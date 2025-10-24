@@ -11,11 +11,13 @@ This repository contains comprehensive documentation for the **Hairline Platform
 ## 🚀 Quick Start
 
 ### For New Team Members
+
 1. **Start Here**: Read [`project-requirements/constitution-summary.md`](project-requirements/constitution-summary.md) for project overview
 2. **Core Requirements**: Review [`project-requirements/system-prd.md`](project-requirements/system-prd.md) for functional requirements
 3. **Technical Details**: Check [`project-requirements/system-technical-spec.md`](project-requirements/system-technical-spec.md) for implementation guidance
 
 ### For Developers
+
 - **Database Design**: [`project-requirements/system-data-schema.md`](project-requirements/system-data-schema.md)
 - **Module Mapping**: Each FR in `system-prd.md` includes module codes (P-01, PR-01, A-01, S-01)
 - **Update History**: [`project-requirements/update-logs/`](project-requirements/update-logs/) for change tracking
@@ -23,7 +25,8 @@ This repository contains comprehensive documentation for the **Hairline Platform
 ## 📁 Documentation Structure
 
 ### Core System Documentation
-```
+
+```sh
 project-requirements/
 ├── constitution-summary.md      # 🎯 START HERE - Project overview & principles
 ├── system-prd.md                # 📋 Functional requirements (24 FRs with module mapping)
@@ -34,7 +37,8 @@ project-requirements/
 ```
 
 ### Supporting Documentation
-```
+
+```sh
 plane-config/                    # 🔧 Project management configuration
 reports/                         # 📈 Development progress reports
 task-prompt/                     # 📝 Task generation templates
@@ -43,29 +47,35 @@ task-prompt/                     # 📝 Task generation templates
 ## 🎯 Key Documents by Role
 
 ### Product Managers
+
 - **Primary**: [`constitution-summary.md`](project-requirements/constitution-summary.md) - Project vision & principles
 - **Secondary**: [`system-prd.md`](project-requirements/system-prd.md) - Detailed requirements
 
 ### Developers
+
 - **Primary**: [`system-technical-spec.md`](project-requirements/system-technical-spec.md) - Implementation guide
 - **Secondary**: [`system-data-schema.md`](project-requirements/system-data-schema.md) - Database design
 
 ### QA Engineers
+
 - **Primary**: [`system-prd.md`](project-requirements/system-prd.md) - Test requirements
 - **Secondary**: [`update-logs/`](project-requirements/update-logs/) - Change history
 
 ### Project Managers
+
 - **Primary**: [`constitution-summary.md`](project-requirements/constitution-summary.md) - Project scope
 - **Secondary**: [`reports/`](reports/) - Progress tracking
 
 ## 🏗️ System Architecture
 
 ### Three Main Platforms
+
 1. **Patient Platform** (Mobile App) - iOS/Android
 2. **Provider Platform** (Web) - Clinic management
 3. **Admin Platform** (Web) - Operations oversight
 
 ### Module Structure
+
 - **Patient Modules**: P-01 through P-07 (Auth, Quotes, Booking, Travel, Aftercare, Communication, 3D Scanning)
 - **Provider Modules**: PR-01 through PR-07 (Auth, Inquiries, Scheduling, Treatment, Aftercare, Financial, Settings)
 - **Admin Modules**: A-01 through A-10 (Patient Mgmt, Provider Mgmt, Aftercare, Travel, Billing, Discounts, Affiliates, Analytics, Settings, Communication)
@@ -99,6 +109,7 @@ All documentation changes are tracked in [`project-requirements/update-logs/`](p
 ## 📞 Support
 
 For questions about documentation:
+
 1. Check [`update-logs/`](project-requirements/update-logs/) for recent clarifications
 2. Review [`transcriptions/`](project-requirements/transcriptions/) for original requirements
 3. Contact the Product Team for clarification
