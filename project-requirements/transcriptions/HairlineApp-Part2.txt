@@ -1,0 +1,66 @@
+So, unfortunately, there is a time limit on recording, and unfortunately, it got cut off
+before I finished last time.
+So there was only one set of screens left, really, which is the support screens.
+And it's just the communication, basically, windows.
+This is mostly for between patient and providers, if they've got questions about procedure and
+so on and so on.
+And this is, you know, before and after.
+So if they, for example, have questions about the length of the procedure, or they're not
+sure about the booking, or whatever, and then afterwards, they can, after they've booked
+and paid, they can, you know, might have more specific questions.
+So this is for that.
+And then this is for the aftercare support.
+This is, you know, our chat once they, if they've got, you know, a few questions about
+how their transplant's going, our chat.
+So our team will be able to, they'll have a few different things, preset things, so
+they can request a 3D hair scan, for example, they can request it, they can request a live
+video chat, for example, through the referring consultant or whatever, there's a few set
+procedures, basically.
+So that's, that's that, really, that's the end of the app.
+The only other thing that's not really on the screens, as I think I mentioned prior,
+is that we wanted a sort of interactive, we wanted the results of the 3D scans to be
+fairly interactive.
+So a person can kind of scroll through a timeline of like months and years or dates, and see
+their, you know, different, you know, different hair transplants, basically, or not hair transplants,
+sorry, but like their hair and how it's progressed.
+If they're monitoring it, because it's getting worse, if they have hair loss, they'll be
+able to see that.
+If they've had a hair transplant, they want to see the results or monitor the results
+that they'll be able to see that.
+So what I'm going to do is just, I'm going to go over to this website, which is kind
+of was a reference for this.
+So a cool little app, this is more for skin.
+So they have a 3D scan of the skin and they, you know, they highlight blemishes and different
+things and then recommend products based on that.
+So our, I would like our 3D scan to be similar to this, basically, it's a little bit more
+difficult with hair, for the beard it's relatively easy, but for the hair, because you're not
+able to see, it's actually easier if someone else does it for you.
+And so that will be part of the instructions.
+If you're able to get someone else to do it, you know, that will be preferable, but otherwise,
+you know, using a mirror, for example, and so on, you know, for them to be able to go
+through it several times until we've marked all the spots and so on.
+The interactive tracker for the hair, I wanted it to be something along the lines of this.
+So they'll be able to move along and click on their, on, you know, like a 3D composite
+of what they look like.
+And they'll be able to see, they'll be able to go around and see where, you know, hair
+has gotten better or gotten worse and so on.
+And that's it really, was there anything else that I'll specifically announce?
+So that's it from that point of view.
+The other thing here also just, it's a little, you know, it doesn't matter too much, but
+here part of, you know, if we're monitoring hair loss, for example, and even if they're
+getting a hair transplant, and especially for aftercare, we will have, you know, a separate,
+this again, this might not be something that we launch with, but this is something important
+that we need to address.
+We do need to give them advice.
+We do need to give them, you know, things that they can do, things that they can start
+with even before they consider, you know, hair transplant and so on.
+So these will be separate, like guides, for example, different things that they can try.
+If they just want to speak to a consultant, for example, and, you know, give them, you
+know, peace of mind or ideas, they can do that through the app and so on.
+So these are all ideas that we have for the progression of this app.
+I'm going to leave it here.
+Hopefully that was helpful.
+And if you've got any questions, again, feel free to reach out at any time.
+And I will then move on now to the provider section, hopefully.
+All the best.
+Bye.

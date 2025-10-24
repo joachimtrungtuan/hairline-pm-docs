@@ -1,0 +1,99 @@
+Hi there. So this is part two. Apologies again. I thought I'll try to do a quick video but
+obviously not. So just going back to this, I think, so yeah, as I said, so basically
+I think special discounts should only be discounts that are between us and them. So they're not
+going to see hairline fees because it's irrelevant to them. A patient can, for example, come
+in and have a discount code that is hairline only, for example. They might have a discount
+code that's already been applied because the clinic has already applied 20% of their fees,
+for example. And they might then add another one that's hairline fees only, for example.
+But this just creates confusion. So I think here we remove this. We just have discounts
+that is applied to both. But the trick here is the clinic needs to be able to approve
+it. So if we say we're doing a 20% discount, it might be too much for the clinic and they
+say they don't want to participate on this discount, for example. And in this case, what
+they're getting is they're going to get a notification to say, new discount available,
+you know, accept or decline. So they can accept or decline. This will be a notification for
+the administrator of the account. So again, I think we remove this. We just have, you
+know, special discounts, hairline, that's it. And so this is how it's going to look.
+So here, again, forgetting this menu, it'll say, please accept discount from our admin.
+Again, change the wording here. It doesn't sound right. But once they click on it, this
+is the notification, you know, 40% discount, you know, between this day to this day, accept
+New Year's discount, accept 200% discount, whatever it is that we've done. And then if
+they've accepted one, it'll show up here. It'll need to have the name and the period
+like this, and so on. They also need to be able to edit or delete their own discounts.
+And, you know, that's the edit screen and so on. So just in terms of issues with this
+already, you can see this doesn't really work as well as, you know, as the screens look
+in terms of, if we look at them side by side, you can see that obviously, this is not, you
+know, it doesn't look anywhere near as clean as this. But also, you know, some of these
+screens are not the same. So the name was on top initially, and so on. I think discount
+description is okay. Discount code is probably something quite important, I think, because
+if it's for the provider only, when the provider is doing this, they ultimately, they're the
+ones selecting it. So discount code in this case is not relevant. This is only relevant
+for us when we're doing this, or we're creating a discount code. But for them, this is irrelevant,
+because when they're looking at their own screens, when they're doing the quote, they're
+going to select, you know, this discount or this discount. They might choose not to do
+it at all. So for us, for them, for the provider section, this is irrelevant, really. And again,
+we should have this disclaimer at the bottom as well. Okay, so let's move back to this
+to the screen. So anyway, so these are this, we've gone through the promotion section.
+Now, if we go to the provider profile, this is, again, just information that they'll be
+able to edit in their profile. They should be able to add, you know, languages, upload
+a, you know, logo or, you know, profile picture, they'll be able to add languages, awards.
+So in awards, I think what I can see now is you can write the name of the award and so
+on. But you can't upload a picture of the award, something like this. I don't know exactly
+how to do this. So it's, so it doesn't look tacky or whatever. It might be that we pre-do
+these ourselves, and then they can select from it, for example. But we, we will need
+to figure out how to do that. Well, security, passwords, delete account. So this is add
+award. So name, description, year. But again, as I said, we need to have a picture for otherwise
+it's just going to look weird. But yeah, anyway, so that's the profile section. This is the
+team, so they need to be able to invite staff. And currently we have, you know, two, there
+really should be three different ones, which is front of staff. So these are people that
+will be able to, you know, look at the process and see what patients, I think, to be honest,
+this is something that we need to work on. But the idea is, it's permissions, really,
+so which staff member can see which part. So for example, there should be a clinical
+staff. So those, for example, will probably not be looking at quotes or confirmations
+or anything. But they might be just looking at the in progress and aftercare section,
+for example. And that's because they just perform procedures, for example. So they need
+to take pictures, 3D scans of the procedure. They need to input that they've gone from
+here to here or provide aftercare and so on. And then there'll be billing staff, you
+know, that will be able to go through the quotes and see how much they're making and
+all of this stuff. So we just need to figure out, you know, permissions, who can do what
+page. But in reality, it's, you know, like once you invite a staff member, you should
+be able to select which pages they can see and so on. These are settings, again, they'll
+be able to change their numbers and so on. Currently, this is, even in the system, it's,
+you're not able to change the plus 90, the Turkish number, but obviously clinics are
+going to be worldwide. So you should be able to change numbers. Actually, in this section,
+you've only got these two options. In the admin section, you can only pick from 90.
+So again, this needs to be amended. You need to be able to reset password, select a time
+zone. Again, some issues now, there's only one time zone. I don't think reset password
+works and so on. Then settings, notifications. So you know, you want to be able to get, you
+should be able to select, for example, I want to get email notifications. I want, I don't know,
+SMS notifications might be too much, but, you know, notification, you know, notification
+through the app or, you know, the web portal, for example, or whatever. And these are some
+other, you know, settings for notifications. And then there's a help section. So these are
+stuff that we will build out, frequently asked questions, guides, and, you know, contact
+us directly and so on and so on. Straightforward, these are things that we can build on later.
+This is the profile drop down menu, you know, none of this stuff works. Well, it does work
+currently. But I do have an issue in terms of the design. And again, as I said, the,
+what is, you know, there's a bit of an issue with the fonts, I think, sizes, and so on.
+So again, we need to, you know, fix this as well. So that's that. Okay. And then, yeah,
+so there's billing. So this is, again, this would only be for the, you know, the provider
+admin, or I don't know, the main account holder, basically, so they'll be able to put the bank
+account details for us to make their payments and so on. And that's pretty much the provider
+section. This is obviously just web-based currently, we do want to create an app for them
+also, but this won't be on release, on launch. But that's the, generally speaking, the
+provider section. There are a lot of issues currently with the platform, that not
+everything is implemented, and so on. But that's, you know, that's something that we need
+to work on. Another thing that we, that's quite, also, it's not, you know, it's not mobile
+responsive, generally speaking. But something that we need to mention, in aftercare, there
+is a, there is, as I mentioned before, we will be providing aftercare, but they might be
+this, some of these, you know, some of these surgeons or clinicians might also provide
+aftercare for us and for other patients, you know, for their own patients and other
+patients. So here, they will have a possibly a secondary tab, if they have been assigned, you
+know, that, you know, for example, the lead aftercare physician, for example, they'll have
+another section where they'll be able to see a little bit more detail in terms of the
+progress. They'll be able to speak to the patient directly through messages. They'll be
+able to see the chat between the, you know, the staff and the patient. But they'll also be
+able to accept, you know, live or, you know, video consultations and so on. That's, that
+you will be able to see that a little bit more with the hairline admin section, because
+that's on our screens. So I'll go through that in a bit. But hopefully, that's enough details
+for the provider for now. Again, if you've got any questions, any problems, and you've got any
+suggestions in terms of how to improve it or things that we can do better. That's, you know,
+I'm more than happy to hear it. All the best for now.

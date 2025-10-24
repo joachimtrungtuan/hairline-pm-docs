@@ -1,0 +1,72 @@
+Hello and welcome. My name is Mohamed. I'm happy to be introducing you to the Hairline
+platform. This video is going to just be an overview of the product, all the different
+elements that we are currently developing. And from there, I will break down the platform
+in a little bit more detail. Just to give you a little bit of idea of the platform.
+So the idea here is that we're creating hopefully a revolutionary product that will make it
+quite easy for patients to look for hair transplant procedures worldwide. Currently, if someone's
+looking to get a hair transplant, they will be contacting separate clinics. They will
+be sending them pictures and videos and having consultations, whether by phone or by video.
+And then often they will travel to these clinics, whether it's in their local countries or in
+other countries to save on costs. And then once they've had this procedure, they go back
+and often they have questions and worries and things might go wrong. So we're trying
+to unify that pathway to make things a little bit easier for the patients. So really it
+starts off with an app, which is the Hairline app. The patients will log in, they will put
+their details in, they will then be prompted to take pictures and videos, or in reality
+it'll be a 3D scan of the head using the phone. Once they've added all their health information
+and so on, that will then be sent over to the clinics that are in our network. So within
+the app itself, you can, let's say, you know, the patient is in the UK, London, they will
+be able to click, you know, they're interested in Turkey, they're interested in the UK, they're
+interested in Poland, you know, whichever is on the list. That will, you know, the information
+will then be sent to our partners, these clinics, which are called providers. The providers
+will then be able to see all the details, estimate the cost and provide a quote. And
+once that happens, the patient will get, you know, different quotes from different
+providers and they'll be able to pick the best one that suits them. Within the platform
+itself, we plan to have also a travel or logistics option. So patients can, once the procedures
+are confirmed, they can book flights, they can check on flights prices and book directly
+from the app. They will be able to see the transport after they've landed that, you know,
+that there's someone's going to be picking them up, back and form hotel, also within
+that, sorry, so it's flights as well as hotels. There are several options. So the clinics
+might be, part of their package might include travel costs or it might include, most of
+the time it includes hotel, but we will also give them the chance to book that within the
+app as part of, you know, as part of their package. And then they will go and have their
+procedure there, you know, while they're doing the procedure, the patient, the provider will,
+you know, will be able to write notes about the procedure. They'll be able to do 3D scans
+of the procedure before and after. They'll be able to write up advice, prescribe medication
+and so on. Once the patient is done and has traveled back, they will have this aftercare
+module. So this aftercare part is an extra feature that we added or are adding. And the
+idea here is they will get notifications, you know, to apply the, you know, the shampoos
+or creams. They will get chat support or even video support if they need with our team
+of aftercare specialists. If the clinic also provides aftercare specialists, they can do
+it through our systems directly and so on. So that's the general idea of Hairline overall.
+I have, I think I've mentioned most of this here. Yeah, so we verify the clinics, we have,
+you know, pricing agreements with them and so on. We've spoken about the aftercare and the logistics
+parts of the booking flights and hotels directly from the app. Transport initially will mostly be
+done through the clinics, but we will ultimately in the end have our own transports in these
+different locations. So we'll be picking up the patients directly and take him to hotel,
+take him to the clinic and so on and so on. This is, you know, further down the line, but
+the platform should, you know, the patient will be able to see once they've landed that, you know,
+so-and-so is picking them up, you know, for example, you know, number plate or whatever
+it is for the car, maybe a picture of the driver, that kind of stuff, so they can easily locate them.
+And likewise, for the drivers, they can, you know, they'll have their own login and they'll
+see who they're picking up and so on. So they might be picking up three or four different people
+from, you know, a range of flights between, you know, one or two hours, for example, and so on.
+So that's the hairline solution. Generally,
+so just again, just breaking it down a little bit, we have the app for the patient,
+and then we have three separate platforms, which is the provider. Provider is the,
+as mentioned before, the clinics or the hospitals performing the procedures.
+We have a affiliate platform, which the idea is, again, if we will work with some influencers or
+something along those lines, where they will promote our product, and we will give them
+commission based on who they refer. And then we have the hairline admin app or platform.
+And that's just an overview of everything that goes on. So we should be able to see
+the billing, you know, which patients are booked with which provider, which stage of the treatment
+they're on, if we need to make amendments and so on. It's all through that, through that platform,
+as well as obviously billing, you know, for the provider, how much are we paying them every
+week, month, and so on, registering new providers, and so on, and so on. And these are the travel
+and aftercare modules, which are really within the admin panel. But, you know, obviously,
+they have different function within the app and the provider platform as well. So that's just a
+quick overview of hairline. I hope it's been helpful. I will be making more videos on this
+I hope it's been helpful. I will be making more videos going through the
+app, the provider platform, as well as the admin portal as well.
+If you have any questions, please feel free to reach out to me directly at any time.
+And I hope to be talking, and I'm sure we'll be
+going through this in more details shortly. All the best.

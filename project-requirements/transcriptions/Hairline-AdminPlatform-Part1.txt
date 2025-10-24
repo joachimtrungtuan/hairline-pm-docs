@@ -1,0 +1,459 @@
+Hello and welcome, I'm now moving on to the hairline admin section.
+Now this section is complicated,
+unfortunately has a lot of different things.
+But the idea I think now hopefully is a little bit easier to understand
+if we've gone through the app and the provider.
+A lot of the data that we have here is now just,
+you know, the collection of everything
+that's happening on those two platforms.
+Again, we don't have a lot of data, so we don't have much to go on.
+But you'll be able to see the providers in this section,
+the patients, you know, and which stage they're in,
+and so on and so on, you know, view their details and so on.
+Again, a lot of this doesn't work currently,
+but I will be going through the screens
+and hopefully a lot of the screens will be easier to understand
+because we've gone through the provider section already.
+So again, first of all, dashboard,
+some of the stuff will be amended and changed,
+but that's just a general idea.
+Then we have the overview.
+So the overview is just the patients.
+So this should be, this will be everything.
+So every patient in whatever stage, if they're in an inquiry,
+if they're in progress, if they're pending,
+so they've, you know, they've created a profile
+where they haven't submitted anything, for example,
+if they're in the code or whichever stage they're in,
+we will have them here.
+You'll be able to filter them through,
+you know, which stage they're in, location, and so on.
+And then these are similar screens to before,
+you'll be able to see the patient,
+again, here, we should have the patient's name
+as well as, you know, an ID for them.
+Something that was quite important in the previous section
+for the provider, the provider shouldn't be able to see
+the patient's name or contact details until after they've paid,
+once they've gone into the, so once they've gone into,
+in progress, I believe, part or complete,
+whichever, not complete.
+I mean, either way, hopefully it makes sense.
+So provider, once they've confirmed, so once they've paid,
+the provider will be able to see their full name,
+they'll be able to see their contact details and so on.
+But before then, they're going to have an ID for them.
+It can be something like mark,
+and then the first letter of their surname.
+So mark P, for example, and then an ID for them.
+But again, this is similar screens to the other one,
+we'll be able to edit them here and so on.
+This is once they've had a quote from a provider,
+we'll be able to see,
+we should be able to see all the quotes that they've had.
+So if they've had like 10 quotes,
+we should be able to see all of them.
+This is might be a little harder to see like this
+because we should be able to see the quotes each one by one.
+Because the idea here is that we need to be able to edit as well.
+So let's say a provider for whatever reason cancels last minute,
+they're not able to do it,
+we should be able to then contact other providers
+and be able to fit them in
+because they might have already booked flights,
+for example, that kind of stuff.
+So in this admin section, we need to be able to edit all of this.
+And then again, accept the screen,
+you know, view the quotes and so on.
+Scheduled again, this is all the information
+that hopefully simple enough, you know,
+these are all the information that we would have seen,
+the progress they're in, and so on and so on.
+So these are these screens.
+From there, we are moving to the provider.
+So this is just, you know, what, you know,
+you'll be able to add a new provider.
+This is the provider screen, the list of providers.
+So this is something that we can see here, for example.
+Again, you know, similar, but again, you'll be able to view them,
+you'll be able to edit them and so on.
+So that's the idea here.
+And again, so you'll be able to edit them,
+you'll be able to see all the details.
+And these are the information that we will add, you know,
+so if they have insurance, license, you know,
+different things that we will be able to add
+to keep on record for these different providers.
+And we'll be able to add, you know, edit,
+you know, their information, we can add languages,
+recognitions, all of this stuff we can add ourselves.
+Also, something that's very important, especially with launching,
+is that we will need to be able to add reviews.
+So this is the reviews that, you know,
+that would have been authentic reviews
+that would have been done through our own users.
+But we want to be able to add reviews,
+especially if a provider is joining us at the beginning,
+and they don't have any reviews, they might look bad.
+But we will, if they give us authenticated reviews,
+and we can see them online, for example, pictures and so on,
+we can ask if we can use them and put them into the platform ourselves.
+Again, documents, this is not, this is the wrong name,
+but you know what I mean.
+And again, we should be able to delete them if we want to,
+there should be, to be honest,
+I don't think we should delete any data.
+Even if a provider wants to delete, what we should do is archive them.
+This is medical data at the end of the day,
+and we have, in most cases, in most countries,
+we have legal responsibility
+to keep the data for at least seven years.
+So it's important that we, you know, we can delete them,
+but they're just archived somewhere.
+These are the add profile screens.
+Again, this is doesn't really work, you know, add a review.
+You know, you need to be able to add a picture for the patient,
+and we need to be able to add, you know, multiple reviews,
+not just one and so on and so on.
+So this, in my opinion, is not relevant.
+I have done a task to change some of this
+already on our project manager, which we can go through later.
+This whole section, I've gone through different amendments
+and changes to make it look better.
+So hopefully, but this is just a simple way to,
+you know, simple explanation to use in terms of adding provider.
+Again, they've got the names wrong, it's not affiliate.
+This is for the affiliate program.
+But they should be able to select, you know,
+whether they're being paid weekly, two times a month, monthly.
+And, you know, if it's an amount or percentage that they're being paid.
+And again, this is for affiliates.
+So again, the screens have been mixed up a little bit here.
+But hopefully, that's not too confusing.
+And then add new staff.
+And then they'll be able to see their list of,
+we will be able to see the list of reviews and so on.
+Okay, so that's that.
+Now moving on to patients.
+So again, we'll be able to see patients.
+This is not the overview of patients.
+This is the full list of patients.
+To be honest, with the overview,
+we need to be a little bit careful here.
+We probably need overview of patients that are active.
+So people have been quoted, for example, people that I know
+we have the filters, but just so it's not a list of everything.
+The idea is that with the overview,
+you'll be able to quickly go through patients
+that might need follow up patients that,
+you know, are in progress that we might want to check on, and so on.
+But this is the list of all the patients.
+I know, simply enough, hopefully.
+And then there's aftercare overview.
+So this is the aftercare screen.
+So with this one, again, you know, the name of the patients,
+where they've had the procedure, which stage they're in,
+what was the clinician that's, you know,
+the lead clinician that's taking care of their aftercare.
+And, you know, what status they're in,
+and, you know, quick insight in terms of how,
+you know, their progress, for example,
+whether compliance, if they're in pain or not,
+and if there's any red flags.
+And then this is also just messages.
+So this is the message if they are communicating in aftercare,
+in their aftercare in the app platform through aftercare,
+if they're seeking support, basically,
+this will show notifications here.
+So this is their progress, as mentioned, you know, pain level.
+And then you can, you know, edit their plans,
+schedule a consultation, activate aftercare, I guess, here.
+And this is the screen for aftercare.
+Once you've clicked on them, this will give them, you know,
+so this communication log of everything
+has been written between us.
+You know, we can write a note to them.
+This is their assigned clinician.
+This is what we've called it.
+And we can upload, you know, information and so on.
+So that's the aftercare.
+Aftercare support is the chat between them and us.
+But we can also chat with their clinician to say,
+you know, I'm concerned about this.
+This person, you know, hasn't stopped bleeding
+since the procedure has been seven days, or whatever.
+We can view their last head scan.
+But also, where is this?
+So I think part of this is we should, we need to be able to,
+I don't know where this is, maybe it's in a separate window.
+I'm not sure now. But in here, we should be able to,
+so once we're chatting with the physician,
+and they confirm that, okay, let me have a video chat with them,
+we need to be able to give them like, very easily send,
+you know, the consultant has,
+your clinician has requested a review, a video review.
+Can you please select one of the following days,
+you know, like, so look at their diary
+and select one of the days or a time that they can do it.
+Number one, and so like, just basically schedule an appointment.
+And number two, also, they might say,
+we need a recent 3D scan. So can you please do a 3D scan,
+you know, so prompt them to do it,
+you know, the day before or on the day,
+for example, that kind of stuff, you know.
+So that's that.
+Travel, we haven't done any windows for yet.
+But the travel is the hotel booking, the flight booking,
+and so on and so on.
+Again, this is, we will do this post release.
+So it's not going to be, it's not necessarily going to be now.
+Provider billing, this is obviously quite an important section.
+So this is, you know, the appendix.
+So this is like, if it's worked out, for example,
+that we pay you every week.
+And it's, you know, the day that we make payments,
+we can see straight away who needs paying and so on.
+So we'll be able to click on it and confirm the amount
+and how we're paying them confirm.
+And it will then give them a notification
+that they've been, you know, they've been paid.
+You can add a note if you want.
+To be honest, add note should just be here to be honest,
+instead of saving, you know, saving us this double window.
+No, so the add note is for us, so we can add a note,
+it's not for them.
+So the add note is, you know, let's say, you know,
+whatever, you know, payment, not through this bank,
+but this bank, because of, you know,
+delay in payments previously, for example, you know.
+So that's the provider payment thing.
+Then there is the patient billing.
+So this is basically us, you know,
+we'll be able to see the invoice numbers,
+the amount due, if it's pending, if it's been paid.
+We should be able to make payments
+if we want to send reminders, you know,
+download invoice, that kind of stuff.
+And then, again, just general information on payments.
+These are just buttons, I guess, but that's just the general idea.
+Billing information, breakdown,
+this needs to be probably a little bit better.
+Like I said before, the discounts and so on doesn't,
+it's not shown well here,
+but we need to be able to do that properly.
+There is a second part to this, which I will explain a little bit.
+So with payments, actually, it's better to explain it now.
+And I think on the patient app,
+there was a bit that says, you know, interest-free payments.
+So the way we've designed it is we want to be able to offer,
+you know, a breakdown of payments.
+So if, let's say the treatment costs £1,000, let's say,
+and they're booked in to come in in six months' time.
+So what we want to do is offer them from the moment of the quote
+until the month before, until 30 days before, whichever,
+how many, you know, like in this case, let's say it's five months,
+we want to be able to offer them a maximum of five months,
+a payment plan of five months.
+So that will be £1,000 divided by five, so £200 a month.
+And it'll prompt them, it'll, you know, I'll take it from their card,
+or, you know, whatever they've done,
+they'll take it from them, you know,
+five times over the course of the five months, for example.
+If the treatment is in four months,
+so we will then offer them, you know,
+the full amount divided by three, for example.
+They can choose, they can choose, for example, three months,
+they can, so it's split pay, basically, it's split pay.
+So they don't have to choose the maximum.
+So the maximum will be five months, but they can choose to,
+for example, do a split pay of three months,
+you know, four months or whatever it is, for example.
+So this is part of the reason why there might be multiple invoices.
+And in here, when you see amount paid,
+but outstanding balance is this, for example.
+So they've paid this much so far,
+but there's still an outstanding balance of that, for example.
+Just so that's clear.
+Promotion we spoke about before, this is the overall promotion.
+And in promotion itself, we should have this,
+but then underneath straightaway should be all promotions
+instead of it being a separate screen.
+So currently, it's a little confusing,
+even I was confused when I was looking at this recently.
+So it has the, you know, the data. That's it. Okay.
+So that has actually, to be honest, it's not terrible,
+but it's just all promotion,
+you have to click on it for it to apply.
+And these are actually, so just leave it as is, I think it's fine.
+So this is all promotions.
+This is, again, what we discussed before.
+You know, all the discounts, this is hairline, this is both.
+And this is, you know, both fees, hairline only.
+So I think, again, it might be a bit confusing.
+I think, again, it might be a bit confusing.
+So I don't think so.
+For example, if we have 100 providers,
+and they all have like five or six different discount types,
+it's going to be really difficult to see all of those here.
+And in reality, it's not irrelevant to us,
+we're never going to pick them or change them or amend them in reality.
+So for us, we probably don't need to see those.
+However, this part is, you know, hairline fees only and both fees.
+These are the, when we saw earlier, it said special fees.
+This is the one where it asks permission for them to take,
+you know, to ask us the permissions for them
+to accept the, you know, this discount code.
+So this will be in both.
+And hairline is where it's just our one that we decide to,
+you know, if we want to do something
+that will only come out of our percentage, for example.
+And this is all of them.
+Okay, so that's that. Going through the screens again.
+So this is just how to add it.
+So in this case, it will be relevant,
+you know, hairline fees only or both fees.
+Well, before it didn't make sense for us to do that for the provider.
+Again, as I mentioned, so this is the basically use the same window
+for both of them, which they should be different.
+But again, here, you can see that, you know, design wise,
+it just doesn't look as nice, to be honest.
+But, you know, here we go.
+Again, here, there should be more options, you know,
+is the discount automatically applied
+or is it through a valid code only?
+And that's in that case, it will pop up the window
+for discount code, for example.
+And then you add, you know, you write a special discount.
+Winter 2025 or whatever it is, for example.
+And then it doesn't have a maximum use or, you know,
+so is it only that, you know, the first 200 people to,
+you know, to put this in or whatever, basically.
+Yeah, so these are the discounts.
+And this is if it's, you know, our fees only.
+Applied discounts screen.
+So this is what's, you know, people have used the discounts.
+And again, just more information on the discounts.
+And this is completed discounts.
+So this is people that have applied it.
+This is, I don't know, what's the difference?
+I don't remember now.
+Applied discount.
+I don't remember the difference between applied and complete.
+There was a purpose to this.
+One, I think, was when they put it into the checkout.
+And one when they've actually completed the checkout.
+This is quite relevant for affiliate
+because the affiliate system works on this.
+So we'll come back to that.
+But there is a reason for it.
+I just don't remember it, to be honest.
+Again, this is, if you click on it, you'll have more information.
+So this is affiliate management.
+So this is the, the affiliates have their own login screen.
+So this is affiliates, very, very small, to be honest.
+So just log in, they can see the data.
+And they, we use, as I said, the discount codes.
+So they can create their own discount codes.
+Actually, they can't.
+I think we create the discount codes for them.
+But we have a conversation with them.
+So we, you know, we say, we will give you, you know, for your users,
+we will offer them 10% discount.
+And we will give you 10%, you know, incentive, so a payout.
+So in essence, we will, we will, it will take 20% from us.
+But we will give them, you know, that 20%.
+So, you know, if that makes sense.
+It won't be 20%. I think 20% is quite high, to be honest.
+But just that's the general idea of it.
+It will most likely be a set amount.
+So 50 pounds, 200 pounds, whatever it is, for example.
+And so again, these are the discount codes.
+And, and so on.
+So this, this will be able to see upcoming payments
+and previous payments,
+and they'll be able to see that these have been applied.
+And so on and so on. That's the affiliate program.
+But just going back to this is us looking, you know,
+seeing the affiliate, you know, what's been,
+how much has been applied in terms of discounts,
+and we can add a new affiliate.
+But also, we should be able to see the full details
+of the affiliates here, as well as, you know,
+these are the affiliate similar here, you know,
+like, similar to what we're doing with the.
+Yeah, so with affiliate, I think it might be a bit different screen.
+So we're probably going to be paying them monthly,
+not weekly.
+And so we'll only have the monthly option.
+And then, and then we just need to create discount codes for them,
+if that makes sense.
+Then there's the, this is what I was looking for.
+So then there's affiliate billing.
+So this is where we, you know, again, we can see up to date.
+So if we pay them once a month, for example,
+on the seventh of every month, you know, for the,
+for anything from the first to the, you know,
+to the last day of the month,
+we pay everything on the seventh of the following month.
+So by the end of the month, you know, 30 days of 31 days have passed,
+we, these will be generated that, you know, this affiliate,
+you know, we owe them this much, we owe them this much, and so on.
+And then we have to pay them as we pay them.
+These should, they should really move from here to paid,
+just so it's not confusing. I don't see a way to do that.
+And I think that was similar to the billing section for providers.
+Again, yeah, so this should be, it should really be split into two.
+So once this is paid, it should be, you know, a paid section,
+not, they shouldn't be on one list like this, if that makes sense.
+I hope that's easy to understand.
+But okay, so that's the affiliate payments.
+I believe yes, management. So that's done.
+Okay, so let's move on now to this is the analytics section.
+So this is, we can speak about this more in detail.
+But you know, this is again, just data that we will take from,
+you know, financial provider, you know, response time,
+la la la, treatment outcomes,
+these are all stuff that we will want to implement once,
+you know, this will be, I guess,
+one of the last things we start implementing.
+But, you know, pending patients, outstanding invoices,
+you know, this is all, you know, financial view,
+this is conversion rate data.
+So, you know, revenue over time. So how many of these convert?
+And, you know, all of these lovely information support center.
+So this, okay, so this is not the aftercare support.
+This is the support center.
+This is when a patient is sending messages from India,
+saying, I don't understand this, this is not working for me,
+you know, that kind of support.
+And so this is the, you know, the chat with them,
+as well as the chat with the clinic.
+So here, there's two sections to this, really.
+So this, yeah, so this two parts, this is the support center.
+There needs to be a second part to this,
+where we can then also see all the provider
+to patient communication as well.
+So we need to be able to see all the data
+that's been shared between provider to patient.
+That's, I don't think is in these screens,
+but and maybe that will be in a separate section altogether.
+And maybe we call it, we call it something else.
+But that's, it'll be something similar to this.
+So we'll be able to keep an eye on any information
+that we, you know, and we might be able to,
+again, it doesn't necessarily need to be straight away,
+but we probably will have, you know, keywords that will flag.
+So it'll just, it'll flash, you know, red for us
+if there is, you know, a keyword that's been highlighted,
+just, you know, so in the message itself,
+if it says something that's, you know,
+you know, contact me through my email directly,
+or whatever, something like that, it might flag it.
+But either way, that's the support section.
+And then there's the setting section.
+So this part is quite intense, to be honest.
+And so what I'll do is I will end this video here,
+and I will start the next video with the setting sections.
+Again, any questions, any worries?
+Just let me know, and I'll come back to you.
+Thank you.

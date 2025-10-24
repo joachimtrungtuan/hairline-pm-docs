@@ -1,0 +1,493 @@
+Hello and welcome, this is the provider platform for Hairline.
+So, this is where clinics and hospitals
+will be given access to this.
+Everyone obviously have their own dashboard and information.
+We currently don't have a lot of data on this version.
+So, unfortunately, we'll have to go back and forth
+between the design and this platform.
+But the idea here is that, again, none of the data here is being pulled.
+This is just a kind of demo.
+But the idea is once the patient has submitted a request for a quote,
+they will get this inquiry tab,
+they will have the patient, age, problem, la, la, la.
+And they'll be able to click on it
+and have the information that the patient submitted.
+So, if I go back to the design,
+so this is just a simple login screen,
+this will be the dashboard of the information like we just saw.
+And then for inquiries, so once they've clicked on inquiries,
+they'll be able to see the patient's details,
+you'll be able to click on view.
+And this will be the details, the scan,
+they'll be able to click and look at the scan,
+the date range that they have, you know, this should be reversed.
+So, any known allergies to medication,
+if there is yes, then they should be highlighted in red.
+So, something obvious, any known allergies to medication.
+So, this is in the, so this will be like a separate question.
+So, for example, this might be, you know,
+do you have diabetes or whatever?
+If they say yes, if they say no, it should be green.
+So, there's, you know, it's fine.
+But if anything is highlighted as yes, then it should be red.
+So, or at least highlighted in a different way.
+So, the provider can quickly scan and say,
+okay, this is no problem, you know, this patient's fine.
+Something, for example, that's quite important is,
+for example, if they highlight HIV,
+or if they have blood disorders, and so on, these kinds of things,
+some providers will not provide treatments.
+Some providers will, but they have to do a very different setup
+and different sanitizations and so on and so on.
+So, the cost for that is very different.
+So, again, these are things that are important.
+Some stuff, they might need to prescribe them different things before.
+If they've got, you know, heart conditions,
+for example, or high blood pressure, they might need to monitor them.
+So, this information needs to be very clear very quickly.
+And then, yeah, so just as I said, you know, patient information and so on.
+And then once, you know, so they can click on submit code,
+when they click on submit code,
+they'll have, you know, this category of different information.
+So, some of this stuff will be pre-done.
+So, we, Hairline app, the admin, we will,
+will be doing these different treatments with providers.
+So, we will create the treatment, we will have the video,
+the information about it, all of those things.
+And so, they will be very easy to select
+what they want to do for treatment.
+And then they will have pre-selected packages
+that they will be able to do from preferences or profile,
+I can't remember exactly where.
+But here, they will be able to click on what they provide,
+if they provide hotels and so on.
+Like, these are the packages that they will select.
+There is a, the way I wanted it to be done,
+I think further down the line, we might be able to see it.
+But when they're creating these treatments,
+they're going to always create a base treatment.
+So, this is just treatment, no hotels, nothing.
+This will be their base price line.
+After that, they'll have, what I really think we should do
+is have add-ons.
+So, things like hotels, things like flights,
+things like transportations, that kind of stuff.
+The idea is that once we start offering stuff through the app,
+so transports, so flights, transport, hotels,
+we can disable these ones.
+So, they can just give us the price of treatment,
+but we will take care of everything else without having,
+without having, so without them having to redo all of this again,
+if that makes sense,
+or without them having to redo the packages again.
+So, anyway, so let's say they've selected a package,
+the package, so they've selected the treatment and package,
+they move on to then customise it.
+So, even within that package, they can customise it.
+Actually, this patient, you know, this doesn't work for this patient,
+you know, they'll disable it, or they can add different things,
+you know, add, so they've selected the package,
+but they will offer hotels and they will offer this and so on.
+So, that's that.
+And then from there, they will select the date range.
+Again, it has to fit with one of the,
+so in the case that we saw earlier,
+the patient selected three different dates,
+so three different ranges of dates.
+So, they have to pick, so they can offer three, for the three.
+So, they can offer, you know, a price for the first one,
+one second, or they can just offer the same price for all of them.
+For example, I want them to be able to do that in one screen.
+So, they don't have to do it again and again and again.
+So, they don't have to do three quotations.
+So, the idea is from the screen, they can select,
+you know, date range one, date range two,
+date range three, for example.
+Once they've done that, they can amend the price.
+And there is a discount, I don't believe,
+I don't believe it's added here on the screen,
+but there should be, you know, a discount section.
+So, there's this discount we will talk about a little bit more
+on the provider, the admin section, our admin section,
+but we will offer separate different types of discounts.
+So, one is a whole discount that will affect,
+you know, I guess it can be a little bit complicated,
+but just to simplify it, there'll be different types of discounts.
+A discount that will affect the whole price,
+discount that will affect only the price for the provider,
+for example, and a discount price that will only affect our,
+the hairline price, the hairline commission, sorry.
+So, we take commissions from each.
+So, let's say this provider is going to submit a quote for 2000,
+we, depending on the agreement with them,
+we might have a 10% commission,
+we might have a 20% depends on our agreement.
+So, some discounts will only affect our price, not them.
+And so, those ones we create, we will create, for example,
+you know, summer offer for 50 pounds off, for example,
+let's say $50 off or whatever.
+And that price might come only from us.
+If we select that it applies to the whole treatment,
+then the provider has to approve it.
+So, they have to approve it for it to work with them,
+if that makes sense.
+And you'll see that through the screens in a little bit.
+So, then they'll add the clinician.
+So, which clinician is doing the procedure,
+they'll select from the clinicians, they can write a note.
+I think the screen is missing currently,
+but they need to be able to write instead of note or with the note,
+they'll need to write the graph number.
+So, and this ideally should be,
+they should be able to analyze the screen, the 3D scan,
+and then write the graph number.
+So, they think roughly they're going to need 2500 graphs,
+for example.
+Another point that we can do, and I'm going to pause the video now
+and just load up another screen quickly.
+So, this is another platform.
+And they have this, this is basically,
+this platform is designed for hair transplant providers.
+Providers, they don't do what we do.
+So, they're not the patient part,
+this is just like for a provider to model hair transplants and so on.
+So, this is definitely something that we need to develop ourselves.
+It might not be something that we are going to be releasing on day one.
+But this is definitely something that we want to do.
+So, the idea here is that they'll be able to visualize
+where the, you know, which part of the transplant is going
+and how it's going to look afterwards and so on.
+Again, it's not something that we're going to do now.
+But, you know, we need to be able to add this to the platform later on.
+So, we'll leave it, I'll leave it here.
+But just keep that in mind as we develop just,
+obviously, as we go through this, if you've got any ideas,
+any thoughts on how to improve this, always feedback, let's write it down.
+Let's, you know, discuss it and hopefully make it happen.
+So, going back to this, once it's a yes,
+then we need to write the, they need to be able to write the graph,
+the number of graphs.
+I mean, to be honest, this should be early on,
+you know, with the selected treatments and so on.
+It should be the number of graphs.
+If we're able to, you know, have lines or drawings on the 3D image
+to send to the patient, so the patient can see
+what they visually want to add.
+Most providers actually will do this,
+but they do it by hand or they do it themselves.
+And then they send it to the patient.
+So, even if we have an area, we can, you know,
+they can upload images and that kind of stuff.
+So, you know, with the note, they'll be able to upload,
+you know, images, you know, or files or whatever.
+So, they can present that to the patient.
+And then there's a summary and submission.
+Really, that's this part.
+This is the idea, this is a screen for the medical questionnaire.
+As I said, the colors really just shouldn't look like this,
+otherwise it's confusing.
+It looks like as if it's a positive when it's a negative, okay?
+What screen is this? This is the 3D scan.
+I've done this, I don't think it really makes sense, but okay, it's fine.
+Moving on to the next part, which is quotes.
+So, within the platform here, you'll see that this is the inquiries.
+And then here we have got the tab for appointments.
+We have in that there's quotes, accepted, scheduled, confirmed.
+So, just very quickly, we go through it.
+These are, you know, the quotes, and these are the accepted.
+So, these are people that have accepted the appointments,
+the treatment time, obviously price and so on.
+And then you'll be able to click and have a look at,
+you know, the information for the patient and so on.
+Here is when they've accepted.
+And as I said earlier, in the mobile app video,
+they need to be able to schedule this as part of the inquiry.
+So, you know, part of the inquiry here, we need to have schedule.
+It does create a little bit more work for the patient, for the provider.
+But it just means that we can auto, you know, complete this.
+So, instead of having this accepted section,
+we can auto schedule it straight away and just it'll save time.
+But really, the idea here is, if the patient confirms,
+and then we have to wait for the provider to then reconfirm,
+if that takes a few days, it takes, you know, a week or whatever it is,
+the patient might have given up or lost interest.
+But if it's auto confirmed straight away,
+and the next screen for the patient is, you know, pay for your appointment,
+they're more likely to pay there and then,
+instead of, you know, coming back a few days later
+and changing their mind or whatever.
+But the idea is that they select the time of the appointment,
+the location of the, you know,
+if they've got multiple clinics, for example, or whatever.
+And then this is the treatment progress.
+Now, again, this should be pre-filled,
+depending on which treatment they've selected.
+So, for example, if we look at here,
+you know, they've selected the type of treatment.
+So, this one, so depending on what they've selected,
+it should automatically fill out, you know, these days.
+Now, they can make amendments, they can say,
+actually, we need an extra day here for this one, and so on and so on.
+But they should be able to do this, you know,
+directly with when they're scheduling the treatment.
+And then this summary, again, this could be the same as,
+you know, this summary would be added to the inquiry section
+when they're providing a quote.
+And then this is another screen for quotes and so on.
+So, you know, similar things, I don't think necessarily
+we're using those at the moment.
+And then these are scheduled. So, this is like, they're scheduled,
+but they're not, and we can even change the name of this
+to from scheduled to accepted, I don't know.
+And remove, you know, remove one of them,
+either accept the schedule and just merge them into one.
+So, yeah, so just merge these into one, basically.
+So, automatically, everything is scheduled.
+It can be called accepted, for example.
+And then from there, we move on to confirmed.
+So, the confirmed is when the patient has paid.
+So, once they've made the payment,
+the patient moves from, in this case, scheduled to confirmed.
+But as I said, instead of having three sections,
+I think we should reduce it to, instead of having four,
+we should reduce it to three and move schedule accepted
+directly to scheduled by pre-doing the appointments
+and the itinerary for the days.
+So, this is the confirmed section. These are the people that have paid.
+Appointment time is set, appointment date is set, and so on.
+Again, this is just information.
+At this point, they'll be awaiting,
+if the package includes hotels, if it includes flights,
+if it includes transport,
+they need to be able to add these details in.
+So, here, it says hotel and flights,
+please wait for patient hotel and flight details.
+So, this is if they don't have,
+but if they're not providing any service,
+at some point, the patient will fill this stuff in,
+and then they will tell them,
+this is the hotel that the patient is staying at,
+this is the flight details of the patient staying at, okay?
+So, that's that.
+Now, we have to remember it's hotel, flights, and transportation.
+And as I said, most providers will provide transportation.
+So, they'll pick them up from the airport,
+they'll take them to the hotels, they'll pick them up from the hotel,
+take them to the clinic, take them back to the hotel,
+take them to the clinic again, take them to the hotel,
+take them to the airport.
+And most of them will also provide hotels.
+Now, all of this, I'm talking, you know, this all depends,
+obviously, if the patient is flying out to get this treatment.
+And this is kind of our main market, realistically speaking.
+But that's the, so that's that.
+Now, if the patient, so this is, again,
+the confirmation of flight details,
+you know, when they're arriving, and so on and so on.
+I would like to make this as easy as possible for the patient,
+you know, maybe take a screenshot of your booking
+or send the email in,
+and then it automatically generates all this data for the provider.
+Again, we have to think about this, but keep that in mind.
+Now, if the patient,
+if the provider is going to do the bookings for hotel or for flights,
+it will say a waiting patient hotel,
+it should say asking for, yeah.
+So it shouldn't say awaiting here,
+it would say awaiting passport details, for example.
+So this is the name of the screen.
+But so here, it should say awaiting,
+it should be very clear in red or not red,
+but sorry, but you know, something very clear,
+that it says, you know, awaiting patient passport details.
+So once the passport is in, it's a bit mean to use this one,
+I don't know why, but it's fine.
+So, you know, break down the data of the passport
+once the passport has been scanned in.
+And then the patient, the provider will then book hotel or book flight,
+depending on if, you know, obviously, this won't show.
+If they're not booking flight, this won't show,
+but, you know, they'll click on these buttons
+to be able to provide the details for the hotel,
+provide the details for the flight, and so on and so on.
+So that's the idea really here.
+Moving on, so once the patient is confirmed,
+then they've now arrived at the clinic,
+or, you know, we're moving on, they're going to be in progress.
+So in progress is a patient that are actually being seen for transplant.
+So they'll be able to click on them,
+they'll have their, you know, their details,
+they'll be able to access all the information again.
+But here, really, the idea is that we…
+Yeah, so before all of this,
+realistically, we need to have some screens.
+So when you click on it, we need to be able to highlight,
+like, for example, patients on day one, this is what's happening,
+you know, because we know what's happening on each day.
+And for each one, we need to have some prompts.
+So, for example, take a screen, a 3D scan before.
+So when they arrive, they've done the consultation,
+they've done a 3D head scan.
+So the provider will now do one in-house.
+And especially because most of them, they will shave their hair.
+So they'll do a scan of it shaved, they'll do a scan of it afterwards.
+So there'll be several prompts to do this at different stages.
+Now, I don't…
+This part, we're going to need a little bit of consultation
+in with one of the consultants.
+So this will be maybe added later, but this should be here somewhere.
+So when they click on it, we need to be able to check them in.
+We need to be able to add the scans in and all of this stuff.
+So once they've done this, and they've finished the procedure,
+there's going to be this aftercare setup.
+Now, aftercare setup is a complicated one.
+The way that we've done it is the patient can…
+or plan to do it, is a patient is going to be able
+to add their own medication.
+Sorry, not patients, sorry.
+Providers are going to be able to add their own aftercare setup.
+But really, we're going to do it from templates.
+So we're going to do a few templates.
+Patients can… the providers can do a few templates.
+And then the idea is just to select from a template
+and it'll fill out all the details.
+They can add instructions or medication.
+This… there is another way…
+there's another set of screens for aftercare
+that I'll show you afterwards,
+which I think might ultimately replace these.
+It might be easier.
+But either way, so select template,
+and it'll load, you know, kind of everything.
+But that's a very simplistic aftercare screens.
+There's a lot more to it in the hairline admin side,
+which I think we will then…
+you know, we will most likely be replacing those here
+just to make it easier.
+But also, there's a little bit of a, you know, like a fine line.
+Because most of the time,
+our company will be doing the hairline, the aftercare service.
+So we will have agreements with each provider.
+So some of them will be…
+we will definitely want to be part of that service.
+And we might pay them extra for that, for example.
+Some of them will not. They'll say, no, we just give them paperwork.
+And that's it. That's all we do.
+So we can have the instructions from the operating physician,
+for example, and all that stuff.
+And then we will then provide the aftercares,
+you know, ourselves separately.
+So we just have to work out exactly how to do that efficiently.
+But then they'll be able…
+So after they finish the in-progress part,
+they'll move to aftercare part.
+The aftercare part is, you know,
+they'll be able to see which phases they've done, recovery.
+Again, once I go through the other section,
+I think it'll be a bit easier to understand.
+But these are basically the milestones, recovery,
+you know, post-op recovery.
+And then there'll be different milestones
+that we will set up with different names.
+And you'll know how far they've, you know,
+depending on what they've completed or depending on the timeframe.
+Most of it is done by timeframe.
+So a few days or weeks or whatever, you know,
+you'll see what percentage they're in.
+And then this is the data that we will have.
+Like in terms of compliance, how much they're checking in,
+how much, what they're doing, as well as their pain level and so on.
+You know, these are the questions that they'll be asked from the app.
+And then they can have a consultation.
+So if they're in quite a lot of pain,
+they're not sure they can, the provider can provide a consultation,
+you know, a video chat with them and so on.
+This is then complete. So this is when they are completely done.
+You know, they'll see if they've given a review.
+And, you know, they'll still be able to see
+which recovery process and so on and so on.
+Now, quickly going through some of these,
+these are just the data reviews, you know, number of quotes,
+you know, which, you know, where the patient's, you know, data lie.
+And then, you know, their general performance.
+So this, the idea here is a breakdown of their earnings, financials.
+So previous payments and upcoming payments.
+And then, you know, just the general graphs of earnings
+and breakdown of what procedure, you know, makes them how much.
+And then upcoming payments is quite an important section.
+So this is, this will be how much we are paying them
+for completed treatments and so on.
+So this will be listed depending on, again, a preset agreements.
+So we will give them the option of paying them once a month,
+once every two weeks, or once or so once a month,
+twice a month, and once a week.
+And so they'll be able to, most of them will pick once a week.
+But the idea here is the system will calculate
+how many patients have completed this,
+their treatments are within the set timeframe.
+And then, and then the payment will be calculated for,
+you know, upcoming payment will be for,
+you know, whatever the agreed period is.
+So that's finance, finance, and then treatment.
+This is the section where they can view the treatments
+that they have, they can add treatments.
+But as I said before, realistically,
+we they're not really going to add treatments,
+what they're going to do is select treatments that they want.
+Because I prefer that the ad part will be from our side.
+So hairline admin will be able to add because we want the videos,
+you know, what's included, la la la la, these different things.
+And, and most, you know, at the end, you know,
+when they select a treatment, they can disable,
+they say, oh, we don't provide this, for example, or whatever it is.
+And we'll also work with clinics
+if they have a very specific treatment that they only provide,
+we will have that, you know, we'll do that for them.
+Then this is the promotion.
+This is the idea that I said to you before regarding discounts.
+So, so if we go down here, we have promotions.
+So, so here it's, again, a lot of this is not working
+as it's supposed to be, but just the general idea of,
+of, you know, adding promotions.
+And if we go back to the screen here,
+you have the ability to set a discount.
+And see, this is the bit where it's a little confusing.
+So what they, they ultimately what they, they won't be able,
+they can't select hairline only, for example.
+And they, and for them, it won't make sense for them to say both feeds
+because automatically it's both of our feeds,
+because we take a percentage, for example.
+So in this case, they're not going to do a discount type, for example.
+So when they select, when they select a discount,
+they will, they're going to get, you know, discount name,
+start date, end date, you know, if it's an amount of percentage.
+And, and then they will, you know, press okay.
+And, you know, if it's percentage, it'll turn to percentage,
+and then it will look, it'll look like this.
+So they'll have, you know, our discount, so this is their discount.
+So when they are selecting, you know, treatment and price,
+they can pre-select that, like the screens I showed you before.
+When they're going through this, their pricing,
+and they've selected the price of the package,
+and then it gives them the option of amending the price here,
+it'll have discount, and they'll be able to select the discount.
+So they'll have the boxes of discounts available,
+and they'll be able to select the discount if they,
+if they choose, if it's valid,
+if it's within the date range, and so on.
+Now, going back to this, so yes, they've selected it in this case,
+they've created it, it will pop up as our discount.
+So this is their discount.
+Now, these are then special discounts that we as Hairline will do.
+So let's say we have a winter discount or whatever it is.
+And this one is, this one will be both of our fees, obviously.
+So this will be, the discount will be taken from their full price.
+And it will automatically be our fees and their fees.
+What I don't, so what I think to make it simpler,
+this will just, they won't necessarily be these.
+So it won't be Hairline fees, both fees.
+If there is a discount that is only our fees that we've done,
+for example, a special discount that we don't,
+we, you know, it's just something on top.
+What we will have here is that will show only on our platform,
+not on their platform. Okay, so.

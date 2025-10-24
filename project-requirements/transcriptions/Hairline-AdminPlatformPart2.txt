@@ -1,0 +1,493 @@
+Hello and welcome.
+So this is part two of the Hairline admin platform.
+So we've got to the general settings section.
+So I think overall,
+mostly it's not implemented to be honest here, generally speaking.
+I think as far as I understand,
+a lot of the APIs were done and so on,
+but visually it's not working.
+So I'll go through this relatively quickly
+because I think we probably have to talk more about this over time.
+But the general idea here is that we want to be able to control
+everything through the app or the provider sees,
+or all of the stuff through the settings section.
+So we want to be able to update terms and conditions,
+consent, all of these different resources.
+And then from there, we want those screens to be populated
+in certain areas in different platforms and so on.
+These are kind of important for us.
+The set process time for treatment,
+I hope we have some screens for it.
+We might not, but we do not.
+Okay, we do not.
+Okay, the idea here of this one is quite important.
+So this was, I think I mentioned before,
+that we have to have a cutoff time between like quotes.
+And you know, and where they, you know, so for example,
+if they've got a quote,
+they might have only 48 hours to respond or whatever it is.
+It might be four days to respond.
+We need to put in a number of hours or days
+or whatever they have to accept or decline it
+or whatever it is, for example.
+So that's important.
+And so this section will have that,
+whether it's, you know, when they're in an inquiry phase
+or whether they have accepted,
+but they haven't paid, for example,
+you know, that kind of stuff.
+So this is for that.
+Add resources for patient.
+This is, I think, mostly irrelevant
+because we have other sections that kind of fulfill this.
+Add resource for provider was,
+if you remember the provider section had,
+you know, a help desk, you know,
+like frequently asked questions, la, la, la, la.
+So I believe this is where, you know,
+here we'll populate there.
+Obviously having just a drag, you know,
+dragging a file into this area for patients
+or for providers won't really do much.
+We need, it needs to be more specific than this.
+And I'll explain hopefully a bit more.
+Then there's this, this is the hairline app settings.
+So with this, it's managed media.
+This is like the first one,
+like the splash page when they log in,
+we want to be able to change logo.
+We want to be able to like have a video,
+for example, dynamic video when they're logging in,
+that kind of stuff.
+So landing page, logging page, service page,
+whatever it is, these are the service pages,
+you know, like the four sections,
+the, you know, request a hair transplant,
+monitor hair loss, you know, all of these different things.
+So that's, you know, these sections.
+So, so that, so, so that's that.
+Those are, those images basically.
+But again, as I said, logo,
+all this stuff should also be included here.
+This is the managed discovery part.
+So this is the questions on the,
+this, you know, so like, how did you find us?
+You know, so we'll be able to add, you know,
+different ones to here if we want to add a new one,
+or if we want to be able to move them up and down,
+so they show up first or last.
+And again, these are screens of how to add them and so on.
+Location, location presentation by country.
+So this is why I said earlier,
+so if you add a location,
+hopefully these screens might make it a little bit easier.
+So let's say, you know,
+here I can add whatever I want.
+So let's say I add the name, you know,
+so let's say for this case, I want to do all of Europe.
+So I'll write Europe, I'll select the countries,
+and then add that.
+And then from there, I can say that,
+you know, for these countries,
+the locations that they started.
+So the first location that it gives you is Turkey.
+Second one is Poland's, third one is UK,
+whatever it is, for example.
+And you can do this as much as you want.
+So you can say, I want this only for Germany.
+So you can have as many as you want.
+So Germany only, UK only, you know, Eastern Europe,
+and maybe they all have the same thing for, you know,
+and so on.
+And this is the add location price, like I said.
+So Turkey, you would add a price,
+depending on currency again,
+because depending on the currency of,
+the location of the patient,
+they will be provided, you know,
+the pricing in their currency, for example.
+But if their location does not preset,
+then we have a fallback price for that region
+that we should have already pre-done here.
+But again, so we can add like Turkey,
+we can add different currencies that we support.
+And add the currency.
+And this will be the starting price, you know,
+that's given to a patient when they log in.
+So yeah, so that again, the naming is incorrect,
+but it's not affiliate pay,
+but this would be, for example, Turkey, you know.
+So this will be the starting price for Turkey.
+So that's the hairline app settings generally.
+I believe that's mostly it from there.
+There might be a few other things,
+but for now that's the simple stuff, the basic stuff.
+So this is the billing settings.
+So this is, you know,
+I'll go through all of this now.
+So Stripe accounts, this is quite important
+because we're going to be managing a few different countries
+and we might have different Stripe account
+depending on different country
+or different company and so on.
+So we want to be able to add Stripe accounts,
+you know, and some of them will be, you know,
+for example, you know,
+only used for patient location here
+and so on and so on,
+all different currencies and so on and so on.
+So we need to be able to add the new account.
+And then from there, this here doesn't have it,
+but here we need to be able to select
+which countries or group of countries
+this Stripe covers, basically.
+I don't think this is set up that way at the moment.
+And then from there, yeah, it's not set up that way.
+We also have a conversion rate.
+So I believe this was the,
+so we haven't done any screens for split pay,
+but split pay, I've explained hopefully a bit earlier
+that hopefully it makes sense.
+So that we just need to be able to,
+I think what we would do is just provide, you know,
+split pay in two, in three, in four, in five, in six,
+for example, all the way up to,
+I would say nine, for example,
+and then have, you know, like a cutoff date.
+So, you know,
+full payment needs to be completed before 30 days.
+For example, the cutoff date for me would be 30 days.
+And so the system will automatically work out
+how many it can offer between now
+until the day of them arriving,
+and then make sure that the payments are done in full
+30 days before,
+and then they'll be able to offer
+one of the split payments options,
+whether two or three,
+or it can offer them multiple,
+but they can pick, you know,
+maybe one of three or something like that.
+So that's that.
+Conversion rate is, this is a difficult one.
+So I'll try to explain it in a second.
+So basically here we have, this is really important.
+So basically clinics, depending where we are,
+we're going to be working in lots of places worldwide.
+We need to be able to have the best conversion rates for us
+because we're offering prices,
+usually for most of our clients,
+they're going to be at their local rate.
+So let's say I'm in the UK, I'm paying in pounds,
+but the clinic actually charges in Euro,
+or they charge in dollars or whatever that is.
+So we will have an automatic,
+we should have an API to automatically
+figure out the conversion rate.
+However, based on that,
+we need to have like, basically we can do it different ways,
+but either the conversion rate will tell us,
+you know, like it's moved, you know, over our range,
+or we set our own conversion.
+And I think in some cases
+where the currency doesn't fluctuate that much,
+we can just have it as an automated one
+and then have the option of adding an extra,
+like 5% extra, for example, just to cover any,
+because basically when you're doing,
+when you're getting conversion rates data
+from things like xe.com or any of these platforms,
+they will give you the best conversion rate
+or the current conversion rate.
+But when you actually use a bank
+or when we actually make payments and so on,
+we will never get that conversion rate
+because the banks make money on those conversion rates.
+So we need to be able to set a figure
+on top of the conversion rate.
+So for example, 5% or whatever it is, we have to work it out.
+But here is where we'd be able to edit it.
+In case, for example, there's a very, very quick,
+or, you know, rapid fluctuation
+between, you know, the clinic default currency
+and the currency that we are charging
+or the users charging,
+we need to be able to set, you know,
+so increase it by 10% or whatever it is.
+So that's something that we need to implement,
+which is quite important.
+Commission is, I don't know if this is relevant here,
+realistically speaking,
+but the idea here is that we can't,
+we want to be able to reset everyone's commission
+to a percentage, for example,
+you know, at a press of a button.
+I don't think we will ever do that, to be honest.
+I think that it won't work in our favor, to be honest.
+So this is a question mark in terms of
+if it's ever going to actually make it here, to be honest,
+but this was an idea at some point.
+Treatment settings.
+So this is where we add new treatments.
+We've spoken about this before.
+So we need to be able to add the name, descriptions,
+add images and videos, as I said before.
+The create packages bit is really separate.
+Like I said before,
+it shouldn't really be part of the treatment.
+The create packages should be separate.
+So as I mentioned before,
+I want each clinic to be able to provide
+a baseline of their treatment.
+So this is the baseline of treatment.
+And then from there, it needs to be more of like an add-on.
+So the add-on would be, the base package would be,
+you know, let's say 1,500.
+And then they will have an add-on for,
+which would be their packages, which would be hotels.
+They'll be able to pick, you know, four stars, five stars,
+all of these different things.
+So that's realistically speaking from the patient's end,
+not from the admin side,
+but we should be able to edit these if we want to, basically.
+I hope that makes sense.
+I'm sure we will, this is quite an important point.
+So we will, I'm sure, discuss this in detail
+in further meetings and so on.
+Aftercare settings.
+So this is, again, it's an interesting part,
+but so in this case, aftercare,
+we provide as a separate service, as I mentioned.
+So it will be an add-on to the treatment.
+And so we, this is where we add the price for it.
+So, you know, whatever,
+these are screens, I guess, for add currency,
+add payment option.
+So, yeah, so I guess the idea here is that we,
+once when we're offering the healthcare,
+we want to offer it in different prices.
+So here we're adding different currencies to it.
+So, you know, so in US dollars, it costs this much,
+in pounds, it costs this much and so on.
+And then we can also do as a monthly subscription.
+So let's say aftercare is for six months or for eight months,
+we can do it as a monthly fee, for example,
+instead of a fixed amount.
+I think overall it'll be, it's gonna be a fixed amount,
+but we could have the option of a monthly subscription
+or we can offer it to the patient,
+which, you know, which way they prefer also.
+If both options have been selected.
+So then this is the creation of milestones.
+Like I mentioned before, we create the milestones.
+You know, this would be, you know, the title description,
+the start and end date will be,
+in reality, how long it's for,
+it's not really a start and end date.
+So let's say the post operation phase, for example,
+might be seven days.
+So here we need to select seven days
+instead of start and end date.
+Activity checklist, I'll explain that in a second,
+but again, I'm not sure about payment types
+and all this stuff.
+So this is basically stuff that we would add
+to each milestone.
+So,
+so this is the head scan part.
+So for each milestone, we ask them to do a 3D scan.
+So, you know, once every five days,
+you know, repeat three times, you know,
+every five days, for example,
+and that would finish the milestone once every week,
+month, or whatever it is, for example.
+So this will be part of the creation of the milestone.
+I don't remember necessarily this area, to be honest,
+because it's confusing,
+because they've obviously just added it,
+but didn't amend it, but you know, add currency.
+So this is the head scan schedule.
+This is what opened up here.
+Activity checklist.
+I don't remember this.
+Again, some of the stuff is not necessarily correct,
+I guess.
+But anyway, so then you add a questionnaire.
+So the questionnaire is, you know,
+so some milestones will,
+so some of this information will be like, for example,
+does it require a questionnaire, for example,
+and then you add which questionnaire is for each milestone.
+So the questionnaire is, again, you know,
+pain questionnaire, sleep questionnaire,
+you know, different things that we will add.
+But the idea is that we will be able to,
+there's, you know, different types of questions,
+and it will ask it daily, it'll ask it, you know,
+every week, whatever it is,
+we will add these, you know,
+these questionnaires to each milestone.
+And obviously once it saves the milestone,
+it saves it, it's just,
+we can amend these at different times.
+And then going back to here.
+So yeah, so add questionnaire.
+So this will be question one, you know,
+it's a visual scale question.
+There's, you know, five options, it's daily and so on.
+So it just breaks it down.
+Then you can add another question and so on and so on.
+So this will be, this is how it'll look like,
+you know, different questions.
+And, you know, you can delete them, change them,
+add new questions and so on.
+This is for each milestone.
+Resources, this is the bit that I was saying before.
+Again, for each, it should really be within each milestone.
+The milestone should be linked to the resources.
+So once they've had the operation, for example,
+they'll have a breakdown, like a video of what you should do
+and, you know, best practice, that kind of stuff.
+And for each milestone, there'll be resources.
+So we just need to build these resources
+as part of the milestone.
+So when they're in aftercare, you know,
+they'll be able to see these different resources
+for each milestone, basically.
+So that's the general idea of these aftercare settings.
+These are the travel settings.
+Again, I don't believe.
+So just the idea was that we would use our API
+or APIs to connect flights to the app.
+And then we might, initially we want to do it free of,
+like, you know, no extra charge for us, for them,
+so they can get the best flights possible.
+But in the future,
+we might want to add a bit of a commission to that.
+So we might add, you know,
+you know, 5% extra, whatever it is, you know,
+for these flights.
+Same as the hotel, same as the...
+Transportation is a little different
+because it's not necessarily through an API,
+but both flight and hotels, you know,
+there are API or companies that offer, you know,
+booking through their APIs and stuff.
+But hotel bookings, again, we can add it, you know,
+like a percentage extra, you know, per, you know,
+not discount, but, you know,
+percentage extra per country, for example.
+Transportation, this doesn't really apply for,
+but again, it is important for hotels
+as well as flights and everything.
+This is actually for, to enable it.
+So enable, so if a patient's in the US,
+then they, you know, they will,
+we will take 10% extra, for example,
+on their booking for hotels or for flights.
+This will be the same for flights, for example.
+And we want, you know, we want to enable it,
+for example, it's enabled.
+So if they're booking from the US,
+the hotel screen will pop up once they're,
+once they're confirmed they're booking,
+we can offer them the hotels, for example,
+or we can do it through the booking itself or whatever.
+This is something that we need to figure out later on.
+Transportation is different.
+So transportation won't work this way.
+We can, we still need to activate it,
+but it won't be a percentage
+because we will most likely have to physically
+offer the service or find a partner
+to offer the service for us.
+But we will need to enable it country by country.
+Hope that makes sense.
+Notifications alert, again, this is quite important,
+but you know, this needs a lot of work from us
+to figure out what needs,
+what needs reporting or not,
+you know, for, you know, for patients, for example,
+are they getting notifications?
+They'll get notifications if a new quote comes in,
+you know, that kind of stuff.
+Messages, la, la, la, la, la.
+Yeah, quote notification, start treatment schedule,
+aftercare review, la, la, la, la.
+Travel provider.
+Again, this shouldn't be called travel settings.
+Confusing, it's notification, but,
+but again, same idea.
+At what point do they get notifications?
+Okay, and I'm sure the list,
+this will be a lot longer, to be honest, in reality.
+Email template.
+So this is a lot,
+but basically we need to be able to edit the templates
+of sign up emails, you know, like patient signed up,
+patient getting the confirmation code for, you know,
+to double check that the email is correct.
+Emails to confirm, you know, a booking
+or confirm treatment, emails to confirm payments,
+emails to confirm a new provider,
+that, you know, their detail and so on.
+You know, all of these different emails,
+we need to be able to, be able to create,
+you know, I guess create a template doesn't necessarily work,
+but, you know, we need to have all of those presets done
+and then be able to edit the wording,
+where the logo goes, all of these different things.
+So hopefully that's clear enough.
+And then this is what I was saying to you before
+about user permissions.
+We need to be able to have user permission for us,
+but also the provider needs to have that as well.
+So the idea is, you know, admin to, you know,
+like all of this stuff, they will have different functions.
+There'll also be users, for example, for aftercare.
+So there'll be people that don't do anything
+except aftercare, there'll be nurses or whatever.
+So all they have is they'll have the, you know,
+the overview of aftercare, they'll have the support,
+they'll have their own settings to change their profile
+and add pictures and all that stuff.
+So that will be a separate category, for example.
+Add roles and be able to manage
+the different permissions and so on.
+Again, it needs to be a little bit more complicated
+than this, but anyway.
+Profile dropdown, we've seen this before in the last one,
+and then the profile settings similar to what we had
+in the other section.
+So that's the provider, sorry, the admin section.
+Again, I'm sure we will be going through all of this
+in detail over time,
+but there's a lot of things that are not connected,
+things that are not working.
+Some of these are just demos,
+but I'm sure we'll be going through all of this over time
+and making sure that we get it
+as close to this end version as possible.
+And I'm sure there'll be different things that we will add
+and play around with over time.
+So hopefully this has been useful.
+Again, if you need me to do other videos
+or break down other sections,
+or if you have thoughts or ideas, just let me know.
+And I'll be more than happy to do that.
+As I said before, there will be sections
+that we'll need to dive in a little bit more
+and think about how it works as a whole,
+because it might not work very well
+with the way it was envisioned initially.
+There'll be things that we can do easier now.
+Things have come a long way
+since we started working on this.
+So just anything that you have thoughts or ideas on,
+I'm always more than happy to hear it.
+Please do reach out.
+Best of luck.
+And thank you for going through all of these videos.
+I do hope it's been helpful.
+All the best.
+Take care.

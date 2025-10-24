@@ -1,0 +1,258 @@
+Hi there, my name is Mohammed. I'm going to be going through the mobile app for Hairline.
+Now I don't have a working app, unfortunately, on the computer. So what I will be going through
+is the designs and just going through the idea of how it's meant to work. So, you know,
+when you load up, it'll load up, you know, the splash screen, and go through the landing
+page. And, you know, you'll click on Get Started, or if you have an account, you'll be prompted
+to the login page. So this is the login page, fairly standard, email, password. And then
+we go through some of these screens for authentication and reset password. For signup,
+again, nothing too complicated, name, email, confirmation of email.
+All fairly easy, hopefully. Once you've confirmed the email, it'll ask you
+date of birth, gender, phone number, location. And then, you know, how they've discovered us,
+they'll go through a list of different things. This is amendable from the Hairline app,
+the admin app. And that's it from that point of view for the signup. Once they've logged into
+the app, they'll have a, you know, the screen of themselves, I would like them to be able to
+add their own picture here. But then they'll get started with, you know, what, you know,
+what's your problem. So this, a lot of this language will be changed, this is just kind of a
+rough idea. But they'll be able to click on a Get Start button, and then they'll land on
+this screen or screen like this. So we have four different
+parts of the app, really. The Get transplant is really the only one that we've worked on.
+The rest, I will explain briefly now. So monitor hair loss, for this, they will,
+they will be presented with, you know, a lot of the screens that you'll see,
+you know, soon for get a hair transplant. But the idea here is, they'll be able to do a 3D scan
+of the head. And they'll be able to monitor it. So they can do weekly scans, monthly scans,
+whatever they like, they can set a notification to remind them every two weeks or whatever the
+optimal time is. And I want that to be relatively interactive, I do have a sample of what that
+should look like. But the idea is that they'll be able to see like a,
+like a, not a chart, but like a draggable date or timeline. And once they go through,
+they'll be able to see a picture of themselves. And because it will be in a composite 3D image,
+so they'll be able to see if the hair is getting less or more and so on. So that's,
+so that's this one. This is very similar to this, monitor your transplant progress. This,
+this is for people that haven't gone through the app, that just had a transplant, but you know,
+they discovered, you know, the app, for example, a bit later, they can do the same thing,
+they can monitor their progress and see objectively if, you know, if things are going
+good or not. Within that, we can then offer them this after, you know, after care for your
+transplant. So aftercare is, you know, will be a team based, you know, through our company
+of nurses and physicians, and they will be, they'll be able to chat to them, they'll be
+able to send the pictures, 3D scans, they'll be able to get advice, they'll be able to get
+prescriptions and so on and so on. So that's the four parts of the app. We will go through the
+hairline transplant part now. So once, you know, once they've clicked it, they'll, they'll say,
+you know, your, your, you know, your transplant is incomplete, you know, because they haven't
+yet. So, you know, continue with your request, with your request. I guess,
+uncomplete here could be in red, just to clarify that it's not, it's not, it's still pending.
+But once they've started the, the, the, the, the request, or, you know, they're looking for a
+quote here. So they'll, you know, this will be the start, you know, choose your destination.
+I think I mentioned that in the overview, they'll be able to, you know, they'll get a list of,
+countries that we, that we work with, and we will have a, a starting from, again, this will be,
+we can add these prices manually from the, from the admin section, the admin platform. But the
+idea is just to get, give them a rough idea of how much it will cost in each, in each country.
+Now, this, this list will, will vary depending on the location of the patient.
+And this is also amendable from the admin section. So, for UK, they will get, you know,
+for example, Turkey first, UK next, they might get Poland, they might get, it just depends on,
+we will be working that out depending on what's the most, you know, what's the most common
+destinations and so on. So once they've clicked that, they will, this will be the, you know,
+the confirmation screen for countries. They will need to move on to the next part, which is,
+you know, which, what, what do they want? A transplanted hair, beard, or both?
+They will select, for example, hair and move on to there. So now you get a,
+a relatively detailed
+information on, you know, on their hair concern.
+This is the way we've done it at the moment. I, I appreciate that it might,
+some of this might be a little bit too much and maybe we will change,
+change how we do this, because ultimately we want this to be as easy as possible for the patient.
+And so maybe we will do the scan first, for example, I don't know. We will need to think
+about this. There's also a possibility of doing this through AI. So we have a, a talking,
+you know, like a video talking to them saying, you know, what's your concern? And they'll speak
+to it or type, speak, or, you know, record themselves. And, you know, we can go through
+all these questions and then, and then extract the information later. So let's say we've done
+this. Now they've gone through the, the head scan. They've completed the head scan. The next part is
+to schedule the treatment. So for this, they can add a few treatment dates that they, that they're
+free in. So for example, they're free next week, but they're also free in three months time. So
+they can do two date ranges. For this, they will select a wide, a relatively wide date range. So
+let's say they're available for a full week. So the provider will then be able to give them a
+quote based on that week. But they can, for example, choose from the Tuesday to the Sunday,
+not from the Monday to the Sunday, for example. The procedure on average takes for around four
+days, or if you're traveling, so you're traveling there first day, there's, you know, there's a
+consultation, for example, the next day, they'll start on the treatment. The third day, typically,
+they'll do like aftercare and so on. And usually you travel on that last day. In some cases,
+they might be, they might have quite a lot of transplant, a lot of work to be done. So it might
+be the transplant itself might carry on for two days, it might be four days and so on.
+So based on that, the provider will select that, you know, this is, you know, the day one is going
+to be this, day one, day two is going to be like this, and so on. So the whole process is four days
+or whatever. Now here, I would like also to, you know, to have the flight API pick up what's the
+average cost of those flights, or, you know, we can maybe do average or cheapest cost or whatever
+it is for those flights, you know, you know, there and back, for example. So if they've selected two
+or three different dates, they might say, oh, actually, this one is too expensive,
+the flights are 500 pounds instead of 220, because of school holidays or something along those lines.
+So that's a, that's something that, you know, needs to be implemented. So once they've selected
+the dates that they want, we move on to the medical questionnaire. So this is quite important,
+because there are certain things that will make mean that this procedure is not safe and so on.
+And I feel like, you know, we need to obviously be, you know, relatively safe, we don't want to be
+flying patients to clinics and perform treatments on them when they're not, you know, we haven't
+covered ourselves and so on. So this one can be quite long. So there's quite a lot of questions
+here, yes or no. Again, maybe we can do this a little bit quicker, but I feel like sometimes
+it's easy to read and press yes or no, and so on. But either way, that's the idea of the medical
+questionnaire.
+Medication, do you have any medication regularly? You know, then you write details if you've got
+medication, and then it's a summary of everything. You can, you know, view your 3D scan, you can see
+the date ranges that you've picked, and the questionnaire that you filled out. And then
+once you've requested a quote, it moves on to, it sends it to your, to practitioners.
+Would you like to request a quote from some of our popular providers? This is a list that I think
+we need to have a bit of control over also. But we can give them like a list of providers, they can,
+or we can do it through reviews or whatever. But again, they can click on them and select
+multiple ones and send, you know, specific requests to those providers.
+And so, this is the, you know, get transplant screens. This is the monitor your hair transplant,
+aftercare, and monitor hair loss. None of these have, you know, we don't have screens for them
+yet, but that's the, you know, that's the idea that I spoke to you, that I mentioned earlier.
+You know, from, from this, from this screen. Okay, so that's the quote part. Once they've
+submitted the quote, they'll have, you know, they'll be able to go back to the dashboard,
+they'll see, you know, that they requested, they'll see the details, and so on. They'll
+be able to see notifications once quotations have come through, and so on. Now, let's say they've
+got some quotations, and they'll see that they've got, you know, four offers, for example, in this
+case, they can view the offer. So, in this case, they'll see, you know, that these are four offers
+for the time period that they've, that they've given, and the price that they,
+the total price for the treatment. Then the next screens are just a breakdown of what it looks like,
+you know, in terms of accepting the offer. This is the travel package, which you'll see in later
+screens here. So, once they've, you know, once they've, you know, if they want to see more
+details, basically, they'll be able to see what's been offered, you know, so that they'll, we will
+make quite a lot of informative videos on each procedure, because they might offer them
+this type of hair transplant, there's lots of types of transplants. So, depending on what
+they've been offered, we will have a very, you know, high quality video for them to understand
+what the procedure is, and, you know, what's going to happen, and so on. And this is just
+some details, again, on the offer. So, again, you have the travel
+options. So, here, depending on the travel options,
+the price will vary. So, you can scroll basically through and see,
+you know, like, you know, travel option one, travel option two, there might be,
+you know, four star versus five star, they might include, you know, hotel pickup versus
+no hotel pickup, and so on and so on. So, this is these travel, these packages will be given by
+the clinic themselves for, you know, so the clinical hospital will offer these packages,
+and so on. Once we start offering these ourselves, you know, flights, transportation,
+or accommodation, we won't really offer it here, or we will offer it. But it won't be part of,
+it won't be part of the provider, it'll just be us. So, they'll have different ones,
+and they'll increase the price depending on which package they choose. At launch, we're going to,
+for travel, we're going to rely completely on the provider. But hopefully, down the line,
+we will be including the travel packages ourselves. So, now, moving down to this,
+this will be, you know, the estimated number of grafts, or how many actual hairs that are going
+to be implanted, this number will vary between 500, all the way to 8,000, 10,000, and so on.
+So, the more hair, the more grafts that you're getting, the longer the procedure is, the more
+cost usually it is. And then these are, you know, little things about what's included in the,
+you know, the medical part of the, of the treatment. They can, if they have questions,
+they can click on chat and chat to us directly. I did want them to have the option of speaking
+directly to, speaking directly to the provider for questions, but I'm not sure at the end if
+that's what we decided or not. It might show up again at the bottom, we'll see. But again, here,
+then there's information in terms of, you know, the arrival window when they need to, you know,
+to arrive for their flight, which airports they need to arrive in. And then this should be a
+takeoff, really, takeoff from Istanbul, you know, date, earliest departure will be, and so on,
+and so on. Then there'll be a cancellation policy, you can see the details,
+privacy commitment, terms and conditions, hopefully all fairly standard for me.
+The other thing that I wanted was this, I wanted the price to be a little bit more obvious,
+so not just here. So I wanted it to, to be, to hover, basically, as you go down,
+you can see the price, and you can accept and so on and so on. Once they've accepted,
+you can apply discount code. So this will work for if you've come through an affiliate,
+you might have a discount, for example, or if you've seen an advert and you have a discount
+code, you can apply a discount here. On the cost, it will have a breakdown of how much the clinic is
+getting. In our ideal term, really, we need to break it down to clinic accommodation, for example,
+and then aftercare. So aftercare is our fee. But we would need to break down, you know, I guess,
+you know, I guess this will, we can work on, but the idea is to have a bit of a better breakdown
+of what the fees are. And then when there is a discount, we need to show, you know,
+how it's been discounted, for example. For example, here, but you know, which,
+you know, which part, because sometimes the discount is only from the transplant costs,
+not everything else, for example, like, you know, it's not the accommodation and so on and so on.
+So we just need to break down where the discount is and so on. And that's it for the accepting part
+of the procedure, I believe. If you, if you click on the provider themselves, so here,
+or where was it? There should be an area here where you can see more information about the
+provider themselves. I'm not sure where that is. Okay, but we'll get back to it. So they'll be
+able to get an overview of the provider. I think we did this a little later on, actually.
+But I think it should be included in these screens as well. I'll explain, you know,
+I'll come back to it in a second. But you'll be able to see the provider, you know,
+you know, the staff, the certifications, awards, all of these different things,
+reviews, which are quite important for us. I think there's a few things that might not have
+been added yet. You know, we, in terms of the design, I guess we will work through these together.
+And yeah, so I think if you can, if you click on this, you'll get the video, you'll also get
+like a text of what the procedure involves, and so on and so on. That's it here. I didn't
+miss anything here. Yep. And then if you've accepted it, if you accepted the transplant,
+the other thing here, just to go back, sorry, we do need to have a time frame of when,
+how long this offer lasts, because the prices do change and so on. So we can't,
+someone can't accept it, you know, the day before, for example, and so on. So
+there usually will be like a, you know, 48 hours or whatever period of time where the offer
+is valid. So there needs to be an indication of how long the offer is. And again, it should be
+repeated here. But once you've accepted the offer, it will then, there's two options, either we have
+a auto-accept. So I think that majority of these will be auto-accept. So once you've had the
+offer, it will auto-accept and these screens will really be irrelevant in essence. But
+so these screens just indicate that you've accepted, but we're waiting, you're waiting
+for the provider then to accept, you know, to accept it in. But the way I wanted it really is,
+and the way that the provider accepts in their platform, which I'll go through in a bit,
+is they will select, you know, so they've given you a time timeline, let's say from the 20th to
+the 25th, but then they select the actual time. So they select 9am on the 20th is the first
+appointment, for example, and then that accepts, they accept the, you know, this patient basically.
+But what I want them to do is pre-select the appointment already from the beginning.
+So once this, the patient has accepted, it's pre-approved automatically. And then we move
+on to the next page straight away, which is basically it's scheduled, but they need to then
+confirm payment. Again, these are the confirmation screens so that it's now been scheduled.
+And they will, they'll have, you know, a detail of what's going to happen on day one to day five,
+whatever it is, the location and so on and so on. And then they'll have a payment screen,
+you know, to pay by, we're using Stripe generally, but we might have other options in the future and
+so on, but just a standard, you know, pay screen. The only thing to say about pay here is,
+depending on where the patient is located, we will have different payment options. So
+we will accept sterling pounds if they're in the UK, euro if they're in Europe,
+dollar if they're in America, and so on. So there'll be a few countries,
+maybe six or seven that we will accept local payments. And for the rest, we will, you know,
+they will be defaulted into dollar or I'm not sure exactly, depending on the region. In the
+admin section, all of that is, you know, is pre-selected. So you select which country
+or which region. So, you know, you can say, you can create a region of Europe, for example, then,
+you know, add 28 countries that will all be in euro, for example, and so on.
+So that's the scheduled. And then this is the confirmed. So they've already made payment.
+They've got the confirmation. And in here, we need to give them the options of book hotel,
+book flights, if they weren't included in the package, for example,
+and then input their passport details. This is for, this is if the provider, for example, is
+is booking their hotels or even booking their flights, they'll need their passports to do
+to do these bookings. So they'll click on the screens and be able to, you know,
+provide a scanned picture of their passports and so on.
+So now this is in progress. I'm just trying to see if there's another screen that I missed before.
+No, I don't think so. Okay, so, so this is in progress. So now this is a patient that's,
+you know, they've got all the details, they've got the flight is booked, and they can see it
+through here. They see what the provider and all, you know, kind of all the details like them,
+we mentioned before. Okay, that's just a different frame. And then this is the aftercare screen. So
+once they've had the procedure and everything, they've moved on to that aftercare screen. So
+this is, you know, they'll have some milestones, you know, we'll break down different milestones
+from the airline admin app. But they'll know which, you know, where they're, you know, which
+milestones they're on. They'll be able to see, they'll be able to chat to the support team if
+they need, they'll be able to do these scans regularly, so they can have a, you know, we'll
+have a basically a collection of how their progress is going, they'll be able to, you know,
+depending on the milestones, especially after surgery, they'll be able to say,
+this is not correct, obviously, like, this is pain, and then night, sleep, and so on. So there'll
+be a sleep assessment, there'll be a pain level assessment. So this is, you know, pain, this should
+be sleep, sleep well, so this should be sleep, not pain. And then there'll be different questions,
+you know, this all depends on the settings that we have for each milestone. So for each
+milestone, we have, for example, one milestone, they'll be asked a set of questions every two
+days. Some milestones, they'll be asked questions every month, or every few weeks, and so on.
+So this will be, you know, the questions, they'll be able to answer it, and so on.
+And then they'll have instructions in terms of, you know, the, you know, the first few days,
+they're taking antibiotics, this, you know, after that, they now have to take these supporting
+medications, and so on. So they'll be able to see all of this. And within that, there'll be like,
+helpful guides of, you know, how to take it, how to wash your hair, and all these different things.
+So that's the, you know, the screens for aftercare. These are the screens for reviews,
+leaving reviews. I do want the reviews to be a little interactive. So you, if they opt to,
+they'll have, you know, the 3D scan of before and after. So there's like an interactive
+progress of, you know, the, you know, how they were, you know, before the scan,
+and before the procedure. And then, you know, it will, you know, sort of build up over,
+you know, how many times they do these scans. So you'll see the progress, and the before and
+after will add up to that. Again, this doesn't have to be all, you know, from the, from launch,
+but this is, you know, kind of the idea that we wanted to do. So this is a screens for profiles,
+again, relatively standard, hopefully nothing too complicated. This is the review section
+for the clinic. Yes. Okay, so this part is, this is quite important. So this, this is
+what I was saying, I, you know, I was sure that we did some screens.
+So this is supposed to be at the bottom of here. So, so you, the, you're getting this graph
+estimate, you're getting the, you know, information for your, before your procedure and so on.
+And then we need to have, before the cancellation process and all that stuff, you have the
+information about the clinic. So this, you know, they'll have the reviews for the clinics with,
+you know, the, the, just like this, basically, you'll be able to scroll through them.
+You'll be able to see all the reviews, you have this section about the, the, the, the clinic or
+hospital, you'll be able to click on it and have more information. You'll see the specialist that
+will, will be doing your, your procedure. And then you can message them directly, you can,
+you know, if you've got certain questions or worries, you can message them now. The idea here
+is that we will monitor all conversations. So all, all communication that's happening in the app,
+we, you know, on the admin side, we need to be able to see it for safety reasons, number one,
+but number two, also, we need to be able to monitor if, if, if any providers are, you know,
+providing treatments outside the app, or asking them to book with them directly,
+that kind of stuff, just to be able to monitor these things. So this is the, that section,
+you can see that there's a few different things that, you know, I guess, when, let me just do,
+I'm just going to click okay.
