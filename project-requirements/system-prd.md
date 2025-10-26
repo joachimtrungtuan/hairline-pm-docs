@@ -408,24 +408,32 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-003: Inquiry Submission & Distribution
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-02: Quote Request & Management
+**Module(s)**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 
 **Requirements**:
 
-- Patients MUST be able to select multiple countries/cities for treatment
+- Patients MUST be able to select multiple countries/cities for treatment (max 10 countries)
 - Patients MUST specify budget range (min-max in preferred currency)
-- Patients MUST indicate preferred treatment dates (range)
-- System MUST distribute inquiry to all providers in selected locations
+- Patients MUST indicate preferred treatment dates (max 10 date ranges, up to 2 years in future)
+- Patients MUST select preferred providers (max 5 providers) based on reviews and admin curation
+- System MUST distribute inquiry to providers in selected locations OR explicitly selected by patient
 - System MUST limit inquiry distribution to maximum 10 providers
 - Providers MUST receive inquiry notification within 5 minutes
 - System MUST track inquiry expiration (72 hours for quote submission)
 - System MUST allow patients to close/cancel inquiry before receiving quotes
+- System MUST support secondary service options: Monitor Hair Loss, Aftercare services
+- System MUST generate unique inquiry IDs in HPID format (HPID + YY + MM + 4-digit sequence)
 
 **Business Rules**:
 
-- Inquiry MUST include: patient scan, medical history, preferences, budget
+- Inquiry MUST include: patient scan, medical history, preferences, budget, provider preferences
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
-- System MUST filter providers by: location, active status, available capacity
+- System MUST filter providers by: location, active status, available capacity, patient explicit selection
+- Provider suggestions MUST be based on: positive reviews, admin curation
+- Patient names MUST be partially masked until quote acceptance
+- Medical alerts MUST be color-coded: red (critical), yellow (standard), green (no alerts)
+- Date ranges MUST display primary range prominently with tooltip for additional ranges
+- Time display MUST use relative format for recent inquiries, specific format for older ones
 
 ---
 
@@ -1192,6 +1200,43 @@ Total Quote:                           £3,000
 3. **Scalability**: When platform offers direct travel booking, provider packages can be disabled without affecting treatments
 4. **Clarity**: Patients understand core procedure vs optional add-ons
 5. **Future-Proof**: Easy transition from provider-managed to platform-managed services
+
+---
+
+### FR-025: Medical Questionnaire Management
+
+**Priority**: P1 (MVP)  
+**Module(s)**: A-09: System Settings & Configuration
+
+**Requirements**:
+
+- **Centralized Question Management**: Admin MUST be able to add, edit, remove, and reorder medical questionnaire questions
+- **Question Content**: Each question MUST have: question text, question type (Yes/No), detailed explanation prompt for "Yes" answers
+- **Severity Flagging**: Each question MUST have a severity flag (Critical/Standard/No Alert)
+- **Alert System**: When patient answers "Yes" to Critical questions → inquiry flagged with red alerts
+- **Alert System**: When patient answers "Yes" to Standard questions → inquiry flagged with yellow/amber alerts  
+- **Alert System**: When patient answers "No" to all questions → inquiry flagged with green (no alerts)
+- **Question Grouping**: Admin MUST be able to organize questions into categories (Allergies, Cardiovascular, etc.)
+- **Version Control**: System MUST track questionnaire changes with timestamps and admin identification
+- **Question Validation**: System MUST validate question completeness before activation
+- **Questionnaire Preview**: Admin MUST be able to preview questionnaire as patients will see it
+- **Bulk Operations**: Admin MUST be able to import/export questionnaire templates
+- **Question Templates**: System MUST provide pre-built question templates for common medical conditions
+
+**Question Examples**:
+
+- **Critical Questions**: HIV/AIDS, Hepatitis B/C, Blood disorders, Heart conditions
+- **Standard Questions**: Allergies, Medications, Previous surgeries, Chronic conditions
+- **No Alert Questions**: General health status, Lifestyle factors
+
+**Admin Interface Requirements**:
+
+- Question list with drag-and-drop reordering
+- Question editor with rich text support
+- Severity flag assignment (dropdown)
+- Category management
+- Preview mode
+- Change history and audit trail
 
 ---
 

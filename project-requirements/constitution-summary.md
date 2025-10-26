@@ -280,6 +280,44 @@ The constitution addresses several gaps not explicitly detailed in the original 
 local-docs/project-requirements/
 ```
 
+### PRD Standards & Requirements (NON-NEGOTIABLE)
+
+All Product Requirements Documents (PRDs) MUST follow the comprehensive structure and quality standards established by the verified FR-011 Aftercare & Recovery Management PRD (`modules/fr011-aftercare-recovery-management/prd.md`).
+
+**Mandatory PRD Structure**:
+
+1. **Header Information**: Module codes, feature branch, creation date, status, source reference
+2. **Executive Summary**: Module purpose, scope, multi-tenant implications, entry points
+3. **Module Scope**: Multi-tenant breakdown, communication structure, entry points
+4. **Business Workflows**: Main flows, alternative flows (A1, A2, B1, B2), actors, triggers, outcomes
+5. **Screen Specifications**: Purpose, data fields, business rules, implementation notes
+6. **Business Rules**: General rules, data/privacy rules, admin editability, payment/billing
+7. **Success Criteria**: Patient, provider, admin, system, and business metrics
+8. **Dependencies**: Internal, external, and data dependencies
+9. **Assumptions**: User behavior, technology, and business process assumptions
+10. **Implementation Notes**: Technical considerations, integration points, scalability, security
+
+**Quality Standards**:
+
+- **Completeness**: All sections fully populated (no placeholders)
+- **Consistency**: Aligns with system-prd.md and constitution principles
+- **Traceability**: References source FR and module codes
+- **Verification**: Cross-checked against client transcriptions
+- **Status Management**: Progresses from "Draft" → "✅ Verified & Approved"
+- **Admin Editability**: Explicitly addresses admin override capabilities
+- **Multi-Tenant**: Clearly defines involved tenants/platforms
+- **Communication Structure**: Explicitly states in/out of scope features
+
+**Verification Process**:
+
+1. Transcription Cross-Check against original client requirements
+2. Consistency Check with system-prd.md and constitution principles
+3. Completeness Review of all mandatory sections
+4. Stakeholder Approval and confirmation as OK
+5. Status Update to "✅ Verified & Approved"
+
+**Template Reference**: Use `modules/fr011-aftercare-recovery-management/prd.md` as the definitive template for all future module PRDs.
+
 ### Current Structure (System-Level Documentation)
 
 ```markdown
@@ -315,22 +353,22 @@ local-docs/project-requirements/
 │   └── user-flows/             # User journey maps, wireframes, UX specs
 ├── api-specs/                  # Shared API specifications (OpenAPI/Swagger)
 ├── security/                   # Security assessments, compliance, audit reports
-└── modules/                    # Each module's complete documentation
-    ├── patient-auth/           # Example module
+└── functional-requirements/   # Each FR's complete documentation
+    ├── fr001-patient-auth/    # Example FR
     │   ├── prd.md              # Product Requirements Document
     │   ├── technical-spec.md   # Detailed technical specifications
-    │   ├── api-contracts.md    # Module-specific API contracts
+    │   ├── api-contracts.md    # FR-specific API contracts
     │   └── testing-plan.md     # Test cases and coverage plans
-    ├── patient-quotes/
-    ├── provider-inquiries/
-    └── [module-name]/          # Repeat for each module
+    ├── fr002-medical-history/
+    ├── fr003-inquiry-submission/
+    └── [fr-code-name]/        # Repeat for each FR
 ```
 
 **Key Principles**:
 
 - **System-level first**: Start with comprehensive system documentation before breaking into modules
 - **Update logs**: All documentation changes tracked in `update-logs/` for audit trail
-- **Module folders**: Each module contains ALL its documentation in one place (when created)
+- **FR folders**: Each functional requirement contains ALL its documentation in one place (when created)
 - **Shared resources**: API specs and security docs centralized for cross-module reference
 
 This structure scales cleanly as modules are added while maintaining system-level coherence.

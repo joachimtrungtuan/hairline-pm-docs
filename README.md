@@ -20,6 +20,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 
 - **Database Design**: [`project-requirements/system-data-schema.md`](project-requirements/system-data-schema.md)
 - **Module Mapping**: Each FR in `system-prd.md` includes module codes (P-01, PR-01, A-01, S-01)
+- **Functional Requirements**: Individual PRDs in `functional-requirements/` folder
 - **Update History**: [`project-requirements/update-logs/`](project-requirements/update-logs/) for change tracking
 
 ## 📁 Documentation Structure
