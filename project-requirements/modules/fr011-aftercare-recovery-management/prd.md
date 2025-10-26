@@ -18,6 +18,17 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **Provider Platform (PR-05)**: Aftercare Participation (optional)
 - **Admin Platform (A-03)**: Aftercare Team Management
 
+### Communication Structure
+
+**Note**: Direct patient-provider chat functionality is currently **not in scope** for V1 and has been moved to the backlog. Communication within the aftercare module is structured through:
+
+- **Patient ↔ Aftercare Team**: Direct communication through structured messaging, questionnaires, and 3D scan submissions
+- **Provider ↔ Aftercare Team**: Communication regarding patient cases and escalations
+- **Admin ↔ All Parties**: Admin can monitor all communications and intervene as needed
+- **Structured Updates**: Progress updates, milestone notifications, and system-generated alerts
+
+If direct patient-provider chat is implemented in the future, it would be handled through a separate FR (FR-012: Messaging & Communication).
+
 ### Entry Points
 
 1. **Treatment-Linked Aftercare**: Automatic activation after Hairline platform treatment completion
@@ -188,12 +199,21 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Alternative Flows**:
 
-- **D1**: Provider performance issues
+- **D1**: Provider withdraws from aftercare
+  - Provider notifies admin of inability/unwillingness to continue aftercare for a patient
+  - Admin receives notification and reviews the case
+  - Admin can either:
+    - Reassign the case to another suitable provider
+    - Assign the case to the Hairline internal aftercare team
+    - Mark the aftercare as cancelled (with reason)
+  - All changes are logged, and the patient is notified of the new arrangement or cancellation
+
+- **D2**: Provider performance issues
   - Admin identifies underperforming providers
   - Admin reassigns cases to better-performing providers
   - Admin provides feedback to provider
 
-- **D2**: System-wide aftercare issues
+- **D3**: System-wide aftercare issues
   - Admin identifies patterns in patient complaints
   - Admin updates templates or processes
   - Admin communicates changes to all providers
@@ -361,7 +381,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - **Table Headers** (sortable with up/down arrows):
   - **Patient ID**: Unique identifier (e.g., HPID2509-0001)
-  - **Patient Name**: Avatar icon + anonymized name + email (e.g., "Aylin K***", "@gmail.com")
+  - **Patient Name**: Avatar icon + full patient name + email (e.g., "Aylin Kaya", "@gmail.com")
   - **Phone Number**: Contact number
   - **Age**: Patient age
   - **Problem**: Treatment area (Hair, Both, Beard)
@@ -386,35 +406,36 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 **Business Rules**:
 
 - Only shows patients assigned to this provider
-- Urgent cases highlighted at top with red indicators
 - Overdue cases shown with amber indicators
-- Patient names revealed only after payment confirmation
+- Patient names are fully visible as aftercare occurs post-payment confirmation
 - Progress calculated automatically by system
 - All data editable by admin (admin override capability)
 
 #### Screen 7: Patient Aftercare Details
 
-**Purpose**: Provider views detailed patient aftercare progress
+**Purpose**: Provider views comprehensive patient aftercare progress with full historical context
 
 **Data Fields**:
 
 - **Patient Information**
-  - Patient ID and treatment details
+  - Patient ID and treatment details (if Hairline-treated patient)
   - Aftercare start date and duration
   - Assigned aftercare template
   - Provider's custom instructions
+  - **Note**: For standalone aftercare patients, treatment details will show "N/A" or be blank
 
 - **Progress Overview**
   - Current milestone and phase
-  - Overall progress percentage
+  - Overall progress percentage (auto-calculated)
   - Milestone completion timeline
   - Upcoming tasks
 
-- **Activity History**
+- **Activity History** (Chronological, Additive)
   - 3D scan uploads with dates and quality scores
   - Questionnaire responses with timestamps
   - Medication adherence history
   - Communication log with aftercare team
+  - **Data Persistence**: All historical data retained, new data added without removing old data
 
 - **Actions**
   - "Adjust Aftercare Plan" button
@@ -424,7 +445,11 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Business Rules**:
 
-- Full patient details visible only after payment confirmation
+- **Data Persistence**: Screen displays all historical data from patient's entire journey (inquiry → treatment → aftercare) without removing older data, providing complete context
+- **Dual Case Handling**:
+  - **Hairline-treated patients**: Shows complete lifecycle data including pre-treatment inquiry, quote, treatment details, and aftercare
+  - **Standalone aftercare patients**: Shows only aftercare-specific data with initial intake information provided during standalone request
+- Full patient details visible as aftercare occurs post-payment confirmation
 - All activities logged with timestamps
 - Provider can modify plan only for their assigned patients
 - Escalation creates audit trail
@@ -529,6 +554,51 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Patient notified of approved changes
 - Change history maintained for audit trail
 
+#### Screen 9: Aftercare Progress Tracking (Provider View)
+
+**Purpose**: Provider monitors ongoing aftercare progress for assigned patients
+
+**Data Fields**:
+
+- **Patient Progress Overview**
+  - Patient name and current milestone
+  - Overall progress percentage (auto-calculated)
+  - Days remaining in current milestone
+  - Next upcoming tasks
+
+- **Milestone Timeline**
+  - Visual timeline of all milestones
+  - Completed milestones (green)
+  - Current milestone (blue)
+  - Upcoming milestones (gray)
+  - Overdue tasks (red indicators)
+
+- **Task Completion Status**
+  - 3D scans: Completed/Pending/Overdue with dates
+  - Questionnaires: Completed/Pending/Overdue with dates
+  - Medication adherence: Percentage and missed doses
+  - Activity compliance: Adherence to restrictions
+
+- **Patient Activity Feed**
+  - Recent 3D scan uploads
+  - Questionnaire completions
+  - Medication adherence updates
+  - Communication interactions
+
+- **Quick Actions**
+  - "Request Additional Scan" button
+  - "Send Message to Patient" button
+  - "Schedule Consultation" button
+  - "Escalate Case" button
+
+**Business Rules**:
+
+- Progress calculated automatically by system
+- Provider can only view assigned patients
+- Real-time updates when patient completes tasks
+- Overdue tasks highlighted prominently
+- All actions logged for audit trail
+
 ### Admin Platform Screens
 
 #### Screen 10: Aftercare Cases List
@@ -539,7 +609,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - **Table Headers** (sortable with up/down arrows):
   - **Case ID**: Unique identifier (e.g., AC2509-0001)
-  - **Patient Name**: Avatar icon + anonymized name + email
+  - **Patient Name**: Avatar icon + full patient name + email
   - **Phone Number**: Contact number
   - **Age**: Patient age
   - **Problem**: Treatment area (Hair, Both, Beard)
@@ -550,7 +620,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
   - **Current Milestone**: Current phase name
   - **Progress**: Visual progress bar
   - **Med Alerts**: Color-coded status (Critical-red, Standard-yellow, None-green)
-  - **Status**: Active, Overdue, Urgent, Completed
+  - **Status**: Active, Overdue, Completed
   - **Action**: Ellipsis menu (View, Edit, Reassign, Escalate)
 
 - **Search and Filter Controls**:
@@ -568,7 +638,6 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - Shows all aftercare cases across all providers
 - Admin can edit any case data (full editability)
-- Urgent cases highlighted at top with red indicators
 - Overdue cases shown with amber indicators
 - Progress calculated automatically by system
 - All actions logged for audit trail
@@ -724,52 +793,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Provider suspension requires admin approval
 - All performance data retained for 2 years
 
-#### Screen 15: Aftercare Progress Tracking (Provider View)
-
-**Purpose**: Provider monitors ongoing aftercare progress for assigned patients
-
-**Data Fields**:
-
-- **Patient Progress Overview**
-  - Patient name and current milestone
-  - Overall progress percentage (auto-calculated)
-  - Days remaining in current milestone
-  - Next upcoming tasks
-
-- **Milestone Timeline**
-  - Visual timeline of all milestones
-  - Completed milestones (green)
-  - Current milestone (blue)
-  - Upcoming milestones (gray)
-  - Overdue tasks (red indicators)
-
-- **Task Completion Status**
-  - 3D scans: Completed/Pending/Overdue with dates
-  - Questionnaires: Completed/Pending/Overdue with dates
-  - Medication adherence: Percentage and missed doses
-  - Activity compliance: Adherence to restrictions
-
-- **Patient Activity Feed**
-  - Recent 3D scan uploads
-  - Questionnaire completions
-  - Medication adherence updates
-  - Communication interactions
-
-- **Quick Actions**
-  - "Request Additional Scan" button
-  - "Send Message to Patient" button
-  - "Schedule Consultation" button
-  - "Escalate Case" button
-
-**Business Rules**:
-
-- Progress calculated automatically by system
-- Provider can only view assigned patients
-- Real-time updates when patient completes tasks
-- Overdue tasks highlighted prominently
-- All actions logged for audit trail
-
-#### Screen 16: Aftercare Progress Tracking (Admin View)
+#### Screen 15: Aftercare Progress Tracking (Admin View)
 
 **Purpose**: Admin monitors all aftercare progress across all providers
 
