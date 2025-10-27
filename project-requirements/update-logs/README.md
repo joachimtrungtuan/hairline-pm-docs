@@ -108,6 +108,34 @@ This folder contains documentation update reports and verification logs for the 
 - **Testing Requirements**: Unit, integration, end-to-end tests
 - **Implementation Timeline**: 3-4 weeks (2 developers)
 
+### CROSS_REFERENCE_UPDATES_2025-10-27.md
+
+**Cross-reference consistency updates** and FR order correction.
+
+**Contents**:
+
+- Fixed folder structure references (`modules/` → `functional-requirements/`)
+- Updated FR count from 24 to 25 in README.md
+- Corrected FR order in system-prd.md (moved FR-024 and FR-025 to correct positions)
+- Updated constitution documents with correct folder references
+- Comprehensive verification of all cross-references
+- Process improvements for future documentation updates
+
+### FR025_PRD_CREATION_2025-10-27.md
+
+**FR-025 Medical Questionnaire Management PRD creation** and approval process.
+
+**Contents**:
+
+- Complete PRD creation following constitution standards
+- Business workflows for admin questionnaire management
+- Screen specifications for admin platform
+- Integration with FR-003 inquiry process
+- User feedback integration and approval process
+- Bulk import functionality removal (per user request)
+- Quality assurance and verification results
+- Technical implementation notes and dependencies
+
 ---
 
 ## Purpose
@@ -133,4 +161,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: October 23, 2025
+**Last Updated**: October 27, 2025
