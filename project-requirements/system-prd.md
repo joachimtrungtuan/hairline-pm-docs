@@ -1122,6 +1122,71 @@ The Hairline Platform consists of four distinct applications serving different u
 
 ---
 
+### FR-020: Notifications & Alerts
+
+**Priority**: P1 (MVP)  
+**Module(s)**: S-03: Notification Service
+
+**Requirements**:
+
+- System MUST send email notifications for key events
+- System MUST send push notifications to mobile app
+- System MUST send SMS notifications for urgent events (optional, configurable)
+- Patients and providers MUST be able to configure notification preferences
+- System MUST support notification types: inquiry received, quote submitted, booking confirmed, payment received, message received, appointment reminder, aftercare milestone
+- System MUST throttle notifications to prevent spam
+- System MUST track notification delivery status
+
+---
+
+### FR-021: Multi-Language & Localization
+
+**Priority**: P2 (Enhanced)  
+**Module(s)**: A-09: System Settings & Configuration | S-02: Payment Processing Service
+
+**Requirements**:
+
+- System MUST support multiple languages (English, Turkish initially, expandable)
+- Patients and providers MUST be able to select preferred language
+- System MUST translate UI elements, emails, and push notifications
+- System MUST support RTL languages (future: Arabic)
+- System MUST display dates and times in user's timezone
+- System MUST support local currency display with conversion
+
+---
+
+### FR-022: Search & Filtering
+
+**Priority**: P2 (Enhanced)  
+**Module(s)**: P-02: Quote Request & Management | A-02: Provider Management & Onboarding
+
+**Requirements**:
+
+- Patients MUST be able to search providers by location, rating, price range
+- Patients MUST be able to filter providers by credentials, years of experience, procedures performed
+- Admins MUST be able to search patients, providers, transactions, inquiries
+- System MUST provide autocomplete for location searches
+- System MUST support advanced filtering with multiple criteria
+
+---
+
+### FR-023: Data Retention & Compliance
+
+**Priority**: P1 (MVP)  
+**Module(s)**: A-09: System Settings & Configuration (Cross-Cutting Concern)
+
+**Requirements**:
+
+- System MUST retain patient medical records for minimum 7 years (healthcare compliance)
+- System MUST retain financial transaction records for minimum 7 years (tax/audit compliance)
+- System MUST support soft-deletes only (no hard deletion of critical data)
+- System MUST anonymize patient data in analytics and reports
+- System MUST provide data export functionality for GDPR compliance
+- System MUST allow patients to request data deletion (GDPR right to be forgotten)
+- System MUST maintain audit logs for all data access and modifications
+
+---
+
 ### FR-024: Treatment & Package Management
 
 **Priority**: P1 (MVP)  
@@ -1237,71 +1302,6 @@ Total Quote:                           £3,000
 - Category management
 - Preview mode
 - Change history and audit trail
-
----
-
-### FR-020: Notifications & Alerts
-
-**Priority**: P1 (MVP)  
-**Module(s)**: S-03: Notification Service
-
-**Requirements**:
-
-- System MUST send email notifications for key events
-- System MUST send push notifications to mobile app
-- System MUST send SMS notifications for urgent events (optional, configurable)
-- Patients and providers MUST be able to configure notification preferences
-- System MUST support notification types: inquiry received, quote submitted, booking confirmed, payment received, message received, appointment reminder, aftercare milestone
-- System MUST throttle notifications to prevent spam
-- System MUST track notification delivery status
-
----
-
-### FR-021: Multi-Language & Localization
-
-**Priority**: P2 (Enhanced)  
-**Module(s)**: A-09: System Settings & Configuration | S-02: Payment Processing Service
-
-**Requirements**:
-
-- System MUST support multiple languages (English, Turkish initially, expandable)
-- Patients and providers MUST be able to select preferred language
-- System MUST translate UI elements, emails, and push notifications
-- System MUST support RTL languages (future: Arabic)
-- System MUST display dates and times in user's timezone
-- System MUST support local currency display with conversion
-
----
-
-### FR-022: Search & Filtering
-
-**Priority**: P2 (Enhanced)  
-**Module(s)**: P-02: Quote Request & Management | A-02: Provider Management & Onboarding
-
-**Requirements**:
-
-- Patients MUST be able to search providers by location, rating, price range
-- Patients MUST be able to filter providers by credentials, years of experience, procedures performed
-- Admins MUST be able to search patients, providers, transactions, inquiries
-- System MUST provide autocomplete for location searches
-- System MUST support advanced filtering with multiple criteria
-
----
-
-### FR-023: Data Retention & Compliance
-
-**Priority**: P1 (MVP)  
-**Module(s)**: A-09: System Settings & Configuration (Cross-Cutting Concern)
-
-**Requirements**:
-
-- System MUST retain patient medical records for minimum 7 years (healthcare compliance)
-- System MUST retain financial transaction records for minimum 7 years (tax/audit compliance)
-- System MUST support soft-deletes only (no hard deletion of critical data)
-- System MUST anonymize patient data in analytics and reports
-- System MUST provide data export functionality for GDPR compliance
-- System MUST allow patients to request data deletion (GDPR right to be forgotten)
-- System MUST maintain audit logs for all data access and modifications
 
 ---
 

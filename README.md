@@ -84,7 +84,7 @@ task-prompt/                     # 📝 Task generation templates
 
 ## 📋 Functional Requirements
 
-The system includes **24 Functional Requirements** (FR-001 through FR-024) covering:
+The system includes **25 Functional Requirements** (FR-001 through FR-025) covering:
 
 - **Patient Journey**: Registration → Inquiry → Quote Comparison → Booking → Payment → Treatment → Aftercare
 - **Provider Operations**: Team management, quote submission, appointment scheduling, treatment execution

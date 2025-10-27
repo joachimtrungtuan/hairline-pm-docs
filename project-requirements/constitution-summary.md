@@ -282,7 +282,7 @@ local-docs/project-requirements/
 
 ### PRD Standards & Requirements (NON-NEGOTIABLE)
 
-All Product Requirements Documents (PRDs) MUST follow the comprehensive structure and quality standards established by the verified FR-011 Aftercare & Recovery Management PRD (`modules/fr011-aftercare-recovery-management/prd.md`).
+All Product Requirements Documents (PRDs) MUST follow the comprehensive structure and quality standards established by the verified FR-011 Aftercare & Recovery Management PRD (`functional-requirements/fr011-aftercare-recovery-management/prd.md`).
 
 **Mandatory PRD Structure**:
 
@@ -316,7 +316,7 @@ All Product Requirements Documents (PRDs) MUST follow the comprehensive structur
 4. Stakeholder Approval and confirmation as OK
 5. Status Update to "✅ Verified & Approved"
 
-**Template Reference**: Use `modules/fr011-aftercare-recovery-management/prd.md` as the definitive template for all future module PRDs.
+**Template Reference**: Use `functional-requirements/fr011-aftercare-recovery-management/prd.md` as the definitive template for all future module PRDs.
 
 ### Current Structure (System-Level Documentation)
 
