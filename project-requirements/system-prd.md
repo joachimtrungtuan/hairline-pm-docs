@@ -525,7 +525,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-006: Booking & Scheduling
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-03: Booking & Payment | PR-03: Appointment Scheduling
+**Module(s)**: P-03: Booking & Payment | PR-02: Inquiry & Quote Management
 
 **Requirements**:
 
@@ -671,7 +671,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-010: Treatment Execution & Documentation
 
 **Priority**: P1 (MVP)  
-**Module(s)**: PR-04: Treatment Execution & Documentation
+**Module(s)**: PR-03: Treatment Execution & Documentation
 
 **Requirements**:
 
@@ -697,7 +697,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-011: Aftercare & Recovery Management
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-05: Aftercare & Progress Monitoring | PR-05: Aftercare Participation | A-03: Aftercare Team Management
+**Module(s)**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation | A-03: Aftercare Team Management
 
 ---
 
@@ -985,7 +985,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-014: Provider Analytics & Reporting
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: PR-06: Financial Management & Reporting | A-08: Analytics & Reporting
+**Module(s)**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 
 **Requirements**:
 
@@ -1050,7 +1050,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-017: Admin Billing & Financial Management
 
 **Priority**: P1 (MVP)  
-**Module(s)**: A-05: Billing & Financial Reconciliation | PR-06: Financial Management & Reporting
+**Module(s)**: A-05: Billing & Financial Reconciliation | PR-05: Financial Management & Reporting
 
 **Requirements**:
 
@@ -1190,7 +1190,7 @@ The Hairline Platform consists of four distinct applications serving different u
 ### FR-024: Treatment & Package Management
 
 **Priority**: P1 (MVP)  
-**Module(s)**: A-09: System Settings & Configuration | PR-07: Profile & Settings Management
+**Module(s)**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
 
 ---
 

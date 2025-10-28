@@ -115,15 +115,14 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **P-06**: Communication (P2)
 - **P-07**: 3D Scan Capture & Viewing (P1)
 
-### Provider Platform Modules (7 core)
+### Provider Platform Modules (6 core)
 
 - **PR-01**: Auth & Team Management (P1)
-- **PR-02**: Inquiry & Quote Management (P1)
-- **PR-03**: Appointment Scheduling (P1)
-- **PR-04**: Treatment Execution & Documentation (P1)
-- **PR-05**: Aftercare Participation (P2 - optional)
-- **PR-06**: Financial Management & Reporting (P1)
-- **PR-07**: Profile & Settings Management (P1)
+- **PR-02**: Inquiry & Quote Management (P1) - Enhanced to include pre-scheduling
+- **PR-03**: Treatment Execution & Documentation (P1)
+- **PR-04**: Aftercare Participation (P2 - optional)
+- **PR-05**: Financial Management & Reporting (P1)
+- **PR-06**: Profile & Settings Management (P1)
 
 ### Admin Platform Modules (10 core)
 
@@ -323,7 +322,7 @@ All Product Requirements Documents (PRDs) MUST follow the comprehensive structur
 ```markdown
 local-docs/project-requirements/
 ├── constitution-summary.md      # This file - core principles & governance
-├── system-data-schema.md        # Database design (91 tables)
+├── system-data-schema.md        # Database design (97 tables)
 ├── system-prd.md                # Product requirements (all platforms)
 ├── system-technical-spec.md     # Technical architecture
 ├── transcriptions/              # Original requirement transcriptions

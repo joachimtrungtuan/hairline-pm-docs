@@ -82,10 +82,9 @@ This document provides the technical architecture, design decisions, and impleme
 │ - Auth Service      │◄────────────────►│ - Notification Svc  │
 │ - Inquiry Service   │                  │ - Payment Svc       │
 │ - Quote Service     │                  │ - Media Svc         │
-│ - Booking Service   │                  │ - 3D Scan Processor │
-│ - Payment Service   │                  │ - Travel API        │
-│ - Aftercare Service │                  └─────────────────────┘
-│ - Provider Service  │
+│ - Payment Service   │                  │ - 3D Scan Processor │
+│ - Aftercare Service │                  │ - Travel API        │
+│ - Provider Service  │                  └─────────────────────┘
 │ - Admin Service     │
 └──────────┬──────────┘
            │
