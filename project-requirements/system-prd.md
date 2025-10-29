@@ -356,13 +356,21 @@ The Hairline Platform consists of four distinct applications serving different u
 
 **Requirements**:
 
-- System MUST allow patients to register with email/password
-- System MUST support social authentication (Google, Apple, Facebook)
-- System MUST verify email addresses through confirmation link
-- System MUST allow password reset via email
+- System MUST allow patients to register with email/password (registration available ONLY via mobile app; admins cannot create new patients)
+- System SHOULD support social authentication (Google, Apple, Facebook) [future]
+- System MUST verify email addresses via 6-digit OTP (not link); OTP expiry and resend rate limits MUST be configurable
+- System MUST allow password reset via 6-digit OTP sent to email
 - Patients MUST be able to update profile information (name, phone, birthday, location)
 - System MUST store profile images securely
 - System MUST support multi-factor authentication (future enhancement)
+
+**Security & Policy Configuration (centrally managed via A-09)**:
+
+- Password policy: FIXED in codebase — at least 12 characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?":{}|<> (not editable in Admin)
+- Authentication throttling: maximum login attempts before lockout and lockout duration MUST be configurable
+- OTP settings: code length is FIXED at 6 (not editable in Admin); expiry time and resend cooldown MUST be configurable
+- Country list and country calling codes used in profile MUST be centrally managed
+- Discovery question options MUST be centrally managed
 
 **Data Security**:
 
@@ -1302,6 +1310,58 @@ Total Quote:                           £3,000
 - Category management
 - Preview mode
 - Change history and audit trail
+
+---
+
+### FR-026: App Settings & Security Policies
+
+**Priority**: P1 (MVP Cross-Cutting)  
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Provide a centralized, audited, and versioned configuration surface for application settings and security policies that affect multiple modules and tenants.
+
+**Requirements**:
+
+- Settings Management UI (Admin)
+  - Admins MUST be able to view, create, update, and version settings within clearly defined groups:
+    - Authentication & Security
+    - App Data (Lists)
+    - Notifications
+  - All changes MUST require a reason and be fully audited (who/when/old value/new value)
+
+- Authentication & Security (affects P-01 and others)
+  - Password policy is FIXED in codebase (not editable in Admin): min length ≥ 12 and must include upper, lower, digit, special from !@#$%^&(),.?":{}|<>
+  - Authentication throttling MUST be configurable: max login attempts before lockout and lockout duration
+  - OTP configuration: length is FIXED at 6 in codebase; expiry (default 15 min) and resend cooldown/rate limits MUST be configurable
+  - System MUST support IP/device-level rate limiting for anti–brute force protections
+
+- App Data (Centrally Managed Lists)
+  - Discovery question options ("How did you find out about us?") MUST be centrally managed
+  - Country list and country calling codes MUST be centrally managed
+  - Changes MUST propagate to dependent UIs within 1 minute
+
+- Notifications
+  - Templates for OTP delivery (verification/reset) MUST be editable with variables and preview
+  - Changes MUST NOT affect delivery to users already in a flow
+
+**Data Security & Governance**:
+
+- All setting changes MUST be versioned and auditable; hard deletes are PROHIBITED (archive only)
+- System MUST support rollback to any previous version for a given setting group
+- Access MUST be restricted to authorized admin roles; sensitive values must be masked in UI and logs
+
+**Impacted Modules**:
+
+- P-01: Auth & Profile (password policy, OTP, throttling, countries/calling codes, discovery options)
+- PR-06: Provider Settings (indirect consumption of lists)
+- S-03: Notification Service (OTP templates)
+
+**Success Criteria**:
+
+- 100% of changes to settings captured with who/when/what-before/after
+- Setting changes propagate to dependent services within ≤ 1 minute
+- Zero production incidents linked to settings drift after enabling versioning and rollback
+- Security scanning shows no exposure of sensitive setting values in UI or logs
 
 ---
 

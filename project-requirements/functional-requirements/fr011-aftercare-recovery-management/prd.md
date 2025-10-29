@@ -554,7 +554,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Patient notified of approved changes
 - Change history maintained for audit trail
 
-#### Screen 9: Aftercare Progress Tracking (Provider View)
+#### Screen 10: Aftercare Progress Tracking (Provider View)
 
 **Purpose**: Provider monitors ongoing aftercare progress for assigned patients
 
@@ -601,7 +601,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 ### Admin Platform Screens
 
-#### Screen 10: Aftercare Cases List
+#### Screen 11: Aftercare Cases List
 
 **Purpose**: Admin views all aftercare cases (similar to existing provider lists)
 
@@ -642,7 +642,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Progress calculated automatically by system
 - All actions logged for audit trail
 
-#### Screen 11: Aftercare Case Details (Multi-Tab View)
+#### Screen 12: Aftercare Case Details (Multi-Tab View)
 
 **Purpose**: Admin views comprehensive aftercare case information
 
@@ -686,7 +686,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - All communications monitored and logged
 - Admin can override any provider settings
 
-#### Screen 12: Standalone Aftercare Requests
+#### Screen 13: Standalone Aftercare Requests
 
 **Purpose**: Admin manages standalone aftercare service requests
 
@@ -719,7 +719,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Rejection requires reason and triggers refund
 - All actions logged for audit trail
 
-#### Screen 13: Milestone Template Management
+#### Screen 14: Milestone Template Management
 
 **Purpose**: Admin creates and manages aftercare milestone templates
 
@@ -755,7 +755,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - New templates must be tested before activation
 - Resource files limited to 100MB each
 
-#### Screen 14: Provider Performance Dashboard
+#### Screen 15: Provider Performance Dashboard
 
 **Purpose**: Admin monitors provider aftercare performance
 
@@ -793,7 +793,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Provider suspension requires admin approval
 - All performance data retained for 2 years
 
-#### Screen 15: Aftercare Progress Tracking (Admin View)
+#### Screen 16: Aftercare Progress Tracking (Admin View)
 
 **Purpose**: Admin monitors all aftercare progress across all providers
 

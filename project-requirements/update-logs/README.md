@@ -25,11 +25,13 @@ This folder contains documentation update reports and verification logs for the 
 - `CROSS_REFERENCE_UPDATES_2025-10-27.md` - Cross-reference consistency updates and FR order correction
 - `FR025_PRD_CREATION_2025-10-27.md` - FR-025 Medical Questionnaire Management PRD creation
 
-### 2025-10-28/ (1 file)
+### 2025-10-28/ (3 files)
 
-#### **Module Restructure**
+#### **Module Restructure & PRD Creation**
 
 - `MODULE_RESTRUCTURE_2025-10-28.md` - MAJOR module restructure aligning Provider Platform modules
+- `DOCUMENTATION_CONSISTENCY_FIXES_2025-10-28.md` - Critical and high-priority documentation fixes
+- `FR001_PRD_CREATION_2025-10-28.md` - FR-001 Patient Authentication PRD creation
 
 ---
 
@@ -60,6 +62,7 @@ This folder contains documentation update reports and verification logs for the 
 
 - **2025-10-23**: `REQUIREMENTS_IMPLEMENTATION_2025-10-23.md` - Implementation summary
 - **2025-10-27**: `FR025_PRD_CREATION_2025-10-27.md` - FR-025 PRD creation
+- **2025-10-28**: `FR001_PRD_CREATION_2025-10-28.md` - FR-001 PRD creation
 
 ---
 
