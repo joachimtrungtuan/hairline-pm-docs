@@ -33,12 +33,13 @@ This folder contains documentation update reports and verification logs for the 
 - `DOCUMENTATION_CONSISTENCY_FIXES_2025-10-28.md` - Critical and high-priority documentation fixes
 - `FR001_PRD_CREATION_2025-10-28.md` - FR-001 Patient Authentication PRD creation
 
-### 2025-10-30/ (2 files)
+### 2025-10-30/ (3 files)
 
 #### **PRD Verification & Documentation Sync**
 
 - `FR001_PRD_VERIFIED_2025-10-30.md` - FR-001 status set to Verified & Approved; detailed Screen 14/16 finalized
 - `DOCUMENTATION_SYNC_2025-10-30.md` - Synced high-level docs and README date to Oct 30, 2025
+- `FR002_MINIMAL_SPECS_2025-10-30.md` - FR-002 screen specs minimized to integration contracts; verified consistency
 
 ## Quick Reference by Topic
 

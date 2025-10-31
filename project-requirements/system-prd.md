@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2025-10-23
+**Last Updated**: 2025-10-30
 
 ---
 
@@ -385,13 +385,16 @@ The Hairline Platform consists of four distinct applications serving different u
 **Priority**: P1 (MVP)  
 **Module(s)**: P-07: 3D Scan Capture & Viewing | S-01: 3D Scan Processing Service | S-05: Media Storage Service
 
+**Note on Release Scope:**
+For V1, the system accepts a guided head video (or photos/clips) for intake and validation. True 3D model capture, generation of multiple 2D views from 3D, and full ARKit/ARCore 3D processing pipeline are deferred to V2 (future enhancement), as patient-side hardware and provider UX matures.
+
 **Requirements**:
 
 - Patients MUST complete comprehensive medical questionnaire before submitting inquiry
 - System MUST capture 3D scan of patient's head using mobile camera
 - System MUST support alternative upload of photos/videos
 - System MUST validate scan quality and provide feedback
-- System MUST watermark all patient scans with unique identifier
+- System MUST watermark all patient scans with anonymized patient identifier
 - Medical history MUST include allergies, medications, previous procedures, health conditions
 - System MUST anonymize patient data in provider-facing views until payment completion
 
@@ -1145,6 +1148,9 @@ The Hairline Platform consists of four distinct applications serving different u
 - System MUST throttle notifications to prevent spam
 - System MUST track notification delivery status
 
+**Implementation Note:**
+For patient platform in FR-001 (MVP), notification preferences are limited to global Email/Push toggles; category preferences (e.g., Inquiry, Quote, Payment, Aftercare) are deferred to V2 per product management alignment.
+
 ---
 
 ### FR-021: Multi-Language & Localization
@@ -1368,6 +1374,10 @@ Total Quote:                           £3,000
 ## Non-Functional Requirements
 
 ### NFR-001: Performance
+
+### Error Handling Standard
+
+All Hairline engines and platform APIs MUST return structured errors complying with the shared Hairline error schema. Error payloads MUST include at least: `error_code`, `message`, `remediation` (if available), `source` (system/context), and `severity`. Reference: Error handling requirements in technical specification.
 
 - API response time MUST be < 500ms for p95 requests
 - API response time MUST be < 1000ms for p99 requests

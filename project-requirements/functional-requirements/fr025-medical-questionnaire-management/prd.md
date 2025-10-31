@@ -30,6 +30,15 @@ The Medical Questionnaire Management module enables administrators to centrally 
 2. **System-Triggered**: Automatic questionnaire delivery to patient inquiry process
 3. **Provider-Viewed**: Medical alerts generated from questionnaire responses
 
+### Questionnaire Context Types
+
+- The system must support multiple questionnaire context types to distinguish usage across flows:
+  - Inquiry: Used during patient inquiry submission
+  - Aftercare: Used within aftercare milestone templates
+  - Multi-Context: Valid for both Inquiry and Aftercare
+- Each questionnaire carries a required Context Type metadata field and optional tags (e.g., "pain", "sleep", "compliance").
+- Downstream modules (e.g., Aftercare Template Management) filter selectable questionnaires by compatible Context Type.
+
 ## Business Workflows
 
 ### Workflow 1: Question Management (Primary Flow)
@@ -124,6 +133,28 @@ The Medical Questionnaire Management module enables administrators to centrally 
   - System updates patient platform with current version
   - Patient re-completes questionnaire if necessary
 
+### Workflow 4: Questionnaire Catalog & Assignment
+
+**Actors**: Admin, System, Aftercare Module
+
+**Main Flow**:
+
+1. Admin creates a new Questionnaire and sets Context Type = Inquiry, Aftercare, or Multi-Context
+2. System validates completeness, context assignment, and versioning
+3. Questionnaire becomes available in the central catalog with its Context Type
+4. In Aftercare Template Management (FR-011 Screen 14), admin selects exactly one Questionnaire Set with Context Type = Aftercare or Multi-Context (single-select)
+5. Milestones within the template may schedule questions only from the selected Questionnaire Set
+6. System deploys scheduled questionnaires to the aftercare plan according to milestone schedules
+
+**Alternative Flows**:
+
+- **A1**: Context mismatch
+  - If a questionnaire with Context Type = Inquiry is selected in an aftercare template, the system blocks selection and explains the mismatch
+- **A2**: Context change on active questionnaire
+  - Context Type changes create a new version; dependent templates must re-confirm the single selected Questionnaire Set
+- **A3**: Questionnaire Set replacement
+  - Replacing the selected Questionnaire Set in FR-011 updates all milestone questionnaire references within that template
+
 ## Screen Specifications
 
 ### Admin Platform Screens
@@ -138,6 +169,7 @@ The Medical Questionnaire Management module enables administrators to centrally 
   - Question ID (auto-generated)
   - Question Text (truncated with expand option)
   - Category (dropdown filter)
+  - Context Type (Inquiry/Aftercare/Multi-Context)
   - Severity Flag (color-coded: Critical/Standard/No Alert)
   - Status (Active/Inactive)
   - Last Modified (timestamp)
@@ -152,6 +184,7 @@ The Medical Questionnaire Management module enables administrators to centrally 
 
 - **Filter and Search**:
   - Category filter (dropdown)
+  - Context Type filter (dropdown)
   - Severity filter (dropdown)
   - Keyword search (question text)
   - Status filter (Active/Inactive/All)
@@ -174,6 +207,8 @@ The Medical Questionnaire Management module enables administrators to centrally 
   - Question Type (Yes/No - fixed, not editable)
   - Detailed Explanation Prompt (text field, required for "Yes" answers)
   - Category Selection (dropdown, required)
+  - Context Type (required: Inquiry, Aftercare, or Multi-Context)
+  - Tags (free-form chips, optional)
 
 - **Severity Configuration**:
   - Severity Flag (dropdown: Critical/Standard/No Alert)
@@ -198,6 +233,7 @@ The Medical Questionnaire Management module enables administrators to centrally 
 - Severity flag determines alert generation
 - All changes logged with timestamp and admin identification
 - Rich text editor supports medical terminology formatting
+- Questions must have a Context Type; selection availability in downstream modules is filtered by Context Type
 
 #### Screen 3: Category Management
 
@@ -336,6 +372,12 @@ The Medical Questionnaire Management module enables administrators to centrally 
    - Alert display must be consistent with color-coding standards
    - Provider notifications must be triggered by critical alerts
    - Alert history must be maintained for provider reference
+
+3. **Aftercare Module Integration (FR-011)**
+
+- Aftercare templates (Screen 14) can only select one Questionnaire Set with Context Type = Aftercare or Multi-Context (single-select)
+- Milestones schedule items only from the selected Questionnaire Set (frequency/recurrence)
+- Inquiry-context questionnaires are not selectable in aftercare templates
 
 ### Data Integrity Rules
 

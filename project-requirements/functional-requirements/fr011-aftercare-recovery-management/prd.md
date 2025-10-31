@@ -694,7 +694,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 - **Request List**
   - Request ID and submission date
-  - Patient information (anonymized until payment)
+  - Patient information (full visibility for Admin; Providers anonymized until payment)
   - Treatment details (date, type, clinic)
   - Requested duration and payment method
   - Status (Pending, Assigned, Active, Rejected)
@@ -738,7 +738,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
   - Milestone configuration:
     - Milestone name and duration
     - 3D scan frequency
-    - Questionnaire types and frequency
+    - Questionnaire selection and frequency (selected from FR-025 catalog)
     - Educational resources
     - Activity restrictions
 
@@ -754,8 +754,18 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Changes to active templates require approval
 - New templates must be tested before activation
 - Resource files limited to 100MB each
+- Questionnaires are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 14 only selects among existing questionnaires and configures schedule/frequency per milestone.
+- Screen 14 must surface only questionnaires with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context questionnaires if flagged as compatible.
+- Each aftercare template references exactly one Questionnaire Set (single-select). All milestones within the template schedule questions only from that selected set. Changing the selected set replaces questionnaire references across all milestones in the template.
+
+Cross-Module Reference:
+
+- Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management
+- After selecting questionnaires here, their delivery and response handling follow the schedules defined per milestone
 
 #### Screen 15: Provider Performance Dashboard
+
+**Status**: Backlog (post-MVP analytics)
 
 **Purpose**: Admin monitors provider aftercare performance
 
@@ -792,8 +802,11 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Poor performance triggers review process
 - Provider suspension requires admin approval
 - All performance data retained for 2 years
+- This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 #### Screen 16: Aftercare Progress Tracking (Admin View)
+
+**Status**: Backlog (post-MVP analytics)
 
 **Purpose**: Admin monitors all aftercare progress across all providers
 
@@ -838,6 +851,7 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - Performance metrics calculated daily
 - Alerts generated automatically for issues
 - All actions logged with admin identification
+- This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 ## Business Rules
 
