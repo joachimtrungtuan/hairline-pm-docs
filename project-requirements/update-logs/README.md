@@ -41,6 +41,13 @@ This folder contains documentation update reports and verification logs for the 
 - `DOCUMENTATION_SYNC_2025-10-30.md` - Synced high-level docs and README date to Oct 30, 2025
 - `FR002_MINIMAL_SPECS_2025-10-30.md` - FR-002 screen specs minimized to integration contracts; verified consistency
 
+### 2025-10-31/ (2 files)
+
+#### **Aftercare & Quotes Updates**
+
+- `FR011_FR025_Updates_2025-10-31.md` - Adjustments to Aftercare and Medical Questionnaire PRDs
+- `FR004_PRD_UPDATES_2025-10-31.md` - Quote Submission & Management updates (expiry policy, scenarios, unified list, admin inline edit)
+
 ## Quick Reference by Topic
 
 ### Documentation Updates
@@ -95,4 +102,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: October 30, 2025
+**Last Updated**: October 31, 2025
