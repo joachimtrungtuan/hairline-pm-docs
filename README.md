@@ -120,3 +120,30 @@ For questions about documentation:
 **Documentation Status**: ✅ Complete and Active  
 **Next Review**: Monthly or upon major changes  
 **Maintained By**: Product & Engineering Teams
+
+## 🔐 Git Push Setup (SSH)
+
+To push changes from `local-docs` to GitHub using SSH, configure your SSH client to use the project key:
+
+```sh
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/.ssh/ssh.key"
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  UseKeychain yes
+```
+
+Steps:
+
+1. Add the public key to GitHub: Settings → SSH and GPG keys → New SSH key.  
+   Key file: `/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/.ssh/ssh.key.pub`
+2. Save the SSH config above to `~/.ssh/config` (create the file if it doesn't exist).
+3. Test and push:
+
+```sh
+ssh -T git@github.com
+cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs"
+git push origin main
+```
