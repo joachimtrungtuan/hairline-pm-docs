@@ -18,17 +18,45 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - **Provider Platform (PR-02)**: Inquiry & Quote Management  
 - **Admin Platform (A-01)**: Patient Management & Oversight
 
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-02)**:
+
+- Create and manage inquiries on mobile (service selection, destinations, medical questionnaire, media upload, date ranges)
+- Resume drafts; view inquiry dashboard and status timeline
+- Review anonymized provider responses (quotes handled by FR-004)
+
+**Provider Platform (PR-02)**:
+
+- View distributed inquiries with anonymized patient info and medical alerts
+- Review inquiry details including 3D scans and questionnaire
+- Manage inquiry status prior to quote creation (quote creation in FR-004)
+
+**Admin Platform (A-01)**:
+
+- Global oversight of all inquiries across lifecycle stages
+- Edit/override inquiry details; reassign providers; soft-delete with audit
+- Configure distribution rules and expirations aligned with system PRD
+
+**Shared Services (S-XX)**:
+
+- Notification service for distribution and status changes
+- Media/scanning service for secure storage and retrieval of 3D scans
+- Audit logging, anonymization and soft delete utilities
+
 ### Communication Structure
 
-**Note**: Direct patient-provider chat functionality is currently **not in scope** for V1 and has been moved to the backlog. Communication within the inquiry module is structured through:
+**In Scope**:
 
-- **Patient → System**: Inquiry submission with comprehensive data
-- **System → Provider**: Automatic inquiry distribution and notifications
-- **Provider → System**: Quote submission and inquiry management
-- **Admin → All Parties**: Admin can monitor, edit, and manage all inquiries
-- **Structured Updates**: System-generated notifications and status updates
+- Patient → System: Inquiry submission with comprehensive data
+- System → Provider: Automatic inquiry distribution and notifications
+- Provider → System: Inquiry management prior to quote (quotes in FR-004)
+- Admin → All Parties: Oversight, edit, and management actions
+- Structured Updates: System-generated notifications and status updates
 
-If direct patient-provider chat is implemented in the future, it would be handled through a separate FR (FR-012: Messaging & Communication).
+**Out of Scope**:
+
+- Direct patient-provider chat (moved to backlog; future FR-012)
 
 ### Entry Points
 
@@ -230,11 +258,15 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Service Options**:
-  - "Get a Hair Transplant" (primary option)
-  - "Monitor Hair Loss" (secondary - different workflow)
-  - "Aftercare: Monitor Transplant Progress" (secondary - different workflow)
-  - "Aftercare for Transplant" (secondary - different workflow)
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Service Option | select (single) | Yes | Primary service selection | Must select one |
+| Treatment Type | checkbox (multi) | Yes | Hair/Beard/Both | At least one selected |
+
+- "Get a Hair Transplant" (primary option)
+- "Monitor Hair Loss" (secondary - different workflow)
+- "Aftercare: Monitor Transplant Progress" (secondary - different workflow)
+- "Aftercare for Transplant" (secondary - different workflow)
 
 - **Treatment Type Selection**:
   - Hair (checkbox)
@@ -253,10 +285,14 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Country List** (multi-select, max 10):
-  - Country name with starting price display
-  - Dynamic ordering (nearest countries first)
-  - Fallback pricing for unsupported currencies
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Countries | multiselect | Yes | Up to 10 preferred countries | Max 10; ordered by proximity |
+| Price Display | derived | No | Starting price per country | Fallback currency support |
+
+- Country name with starting price display
+- Dynamic ordering (nearest countries first)
+- Fallback pricing for unsupported currencies
 
 - **Price Display**:
   - Starting price per country
@@ -276,13 +312,23 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Hair Concern Details**:
-  - Nature of concern (text field, required)
-  - Duration of concern (dropdown enum, required)
-  - Previous treatments (text field, required)
-  - Symptom severity (1-10 slider, required)
-  - Lifestyle factors (text field, optional)
-  - Additional notes (text field, optional)
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Nature of concern | text | Yes | Patient description | Max length; not empty |
+| Duration | select | Yes | Duration enum | Must select one |
+| Previous treatments | text | Yes | Prior treatments | Max length |
+| Symptom severity | slider (1-10) | Yes | Severity index | Integer 1-10 |
+| Lifestyle factors | text | No | Optional context | Max length |
+| Additional notes | text | No | Optional notes | Max length |
+| Photos | file (image) | No | Up to 5 images | JPG/PNG ≤ 2MB each; total ≤ 5 |
+| Videos | file (video) | No | Up to 5 videos | MP4 ≤ 30s, ≤ 20MB each |
+
+- Nature of concern (text field, required)
+- Duration of concern (dropdown enum, required)
+- Previous treatments (text field, required)
+- Symptom severity (1-10 slider, required)
+- Lifestyle factors (text field, optional)
+- Additional notes (text field, optional)
 
 - **Visual Evidence**:
   - Photo upload (max 5 files)
@@ -303,10 +349,14 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Scan Instructions**:
-  - Visual guidance for proper positioning
-  - Quality indicators and feedback
-  - Retake options
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| 3D Scan | capture | Yes | 3D head scan data | Quality threshold must pass |
+| Quality Indicators | derived | Yes | Real-time quality feedback | Retake if below threshold |
+
+- Visual guidance for proper positioning
+- Quality indicators and feedback
+- Retake options
 
 - **Scan Data**:
   - 3D model capture
@@ -326,10 +376,13 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Date Range Selection**:
-  - Multiple date range pickers (max 10)
-  - Calendar interface with availability
-  - Non-overlapping date validation
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Date Ranges | date range (multi) | Yes | Up to 10 ranges | Max 10; non-overlapping; ≤ 2 years out |
+
+- Multiple date range pickers (max 10)
+- Calendar interface with availability
+- Non-overlapping date validation
 
 - **Date Constraints**:
   - Maximum 2 years in future
@@ -349,28 +402,34 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Medical Questions** (comprehensive list):
-  - Allergies to medications (Yes/No + details)
-  - Other allergies (Yes/No + details)
-  - Respiratory conditions (Yes/No + details)
-  - Cardiovascular disease (Yes/No + details)
-  - Hypertension (Yes/No + details)
-  - Diabetes (Yes/No + details)
-  - Implanted medical devices (Yes/No + details)
-  - Hepatitis B/C (Yes/No + details)
-  - HIV/AIDS (Yes/No + details)
-  - Arthritis (Yes/No + details)
-  - Neurological disorders (Yes/No + details)
-  - Other medical conditions (Yes/No + details)
-  - Bleeding disorders (Yes/No + details)
-  - Kidney disease (Yes/No + details)
-  - Cancer history (Yes/No + details)
-  - Digestive diseases (Yes/No + details)
-  - Mental health disorders (Yes/No + details)
-  - Blood clots/DVT (Yes/No + details)
-  - Previous surgeries (Yes/No + details)
-  - Pregnancy status (Yes/No + details)
-  - Regular medications (Yes/No + details)
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Question | enum | Yes | Medical question item | Must answer Yes/No |
+| Answer | boolean | Yes | Yes/No | Required |
+| Details | text | Cond. | Required if Answer = Yes | Non-empty when required |
+| Alert Level | derived | No | Critical/Standard/None | Derived from rules |
+
+- Allergies to medications (Yes/No + details)
+- Other allergies (Yes/No + details)
+- Respiratory conditions (Yes/No + details)
+- Cardiovascular disease (Yes/No + details)
+- Hypertension (Yes/No + details)
+- Diabetes (Yes/No + details)
+- Implanted medical devices (Yes/No + details)
+- Hepatitis B/C (Yes/No + details)
+- HIV/AIDS (Yes/No + details)
+- Arthritis (Yes/No + details)
+- Neurological disorders (Yes/No + details)
+- Other medical conditions (Yes/No + details)
+- Bleeding disorders (Yes/No + details)
+- Kidney disease (Yes/No + details)
+- Cancer history (Yes/No + details)
+- Digestive diseases (Yes/No + details)
+- Mental health disorders (Yes/No + details)
+- Blood clots/DVT (Yes/No + details)
+- Previous surgeries (Yes/No + details)
+- Pregnancy status (Yes/No + details)
+- Regular medications (Yes/No + details)
 
 - **Alert System**:
   - Critical alerts (red indicators)
@@ -390,14 +449,18 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Summary Sections**:
-  - Selected treatment type
-  - Chosen countries with prices
-  - Hair concern details
-  - Visual evidence preview
-  - 3D scan preview
-  - Selected date ranges
-  - Medical questionnaire summary
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Section Summary | group | Yes | Read-only summary of prior steps | Must reflect latest data |
+| Terms Acceptance | checkbox | Yes | Accept T&C before submission | Required to submit |
+
+- Selected treatment type
+- Chosen countries with prices
+- Hair concern details
+- Visual evidence preview
+- 3D scan preview
+- Selected date ranges
+- Medical questionnaire summary
 
 - **Submission Controls**:
   - "Edit" buttons for each section
@@ -417,16 +480,15 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Inquiry Status**:
-  - Current stage (Inquiry, Quoted, Accepted, etc.)
-  - Timeline of status changes
-  - Provider responses count
-
-- **Inquiry Details**:
-  - Complete inquiry information
-  - Provider quotes received
-  - Response deadlines
-  - Next actions available
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/...) | Valid lifecycle value |
+| Timeline | timeline | Yes | Chronological status changes | Timestamps present |
+| Responses Count | number | Yes | Number of provider responses | Non-negative integer |
+| Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
+| Quotes Received | list | No | Provider quotes (from FR-004) | Read-only links |
+| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
+| Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
 
 **Business Rules**:
 
@@ -442,6 +504,20 @@ If direct patient-provider chat is implemented in the future, it would be handle
 **Purpose**: Provider views all distributed inquiries
 
 **Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | column | Yes | HPID + YY + MM + 4-digit sequence | Sortable; searchable |
+| Patient Name | column | Yes | Partially masked name | Mask until acceptance |
+| Age | column | No | Patient age | Number; sortable |
+| Problem/Concern | column | No | Primary concern enum | Filterable |
+| Requested Date Ranges | column | Yes | Primary + tooltip for others | Non-overlap; tooltip expansion |
+| Location | column | No | Patient country | Filterable |
+| Medical Alerts | column | Yes | Color-coded chips | Critical/Standard/None |
+| Inquiry Date | column | Yes | Created timestamp | Relative formatting rules |
+| Action | column | Yes | View/Create Quote buttons | State-aware actions |
+| Search | control | No | Keyword search (ID, Name) | Debounced; case-insensitive |
+| Filters | control | No | Age range, Concern, Date range, Alerts, Location | Valid ranges/enums |
 
 - **Table Headers** (sortable):
   - Patient ID (auto-generated, HPID format: HPID + YY + MM + 4-digit sequence)
@@ -477,6 +553,19 @@ If direct patient-provider chat is implemented in the future, it would be handle
 **Purpose**: Provider reviews comprehensive inquiry details
 
 **Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Inquiry ID | text | Yes | Unique ID and current stage | Read-only |
+| Timestamps | group | Yes | Created/updated/activity times | ISO 8601 |
+| Patient (masked) | group | Yes | Partially masked identity | Reveal post-acceptance |
+| Countries | list | Yes | Selected treatment countries | Non-empty |
+| Problem Details | group | Yes | Concern text, duration, previous treatments | Complete |
+| Media | gallery | No | Photos/videos previews | File constraints enforced |
+| 3D Scan | viewer | No | Special viewer for 3D scan | Available if captured |
+| Date Ranges | list | Yes | All selected date ranges | Non-overlapping |
+| Medical Questionnaire | group | Yes | Full Q&A responses | Completed |
+| Medical Alerts | chips | Yes | Tiered alert indicators | Critical/Standard/None |
 
 - **Patient Information**:
   - Inquiry ID and stage
@@ -518,6 +607,24 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | column | Yes | HPID + YY + MM + 4-digit sequence | Sortable; searchable |
+| Full Patient Name | column | Yes | Unmasked name | Admin only |
+| Age | column | No | Patient age | Number; sortable |
+| Problem/Concern | column | No | Primary concern enum | Filterable |
+| Requested Date Ranges | column | Yes | Primary + tooltip for others | Non-overlap; tooltip expansion |
+| Location | column | No | Patient country | Filterable |
+| Medical Alerts | column | Yes | Color-coded chips | Critical/Standard/None |
+| Inquiry Date | column | Yes | Created timestamp | Relative date logic |
+| Current Status | column | Yes | Lifecycle stage | Enum validation |
+| Quotes Count | column | No | Number of quotes | Non-negative integer |
+| Payment Status | column | No | Payment indicator | Enum validation |
+| Last Active | column | No | Last activity timestamp | ISO 8601 |
+| Assigned Providers | column | No | Provider(s) assigned | List formatting |
+| Action | column | Yes | Action buttons | State-aware actions |
+| Advanced Filters | control | No | Patient/Provider locations, Stage, Payment, Date ranges | Valid enums/ranges |
+
 - **Comprehensive Table**:
   - Patient ID (auto-generated, HPID format: HPID + YY + MM + 4-digit sequence)
   - Full Patient Name (admin can see all)
@@ -553,6 +660,15 @@ If direct patient-provider chat is implemented in the future, it would be handle
 **Purpose**: Admin manages individual inquiry with full control
 
 **Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Full Inquiry | group | Yes | All patient and inquiry data | Admin-only visibility |
+| Admin Actions | actions | Yes | Edit, reassign, override, soft delete | Reason required; audited |
+| Override Controls | form | No | Expiry/distribution overrides | Confirmation + reason required |
+| Reassignment | control | No | Assign/reassign providers | Validation on provider eligibility |
+| Soft Delete | control | No | Archive inquiry | Requires reason; reversible view-only |
+| Audit Trail | log | Yes | Full change history | Immutable; timestamped |
 
 - **Complete Inquiry Data**:
   - All patient information (unmasked)
@@ -746,6 +862,48 @@ If direct patient-provider chat is implemented in the future, it would be handle
 - **SC-019**: 50% reduction in inquiry-related support tickets
 - **SC-020**: 30% improvement in provider response times
 
+## Functional Requirements Summary
+
+### Core Requirements
+
+- **FR-001**: System MUST allow patients to create and submit inquiries with destinations, media, date ranges, 3D scan, and medical questionnaire.
+- **FR-002**: System MUST distribute completed inquiries to matching providers in selected countries and those explicitly chosen by the patient.
+- **FR-003**: Providers MUST see anonymized patient data and tiered medical alerts until payment/acceptance per system PRD.
+- **FR-004**: System MUST support draft autosave and resume with 7-day inactivity expiry for incomplete inquiries.
+- **FR-005**: Admin MUST be able to view, edit (with warnings), reassign, soft delete, and override distribution/expiration with full audit trail.
+
+### Data Requirements
+
+- **FR-006**: System MUST retain inquiry data for at least 7 years; scan retention per system policy.
+- **FR-007**: System MUST link inquiries to patients, providers, locations, 3D scans, and questionnaire responses.
+
+### Security & Privacy Requirements
+
+- **FR-008**: System MUST anonymize patient identifiers and mask names prior to acceptance.
+- **FR-009**: System MUST encrypt all inquiry-related data at rest and in transit, and maintain immutable audit logs.
+
+### Integration Requirements
+
+- **FR-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
+- **FR-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
+
+### Marking Unclear Requirements
+
+- **FR-012**: Provider capacity management is referenced but handled by a separate FR (TBD); integration expectations remain.
+
+## Key Entities
+
+- **Inquiry**: patientId, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt
+  - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
+- **ProviderInquiry**: inquiryId, providerId, distributionAt, viewedAt, status
+  - Relationships: belongsTo Inquiry; belongsTo Provider
+- **MedicalQuestionnaireResponse**: inquiryId, questionId, answer, details
+  - Relationships: belongsTo Inquiry
+- **MedicalAlert**: inquiryId, level (critical/standard/none), reason
+  - Relationships: belongsTo Inquiry
+- **Scan**: inquiryId, storageUrl, qualityScore, metadata
+  - Relationships: belongsTo Inquiry
+
 ## Dependencies
 
 ### Internal Dependencies
@@ -822,3 +980,18 @@ If direct patient-provider chat is implemented in the future, it would be handle
 **Next Steps**: Technical specification and implementation planning  
 **Maintained By**: Product & Engineering Teams  
 **Review Cycle**: Monthly or upon major changes
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
+| 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, field tables, FR summary, entities, appendices | Product & Engineering |
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | [Status] |
+| Technical Lead | [Name] | [Date] | [Status] |
+| Stakeholder | [Name] | [Date] | [Status] |
