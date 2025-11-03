@@ -187,7 +187,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 
 ### Version Control
 
-- Branching: main (production), develop (integration), feature/*, hotfix/*
+- Branching: main (production), develop (integration), fr[###]-[module-name], hotfix/*, release/*
 - Conventional Commits format
 - Protected branches with CI checks
 

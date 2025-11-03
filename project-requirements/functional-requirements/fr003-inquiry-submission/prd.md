@@ -263,14 +263,16 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Service Option | select (single) | Yes | Primary service selection | Must select one |
 | Treatment Type | checkbox (multi) | Yes | Hair/Beard/Both | At least one selected |
 
-- "Get a Hair Transplant" (primary option)
-- "Monitor Hair Loss" (secondary - different workflow)
-- "Aftercare: Monitor Transplant Progress" (secondary - different workflow)
-- "Aftercare for Transplant" (secondary - different workflow)
+**Notes**:
 
-- **Treatment Type Selection**:
+- Service Options:
+  - "Get a Hair Transplant" (primary option)
+  - "Monitor Hair Loss" (secondary - different workflow)
+  - "Aftercare: Monitor Transplant Progress" (secondary - different workflow)
+  - "Aftercare for Transplant" (secondary - different workflow)
+- Treatment Type Selection:
   - Hair (checkbox)
-  - Beard (checkbox)  
+  - Beard (checkbox)
   - Both (checkbox)
 
 **Business Rules**:
@@ -290,11 +292,13 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Countries | multiselect | Yes | Up to 10 preferred countries | Max 10; ordered by proximity |
 | Price Display | derived | No | Starting price per country | Fallback currency support |
 
-- Country name with starting price display
-- Dynamic ordering (nearest countries first)
-- Fallback pricing for unsupported currencies
+**Notes**:
 
-- **Price Display**:
+- Country List:
+  - Show country name with starting price
+  - Order by proximity to patient location
+  - Support fallback currency/pricing display
+- Price Display:
   - Starting price per country
   - Currency based on patient location
   - Price range indicators
@@ -323,17 +327,12 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Photos | file (image) | No | Up to 5 images | JPG/PNG ≤ 2MB each; total ≤ 5 |
 | Videos | file (video) | No | Up to 5 videos | MP4 ≤ 30s, ≤ 20MB each |
 
-- Nature of concern (text field, required)
-- Duration of concern (dropdown enum, required)
-- Previous treatments (text field, required)
-- Symptom severity (1-10 slider, required)
-- Lifestyle factors (text field, optional)
-- Additional notes (text field, optional)
+**Notes**:
 
-- **Visual Evidence**:
-  - Photo upload (max 5 files)
-  - Video upload (max 5 files)
-  - File size and format validation
+- Visual Evidence:
+  - Photo upload: max 5 files (JPG/PNG ≤ 2MB each)
+  - Video upload: max 5 files (MP4 ≤ 30s, ≤ 20MB each)
+  - Enforce file size/format and total file count
 
 **Business Rules**:
 
@@ -354,14 +353,15 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | 3D Scan | capture | Yes | 3D head scan data | Quality threshold must pass |
 | Quality Indicators | derived | Yes | Real-time quality feedback | Retake if below threshold |
 
-- Visual guidance for proper positioning
-- Quality indicators and feedback
-- Retake options
+**Notes**:
 
-- **Scan Data**:
+- Scan Instructions:
+  - Visual guidance for positioning
+  - Quality indicators and feedback
+  - Retake options available
+- Scan Data:
   - 3D model capture
-  - Quality validation
-  - Storage confirmation
+  - Quality validation and storage confirmation
 
 **Business Rules**:
 
@@ -380,14 +380,16 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 |------------|------|----------|-------------|------------------|
 | Date Ranges | date range (multi) | Yes | Up to 10 ranges | Max 10; non-overlapping; ≤ 2 years out |
 
-- Multiple date range pickers (max 10)
-- Calendar interface with availability
-- Non-overlapping date validation
+**Notes**:
 
-- **Date Constraints**:
-  - Maximum 2 years in future
-  - Minimum 30 days from inquiry date
-  - Provider availability consideration
+- Date Range Selection:
+  - Multiple pickers (max 10)
+  - Calendar with availability
+  - Non-overlapping validation
+- Date Constraints:
+  - Max 2 years in future
+  - Min 30 days from inquiry date
+  - Consider provider availability
 
 **Business Rules**:
 
@@ -409,32 +411,34 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Details | text | Cond. | Required if Answer = Yes | Non-empty when required |
 | Alert Level | derived | No | Critical/Standard/None | Derived from rules |
 
-- Allergies to medications (Yes/No + details)
-- Other allergies (Yes/No + details)
-- Respiratory conditions (Yes/No + details)
-- Cardiovascular disease (Yes/No + details)
-- Hypertension (Yes/No + details)
-- Diabetes (Yes/No + details)
-- Implanted medical devices (Yes/No + details)
-- Hepatitis B/C (Yes/No + details)
-- HIV/AIDS (Yes/No + details)
-- Arthritis (Yes/No + details)
-- Neurological disorders (Yes/No + details)
-- Other medical conditions (Yes/No + details)
-- Bleeding disorders (Yes/No + details)
-- Kidney disease (Yes/No + details)
-- Cancer history (Yes/No + details)
-- Digestive diseases (Yes/No + details)
-- Mental health disorders (Yes/No + details)
-- Blood clots/DVT (Yes/No + details)
-- Previous surgeries (Yes/No + details)
-- Pregnancy status (Yes/No + details)
-- Regular medications (Yes/No + details)
+**Notes**:
 
-- **Alert System**:
-  - Critical alerts (red indicators)
-  - Standard alerts (yellow indicators)
-  - No alerts (green indicators)
+- Question List:
+  - Allergies to medications (Yes/No + details)
+  - Other allergies (Yes/No + details)
+  - Respiratory conditions (Yes/No + details)
+  - Cardiovascular disease (Yes/No + details)
+  - Hypertension (Yes/No + details)
+  - Diabetes (Yes/No + details)
+  - Implanted medical devices (Yes/No + details)
+  - Hepatitis B/C (Yes/No + details)
+  - HIV/AIDS (Yes/No + details)
+  - Arthritis (Yes/No + details)
+  - Neurological disorders (Yes/No + details)
+  - Other medical conditions (Yes/No + details)
+  - Bleeding disorders (Yes/No + details)
+  - Kidney disease (Yes/No + details)
+  - Cancer history (Yes/No + details)
+  - Digestive diseases (Yes/No + details)
+  - Mental health disorders (Yes/No + details)
+  - Blood clots/DVT (Yes/No + details)
+  - Previous surgeries (Yes/No + details)
+  - Pregnancy status (Yes/No + details)
+  - Regular medications (Yes/No + details)
+- Alert System:
+  - Critical (red)
+  - Standard (amber)
+  - None (green)
 
 **Business Rules**:
 
@@ -454,18 +458,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Section Summary | group | Yes | Read-only summary of prior steps | Must reflect latest data |
 | Terms Acceptance | checkbox | Yes | Accept T&C before submission | Required to submit |
 
-- Selected treatment type
-- Chosen countries with prices
-- Hair concern details
-- Visual evidence preview
-- 3D scan preview
-- Selected date ranges
-- Medical questionnaire summary
+**Notes**:
 
-- **Submission Controls**:
-  - "Edit" buttons for each section
-  - "Submit Inquiry" confirmation button
-  - Terms and conditions acceptance
+- Summary includes: treatment type, countries with prices, concern details, media, 3D scan, date ranges, questionnaire summary
+- Submission Controls: per-section Edit, Submit button, T&C acceptance
 
 **Business Rules**:
 
@@ -489,6 +485,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Quotes Received | list | No | Provider quotes (from FR-004) | Read-only links |
 | Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
 | Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
+
+**Notes**:
+
+- Dashboard shows: full inquiry summary, provider responses, deadlines, and context-aware next actions
 
 **Business Rules**:
 
@@ -519,24 +519,12 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Search | control | No | Keyword search (ID, Name) | Debounced; case-insensitive |
 | Filters | control | No | Age range, Concern, Date range, Alerts, Location | Valid ranges/enums |
 
-- **Table Headers** (sortable):
-  - Patient ID (auto-generated, HPID format: HPID + YY + MM + 4-digit sequence)
-  - Patient Name (partially censored)
-  - Age (number)
-  - Problem/Concern (enum)
-  - Requested Date Ranges (multiple ranges with tooltip expansion)
-  - Location (patient's country)
-  - Medical Alerts (color-coded chips)
-  - Inquiry Date (relative time display)
-  - Action (View/Create Quote buttons)
+**Notes**:
 
-- **Search and Filter Controls**:
-  - Keyword search (Patient ID, Name)
-  - Age range filter (dual textboxes)
-  - Problem/Concern filter (enum dropdown)
-  - Date range filter (calendar picker)
-  - Medical alerts filter (enum dropdown)
-  - Location filter (enum dropdown)
+- Requested Date Ranges: primary displayed; all ranges via tooltip
+- Patient Name: masked until acceptance
+- Time Display: relative for recent; formatted for older
+- Empty States: Loading, Error, No permission
 
 **Business Rules**:
 
@@ -567,28 +555,45 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Medical Questionnaire | group | Yes | Full Q&A responses | Completed |
 | Medical Alerts | chips | Yes | Tiered alert indicators | Critical/Standard/None |
 
-- **Patient Information**:
-  - Inquiry ID and stage
-  - Patient personal info (partially masked)
-  - Patient location and contact (masked until payment)
+**Notes**:
 
-- **Inquiry Details**:
-  - Chosen countries for treatment
-  - Problem details (comprehensive)
-  - Visual evidence (photos/videos)
-  - 3D head scan (special viewer)
-  - Requested date ranges
-  - Additional notes
-
-- **Medical Information**:
-  - Complete medical questionnaire
-  - Medical alerts (tiered system)
-  - Detailed Q&A responses
-
-- **Timeline**:
-  - Inquiry creation timestamp
-  - Last activity timestamp
-  - Status change history
+- Inquiry Metadata:
+  - Inquiry ID (HPID + YY + MM + 4-digit sequence)
+  - Current stage (Inquiry/Quoted/Accepted/...)
+  - Created at, Updated at, Last activity timestamps (ISO 8601)
+- Patient (Masked):
+  - Display name: First name + last initial + asterisks (e.g., "John D*****")
+  - Age, Gender, Country (contact details masked until payment)
+  - Anonymized patient identifier everywhere except admin
+- Countries:
+  - Full list of selected treatment countries (ISO country + display name)
+  - Primary country highlighted; remaining listed in order selected
+- Problem Details:
+  - Nature of concern (required)
+  - Duration (enum)
+  - Previous treatments (required)
+  - Symptom severity (1–10)
+  - Lifestyle factors (optional)
+  - Additional notes (optional)
+- Media:
+  - Photos (JPG/PNG ≤ 2MB each, max 5): show thumbnails with modal preview
+  - Videos (MP4 ≤ 30s, ≤ 20MB each, max 5): show poster frame with player
+  - Validation messages for any file policy violations
+- 3D Scan:
+  - Special viewer control (orbit/zoom)
+  - Quality score and capture metadata if available
+  - Retake indicator if replaced after initial capture
+- Date Ranges:
+  - Display all selected ranges, non-overlapping
+  - Primary range shown first; additional ranges listed below
+  - Server-side validation notes for overlaps and max count (10)
+- Medical Questionnaire:
+  - Full Q&A list (Yes/No + required details for Yes)
+  - Derived medical alerts: Critical (red), Standard (amber), None (green)
+  - Link to audit trail of questionnaire version used
+- Timeline:
+  - Creation, distribution to providers, provider views, status changes
+  - Sorted descending by time with relative and absolute timestamps
 
 **Business Rules**:
 
@@ -625,28 +630,6 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Action | column | Yes | Action buttons | State-aware actions |
 | Advanced Filters | control | No | Patient/Provider locations, Stage, Payment, Date ranges | Valid enums/ranges |
 
-- **Comprehensive Table**:
-  - Patient ID (auto-generated, HPID format: HPID + YY + MM + 4-digit sequence)
-  - Full Patient Name (admin can see all)
-  - Age, Problem, Location
-  - Requested Date Ranges (with tooltip expansion)
-  - Medical Alerts (color-coded)
-  - Inquiry Date (relative time display)
-  - Current Status (all lifecycle stages)
-  - Number of Quotes Received
-  - Payment Status
-  - Last Active Date
-  - Assigned Provider(s)
-  - Action buttons
-
-- **Advanced Filtering**:
-  - All provider filters plus:
-  - Patient Location filter
-  - Provider Location filter
-  - Inquiry Stage filter
-  - Payment Status filter
-  - Date range filters
-
 **Business Rules**:
 
 - Shows all inquiries in all lifecycle stages
@@ -670,26 +653,35 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Soft Delete | control | No | Archive inquiry | Requires reason; reversible view-only |
 | Audit Trail | log | Yes | Full change history | Immutable; timestamped |
 
-- **Complete Inquiry Data**:
-  - All patient information (unmasked)
-  - Complete inquiry details
-  - All provider interactions
-  - Quote history and responses
-  - Payment status and history
+**Notes**:
 
-- **Admin Actions**:
-  - Edit inquiry details (with caution warnings)
-  - Reassign to different providers
-  - Override quote expiration
-  - Escalate urgent cases
-  - Soft delete inquiry
-  - Add admin notes
-
-- **Audit Trail**:
-  - All changes logged with timestamps
-  - Admin identification for all actions
-  - Change reason tracking
-  - Complete activity history
+- Full Inquiry (read-only groups):
+  - Patient (unmasked for admin): name, contact, country
+  - Inquiry metadata: ID, stage, created/updated/activity times
+  - Countries, Problem details, Media, 3D scan viewer, Date ranges
+  - Medical questionnaire Q&A and derived alerts
+- Admin Actions:
+  - Edit inquiry details with caution banners and field-level audit
+  - Reassign providers (single/multi) with eligibility checks
+  - Override expiry/distribution windows with required reason
+  - Soft delete (archive) with reason; read-only view after deletion
+  - Add admin notes (time-stamped; visible to admins only)
+  - Trigger re-notifications when impactful fields change
+- Override Controls:
+  - Expiry: set new deadline (cannot be in the past without justification)
+  - Distribution: re-run matching; include/exclude specific providers
+  - All overrides require confirmation and reason entry
+- Reassignment:
+  - Search providers by country/specialty; multi-select
+  - Validation: avoid duplicates; respect provider capacity policies (if enabled)
+  - Optional note sent to provider(s) upon assignment
+- Soft Delete:
+  - Requires reason; retains data for audit; prevents further edits
+  - Display badge "Archived" across all admin views
+- Audit Trail:
+  - Records: who, when, what changed (old → new), reason, IP (if available)
+  - Filterable by field, user, date range
+  - Exportable (CSV/JSON) for compliance
 
 **Business Rules**:
 
