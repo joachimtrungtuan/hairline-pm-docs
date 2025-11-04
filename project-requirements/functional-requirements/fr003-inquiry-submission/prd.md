@@ -70,6 +70,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Actors**: Patient, System, Medical Questionnaire Engine, 3D Scan Service
 
+**Trigger**: Patient starts a new inquiry in the mobile app and proceeds through the creation steps
+
+**Outcome**: A complete inquiry is created with destinations, media, scan reference, date ranges, and medical questionnaire; inquiry ID generated
+
 **Main Flow**:
 
 1. **Service Selection**
@@ -148,6 +152,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Actors**: System, Providers, Admin
 
+**Trigger**: System detects a newly submitted inquiry meeting completeness requirements
+
+**Outcome**: Inquiry is distributed to matching providers; provider dashboards updated and notifications sent
+
 **Main Flow**:
 
 1. **Inquiry Processing**
@@ -187,6 +195,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Actors**: Provider, System, Admin
 
+**Trigger**: Provider receives a distributed inquiry or opens an assigned inquiry from the dashboard
+
+**Outcome**: Provider reviews anonymized details and manages status prior to quote creation
+
 **Main Flow**:
 
 1. **Inquiry Review**
@@ -215,6 +227,10 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 ### Workflow 4: Admin Inquiry Management (Admin Flow)
 
 **Actors**: Admin, System, Providers, Patients
+
+**Trigger**: Admin opens an inquiry for oversight or intervention, or a policy/action requires admin processing
+
+**Outcome**: Admin edits/overrides/reassigns/archives with full audit; re-notifications triggered as needed
 
 **Main Flow**:
 
@@ -923,18 +939,26 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ## Assumptions
 
-1. **Patient Engagement**: Patients will actively complete comprehensive inquiries and provide accurate medical information
-2. **Provider Participation**: Providers will respond to distributed inquiries within specified timeframes
-3. **Technology Access**: Patients have access to smartphones with camera capabilities for 3D scanning
-4. **Internet Connectivity**: Patients have reliable internet access for inquiry submission
-5. **Medical Compliance**: Patients will provide honest and complete medical information
-6. **Provider Capacity**: Sufficient provider capacity exists to handle inquiry volume (capacity management handled separately)
-7. **Admin Resources**: Admin team has capacity to manage inquiry operations and system configuration
-8. **Data Quality**: 3D scans and questionnaire responses will be of sufficient quality for medical assessment
-9. **System Performance**: Infrastructure can handle concurrent inquiry operations without degradation
-10. **Regulatory Compliance**: Medical data handling meets healthcare compliance requirements
-11. **Medical Alerts**: Medical questionnaire alerts are for provider awareness, not patient rejection
-12. **Incomplete Inquiries**: Patients can have incomplete inquiries and continue them from where they left off
+### User Behavior Assumptions
+
+- Patients will actively complete comprehensive inquiries and provide accurate medical information
+- Patients can have incomplete inquiries and resume from where they left off
+- Patients will provide honest and complete medical information
+- Providers will respond to distributed inquiries within specified timeframes
+
+### Technology Assumptions
+
+- Patients have access to smartphones with camera capabilities for 3D scanning
+- Patients have reliable internet access for inquiry submission
+- Infrastructure can handle concurrent inquiry operations without degradation
+
+### Business Process Assumptions
+
+- Sufficient provider capacity exists to handle inquiry volume (capacity management handled separately)
+- Admin team has capacity to manage inquiry operations and system configuration
+- 3D scans and questionnaire responses will be of sufficient quality for medical assessment
+- Medical data handling meets healthcare compliance requirements
+- Medical questionnaire alerts are for provider awareness, not patient rejection
 
 ## Implementation Notes
 
@@ -965,6 +989,52 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - **Access Control**: Strict role-based access to inquiry data
 - **Audit Logging**: Comprehensive logging of all inquiry activities
 - **Compliance**: Healthcare data protection regulations compliance
+
+---
+
+## User Scenarios & Testing
+
+### User Story 1 - Submit Complete Inquiry (Priority: P1)
+
+Why: Core entry point that powers distribution and provider review.
+
+Independent Test: Patient completes all sections (destinations, media, 3D scan, date ranges, questionnaire) and submits; verify inquiry creation and distribution readiness.
+
+Acceptance Scenarios:
+
+1. Given patient completes required fields, When submitting inquiry, Then system validates and creates inquiry with unique ID
+2. Given a created inquiry, When distribution runs, Then matching providers are identified and prepared for notification
+3. Given a created inquiry, When viewing patient dashboard, Then status shows Inquiry with full summary
+
+### User Story 2 - Draft Autosave & Resume (Priority: P2)
+
+Why: Reduces drop-off and improves completion rates.
+
+Independent Test: Patient abandons mid-flow; later resumes and completes submission.
+
+Acceptance Scenarios:
+
+1. Given patient leaves mid-inquiry, When returning within 7 days, Then system restores last step and data
+2. Given a restored draft, When continuing, Then previously validated sections remain intact
+3. Given 7 days of inactivity, When resuming, Then draft has expired and patient starts a new inquiry
+
+### User Story 3 - Provider Review Read-Only (Priority: P2)
+
+Why: Ensures providers can triage efficiently while protecting patient privacy.
+
+Independent Test: Provider opens distributed inquiry and reviews anonymized details, media, 3D scan, date ranges, and medical alerts.
+
+Acceptance Scenarios:
+
+1. Given distributed inquiry, When provider opens it, Then anonymized patient and medical alerts are visible
+2. Given 3D scan and media, When provider views, Then performance and policy constraints are respected
+3. Given pre-quote stage, When provider attempts to modify patient data, Then system blocks and logs read-only access
+
+### Edge Cases
+
+- Patient uploads invalid media exceeding limits: validation blocks with actionable guidance
+- Overlapping date ranges: server-side validation rejects with correction prompts
+- Missing questionnaire details for “Yes” answers: system requires completion before submission
 
 ---
 

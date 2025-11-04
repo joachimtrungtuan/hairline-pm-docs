@@ -12,24 +12,16 @@
 
 Enable patients to convert accepted quotes into confirmed procedure bookings by selecting provider pre-scheduled time slots and paying deposits, while ensuring calendars are blocked, confirmations are issued, and rescheduling/cancellations follow clear rules. This module operationalizes the handoff from quote acceptance (auto-scheduled) to confirmed booking, enforcing deposit collection, provider calendar integrity, and patient/admin notifications.
 
-### Multi-Tenant Architecture
-
-**Tenants Involved**: ✅ Patient Platform | ✅ Provider Platform | ✅ Admin Platform | ✅ Shared Services
-
-**Cross-Tenant Communication**:
-
-- Patient app confirms booking details and initiates payment via platform APIs; provider calendar availability is surfaced from Provider Platform; Admin Platform observes and can intervene per policy.
-- Separate auth per tenant with RBAC; cross-tenant interactions strictly via versioned APIs; patient identity remains masked to providers until payment confirmation.
-- Admin has oversight visibility across bookings, payments, and schedules for audit and support.
-
-**Entry Points**:
-
-- Patient accesses from Accepted Quote details in mobile app; auto-preselects a provider slot embedded in the quote.
-- Activation triggers: Quote accepted (from FR-005) → Booking flow becomes available; Confirmation triggers: successful deposit payment (FR-007/007B) → status moves to Confirmed and identity unmasking occurs for provider.
-
 ---
 
 ## Module Scope
+
+### Multi-Tenant Architecture
+
+- **Patient Platform (P-03)**: Booking confirmation flow and payment initiation after quote acceptance.
+- **Provider Platform (PR-02)**: Calendar exposure and blocking, booking visibility, reschedule approvals.
+- **Admin Platform (A-01/A-05/A-09)**: Oversight, policy configuration, financial reconciliation, notifications governance.
+- **Shared Services (S-02/S-03/S-05)**: Payments, notifications, document storage.
 
 ### Multi-Tenant Breakdown
 
@@ -69,9 +61,11 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - Direct patient↔provider chat (handled by FR-012 scope); SMS optionality is handled by S-03 settings.
 - Travel booking details (handled by FR-008) beyond minimal itinerary placeholders.
 
-### Entry Points & Activation
+### Entry Points
 
-Patients enter from the Accepted Quote detail view; flow is enabled immediately after FR-005 acceptance. Booking is confirmed upon successful deposit payment; calendar blocks occur at confirmation.
+- Patient-initiated via mobile from the Accepted Quote detail view.
+- Activation: Becomes available immediately after FR-005 quote acceptance.
+- Confirmation: Occurs after successful deposit (or first installment) per FR-007/FR-007B, which also unmask patient identity and blocks provider calendar.
 
 ---
 
