@@ -3,7 +3,7 @@
 **Module**: P-01: Auth & Profile Management  
 **Feature Branch**: `fr001-patient-authentication`  
 **Created**: 2025-10-28  
-**Status**: Verified & Approved  
+**Status**: ✅ Verified & Approved  
 **Source**: FR-001 from system-prd.md
 
 ## Executive Summary
@@ -15,24 +15,72 @@ The Patient Authentication & Profile Management module enables patients to secur
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-01)**: Auth & Profile Management
-- **Integration Points**: Admin Platform (patient oversight), Provider Platform (anonymized patient data)
+- **Provider Platform**: Anonymized patient data access (read-only)
+- **Admin Platform (A-01)**: Patient Management & Oversight
+
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-01)**:
+
+- Register and create accounts via mobile app only
+- Login and authenticate with email/password
+- Manage profile information (name, email, phone, date of birth, gender, country)
+- Update profile image and preferences
+- Reset password via email OTP
+- Manage notification preferences and privacy settings
+- View and manage active device sessions
+- Request account deletion (soft-delete handled by admin)
+- Access profile overview, settings, and account management features
+
+**Provider Platform**:
+
+- Access anonymized patient data only (no direct patient communication)
+- View patient identifiers and basic profile information for assigned cases
+- No authentication or profile management capabilities for providers
+- Patient data remains anonymized until payment confirmation (per system PRD)
+
+**Admin Platform (A-01)**:
+
+- View all patient accounts and profiles
+- Edit patient profile information with audit trail
+- Suspend/reactivate patient accounts
+- Reset patient passwords
+- Manage patient account status and verification state
+- View and manage patient authentication logs
+- Handle account deletion requests (soft-delete)
+- Cannot create new patient accounts (patients must register via mobile app)
+
+**Shared Services (S-XX)**:
+
+- Email service for OTP delivery and notifications
+- Session management and authentication tokens
+- Audit logging for all authentication and profile changes
+- Password hashing and security utilities
+- Notification service integration for account-related alerts
 
 ### Communication Structure
 
-**Note**: Direct patient-provider communication is currently **not in scope** for V1 and has been moved to the backlog. Authentication and profile management operates through:
+**In Scope**:
 
-- **Patient → System**: Registration, login, profile updates, password management
-- **System → Patient**: One-time passcodes (OTP) for email confirmation and password reset, profile update notifications
-- **Admin → Patient Data**: Admin can view and manage patient profiles (with audit trail)
-- **System → Provider Platform**: Anonymized patient data (no direct communication)
+- Patient → System: Registration, login, profile updates, password management
+- System → Patient: One-time passcodes (OTP) for email confirmation and password reset, profile update notifications
+- Admin → Patient Data: Admin can view and manage patient profiles (with audit trail)
+- System → Provider Platform: Anonymized patient data (no direct communication)
+- System → Admin: Authentication logs, security events, and account status updates
 
-If direct patient-provider communication is implemented in the future, it would be handled through a separate FR (FR-012: Messaging & Communication).
+**Out of Scope**:
+
+- Direct patient-provider communication (handled by FR-012, future)
+- Provider-initiated patient account creation
+- Admin-initiated patient account creation (patients must register via mobile app)
+- Social authentication (Google, Apple, Facebook OAuth - future enhancement)
+- Multi-factor authentication beyond email OTP (future enhancement)
 
 ### Entry Points
 
 1. **Patient-Initiated**: Primary flow through mobile app registration and login (patients can ONLY be registered via the mobile app)
 2. **Admin-Managed**: Admin can manage patient accounts (view/edit/suspend) but CANNOT create new patient accounts
-3. **System-Triggered**: Automatic notifications and confirmations
+3. **System-Triggered**: Automatic notifications and confirmations (OTP delivery, security alerts)
 
 ## Business Workflows
 
@@ -750,16 +798,26 @@ About
 
 ## Assumptions
 
-1. **Patient Engagement**: Patients will actively complete registration and provide accurate information
-2. **Email Access**: Patients have reliable access to email for verification and password reset
-3. **Device Capability**: Patients have smartphones with camera and internet access
-4. **Security Awareness**: Patients understand password security requirements
-5. **Admin Resources**: Admin team has capacity to manage patient accounts and resolve issues
-6. **Email Delivery**: Email service provider maintains high delivery rates
-7. **Network Connectivity**: Patients have reliable internet access for authentication
-8. **Data Accuracy**: Patients will provide accurate personal information
-9. **Compliance Requirements**: Healthcare data handling meets regulatory requirements
-10. **User Behavior**: Patients prefer streamlined registration over comprehensive data collection
+### User Behavior Assumptions
+
+- **Assumption 1**: Patients will actively complete registration and provide accurate information
+- **Assumption 2**: Patients prefer streamlined registration over comprehensive data collection
+- **Assumption 3**: Patients have reliable access to email for verification and password reset
+- **Assumption 4**: Patients understand password security requirements and will follow password strength guidelines
+
+### Technology Assumptions
+
+- **Assumption 1**: Patients have smartphones with camera and internet access
+- **Assumption 2**: Patients use mobile devices (iOS/Android) with modern operating systems
+- **Assumption 3**: Patients have reliable internet connectivity for authentication and profile management
+- **Assumption 4**: Email service provider maintains high delivery rates for OTP and notification emails
+
+### Business Process Assumptions
+
+- **Assumption 1**: Admin team has capacity to manage patient accounts and resolve issues
+- **Assumption 2**: Healthcare data handling meets regulatory requirements (HIPAA/GDPR compliance)
+- **Assumption 3**: Patients will provide accurate personal information during registration
+- **Assumption 4**: Account lockout and security measures are understood and accepted by users
 
 ## Implementation Notes
 
@@ -793,7 +851,166 @@ About
 
 ---
 
-**Document Status**: Draft  
-**Next Steps**: Stakeholder review and approval  
+## User Scenarios & Testing
+
+### User Story 1 - Patient Registration (Priority: P1)
+
+A new patient successfully registers an account through the mobile app, completes email verification, and sets up their profile.
+
+**Why this priority**: This is the foundational user journey that enables all other platform interactions. Without successful registration, patients cannot access any platform features.
+
+**Independent Test**: Can be fully tested by walking through the complete registration flow from app launch to profile completion, verifying each step completes successfully and account is created.
+
+**Acceptance Scenarios**:
+
+1. **Given** patient opens the mobile app for the first time, **When** patient taps "Get Started", **Then** system displays name collection screen
+2. **Given** patient enters name and email/password, **When** patient submits account creation form, **Then** system validates inputs and sends OTP email
+3. **Given** patient receives OTP email, **When** patient enters correct 6-digit code, **Then** system verifies email and proceeds to profile completion
+4. **Given** patient completes profile with all required fields, **When** patient submits profile, **Then** system creates account and redirects to discovery question
+5. **Given** patient answers discovery question, **When** patient taps Continue, **Then** system completes registration and redirects to main app dashboard
+
+---
+
+### User Story 2 - Patient Login (Priority: P1)
+
+An existing patient successfully logs into their account using email and password credentials.
+
+**Why this priority**: This is essential for returning users to access the platform. All authenticated features depend on successful login.
+
+**Independent Test**: Can be fully tested by attempting login with valid credentials, verifying session creation and dashboard access.
+
+**Acceptance Scenarios**:
+
+1. **Given** patient has an existing account, **When** patient enters correct email and password, **Then** system authenticates and creates session
+2. **Given** patient enters incorrect credentials, **When** patient attempts login, **Then** system displays error message and tracks failed attempt
+3. **Given** patient has 5 failed login attempts, **When** patient attempts login again, **Then** system locks account and displays lockout message
+4. **Given** patient successfully logs in, **When** session is created, **Then** system logs authentication event and redirects to dashboard
+
+---
+
+### User Story 3 - Password Reset (Priority: P2)
+
+A patient who forgot their password successfully resets it using email OTP verification.
+
+**Why this priority**: Password recovery is critical for account accessibility and reduces support burden. However, it's secondary to initial registration and login flows.
+
+**Independent Test**: Can be fully tested by initiating password reset flow, verifying OTP delivery, and confirming password change completes successfully.
+
+**Acceptance Scenarios**:
+
+1. **Given** patient forgot password, **When** patient requests password reset, **Then** system sends OTP to registered email
+2. **Given** patient receives reset OTP, **When** patient enters correct code, **Then** system validates code and allows new password entry
+3. **Given** patient enters new password meeting requirements, **When** patient confirms password, **Then** system updates password and creates new session
+4. **Given** reset OTP expires, **When** patient tries to use expired code, **Then** system displays error and allows requesting new code
+
+---
+
+### User Story 4 - Profile Management (Priority: P2)
+
+A patient successfully updates their profile information and manages account settings.
+
+**Why this priority**: Profile management enables users to maintain accurate information and customize their experience. Important but not blocking for core platform functionality.
+
+**Independent Test**: Can be fully tested by accessing profile, editing fields, and verifying changes are saved and reflected correctly.
+
+**Acceptance Scenarios**:
+
+1. **Given** patient is authenticated, **When** patient navigates to profile, **Then** system displays current profile information
+2. **Given** patient edits profile field, **When** patient saves changes, **Then** system validates and updates profile with audit log
+3. **Given** patient changes email address, **When** patient saves, **Then** system triggers email re-verification via OTP
+4. **Given** patient updates notification preferences, **When** patient saves, **Then** system applies changes within 1 minute
+
+---
+
+### Edge Cases
+
+- What happens when patient attempts to register with an email that already exists?
+- How does system handle OTP delivery failure or email service unavailability?
+- What occurs if patient's device loses internet connection during registration process?
+- How to manage concurrent login attempts from multiple devices?
+- What happens when patient attempts to reset password for non-existent email?
+- How does system handle account lockout expiration and unlock process?
+- What occurs if patient tries to delete account with active treatment/aftercare case?
+- How to manage session timeout and automatic logout behavior?
+- What happens when admin modifies patient profile while patient is viewing it?
+- How does system handle password reset OTP expiration mid-flow?
+
+---
+
+## Functional Requirements Summary
+
+### Core Requirements
+
+- **FR-001**: System MUST allow patients to register accounts via mobile app only with email and password
+- **FR-002**: System MUST require email verification via 6-digit OTP before account activation
+- **FR-003**: System MUST authenticate patients with email and password credentials
+- **FR-004**: System MUST support password reset via email OTP verification
+- **FR-005**: System MUST allow patients to view and edit their profile information
+- **FR-006**: System MUST enforce password strength requirements (12+ chars, mixed case, numbers, special chars)
+- **FR-007**: System MUST track and lock accounts after 5 failed login attempts
+- **FR-008**: System MUST log all authentication events for audit trail
+
+### Data Requirements
+
+- **FR-009**: System MUST maintain unique email addresses across all patient accounts
+- **FR-010**: System MUST store patient profile data (name, email, phone, DOB, gender, country)
+- **FR-011**: System MUST maintain session management for authenticated users
+- **FR-012**: System MUST retain patient data for minimum 7 years per healthcare compliance
+
+### Security & Privacy Requirements
+
+- **FR-013**: System MUST hash passwords using bcrypt (cost factor 12+)
+- **FR-014**: System MUST encrypt patient data at rest and in transit
+- **FR-015**: System MUST anonymize patient data when shared with providers (until payment confirmation)
+- **FR-016**: System MUST require re-authentication for sensitive actions (delete account, password change)
+- **FR-017**: System MUST log all admin profile modifications with reason and timestamp
+
+### Integration Requirements
+
+- **FR-018**: System MUST integrate with email service for OTP delivery and notifications
+- **FR-019**: System MUST expose APIs for profile management and authentication
+- **FR-020**: System MUST integrate with notification service (FR-020) for account-related alerts
+
+---
+
+## Key Entities
+
+- **Patient**: patientId, email (unique), firstName, lastName, phoneNumber, dateOfBirth, gender, country, profileImageUrl, emailVerified, accountStatus, createdAt, updatedAt
+  - **Key attributes**: Unique email address, encrypted password, profile completion status, account verification state
+  - **Relationships**: One patient has many sessions; one patient has one profile; one patient has many audit logs
+
+- **PatientSession**: sessionId, patientId, deviceInfo, ipAddress, userAgent, expiresAt, createdAt, lastActivityAt
+  - **Key attributes**: Authentication token, session expiration, device information
+  - **Relationships**: Belongs to Patient; can be revoked independently
+
+- **AuditLog**: auditId, patientId, action, actorId (patient/admin), actionType, beforeValue, afterValue, reason, ipAddress, createdAt
+  - **Key attributes**: Immutable log entry, change tracking, audit trail
+  - **Relationships**: Belongs to Patient; tracks all profile and authentication changes
+
+- **OTPCode**: otpId, email, code (hashed), type (verification/reset), expiresAt, used, attempts, createdAt
+  - **Key attributes**: 6-digit code, expiration time, usage tracking
+  - **Relationships**: Linked to email address; one-time use
+
+---
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-10-28 | 1.0 | Initial PRD creation | Product & Engineering |
+| 2025-11-04 | 1.1 | Template compliance: Added User Scenarios & Testing, Functional Requirements Summary, Key Entities, restructured Assumptions, added Appendices | Product & Engineering |
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | [Status] |
+| Technical Lead | [Name] | [Date] | [Status] |
+| Stakeholder | [Name] | [Date] | [Status] |
+
+---
+
+**Document Status**: ✅ Complete  
+**Next Steps**: Technical specification and implementation planning  
 **Maintained By**: Product & Engineering Teams  
 **Review Cycle**: Monthly or upon major changes

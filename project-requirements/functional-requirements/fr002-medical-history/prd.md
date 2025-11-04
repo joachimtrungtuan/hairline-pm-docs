@@ -15,22 +15,64 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 ### Multi-Tenant Architecture
 
-- Shared Services: Medical Intake Engine (questionnaire validation, alert generation); 3D Media Processing (validation, watermarking); Media Storage
-- Consumer Modules: FR-003 Inquiry (capture and distribution), PR-02 Provider Review (read-only consumption), FR-011 Aftercare (follow-up media)
-- Admin Platform (A-09): Questionnaire templates and risk-tag rules powering the engine
+- **Shared Services (S-01, S-05)**: 3D Media Processing Service | Media Storage Service | Medical Intake Engine
+- **Patient Platform (P-07)**: 3D Scan Capture & Viewing (consumer via FR-003)
+- **Provider Platform (PR-02)**: Inquiry & Quote Management (read-only consumption)
+- **Admin Platform (A-09)**: System Settings & Configuration (Questionnaire Templates Integration)
+
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-07)**:
+
+- Patient-facing capture UI is handled by FR-003 (Inquiry Submission module)
+- Patient app submits questionnaire responses and head video to engine via FR-003
+- Patients do not directly interact with FR-002 engine; all interaction through FR-003
+
+**Provider Platform (PR-02)**:
+
+- Providers consume read-only processed artifacts (normalized questionnaire, alerts, watermarked media)
+- Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing
+- Providers see anonymized artifacts until payment confirmation (per system PRD)
+
+**Admin Platform (A-09)**:
+
+- Admin manages questionnaire templates, sections, fields, and risk-tag rules via FR-025
+- Admin configures validation rules, media constraints, and alert thresholds
+- Admin cannot modify fixed security constraints (encryption, retention policies)
+- Template versioning and publishing managed through FR-025; engine consumes published versions
+
+**Shared Services (S-01, S-05)**:
+
+- **S-01: 3D Media Processing Service**: Validates head video quality, applies watermarking, handles media transformations
+- **S-05: Media Storage Service**: Stores processed media artifacts with secure access controls
+- **Medical Intake Engine**: Validates questionnaire responses, computes severity alerts, normalizes data, manages versioning
+- Engine operations are stateless between calls except for persisted artifacts
+- All processing includes configuration version stamping (templateVersion, rulesetVersion)
 
 ### Communication Structure
 
-- This FR exposes backend contracts only; patient/provider UI is handled in FR-003/PR-02.
-- Admin ↔ System: Templates and rules are managed in FR-025; the engine consumes published versions.
+**In Scope**:
 
-Out-of-scope for this FR: Real-time chat, appointment scheduling, and pricing setup (covered by other FRs).
+- FR-003 → Engine: Submission of questionnaire responses and head video for processing
+- Engine → FR-003: Return of normalized payload, alert tags, and media URIs
+- Engine → Providers (via FR-003/PR-02): Read-only access to processed artifacts
+- Admin → Engine (via FR-025): Template and rule configuration updates
+- Engine → System: Automatic consumption of published template versions
+
+**Out of Scope**:
+
+- Patient-facing capture UI (handled by FR-003)
+- Provider review UI (handled by FR-003/PR-02)
+- Real-time chat between patients and providers
+- Appointment scheduling functionality
+- Pricing setup and quote management (covered by FR-004)
+- Direct patient-provider communication
 
 ### Entry Points
 
-1. FR-003 submits questionnaire responses and head video to the engine
-2. Engine validates, normalizes, watermarks and stores artifacts; returns payload to FR-003
-3. Engine consumes updated templates/rules upon FR-025 publication
+1. **FR-003 Submission**: FR-003 (Inquiry Submission) calls engine API with questionnaire responses and head video
+2. **Template Updates**: Engine automatically consumes updated templates/rules when FR-025 publishes new versions
+3. **Admin Configuration**: Admin publishes template versions via FR-025 (A-09 settings); engine applies to new inquiries
 
 ## Business Workflows
 

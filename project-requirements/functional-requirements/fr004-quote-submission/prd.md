@@ -3,7 +3,7 @@
 **Module**: PR-02: Inquiry & Quote Management
 **Feature Branch**: `fr004-quote-submission-management`
 **Created**: 2025-10-30
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-004 from system-prd.md
 
 ## Executive Summary
@@ -18,12 +18,39 @@ The Quote Submission & Management module empowers providers to receive distribut
 - **Patient Platform (P-02)**: Quote review/acceptance/cancellation (read-only for submission)
 - **Admin Platform (A-01)**: Audit, visibility, and override authority on all quote objects
 
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-02)**:
+
+- View quotes per inquiry; accept/decline; see expiry timers and status
+- Receive notifications for quote creation/updates/expiry
+
+**Provider Platform (PR-02)**:
+
+- Create, edit, submit quotes; manage lifecycle (draft, sent, expired, withdrawn, archived)
+- See inquiry context (append-only)
+
+**Admin Platform (A-01)**:
+
+- Oversight of all quotes; inline edit (policy-bound), soft delete/restore; full audit trail
+- Configure expiry window and manage exceptional withdrawals
+
+**Shared Services (S-XX)**:
+
+- Notification service; audit logging; retention/soft-delete utilities
+
 ### Communication Structure
 
-- **System → Provider**: Automatic notifications for new inquiries and time-bound updates
-- **Provider → System**: Quote draft, edit, status transitions, deletion, and archiving actions
-- **System → Patient**: Notification of quote creation/expiry/status via platform subsystem
-- **Admin → All Parties**: Oversight, intervention, and audit logging
+**In Scope**:
+
+- System → Provider: New inquiry notifications and time-bound updates
+- Provider → System: Draft, edit, status transitions, soft delete/archive
+- System → Patient: Quote creation/expiry/status notifications
+- Admin → All Parties: Oversight, intervention, audit logging
+
+**Out of Scope**:
+
+- Direct patient-provider chat (handled by FR-012, future)
 
 ### Entry Points
 
@@ -93,37 +120,34 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 #### Screen 1: Quote Creation/Edit
 
-- All inquiry context/fields (auto-copied from distributed inquiry; append-only — never replace inquiry data).
-- Field order (matches implemented design):
-  1) Select treatment (admin-curated; compulsory)
-  2) Select package (provider-bounded; optional, per quote)
-  3) Customize package → What to include (per quote):
-     - Medical consultation
-     - Maximum grafts
-     - PRP injection
-     - Washing session on 3rd day
-     - Life time warranty
-     - Preferred language translator
-     - [Add more services]
-     - Travel & accommodation arrangements
-       - Hotel accommodation (pick star level)
-       - Facility–hotel transport
-       - Airport–hotel transport
-       - Flight arrangements (pick flying class)
-       - [Add more services]
-  4) Estimate grafts
-     - Estimate number of grafts required
-     - Draw on 3D image to communicate with the patient
-  5) Select treatment date(s)
-     - From patient-requested date ranges; provider may choose a subset (not required to quote all)
-  6) Price
-     - Quote price per each selected date range
-     - Add promotion
-  7) Select the clinician
-  8) Add treatment plan
-  9) Add note (long text)
-  10) View summary (read-only): Treatment chosen; Package chosen; Customization; Estimated grafts; Date(s) with price per date; Clinician; Note
-  11) Expiry (read-only): shows admin-defined window (default 48h) and computed deadline
+**Purpose**: Provider creates/edits a quote with full inquiry context
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Treatment | select | Yes | Admin-curated treatment | Must select one |
+| Package | select | No | Provider-bounded package | Optional per quote |
+| Package Customization | checklist | No | Per-quote inclusions | Free add-ons allowed (logged) |
+| Custom Services | repeater | No | Provider-defined services (name/desc/cost) | Each item validated; logged |
+| Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
+| 3D Markup | drawing | No | Draw on 3D image | Stored with audit |
+| Treatment Dates | multiselect (dates) | Yes | Subset of patient-requested ranges | Non-overlapping; from FR-003 ranges |
+| Price per Date | repeater | Yes | Price for each selected date | Currency rules; one-to-one with dates |
+| Promotion | select/text | No | Optional promotion | Valid code or text note |
+| Clinician | select | Yes | Responsible clinician | Must be active/eligible |
+| Treatment Plan (per-day) | repeater | Yes | Consecutive per-day plan entries | No date gaps; sequential dates |
+| Note | textarea | No | Additional note | Max length enforced |
+| Summary (read-only) | group | Yes | Read-only summary of inputs | Must reflect latest data |
+| Expiry (read-only) | datetime | Yes | Derived deadline | From admin-configured window |
+
+**Notes**:
+
+- Package Customization examples: Medical consultation, Max grafts, PRP injection, Day-3 wash, Lifetime warranty, Language translator
+- Travel & accommodation add-ons: Hotel (star level), Facility–hotel transport, Airport–hotel transport, Flight (class)
+- Price must be specified per each selected treatment date
+- Providers may add Custom Services as needed (name, description, optional price); all custom items are audited
+- Treatment Plan must cover consecutive calendar days without skipping; validation blocks gaps or overlaps
 
 Notes:
 
@@ -131,51 +155,157 @@ Notes:
 
 #### Screen 2: Quote List (Unified; no tabs)
 
-- Single unified list (no tab segmentation) to reflect globally unified case statuses.
-- Columns:
-  - Patient identifier (auto-generated anonymized ID)
-  - Name (partly censored)
-  - Age (number)
-  - Problem/concern (enum)
-  - Treatment & package chosen
-  - Date ranges quoted (multiple; provider-chosen subset)
-  - Price (multiple; mapped to date ranges)
-  - Location
-  - Medical alerts (chips)
-  - Quoted date
-  - Action (Edit, Soft Delete, View Details)
-- Search/filter: by patient/inquiry/treatment/date/status/provider/location/alerts
+**Purpose**: Provider views all quotes in a single unified list
 
-#### Screen 3: Quote Details Popup/Screen
+**Data Fields**:
 
-- Full quote breakdown, all submitted fields
-- Edit and Delete (soft) if eligible
-- Complete provider/practice info as per platform rules
-- Audit/version history popup
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | column | Yes | Anonymized ID | Searchable |
+| Name | column | Yes | Partly censored name | Masking applies |
+| Age | column | No | Patient age | Number; sortable |
+| Problem/Concern | column | No | Primary concern | Filterable |
+| Treatment & Package | column | Yes | Selected treatment/package | Read-only |
+| Date Ranges Quoted | column | Yes | Provider-chosen subset | Tooltip for all ranges |
+| Price | column | Yes | Prices mapped per date | Currency formatting |
+| Location | column | No | Patient country | Filterable |
+| Medical Alerts | column | Yes | Alert chips | Severity colors |
+| Quoted Date | column | Yes | Quote created date | Relative formatting rules |
+| Action | column | Yes | Edit, Soft Delete, View Details | State-aware |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts | Valid enums/ranges |
+
+**Notes**:
+
+- Unified list (no tabs) to reflect global case statuses
+
+#### Screen 3: Quote Details Screen
+
+**Purpose**: Inspect full quote details and act (patient-first continuation from inquiry)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient (Anonymized) | group | Yes | Anonymized ID, masked name, age, location | Contact hidden until payment |
+| Inquiry Context | group | Yes | Continuation data from FR-003 | Read-only |
+|  • Countries | list | Yes | Selected treatment countries | From inquiry |
+|  • Problem Details | group | Yes | Concern, duration, previous treatments | From inquiry |
+|  • Medical Alerts | chips | Yes | Critical/Standard/None | Derived from questionnaire |
+|  • Requested Date Ranges | list | Yes | All patient-requested ranges | Read-only |
+|  • Media/Scan | links/viewer | No | Photos/videos/3D scan viewer | Read-only |
+| Quote Summary | group | Yes | Treatment, package, custom services, per-day plan | Read-only |
+| Dates & Prices | table | Yes | Each selected date with price | One-to-one mapping; currency rules |
+| Custom Services | list | No | Provider-defined services | Name/desc/cost shown |
+| Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
+| Promotion | text/select | No | Promotion applied | Code or description |
+| Clinician | text | Yes | Responsible clinician | Must be eligible |
+| Treatment Plan (per-day) | table | Yes | Consecutive per-day entries | No gaps/overlaps |
+| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot |
+| Note | text | No | Provider note | Read-only |
+| Expiry | datetime | Yes | Computed deadline | From admin window |
+| Provider Info | group | Yes | Provider/practice info | Read-only per policy |
+| Actions | actions | Yes | Edit / Soft Delete (if eligible) | State policy enforced |
+| Audit/Version | modal | Yes | Version history and audit log | Immutable audit |
+
+**Notes**:
+
+- UI may use a tabbed interface defaulting to Patient tab, then Inquiry, then Quote, then Audit
+- Patient-first ordering ensures natural continuation from inquiry to quote data
 
 ### Patient Platform (Read-only for this module)
 
 #### Screen 4: Quote Review
 
-- Quotes grouped/listed per inquiry
-- Major fields: Treatment, price breakdown, add-ons, status (Pending, Accepted, Expired), expiration timer
-- Accept/Decline buttons (with warning for expiration/withdrawal)
-- Provider info and medical details as allowed by privacy rules
-- Notification of new/updated/expired quotes
+**Purpose**: Patient reviews and accepts/declines quotes
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Quote List | list | Yes | Quotes grouped by inquiry | Read-only |
+| Treatment | text | Yes | Selected treatment | Read-only |
+| Price Breakdown | table | Yes | Per-date pricing | Currency rules |
+| Add-ons | list | No | Customizations/add-ons | Read-only |
+| Status | badge | Yes | Pending/Accepted/Expired | Enum validation |
+| Expiration Timer | timer | Yes | Countdown to expiry | From admin window |
+| Provider Info | group | Yes | Allowed provider details | Privacy rules |
+| Actions | actions | Yes | Accept/Decline | State & confirmation rules |
+| Notifications | note | No | New/updated/expired indicators | Read-only |
 
 ### Admin Platform
 
-#### Screen 5: Quote Oversight/Audit Dashboard
+#### Screen 5: Quote List (Admin)
 
-- Search/filter for all quotes by provider/inquiry/status/date/location/alerts
-- Restore or permanently archive (special action)
-- Audit trail modal for every quote (who, what, when, previous value)
-- View all quote version history
+**Purpose**: Admin lists and filters all quotes (multiple providers per inquiry)
 
-#### Screen 6: Admin Inline Quote Edit
+**Data Fields**:
 
-- Admin can inline-edit quotes where policy requires intervention: price per selected date range, package inclusions, notes, and clinician (with audit reason).
-- All inline edits are auditable (who/when/before/after, reason). System re-notifies patient and provider when changes are impactful.
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Global Quote Table | table | Yes | All quotes with columns & filters | Admin-only |
+| Patient ID | column | Yes | Anonymized ID | Searchable |
+| Name | column | Yes | Partly censored name | Masking applies |
+| Age | column | No | Patient age | Number; sortable |
+| Problem/Concern | column | No | Primary concern | Filterable |
+| Treatment & Package | column | Yes | Selected treatment/package | Read-only |
+| Date Ranges Quoted | column | Yes | Provider-chosen subset | Tooltip for all ranges |
+| Price | column | Yes | Prices mapped per date | Currency formatting |
+| Location | column | No | Patient country | Filterable |
+| Medical Alerts | column | Yes | Alert chips | Severity colors |
+| Quoted Date | column | Yes | Quote created date | Relative formatting rules |
+| Provider | column | Yes | Provider/clinic | Filterable |
+| Actions | column | Yes | Restore/Archive/View Detail | State-aware |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider | Valid enums/ranges |
+| Inquiry Grouping | control | Yes | Default: grouped by inquiry | Toggle grouping |
+| Multi-Quote Cue | badge/icon | No | Visual cue for multiple quotes in inquiry | Shows count or indicator |
+| Audit Trail | modal | Yes | Per-quote audit (who/what/when/prev value) | Immutable |
+| Version History | modal | Yes | Full version history | Immutable |
+
+#### Screen 6: Quote Detail (Admin)
+
+**Purpose**: Admin views complete quote with inquiry continuation
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Quote Selector | dropdown/list | Yes | Switch between quotes for this inquiry | Must belong to same inquiry |
+| Quote Summary | group | Yes | Treatment, package, custom services, per-day plan | Read-only |
+| Dates & Prices | table | Yes | Each selected date with price | One-to-one mapping |
+| Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
+| Promotion | text/select | No | Promotion applied | Code or description |
+| Clinician | text | Yes | Responsible clinician | Must be eligible |
+| Treatment Plan (per-day) | table | Yes | Consecutive per-day entries | No gaps/overlaps |
+| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot |
+| Note | text | No | Provider note | Read-only |
+| Expiry | datetime | Yes | Computed deadline | From admin window |
+| Provider Info | group | Yes | Provider/practice info | Read-only |
+| Inquiry Context | group | Yes | Countries, problem, alerts, ranges, media/scan | From FR-003 |
+| Audit Trail | log | Yes | Full change history | Immutable |
+| Version History | list | Yes | Quote versions | Immutable |
+
+#### Screen 7: Admin Inline Quote Edit
+
+**Purpose**: Admin performs limited inline edits with audit
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Quote Selector | dropdown/list | Yes | Select target quote under inquiry | Must belong to same inquiry |
+| Price per Date | repeater | Cond. | Edit price per selected date | Reason required |
+| Package Inclusions | checklist | Cond. | Edit inclusions | Reason required |
+| Estimated Grafts | number | Cond. | Adjust graft count | Positive integer; reason required |
+| Custom Services | repeater | Cond. | Add/edit provider-defined services | Name/desc/cost; reason required |
+| Treatment Plan (per-day) | repeater | Cond. | Edit consecutive per-day plan | No gaps/overlaps; reason required |
+| Promotion | text/select | Cond. | Add/change promotion | Valid code; reason required |
+| Notes | textarea | No | Admin note | Stored with audit |
+| Clinician | select | Cond. | Change clinician | Must be eligible |
+| Audit Reason | textarea | Yes | Reason for change | Required for any edit |
+
+**Notes**:
+
+- All inline edits auditable (who/when/before/after, reason); system re-notifies on impactful changes
 
 ## Business Rules
 
@@ -203,6 +333,44 @@ Notes:
 - **SC-003**: 95% of patient decisions (accept/decline) are processed with correct quote status update and notification
 - **SC-004**: <5% of provider quote rejections due to missing/invalid fields
 - **SC-005**: 0 hard deletes of quotes; 100% retrievable from archive for ≥7 years
+
+## Functional Requirements Summary
+
+### Core Requirements
+
+- **FR-001**: Providers MUST create, edit, and submit quotes with treatment, package, customization, dates, and per-date pricing.
+- **FR-002**: System MUST enforce admin-controlled expiry window (default 48h) and compute deadlines per quote.
+- **FR-003**: System MUST auto-cancel other quotes for the same inquiry upon one acceptance and notify affected providers.
+- **FR-004**: System MUST support provider withdrawal after acceptance with admin resolution workflow and full audit.
+- **FR-005**: Admin MUST be able to inline edit policy-bound fields with required reason and re-notifications.
+
+### Data Requirements
+
+- **FR-006**: Quotes MUST reference original inquiry and patient; quote data appends, never overwrites inquiry data.
+- **FR-007**: All quote edits and state transitions MUST be versioned and auditable.
+
+### Security & Privacy Requirements
+
+- **FR-008**: Patient identifiers MUST remain anonymized to providers until payment confirmation.
+- **FR-009**: All quote data MUST be encrypted at rest and in transit; soft deletes only.
+
+### Integration Requirements
+
+- **FR-010**: Module MUST integrate with FR-003 for inquiry context and FR-020 for notifications.
+- **FR-011**: Admin settings (expiry window) MUST be applied from A-09.
+
+### Clarifications
+
+- **FR-012**: Refund/penalty policy depth for provider withdrawal may move to a dedicated FR if expanded.
+
+## Key Entities
+
+- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], clinicianId, plan, note, status, expiresAt, createdAt, updatedAt
+  - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
+- **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
+  - Relationships: belongsTo Quote
+- **QuoteAudit**: quoteId, action, actorId, reason, before, after, createdAt
+  - Relationships: belongsTo Quote
 
 ## Dependencies
 
@@ -256,3 +424,18 @@ Notes:
 - [ ] Consistent with UI diagrams, data schema, and nomenclature
 - [ ] No unresolved [NEEDS CLARIFICATION]
 - [ ] Aligned with GDPR/data/retention and platform notification/audit rules
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
+| 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, comms structure, screen tables, FR summary, entities | Product & Engineering |
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | [Status] |
+| Technical Lead | [Name] | [Date] | [Status] |
+| Stakeholder | [Name] | [Date] | [Status] |
