@@ -17,17 +17,46 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **Patient Platform (P-05)**: Aftercare & Progress Monitoring
 - **Provider Platform (PR-04)**: Aftercare Participation (optional)
 - **Admin Platform (A-03)**: Aftercare Team Management
+- **Shared Services (S-XX)**: Notifications & Alerts, Media Storage, Payment (Standalone), Messaging/Communication (if enabled)
+
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-05)**:
+
+- View aftercare dashboard (milestones, tasks, progress)
+- Upload 3D scans per schedule; complete questionnaires; track medications
+- Receive reminders and urgent alerts; contact aftercare team
+
+**Provider Platform (PR-04)**:
+
+- Review assigned aftercare cases and patient progress
+- Configure/activate aftercare plans; customize milestones/medications/instructions
+- Manage reschedules, escalations, and communications with aftercare team
+
+**Admin Platform (A-03)**:
+
+- Global oversight; case reassignment; plan overrides; escalations
+- Template management (milestones, questionnaires, resources)
+- Standalone aftercare request intake and assignment
+
+**Shared Services (S-XX)**:
+
+- Notifications & alerts; media storage for scans/documents
+- Payment for standalone activation; secure messaging (if enabled)
 
 ### Communication Structure
 
-**Note**: Direct patient-provider chat functionality is currently **not in scope** for V1 and has been moved to the backlog. Communication within the aftercare module is structured through:
+**In Scope**:
 
-- **Patient ↔ Aftercare Team**: Direct communication through structured messaging, questionnaires, and 3D scan submissions
-- **Provider ↔ Aftercare Team**: Communication regarding patient cases and escalations
-- **Admin ↔ All Parties**: Admin can monitor all communications and intervene as needed
-- **Structured Updates**: Progress updates, milestone notifications, and system-generated alerts
+- Patient ↔ Aftercare Team: Structured messaging, questionnaires, and 3D scan submissions
+- Provider ↔ Aftercare Team: Case updates and escalations
+- Admin ↔ All Parties: Oversight and interventions
+- System-generated updates: Milestone reminders, progress updates, urgent flags
 
-If direct patient-provider chat is implemented in the future, it would be handled through a separate FR (FR-012: Messaging & Communication).
+**Out of Scope**:
+
+- Direct patient ↔ provider chat (handled by FR-012 backlog)
+- Payment flows beyond standalone activation (handled in Payment FR)
 
 ### Entry Points
 
@@ -40,6 +69,10 @@ If direct patient-provider chat is implemented in the future, it would be handle
 ### Workflow 1: Treatment-Linked Aftercare Setup (Primary Flow)
 
 **Actors**: Provider, System, Patient, Aftercare Team
+
+**Trigger**: Provider marks treatment as completed and initiates aftercare setup
+
+**Outcome**: Aftercare plan is configured, activated, and patient/aftercare team are notified
 
 **Main Flow**:
 
@@ -84,6 +117,10 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Actors**: Patient, Admin, Assigned Provider, Aftercare Team
 
+**Trigger**: Patient requests standalone aftercare service and completes payment
+
+**Outcome**: Aftercare plan is assigned, configured, and activated for the patient
+
 **Main Flow**:
 
 1. **Service Request**
@@ -124,6 +161,10 @@ If direct patient-provider chat is implemented in the future, it would be handle
 ### Workflow 3: Patient Aftercare Activities (Ongoing Flow)
 
 **Actors**: Patient, System, Aftercare Team
+
+**Trigger**: Scheduled milestone/task becomes due or patient initiates activity
+
+**Outcome**: Task completed, progress updated, and alerts/escalations generated when needed
 
 **Main Flow**:
 
@@ -167,6 +208,10 @@ If direct patient-provider chat is implemented in the future, it would be handle
 ### Workflow 4: Admin Aftercare Management (Management Flow)
 
 **Actors**: Admin, Aftercare Team, Providers
+
+**Trigger**: Admin opens case for oversight or receives event requiring intervention
+
+**Outcome**: Case updated (reassignment/plan edits/escalations) with full audit and re-notifications as needed
 
 **Main Flow**:
 
@@ -228,23 +273,20 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Progress Overview**
-  - Overall progress percentage (calculated field)
-  - Current milestone name and phase
-  - Days remaining in current milestone
-  - Next upcoming task with countdown timer
-
-- **Recent Activity**
-  - Last 3D scan date and status
-  - Last questionnaire completion date
-  - Medication adherence percentage
-  - Upcoming tasks list (next 7 days)
-
-- **Quick Actions**
-  - "Upload 3D Scan" button (if due)
-  - "Complete Questionnaire" button (if due)
-  - "View Instructions" button
-  - "Contact Support" button
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Overall Progress | derived | Yes | Percentage of completed tasks for current plan | 0–100%; auto-calculated |
+| Current Milestone | text | Yes | Name and phase of current milestone | Must exist in plan |
+| Days Remaining | number | No | Days left in current milestone | Non-negative integer |
+| Next Task | text/datetime | No | Next upcoming task with countdown | Shows due date/time |
+| Last 3D Scan | datetime/status | No | Timestamp and status of last scan | Valid status enum |
+| Last Questionnaire | datetime | No | Timestamp of last questionnaire completion | ISO 8601 |
+| Medication Adherence | percent | No | Adherence percentage for current period | 0–100% |
+| Upcoming Tasks | list | No | Next 7 days tasks | Items must exist in schedule |
+| Upload 3D Scan | action | Cond. | Action to capture/upload scan | Enabled if due |
+| Complete Questionnaire | action | Cond. | Action to complete due questionnaire | Enabled if due |
+| View Instructions | action | No | Open instructions content | Always available |
+| Contact Support | action | No | Contact aftercare support | Always available |
 
 **Business Rules**:
 
@@ -379,29 +421,23 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Table Headers** (sortable with up/down arrows):
-  - **Patient ID**: Unique identifier (e.g., HPID2509-0001)
-  - **Patient Name**: Avatar icon + full patient name + email (e.g., "Aylin Kaya", "@gmail.com")
-  - **Phone Number**: Contact number
-  - **Age**: Patient age
-  - **Problem**: Treatment area (Hair, Both, Beard)
-  - **Treatment & Package**: Treatment type + package name
-  - **Aftercare Start Date**: When aftercare began
-  - **Current Milestone**: Current phase name
-  - **Progress**: Visual progress bar (e.g., "3/5 day", "2/3 day")
-  - **Med Alerts**: Color-coded status (Critical-red, Standard-yellow, None-green)
-  - **Last Activity**: Time since last patient interaction
-  - **Action**: Ellipsis menu (View, Edit, Message, Escalate)
-
-- **Search and Filter Controls**:
-  - Search bar: "Search aftercare cases"
-  - Filter button with funnel icon
-  - Sortable columns with arrow indicators
-
-- **Pagination**:
-  - "Total X items" display
-  - Page navigation: "< 1 2 3 4 5 ... 50 >"
-  - Items per page dropdown: "10/page"
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | column | Yes | Unique identifier (e.g., HPID2509-0001) | Searchable; sortable |
+| Patient Name | column | Yes | Avatar + full name + email | PII per role; sortable |
+| Phone Number | column | No | Contact number | E.164 format |
+| Age | column | No | Patient age | Integer 18–100 |
+| Problem | column | No | Treatment area (Hair/Both/Beard) | Enum |
+| Treatment & Package | column | Yes | Treatment + package | Read-only |
+| Aftercare Start Date | column | Yes | Start date | ISO 8601; sortable |
+| Current Milestone | column | Yes | Phase name | Must exist in plan |
+| Progress | column | Yes | Visual progress (e.g., 3/5 days) | Derived; non-negative |
+| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
+| Last Activity | column | No | Time since last interaction | Relative format |
+| Action | column | Yes | View/Edit/Message/Escalate | RBAC enforced |
+| Search | control | No | Search aftercare cases | Debounced input |
+| Filters | control | No | Provider/Milestone/Status/Date range | Valid enums/ranges |
+| Pagination | control | No | Page controls and size | Standard UX pattern |
 
 **Business Rules**:
 
@@ -607,32 +643,24 @@ If direct patient-provider chat is implemented in the future, it would be handle
 
 **Data Fields**:
 
-- **Table Headers** (sortable with up/down arrows):
-  - **Case ID**: Unique identifier (e.g., AC2509-0001)
-  - **Patient Name**: Avatar icon + full patient name + email
-  - **Phone Number**: Contact number
-  - **Age**: Patient age
-  - **Problem**: Treatment area (Hair, Both, Beard)
-  - **Treatment & Package**: Treatment type + package name
-  - **Provider**: Assigned provider name
-  - **Aftercare Type**: Treatment-linked or Standalone
-  - **Start Date**: When aftercare began
-  - **Current Milestone**: Current phase name
-  - **Progress**: Visual progress bar
-  - **Med Alerts**: Color-coded status (Critical-red, Standard-yellow, None-green)
-  - **Status**: Active, Overdue, Completed
-  - **Action**: Ellipsis menu (View, Edit, Reassign, Escalate)
-
-- **Search and Filter Controls**:
-  - Search bar: "Search aftercare cases"
-  - Filter button with funnel icon
-  - Advanced filters: Provider, Milestone, Status, Date range
-  - Sortable columns with arrow indicators
-
-- **Pagination**:
-  - "Total X items" display
-  - Page navigation: "< 1 2 3 4 5 ... 50 >"
-  - Items per page dropdown: "10/page"
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Case ID | column | Yes | Unique identifier (e.g., AC2509-0001) | Searchable; sortable |
+| Patient Name | column | Yes | Avatar + full name + email | PII admin-only |
+| Phone Number | column | No | Contact number | E.164 format |
+| Age | column | No | Patient age | Integer 18–100 |
+| Problem | column | No | Treatment area | Enum |
+| Treatment & Package | column | Yes | Treatment + package | Read-only |
+| Provider | column | Yes | Assigned provider name | Must exist |
+| Aftercare Type | column | Yes | Treatment-linked or Standalone | Enum |
+| Start Date | column | Yes | Aftercare start date | ISO 8601; sortable |
+| Current Milestone | column | Yes | Current phase | Must exist in plan |
+| Progress | column | Yes | Visual progress bar | Derived; non-negative |
+| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
+| Status | column | Yes | Active/Overdue/Completed | Enum |
+| Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced |
+| Search/Filters | control | No | Provider/Milestone/Status/Date range | Valid enums/ranges |
+| Pagination | control | No | Page and size controls | Standard UX pattern |
 
 **Business Rules**:
 
@@ -1024,16 +1052,24 @@ Cross-Module Reference:
 
 ## Assumptions
 
-1. **Patient Engagement**: Patients will actively participate in aftercare activities and complete required tasks
-2. **Provider Participation**: Providers will engage with aftercare features and respond to escalations promptly
-3. **Technology Access**: Patients have access to smartphones with camera capabilities for 3D scanning
-4. **Internet Connectivity**: Patients have reliable internet access for uploading scans and completing questionnaires
-5. **Medical Compliance**: Patients will follow medication schedules and activity restrictions as prescribed
-6. **Provider Availability**: Sufficient provider capacity exists to handle aftercare case load
-7. **Admin Resources**: Admin team has capacity to manage aftercare operations and respond to escalations
-8. **Data Quality**: 3D scans and questionnaire responses will be of sufficient quality for medical assessment
-9. **Payment Processing**: Standalone aftercare payments will be processed successfully without significant failures
-10. **System Performance**: Infrastructure can handle concurrent aftercare operations without degradation
+### User Behavior Assumptions
+
+- Patients will actively participate in aftercare activities and complete required tasks
+- Patients will follow medication schedules and activity restrictions as prescribed
+- Providers will engage with aftercare features and respond to escalations promptly
+
+### Technology Assumptions
+
+- Patients have smartphones with camera capabilities for 3D scanning
+- Patients have reliable internet access for uploading scans and completing questionnaires
+- Infrastructure can handle concurrent aftercare operations without degradation
+
+### Business Process Assumptions
+
+- Sufficient provider capacity exists to handle aftercare case load
+- Admin team can manage operations and respond to escalations
+- 3D scans and questionnaire responses will be of sufficient quality for assessment
+- Standalone aftercare payments will process successfully without significant failures
 
 ## Implementation Notes
 
@@ -1067,8 +1103,121 @@ Cross-Module Reference:
 
 ---
 
+## Functional Requirements Summary
+
+### Core Requirements
+
+- FR-011-CR1: System MUST support treatment-linked and standalone aftercare activation paths
+- FR-011-CR2: Patients MUST be able to complete milestone tasks (3D scans, questionnaires) with reminders and quality validation
+- FR-011-CR3: Providers MUST be able to configure and activate aftercare plans with template customization
+- FR-011-CR4: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
+
+### Data Requirements
+
+- FR-011-DR1: System MUST track milestones, tasks, progress, and adherence as structured entities
+- FR-011-DR2: System MUST retain all aftercare artifacts (scans, questionnaires, communications) per retention policy
+- FR-011-DR3: Progress MUST be derived deterministically from plan and task completion
+
+### Security & Privacy Requirements
+
+- FR-011-SP1: All aftercare data MUST be encrypted in transit and at rest
+- FR-011-SP2: Access MUST be role-based (patient, provider, admin) and fully audited
+- FR-011-SP3: PII visibility MUST follow payment-confirmation policy and admin exemptions
+
+### Integration Requirements
+
+- FR-011-IR1: System MUST integrate with Notification Service for reminders/alerts
+- FR-011-IR2: System MUST store media artifacts in secure storage with controlled access
+- FR-011-IR3: System MUST reference questionnaires managed in FR-025 for aftercare context
+
+## User Scenarios & Testing
+
+### User Story 1 - Treatment-Linked Setup & Activation (Priority: P1)
+
+Why: Core path for Hairline-treated patients entering aftercare.
+
+Independent Test: Provider completes treatment; selects template; activates plan; patient and aftercare team receive notifications.
+
+Acceptance Scenarios:
+
+1. Given treatment completion, When provider selects and activates an aftercare template, Then patient dashboard and team assignment are created
+2. Given activation, When notifications are sent, Then patient and assigned team receive activation messages
+3. Given activation, When viewing patient dashboard, Then milestones, tasks, and schedule are visible
+
+### User Story 2 - Patient Completes Milestone Tasks (Priority: P1)
+
+Why: Ensures ongoing patient engagement and monitoring.
+
+Independent Test: Patient receives reminders; uploads 3D scan; completes questionnaire; progress updates; alerts generated if concerning.
+
+Acceptance Scenarios:
+
+1. Given task due, When patient uploads scan meeting quality, Then task is completed and progress updates
+2. Given concerning questionnaire responses, When submitted, Then case is flagged urgent and team notified
+3. Given missed tasks, When overdue by 24 hours, Then status is Overdue and reminders/escalations trigger
+
+### User Story 3 - Standalone Aftercare Onboarding (Priority: P2)
+
+Why: Opens service to external clinic patients.
+
+Independent Test: Patient requests standalone service, payment completes, admin assigns provider, provider activates plan.
+
+Acceptance Scenarios:
+
+1. Given paid request, When admin assigns provider, Then provider configures and activates plan
+2. Given activation, When patient opens app, Then aftercare dashboard is available with schedule
+
+### Edge Cases
+
+- Provider withdrawal: admin reassigns or cancels with reason; patient notified
+- Network loss during scan upload: resumable upload; no duplicate entries
+- Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved
+
+## Key Entities
+
+- AftercarePlan: patientId, providerId, templateId, status, milestones[], medications[], customInstructions, activatedAt
+  - Key attributes: plan status, schedule, customization
+  - Relationships: belongsTo Patient; belongsTo Provider; references Template
+
+- Milestone: planId, name, durationDays, scanSchedule, questionnaireSchedule, resources[]
+  - Key attributes: schedule and required tasks
+  - Relationships: belongsTo AftercarePlan
+
+- AftercareTask: planId, milestoneId, type (scan|questionnaire|medication|education), dueAt, completedAt, status
+  - Key attributes: task status and timestamps
+  - Relationships: belongsTo Milestone
+
+- ScanArtifact: planId, milestoneId, storageUrl, qualityScore, capturedAt, validated
+  - Key attributes: media reference, quality
+  - Relationships: belongsTo AftercarePlan; referenced by tasks
+
+- QuestionnaireResponse: planId, milestoneId, questionnaireId, answers, flagged, submittedAt
+  - Key attributes: responses and flags
+  - Relationships: belongsTo AftercarePlan; references FR-025 questionnaire
+
+- AftercareAuditEntry: entityType, entityId, action, actorId, reason, before, after, createdAt
+  - Key attributes: immutable audit record
+  - Relationships: belongsTo AftercarePlan (or nested entities)
+
 **Document Status**: ✅ Verified & Approved  
 **Next Steps**: Technical specification and implementation planning  
 **Maintained By**: Product & Engineering Teams  
 **Review Cycle**: Monthly or upon major changes  
 **Verification Date**: 2025-10-23 - Cross-checked against client transcriptions and confirmed alignment
+
+---
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
+| 2025-11-04 | 1.1 | Template compliance: added Shared Services; Communication Structure (In/Out of Scope); Triggers/Outcomes for workflows; restructured Assumptions; added User Scenarios & Testing; Appendices | Product & Engineering |
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | [Status] |
+| Technical Lead | [Name] | [Date] | [Status] |
+| Stakeholder | [Name] | [Date] | [Status] |

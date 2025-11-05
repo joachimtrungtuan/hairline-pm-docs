@@ -66,6 +66,10 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 **Actors**: Provider, System, Admin (observer/audit)
 
+**Trigger**: Provider opens a distributed inquiry and starts composing a quote
+
+**Outcome**: Valid quote is created and delivered to the patient; audit entry recorded
+
 - Provider receives inquiry and opens details
 - Provider fills required quote fields (treatment, pricing, scheduling, packages)
 - Provider submits quote (system validates required/optional fields)
@@ -73,12 +77,24 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 ### Workflow 2: Quote Editing
 
+**Actors**: Provider, System, Admin (observer/audit)
+
+**Trigger**: Provider opens an existing draft or sent (pre-expiry) quote to modify fields
+
+**Outcome**: Changes are saved with versioning/audit; patient notified if significant and not yet accepted
+
 - Provider may edit draft or sent (pre-expiry) quotes (field, price, package edits)
 - All changes are versioned/audited
 - Edits on expired/withdrawn/archived quote are prohibited
 - Patient auto-notified of significant edits if not yet accepted
 
 ### Workflow 3: Quote Expiry & Status Transitions
+
+**Actors**: System, Provider, Patient, Admin (observer)
+
+**Trigger**: Time-based expiry reached; patient accepts a quote; or provider initiates withdrawal/archive
+
+**Outcome**: Quote transitions to correct status; notifications sent; audit recorded
 
 - Each quote has an explicit expiry date (admin-controlled). Default expiry window is 48 hours; providers cannot modify this window and only see the computed expiry timestamp.
 - Upon expiry, system updates quote to "expired" status; quote can no longer be accepted
@@ -88,11 +104,23 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 ### Workflow 4: Quote Deletion (Soft Delete)
 
+**Actors**: Provider, System, Admin
+
+**Trigger**: Provider chooses to remove an ineligible or obsolete quote prior to acceptance
+
+**Outcome**: Quote becomes Archived with rationale; remains visible in audit/archive; only admin can restore
+
 - Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record)
 - System sets status = Archived with rationale
 - Soft-deletes are fully auditable and revertible only by admin
 
 ### Workflow 5: Admin Oversight
+
+**Actors**: Admin, System
+
+**Trigger**: Admin monitors quotes or intervenes per policy or escalation
+
+**Outcome**: Administrative action applied; full audit trail preserved; re-notifications triggered if needed
 
 - Admin dashboard lists all provider quotes, searchable/filterable by state/date/provider/inquiry
 - Admin can perform soft delete or restore; view/edit audit trail and full quote history
@@ -100,6 +128,10 @@ The Quote Submission & Management module empowers providers to receive distribut
 ### Workflow 6: Provider Withdrawal After Acceptance
 
 **Actors**: Provider, Admin, Patient, System
+
+**Trigger**: Provider requests withdrawal after a patient has accepted the quote
+
+**Outcome**: Quote moves to provider-withdrawn pending admin action; system notifies stakeholders; admin resolves path
 
 - In rare cases, provider may withdraw from giving treatment after patient acceptance.
 - Provider submits a withdrawal request with reason; quote status transitions to "provider-withdrawn" pending admin action.
@@ -374,26 +406,63 @@ Notes:
 
 ## Dependencies
 
-- **Internal**:
-  - FR-003: Inquiry Submission (quote distribution and reference)
-  - FR-020: Notifications & Alerts (quote distribution/updates)
-  - Admin-managed treatment catalog/package definitions (A-09)
-- **External**: Calendar/inquiry APIs for appointment integration, currency/exchange rate API for quote currency fields if applicable
-- **Data**: Inquiry ID, Patient anonymized ID, Provider ID, Audit log IDs
+### Internal Dependencies
+
+- FR-003: Inquiry Submission (quote distribution and reference)
+- FR-020: Notifications & Alerts (quote distribution/updates)
+- Admin-managed treatment catalog/package definitions (A-09)
+
+### External Dependencies (APIs, Services)
+
+- Calendar/appointment APIs for appointment integration
+- Currency/exchange rate API for quote currency fields (if applicable)
+
+### Data Dependencies
+
+- Inquiry ID, Patient anonymized ID, Provider ID, Audit log IDs
 
 ## Assumptions
 
-- Providers are fully onboarded and have active staff/clinic profiles
-- All patients/inquiries distributed to eligible providers in jurisdiction
-- Admin-curated treatment catalog is up to date and available
-- Provider staff are trained to use quote management UI and comply with platform audit rules
+### User Behavior Assumptions
+
+- Providers are trained and will use the quote management UI in compliance with platform audit rules
+- Patients will review quotes and act (accept/decline) within configured timeframes
+
+### Technology Assumptions
+
+- Providers have reliable access to the web app; network supports quote operations and media viewing
+- Integration services (notifications, currency) are available with acceptable latency
+
+### Business Process Assumptions
+
+- All patients/inquiries are distributed only to eligible providers within jurisdiction
+- Admin-curated treatment catalog/package definitions are up to date and applied consistently
 
 ## Implementation Notes
 
+### Technical Considerations
+
 - No free text for core treatment field (catalog enforced)
-- Expiry, soft-delete, and audit patterns as per platform standard (see system PRD/constitution)
-- Integration points: Inquiry module (FR-003), notification service (FR-020), admin treatment settings
-- Currency and pricing logic leverages platform-wide exchange rate/service
+- Immutable audit/versioning for all edits and state transitions
+- Expiry, soft-delete, and audit patterns conform to platform standards
+
+### Integration Points
+
+- FR-003: Inquiry context and distribution inputs
+- FR-020: Notifications for creation/updates/expiry/status
+- Admin (A-09): Treatment catalog/package definitions and expiry policy
+
+### Scalability Considerations
+
+- Efficient querying/indexing for provider quote lists and filters
+- Background jobs for mass notifications and expiry processing
+- Rate limiting on edit/submit endpoints to prevent abuse
+
+### Security Considerations
+
+- Encrypt quote data at rest and in transit; enforce RBAC for provider staff
+- Anonymize patient identifiers until payment confirmation
+- Comprehensive audit logging (who/when/what-before/after, reason)
 
 ## Edge Cases
 
@@ -411,6 +480,50 @@ Notes:
 - **Add-On/Package**: Optional offering by provider (e.g., hotel, transport, medications)
 
 ## References
+
+## User Scenarios & Testing
+
+### User Story 1 - Create and Submit Quote (Priority: P1)
+
+Why: Core provider action enabling patient decision-making.
+
+Independent Test: Provider opens distributed inquiry, fills required quote fields, submits; patient sees quote with expiry.
+
+Acceptance Scenarios:
+
+1. Given a distributed inquiry, When provider submits a valid quote, Then patient receives quote and expiry timer starts
+2. Given required fields are missing, When submitting, Then system blocks with clear validation messages
+3. Given a submitted quote, When viewing provider list, Then quote appears with correct status and audit entry
+
+### User Story 2 - Edit Quote Before Expiry (Priority: P2)
+
+Why: Providers need controlled flexibility prior to patient acceptance.
+
+Independent Test: Provider edits a sent (pre-expiry) quote; changes versioned and patient notified.
+
+Acceptance Scenarios:
+
+1. Given a sent quote not yet expired, When editing price/package, Then version increments and audit logs record change
+2. Given a significant change, When saved, Then patient is notified automatically
+3. Given an expired quote, When editing, Then system blocks and shows policy notice
+
+### User Story 3 - Auto-Expiry and Status Transitions (Priority: P1)
+
+Why: Enforces time-bound decision windows.
+
+Independent Test: Allow quote to reach expiry; verify status transitions and notifications.
+
+Acceptance Scenarios:
+
+1. Given a sent quote, When expiry time is reached, Then status becomes Expired and provider/patient are notified
+2. Given patient accepts a quote, When acceptance is recorded, Then other quotes are cancelled and stakeholders notified
+
+### Edge Cases (User Scenarios)
+
+- Provider starts draft then abandons: auto-archive after 7 days
+- Patient does not respond: quote expires and provider notified
+- Provider attempts deletion post-acceptance: disallowed; admin-only archive with rationale
+- Admin audits archived/soft-deleted quote: available in Archived view with full audit trail
 
 - Design: Quote submission/management dashboard + details/flow (latest version approved by Product Owner)
 - system-prd.md: FR-004, Notification/Retention/Audit policies
@@ -431,6 +544,7 @@ Notes:
 |------|---------|---------|--------|
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, comms structure, screen tables, FR summary, entities | Product & Engineering |
+| 2025-11-04 | 1.2 | Template compliance: added Actors/Trigger/Outcome to workflows; normalized Dependencies; restructured Assumptions; formalized Implementation Notes; added User Scenarios & Testing | Product & Engineering |
 
 ## Appendix: Approvals
 

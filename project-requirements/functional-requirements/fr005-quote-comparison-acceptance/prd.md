@@ -12,16 +12,16 @@
 
 The Quote Comparison & Acceptance module enables patients to review all provider quotes received for a submitted inquiry, compare details (treatment, dates, pricing, inclusions), and accept exactly one quote to proceed. Acceptance transitions the case from Quoted to Accepted and prepares the handoff to the subsequent Booking & Payment module. This module maintains strict privacy rules: provider access to patient full identity remains restricted until successful payment confirmation. The module preserves full auditability, honors quote expirations, and ensures non-selected quotes are automatically cancelled with appropriate notifications.
 
+---
+
+## Module Scope
+
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-02)**: Quote Request & Management  
 - **Provider Platform (PR-02)**: Inquiry & Quote Management  
 - **Admin Platform (A-01)**: Patient Management & Oversight  
 - **Shared Services (S-XX)**: Notification service, audit logging, retention/archival utilities
-
----
-
-## Module Scope
 
 ### Multi-Tenant Breakdown
 
@@ -66,7 +66,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - Payment collection and invoice issuance (handled in Booking & Payment FR).  
 - Revealing patient contact/identity to provider prior to payment confirmation.
 
-### Entry Points & Activation
+### Entry Points
 
 - Patient accesses from Inquiry Dashboard (FR-003 Screen 8) where quotes are displayed within the inquiry context, or via push/email notification.  
 - Acceptance is available only while the target quote is non-expired and not withdrawn.  
@@ -148,7 +148,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 - Quotes are displayed within the inquiry dashboard context (not a separate screen).  
 - Expired/withdrawn quotes are visually disabled.  
-- Exactly one acceptance permitted per inquiry.  
+- Exactly one acceptance permitted per inquiry.
 - Patient can view quote details and accept directly from the dashboard.
 
 #### Screen 2: Quote Detail with Accept Action (Extension of FR-004 Screen 4)
@@ -321,12 +321,20 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 ## Assumptions
 
-1. Patient has exactly one active inquiry for which quotes exist.  
-2. Providers have submitted valid, non-expired quotes per FR-004.  
-3. Acceptance alone does not disclose patient full identity to provider; reveal occurs after successful payment confirmation.  
-4. Booking & Payment is implemented as the immediate next step following acceptance.  
-5. Admin legal copy and acknowledgment text are centrally managed.  
-6. **Design Decision - No "Decline" Functionality**: Patients do not have an explicit "decline" action for quotes. Non-selected quotes are handled through: (a) auto-cancellation when another quote is accepted, or (b) expiry after the configured time period (default 48 hours). This simplifies the user flow and reduces system complexity while maintaining full functionality. If user feedback indicates a need for explicit decline functionality, it can be added as a P2 enhancement.
+### User Behavior Assumptions
+
+- Patient has exactly one active inquiry for which quotes exist.  
+- Patients do not have an explicit "decline" action; non-selected quotes are auto-cancelled on acceptance or expire by policy.  
+
+### Technology Assumptions
+
+- Providers have submitted valid, non-expired quotes per FR-004.  
+- Booking & Payment module is available for immediate handoff post-acceptance.
+
+### Business Process Assumptions
+
+- Acceptance alone does not disclose patient full identity to provider; reveal occurs after successful payment confirmation.  
+- Admin legal copy and acknowledgment text are centrally managed.  
 
 ---
 
@@ -428,6 +436,7 @@ Patient attempts to accept a quote that has expired.
 |------|---------|---------|--------|
 | 2025-11-03 | 1.0 | Initial PRD creation for FR-005 | Product & Engineering |
 | 2025-11-04 | 1.1 | PRD reviewed and verified | Product Owner |
+| 2025-11-04 | 1.2 | Template compliance: moved Multi-Tenant Architecture to Module Scope; added MTA bullets; renamed Entry Points; restructured Assumptions into subsections | Product & Engineering |
 
 ---
 
