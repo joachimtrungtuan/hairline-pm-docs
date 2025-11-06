@@ -295,28 +295,33 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Overdue tasks highlighted in red
 - Completed tasks shown in green
 
+**Notes**:
+
+- Dashboard serves as the primary patient interface for aftercare engagement
+- Real-time progress updates when tasks are completed
+- Countdown timers for upcoming tasks create urgency and improve compliance
+- Quick action buttons provide easy access to most common patient activities
+- Mobile-first design optimized for smartphone screens
+
 #### Screen 2: 3D Scan Upload
 
 **Purpose**: Patient uploads milestone 3D head scans
 
 **Data Fields**:
 
-- **Scan Information**
-  - Milestone name (read-only)
-  - Scan due date (read-only)
-  - Days overdue (if applicable)
-  - Scan guidance instructions
-
-- **Scan Capture**
-  - Camera viewfinder
-  - Scan quality indicator
-  - "Capture Scan" button
-  - "Retake" button (if quality poor)
-
-- **Upload Status**
-  - Upload progress bar
-  - Upload success/error message
-  - "View Previous Scans" link
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Milestone Name | text | Yes | Current milestone name (read-only) | Display only |
+| Scan Due Date | datetime | Yes | Due date for this scan (read-only) | ISO 8601 format |
+| Days Overdue | number | No | Days past due date (if applicable) | Non-negative integer |
+| Scan Guidance | text | No | Instructions for proper scan capture | Display only |
+| Camera Viewfinder | component | Yes | Live camera preview for 3D scan | ARKit/ARCore required |
+| Quality Indicator | status | Yes | Real-time scan quality feedback | Valid quality enum |
+| Capture Scan | action | Yes | Button to capture 3D scan | Enabled when quality threshold met |
+| Retake | action | Cond. | Button to retake if quality poor | Enabled when quality below threshold |
+| Upload Progress | progress | No | Upload progress bar (0-100%) | 0-100% |
+| Upload Status | message | No | Success/error message after upload | Valid status enum |
+| View Previous Scans | link | No | Link to view historical scans | Always available |
 
 **Business Rules**:
 
@@ -325,27 +330,40 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Only one scan per milestone allowed
 - Previous scans remain accessible for comparison
 
+**Notes**:
+
+- Use ARKit (iOS) or ARCore (Android) for 3D head scanning
+- Quality validation should provide real-time feedback during capture
+- Implement resumable upload for unreliable network connections
+- Store scans in secure cloud storage with patient ID watermarking
+
 #### Screen 3: Questionnaire Completion
 
 **Purpose**: Patient completes milestone-specific questionnaires
 
 **Data Fields**:
 
-- **Questionnaire Header**
-  - Milestone name and phase
-  - Questionnaire type (Pain Assessment, Sleep Quality, etc.)
-  - Due date and completion status
-
-- **Question Fields** (dynamic based on questionnaire type)
-  - **Pain Assessment**: Scale 1-10, description text area
-  - **Sleep Quality**: Hours slept (number), quality rating (1-5), disruptions (checkbox list)
-  - **Compliance Check**: Medication adherence (yes/no), activity restrictions (yes/no), washing instructions (yes/no)
-  - **Symptom Check**: Swelling (yes/no), redness (yes/no), bleeding (yes/no), infection signs (yes/no)
-
-- **Submission**
-  - "Save Draft" button
-  - "Submit" button
-  - Warning for concerning responses
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Milestone Name | text | Yes | Current milestone and phase | Display only |
+| Questionnaire Type | text | Yes | Type (Pain Assessment, Sleep Quality, etc.) | Must exist in FR-025 catalog |
+| Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format |
+| Completion Status | status | Yes | Completed/Pending/Overdue | Valid status enum |
+| Pain Scale | number | Cond. | Pain level 1-10 (if Pain Assessment type) | Integer 1-10 |
+| Pain Description | text | No | Text description of pain | Max 500 chars |
+| Hours Slept | number | Cond. | Hours slept (if Sleep Quality type) | Integer 0-24 |
+| Sleep Quality Rating | number | Cond. | Quality rating 1-5 (if Sleep Quality type) | Integer 1-5 |
+| Sleep Disruptions | checkbox[] | Cond. | List of disruptions (if Sleep Quality type) | Valid disruption types |
+| Medication Adherence | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
+| Activity Restrictions | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
+| Washing Instructions | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
+| Swelling | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
+| Redness | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
+| Bleeding | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
+| Infection Signs | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
+| Save Draft | action | No | Save progress without submitting | Always available |
+| Submit | action | Yes | Submit completed questionnaire | Enabled when all required fields complete |
+| Warning Message | alert | No | Warning for concerning responses | Shown when pain >7 or infection signs detected |
 
 **Business Rules**:
 
@@ -354,27 +372,35 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Drafts saved automatically every 30 seconds
 - One submission per questionnaire allowed
 
+**Notes**:
+
+- Questionnaire structure and questions managed in FR-025 (Medical Questionnaire Management)
+- Dynamic form rendering based on questionnaire type from template
+- Auto-save draft functionality to prevent data loss
+- Real-time validation for concerning responses (triggers urgent flag immediately)
+- Mobile-optimized form layout for easy completion on small screens
+
 #### Screen 4: Medication Schedule
 
 **Purpose**: Patient views and tracks medication adherence
 
 **Data Fields**:
 
-- **Current Medications**
-  - Medication name
-  - Dosage and frequency
-  - Special instructions
-  - Start and end dates
-
-- **Today's Schedule**
-  - Upcoming doses with times
-  - "Mark as Taken" buttons
-  - Missed dose indicators
-
-- **Adherence Tracking**
-  - Weekly adherence percentage
-  - Missed doses count
-  - "View History" link
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Medication Name | text | Yes | Name of medication | Must exist in medication catalog |
+| Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
+| Frequency | text | Yes | Frequency (e.g., "2x daily", "Every 8 hours") | Valid frequency format |
+| Special Instructions | text | No | Additional instructions from provider | Max 500 chars |
+| Start Date | date | Yes | Medication start date | ISO 8601 format |
+| End Date | date | Yes | Medication end date | Must be after start date |
+| Today's Doses | list | Yes | Upcoming doses for today with times | Sorted by time |
+| Dose Time | time | Yes | Scheduled time for each dose | HH:MM format |
+| Mark as Taken | action | Yes | Button to mark dose as taken | Enabled when dose time reached |
+| Missed Dose Indicator | status | No | Visual indicator for missed doses | Shown if dose not taken within 2 hours |
+| Weekly Adherence | percent | Yes | Percentage of doses taken this week | 0-100%; auto-calculated |
+| Missed Doses Count | number | Yes | Total missed doses count | Non-negative integer |
+| View History | link | No | Link to view full adherence history | Always available |
 
 **Business Rules**:
 
@@ -383,28 +409,35 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Missed doses trigger reminder notifications
 - History available for entire aftercare period
 
+**Notes**:
+
+- Medications defined during aftercare plan setup (Screen 8)
+- Push notifications for upcoming doses (configurable by patient)
+- History view shows complete timeline of all medications and adherence
+- Visual indicators (colors/icons) for easy recognition of adherence status
+- Support for multiple medications with overlapping schedules
+
 #### Screen 5: Educational Resources
 
 **Purpose**: Patient accesses milestone-specific educational content
 
 **Data Fields**:
 
-- **Resource Categories**
-  - Instructional videos
-  - Best practice guides
-  - FAQ documents
-  - When to seek help guide
-
-- **Resource Details**
-  - Resource title and description
-  - Duration (for videos)
-  - "Mark as Viewed" checkbox
-  - Download/view buttons
-
-- **Progress Tracking**
-  - Resources viewed count
-  - Completion percentage per category
-  - "Mark All as Viewed" option
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Resource Category | text | Yes | Category (Videos, Guides, FAQs, Help) | Valid category enum |
+| Resource Title | text | Yes | Title of educational resource | Max 200 chars |
+| Resource Description | text | No | Description of resource content | Max 1000 chars |
+| Resource Type | text | Yes | Type (video, PDF, webpage, etc.) | Valid resource type enum |
+| Resource URL | url | Yes | URL or file path to resource | Valid URL or file path |
+| Duration | time | Cond. | Duration in minutes (for videos) | Valid time format |
+| File Size | size | Cond. | File size for downloadable resources | Display only |
+| Mark as Viewed | checkbox | No | Checkbox to mark resource as viewed | Boolean |
+| View/Download | action | Yes | Button to view or download resource | Always available |
+| Resources Viewed Count | number | Yes | Count of viewed resources | Non-negative integer |
+| Total Resources | number | Yes | Total resources in current milestone | Non-negative integer |
+| Completion Percentage | percent | Yes | Percentage of resources viewed | 0-100%; auto-calculated |
+| Mark All as Viewed | action | No | Button to mark all resources as viewed | Enabled when resources available |
 
 **Business Rules**:
 
@@ -412,6 +445,14 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Viewing progress tracked for compliance
 - Resources remain accessible throughout aftercare
 - New resources added by admin appear automatically
+
+**Notes**:
+
+- Resources managed in Screen 14 (Milestone Template Management) by admin
+- Support for various media types: videos (streaming), PDFs (download), web pages (in-app browser)
+- Progress tracking helps ensure patients review critical educational content
+- Resources organized by category for easy navigation
+- Offline viewing capability for downloaded resources
 
 ### Provider Platform Screens
 
@@ -447,37 +488,48 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Progress calculated automatically by system
 - All data editable by admin (admin override capability)
 
+**Notes**:
+
+- Similar table structure to existing "In Progress" treatment list for consistency
+- Color-coded medication alerts (red=critical, yellow=standard, green=none) provide quick visual status
+- Filters allow providers to focus on specific patient groups (by milestone, status, date range)
+- Sortable columns help providers prioritize cases (e.g., sort by Last Activity to find inactive patients)
+- Action menu provides quick access to common provider tasks without navigating away
+
 #### Screen 7: Patient Aftercare Details
 
 **Purpose**: Provider views comprehensive patient aftercare progress with full historical context
 
 **Data Fields**:
 
-- **Patient Information**
-  - Patient ID and treatment details (if Hairline-treated patient)
-  - Aftercare start date and duration
-  - Assigned aftercare template
-  - Provider's custom instructions
-  - **Note**: For standalone aftercare patients, treatment details will show "N/A" or be blank
-
-- **Progress Overview**
-  - Current milestone and phase
-  - Overall progress percentage (auto-calculated)
-  - Milestone completion timeline
-  - Upcoming tasks
-
-- **Activity History** (Chronological, Additive)
-  - 3D scan uploads with dates and quality scores
-  - Questionnaire responses with timestamps
-  - Medication adherence history
-  - Communication log with aftercare team
-  - **Data Persistence**: All historical data retained, new data added without removing old data
-
-- **Actions**
-  - "Adjust Aftercare Plan" button
-  - "Request Additional Scan" button
-  - "Contact Aftercare Team" button
-  - "Escalate Case" button
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | text | Yes | Unique patient identifier | Display only |
+| Treatment Details | text | Cond. | Treatment info (if Hairline-treated patient) | Display only; N/A for standalone |
+| Aftercare Start Date | date | Yes | When aftercare began | ISO 8601 format |
+| Aftercare Duration | text | Yes | Planned duration (e.g., "12 months") | Display only |
+| Assigned Template | text | Yes | Aftercare template name | Display only |
+| Custom Instructions | text | No | Provider's patient-specific instructions | Max 2000 chars; editable |
+| Current Milestone | text | Yes | Current milestone name and phase | Must exist in plan |
+| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% |
+| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only |
+| Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date |
+| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order |
+| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format |
+| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
+| Questionnaire Responses | list | Yes | All questionnaire completions | Chronological order |
+| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
+| Questionnaire Type | text | Yes | Type of questionnaire completed | Valid questionnaire type |
+| Medication Adherence History | list | Yes | Historical adherence data | Chronological order |
+| Adherence Period | date range | Yes | Date range for adherence period | Valid date range |
+| Adherence Percentage | percent | Yes | Percentage for that period | 0-100% |
+| Communication Log | list | Yes | All communications with aftercare team | Chronological order |
+| Message Date | datetime | Yes | Date/time of message | ISO 8601 format |
+| Message Type | text | Yes | Type (message, escalation, alert) | Valid message type enum |
+| Adjust Plan | action | No | Button to modify aftercare plan | Enabled for assigned patients |
+| Request Additional Scan | action | No | Button to request extra scan | Always available |
+| Contact Aftercare Team | action | No | Button to send message | Always available |
+| Escalate Case | action | No | Button to escalate urgent case | Always available |
 
 **Business Rules**:
 
@@ -490,57 +542,66 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Provider can modify plan only for their assigned patients
 - Escalation creates audit trail
 
+**Notes**:
+
+- Comprehensive view consolidates all patient aftercare information in one place
+- Chronological activity feed provides full context for provider decision-making
+- Historical data persistence ensures complete patient journey visibility
+- Visual timeline helps providers quickly identify where patient is in recovery process
+- Quick action buttons enable providers to make interventions without leaving the screen
+- Escalation workflow creates immediate audit trail for urgent cases
+
 #### Screen 8: Aftercare Setup (Multi-Step Process)
 
 **Purpose**: Provider sets up aftercare plan after treatment completion
 
-##### **Step 1: Template Selection**
+**Data Fields**:
 
-- **Available Templates**: List of admin-created templates
-  - Template name and description
-  - Treatment type compatibility
-  - Duration (6 months, 12 months, etc.)
-  - Milestone count and structure
-- **Template Preview**: Shows template details before selection
-- **Selection**: "Select Template" button
-
-##### **Step 2: Milestone Customization**
-
-- **Milestone List**: All milestones from selected template
-  - Milestone name and duration
-  - 3D scan frequency
-  - Questionnaire types and frequency
-  - Educational resources
-  - Activity restrictions
-- **Customization Options**:
-  - Modify milestone durations
-  - Add/remove questionnaires
-  - Add custom instructions per milestone
-  - Override activity restrictions
-
-##### **Step 3: Medication Setup**
-
-- **Medication List**: Add medications for patient
-  - Medication name (dropdown from database)
-  - Dosage and frequency
-  - Start and end dates
-  - Special instructions
-  - "Add Medication" button
-- **Medication Schedule**: Visual timeline of all medications
-
-##### **Step 4: Custom Instructions**
-
-- **General Instructions**: Free-text area for provider notes
-- **Milestone-Specific Instructions**: Instructions per milestone
-- **Emergency Contact**: Provider contact information for patient
-- **Special Considerations**: Patient-specific notes
-
-##### **Step 5: Review and Confirm**
-
-- **Plan Summary**: Complete aftercare plan overview
-- **Patient Information**: Confirmation of patient details
-- **Provider Information**: Provider contact details
-- **Confirmation**: "Activate Aftercare Plan" button
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| **Step 1: Template Selection** | | | | |
+| Available Templates | list | Yes | List of admin-created templates | Must have at least one template |
+| Template Name | text | Yes | Selected template name | Must exist in template catalog |
+| Template Description | text | Yes | Template description | Display only |
+| Treatment Type | text | Yes | Treatment type compatibility | Valid treatment type enum |
+| Duration | text | Yes | Duration (e.g., "12 months") | Display only |
+| Milestone Count | number | Yes | Number of milestones in template | Display only |
+| Template Preview | component | No | Preview of template details | Display only |
+| Select Template | action | Yes | Button to select template | Enabled when template selected |
+| **Step 2: Milestone Customization** | | | | |
+| Milestone List | list | Yes | All milestones from selected template | Must have at least one milestone |
+| Milestone Name | text | Yes | Name of milestone | Max 200 chars |
+| Milestone Duration | number | Yes | Duration in days | Positive integer; editable |
+| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum; editable |
+| Questionnaire Types | list | Yes | Types of questionnaires per milestone | Must exist in FR-025 catalog |
+| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum; editable |
+| Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
+| Activity Restrictions | text | No | Restrictions for this milestone | Max 500 chars; editable |
+| Modify Duration | action | No | Button to modify milestone duration | Always available |
+| Add Questionnaire | action | No | Button to add questionnaire | Always available |
+| Remove Questionnaire | action | No | Button to remove questionnaire | Enabled when questionnaires exist |
+| Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars |
+| Override Restrictions | action | No | Button to override activity restrictions | Always available |
+| **Step 3: Medication Setup** | | | | |
+| Medication Name | select | Yes | Medication from dropdown database | Must exist in medication catalog |
+| Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
+| Frequency | text | Yes | Frequency (e.g., "2x daily") | Valid frequency format |
+| Start Date | date | Yes | Medication start date | ISO 8601 format; must be today or future |
+| End Date | date | Yes | Medication end date | ISO 8601 format; must be after start date |
+| Special Instructions | text | No | Additional instructions | Max 500 chars |
+| Add Medication | action | Yes | Button to add medication to list | Enabled when all fields complete |
+| Medication List | list | Yes | List of all added medications | May be empty |
+| Medication Timeline | component | Yes | Visual timeline of all medications | Display only |
+| **Step 4: Custom Instructions** | | | | |
+| General Instructions | textarea | No | Free-text area for provider notes | Max 2000 chars |
+| Milestone Instructions | textarea[] | No | Instructions per milestone | Max 1000 chars per milestone |
+| Emergency Contact | text | No | Provider contact information | Max 200 chars |
+| Special Considerations | textarea | No | Patient-specific notes | Max 1000 chars |
+| **Step 5: Review and Confirm** | | | | |
+| Plan Summary | component | Yes | Complete aftercare plan overview | Display only |
+| Patient Information | component | Yes | Confirmation of patient details | Display only |
+| Provider Information | component | Yes | Provider contact details | Display only |
+| Activate Plan | action | Yes | Button to activate aftercare plan | Enabled when all steps complete |
 
 **Business Rules**:
 
@@ -550,36 +611,41 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Admin can edit any step after activation
 - Patient receives notification upon activation
 
+**Notes**:
+
+- Multi-step wizard guides providers through setup process systematically
+- Progress indicator shows current step and completion status
+- Template selection reduces setup time by providing pre-configured plans
+- Customization options allow providers to tailor plans to individual patient needs
+- Review step allows providers to verify all settings before activation
+- Medication management interface supports multiple medications with overlapping schedules
+- Visual timeline helps providers understand medication schedule at a glance
+
 #### Screen 9: Aftercare Plan Edit
 
 **Purpose**: Provider or Admin modifies existing aftercare plan
 
 **Data Fields**:
 
-- **Current Plan Overview**
-  - Selected template name
-  - Milestone structure with progress
-  - Medication schedule
-  - Custom instructions
-
-- **Edit Options** (Provider):
-  - Modify medication schedule
-  - Update custom instructions
-  - Add milestone-specific notes
-  - Request milestone duration changes
-
-- **Edit Options** (Admin):
-  - All provider options plus:
-  - Change milestone structure
-  - Modify template assignments
-  - Override any aftercare settings
-  - Reassign to different provider
-
-- **Change Tracking**
-  - Change reason (required)
-  - Change timestamp
-  - Changed by (user identification)
-  - Approval status
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Selected Template | text | Yes | Current template name | Display only |
+| Milestone Structure | component | Yes | Visual structure with progress indicators | Display only |
+| Medication Schedule | component | Yes | Visual timeline of medications | Display only |
+| Custom Instructions | textarea | No | Current custom instructions | Max 2000 chars; editable |
+| Modify Medication Schedule | action | Cond. | Button to modify medications (Provider) | Enabled for providers |
+| Update Custom Instructions | action | Cond. | Button to update instructions (Provider) | Enabled for providers |
+| Add Milestone Notes | action | Cond. | Button to add milestone-specific notes (Provider) | Enabled for providers |
+| Request Duration Change | action | Cond. | Button to request milestone duration change (Provider) | Enabled for providers |
+| Change Milestone Structure | action | Cond. | Button to modify milestones (Admin only) | Enabled for admins |
+| Modify Template Assignment | action | Cond. | Button to change template (Admin only) | Enabled for admins |
+| Override Settings | action | Cond. | Button to override any settings (Admin only) | Enabled for admins |
+| Reassign Provider | action | Cond. | Button to reassign case (Admin only) | Enabled for admins |
+| Change Reason | textarea | Yes | Required reason for changes | Max 500 chars; required |
+| Change Timestamp | datetime | Yes | When change was made | Auto-generated |
+| Changed By | text | Yes | User who made the change | Auto-populated |
+| Approval Status | status | Yes | Status (Pending/Approved/Rejected) | Valid status enum |
+| Change History | list | Yes | Historical list of all changes | Chronological order |
 
 **Business Rules**:
 
@@ -590,42 +656,48 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Patient notified of approved changes
 - Change history maintained for audit trail
 
+**Notes**:
+
+- Edit capabilities differ based on user role (Provider vs Admin)
+- Admin has full override capabilities on all plan aspects
+- Change tracking ensures full audit trail for compliance
+- Change reason required for all modifications to document rationale
+- Approval workflow for major changes ensures quality control
+- Patient notifications keep them informed of plan modifications
+
 #### Screen 10: Aftercare Progress Tracking (Provider View)
 
 **Purpose**: Provider monitors ongoing aftercare progress for assigned patients
 
 **Data Fields**:
 
-- **Patient Progress Overview**
-  - Patient name and current milestone
-  - Overall progress percentage (auto-calculated)
-  - Days remaining in current milestone
-  - Next upcoming tasks
-
-- **Milestone Timeline**
-  - Visual timeline of all milestones
-  - Completed milestones (green)
-  - Current milestone (blue)
-  - Upcoming milestones (gray)
-  - Overdue tasks (red indicators)
-
-- **Task Completion Status**
-  - 3D scans: Completed/Pending/Overdue with dates
-  - Questionnaires: Completed/Pending/Overdue with dates
-  - Medication adherence: Percentage and missed doses
-  - Activity compliance: Adherence to restrictions
-
-- **Patient Activity Feed**
-  - Recent 3D scan uploads
-  - Questionnaire completions
-  - Medication adherence updates
-  - Communication interactions
-
-- **Quick Actions**
-  - "Request Additional Scan" button
-  - "Send Message to Patient" button
-  - "Schedule Consultation" button
-  - "Escalate Case" button
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient Name | text | Yes | Full patient name | Display only |
+| Current Milestone | text | Yes | Current milestone name and phase | Display only |
+| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% |
+| Days Remaining | number | Yes | Days left in current milestone | Non-negative integer |
+| Next Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date |
+| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only |
+| Completed Milestones | indicator | Yes | Green indicators for completed | Display only |
+| Current Milestone Indicator | indicator | Yes | Blue indicator for current | Display only |
+| Upcoming Milestones | indicator | Yes | Gray indicators for upcoming | Display only |
+| Overdue Tasks Indicator | indicator | Yes | Red indicators for overdue | Display only |
+| 3D Scan Status | status | Yes | Completed/Pending/Overdue with dates | Valid status enum |
+| Scan Due Date | datetime | Yes | Due date for scan | ISO 8601 format |
+| Questionnaire Status | status | Yes | Completed/Pending/Overdue with dates | Valid status enum |
+| Questionnaire Due Date | datetime | Yes | Due date for questionnaire | ISO 8601 format |
+| Medication Adherence | percent | Yes | Adherence percentage | 0-100% |
+| Missed Doses | number | Yes | Count of missed doses | Non-negative integer |
+| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% |
+| Recent Scan Uploads | list | Yes | Recent 3D scan uploads | Chronological order |
+| Questionnaire Completions | list | Yes | Recent questionnaire submissions | Chronological order |
+| Medication Updates | list | Yes | Recent adherence updates | Chronological order |
+| Communication Interactions | list | Yes | Recent messages/interactions | Chronological order |
+| Request Additional Scan | action | No | Button to request extra scan | Always available |
+| Send Message to Patient | action | No | Button to send message | Always available |
+| Schedule Consultation | action | No | Button to schedule consultation | Always available |
+| Escalate Case | action | No | Button to escalate urgent case | Always available |
 
 **Business Rules**:
 
@@ -634,6 +706,15 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Real-time updates when patient completes tasks
 - Overdue tasks highlighted prominently
 - All actions logged for audit trail
+
+**Notes**:
+
+- Focused view for providers to monitor patient progress at a glance
+- Visual timeline provides quick understanding of patient's recovery journey
+- Color-coded indicators help providers quickly identify status and issues
+- Activity feed shows recent patient engagement for quick assessment
+- Quick action buttons enable providers to take immediate interventions
+- Real-time updates ensure providers have current information for decision-making
 
 ### Admin Platform Screens
 
@@ -670,41 +751,66 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Progress calculated automatically by system
 - All actions logged for audit trail
 
+**Notes**:
+
+- Admin view shows all cases across all providers (unlike provider view which is filtered)
+- Full editability allows admins to override any data when needed
+- Color-coded alerts and status indicators help admins quickly identify cases needing attention
+- Search and filter capabilities enable admins to find specific cases efficiently
+- Action menu provides quick access to admin interventions (reassign, escalate, edit)
+
 #### Screen 12: Aftercare Case Details (Multi-Tab View)
 
 **Purpose**: Admin views comprehensive aftercare case information
 
-##### **Tab 1: Case Overview**
+**Data Fields**:
 
-- **Patient Information**: Full patient details (admin can see all)
-- **Treatment Information**: Original treatment details
-- **Provider Information**: Assigned provider details
-- **Aftercare Plan**: Selected template and customizations
-- **Current Status**: Milestone progress and completion
-
-##### **Tab 2: Progress Tracking**
-
-- **Milestone Progress**: Visual timeline of all milestones
-- **3D Scan History**: All uploaded scans with dates and quality scores
-- **Questionnaire Responses**: All responses with timestamps
-- **Medication Adherence**: Compliance tracking and history
-- **Activity Compliance**: Activity restriction adherence
-
-##### **Tab 3: Communication Log**
-
-- **Patient Messages**: All patient communications
-- **Provider Messages**: Provider communications
-- **Aftercare Team Messages**: Internal team communications
-- **Escalation History**: All escalations and resolutions
-- **System Notifications**: Automated notifications sent
-
-##### **Tab 4: Admin Actions**
-
-- **Edit Aftercare Plan**: Modify any aspect of the plan
-- **Reassign Provider**: Change provider assignment
-- **Escalate Case**: Escalate to medical supervisor
-- **Add Notes**: Internal admin notes
-- **Change History**: Audit trail of all changes
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| **Tab 1: Case Overview** | | | | |
+| Patient Information | component | Yes | Full patient details (admin can see all) | Display only |
+| Patient ID | text | Yes | Unique patient identifier | Display only |
+| Patient Name | text | Yes | Full patient name | Display only |
+| Contact Information | text | Yes | Email, phone, address | Display only |
+| Treatment Information | component | Yes | Original treatment details | Display only |
+| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format |
+| Treatment Type | text | Yes | Type of treatment | Display only |
+| Provider Information | component | Yes | Assigned provider details | Display only |
+| Provider Name | text | Yes | Assigned provider name | Display only |
+| Provider Contact | text | Yes | Provider contact information | Display only |
+| Aftercare Plan | component | Yes | Selected template and customizations | Display only |
+| Template Name | text | Yes | Selected template name | Display only |
+| Current Status | component | Yes | Milestone progress and completion | Display only |
+| Current Milestone | text | Yes | Current milestone name | Display only |
+| Progress Percentage | percent | Yes | Overall progress | 0-100% |
+| **Tab 2: Progress Tracking** | | | | |
+| Milestone Progress | component | Yes | Visual timeline of all milestones | Display only |
+| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order |
+| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format |
+| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
+| Questionnaire Responses | list | Yes | All responses with timestamps | Chronological order |
+| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
+| Questionnaire Type | text | Yes | Type of questionnaire | Display only |
+| Medication Adherence | component | Yes | Compliance tracking and history | Display only |
+| Adherence Percentage | percent | Yes | Overall adherence percentage | 0-100% |
+| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% |
+| **Tab 3: Communication Log** | | | | |
+| Patient Messages | list | Yes | All patient communications | Chronological order |
+| Provider Messages | list | Yes | Provider communications | Chronological order |
+| Aftercare Team Messages | list | Yes | Internal team communications | Chronological order |
+| Escalation History | list | Yes | All escalations and resolutions | Chronological order |
+| System Notifications | list | Yes | Automated notifications sent | Chronological order |
+| Message Date | datetime | Yes | Date/time of message | ISO 8601 format |
+| Message Type | text | Yes | Type of message | Valid message type enum |
+| **Tab 4: Admin Actions** | | | | |
+| Edit Aftercare Plan | action | No | Button to modify any aspect of plan | Always available |
+| Reassign Provider | action | No | Button to change provider assignment | Always available |
+| Escalate Case | action | No | Button to escalate to supervisor | Always available |
+| Add Notes | action | No | Button to add internal admin notes | Always available |
+| Change History | list | Yes | Audit trail of all changes | Chronological order |
+| Change Date | datetime | Yes | Date of change | ISO 8601 format |
+| Changed By | text | Yes | User who made change | Display only |
+| Change Reason | text | Yes | Reason for change | Display only |
 
 **Business Rules**:
 
@@ -714,31 +820,48 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - All communications monitored and logged
 - Admin can override any provider settings
 
+**Notes**:
+
+- Multi-tab interface organizes comprehensive case information logically
+- Tab 1 provides quick overview of case status and key information
+- Tab 2 shows detailed progress tracking across all milestones and activities
+- Tab 3 maintains complete communication history for audit and context
+- Tab 4 provides admin intervention capabilities with full audit trail
+- All tabs provide full admin visibility without restrictions
+- Change history ensures complete audit trail for compliance
+
 #### Screen 13: Standalone Aftercare Requests
 
 **Purpose**: Admin manages standalone aftercare service requests
 
 **Data Fields**:
 
-- **Request List**
-  - Request ID and submission date
-  - Patient information (full visibility for Admin; Providers anonymized until payment)
-  - Treatment details (date, type, clinic)
-  - Requested duration and payment method
-  - Status (Pending, Assigned, Active, Rejected)
-
-- **Request Details**
-  - Full patient information
-  - Treatment documentation
-  - Current concerns or issues
-  - Uploaded photos and surgeon notes
-  - Payment status
-
-- **Assignment Options**
-  - Available providers list
-  - Provider specializations and availability
-  - "Assign Provider" button
-  - "Reject Request" button with reason
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Request ID | text | Yes | Unique request identifier | Searchable; sortable |
+| Submission Date | datetime | Yes | Date request was submitted | ISO 8601 format; sortable |
+| Patient Name | text | Yes | Full patient name (admin full visibility) | Display only |
+| Patient Email | email | Yes | Patient email address | Valid email format |
+| Patient Phone | text | Yes | Patient phone number | E.164 format |
+| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format |
+| Treatment Type | text | Yes | Type of treatment | Valid treatment type enum |
+| Treatment Clinic | text | Yes | Name of clinic where treatment performed | Display only |
+| Requested Duration | text | Yes | Duration requested (e.g., "12 months") | Valid duration enum |
+| Payment Method | text | Yes | Payment method selected | Valid payment method enum |
+| Payment Status | status | Yes | Payment status (Paid/Pending/Failed) | Valid status enum |
+| Request Status | status | Yes | Status (Pending/Assigned/Active/Rejected) | Valid status enum |
+| Full Patient Information | component | Yes | Complete patient details | Display only |
+| Treatment Documentation | component | Yes | Treatment documentation files | Display/download |
+| Current Concerns | textarea | No | Patient's current concerns or issues | Max 2000 chars |
+| Uploaded Photos | list | Yes | Photos uploaded by patient | Display only |
+| Surgeon Notes | text | No | Notes from treating surgeon | Max 2000 chars |
+| Available Providers | list | Yes | List of available providers | Display only |
+| Provider Name | text | Yes | Provider name | Display only |
+| Provider Specialization | text | Yes | Provider specialization areas | Display only |
+| Provider Availability | status | Yes | Current availability status | Valid status enum |
+| Assign Provider | action | Yes | Button to assign provider to request | Enabled when provider selected |
+| Reject Request | action | Yes | Button to reject request with reason | Always available |
+| Rejection Reason | textarea | Yes | Required reason for rejection | Max 500 chars; required when rejecting |
 
 **Business Rules**:
 
@@ -747,34 +870,51 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Rejection requires reason and triggers refund
 - All actions logged for audit trail
 
+**Notes**:
+
+- Admin has full visibility into patient information (unlike providers who see anonymized data until payment)
+- Request list provides quick overview of all pending standalone requests
+- Detailed request view shows all patient-submitted information for informed assignment decisions
+- Provider assignment interface helps match requests to appropriate providers based on specialization
+- Rejection workflow ensures proper documentation and automatic refund processing
+- Expiration tracking helps admins prioritize requests that are approaching deadline
+
 #### Screen 14: Milestone Template Management
 
 **Purpose**: Admin creates and manages aftercare milestone templates
 
 **Data Fields**:
 
-- **Template List**
-  - Template name and description
-  - Treatment type (FUE, FUT, DHI, etc.)
-  - Duration (6 months, 12 months, etc.)
-  - Number of milestones
-  - Usage count (how many patients using)
-
-- **Template Editor**
-  - Template name and description
-  - Treatment type selection
-  - Milestone configuration:
-    - Milestone name and duration
-    - 3D scan frequency
-    - Questionnaire selection and frequency (selected from FR-025 catalog)
-    - Educational resources
-    - Activity restrictions
-
-- **Resource Management**
-  - Upload instructional videos
-  - Add best practice guides
-  - Create FAQ documents
-  - Manage help guides
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| **Template List** | | | | |
+| Template Name | text | Yes | Name of template | Max 200 chars; unique |
+| Template Description | text | No | Description of template | Max 1000 chars |
+| Treatment Type | text | Yes | Treatment type (FUE, FUT, DHI, etc.) | Valid treatment type enum |
+| Duration | text | Yes | Duration (e.g., "12 months") | Valid duration enum |
+| Number of Milestones | number | Yes | Count of milestones in template | Positive integer |
+| Usage Count | number | Yes | How many patients currently using | Non-negative integer |
+| **Template Editor** | | | | |
+| Template Name (Edit) | text | Yes | Template name | Max 200 chars; unique |
+| Template Description (Edit) | textarea | No | Template description | Max 1000 chars |
+| Treatment Type Selection | select | Yes | Treatment type dropdown | Valid treatment type enum |
+| Milestone Name | text | Yes | Name of milestone | Max 200 chars |
+| Milestone Duration | number | Yes | Duration in days | Positive integer |
+| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum |
+| Questionnaire Set | select | Yes | Single Questionnaire Set selection | Must exist in FR-025 catalog |
+| Questionnaire Selection | list | Yes | Questions from selected set (aftercare context) | Filtered by context type |
+| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum |
+| Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
+| Resource Title | text | Yes | Resource title | Max 200 chars |
+| Resource Type | select | Yes | Type (video, PDF, webpage) | Valid resource type enum |
+| Resource URL | url | Yes | URL or file path | Valid URL or file path |
+| Activity Restrictions | textarea | No | Restrictions for milestone | Max 500 chars |
+| **Resource Management** | | | | |
+| Upload Video | action | No | Button to upload instructional videos | File size max 100MB |
+| Add Guide | action | No | Button to add best practice guides | File size max 100MB |
+| Create FAQ | action | No | Button to create FAQ documents | File size max 100MB |
+| Manage Help Guides | action | No | Button to manage help guides | File size max 100MB |
+| Resource File | file | Yes | Uploaded resource file | Max 100MB per file |
 
 **Business Rules**:
 
@@ -790,6 +930,17 @@ Cross-Module Reference:
 
 - Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management
 - After selecting questionnaires here, their delivery and response handling follow the schedules defined per milestone
+
+**Notes**:
+
+- Template management enables standardization of aftercare plans across providers
+- Template list shows usage count to prevent deletion of active templates
+- Template editor provides comprehensive configuration for all milestone aspects
+- Questionnaire integration with FR-025 ensures consistent questionnaire management
+- Single Questionnaire Set per template simplifies configuration while maintaining flexibility
+- Resource management supports various media types for educational content
+- File size limits (100MB) ensure reasonable storage usage while supporting high-quality content
+- Approval workflow for active template changes prevents disruption to ongoing aftercare plans
 
 #### Screen 15: Provider Performance Dashboard
 
@@ -831,6 +982,15 @@ Cross-Module Reference:
 - Provider suspension requires admin approval
 - All performance data retained for 2 years
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
+
+**Notes**:
+
+- Analytics dashboard for monitoring provider performance across all aftercare cases
+- Performance metrics calculated monthly to identify trends and issues
+- Provider list enables comparison of performance across providers
+- Case details provide drill-down capability for specific performance issues
+- Action buttons enable admin interventions (feedback, reassignment, suspension)
+- Deferred to post-MVP phase as it extends beyond core case management operations
 
 #### Screen 16: Aftercare Progress Tracking (Admin View)
 
@@ -881,9 +1041,19 @@ Cross-Module Reference:
 - All actions logged with admin identification
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
+**Notes**:
+
+- System-wide analytics dashboard for monitoring all aftercare progress across all providers
+- Real-time updates provide current status of all active cases
+- Provider performance grid enables comparison and identification of performance patterns
+- Case status distribution helps identify systemic issues or bottlenecks
+- Real-time alerts notify admins of urgent cases requiring immediate attention
+- Quick action buttons enable rapid interventions across multiple cases
+- Deferred to post-MVP phase as it extends beyond core case management operations
+
 ## Business Rules
 
-### General Aftercare Rules
+### General Module Rules
 
 1. **Activation Rules**
    - Treatment-linked aftercare activates automatically upon treatment completion
@@ -1029,26 +1199,63 @@ Cross-Module Reference:
 
 ## Dependencies
 
-### Internal Dependencies
+### Internal Dependencies (Other FRs/Modules)
 
-- **FR-010**: Treatment Execution & Documentation (triggers aftercare activation)
-- **FR-002**: Medical History & 3D Scanning (scan capture technology)
-- **FR-007**: Payment Processing (standalone aftercare payments)
-- **FR-020**: Notifications & Alerts (task reminders and updates)
+- **FR-010 / Module PR-XX**: Treatment Execution & Documentation
+  - **Why needed**: Triggers automatic aftercare activation when treatment is marked as completed
+  - **Integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
 
-### External Dependencies
+- **FR-002 / Module P-XX**: Medical History & 3D Scanning
+  - **Why needed**: Provides 3D scan capture technology and infrastructure for patient milestone scans
+  - **Integration point**: Shares 3D scanning SDK integration and scan storage infrastructure; reuses scan quality validation logic
 
-- **3D Scanning SDK**: ARKit (iOS) and ARCore (Android) for mobile scan capture
-- **Cloud Storage**: Secure storage for 3D scans and documents
-- **Payment Gateway**: Stripe integration for standalone aftercare payments
-- **Notification Service**: Email, SMS, and push notification delivery
+- **FR-007 / Module S-XX**: Payment Processing
+  - **Why needed**: Processes standalone aftercare service payments before activation
+  - **Integration point**: Payment completion triggers aftercare request assignment; payment status determines service activation eligibility
+
+- **FR-020 / Module S-XX**: Notifications & Alerts
+  - **Why needed**: Sends task reminders, progress updates, and urgent alerts to patients, providers, and aftercare team
+  - **Integration point**: Aftercare events (task due, milestone completion, escalations) trigger notification delivery; notification preferences managed per user
+
+### External Dependencies (APIs, Services)
+
+- **3D Scanning SDK - ARKit/ARCore**:
+  - **Purpose**: Provides 3D head scanning capabilities on mobile devices for patient milestone scans
+  - **Integration**: Native SDK integration in mobile apps (iOS ARKit, Android ARCore) for real-time 3D capture
+  - **Failure handling**: Fallback to 2D photo capture if 3D scanning unavailable; user notification of degraded functionality
+
+- **Cloud Storage Service**:
+  - **Purpose**: Secure storage for 3D scans, documents, and educational resources
+  - **Integration**: RESTful API for file upload/download with signed URLs for secure access
+  - **Failure handling**: Retry with exponential backoff; queue uploads for retry if service unavailable; notify user of upload delays
+
+- **Payment Gateway - Stripe**:
+  - **Purpose**: Processes standalone aftercare service payments
+  - **Integration**: Stripe API integration for payment processing and refund handling
+  - **Failure handling**: Payment failures trigger retry queue; user notified of payment issues; automatic refund processing on rejection
+
+- **Notification Service**:
+  - **Purpose**: Delivers email, SMS, and push notifications for reminders and alerts
+  - **Integration**: RESTful API for notification delivery with delivery status tracking
+  - **Failure handling**: Retry failed notifications; fallback to alternative channels (e.g., SMS if email fails); notification delivery failures logged for monitoring
 
 ### Data Dependencies
 
-- **Patient Data**: From patient registration and treatment records
-- **Provider Data**: From provider onboarding and treatment execution
-- **Treatment Data**: From treatment completion and documentation
-- **Payment Data**: From payment processing and billing systems
+- **Patient Data**:
+  - **Why needed**: Patient profile information required for aftercare plan creation and patient identification
+  - **Source**: Patient registration module (FR-001) and treatment records (FR-010)
+
+- **Provider Data**:
+  - **Why needed**: Provider information required for aftercare plan assignment and provider capabilities
+  - **Source**: Provider onboarding module and treatment execution records (FR-010)
+
+- **Treatment Data**:
+  - **Why needed**: Treatment completion status and details trigger aftercare activation and inform plan configuration
+  - **Source**: Treatment Execution & Documentation module (FR-010)
+
+- **Payment Data**:
+  - **Why needed**: Payment confirmation required for standalone aftercare activation and provider access to patient information
+  - **Source**: Payment Processing module (FR-007)
 
 ## Assumptions
 
@@ -1082,10 +1289,25 @@ Cross-Module Reference:
 
 ### Integration Points
 
-- **Treatment Module**: Seamless transition from treatment completion to aftercare activation
-- **Payment Module**: Integration for standalone aftercare service payments
-- **Notification Module**: Automated reminders and alerts for aftercare tasks
-- **Communication Module**: Secure messaging between all stakeholders
+- **Integration 1 - Treatment Module**: Seamless transition from treatment completion to aftercare activation
+  - **Data format**: JSON payload with treatment ID, completion status, patient ID, provider ID, treatment details
+  - **Authentication**: OAuth 2.0 bearer tokens for service-to-service communication
+  - **Error handling**: Retry with exponential backoff on 5xx errors; queue activation requests if treatment module unavailable
+
+- **Integration 2 - Payment Module**: Integration for standalone aftercare service payments
+  - **Data format**: JSON payload with payment ID, amount, currency, payment method, patient ID, service type
+  - **Authentication**: API key authentication for payment gateway integration
+  - **Error handling**: Payment failures trigger user notification and retry queue; automatic refund processing on rejection
+
+- **Integration 3 - Notification Module**: Automated reminders and alerts for aftercare tasks
+  - **Data format**: JSON payload with recipient ID, notification type, message content, priority, delivery channels
+  - **Authentication**: OAuth 2.0 bearer tokens for service-to-service communication
+  - **Error handling**: Retry failed notifications with exponential backoff; fallback to alternative delivery channels
+
+- **Integration 4 - Communication Module**: Secure messaging between all stakeholders
+  - **Data format**: JSON payload with sender ID, recipient ID, message content, message type, attachments
+  - **Authentication**: OAuth 2.0 bearer tokens with role-based access control
+  - **Error handling**: Message delivery failures logged and retried; user notified of delivery status
 
 ### Scalability Considerations
 

@@ -1353,7 +1353,8 @@ Total Quote:                           £3,000
 **Data Security & Governance**:
 
 - All setting changes MUST be versioned and auditable; hard deletes are PROHIBITED (archive only)
-- System MUST support rollback to any previous version for a given setting group
+- System MUST support forward-only changes (no automated rollback); admins can manually recreate previous configurations using version history as reference
+  - **Rationale**: Security policies should never be automatically rolled back as this could reintroduce vulnerabilities. Forward-only changes ensure security improvements are never accidentally regressed. Admins retain full audit trail and can manually restore previous values if needed.
 - Access MUST be restricted to authorized admin roles; sensitive values must be masked in UI and logs
 
 **Impacted Modules**:
@@ -1368,6 +1369,138 @@ Total Quote:                           £3,000
 - Setting changes propagate to dependent services within ≤ 1 minute
 - Zero production incidents linked to settings drift after enabling versioning and rollback
 - Security scanning shows no exposure of sensitive setting values in UI or logs
+
+---
+
+### FR-027: Legal Content Management
+
+**Priority**: P3 (Future)
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms) with versioning, preview, and audit trail capabilities.
+
+**Requirements**:
+
+- Content Management: Admins MUST be able to create, edit, and publish legal content documents
+- Version Control: System MUST maintain version history with timestamps and change tracking
+- Preview & Publishing: Admins MUST be able to preview content before publishing to users
+- Consent Tracking: System MUST track which users have accepted which versions of legal documents
+- Audit Trail: All legal content changes MUST be logged with who/when/what changed
+
+**Impacted Modules**:
+
+- P-01: Auth & Profile (T&C acceptance during registration)
+- PR-01: Auth & Team Management (provider T&C acceptance)
+
+**Note**: Detailed requirements to be documented in dedicated FR-027 PRD.
+
+---
+
+### FR-028: Regional Configuration & Pricing
+
+**Priority**: P2 (Enhanced)
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Enable admins to configure location presentation rules, regional groupings, and starting price configurations for different countries and currencies.
+
+**Requirements**:
+
+- Location Grouping: Admins MUST be able to group countries into regions (e.g., "Europe", "Eastern Europe")
+- Location Ordering: Admins MUST be able to define provider display order per region (e.g., Turkey first for Europe)
+- Starting Prices: Admins MUST be able to set starting prices per location and currency
+- Fallback Pricing: System MUST support fallback pricing for locations without preset configurations
+- Regional Display: Patient app MUST display providers based on configured regional rules
+
+**Impacted Modules**:
+
+- P-02: Quote Request & Management (location selection, pricing display)
+- PR-02: Inquiry & Quote Management (regional filtering)
+
+**Dependencies**:
+
+- FR-026 provides country list consumed by this module
+
+**Note**: Detailed requirements to be documented in dedicated FR-028 PRD.
+
+---
+
+### FR-029: Payment System Configuration
+
+**Priority**: P1 (MVP)
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Provide comprehensive payment infrastructure configuration including Stripe account management, currency conversion settings, and split payment rules.
+
+**Requirements**:
+
+- Stripe Account Management: Admins MUST be able to manage multiple Stripe accounts
+- Account-to-Region Mapping: Admins MUST be able to assign Stripe accounts to countries/regions
+- Currency Support: System MUST support multiple currencies per Stripe account
+- Conversion Rate Configuration: Admins MUST be able to configure currency conversion rate sources and markup percentages
+- Split Payment Rules: Admins MUST be able to configure installment plan options (2-9 installments) and cutoff dates (e.g., 30 days before procedure)
+- Rate Protection: System MUST handle rapid currency fluctuations and protect against unfavorable rates
+
+**Impacted Modules**:
+
+- P-03: Booking & Payment (payment processing, installment calculations)
+- S-02: Payment Processing Service (Stripe integration, currency conversion)
+- FR-007: Payment Processing (extends with configuration capabilities)
+- FR-007B: Split Payment / Installment Plans (extends with configuration capabilities)
+
+**Note**: Detailed requirements to be documented in dedicated FR-029 PRD.
+
+---
+
+### FR-030: Notification Rules & Configuration
+
+**Priority**: P2 (Enhanced)
+**Module(s)**: A-09: System Settings & Configuration | S-03: Notification Service
+
+**Goal**: Enable admins to configure event-to-notification mappings, channel preferences (email/SMS/push), and recipient rules for platform-wide notification system.
+
+**Requirements**:
+
+- Event Mapping: Admins MUST be able to configure which events trigger notifications (quote received, treatment start, aftercare review)
+- Channel Configuration: Admins MUST be able to define notification channels per event type (email, SMS, push)
+- Recipient Preferences: Admins MUST be able to set notification preferences per recipient type (patient, provider, admin)
+- Template Management: System MUST support notification template creation and editing (extends FR-026 OTP templates to general notifications)
+- Testing: Admins MUST be able to test notification rules before activation
+
+**Impacted Modules**:
+
+- S-03: Notification Service (notification delivery)
+- FR-020: Notifications & Alerts (extends with configuration capabilities)
+
+**Dependencies**:
+
+- FR-026 provides OTP template foundation extended by this module
+
+**Note**: Detailed requirements to be documented in dedicated FR-030 PRD.
+
+---
+
+### FR-031: Admin Access Control & Permissions
+
+**Priority**: P1 (MVP)
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Provide role-based access control system for admin platform with granular permission management, team member administration, and audit trail.
+
+**Requirements**:
+
+- Role Management: Admins MUST be able to create and manage admin roles (aftercare staff, billing staff, support staff, super admin)
+- Permission Matrix: Admins MUST be able to assign granular permissions per role (feature access control)
+- Team Member Management: Admins MUST be able to invite, manage, and remove admin team members
+- Role Assignment: Admins MUST be able to assign roles to team members with effective date tracking
+- Audit Trail: System MUST log all permission changes with who/when/what changed
+- Access Validation: System MUST enforce permission checks on all admin actions and API calls
+
+**Impacted Modules**:
+
+- A-01 through A-10: All Admin modules (permission enforcement)
+- All admin-facing features require access control integration
+
+**Note**: Detailed requirements to be documented in dedicated FR-031 PRD.
 
 ---
 

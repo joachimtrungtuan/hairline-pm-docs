@@ -79,6 +79,11 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Actual email sending (handled by S-03: Notification Service)
 - SMS notifications (future enhancement, V2)
 - Push notification templates (handled separately in notification preferences module)
+- Legal content management (see FR-027: Terms & Conditions, Privacy Policy, Consent forms)
+- Regional configuration and pricing (see FR-028: Location presentation, starting prices by currency)
+- Payment system configuration (see FR-029: Stripe account management, conversion rates, split payment rules)
+- Notification rules and event-based triggers (see FR-030: Event-to-notification mapping, channel configuration)
+- Admin access control and role-based permissions (see FR-031: Role management, permission matrix)
 
 ### Entry Points
 
@@ -303,6 +308,47 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Default max resend attempts: 5 per hour
 - Changes apply only to NEW OTP generation requests
 - Existing OTP codes in users' inboxes retain original expiry time
+
+**Rate Limiting Interaction Logic**:
+
+The system enforces BOTH constraints simultaneously (whichever is more restrictive applies):
+
+1. **Cooldown Constraint**: User must wait at least `Resend Cooldown` seconds between consecutive resend requests
+2. **Hourly Limit Constraint**: User cannot exceed `Max Resend Attempts` resend requests within a 1-hour rolling window
+
+**Logic**: User can resend OTP IF AND ONLY IF:
+
+- Cooldown period has elapsed since last resend (e.g., ≥60 seconds) AND
+- Hourly limit not exceeded (e.g., <5 attempts in last 60 minutes)
+
+**Examples**:
+
+- **Scenario 1**: Cooldown = 60s, Max = 5/hour
+  - User can resend approximately every 60 seconds, up to 5 times per hour
+  - If user sends 5 times in 5 minutes (60s apart), 6th request blocked until 60 minutes elapsed from 1st request
+
+- **Scenario 2**: Cooldown = 30s, Max = 10/hour
+  - User can resend approximately every 30 seconds, up to 10 times per hour
+  - If user sends 10 times in 5 minutes (30s apart), 11th request blocked until 60 minutes elapsed from 1st request
+
+- **Scenario 3**: Cooldown = 300s (5 min), Max = 10/hour
+  - User can resend approximately every 5 minutes
+  - Hourly limit theoretically allows 12 requests (60min ÷ 5min), but max enforced at 10
+  - Cooldown is more restrictive, effectively limiting to ~10-12 requests per hour
+
+**Counter Reset Logic**:
+
+- **Rolling Window (RECOMMENDED)**: Hourly counter calculated as "number of resend requests in last 60 minutes from current time"
+  - Example: User sent OTPs at 10:00, 10:05, 10:10, 10:15, 10:20 (5 requests)
+  - At 10:30, user has 5 requests in last 60 min (blocked if max=5)
+  - At 11:01, user has 4 requests in last 60 min (10:05, 10:10, 10:15, 10:20) - 10:00 request outside window
+  - User can now resend (cooldown satisfied, hourly limit not exceeded)
+
+- **Fixed Window (NOT RECOMMENDED)**: Counter resets at exact hourly boundaries (e.g., 10:00, 11:00, 12:00)
+  - Issue: User could send 5 at 10:59 and 5 at 11:01 (10 requests in 2 minutes)
+  - Creates burst traffic vulnerability
+
+**Implementation**: Use rolling window to prevent burst abuse
 
 **Notes**:
 
@@ -550,6 +596,24 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - **Why needed**: S-03 consumes OTP email templates for verification and password reset emails
   - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 5 minutes
 
+- **FR-024 / Module A-09: Treatment & Package Management**
+  - **Why needed**: Treatments are admin-created foundation items managed through Settings UI
+  - **Relationship**: FR-024 Part A (Treatments) is admin-configured; admin creates treatments (FUE, FUT, DHI) with name, description, type, video, images, technique details
+  - **Integration point**: Treatment management is a submodule of A-09 System Settings & Configuration; shares same Settings Management UI and audit trail
+  - **Scope clarification**: FR-026 provides the settings infrastructure; FR-024 implements treatment-specific CRUD operations
+
+- **FR-011 / Module A-03: Aftercare Team Management**
+  - **Why needed**: Aftercare milestone templates are admin-created and managed through Settings UI
+  - **Relationship**: Aftercare templates (Post-Op Phase, Recovery Phase, Growth Phase, Final Assessment) are admin-configured with milestones, scan frequency, questionnaires, educational resources
+  - **Integration point**: Providers select from admin-created templates during treatment completion; templates define complete aftercare plan structure
+  - **Scope clarification**: FR-026 provides the settings infrastructure; FR-011 implements aftercare template-specific management
+
+- **Admin Authentication & Authorization Module**
+  - **Why needed**: Cannot restrict access to Settings Management UI without authentication and role-based permissions
+  - **Required roles**: "Settings Manager" (view + edit all settings), "Settings Viewer" (read-only), "Security Admin" (view sensitive values unmasked)
+  - **Required permissions**: "read:settings", "write:settings", "view:sensitive", "edit:auth-policies", "edit:app-data", "edit:templates"
+  - **Integration point**: All Settings Management UI screens enforce role checks before allowing access; all API endpoints validate OAuth 2.0 tokens with appropriate scopes
+
 ### External Dependencies (APIs, Services)
 
 - **None**: This module has no external dependencies (self-contained within Hairline platform)
@@ -635,6 +699,25 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - **Audit trail**: All admin actions logged with IP address, user agent, timestamp, and change details
 - **Rate limiting**: Settings API rate limited to 100 requests/minute per admin to prevent abuse
 - **Input validation**: All user inputs sanitized to prevent XSS, SQL injection, command injection
+- **HTML Sanitization for Email Templates**:
+  - **Sanitization Library**: MUST use DOMPurify (JavaScript) or Bleach (Python) for server-side HTML sanitization
+  - **Allowed HTML Tags**: `<p>`, `<br>`, `<a>`, `<strong>`, `<em>`, `<ul>`, `<ol>`, `<li>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<img>`, `<table>`, `<tr>`, `<td>`, `<th>`, `<thead>`, `<tbody>`, `<span>`, `<div>`
+  - **Allowed HTML Attributes**: `href` (on `<a>` only), `src` (on `<img>` only), `alt` (on `<img>` only), `title`, `class`, `style` (limited to safe CSS properties: color, font-size, font-weight, text-align, padding, margin, background-color)
+  - **Prohibited HTML Tags**: `<script>`, `<iframe>`, `<object>`, `<embed>`, `<form>`, `<input>`, `<button>`, `<select>`, `<textarea>`, `<link>`, `<meta>`, `<base>`, `<applet>`, `<audio>`, `<video>`
+  - **Prohibited HTML Attributes**: All event handlers (`onclick`, `onerror`, `onload`, `onmouseover`, etc.), `javascript:` in `href`, `data:` URIs in `src`, `formaction`, `srcdoc`
+  - **URL Validation**: All `href` and `src` attributes MUST be validated against whitelist of allowed protocols (http://, https://, mailto:) and reject javascript:, data:, vbscript:, file:
+  - **CSS Sanitization**: If `style` attribute is allowed, MUST strip dangerous CSS properties (expression, behavior, -moz-binding, import, @import)
+  - **Content Security Policy (CSP)**: Template preview iframe MUST render with restrictive CSP headers:
+    - `default-src 'none'`
+    - `img-src https: data:`
+    - `style-src 'unsafe-inline'`
+    - `script-src 'none'`
+  - **XSS Prevention Test Cases**:
+    1. Template containing `<script>alert('XSS')</script>` MUST be sanitized to empty string
+    2. Template containing `<img src=x onerror=alert('XSS')>` MUST strip onerror attribute
+    3. Template containing `<a href="javascript:alert('XSS')">Click</a>` MUST reject javascript: protocol
+    4. Template containing `<div style="background:url('javascript:alert(1)')">` MUST strip dangerous CSS
+    5. Template containing `{code}<script>alert(1)</script>` MUST render variable substitution but sanitize script tag
 - **Compliance**: Audit logs retained for 10 years per compliance requirements; immutable (no deletion)
 
 ---
