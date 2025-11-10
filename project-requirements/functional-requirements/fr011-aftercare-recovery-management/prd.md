@@ -123,40 +123,113 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Main Flow**:
 
-1. **Service Request**
-   - Patient navigates to "Request Aftercare Service" in app
-   - Patient fills out treatment details form
-   - Patient selects aftercare duration and payment option
-   - Patient submits request and makes payment
+1. **Service Request & Package Selection**
+   - Patient navigates to "Request Aftercare Service" in app (Screen 6)
+   - Patient selects service type (standalone for external clinic patients)
+   - Patient fills out treatment details form (treatment date, type, clinic)
+   - Patient browses available aftercare templates marked "Available for Purchase"
+   - Patient selects desired template and views pricing breakdown
+   - Patient chooses payment method (fixed or subscription, if both available)
+   - Patient proceeds to payment screen
 
-2. **Admin Review & Assignment**
-   - Request appears in admin dashboard as "Pending Assignment"
+2. **Payment & Checkout**
+   - Patient reviews order summary with template details, fees, and total (Screen 7)
+   - Patient selects payment method (credit card, PayPal, etc.)
+   - Patient enters payment and billing information
+   - Patient accepts terms and conditions
+   - Patient submits payment
+   - System processes payment via FR-007 Payment Processing module
+   - On success: Payment confirmation displayed, email sent, request moves to "Pending Assignment"
+   - On failure: Error message displayed, retry option provided
+
+3. **Admin Review & Assignment**
+   - Request appears in admin dashboard as "Pending Assignment" (Screen 15)
    - Admin reviews patient information and treatment details
    - Admin assigns suitable provider to oversee case
    - System notifies assigned provider
 
-3. **Provider Activation**
+4. **Provider Activation**
    - Assigned provider reviews patient case
-   - Provider selects appropriate aftercare template
+   - Provider selects appropriate aftercare template (same as purchased template or alternative if needed)
    - Provider customizes plan based on patient's specific situation
    - Provider activates aftercare plan
 
-4. **Patient Onboarding**
+5. **Patient Onboarding**
    - Patient receives activation notification
-   - Patient gains access to aftercare dashboard
+   - Patient gains access to aftercare dashboard (Screen 1)
    - Aftercare team begins monitoring
 
 **Alternative Flows**:
 
-- **B1**: Admin rejects request
+- **B1**: Payment fails
+  - Patient receives payment failure notification
+  - Patient can retry payment with different method
+  - Request expires after 48 hours without successful payment
+
+- **B2**: Admin rejects request
   - Admin marks request as "Not suitable for aftercare"
   - Patient receives rejection notification with reason
   - Refund processed automatically
 
-- **B2**: No suitable provider available
+- **B3**: No suitable provider available
   - Admin marks as "Awaiting provider availability"
   - Patient notified of delay
   - Admin manually assigns when provider becomes available
+
+### Workflow 2b: Post-Treatment Aftercare Add-On (Secondary Flow)
+
+**Actors**: Patient (Hairline-treated), Admin, Assigned Provider (original or new), Aftercare Team
+
+**Trigger**: Hairline-treated patient requests aftercare service after treatment completion (within 90 days)
+
+**Outcome**: Aftercare plan is configured, activated, and patient receives ongoing monitoring
+
+**Main Flow**:
+
+1. **Add-On Service Request**
+   - Patient navigates to "Add Aftercare Service" in patient dashboard (Screen 6)
+   - System verifies patient has completed Hairline treatment within 90 days
+   - Patient selects service type (post-treatment add-on)
+   - System auto-populates treatment information from patient's treatment history
+   - Patient browses available aftercare templates (filtered by treatment type compatibility)
+   - Patient selects desired template and payment method
+   - Patient proceeds to payment
+
+2. **Payment & Checkout**
+   - Patient reviews order summary with template details (Screen 7)
+   - Patient completes payment via checkout screen
+   - System processes payment via FR-007 Payment Processing module
+   - On success: Payment confirmed, request moves to automatic assignment
+   - On failure: Error message, retry option
+
+3. **Automatic Assignment**
+   - Payment confirmation triggers automatic assignment
+   - System assigns to original treatment provider (if provider participates in aftercare)
+   - If provider doesn't participate, system assigns to Hairline aftercare team
+   - Assigned provider receives notification
+
+4. **Provider Activation**
+   - Provider reviews patient's treatment history (pre-populated from treatment records)
+   - Provider selects appropriate aftercare template (same as purchased or alternative)
+   - Provider customizes plan based on patient's treatment and package selection
+   - Provider activates aftercare plan
+
+5. **Patient Onboarding**
+   - Patient receives activation notification
+   - Patient gains access to aftercare dashboard (Screen 1)
+   - Aftercare team begins monitoring
+
+**Alternative Flows**:
+
+- **B1a**: Original provider declines aftercare participation
+  - System automatically assigns to Hairline aftercare team
+  - Patient notified of provider assignment
+  - Aftercare team provider configures and activates plan
+
+- **B1b**: Payment fails
+  - Patient receives payment failure notification
+  - Patient can retry payment with different method
+  - Request expires after 48 hours without successful payment
 
 ### Workflow 3: Patient Aftercare Activities (Ongoing Flow)
 
@@ -448,15 +521,124 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Notes**:
 
-- Resources managed in Screen 14 (Milestone Template Management) by admin
+- Resources managed in Screen 16 (Milestone Template Management) by admin
 - Support for various media types: videos (streaming), PDFs (download), web pages (in-app browser)
 - Progress tracking helps ensure patients review critical educational content
 - Resources organized by category for easy navigation
 - Offline viewing capability for downloaded resources
 
+#### Screen 6: Aftercare Service Purchase
+
+**Purpose**: Patient purchases aftercare service (post-treatment add-on or standalone)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Service Type | radio | Yes | Post-Treatment Add-On or Standalone Service | Enum: "post_treatment", "standalone" |
+| Treatment Information | component | Cond. | Treatment details (if post-treatment add-on) | Auto-populated for post_treatment type |
+| External Treatment Details | form | Cond. | Treatment info form (if standalone) | Required for standalone type |
+| Treatment Date | date | Cond. | Date treatment performed | ISO 8601; required for standalone |
+| Treatment Type | select | Cond. | Type of treatment received | Valid treatment type enum; required for standalone |
+| Treating Clinic | text | Cond. | Name of external clinic | Max 200 chars; required for standalone |
+| Upload Treatment Documentation | file | No | Optional treatment documentation | Max 10MB; PDF/JPG/PNG |
+| Available Aftercare Services | list | Yes | List of purchasable aftercare templates | Filtered by treatment type compatibility |
+| Service Name | text | Yes | Template name (e.g., "Standard 6-Month FUE Aftercare") | Display only |
+| Service Description | text | Yes | Template description with features | Display only |
+| Duration | text | Yes | Service duration (from template) | Display only |
+| Milestones Included | list | Yes | Milestone summary | Display only |
+| Features Included | list | Yes | Features (3D scans, questionnaires, etc.) | Display only |
+| Pricing Options | component | Yes | Available pricing for this template | Based on template configuration |
+| Payment Method | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model |
+| Price (Fixed) | currency | Cond. | One-time payment amount | Shown if Fixed or Both |
+| Price (Monthly) | currency | Cond. | Monthly subscription amount | Shown if Subscription or Both |
+| Total Amount | currency | Yes | Total amount for selected payment method | Auto-calculated |
+| Currency | text | Yes | Patient's currency (auto-detected) | Based on location |
+| Selected Service | radio | Yes | User selection of template | Required before checkout |
+| Selected Payment Method | radio | Cond. | If template offers both pricing models | Required if Both available |
+| Current Concerns | textarea | No | Patient's current concerns or symptoms | Max 2000 chars |
+| Upload Photos | file[] | No | Optional photos of current condition | Max 5 files; 10MB each; JPG/PNG |
+| Proceed to Payment | action | Yes | Button to proceed to checkout | Enabled when service selected |
+
+**Business Rules**:
+
+- Only templates marked "Available for Purchase" are shown
+- Templates filtered by treatment type compatibility (FUE templates for FUE patients, etc.)
+- Pricing shown in patient's local currency (based on location detection)
+- If template offers both Fixed and Subscription, patient chooses preferred payment method
+- Service name uses template name for consistency across provider and patient views
+- Post-treatment add-on only available within 90 days of Hairline treatment completion
+- Treatment documentation optional but helps provider customize plan
+
+**Notes**:
+
+- Service offerings are directly pulled from aftercare templates (Screen 16)
+- Each template defines its own pricing, features, and duration
+- Visual presentation similar to treatment package selection for consistency
+- Pricing transparency with clear breakdown of what's included
+- Service type auto-detected based on patient's treatment history
+
+#### Screen 7: Aftercare Payment & Checkout
+
+**Purpose**: Patient completes payment for aftercare service
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Order Summary | component | Yes | Selected aftercare service details | Display only |
+| Service Name | text | Yes | Selected template name | Display only |
+| Duration | text | Yes | Service duration | Display only |
+| Payment Method Selected | text | Yes | Fixed or Monthly Subscription | Display only |
+| Subtotal | currency | Yes | Base service price (from template) | Display only |
+| Platform Fee | currency | Yes | Platform service fee | Display only; 15-25% |
+| Tax | currency | Yes | Applicable tax | Display only; location-based |
+| Total Amount | currency | Yes | Final amount to pay | Display only |
+| Monthly Payment Details | component | Cond. | Breakdown of subscription payments | Shown if subscription selected |
+| Monthly Amount | currency | Yes | Amount charged per month | Display only |
+| Number of Months | number | Yes | Total subscription duration | Display only |
+| Total Subscription Amount | currency | Yes | Monthly amount × number of months | Display only |
+| Payment Method Selection | radio | Yes | Credit/Debit Card, PayPal, etc. | Valid payment method enum |
+| Card Number | text | Cond. | Credit/debit card number | Valid card format; required if card payment |
+| Expiry Date | text | Cond. | Card expiry date | MM/YY format; required if card payment |
+| CVV | text | Cond. | Card security code | 3-4 digits; required if card payment |
+| Cardholder Name | text | Cond. | Name on card | Max 200 chars; required if card payment |
+| Billing Address | component | Yes | Billing address details | Required for all payment methods |
+| Street Address | text | Yes | Street address | Max 500 chars |
+| City | text | Yes | City | Max 100 chars |
+| State/Province | text | Yes | State/province | Max 100 chars |
+| Postal Code | text | Yes | Postal/ZIP code | Valid postal format |
+| Country | select | Yes | Country | Valid country enum |
+| Terms & Conditions | checkbox | Yes | Agreement to terms | Boolean; must be checked |
+| Privacy Policy | checkbox | Yes | Agreement to privacy policy | Boolean; must be checked |
+| Payment Processing | status | No | Payment processing status | Display during payment |
+| Complete Payment | action | Yes | Button to submit payment | Enabled when all fields valid |
+
+**Business Rules**:
+
+- Payment integration with FR-007 (Payment Processing module)
+- Support for multiple payment methods (credit/debit cards, PayPal, local payment methods)
+- Secure payment processing with PCI compliance
+- Payment confirmation triggers aftercare request workflow (Workflow 2 or 2b)
+- Failed payments allow retry with different payment method
+- Refunds processed automatically if request is rejected by admin
+- Subscription payments charged automatically on monthly basis
+- First subscription payment charged immediately; subsequent payments on monthly anniversary
+
+**Notes**:
+
+- Integrate with Stripe payment gateway (per dependencies, line 1232-1236)
+- Order summary clearly shows all fees and charges with transparent breakdown
+- Payment method selection supports region-specific payment options
+- Secure payment form with SSL encryption and PCI compliance
+- Payment confirmation email sent immediately after successful payment
+- Payment status tracked and visible in patient dashboard
+- For subscriptions, clear communication of recurring payment schedule
+- Subscription management interface for patients to view/cancel subscriptions
+
 ### Provider Platform Screens
 
-#### Screen 6: Aftercare Cases List
+#### Screen 8: Aftercare Cases List
 
 **Purpose**: Provider views all patients in aftercare (similar to existing "In Progress" list)
 
@@ -496,7 +678,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Sortable columns help providers prioritize cases (e.g., sort by Last Activity to find inactive patients)
 - Action menu provides quick access to common provider tasks without navigating away
 
-#### Screen 7: Patient Aftercare Details
+#### Screen 9: Patient Aftercare Details
 
 **Purpose**: Provider views comprehensive patient aftercare progress with full historical context
 
@@ -551,7 +733,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Quick action buttons enable providers to make interventions without leaving the screen
 - Escalation workflow creates immediate audit trail for urgent cases
 
-#### Screen 8: Aftercare Setup (Multi-Step Process)
+#### Screen 10: Aftercare Setup (Multi-Step Process)
 
 **Purpose**: Provider sets up aftercare plan after treatment completion
 
@@ -621,7 +803,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Medication management interface supports multiple medications with overlapping schedules
 - Visual timeline helps providers understand medication schedule at a glance
 
-#### Screen 9: Aftercare Plan Edit
+#### Screen 11: Aftercare Plan Edit
 
 **Purpose**: Provider or Admin modifies existing aftercare plan
 
@@ -665,7 +847,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Approval workflow for major changes ensures quality control
 - Patient notifications keep them informed of plan modifications
 
-#### Screen 10: Aftercare Progress Tracking (Provider View)
+#### Screen 12: Aftercare Progress Tracking (Provider View)
 
 **Purpose**: Provider monitors ongoing aftercare progress for assigned patients
 
@@ -718,7 +900,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### Admin Platform Screens
 
-#### Screen 11: Aftercare Cases List
+#### Screen 13: Aftercare Cases List
 
 **Purpose**: Admin views all aftercare cases (similar to existing provider lists)
 
@@ -759,7 +941,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Search and filter capabilities enable admins to find specific cases efficiently
 - Action menu provides quick access to admin interventions (reassign, escalate, edit)
 
-#### Screen 12: Aftercare Case Details (Multi-Tab View)
+#### Screen 14: Aftercare Case Details (Multi-Tab View)
 
 **Purpose**: Admin views comprehensive aftercare case information
 
@@ -830,7 +1012,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - All tabs provide full admin visibility without restrictions
 - Change history ensures complete audit trail for compliance
 
-#### Screen 13: Standalone Aftercare Requests
+#### Screen 15: Standalone Aftercare Requests
 
 **Purpose**: Admin manages standalone aftercare service requests
 
@@ -879,7 +1061,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Rejection workflow ensures proper documentation and automatic refund processing
 - Expiration tracking helps admins prioritize requests that are approaching deadline
 
-#### Screen 14: Milestone Template Management
+#### Screen 16: Milestone Template Management
 
 **Purpose**: Admin creates and manages aftercare milestone templates
 
@@ -915,6 +1097,17 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Create FAQ | action | No | Button to create FAQ documents | File size max 100MB |
 | Manage Help Guides | action | No | Button to manage help guides | File size max 100MB |
 | Resource File | file | Yes | Uploaded resource file | Max 100MB per file |
+| **Pricing Configuration** | | | | |
+| Enable for Purchase | checkbox | Yes | Make template available for standalone/add-on purchase | Boolean; default false |
+| Service Description | textarea | Cond. | Marketing description for patients | Max 500 chars; required if enabled for purchase |
+| Pricing Model | radio | Cond. | Fixed Price or Subscription or Both | Enum: "fixed", "subscription", "both"; required if enabled for purchase |
+| Multi-Currency Pricing | component | Cond. | Currency-specific pricing table | Required if enabled for purchase |
+| Currency | select | Yes | Currency (USD, GBP, EUR, etc.) | Valid currency enum |
+| Fixed Price | currency | Cond. | One-time payment amount | Required if "fixed" or "both" selected |
+| Monthly Subscription Price | currency | Cond. | Monthly payment amount | Required if "subscription" or "both" selected |
+| Add Currency | action | Yes | Button to add another currency | Always available |
+| Default Payment Method | radio | Cond. | Default shown to patient (if Both enabled) | Enum: "fixed", "subscription"; required if "both" selected |
+| Enable Discounts | checkbox | No | Allow discount codes for this template | Boolean; default false |
 
 **Business Rules**:
 
@@ -922,11 +1115,18 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Changes to active templates require approval
 - New templates must be tested before activation
 - Resource files limited to 100MB each
-- Questionnaires are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 14 only selects among existing questionnaires and configures schedule/frequency per milestone.
-- Screen 14 must surface only questionnaires with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context questionnaires if flagged as compatible.
+- Templates can be marked as "Internal Use Only" (providers only) or "Available for Purchase" (standalone/add-on)
+- Purchasable templates require pricing configuration for all supported currencies
+- If "Both" pricing model selected, patient can choose between fixed or subscription at purchase
+- Monthly subscription price is per month; total subscription amount = monthly price × template duration in months
+- Pricing changes to active templates require admin approval and don't affect existing patients (locked at purchase time)
+- Multi-currency pricing uses real-time exchange rates as baseline but allows admin override for final pricing
+- Template Name is used as service name for patient-facing display (no separate service name needed)
+- Questionnaires are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 only selects among existing questionnaires and configures schedule/frequency per milestone.
+- Screen 16 must surface only questionnaires with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context questionnaires if flagged as compatible.
 - Each aftercare template references exactly one Questionnaire Set (single-select). All milestones within the template schedule questions only from that selected set. Changing the selected set replaces questionnaire references across all milestones in the template.
 
-Cross-Module Reference:
+**Cross-Module Reference**:
 
 - Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management
 - After selecting questionnaires here, their delivery and response handling follow the schedules defined per milestone
@@ -941,8 +1141,12 @@ Cross-Module Reference:
 - Resource management supports various media types for educational content
 - File size limits (100MB) ensure reasonable storage usage while supporting high-quality content
 - Approval workflow for active template changes prevents disruption to ongoing aftercare plans
+- Templates serve dual purpose: clinical configuration for providers AND purchasable service offerings for patients
+- Pricing configuration allows templates to be sold as standalone/add-on services with flexible payment options
+- Multi-currency pricing ensures patients see prices in their local currency
+- Template Name serves as both internal reference and patient-facing service name for consistency
 
-#### Screen 15: Provider Performance Dashboard
+#### Screen 17: Provider Performance Dashboard
 
 **Status**: Backlog (post-MVP analytics)
 
@@ -992,7 +1196,7 @@ Cross-Module Reference:
 - Action buttons enable admin interventions (feedback, reassignment, suspension)
 - Deferred to post-MVP phase as it extends beyond core case management operations
 
-#### Screen 16: Aftercare Progress Tracking (Admin View)
+#### Screen 18: Aftercare Progress Tracking (Admin View)
 
 **Status**: Backlog (post-MVP analytics)
 
@@ -1161,6 +1365,18 @@ Cross-Module Reference:
    - Platform commission deducted from standalone aftercare payments
    - Commission rate: 15-25% (configurable)
    - Commission calculated at time of payment
+
+4. **Aftercare Service Payment Rules**
+   - **Template-based pricing**: Each aftercare template defines its own pricing (fixed, subscription, or both) in Screen 16
+   - **Multi-currency support**: Pricing configured per currency; patient sees price in local currency based on location
+   - **Payment method selection**: If template offers both fixed and subscription, patient chooses at purchase time
+   - **Subscription payments**: Monthly installments charged automatically for template duration; first payment immediate, subsequent on monthly anniversary
+   - **Post-treatment add-on availability**: Available to Hairline-treated patients within 90 days of treatment completion
+   - **Standalone service availability**: Available to all patients regardless of treatment source
+   - **Template filtering**: Only templates marked "Available for Purchase" are shown; filtered by treatment type compatibility
+   - **Pricing immutability**: Patients locked into price at time of purchase (future template price changes don't affect existing patients)
+   - **Payment timing**: Payment required before service activation for both standalone and post-treatment add-on
+   - **Refund policy**: Full refund if request rejected by admin; prorated refund for subscription cancellations based on unused months
 
 ## Success Criteria
 
