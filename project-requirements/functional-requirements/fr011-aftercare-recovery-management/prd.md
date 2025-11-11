@@ -400,7 +400,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - Scan must meet minimum quality threshold
 - Maximum file size: 50MB
-- Only one scan per milestone allowed
+- Multiple scans within a milestone are supported per the configured scan schedule (e.g., every X days for Y repetitions); one upload is allowed per scheduled instance
 - Previous scans remain accessible for comparison
 
 **Notes**:
