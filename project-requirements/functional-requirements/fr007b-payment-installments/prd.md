@@ -109,7 +109,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 ### Alternative Flows
 
-**A1: Patient Chooses Fewer Installments Than Maximum Available**
+**A1: Patient Chooses Fewer Installments Than Maximum Available**:
 
 - **Trigger**: Patient wants to pay faster than the maximum allowed installments
 - **Steps**:
@@ -118,7 +118,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   3. System adjusts payment schedule accordingly
 - **Outcome**: Booking completed with shorter payment timeline; same 30-day buffer maintained
 
-**A2: Patient Opts for Full Payment Instead of Installments**
+**A2: Patient Opts for Full Payment Instead of Installments**:
 
 - **Trigger**: Patient prefers to pay entire amount upfront
 - **Steps**:
@@ -127,7 +127,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   3. System marks booking as "Fully Paid"
 - **Outcome**: Booking confirmed without installment plan; same as existing FR-007 payment flow
 
-**A3: Patient Updates Payment Method Mid-Plan**
+**A3: Patient Updates Payment Method Mid-Plan**:
 
 - **Trigger**: Patient's payment method expired or needs to change card
 - **Steps**:
@@ -137,7 +137,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   4. System applies new payment method to remaining installments
 - **Outcome**: Future installments charged to new payment method; previous installments unaffected
 
-**B1: Installment Payment Fails**
+**B1: Installment Payment Fails**:
 
 - **Trigger**: Scheduled installment charge is declined or fails
 - **Steps**:
@@ -151,7 +151,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   8. Admin reviews and contacts patient to resolve payment issue
 - **Outcome**: Payment resolved manually or booking canceled per admin decision; patient may be charged late fees or rescheduling fees
 
-**B2: Patient Cancels Booking With Active Installment Plan**
+**B2: Patient Cancels Booking With Active Installment Plan**:
 
 - **Trigger**: Patient requests booking cancellation before completing all installments
 - **Steps**:
@@ -163,7 +163,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   6. System updates booking status to "Canceled - Partial Refund"
 - **Outcome**: Patient refunded per policy; no further installments charged; provider notified
 
-**B3: Procedure Date Changes After Installment Plan Established**
+**B3: Procedure Date Changes After Installment Plan Established**:
 
 - **Trigger**: Patient or provider reschedules procedure date
 - **Steps**:
