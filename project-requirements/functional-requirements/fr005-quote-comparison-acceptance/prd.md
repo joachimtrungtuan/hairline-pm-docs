@@ -265,6 +265,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - Acceptance prepares booking/payment handoff; no funds are collected in this module.  
 - Selected quote’s per-date pricing and chosen date feed the next module for payment intent creation.  
 - Pricing and discounts shown are those defined in FR-004; acceptance does not modify financial terms.
+- Post-Acceptance Hold: After acceptance, the system reserves the pre-selected appointment slot for 48 hours to allow the patient to complete the initial payment (deposit or first installment) in FR-006. If payment is not completed within 48 hours, the reservation is released and the slot may be reallocated by the provider.
 
 ---
 

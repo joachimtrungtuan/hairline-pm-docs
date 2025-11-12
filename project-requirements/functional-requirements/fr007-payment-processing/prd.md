@@ -3,7 +3,7 @@
 **Module**: P-03: Booking & Payment | PR-05: Financial Management & Reporting | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service | S-03: Notification Service
 **Feature Branch**: `fr007-payment-processing`
 **Created**: 2025-11-04
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-007 from local-docs/project-requirements/system-prd.md (Payment Processing) + Constitution (.specify/memory/constitution.md)
 
 ---
@@ -19,8 +19,8 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-03)**: Patient pays deposit to confirm booking; pays final amount by procedure date; views payment status, receipts, and invoices; selects supported payment method and currency; receives payment confirmations and reminders.
-- **Provider Platform (PR-05)**: Provider views booking payment status and scheduled payouts; sees commission deducted amounts; accesses payout statements and history once treatment is marked complete.
-- **Admin Platform (A-05)**: Admin configures commission rates and deposit defaults; approves/executes provider payouts post-treatment; processes refunds per policy; monitors payment dashboards, reconciliation, and reports.
+- **Provider Platform (PR-05)**: Provider views booking payment status and patient payment progress; sees commission deducted amounts; accesses payout statements and history once treatment is marked complete (payout execution managed in FR-017).
+- **Admin Platform (A-05)**: Admin processes refunds per policy; monitors payment dashboards and reconciliation; views patient payment progress across bookings (commission rates and deposit defaults configured via FR-029; provider payout execution managed in FR-017).
 - **Shared Services (S-02/S-03)**: Payment Processing Service handles authorizations/captures/refunds and payout preparation; Notification Service delivers confirmations and reminders.
 
 ### Multi-Tenant Breakdown
@@ -37,16 +37,17 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 **Provider Platform (PR-05)**:
 
 - View booking payment status (unpaid/deposit paid/final paid/refunded)
-- View upcoming and completed payouts with commission deducted
-- Access payout statements for accounting
+- View patient payment progress (deposit status, installment progress, final payment status)
+- View upcoming and completed payouts with commission deducted (payout execution managed in FR-017)
+- Access payout statements for accounting (generated in FR-017)
 
 **Admin Platform (A-05)**:
 
-- Configure commission rate per provider or tier (within policy bounds)
-- Configure deposit percentage defaults and allowed range
-- Review and trigger provider payouts after treatment completion
-- Approve and process refunds per cancellation policy
+- View patient payment progress across all bookings (deposit status, installment progress, final payment status)
+- Approve and process refunds per cancellation policy (refund amount calculation per FR-006 cancellation policy)
 - View reconciliation dashboards and export payment/commission reports
+- **Note**: Commission rate and deposit defaults are configured via FR-029: Payment System Configuration (system-level settings)
+- **Note**: Provider payout execution and invoice generation are managed in FR-017: Admin Billing & Financial Management
 
 **Shared Services (S-02, S-03)**:
 
@@ -72,7 +73,8 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 - Patient initiates payment in booking confirmation flow (deposit required)
 - Patient initiates final payment from booking details prior to procedure date
-- Admin initiates provider payout after treatment is marked completed
+- Admin processes refunds per cancellation policy (refund amounts per FR-006)
+- **Note**: Provider payout execution is handled in FR-017: Admin Billing & Financial Management
 
 ---
 
@@ -93,7 +95,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 5. On success, System marks booking as confirmed; generates receipt and invoice; sends confirmation to patient and provider
 6. Prior to procedure date, Patient initiates final payment from booking details
 7. System processes final payment and updates booking to fully paid; issues final receipt/invoice; sends confirmations
-8. After treatment completion, Admin reviews the booking and triggers provider payout; System calculates commission and prepares payout statement; provider is notified
+8. After treatment completion, provider payout becomes eligible (payout execution handled in FR-017: Admin Billing & Financial Management)
 
 ### Alternative Flows
 
@@ -108,12 +110,12 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 **A2: Refund Due to Cancellation**:
 
-- **Trigger**: Patient cancels booking; cancellation policy determines refund amount
+- **Trigger**: Patient cancels booking; cancellation policy determines refund amount (per FR-006 cancellation policy)
 - **Steps**:
-  1. Admin reviews cancellation timing and applicable refund schedule
-  2. System calculates refundable amount and initiates refund
+  1. Admin reviews cancellation timing and applicable refund schedule (refund amounts per FR-006: >30 days = 90%, 15-30 days = 50%, <15 days = no refund unless exception)
+  2. System calculates refundable amount based on cancellation policy and initiates refund
   3. System updates booking/payment status and sends confirmation notices
-- **Outcome**: Refund processed according to policy; provider payout eligibility updated
+- **Outcome**: Refund processed according to FR-006 cancellation policy; provider payout eligibility updated
 
 **B1: Payment Authentication Required / Challenge Failed**:
 
@@ -135,7 +137,9 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ## Screen Specifications
 
-### Screen 1: Patient Checkout (Deposit)
+### Patient Platform
+
+#### Screen 1: Patient Checkout (Deposit)
 
 **Purpose**: Allow patient to pay deposit to confirm booking
 
@@ -144,7 +148,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Total Amount | number | Yes | Total procedure price | Positive amount; matches booking |
-| Deposit Amount | number | Yes | Deposit to confirm booking | Percent of total; within allowed range |
+| Deposit Amount | number | Yes | Deposit to confirm booking | Admin-configurable percentage (default 20-30% range, configured via FR-029); within allowed range |
 | Currency | select | Yes | Selected currency | Supported list; defaults by locale |
 | Payment Method | select | Yes | Card, bank transfer, or digital wallet | Must be in supported methods |
 | Billing Details | text | Yes | Name, address, contact | Required for invoicing |
@@ -163,7 +167,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ---
 
-### Screen 2: Patient Final Payment
+#### Screen 2: Patient Final Payment
 
 **Purpose**: Allow patient to complete final payment before or on procedure date
 
@@ -188,52 +192,497 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ---
 
-### Screen 3: Provider Payout Overview
+### Provider Platform
 
-**Purpose**: Allow provider to view payout status and details for completed treatments
+#### Screen 3: Booking Payment Status & Progress (Provider)
 
-**Data Fields**:
+**Purpose**: View complete payment information with full context from inquiry, quote, booking, and payment stages
+
+**Note**: This screen aggregates payment data with context from previous stages (FR-003, FR-004, FR-005, FR-006) to provide comprehensive payment view. This complements FR-006's Booking Detail View (Screen 4) which shows all booking information including payment summary.
+
+**Data Fields** (Continuation from FR-006 Screen 4, aggregating data from FR-003, FR-004, FR-005, FR-006, FR-007):
+
+**Section 1: Booking & Payment Context** (from FR-006):
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Booking ID | text | Yes | Reference identifier | Must match existing booking |
-| Patient Alias | text | Yes | Anonymized patient reference | No PII until confirmed |
-| Gross Amount | number | Yes | Total paid by patient | Positive |
-| Commission | number | Yes | Platform commission deducted | Within configured range |
-| Net Payout | number | Yes | Amount to provider | Gross minus commission |
-| Payout Status | select | Yes | Pending/Executed/On Hold | Valid transitions only |
+| Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
+| Booking Status | badge | Yes | Current status (Accepted/Confirmed/In Progress/Cancelled) | Read-only |
+| Appointment Date | datetime | Yes | Confirmed appointment slot | Read-only |
+| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
+| Quote Reference | text | Yes | Original quote reference | Read-only; link to quote |
+
+**Section 2: Patient Information** (from FR-003, unmasked if Confirmed):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient Anonymized ID | text | Yes | Patient code (always visible) | Read-only |
+| Patient Name | text | Conditional | Full name (if Confirmed) or masked (e.g., "Mark P. - PAT-00123") | Unmask only if status = Confirmed |
+| Patient Location | text | Yes | Country/city | Read-only; from inquiry |
+| Treatment Type Requested | text | Yes | Hair/Beard/Both | Read-only; from inquiry |
+
+**Section 3: Quote & Treatment Information** (from FR-004):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; from quote |
+| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; from quote |
+| Packages Selected | list | No | Hotel, transport, medication packages | Read-only; from quote |
+| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; from quote |
+
+**Section 4: Pricing Breakdown** (from FR-004):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Currency | text | Yes | Payment currency | Read-only; from quote |
+| Treatment Price | number | Yes | Base treatment price | Read-only; from quote |
+| Package Prices | number | Yes | Total package prices | Read-only; from quote |
+| Discount Applied | number | No | Discount amount (if any) | Read-only; from quote |
+| Total Quote Amount | number | Yes | Total booking amount | Read-only; from quote |
+
+**Section 5: Payment Progress & Status** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured via FR-029 |
+| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Status | badge | Yes | Pending / Paid / Partial | Read-only |
+| Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
+| Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid |
+| Payment Status | badge | Yes | Unpaid / Deposit Only / Installments Active / Full Paid | Read-only |
+| Installment Progress | group | Conditional | Current installment number, total installments, next due date, completion percentage | Only shown if installments active |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only |
+| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only |
+| Final Payment Amount | number | Conditional | Final payment amount due | Calculated |
+| Final Payment Method | text | Conditional | Payment method used for final payment | Read-only; if paid |
+| Final Payment Paid Date | datetime | Conditional | Date final payment was paid | Read-only; if paid |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated |
+| Total Paid Amount | number | Yes | Sum of all payments made | Calculated |
+
+**Section 6: Payment History** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payment History | table | Yes | All payments (deposit, installments, final) with dates, amounts, methods, status | Read-only |
+| Payment Transaction ID | text | Yes | Payment processor transaction ID | Read-only |
+| Payment Receipt Link | link | Yes | Link to payment receipt/invoice | Read-only |
+| Refund History | table | Conditional | All refunds processed (if any) with dates, amounts, reasons | Read-only; if refunds exist |
+
+**Section 7: Payout Information** (from FR-017, conditional):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payout Status | badge | Conditional | Pending / Eligible / Processing / Executed | Only shown after treatment completion |
+| Gross Amount | number | Conditional | Total paid by patient | Read-only; if payout eligible |
+| Commission Rate | text | Conditional | Platform commission percentage | Read-only; configured via FR-029 |
+| Commission Amount | number | Conditional | Platform commission deducted | Read-only; if payout eligible |
+| Net Payout | number | Conditional | Amount to provider | Read-only; if payout eligible |
+| Payout Execution Date | datetime | Conditional | Date payout was executed | Read-only; if executed |
+| Payout Statement Link | link | Conditional | Link to detailed payout invoice (FR-017) | Only shown if payout executed |
+
+**Actions**:
+
+| Action | Type | Condition | Description |
+|--------|------|-----------|-------------|
+| View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
+| View Quote | link | Always | Open full quote details (FR-004) |
+| View Inquiry | link | Always | Open full inquiry details (FR-003) |
+| View Payment Receipt | link | Conditional | Open payment receipt/invoice (if payment exists) |
+| View Payout Details | link | Conditional | Open payout details in FR-017 (if payout exists) |
+
+**Business Rules**:
+
+- Payment status reflects real-time payment progress (deposit, installments, final payment)
+- Provider can see payment progress but cannot modify payment information
+- Patient full identity only visible if booking status is "Confirmed" (payment successful)
+- All payment data is read-only for provider
+- Payout information links to FR-017: Admin Billing & Financial Management for detailed payout statements
+- All sections display data from previous stages (inquiry → quote → booking → payment) in chronological order
+
+**Notes**:
+
+- This screen provides comprehensive payment view with full context from patient journey
+- UI may use tabs or accordion sections to organize information by stage
+- Payment details shown without card information (PCI compliance)
+- This complements FR-006's Booking Detail View which shows all booking information; this screen focuses specifically on payment details
+- Payment status updates in real-time as patient makes payments
+
+---
+
+#### Screen 4: Provider Payout Overview (Provider)
+
+**Purpose**: View payout status and details for completed treatments with full context from booking and payment stages
+
+**Note**: Detailed payout execution and invoice generation are managed in FR-017: Admin Billing & Financial Management. This screen provides comprehensive view with context from previous stages and links to detailed payout information.
+
+**Data Fields** (Continuation from Screen 3, aggregating data from FR-003, FR-004, FR-006, FR-007, FR-017):
+
+**Section 1: Booking & Treatment Context** (from FR-006):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
+| Treatment Completion Date | datetime | Yes | Date treatment was marked complete | Read-only |
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; from quote |
+| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; from quote |
+| Clinician Assigned | text | Yes | Clinician who performed procedure | Read-only; from quote |
+
+**Section 2: Patient Information** (from FR-003):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient Name | text | Yes | Full patient name (unmasked after treatment) | Read-only |
+| Patient ID | text | Yes | Patient code | Read-only |
+| Treatment Type Requested | text | Yes | Hair/Beard/Both | Read-only; from inquiry |
+
+**Section 3: Payment Summary** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Currency | text | Yes | Payment currency | Read-only; from quote |
+| Total Quote Amount | number | Yes | Total booking amount | Read-only; from quote |
+| Total Paid Amount | number | Yes | Sum of all payments made by patient | Read-only |
+| Payment Status | badge | Yes | Deposit Only / Installments / Full Paid | Read-only |
+| Payment History | link | Yes | Link to full payment history (Screen 3) | Read-only |
+
+**Section 4: Payout Calculation** (from FR-017):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Gross Amount | number | Yes | Total paid by patient | Positive; read-only |
+| Commission Rate | text | Yes | Platform commission percentage | Read-only; configured via FR-029 |
+| Commission Amount | number | Yes | Platform commission deducted | Calculated; read-only |
+| Net Payout | number | Yes | Amount to provider | Gross minus commission; read-only |
+| Payout Currency | text | Yes | Provider's payout currency | Read-only; provider-configured |
+| Exchange Rate | number | Conditional | Currency conversion rate (if multi-currency) | Read-only; locked at booking |
+
+**Section 5: Payout Status & Execution** (from FR-017):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payout Status | badge | Yes | Pending / Eligible / Processing / Executed / On Hold | Valid transitions only |
+| Payout Eligibility Date | datetime | Conditional | Date payout became eligible | Read-only; after treatment completion |
+| Payout Execution Date | datetime | Conditional | Date payout was executed | Read-only; if executed |
+| Payout Method | text | Conditional | Payout method (bank transfer, etc.) | Read-only; if executed |
+| Payout Transaction ID | text | Conditional | Payout transaction reference | Read-only; if executed |
+| Payout Statement Link | link | Conditional | Link to detailed payout invoice (FR-017) | Only shown if payout executed |
+| Payout Invoice | link | Conditional | Download payout invoice PDF | Only shown if payout executed |
+
+**Section 6: Treatment Details** (from FR-004, FR-006):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Quote Reference | text | Yes | Original quote reference | Read-only; link to quote |
+| Packages Selected | list | No | Hotel, transport, medication packages | Read-only; from quote |
+| Appointment Date | datetime | Yes | Procedure date | Read-only |
+
+**Actions**:
+
+| Action | Type | Condition | Description |
+|--------|------|-----------|-------------|
+| View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
+| View Payment Details | link | Always | Open Screen 3: Payment Status & Progress |
+| View Quote | link | Always | Open full quote details (FR-004) |
+| Download Payout Invoice | link | Conditional | Download payout invoice PDF (if payout executed) |
+| View Payout Details (FR-017) | link | Conditional | Open detailed payout information in FR-017 (if payout exists) |
 
 **Business Rules**:
 
 - Payout visible only after treatment marked complete by admin
-- Commission shown and deducted from payout amount
+- Commission shown and deducted from payout amount (commission rate configured via FR-029)
+- Payout calculation based on total paid amount (not just deposit)
 - History of payouts accessible for accounting
+- Links to FR-017 for detailed payout statements and invoices
+- All payout data is read-only for provider (payout execution is admin-controlled in FR-017)
 
 **Notes**:
 
-- This is a read-only view for providers; payout execution is admin-controlled
+- This screen provides comprehensive payout view with full context from booking and payment stages
+- UI may use tabs or accordion sections to organize information
+- This complements FR-006's Booking Detail View and Screen 3's Payment Status view
+- Detailed payout invoices and statements are generated in FR-017: Admin Billing & Financial Management
+- Payout execution is admin-controlled; provider can only view status and details
 
 ---
 
-### Screen 4: Admin Payout & Refund Management
+### Admin Platform
 
-**Purpose**: Allow admin to execute payouts and process refunds per policy
+**Configuration Reference**: Payment system settings (deposit percentages, commission rates, supported payment methods) are configured and reviewed via `FR-029: Payment System Configuration`. This module links admins out to FR-029 when configuration context is needed; no configuration data is duplicated here.
+
+#### Screen 5: Patient Payment Progress Dashboard (Admin)
+
+**Purpose**: Allow admin to monitor patient payment progress across all bookings (list/dashboard view)
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Treatment Completion Flag | checkbox | Yes | Eligibility for payout | Requires completed status |
-| Commission Rate | number | Yes | Provider commission configuration | Within allowed bounds |
-| Refund Amount | number | Conditional | Calculated per policy | Cannot exceed paid amount |
-| Refund Reason | text | Yes | Reason for refund | Mandatory audit field |
-| Payout Execution | action | Yes | Trigger payout | Allowed only when eligible |
+| Booking ID | text | Yes | Reference identifier | Searchable, filterable, clickable link |
+| Patient Name | text | Yes | Full patient name | Searchable |
+| Provider Name | text | Yes | Provider/clinic name | Filterable |
+| Total Amount | number | Yes | Total booking amount | Sortable |
+| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable |
+| Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
+| Payment Status | badge | Yes | Unpaid / Deposit Only / Installments Active / Full Paid / Overdue | Filterable |
+| Installment Progress | text | Conditional | "X of Y installments paid" | Only shown if installments active |
+| Next Payment Due Date | datetime | Conditional | Next installment or final payment due date | Read-only |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Filterable |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated, sortable |
+| Actions | buttons | Yes | View Payment Details, Process Refund, Send Reminder | RBAC enforced |
 
 **Business Rules**:
 
-- Refunds follow cancellation schedule; admin approval required
-- Payout execution creates immutable payout record and statement
-- All actions are auditable with timestamp, actor, and reason
+- Admin can view payment progress for all bookings across all providers
+- Filtering options: Payment Status, Provider, Date Range, Overdue Payments
+- Clicking on Booking ID or "View Payment Details" opens Screen 5B: Payment Detail View
+- Admin can send payment reminders to patients
+- Admin can process refunds per FR-006 cancellation policy (opens Screen 6)
+- All payment data in dashboard is read-only
+
+**Notes**:
+
+- This screen provides comprehensive payment monitoring across the platform
+- Dashboard/list view for quick overview and filtering
+- Links to detailed payment information (Screen 5B) and booking information (FR-006 Screen 6)
+
+---
+
+#### Screen 5B: Payment Detail View (Admin)
+
+**Purpose**: View complete payment information with full context from all stages for a specific booking
+
+**Note**: This screen is accessed from Screen 5 (Payment Progress Dashboard) by clicking "View Payment Details" or a booking row. It provides comprehensive payment view with context from previous stages (FR-003, FR-004, FR-005, FR-006, FR-007).
+
+**Data Fields** (Continuation from Screen 5, aggregating data from FR-003, FR-004, FR-005, FR-006, FR-007):
+
+**Section 1: Booking & Payment Context** (from FR-006):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
+| Booking Status | badge | Yes | Current status (Accepted/Confirmed/In Progress/Cancelled) | Read-only |
+| Appointment Date | datetime | Yes | Confirmed appointment slot | Read-only |
+| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
+| Quote Reference | text | Yes | Original quote reference | Read-only; link to quote |
+
+**Section 2: Patient Information** (from FR-003, always visible to admin):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient ID | text | Yes | Patient code | Read-only |
+| Patient Name | text | Yes | Full patient name | Read-only |
+| Patient Email | text | Yes | Email address | Read-only |
+| Patient Phone | text | Yes | Phone number | Read-only |
+| Patient Address | text | No | Full address | Read-only; from profile |
+| Patient Location | text | Yes | Country/city | Read-only; from inquiry |
+| Patient Age | number | Yes | Patient age | Read-only; from inquiry |
+| Patient Gender | text | Yes | Gender | Read-only; from inquiry |
+| Treatment Type Requested | text | Yes | Hair/Beard/Both | Read-only; from inquiry |
+
+**Section 3: Quote & Treatment Information** (from FR-004):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; from quote |
+| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; from quote |
+| Packages Selected | list | No | Hotel, transport, medication packages | Read-only; from quote |
+| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; from quote |
+
+**Section 4: Pricing Breakdown** (from FR-004):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Currency | text | Yes | Payment currency | Read-only; from quote |
+| Treatment Price | number | Yes | Base treatment price | Read-only; from quote |
+| Package Prices | number | Yes | Total package prices | Read-only; from quote |
+| Discount Applied | number | No | Discount amount (if any) | Read-only; from quote |
+| Total Quote Amount | number | Yes | Total booking amount | Read-only; from quote |
+
+**Section 5: Payment Progress & Status** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured via FR-029 |
+| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Status | badge | Yes | Pending / Paid / Partial | Read-only |
+| Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
+| Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid |
+| Payment Status | badge | Yes | Unpaid / Deposit Only / Installments Active / Full Paid | Read-only |
+| Installment Progress | group | Conditional | Current installment number, total installments, next due date, completion percentage | Only shown if installments active |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only |
+| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only |
+| Final Payment Amount | number | Conditional | Final payment amount due | Calculated |
+| Final Payment Method | text | Conditional | Payment method used for final payment | Read-only; if paid |
+| Final Payment Paid Date | datetime | Conditional | Date final payment was paid | Read-only; if paid |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated |
+| Total Paid Amount | number | Yes | Sum of all payments made | Calculated |
+
+**Section 6: Payment History** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payment History | table | Yes | All payments (deposit, installments, final) with dates, amounts, methods, transaction IDs, status | Read-only |
+| Payment Transaction ID | text | Yes | Payment processor transaction ID | Read-only |
+| Payment Receipt Link | link | Yes | Link to payment receipt/invoice | Read-only |
+| Refund History | table | Conditional | All refunds processed (if any) with dates, amounts, reasons, transaction IDs | Read-only; if refunds exist |
+
+**Section 7: Provider Information** (from provider profile):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Provider Name | text | Yes | Provider/clinic name | Read-only |
+| Provider Contact | text | Yes | Clinic contact information | Read-only |
+| Provider Email | text | Yes | Provider email | Read-only |
+
+**Section 8: Payout Information** (from FR-017, conditional):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payout Status | badge | Conditional | Pending / Eligible / Processing / Executed | Only shown after treatment completion |
+| Gross Amount | number | Conditional | Total paid by patient | Read-only; if payout eligible |
+| Commission Rate | text | Conditional | Platform commission percentage | Read-only; configured via FR-029 |
+| Commission Amount | number | Conditional | Platform commission deducted | Read-only; if payout eligible |
+| Net Payout | number | Conditional | Amount to provider | Read-only; if payout eligible |
+| Payout Link | link | Conditional | Link to payout details in FR-017 | Only shown if payout exists |
+
+**Actions**:
+
+| Action | Type | Condition | Description |
+|--------|------|-----------|-------------|
+| View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
+| View Quote | link | Always | Open full quote details (FR-004) |
+| View Inquiry | link | Always | Open full inquiry details (FR-003) |
+| Process Refund | button | Booking cancelled or eligible | Open Screen 6: Refund Processing |
+| Send Payment Reminder | button | Payment due or overdue | Send reminder to patient |
+| View Payment Receipt | link | If payment exists | Open payment receipt/invoice |
+| View Payout Details | link | If payout exists | Open payout details in FR-017 |
+
+**Business Rules**:
+
+- Admin has full visibility to all patient and provider information (no masking)
+- Payment status reflects real-time payment progress (deposit, installments, final payment)
+- All payment data is read-only except for refund processing and reminder actions
+- All sections display data from previous stages (inquiry → quote → booking → payment) in chronological order
+- Links to original inquiry, quote, and booking provide full context and audit trail
+
+**Notes**:
+
+- This screen provides comprehensive payment view with full context from patient journey
+- UI may use tabs or accordion sections to organize information by stage
+- Payment details shown without card information (PCI compliance)
+- This complements FR-006's Booking Detail View (Screen 6) which shows all booking information; this screen focuses specifically on payment details
+- Payment status updates in real-time as patient makes payments
+
+---
+
+#### Screen 6: Refund Processing (Admin)
+
+**Purpose**: Process refunds per cancellation policy with full context from booking and payment stages
+
+**Note**: This screen is accessed from Screen 5 (Payment Progress Dashboard) or Screen 5B (Payment Detail View) when admin clicks "Process Refund". It provides comprehensive refund processing with context from previous stages.
+
+**Data Fields** (Continuation from Screen 5/5B, aggregating data from FR-003, FR-004, FR-006, FR-007):
+
+**Section 1: Booking & Cancellation Context** (from FR-006):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
+| Booking Status | badge | Yes | Current status | Read-only |
+| Appointment Date | datetime | Yes | Original appointment slot | Read-only |
+| Cancellation Date | datetime | Yes | Date of cancellation request | Read-only |
+| Days Before Procedure | number | Yes | Days until procedure date | Calculated, read-only |
+| Cancellation Reason | text | Yes | Reason for cancellation | Read-only; from cancellation request |
+
+**Section 2: Patient Information** (from FR-003):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient Name | text | Yes | Full patient name | Read-only |
+| Patient Email | text | Yes | Email address | Read-only |
+| Patient Phone | text | Yes | Phone number | Read-only |
+| Patient ID | text | Yes | Patient code | Read-only |
+
+**Section 3: Treatment Information** (from FR-004):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; from quote |
+| Provider Name | text | Yes | Provider/clinic name | Read-only |
+| Total Quote Amount | number | Yes | Total booking amount | Read-only; from quote |
+
+**Section 4: Payment Summary** (from FR-007):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Currency | text | Yes | Payment currency | Read-only; from quote |
+| Total Paid Amount | number | Yes | Total amount paid by patient | Read-only |
+| Deposit Paid | number | Yes | Deposit amount paid | Read-only |
+| Final Payment Paid | number | Conditional | Final payment amount paid | Read-only; if paid |
+| Payment History | table | Yes | All payments made (deposit, installments, final) with dates and amounts | Read-only |
+| Original Payment Methods | list | Yes | Payment methods used (may be multiple if installments) | Read-only |
+
+**Section 5: Refund Calculation** (from FR-006 cancellation policy):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Cancellation Policy | text | Yes | Applicable refund percentage per FR-006 | Read-only; based on timing |
+| Refund Percentage | number | Yes | Refund percentage (90% / 50% / 0%) | Read-only; per FR-006 policy |
+| Calculated Refund Amount | number | Yes | Refund amount to process | Calculated per FR-006 policy; cannot exceed paid amount |
+| Refund Breakdown | text | Yes | Explanation of calculation (e.g., "50% of £3,000 = £1,500") | Read-only; for transparency |
+
+**Section 6: Refund Processing** (Admin Action):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Refund Reason | textarea | Yes | Reason for refund | Mandatory audit field; min 20 characters |
+| Refund Destination | select | Yes | Where refund will be sent | Defaults to original payment method; can select alternative |
+| Refund Method | text | Yes | Refund method (original payment method or alternative) | Read-only; based on selection |
+| Approval Required | checkbox | Conditional | Secondary admin approval for exceptions | Required for exceptions to policy |
+| Exception Documentation | file | Conditional | Medical emergency documentation or other exception proof | Required if exception to policy |
+| Process Refund | button | Yes | Confirm and process refund | Enabled when all required fields complete |
+
+**Section 7: Refund History** (if previous refunds exist):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Previous Refunds | table | Conditional | Previous refunds processed (if any) with dates, amounts, reasons | Read-only; if refunds exist |
+
+**Actions**:
+
+| Action | Type | Condition | Description |
+|--------|------|-----------|-------------|
+| View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
+| View Payment Details | link | Always | Open Screen 5B: Payment Detail View |
+| View Quote | link | Always | Open full quote details (FR-004) |
+| Cancel Refund | button | Always | Cancel refund processing and return to dashboard |
+| Process Refund | button | All fields complete | Confirm and process refund |
+
+**Business Rules**:
+
+- Refund amounts calculated per FR-006 cancellation policy:
+  - > 30 days before procedure: 90% refund
+  - 15-30 days before procedure: 50% refund
+  - < 15 days before procedure: No refund (unless medical emergency with documentation)
+- Admin approval required for all refunds
+- Exceptions to policy (e.g., medical emergency) require secondary admin approval and documentation upload
+- Refund processed to original payment method by default; admin can select alternative method
+- Refund amount cannot exceed total paid amount
+- All refund actions are auditable with timestamp, actor, reason, and approval chain
+- Refund processing updates booking status and notifies patient and provider
+
+**Notes**:
+
+- Refund amount calculation is based on FR-006 cancellation policy
+- Medical emergency exceptions require documentation upload (medical certificate, doctor's note, etc.)
+- This screen provides full context from booking and payment stages to inform refund decisions
+- UI should clearly display refund calculation breakdown for transparency
+- All sections display data from previous stages to provide complete context for refund processing
+
+---
+
+**Configuration Access**: Admin users who need to view or edit deposit, commission, or payment method settings follow the in-app link to `FR-029: Payment System Configuration`, where those settings are managed. This FR does not duplicate or display that configuration.
 
 ---
 
@@ -241,7 +690,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ### General Module Rules
 
-- Deposit is required to confirm a booking; default 30% (admin-configurable within allowed range)
+- Deposit is required to confirm a booking; default 20-30% range (admin-configurable via FR-029: Payment System Configuration, per-provider or globally)
 - Final payment is due before or on procedure date; overdue payments are flagged and notified
 - Full payment option is always available as an alternative to split payments
 - Receipts and invoices are generated for every successful transaction
@@ -259,11 +708,10 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 **Editable by Admin**:
 
-- Provider commission rate (within 15–25% bounds per policy)
-- Deposit percentage default (e.g., 20–30%) and allowable range per provider
-- Supported payment methods and currencies (enable/disable)
-- Refund approvals and reasons (within policy)
-- Payout execution after verifying treatment completion
+- **Note**: Commission rates and deposit defaults are managed at system level via **FR-029: Payment System Configuration** (not editable in this module)
+- Supported payment methods and currencies (enable/disable) - managed via FR-029
+- Refund approvals and reasons (within FR-006 cancellation policy)
+- **Note**: Payout execution is managed in **FR-017: Admin Billing & Financial Management** (not in this module)
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -279,12 +727,12 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 ### Payment & Billing Rules
 
 - Payment methods include cards, bank transfers, and mainstream digital wallets supported by the processor
-- Deposit payment is collected at booking confirmation; final payment before or on procedure day
-- Refunds follow cancellation schedule (example: >30d 90%; 15–30d 50%; <15d no refund unless exception)
+- Deposit payment is collected at booking confirmation (admin-configurable percentage, default 20-30% range, configured via FR-029); final payment before or on procedure day
+- Refunds follow FR-006 cancellation policy: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund (unless medical emergency with documentation)
 - Invoices and receipts are issued for every successful payment and refund
 - Prices are displayed in the patient’s selected currency; provider payouts occur in provider’s configured payout currency with fair conversion
 - Support additional authentication flows when requested by issuer/regulation
-- Platform is the Merchant of Record; platform issues invoices to patients, handles refunds/taxes, and pays providers net of commission
+- Platform is the Merchant of Record; platform issues invoices to patients, manages refunds/taxes, and pays providers net of commission
 - Commission is deducted at time of payout after treatment completion (admin-triggered), consistent with FR-007 Payment Flow V1
 
 ---
@@ -333,16 +781,19 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
   - **Integration point**: Uses patient profile and booking ownership for access
 
 - **P-03: Booking & Scheduling (FR-006)**
-  - **Why needed**: Deposit is tied to booking confirmation; final payment linked to procedure date
-  - **Integration point**: Booking state updates on payment events
+  - **Why needed**: Deposit is tied to booking confirmation; final payment linked to procedure date; refund amounts calculated per FR-006 cancellation policy
+  - **Integration point**: Booking state updates on payment events; refund calculations use FR-006 cancellation policy
 
 - **PR-05: Financial Management & Reporting**
   - **Why needed**: Providers need payout visibility and statements
   - **Integration point**: Payout and commission details surfaced in provider portal
 
-- **A-05: Billing & Financial Reconciliation**
-  - **Why needed**: Admin config and payout execution responsibilities
-  - **Integration point**: Commission settings, payout approvals, refund processing
+- **A-05: Billing & Financial Reconciliation (FR-017)**
+  - **Why needed**: Provider payout execution and invoice generation (managed in FR-017)
+  - **Integration point**: Payment data feeds into payout calculations; refund processing in this module
+- **FR-029: Payment System Configuration (A-09)**
+  - **Why needed**: Commission rates and deposit defaults are configured at system level via FR-029
+  - **Integration point**: Payment processing uses configured deposit percentages and commission rates from FR-029
 
 - **S-03: Notification Service**
   - **Why needed**: Send confirmations, reminders, and alerts
@@ -383,9 +834,9 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ### Business Process Assumptions
 
-- Admin marks treatment completion; provider cannot self-execute payouts
-- Default deposit set to 30% unless provider-specific override exists
-- Refund exceptions (e.g., medical emergency) require documentation and admin approval
+- Admin marks treatment completion; provider cannot self-execute payouts (payout execution in FR-017)
+- Default deposit set to 20-30% range (admin-configurable via FR-029) unless provider-specific override exists
+- Refund exceptions (e.g., medical emergency) require documentation and admin approval; refund amounts per FR-006 cancellation policy
 
 ---
 
@@ -429,7 +880,7 @@ Patient pays deposit to confirm booking and receives immediate confirmation with
 
 **Acceptance Scenarios**:
 
-1. **Given** a booking requiring a 30% deposit, **When** the patient pays the deposit successfully, **Then** the booking is marked confirmed and a receipt/invoice is issued and delivered.
+1. **Given** a booking requiring a deposit (admin-configurable percentage, default 20-30% range), **When** the patient pays the deposit successfully, **Then** the booking is marked confirmed and a receipt/invoice is issued and delivered.
 2. **Given** a required additional authentication step, **When** the patient completes it successfully, **Then** the payment completes and confirmation is shown within 5 seconds.
 3. **Given** a payment failure, **When** the patient retries with a different method, **Then** the system prevents duplicate charges and confirms only a single successful payment.
 
@@ -460,7 +911,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 **Acceptance Scenarios**:
 
-1. **Given** a cancellation 20 days before procedure, **When** admin approves refund, **Then** the system refunds 50% and updates booking/payment status with audit log.
+1. **Given** a cancellation 20 days before procedure, **When** admin approves refund, **Then** the system refunds 50% per FR-006 cancellation policy and updates booking/payment status with audit log.
 2. **Given** a cancellation 5 days before procedure, **When** admin denies refund per policy, **Then** the system records the decision with reason and notifies the patient.
 
 ---
@@ -530,7 +981,11 @@ Admin processes a refund request according to cancellation policy; patient and p
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-04 | 1.0 | Initial PRD creation | AI |
-| [DATE] | 1.1 | [Description of changes] | [Name] |
+| 2025-11-12 | 1.1 | Major revisions: Moved commission rate and deposit defaults to system level (FR-029); Clarified provider payout execution is in FR-017; Clarified refund amount calculation is per FR-006 cancellation policy; Added tenant distinction to screen specifications; Added patient payment progress screens for admin and provider; Aligned default deposit amount with FR-006 (20-30% range, not 30%) | AI |
+| 2025-11-12 | 1.2 | Enhanced provider screens: Added comprehensive data from all previous stages (FR-003 inquiry, FR-004 quote, FR-006 booking) to Screen 3 (Payment Status & Progress) and Screen 4 (Payout Overview) to show continuation of data across stages, consistent with FR-006 booking detail view | AI |
+| 2025-11-12 | 1.3 | Enhanced admin screens: Added Screen 5B (Payment Detail View) with comprehensive data from all previous stages (FR-003 inquiry, FR-004 quote, FR-005 acceptance, FR-006 booking, FR-007 payment) organized into 8 sections; Enhanced Screen 6 (Refund Processing) with 7 sections providing full context from booking and payment stages; Updated Screen 5 (Payment Progress Dashboard) to link to detail view; All admin screens now show data continuity consistent with FR-006 booking detail view | AI |
+| 2025-11-12 | 1.4 | Simplified admin configuration access: Removed read-only Screen 7 in favor of direct link-out to `FR-029: Payment System Configuration`; clarified in Admin Platform intro and post-screen note that configuration lives entirely in FR-029 | AI |
+| 2025-11-12 | 1.5 | Cross-checked PRD against `system-prd.md` and client transcriptions; updated status to "✅ Verified & Approved" per template; confirmed change log consistency | AI |
 
 ---
 
@@ -547,4 +1002,4 @@ Admin processes a refund request according to cancellation policy; patient and p
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007 Payment Processing (system-prd.md)
-**Last Updated**: 2025-11-04
+**Last Updated**: 2025-11-12

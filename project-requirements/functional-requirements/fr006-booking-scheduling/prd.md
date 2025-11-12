@@ -612,6 +612,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - **Deposit Rate**: Deposit percentage is admin-configurable (default: 20-30% of total). Admin can set different rates per provider or use global default. Deposit amount is calculated at booking creation time and locked.
 - Deposit required to confirm booking; final payment per FR-007 schedule.
 - Installments must complete ≥30 days before procedure; failures trigger retries, then flag for admin.
+- **Post-Acceptance Hold**: After quote acceptance, the system holds the reserved appointment slot for 48 hours to allow the patient to complete initial payment (deposit or first installment). If no payment is completed within 48 hours, the reservation is released and the slot becomes available again.
 - **Payment Failure Handling**:
   - If deposit payment fails, system retries up to 3 times automatically.
   - Accepted quote and appointment slot are held for 48 hours (admin-configurable) to allow patient to retry payment.
@@ -679,7 +680,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 ### External Dependencies (APIs, Services)
 
-- Payment processor for deposits/installments/refunds (PCI compliant); retry with backoff, hold booking for 24 hours on failure.
+- Payment processor for deposits/installments/refunds (PCI compliant); retry with backoff, hold booking for 48 hours on failure.
 - Calendar/ICS generation for add-to-calendar links.
 
 ### Data Dependencies
