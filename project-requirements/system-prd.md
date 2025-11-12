@@ -542,7 +542,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 - Patients MUST be able to select procedure date from provider's available slots
 - System MUST integrate with provider's calendar to show real-time availability
-- Patients MUST confirm booking by paying deposit (20-30% of total)
+- Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of total, configured via FR-029)
 - System MUST generate booking confirmation with reference number
 - System MUST send confirmation emails to patient and provider
 - System MUST allow rescheduling up to 14 days before procedure (subject to provider approval)
@@ -1429,7 +1429,7 @@ Total Quote:                           £3,000
 **Priority**: P1 (MVP)
 **Module(s)**: A-09: System Settings & Configuration
 
-**Goal**: Provide comprehensive payment infrastructure configuration including Stripe account management, currency conversion settings, and split payment rules.
+**Goal**: Provide comprehensive payment infrastructure configuration including Stripe account management, currency conversion settings, deposit rate configuration, and split payment rules.
 
 **Requirements**:
 
@@ -1437,13 +1437,15 @@ Total Quote:                           £3,000
 - Account-to-Region Mapping: Admins MUST be able to assign Stripe accounts to countries/regions
 - Currency Support: System MUST support multiple currencies per Stripe account
 - Conversion Rate Configuration: Admins MUST be able to configure currency conversion rate sources and markup percentages
+- **Deposit Rate Configuration**: Admins MUST be able to configure deposit percentage (default range: 20-30% of total booking amount). This MUST be configurable per provider or globally. Changes apply to new bookings only (existing bookings retain original deposit rate)
 - Split Payment Rules: Admins MUST be able to configure installment plan options (2-9 installments) and cutoff dates (e.g., 30 days before procedure)
 - Rate Protection: System MUST handle rapid currency fluctuations and protect against unfavorable rates
 
 **Impacted Modules**:
 
-- P-03: Booking & Payment (payment processing, installment calculations)
+- P-03: Booking & Payment (payment processing, deposit calculation, installment calculations)
 - S-02: Payment Processing Service (Stripe integration, currency conversion)
+- FR-006: Booking & Scheduling (deposit rate used for booking confirmation)
 - FR-007: Payment Processing (extends with configuration capabilities)
 - FR-007B: Split Payment / Installment Plans (extends with configuration capabilities)
 
