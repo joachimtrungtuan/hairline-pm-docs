@@ -97,7 +97,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ### Alternative Flows
 
-**A1: Full Payment at Booking**
+**A1: Full Payment at Booking**:
 
 - **Trigger**: Patient prefers to pay the full amount at booking instead of split payments
 - **Steps**:
@@ -106,7 +106,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
   3. System issues receipt/invoice and sends confirmations
 - **Outcome**: Booking is confirmed and fully paid; payout remains pending until treatment completion
 
-**A2: Refund Due to Cancellation**
+**A2: Refund Due to Cancellation**:
 
 - **Trigger**: Patient cancels booking; cancellation policy determines refund amount
 - **Steps**:
@@ -115,7 +115,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
   3. System updates booking/payment status and sends confirmation notices
 - **Outcome**: Refund processed according to policy; provider payout eligibility updated
 
-**B1: Payment Authentication Required / Challenge Failed**
+**B1: Payment Authentication Required / Challenge Failed**:
 
 - **Trigger**: Additional authentication requested; patient fails or abandons
 - **Steps**:
@@ -123,7 +123,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
   2. If challenge fails or times out, System presents retry and alternative method options
 - **Outcome**: Payment remains incomplete until successful authentication; booking not confirmed
 
-**B2: Payment Failure or Decline**
+**B2: Payment Failure or Decline**:
 
 - **Trigger**: Payment is declined or fails
 - **Steps**:
@@ -284,8 +284,8 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 - Invoices and receipts are issued for every successful payment and refund
 - Prices are displayed in the patient’s selected currency; provider payouts occur in provider’s configured payout currency with fair conversion
 - Support additional authentication flows when requested by issuer/regulation
- - Platform is the Merchant of Record; platform issues invoices to patients, handles refunds/taxes, and pays providers net of commission
- - Commission is deducted at time of payout after treatment completion (admin-triggered), consistent with FR-007 Payment Flow V1
+- Platform is the Merchant of Record; platform issues invoices to patients, handles refunds/taxes, and pays providers net of commission
+- Commission is deducted at time of payout after treatment completion (admin-triggered), consistent with FR-007 Payment Flow V1
 
 ---
 
