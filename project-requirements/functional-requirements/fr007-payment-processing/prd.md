@@ -1,6 +1,6 @@
 # Product Requirements Document: Payment Processing (FR-007)
 
-**Module**: P-03: Booking & Payment | PR-05: Financial Management & Reporting | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service | S-03: Notification Service
+**Module**: P-03: Booking & Payment | PR-05: Financial Management & Reporting | A-01: Patient Management & Oversight | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service | S-03: Notification Service
 **Feature Branch**: `fr007-payment-processing`
 **Created**: 2025-11-04
 **Status**: ✅ Verified & Approved
@@ -20,7 +20,8 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 - **Patient Platform (P-03)**: Patient pays deposit to confirm booking; pays final amount by procedure date; views payment status, receipts, and invoices; selects supported payment method and currency; receives payment confirmations and reminders.
 - **Provider Platform (PR-05)**: Provider views booking payment status and patient payment progress; sees commission deducted amounts; accesses payout statements and history once treatment is marked complete (payout execution managed in FR-017).
-- **Admin Platform (A-05)**: Admin processes refunds per policy; monitors payment dashboards and reconciliation; views patient payment progress across bookings (commission rates and deposit defaults configured via FR-029; provider payout execution managed in FR-017).
+- **Admin Platform (A-01)**: Admin views patient payment progress across bookings as part of patient management oversight; views payment details with full context from inquiry/quote/booking stages; monitors payment status as part of patient journey tracking.
+- **Admin Platform (A-05)**: Admin processes refunds per policy; monitors payment dashboards and reconciliation; views financial reconciliation data and export payment/commission reports (commission rates and deposit defaults configured via FR-029; provider payout execution managed in FR-017).
 - **Shared Services (S-02/S-03)**: Payment Processing Service handles authorizations/captures/refunds and payout preparation; Notification Service delivers confirmations and reminders.
 
 ### Multi-Tenant Breakdown
@@ -41,11 +42,18 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 - View upcoming and completed payouts with commission deducted (payout execution managed in FR-017)
 - Access payout statements for accounting (generated in FR-017)
 
+**Admin Platform (A-01)**:
+
+- View patient payment progress across all bookings (deposit status, installment progress, final payment status) as part of patient management oversight
+- View payment details with full context from inquiry/quote/booking stages for patient journey tracking
+- Monitor payment status and send payment reminders to patients
+- Access payment information when managing patient accounts and resolving disputes
+
 **Admin Platform (A-05)**:
 
-- View patient payment progress across all bookings (deposit status, installment progress, final payment status)
 - Approve and process refunds per cancellation policy (refund amount calculation per FR-006 cancellation policy)
 - View reconciliation dashboards and export payment/commission reports
+- Monitor financial reconciliation data and payment operations
 - **Note**: Commission rate and deposit defaults are configured via FR-029: Payment System Configuration (system-level settings)
 - **Note**: Provider payout execution and invoice generation are managed in FR-017: Admin Billing & Financial Management
 

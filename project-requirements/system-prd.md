@@ -451,7 +451,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-004: Quote Submission & Management
 
 **Priority**: P1 (MVP)  
-**Module(s)**: PR-02: Inquiry & Quote Management
+**Module(s)**: PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 
 **Requirements**:
 
@@ -509,7 +509,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-005: Quote Comparison & Acceptance
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-02: Quote Request & Management
+**Module(s)**: P-02: Quote Request & Management | A-01: Patient Management & Oversight
 
 **Requirements**:
 
@@ -536,7 +536,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-006: Booking & Scheduling
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-03: Booking & Payment | PR-02: Inquiry & Quote Management
+**Module(s)**: P-03: Booking & Payment | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 
 **Requirements**:
 
@@ -560,7 +560,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-007: Payment Processing
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-03: Booking & Payment | S-02: Payment Processing Service
+**Module(s)**: P-03: Booking & Payment | A-01: Patient Management & Oversight | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service
 
 **Requirements**:
 

@@ -1,6 +1,6 @@
 # Quote Submission & Management Module - Product Requirements Document
 
-**Module**: PR-02: Inquiry & Quote Management
+**Module**: PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 **Feature Branch**: `fr004-quote-submission-management`
 **Created**: 2025-10-30
 **Status**: ✅ Verified & Approved
