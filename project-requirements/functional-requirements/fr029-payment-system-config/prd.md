@@ -1,0 +1,963 @@
+# Product Requirements Document: Payment System Configuration
+
+**Module**: A-09: System Settings & Configuration
+**Feature Branch**: `fr029-payment-system-config`
+**Created**: 2025-11-13
+**Status**: Draft
+**Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
+
+---
+
+## Executive Summary
+
+The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), and define split payment (installment) plans with cutoff rules.
+
+This configuration layer is critical because Hairline operates across multiple countries with different currencies, banking systems, and regulatory requirements. Admins need the flexibility to assign different Stripe accounts to different regions, protect the platform against currency fluctuations through configurable markup rates, and offer patients flexible payment options (2-9 installments) while ensuring full payment completion before procedure dates.
+
+The module delivers value by:
+- Enabling multi-country payment operations with region-specific Stripe account management
+- Protecting revenue through configurable currency conversion markup (e.g., 5% buffer)
+- Increasing booking conversion rates by offering flexible deposit rates (20-30%) and installment plans
+- Reducing manual administrative overhead through centralized payment configuration
+- Ensuring compliance with regional payment regulations through proper account-to-region mapping
+
+---
+
+## Module Scope
+
+### Multi-Tenant Architecture
+
+- **Patient Platform (P-03)**: Uses configured payment settings during booking flow (deposit calculation, installment options)
+- **Provider Platform (PR-XX)**: No direct interaction (inherits region-based payment configuration)
+- **Admin Platform (A-09)**: Full payment system configuration management interface
+- **Shared Services (S-02)**: Payment Processing Service implements configured rules for Stripe integration, currency conversion, and deposit/installment calculations
+
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-03: Booking & Payment)**:
+
+- Patients see deposit amount calculated based on admin-configured deposit rate (20-30%)
+- Patients see available installment plan options (2-9 installments) filtered by cutoff date rule
+- Patients see prices displayed in their selected currency using admin-configured conversion rates
+- Patients cannot view or modify payment system configuration settings
+- Patients experience seamless payment processing using the appropriate Stripe account for their region
+
+**Provider Platform (PR-XX)**:
+
+- Providers receive payments through the Stripe account assigned to their region
+- Providers have no direct interaction with payment system configuration
+- Providers see booking payments processed according to deposit rates and installment rules
+- Provider payout schedules follow Stripe account settings configured by admins
+
+**Admin Platform (A-09: System Settings & Configuration)**:
+
+- Admins manage multiple Stripe accounts with API key configuration
+- Admins assign Stripe accounts to specific countries or regional groupings
+- Admins configure currency conversion rate sources (e.g., xe.com API integration)
+- Admins set currency conversion markup percentages (e.g., 5-10%) to protect against rate fluctuations
+- Admins configure deposit rate percentage (20-30%) globally or per provider
+- Admins define split payment options (2-9 installments) and cutoff rules (e.g., 30 days before procedure)
+- Admins monitor payment configuration health and receive alerts for rate protection thresholds
+- Admins audit configuration change history for compliance
+
+**Shared Services (S-02: Payment Processing Service)**:
+
+- Payment Processing Service routes transactions to appropriate Stripe account based on patient location
+- Currency conversion service fetches real-time rates and applies admin-configured markup
+- Deposit calculation service applies configured deposit rate to booking totals
+- Installment calculation service generates payment schedules based on configured options and cutoff dates
+- Rate protection service monitors currency fluctuations and alerts admins when thresholds exceeded
+- Payment audit logging service tracks all transactions for compliance and reconciliation
+
+### Communication Structure
+
+**In Scope**:
+
+- Email notifications to admins when payment configuration changes are published
+- System alerts when currency conversion rates exceed configured thresholds (rate protection)
+- Admin dashboard notifications for Stripe account connection failures or API errors
+- Audit log notifications for payment configuration changes requiring compliance review
+
+**Out of Scope**:
+
+- Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module)
+- Provider notifications about payout schedule changes (handled by separate provider payout module)
+- SMS notifications for payment failures or processing issues (handled by S-03: Notification Service)
+- In-app chat or support messaging (handled by separate support module)
+
+### Entry Points
+
+- **Admin-initiated**: Admin accesses "Payment Configuration" section from admin dashboard settings menu
+- **System-triggered**: Payment Processing Service queries payment configuration during every booking transaction
+- **API-accessed**: External integrations (if authorized) can query currency conversion rates via read-only API
+- **Scheduled jobs**: Currency conversion rate sync runs on scheduled intervals (e.g., every 6 hours) to update cached rates
+- **Alert-triggered**: Rate protection system alerts admins when currency fluctuations exceed configured thresholds
+
+---
+
+## Business Workflows
+
+### Main Flow: Configure New Stripe Account
+
+**Actors**: Admin, System, Stripe API
+**Trigger**: Admin navigates to "Payment Configuration > Stripe Accounts" and clicks "Add New Account"
+**Outcome**: New Stripe account added and mapped to specific countries/regions, ready to process payments
+
+**Steps**:
+
+1. Admin clicks "Add New Account" button on Stripe Accounts configuration page
+2. System displays Stripe account configuration form with required fields
+3. Admin enters Stripe account details (account name, publishable key, secret key, webhook secret)
+4. Admin selects "Test Mode" or "Live Mode" for the Stripe account
+5. System validates Stripe API credentials by making test connection to Stripe API
+6. Admin assigns countries or regional groupings to this Stripe account
+7. Admin configures supported currencies for this Stripe account (e.g., USD, EUR, GBP)
+8. Admin sets default currency for the account
+9. Admin reviews configuration summary and clicks "Save & Activate"
+10. System stores Stripe account configuration and marks as active
+11. System propagates configuration to Payment Processing Service (S-02) with cache TTL of 5 minutes
+12. System sends email notification to admin confirming Stripe account activation
+13. System logs configuration change to audit trail with admin ID, timestamp, and change details
+
+### Main Flow: Configure Currency Conversion Rules
+
+**Actors**: Admin, System, Currency API (e.g., xe.com)
+**Trigger**: Admin navigates to "Payment Configuration > Currency Conversion" to set conversion rate sources and markup
+**Outcome**: Currency conversion rules configured with markup percentages to protect against unfavorable rates
+
+**Steps**:
+
+1. Admin clicks "Currency Conversion" tab on Payment Configuration page
+2. System displays current conversion rate configuration and list of supported currency pairs
+3. Admin selects conversion rate source API (e.g., xe.com, fixer.io, or manual entry)
+4. Admin enters API credentials for selected conversion rate source
+5. System validates API connection by fetching current rates for configured currency pairs
+6. Admin configures markup percentage per currency pair (e.g., 5% markup for USD to EUR)
+7. Admin sets rate protection thresholds (e.g., alert if rate changes more than 3% in 24 hours)
+8. Admin configures sync frequency for automated rate updates (e.g., every 6 hours)
+9. Admin enables or disables automatic rate application (if disabled, admins manually approve rate changes)
+10. Admin clicks "Save Configuration"
+11. System stores conversion rate rules and markup percentages
+12. System immediately syncs current rates from API and applies markup
+13. System schedules next sync job based on configured frequency
+14. System sends email notification to admin confirming currency conversion configuration
+15. System logs configuration change to audit trail
+
+### Main Flow: Configure Deposit Rate Rules
+
+**Actors**: Admin, System
+**Trigger**: Admin navigates to "Payment Configuration > Deposit Rates" to configure deposit percentage
+**Outcome**: Deposit rate configured globally or per provider, applied to all new bookings
+
+**Steps**:
+
+1. Admin clicks "Deposit Rates" tab on Payment Configuration page
+2. System displays current deposit rate configuration (global default and provider-specific overrides)
+3. Admin selects configuration scope: "Global Default" or "Provider-Specific"
+4. Admin sets deposit percentage (range: 20-30% with validation)
+5. If provider-specific: Admin searches and selects provider(s) to apply custom rate
+6. Admin reviews summary showing which bookings will be affected (new bookings only)
+7. Admin clicks "Apply Deposit Rate"
+8. System validates deposit percentage is within allowed range (20-30%)
+9. System stores deposit rate configuration with effective date (now) and scope (global or provider IDs)
+10. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
+11. System displays confirmation message: "Deposit rate updated. New bookings will use [X]% deposit rate."
+12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
+13. System sends email notification to affected providers (if provider-specific change)
+
+### Main Flow: Configure Split Payment (Installment) Plans
+
+**Actors**: Admin, System
+**Trigger**: Admin navigates to "Payment Configuration > Split Payment" to configure installment options and cutoff rules
+**Outcome**: Installment plan options (2-9 installments) and cutoff date rules configured, available to patients during booking
+
+**Steps**:
+
+1. Admin clicks "Split Payment" tab on Payment Configuration page
+2. System displays current split payment configuration showing enabled installment options and cutoff rules
+3. Admin enables or disables specific installment options (checkboxes for 2, 3, 4, 5, 6, 7, 8, 9 installments)
+4. Admin configures cutoff date rule (e.g., "Full payment must be completed 30 days before procedure date")
+5. Admin sets minimum booking amount eligible for split payments (e.g., minimum $500 booking for installments)
+6. Admin configures installment schedule rules (e.g., equal installments, first installment = deposit, etc.)
+7. Admin reviews preview showing example installment schedules for different booking amounts and dates
+8. Admin clicks "Save Split Payment Configuration"
+9. System validates cutoff date is reasonable (e.g., minimum 7 days, maximum 90 days)
+10. System stores split payment rules with enabled installment options and cutoff date
+11. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
+12. System calculates which installment options will be available to patients based on booking date and procedure date
+13. System displays confirmation message: "Split payment options updated. Patients will see [X] installment options."
+14. System logs configuration change to audit trail
+15. System sends email notification to admin confirming split payment configuration
+
+### Alternative Flows
+
+**A1: Add Stripe Account with Regional Grouping Override**
+
+- **Trigger**: Admin wants to assign a Stripe account to a regional grouping that already has another account assigned
+- **Steps**:
+  1. Admin attempts to assign countries to new Stripe account that overlap with existing account
+  2. System detects conflict and displays warning: "Countries [list] are already assigned to Stripe account [name]"
+  3. Admin selects conflict resolution: "Override" (replace existing assignment) or "Add as Secondary" (both accounts can serve region)
+  4. Admin confirms override action
+  5. System updates country-to-account mappings, prioritizing most recently configured account
+  6. System propagates updated mappings to Payment Processing Service
+  7. System logs conflict resolution to audit trail
+- **Outcome**: New Stripe account assigned to region, replacing or supplementing previous assignment
+
+**A2: Configure Provider-Specific Deposit Rate**
+
+- **Trigger**: Admin wants to set custom deposit rate for specific provider(s) different from global default
+- **Steps**:
+  1. Admin selects "Provider-Specific" scope in deposit rate configuration
+  2. Admin searches for provider by name or ID
+  3. Admin selects one or more providers from search results
+  4. Admin sets custom deposit rate percentage (20-30%) for selected providers
+  5. System displays preview: "This will override global default [X]% for [Y] providers"
+  6. Admin confirms provider-specific rate
+  7. System stores provider-specific rate configuration with provider IDs
+  8. System displays confirmation with list of affected providers
+- **Outcome**: Selected providers have custom deposit rate, overriding global default
+
+**A3: Enable Automatic Currency Conversion Rate Updates**
+
+- **Trigger**: Admin wants to enable fully automated rate updates without manual approval
+- **Steps**:
+  1. Admin configures conversion rate source API and markup percentages
+  2. Admin enables "Automatic Rate Application" toggle
+  3. System displays warning: "Rates will update automatically based on sync frequency. Rate protection alerts will still notify you of large fluctuations."
+  4. Admin confirms automatic updates
+  5. System schedules automated sync jobs per configured frequency (e.g., every 6 hours)
+  6. System fetches rates from API, applies markup, and updates cached rates automatically
+  7. System sends email digest to admin showing rate changes from last sync
+- **Outcome**: Currency conversion rates update automatically without manual admin intervention
+
+**A4: Configure Different Installment Options for Different Booking Amounts**
+
+- **Trigger**: Admin wants to offer more installment options for higher-value bookings
+- **Steps**:
+  1. Admin creates multiple split payment rule tiers based on booking amount ranges
+  2. Admin sets tier 1: Bookings $500-$2,000 can use 2-4 installments
+  3. Admin sets tier 2: Bookings $2,001-$5,000 can use 2-6 installments
+  4. Admin sets tier 3: Bookings $5,001+ can use 2-9 installments
+  5. System validates tier ranges don't overlap and are logically ordered
+  6. System stores tiered split payment rules
+  7. System applies appropriate installment options based on booking amount during checkout
+- **Outcome**: Patients see installment options appropriate for their booking amount
+
+**B1: Stripe API Credential Validation Fails**
+
+- **Trigger**: Admin enters invalid Stripe API credentials or Stripe API is unreachable
+- **Steps**:
+  1. Admin submits Stripe account configuration with API credentials
+  2. System attempts to validate credentials by calling Stripe API
+  3. Stripe API returns authentication error or connection timeout
+  4. System displays error message: "Unable to connect to Stripe. Please verify API keys are correct and your Stripe account is active."
+  5. System highlights fields with credential errors (publishable key, secret key, webhook secret)
+  6. Admin corrects API credentials or troubleshoots connection issue
+  7. Admin clicks "Retry Connection"
+  8. System re-attempts validation
+- **Outcome**: Admin corrects credentials and successfully adds Stripe account, or admin contacts support for assistance
+
+**B2: Currency Conversion API Connection Failure**
+
+- **Trigger**: Currency conversion rate sync job fails due to API downtime or network issue
+- **Steps**:
+  1. System scheduled sync job attempts to fetch current rates from conversion API (e.g., xe.com)
+  2. API returns error (503 Service Unavailable) or connection timeout
+  3. System logs sync failure with error details
+  4. System continues using last successfully fetched rates (cached rates with timestamp)
+  5. System sends alert notification to admin: "Currency conversion sync failed. Using cached rates from [timestamp]."
+  6. System retries sync after exponential backoff (e.g., retry in 15 minutes, then 30 minutes, then 1 hour)
+  7. Admin investigates API status or switches to alternative rate source if prolonged outage
+- **Outcome**: System gracefully handles API failure by using cached rates and alerting admin
+
+**B3: Deposit Rate Outside Allowed Range**
+
+- **Trigger**: Admin attempts to set deposit rate below 20% or above 30%
+- **Steps**:
+  1. Admin enters deposit rate percentage (e.g., 15% or 35%) outside allowed range
+  2. Admin clicks "Apply Deposit Rate"
+  3. System validates deposit rate and detects out-of-range value
+  4. System displays validation error: "Deposit rate must be between 20% and 30%. You entered [X]%."
+  5. System highlights deposit rate input field with error state
+  6. Admin corrects deposit rate to value within allowed range (20-30%)
+  7. Admin resubmits configuration
+  8. System accepts valid deposit rate
+- **Outcome**: Admin sets deposit rate within allowed range, ensuring business rule compliance
+
+**B4: Split Payment Cutoff Date Conflict**
+
+- **Trigger**: Admin configures cutoff date that would prevent any installment options from being offered
+- **Steps**:
+  1. Admin sets cutoff date to very aggressive value (e.g., 90 days before procedure)
+  2. Admin enables multiple installment options (e.g., 2-9 installments)
+  3. System calculates that most bookings won't have enough time for multiple installments before cutoff
+  4. System displays warning: "Current cutoff date [X days] may prevent installment options from being offered for most bookings. Consider reducing cutoff to 30-45 days."
+  5. Admin reviews warning and adjusts cutoff date or proceeds with aggressive cutoff
+  6. Admin confirms configuration
+  7. System stores configuration but logs warning to admin activity log
+- **Outcome**: Admin is informed of potential issue and can adjust cutoff date or accept restrictive configuration
+
+**B5: Currency Fluctuation Exceeds Rate Protection Threshold**
+
+- **Trigger**: Scheduled sync detects currency rate change exceeding configured alert threshold (e.g., 3% in 24 hours)
+- **Steps**:
+  1. System fetches current rates from conversion API during scheduled sync
+  2. System compares new rates to previously cached rates
+  3. System detects EUR to USD rate increased by 4.5% in last 24 hours (exceeds 3% threshold)
+  4. System sends urgent alert notification to admin: "Currency alert: EUR to USD rate increased 4.5% in 24 hours. Review conversion markup."
+  5. Admin reviews alert and checks current rate and markup percentage
+  6. Admin decides to increase markup from 5% to 7% to protect against unfavorable rate
+  7. Admin updates markup percentage in currency conversion configuration
+  8. System applies new markup and logs admin action to audit trail
+- **Outcome**: Admin is alerted to significant rate fluctuation and can adjust markup to protect revenue
+
+**B6: No Stripe Account Available for Patient Location**
+
+- **Trigger**: Patient from country with no assigned Stripe account attempts booking
+- **Steps**:
+  1. Patient selects country during booking flow (e.g., patient in South Africa)
+  2. Payment Processing Service queries payment configuration for patient's country
+  3. System finds no Stripe account assigned to South Africa
+  4. System checks for fallback Stripe account with "Global/Default" region mapping
+  5. If fallback exists: System uses fallback Stripe account and logs warning to admin
+  6. If no fallback: System displays error to patient: "Payment processing not available for your location. Please contact support."
+  7. System sends alert to admin: "Payment attempted from unsupported country: South Africa. Configure Stripe account for this region."
+- **Outcome**: Patient uses fallback account (if configured) or is unable to complete booking, and admin is alerted to expand regional coverage
+
+---
+
+## Screen Specifications
+
+### Screen 1: Stripe Accounts Management
+
+**Purpose**: Allows admins to add, edit, and manage multiple Stripe accounts and assign them to countries or regional groupings
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Account Name | text | Yes | Friendly name for Stripe account (e.g., "US & Canada Account", "EU Account") | Max 100 chars, must be unique |
+| Publishable Key | text | Yes | Stripe publishable API key (starts with pk_) | Must start with "pk_test_" or "pk_live_", max 200 chars |
+| Secret Key | password | Yes | Stripe secret API key (starts with sk_) | Must start with "sk_test_" or "sk_live_", max 200 chars |
+| Webhook Secret | password | Yes | Stripe webhook signing secret | Min 32 chars, max 200 chars |
+| Account Mode | select | Yes | Test Mode or Live Mode | Must select one option |
+| Assigned Countries | multi-select | Yes | Countries or regional groupings served by this account | Must select at least one country |
+| Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency |
+| Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies |
+| Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) |
+
+**Business Rules**:
+
+- Stripe API credentials must be validated before account can be activated (test connection to Stripe API)
+- Same country can be assigned to multiple Stripe accounts (system prioritizes most recent assignment)
+- Cannot delete Stripe account if it has processed transactions in last 90 days (archive instead)
+- Admin can test Stripe connection at any time by clicking "Test Connection" button
+- Webhook secret is required for payment event verification and cannot be left blank
+- Supported currencies must be compatible with assigned countries (e.g., EUR for European countries)
+- Changes to Stripe account configuration propagate to Payment Processing Service within 5 minutes (cache TTL)
+
+**Notes**:
+
+- Display last successful connection test timestamp below API credential fields
+- Show warning icon if Stripe account hasn't been tested in over 30 days
+- Provide inline help text explaining difference between Test Mode and Live Mode
+- Display transaction count and total volume processed by each account (last 30 days) for admin reference
+- Use password masking for Secret Key and Webhook Secret fields, with "Show" toggle button
+
+---
+
+### Screen 2: Currency Conversion Configuration
+
+**Purpose**: Allows admins to configure currency conversion rate sources, markup percentages, and rate protection thresholds
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Conversion Rate Source | select | Yes | API provider for currency rates (e.g., xe.com, fixer.io, manual entry) | Must select one option |
+| API Credentials | text | Conditional | API key for selected rate source provider | Required if source is API-based (not manual) |
+| Currency Pair | multi-select | Yes | Currency pairs to configure (e.g., USD/EUR, GBP/USD) | Must select at least one pair |
+| Markup Percentage | number | Yes | Percentage to add on top of fetched rate (e.g., 5%) | Range: 0-20%, decimal precision: 0.01% |
+| Rate Protection Threshold | number | Yes | Alert if rate changes more than this percentage in 24 hours | Range: 1-50%, decimal precision: 0.1% |
+| Sync Frequency | select | Yes | How often to fetch updated rates (e.g., every 6 hours, every 12 hours, daily) | Must select one option |
+| Automatic Rate Application | toggle | Yes | Enable or disable automatic rate updates without manual approval | Boolean (enabled = auto-update) |
+| Last Sync Timestamp | display-only | N/A | Shows when rates were last successfully fetched | Auto-populated by system |
+| Current Rate | display-only | N/A | Current conversion rate with markup applied | Auto-populated by system |
+
+**Business Rules**:
+
+- API credentials must be validated before enabling automatic rate application (test connection)
+- Markup percentage protects against bank/payment processor conversion rate differences (typical range: 3-10%)
+- Rate protection threshold alerts admin to significant fluctuations but doesn't automatically stop payments
+- If automatic rate application is disabled, admin must manually approve rate updates after each sync
+- Manual entry mode allows admin to set fixed conversion rates (no API sync), useful for stable currency pairs
+- System uses last successfully fetched rates if API sync fails (displays "using cached rates" warning)
+- Currency pairs must match currencies supported by configured Stripe accounts
+
+**Notes**:
+
+- Display historical rate chart showing rate changes over last 30 days for each currency pair
+- Show alert badges for currency pairs that have triggered rate protection threshold in last 7 days
+- Provide "Sync Now" button to immediately fetch latest rates outside scheduled sync
+- Display API provider status indicator (green = healthy, yellow = degraded, red = down)
+- Show estimated conversion rate impact: "5% markup on 1.08 USD/EUR = 1.134 effective rate"
+
+---
+
+### Screen 3: Deposit Rate Configuration
+
+**Purpose**: Allows admins to configure deposit percentage for bookings, either globally or per provider
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Configuration Scope | radio | Yes | Global Default or Provider-Specific | Must select one option |
+| Global Deposit Rate | number | Conditional | Default deposit percentage for all providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Global |
+| Provider Search | search | Conditional | Search for provider by name or ID | Required if scope is Provider-Specific |
+| Selected Providers | list | Conditional | List of providers for custom deposit rate | Required if scope is Provider-Specific |
+| Provider Deposit Rate | number | Conditional | Custom deposit percentage for selected providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Provider-Specific |
+| Effective Date | display-only | N/A | Shows when this rate takes effect (immediately for new bookings) | Auto-populated: current timestamp |
+| Affected Bookings | display-only | N/A | Shows booking count that will use this rate (estimates based on historical data) | Auto-calculated by system |
+
+**Business Rules**:
+
+- Deposit rate must be between 20% and 30% (business rule enforced by system validation)
+- Deposit rate changes apply to new bookings only (existing bookings retain original deposit rate)
+- Provider-specific rates override global default rate for selected providers
+- Admin can set multiple provider-specific rates (different rates for different providers)
+- System calculates deposit amount by multiplying booking total by deposit rate percentage
+- Deposit rate configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
+- Cannot delete provider-specific rate if provider has active bookings using that rate (archive instead)
+
+**Notes**:
+
+- Display preview calculation: "For $2,000 booking, 25% deposit = $500 due at booking time"
+- Show list of providers with custom rates different from global default (sortable table)
+- Provide bulk edit capability: select multiple providers and apply same deposit rate
+- Display historical deposit rate changes in audit log below configuration form
+- Show visual indicator (badge) next to providers with custom rates on provider list screens
+
+---
+
+### Screen 4: Split Payment (Installment) Configuration
+
+**Purpose**: Allows admins to configure available installment plan options (2-9 installments) and cutoff date rules
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Enable Split Payments | toggle | Yes | Master switch to enable or disable split payment feature globally | Boolean (enabled = feature active) |
+| Available Installments | checkbox-group | Yes | Select which installment options to offer (2, 3, 4, 5, 6, 7, 8, 9) | Must select at least one if feature enabled |
+| Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 7-90 days, integer only |
+| Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only |
+| First Installment Amount | select | Yes | First installment equals deposit or equal split | Must select: "Deposit Amount" or "Equal Split" |
+| Installment Frequency | select | Yes | Payment schedule frequency (e.g., weekly, bi-weekly, monthly) | Must select one option |
+| Late Payment Grace Period | number | Yes | Days after missed payment before booking cancellation | Range: 0-14 days, integer only |
+
+**Business Rules**:
+
+- Cutoff days ensures patients complete full payment before procedure date (default: 30 days)
+- System automatically calculates available installment options based on booking date and procedure date
+- If time between booking and procedure is insufficient for selected installments given cutoff, system offers fewer installments
+- First installment defaults to deposit amount, remaining balance split equally across remaining installments
+- Minimum booking amount prevents installments for low-value bookings (reduces administrative overhead)
+- Late payment grace period allows patients short extension before booking cancellation (0 = no grace period)
+- Split payment configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
+- Cannot modify split payment rules for bookings with active installment plans (changes apply to new bookings only)
+
+**Notes**:
+
+- Display preview calculator: "For $3,000 booking with 5 installments, 30-day cutoff, booking 90 days before procedure:"
+  - First installment (deposit 25%): $750 due at booking
+  - Remaining 4 installments: $562.50 each, due every 14 days
+  - Final payment due: 30 days before procedure date
+- Show example scenarios for different booking amounts and installment options
+- Provide "Preview Installment Schedule" button that generates detailed payment schedule
+- Display warning if cutoff days is very aggressive (e.g., >60 days): "This may limit installment availability"
+- Show statistics: "In last 30 days, 42% of bookings used installment plans (avg: 3.8 installments)"
+
+---
+
+## Business Rules
+
+### General Module Rules
+
+- **Rule 1**: Payment configuration changes apply to new transactions only (existing bookings, quotes, and active installment plans retain original configuration)
+- **Rule 2**: All payment configuration changes must be logged to audit trail with admin ID, timestamp, and change details for compliance
+- **Rule 3**: Configuration cache propagates to Payment Processing Service within 5 minutes maximum (cache TTL)
+- **Rule 4**: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration)
+- **Rule 5**: Admin cannot delete Stripe accounts, deposit rates, or split payment rules with active references (archive instead)
+
+### Data & Privacy Rules
+
+- **Privacy Rule 1**: Stripe API secret keys and webhook secrets must be encrypted at rest using AES-256 encryption
+- **Privacy Rule 2**: Stripe secret keys must never be logged in plain text to audit logs or error logs (mask all but last 4 characters)
+- **Privacy Rule 3**: Admin access to payment configuration must require elevated permissions (not available to standard admin users)
+- **Audit Rule**: All payment configuration changes must be logged with before/after state for audit compliance
+- **Compliance Rule**: Payment data handling must comply with PCI DSS requirements (no storage of full card numbers, CVVs, or PINs)
+- **Data Retention**: Payment configuration history retained for 7 years for financial audit and compliance purposes
+
+### Admin Editability Rules
+
+**Editable by Admin**:
+
+- Stripe account credentials, assigned countries, supported currencies, and active/inactive status
+- Currency conversion rate source, API credentials, markup percentages, and rate protection thresholds
+- Deposit rate percentage (20-30% range) globally or per provider
+- Split payment available installment options (2-9), cutoff days (7-90), minimum booking amount ($100-$10,000)
+- Installment schedule rules (first installment amount, frequency, late payment grace period)
+- Rate protection alert thresholds and sync frequency for currency conversion
+
+**Fixed in Codebase (Not Editable)**:
+
+- Deposit rate allowed range (20-30% hard-coded business rule)
+- Split payment installment range (2-9 installments hard-coded limit)
+- Cutoff days allowed range (7-90 days hard-coded limits)
+- Encryption algorithms for Stripe secret keys (AES-256)
+- Cache TTL for configuration propagation (5 minutes hard-coded)
+- Payment audit logging requirements (always enabled, cannot be disabled)
+
+**Configurable with Restrictions**:
+
+- Markup percentage for currency conversion (range: 0-20%, requires validation)
+- Rate protection thresholds (range: 1-50%, requires validation)
+- Minimum booking amount for split payments (range: $100-$10,000, requires validation)
+- Admin can enable/disable automatic rate application, but rate protection alerts always active
+
+### Payment & Billing Rules
+
+- **Payment Rule 1**: Payment Processing Service routes transactions to appropriate Stripe account based on patient's country location
+- **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses fallback "Global/Default" account (if configured) or blocks payment
+- **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
+- **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to 2 decimal places)
+- **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
+- **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
+- **Billing Rule 1**: First installment defaults to deposit amount unless admin configures equal split across all installments
+- **Billing Rule 2**: Remaining balance after deposit split equally across remaining installments (rounded to 2 decimal places, last installment absorbs rounding difference)
+- **Currency Rule**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
+- **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
+
+---
+
+## Success Criteria
+
+### Patient Experience Metrics
+
+- **SC-001**: Patients can complete booking payment with deposit (20-30% of total) in under 60 seconds for 95% of transactions
+- **SC-002**: Patients see available installment plan options that fit their booking timeline and cutoff date constraints with 100% accuracy
+- **SC-003**: Patients see prices displayed in their selected currency with conversion rates updated within 6 hours of market changes
+- **SC-004**: 90% of patients who select installment plans successfully complete all scheduled payments before cutoff date
+
+### Provider Efficiency Metrics
+
+- **SC-005**: Providers receive deposit payments immediately upon booking confirmation with 99.5% reliability
+- **SC-006**: Provider payout schedules align with Stripe account configuration for their region with zero discrepancies
+- **SC-007**: Providers experience zero payment processing delays due to misconfigured Stripe accounts or currency conversion issues
+
+### Admin Management Metrics
+
+- **SC-008**: Admins can add and activate new Stripe account in under 5 minutes for 90% of configurations
+- **SC-009**: Admins can configure or update currency conversion markup percentages in under 2 minutes for 95% of changes
+- **SC-010**: Admins can set global or provider-specific deposit rates in under 3 minutes for 90% of configurations
+- **SC-011**: Admins can configure split payment rules (installments, cutoff) in under 5 minutes for 95% of configurations
+- **SC-012**: Admins receive rate protection alerts within 15 minutes of currency rate exceeding configured threshold for 100% of threshold breaches
+- **SC-013**: Admins can audit complete payment configuration change history for any time period with 100% accuracy
+
+### System Performance Metrics
+
+- **SC-014**: Payment configuration changes propagate to Payment Processing Service within 5 minutes for 99% of updates
+- **SC-015**: Currency conversion rate sync completes within 30 seconds for 95% of scheduled syncs
+- **SC-016**: System routes payment to correct regional Stripe account based on patient location with 99.9% accuracy
+- **SC-017**: Payment Processing Service applies correct deposit rate (global or provider-specific) with 100% accuracy
+- **SC-018**: Installment schedule calculations account for cutoff date constraints with zero calculation errors
+- **SC-019**: System handles currency conversion API failures gracefully by using cached rates with 100% uptime (no payment blocking)
+
+### Business Impact Metrics
+
+- **SC-020**: Booking conversion rate increases by 15% after enabling split payment installment options (measured over 90-day period)
+- **SC-021**: Revenue protection from currency conversion markup prevents losses on 99% of transactions involving currency conversion
+- **SC-022**: Multi-regional Stripe account configuration enables payment processing in 20+ countries with localized payment methods
+- **SC-023**: Automated currency rate syncing reduces admin manual rate update overhead by 90% (measured in admin hours per month)
+- **SC-024**: Provider-specific deposit rate flexibility increases provider satisfaction scores by 10% (measured via provider surveys)
+
+---
+
+## Dependencies
+
+### Internal Dependencies (Other FRs/Modules)
+
+- **FR-028 / Module A-09**: Regional Configuration & Pricing
+  - **Why needed**: Stripe account assignments must align with regional groupings defined in FR-028
+  - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions
+
+- **FR-006 / Module P-03**: Booking & Scheduling
+  - **Why needed**: Booking flow uses configured deposit rates to calculate deposit amount at booking confirmation
+  - **Integration point**: Booking service queries Payment Configuration API for deposit rate based on provider ID
+
+- **FR-007 / Module S-02**: Payment Processing
+  - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
+  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency rates, deposit rates
+
+- **FR-007B / Module S-02**: Split Payment / Installment Plans
+  - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules
+  - **Integration point**: Installment service queries Payment Configuration API for split payment rules
+
+- **FR-001 / Module P-01**: Patient Authentication & Profile Management
+  - **Why needed**: Patient location (country) from profile determines which Stripe account processes payments
+  - **Integration point**: Payment service queries patient profile for country to route payment to correct Stripe account
+
+- **FR-XXX / Module PR-01**: Provider Onboarding & Profile Management
+  - **Why needed**: Provider region determines which Stripe account handles provider payouts and deposit rates
+  - **Integration point**: Payment Configuration displays provider list for provider-specific deposit rate assignment
+
+### External Dependencies (APIs, Services)
+
+- **External Service 1**: Stripe Payment API
+  - **Purpose**: Processes all payment transactions using configured Stripe accounts
+  - **Integration**: RESTful API calls for payment intent creation, charge capture, payout management
+  - **Failure handling**: If Stripe API unavailable, queue payment transactions for retry with exponential backoff, notify admin of Stripe outage
+
+- **External Service 2**: Currency Conversion Rate API (e.g., xe.com, fixer.io)
+  - **Purpose**: Fetches real-time currency conversion rates for markup calculation
+  - **Integration**: HTTP API calls to fetch current rates for configured currency pairs
+  - **Failure handling**: If API unavailable, use last successfully cached rates and alert admin, retry sync with exponential backoff
+
+- **External Service 3**: Admin Email Service
+  - **Purpose**: Sends email notifications to admins for configuration changes and rate protection alerts
+  - **Integration**: SMTP or transactional email API (e.g., SendGrid, AWS SES)
+  - **Failure handling**: If email service unavailable, log notification failures and display in-app notification to admin, retry with queue
+
+### Data Dependencies
+
+- **Entity 1**: Active Provider Profiles with Region Data
+  - **Why needed**: Cannot assign provider-specific deposit rates without provider IDs and regional context
+  - **Source**: Provider Onboarding & Profile Management module (PR-01)
+
+- **Entity 2**: Regional Groupings and Country Mappings
+  - **Why needed**: Cannot map Stripe accounts to regions without defined regional groupings
+  - **Source**: Regional Configuration & Pricing module (FR-028 / A-09)
+
+- **Entity 3**: Active Booking Records with Procedure Dates
+  - **Why needed**: Cannot calculate installment schedules without knowing booking date and procedure date
+  - **Source**: Booking & Scheduling module (FR-006 / P-03)
+
+- **State 1**: Patient Country/Location Data
+  - **Why needed**: Cannot route payments to correct regional Stripe account without patient location
+  - **Source**: Patient Authentication & Profile Management module (FR-001 / P-01)
+
+---
+
+## Assumptions
+
+### User Behavior Assumptions
+
+- **Assumption 1**: Admins have Stripe account credentials available when configuring payment accounts (publishable key, secret key, webhook secret)
+- **Assumption 2**: Admins understand currency conversion markup concept and can determine appropriate markup percentages for their business (typically 3-10%)
+- **Assumption 3**: Admins will monitor rate protection alerts and respond within 24 hours to adjust markup if needed
+- **Assumption 4**: Admins will configure at least one "Global/Default" Stripe account as fallback for countries without specific account assignment
+- **Assumption 5**: Admins will test Stripe account connections after initial configuration to verify credentials are correct
+
+### Technology Assumptions
+
+- **Assumption 1**: Platform has secure storage infrastructure for encrypting Stripe API secret keys at rest (AES-256)
+- **Assumption 2**: Admin web app accessed via modern browsers supporting password field masking and secure form submission (Chrome, Safari, Firefox - last 2 versions)
+- **Assumption 3**: Payment Processing Service has reliable internet connectivity to Stripe API and currency conversion APIs
+- **Assumption 4**: System has caching infrastructure to store payment configuration with 5-minute TTL (e.g., Redis, Memcached)
+- **Assumption 5**: Currency conversion API providers (xe.com, fixer.io) have 99%+ uptime and provide rate data in standard JSON format
+
+### Business Process Assumptions
+
+- **Assumption 1**: Admins configure Stripe accounts before launching in new geographic regions (cannot process payments without configured account)
+- **Assumption 2**: Admins review currency conversion rates at least weekly to ensure markup percentages are appropriate
+- **Assumption 3**: Deposit rate percentage (20-30% range) is acceptable to both patients (affordability) and providers (cash flow)
+- **Assumption 4**: 30-day cutoff before procedure date is standard business rule, but admins may adjust for specific business needs (7-90 day range)
+- **Assumption 5**: Provider-specific deposit rates are exception rather than norm (most providers use global default rate)
+
+---
+
+## Implementation Notes
+
+### Technical Considerations
+
+- **Architecture**: Payment configuration data must be cached with 5-minute TTL to minimize database queries during high-volume payment processing
+- **Technology**: Stripe API credentials (secret keys) must be encrypted at rest using AES-256 and never logged in plain text
+- **Performance**: Currency conversion rate sync should run as background job on scheduled intervals (not synchronous during payment processing)
+- **Storage**: Payment configuration history requires time-series storage for audit trail (7-year retention for financial compliance)
+- **Concurrency**: Payment configuration updates must use optimistic locking to prevent race conditions when multiple admins edit simultaneously
+
+### Integration Points
+
+- **Integration 1**: Admin web app sends payment configuration updates to Payment Configuration API via REST
+  - **Data format**: JSON payload with configuration type (Stripe account, currency rates, deposit rates, split payment rules)
+  - **Authentication**: OAuth 2.0 bearer tokens with elevated admin permissions
+  - **Error handling**: Validation errors returned with 400 Bad Request, server errors trigger retry with exponential backoff
+
+- **Integration 2**: Payment Processing Service queries Payment Configuration API for transaction routing and calculation rules
+  - **Data format**: RESTful API calls for Stripe account lookup (by country), currency conversion rates, deposit rates, installment rules
+  - **Authentication**: Internal service authentication using API keys or mutual TLS
+  - **Error handling**: If Configuration API unavailable, use last cached configuration and alert admin, retry with exponential backoff
+
+- **Integration 3**: Currency conversion rate sync job fetches rates from external API (xe.com, fixer.io)
+  - **Data format**: HTTP GET requests returning JSON with currency pair rates
+  - **Authentication**: API key authentication for rate provider service
+  - **Error handling**: If API unavailable, use cached rates and alert admin, retry sync with exponential backoff (15 min, 30 min, 1 hour)
+
+- **Integration 4**: Admin email notification service sends alerts for configuration changes and rate protection events
+  - **Data format**: SMTP or transactional email API with HTML email templates
+  - **Authentication**: SMTP credentials or API keys for email service
+  - **Error handling**: If email service unavailable, log notification and display in-app alert to admin
+
+### Scalability Considerations
+
+- **Current scale**: Expected 1,000 payment transactions per day at launch across 10 countries with 3-5 Stripe accounts
+- **Growth projection**: Plan for 10,000 transactions per day within 12 months, expanding to 30+ countries with 10-15 Stripe accounts
+- **Peak load**: Handle 5x normal transaction volume during promotional campaigns or seasonal booking spikes
+- **Configuration data volume**: Payment configuration data is relatively small (< 1MB), but audit log grows over time (estimate 10GB per year)
+- **Scaling strategy**: Horizontal scaling of Payment Configuration API, distributed caching (Redis cluster), read replicas for audit log queries
+
+### Security Considerations
+
+- **Authentication**: Elevated admin permissions required to access payment configuration (role-based access control)
+- **Authorization**: Only admins with "PaymentConfigAdmin" role can modify Stripe accounts, currency rates, deposit rates, split payment rules
+- **Encryption**: Stripe secret keys and webhook secrets encrypted at rest using AES-256, decrypted only in memory during API calls
+- **Audit trail**: All payment configuration changes logged with admin ID, timestamp, IP address, before/after state
+- **Threat mitigation**: Rate limiting on Payment Configuration API (max 100 requests/minute per admin user) to prevent abuse
+- **Compliance**: PCI DSS Level 1 compliance for payment data handling (no storage of full card numbers, CVVs, or PINs)
+- **API security**: Payment Configuration API requires TLS 1.3 for all connections, no plain HTTP allowed
+- **Secret rotation**: Support for Stripe API key rotation without downtime (configure new keys, test, then deactivate old keys)
+
+---
+
+## User Scenarios & Testing
+
+<!--
+  IMPORTANT: User stories prioritized as user journeys ordered by importance.
+  Each user story is INDEPENDENTLY TESTABLE.
+-->
+
+### User Story 1 - Configure First Stripe Account for Single Region (Priority: P1)
+
+As a platform administrator launching Hairline in the United States, I need to configure the first Stripe account and assign it to the US region so that patients in the US can complete booking payments.
+
+**Why this priority**: This is the foundational capability required before any payment processing can occur. Without at least one configured Stripe account, the platform cannot accept payments.
+
+**Independent Test**: Can be fully tested by adding Stripe account with US region assignment, then submitting test payment from US patient account and verifying payment routes to correct Stripe account.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am an admin with elevated permissions, **When** I navigate to Payment Configuration > Stripe Accounts and click "Add New Account", **Then** I see the Stripe account configuration form with all required fields
+2. **Given** I have Stripe API credentials for US account, **When** I enter publishable key, secret key, webhook secret, and select "United States" as assigned country, **Then** system validates credentials by testing Stripe API connection
+3. **Given** Stripe API credentials are valid, **When** I click "Save & Activate", **Then** system stores Stripe account configuration and displays confirmation message "Stripe account activated for United States"
+4. **Given** Stripe account is active for US, **When** US patient attempts booking payment, **Then** payment routes to correct US Stripe account and processes successfully
+5. **Given** Stripe account is configured, **When** I view Stripe Accounts list, **Then** I see US account with status "Active" and last connection test timestamp
+
+---
+
+### User Story 2 - Configure Currency Conversion with Automatic Rate Updates (Priority: P2)
+
+As a platform administrator managing international payments, I need to configure currency conversion rates with automatic syncing and markup percentages so that patients see accurate prices in their local currency and the platform is protected against unfavorable conversion rates.
+
+**Why this priority**: Currency conversion is critical for international operations but can be configured after basic Stripe accounts. This enables multi-currency payment processing with revenue protection.
+
+**Independent Test**: Can be fully tested by configuring xe.com API as rate source with 5% markup, enabling automatic updates, then verifying rates sync every 6 hours and markup is applied to patient-facing prices.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am an admin, **When** I navigate to Payment Configuration > Currency Conversion, **Then** I see configuration form for rate source, markup percentages, and sync frequency
+2. **Given** I select xe.com as rate source and enter API credentials, **When** I click "Test Connection", **Then** system fetches current rates for configured currency pairs and displays success message
+3. **Given** I configure 5% markup for USD/EUR currency pair, **When** I click "Save Configuration", **Then** system stores markup percentage and applies it to all USD/EUR conversions
+4. **Given** I enable automatic rate application with 6-hour sync frequency, **When** next sync job runs, **Then** system fetches latest rates, applies markup, and updates cached rates without admin intervention
+5. **Given** EUR/USD rate increases by 4% in 24 hours (exceeds 3% threshold), **When** sync detects rate change, **Then** system sends rate protection alert to admin email: "Currency alert: EUR/USD increased 4%"
+6. **Given** currency conversion is configured, **When** UK patient views US provider's $2,000 procedure, **Then** patient sees "£1,701 GBP" (using current rate 0.85 + 5% markup = 0.8925)
+
+---
+
+### User Story 3 - Configure Split Payment Installment Plans (Priority: P2)
+
+As a platform administrator aiming to increase booking conversion rates, I need to configure split payment installment options (2-9 installments) with a 30-day cutoff rule so that patients can spread booking costs over time and are more likely to complete bookings.
+
+**Why this priority**: Split payments significantly improve booking conversion by reducing upfront cost burden. This can be configured independently of other payment settings and delivers immediate business value.
+
+**Independent Test**: Can be fully tested by enabling 2, 3, 4, 5 installment options with 30-day cutoff, then submitting test booking 90 days before procedure and verifying patient sees all installment options, while booking 40 days before procedure only shows 2 installments.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am an admin, **When** I navigate to Payment Configuration > Split Payment, **Then** I see configuration form for available installments, cutoff days, and minimum booking amount
+2. **Given** I enable 2, 3, 4, 5, 6 installment options, **When** I set cutoff days to 30 and minimum booking amount to $500, **Then** system stores split payment rules
+3. **Given** split payment is configured with 30-day cutoff, **When** patient books $2,000 procedure 90 days in advance, **Then** patient sees all enabled installment options (2-6 installments)
+4. **Given** same configuration, **When** patient books $2,000 procedure 40 days in advance, **Then** patient sees only 2 installments (not enough time for more payments before 30-day cutoff)
+5. **Given** patient selects 4 installments for $2,000 booking with 25% deposit rate, **When** patient completes booking, **Then** system calculates payment schedule:
+   - First installment: $500 (25% deposit) due at booking
+   - Remaining 3 installments: $500 each, due every 20 days
+   - Final payment due: 30 days before procedure date
+6. **Given** patient has active installment plan, **When** patient misses second installment payment deadline, **Then** system sends reminder notification during grace period, then cancels booking if not paid within grace period
+
+---
+
+### User Story 4 - Configure Provider-Specific Deposit Rates (Priority: P3)
+
+As a platform administrator managing diverse provider needs, I need to configure custom deposit rates for specific providers (different from the global default 25%) so that providers with different cash flow requirements can have appropriate deposit percentages while most providers use the global default.
+
+**Why this priority**: Provider-specific deposit rates add flexibility but are not critical for launch. Most providers can use global default, and this can be added after basic deposit rate configuration is working.
+
+**Independent Test**: Can be fully tested by setting global deposit rate to 25%, then assigning custom 30% rate to specific provider, then verifying that provider's bookings use 30% deposit while other providers use 25% deposit.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am an admin, **When** I navigate to Payment Configuration > Deposit Rates, **Then** I see configuration form with options for Global Default or Provider-Specific scope
+2. **Given** I select Provider-Specific scope, **When** I search for provider "Dr. Smith Hair Clinic", **Then** system displays matching provider in search results
+3. **Given** I select provider and set custom deposit rate to 30%, **When** I click "Apply Deposit Rate", **Then** system stores provider-specific rate and displays confirmation: "Custom deposit rate 30% applied to Dr. Smith Hair Clinic"
+4. **Given** provider has custom 30% deposit rate, **When** patient books procedure with this provider (booking total $3,000), **Then** system calculates deposit as $900 (30% of $3,000)
+5. **Given** different provider uses global default 25% rate, **When** patient books procedure with this provider (booking total $3,000), **Then** system calculates deposit as $750 (25% of $3,000)
+6. **Given** provider-specific rate is configured, **When** I view Deposit Rates configuration page, **Then** I see list of providers with custom rates showing provider name, custom rate, and override indicator
+
+---
+
+### User Story 5 - Monitor and Respond to Currency Rate Protection Alerts (Priority: P3)
+
+As a platform administrator managing international payments, I need to receive timely alerts when currency rates fluctuate significantly (exceeding configured threshold) so that I can adjust markup percentages to protect the platform against unfavorable conversion rates and revenue loss.
+
+**Why this priority**: Rate protection adds proactive monitoring but is not essential for launch. Admins can manually monitor rates initially, and this can be added as operational maturity improves.
+
+**Independent Test**: Can be fully tested by configuring 3% rate protection threshold, simulating 4% rate change in test environment, then verifying admin receives alert email within 15 minutes and can adjust markup percentage in response.
+
+**Acceptance Scenarios**:
+
+1. **Given** I have configured currency conversion with 3% rate protection threshold, **When** scheduled sync detects EUR/USD rate increased 4% in 24 hours, **Then** system sends urgent alert email to admin: "Currency alert: EUR/USD increased 4% in 24 hours. Review conversion markup."
+2. **Given** I receive rate protection alert, **When** I navigate to Payment Configuration > Currency Conversion, **Then** I see visual alert indicator on EUR/USD currency pair with details: "Rate change: +4% (24h)"
+3. **Given** I review alert and decide to increase markup, **When** I update EUR/USD markup from 5% to 7% and click "Save Configuration", **Then** system applies new markup to all future transactions and logs admin action to audit trail
+4. **Given** markup is updated, **When** next patient views price in EUR, **Then** price reflects new 7% markup instead of previous 5% markup
+5. **Given** rate protection alert was triggered, **When** I view currency conversion history chart, **Then** chart shows rate spike and timestamp when alert was sent
+
+---
+
+### Edge Cases
+
+- What happens when admin attempts to delete Stripe account that processed transactions in last 90 days? **System prevents deletion and displays error: "Cannot delete Stripe account with recent transactions. Archive instead."** System archives account, marking as inactive but retaining configuration for audit purposes.
+
+- How does system handle currency conversion API being completely unavailable for 24+ hours? **System continues using last successfully cached rates and displays prominent warning banner to admin: "Using cached rates from [timestamp]. Currency API unavailable."** System sends daily email digest to admin summarizing API outage. When API recovers, system immediately syncs latest rates and notifies admin.
+
+- What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log.
+
+- How to manage patient attempting payment from country with no assigned Stripe account and no global fallback configured? **System checks patient country, finds no Stripe account assigned, checks for global/default fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
+
+- What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately.
+
+- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day (e.g., 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when initial 3% threshold crossed. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "EUR/USD increased 6% in 6 hours."** Admin receives summary of all rate changes in daily digest email.
+
+- What occurs if admin configures two different Stripe accounts for overlapping countries (e.g., Account A for US/Canada/Mexico, Account B for US/UK)? **System detects country overlap (US) during configuration and displays warning: "US is already assigned to Account A. Override assignment?"** Admin selects: "Override" (US moves to Account B, no longer uses Account A) or "Cancel" (keep current assignment). System logs conflict resolution to audit trail. If admin overrides, system uses most recently configured account for overlapping country (Account B for US in this example).
+
+- How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? **During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: "Stripe authentication failed for account [name]."** System sends urgent alert to admin: "Stripe account [name] failed authentication. Verify API keys are active and have required permissions."** System temporarily routes payments to fallback global account (if configured) and displays error banner to admin.
+
+---
+
+## Functional Requirements Summary
+
+### Core Requirements
+
+- **FR-001**: System MUST allow admins to add, edit, and manage multiple Stripe accounts with API credentials (publishable key, secret key, webhook secret)
+- **FR-002**: System MUST allow admins to assign Stripe accounts to specific countries or regional groupings (multi-select assignment)
+- **FR-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
+- **FR-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
+- **FR-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
+- **FR-006**: System MUST allow admins to configure currency conversion rate sources (xe.com, fixer.io, or manual entry)
+- **FR-007**: System MUST allow admins to set currency conversion markup percentages (0-20% range) per currency pair
+- **FR-008**: System MUST fetch currency conversion rates automatically on scheduled intervals (configurable sync frequency: 6h, 12h, 24h)
+- **FR-009**: System MUST apply admin-configured markup percentage to fetched currency rates before displaying prices to patients
+- **FR-010**: System MUST allow admins to configure rate protection thresholds (1-50% range) and send alerts when thresholds exceeded
+- **FR-011**: System MUST allow admins to enable or disable automatic rate application (if disabled, admin must manually approve rate updates)
+- **FR-012**: System MUST gracefully handle currency conversion API failures by using last cached rates and alerting admin
+- **FR-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
+- **FR-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
+- **FR-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate)
+- **FR-016**: System MUST calculate deposit amount by multiplying booking total by configured deposit rate percentage
+- **FR-017**: System MUST allow admins to enable or disable split payment (installment) feature globally
+- **FR-018**: System MUST allow admins to select available installment options (2-9 installments) via multi-select checkboxes
+- **FR-019**: System MUST allow admins to configure cutoff days (7-90 day range) requiring full payment completion before procedure date
+- **FR-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
+- **FR-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
+- **FR-022**: System MUST generate installment payment schedules with first installment equal to deposit amount and remaining balance split equally
+- **FR-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
+
+### Data Requirements
+
+- **FR-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, split payment rules) with full audit history
+- **FR-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
+- **FR-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
+- **FR-027**: System MUST retain payment configuration audit history for minimum 7 years for financial compliance
+
+### Security & Privacy Requirements
+
+- **FR-028**: System MUST encrypt Stripe API secret keys and webhook secrets at rest using AES-256 encryption
+- **FR-029**: System MUST never log Stripe secret keys in plain text to audit logs or error logs (mask all but last 4 characters)
+- **FR-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
+- **FR-031**: System MUST use TLS 1.3 for all connections to Payment Configuration API (no plain HTTP allowed)
+- **FR-032**: System MUST comply with PCI DSS Level 1 requirements for payment data handling
+
+### Integration Requirements
+
+- **FR-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency rates, deposit rates, installment rules)
+- **FR-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests
+- **FR-035**: System MUST send email notifications to admins for payment configuration changes and rate protection alerts
+- **FR-036**: System MUST propagate payment configuration changes to Payment Processing Service within 5 minutes maximum (cache TTL)
+
+### Validation & Error Handling Requirements
+
+- **FR-037**: System MUST validate deposit rate percentage is within allowed range (20-30%) and display error if out of range
+- **FR-038**: System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range
+- **FR-039**: System MUST validate cutoff days is within allowed range (7-90 days) and display error if out of range
+- **FR-040**: System MUST prevent deletion of Stripe accounts with transactions in last 90 days (archive instead)
+- **FR-041**: System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)
+- **FR-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
+
+---
+
+## Key Entities
+
+- **Entity 1 - Stripe Account Configuration**:
+  - **Key attributes**: account_id, account_name, publishable_key, secret_key_encrypted, webhook_secret_encrypted, mode (test/live), assigned_countries[], supported_currencies[], default_currency, status (active/inactive), created_date, last_tested_date
+  - **Relationships**: One Stripe account assigned to many countries; one country can map to one Stripe account (most recent assignment prioritized)
+
+- **Entity 2 - Currency Conversion Configuration**:
+  - **Key attributes**: config_id, rate_source (xe.com/fixer.io/manual), api_credentials_encrypted, currency_pair, markup_percentage, rate_protection_threshold, sync_frequency, automatic_rate_application (enabled/disabled), last_sync_timestamp, current_rate_with_markup
+  - **Relationships**: One currency conversion configuration per currency pair; many transactions reference currency conversion rates
+
+- **Entity 3 - Deposit Rate Configuration**:
+  - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), deposit_percentage, effective_date, created_by_admin_id, created_date
+  - **Relationships**: One global deposit rate; many provider-specific deposit rate overrides (one per provider); many bookings reference deposit rate configuration
+
+- **Entity 4 - Split Payment Configuration**:
+  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, first_installment_type (deposit/equal_split), installment_frequency (weekly/bi-weekly/monthly), late_payment_grace_period_days, effective_date, created_by_admin_id
+  - **Relationships**: One split payment configuration (global); many bookings reference split payment rules; many installment schedules generated based on configuration
+
+- **Entity 5 - Payment Configuration Audit Log**:
+  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/split_payment), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
+  - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
+
+---
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-11-13 | 1.0 | Initial PRD creation for FR-029: Payment System Configuration | Claude (AI Assistant) |
+
+---
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | [Status] |
+| Technical Lead | [Name] | [Date] | [Status] |
+| Stakeholder | [Name] | [Date] | [Status] |
+
+---
+
+**Template Version**: 2.0.0 (Constitution-Compliant)
+**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
+**Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
+**Last Updated**: 2025-11-13
