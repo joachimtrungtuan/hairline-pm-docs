@@ -1,6 +1,6 @@
 # Aftercare & Recovery Management Module - Product Requirements Document
 
-**Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation | A-03: Aftercare Team Management  
+**Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
 **Status**: ✅ Verified & Approved  
@@ -15,7 +15,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-05)**: Aftercare & Progress Monitoring
-- **Provider Platform (PR-04)**: Aftercare Participation (optional)
+- **Provider Platform (PR-04)**: Aftercare Participation (P1 scope for FR-011)
 - **Admin Platform (A-03)**: Aftercare Team Management
 - **Shared Services (S-XX)**: Notifications & Alerts, Media Storage, Payment (Standalone), Messaging/Communication (if enabled)
 

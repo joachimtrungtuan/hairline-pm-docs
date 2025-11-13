@@ -1,6 +1,6 @@
 # Product Requirements Document: Search & Filtering
 
-**Module**: P-02: Quote Request & Management | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding
+**Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | PR-03: Treatment Execution & Documentation | PR-04: Aftercare Participation | PR-05: Financial Management & Reporting | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding | A-03: Aftercare Team Management | A-05: Billing & Financial Reconciliation | A-06: Discount & Promotion Management | A-07: Affiliate Program Management | A-08: Analytics & Reporting | A-09: System Settings & Configuration | A-10: Communication Monitoring & Support
 **Feature Branch**: `fr022-search-filtering`
 **Created**: 2025-11-12
 **Status**: Draft
@@ -26,8 +26,8 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-02)**: Provider search and filtering for quote request submission (P2 - Enhanced)
-- **Provider Platform**: Not applicable (providers don't search for patients)
-- **Admin Platform (A-01, A-02)**: Patient and provider search with advanced filtering for operations and support (P1 - MVP)
+- **Provider Platform (PR-02, PR-03, PR-04, PR-05, PR-06)**: Search and filtering across all provider workflows - inquiries, quotes, treatments, aftercare cases, financial records, and settings (P1 - MVP)
+- **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10)**: Comprehensive search and filtering across all admin operations - patient management, provider management, aftercare oversight, billing, discounts, affiliates, analytics, system settings, and communication monitoring (P1 - MVP)
 - **Shared Services**: None (search logic implemented within each tenant's backend)
 
 ### Multi-Tenant Breakdown
@@ -40,26 +40,25 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 - Select providers for quote request submission
 - Autocomplete for location searches
 
-**Provider Platform**:
+**Provider Platform (PR-02, PR-03, PR-04, PR-05, PR-06)** [P1 - MVP]:
 
-- Not applicable - providers do not search for or select patients
+- **Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient details, location, date range, status, medical alerts; filter quotes by status, amount, treatment type
+- **Treatment Execution (PR-03)**: Search and filter treatment cases by patient, date, clinician, status, graft count
+- **Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient, milestone status, risk level, completion rate
+- **Financial Management (PR-05)**: Search and filter financial records, reports, payouts by date range, amount, status, transaction type
+- **Profile & Settings (PR-06)**: Search and filter treatment catalogs, packages, pricing by availability, type, date range
 
-**Admin Platform (A-01, A-02)** [P1 - MVP]:
+**Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10)** [P1 - MVP]:
 
-- **Patient Search & Filtering (A-01)**:
-  - Search patients by name, email, phone, patient ID (HPID format)
-  - Filter patients by status (inquiry, quoted, scheduled, in-progress, aftercare, complete)
-  - Filter patients by location, registration date, treatment type
-  - View patient details (profile, medical history, 3D scans, quote history, bookings)
-  - Export search results to CSV/Excel for reporting
-
-- **Provider Search & Filtering (A-02)**:
-  - Search providers by name, clinic name, location, credentials
-  - Filter providers by status (active, suspended, pending onboarding)
-  - Filter providers by location, specialties, years of experience
-  - Filter providers by performance metrics (quote acceptance rate, revenue)
-  - View provider details (profile, staff, certifications, reviews, performance)
-  - Export search results for reporting
+- **Patient Search & Filtering (A-01)**: Search patients by name, email, phone, patient ID (HPID format); filter by status, location, registration date, treatment type; export results
+- **Provider Search & Filtering (A-02)**: Search providers by name, clinic name, location, credentials; filter by status, location, specialties, performance metrics; export results
+- **Aftercare Team Management (A-03)**: Search and filter aftercare cases by patient, milestone status, risk level, specialist assignment, completion rate
+- **Billing & Financial Reconciliation (A-05)**: Search and filter transactions, payouts, invoices by date range, amount, provider, status, currency; filter discount codes by usage, ROI, status
+- **Discount & Promotion Management (A-06)**: Search and filter discount codes by code, provider participation, status, usage, date range, ROI
+- **Affiliate Program Management (A-07)**: Search and filter affiliates by name, code, referral count, commission amount, payout status, performance metrics
+- **Analytics & Reporting (A-08)**: Search and filter reports by type, date range, provider, patient segment; filter metrics by dimension (location, treatment type, time period)
+- **System Settings & Configuration (A-09)**: Search and filter settings by category, version, change history, admin user; filter configurations by module, status, effective date
+- **Communication Monitoring & Support (A-10)**: Search and filter conversations by participant, tag, severity, date range, agent assignment, status
 
 **Shared Services**:
 
@@ -87,9 +86,9 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 
 **Admin Platform** [P1 - MVP]:
 
-- **Patient Search**: Accessed from "Overview" dashboard or "Patients" module
-- **Provider Search**: Accessed from "Providers" module
-- Always available via global search bar in admin navigation
+- **Global Search**: Always available via global search bar in admin navigation (searches across all modules)
+- **Module-Specific Search**: Each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface
+- **Cross-Module Search**: Search results can link to related records across modules (e.g., patient search results link to their inquiries, bookings, aftercare cases)
 
 ---
 

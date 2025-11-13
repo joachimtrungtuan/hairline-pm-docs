@@ -708,7 +708,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-011: Aftercare & Recovery Management
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation | A-03: Aftercare Team Management
+**Module(s)**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management
 
 ---
 
@@ -1172,7 +1172,7 @@ For patient platform in FR-001 (MVP), notification preferences are limited to gl
 ### FR-022: Search & Filtering
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: P-02: Quote Request & Management | A-02: Provider Management & Onboarding
+**Module(s)**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | PR-03: Treatment Execution & Documentation | PR-04: Aftercare Participation | PR-05: Financial Management & Reporting | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding | A-03: Aftercare Team Management | A-05: Billing & Financial Reconciliation | A-06: Discount & Promotion Management | A-07: Affiliate Program Management | A-08: Analytics & Reporting | A-09: System Settings & Configuration | A-10: Communication Monitoring & Support
 
 **Requirements**:
 
