@@ -38,11 +38,13 @@ The user wants to verify the accuracy of a module progress checklist file by cro
 1. `CHECKLIST_FILE` - The checklist to verify (from user input) - **REQUIRED**
 2. `.specify/memory/constitution.md` - For module code definitions and architecture principles - **REQUIRED**
 3. `local-docs/project-requirements/system-prd.md` - For system-level requirements and FR definitions - **REQUIRED**
+   - GitHub reference: [System PRD](https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md)
 4. `local-docs/project-requirements/transcriptions/` - All transcription files for client requirements alignment - **REQUIRED**
+   - GitHub reference: [Client Transcriptions](https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions)
    - Load all `.txt` files in this directory
    - Files include: HairlineOverview.txt, HairlineApp-Part1.txt, HairlineApp-Part2.txt, Hairline-AdminPlatform-Part1.txt, Hairline-AdminPlatformPart2.txt, Hairline-ProviderPlatformPart1.txt, Hairline-ProviderPlatformPart2.txt
 
-**IMPORTANT**: All file paths **MUST** be absolute paths. If user provides relative path, convert to absolute path based on workspace root.
+**IMPORTANT**: All file paths **MUST** be absolute paths. If user provides relative path, convert to absolute path based on workspace root. GitHub links are provided for reference, but files should be loaded from local paths.
 
 ### Step 2: Understand Status Symbols
 
@@ -140,16 +142,18 @@ For **EACH** subflow item in the checklist, perform these checks based on module
 
 1. **PRD Documents**:
    - Load relevant PRD from `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`
+   - GitHub reference: [Functional Requirements PRDs](https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/functional-requirements)
    - Compare checklist item with PRD requirements
    - Verify implementation matches PRD specifications
 
 2. **System Technical Spec**:
    - Check `local-docs/project-requirements/system-technical-spec.md` if available
+   - GitHub reference: [System Technical Spec](https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-technical-spec.md) (if available)
    - Verify API structure matches technical spec
 
 3. **System PRD & Client Requirements**:
-   - Cross-reference with `system-prd.md` for system-level requirements and FR definitions
-   - Cross-reference with transcription files for original client requirements
+   - Cross-reference with [System PRD](https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md) for system-level requirements and FR definitions
+   - Cross-reference with [Client Transcription Files](https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions) for original client requirements
    - Verify checklist items align with client's stated requirements from transcriptions
    - Verify module codes and FR numbers match system PRD definitions
    - Identify any discrepancies between checklist and original client requirements
@@ -338,7 +342,7 @@ For **EACH** missing component identified, **MUST** create a task with:
 
    ```markdown
    **Overview**: [What needs to be implemented - 2-3 sentences]
-   **Reference**: [PRD document path and/or Figma link if available]
+   **Reference**: [GitHub PRD link with section anchor (e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow) and/or Figma link if available]
    **Current Status**: [What exists now - be specific with file paths/endpoints]
    **Expectation**: [What should be implemented - detailed requirements]
    **Acceptance Criteria**: [How to verify completion - specific, testable criteria]
@@ -480,8 +484,8 @@ grep -r "ProviderDashboard\|AdminDashboard" main/hairline-frontend/src
 
 1. **Source Information**:
    - Checklist file verified: `CHECKLIST_FILE` (absolute path)
-   - System PRD referenced: `local-docs/project-requirements/system-prd.md`
-   - Client transcriptions referenced: `local-docs/project-requirements/transcriptions/` (all files)
+   - System PRD referenced: [System PRD](https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md) (`local-docs/project-requirements/system-prd.md`)
+   - Client transcriptions referenced: [Client Transcriptions](https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions) (`local-docs/project-requirements/transcriptions/` - all files)
 
 2. **Verification Summary**:
    - Total items verified
