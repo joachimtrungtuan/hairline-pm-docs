@@ -1,2 +1,5 @@
 # macOS system files
 .DS_Store
+
+# Task creation folder
+task-creation/
