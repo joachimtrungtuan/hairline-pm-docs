@@ -337,7 +337,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 **Business Rules**:
 
 - Email must be valid format
-- Password minimum 8 characters with mixed case, numbers, special characters
+- Password minimum 12 characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?":{}|<> (fixed in codebase, not editable in Admin)
 - Password confirmation must match
 - Create account button disabled until all fields valid
 - Real-time password strength validation

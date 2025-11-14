@@ -169,4 +169,3 @@ Only rows with meaningful gaps or scope mixups are listed.
 
 - **Ensure explicitly listed**:
   - “Trigger request for 3D scan or schedule review directly from chat context, with audit logging”.
-

@@ -21,7 +21,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - **Operational Efficiency**: Admins can adjust security policies without code deployments
 - **Auditability**: Complete audit trail of all configuration changes
 - **Consistency**: Single source of truth for settings consumed by Patient, Provider, and Admin platforms
-- **Risk Mitigation**: Ability to rapidly adjust configurations with a complete audit trail
+- **Risk Mitigation**: Ability to rapidly adjust configurations forward-only (no rollback) with a complete audit trail
 - **Compliance**: Demonstrated control over security parameters for audits
 
 ---
@@ -121,8 +121,8 @@ The App Settings & Security Policies module provides a centralized, audited, and
 5. Admin changes "Max Login Attempts" from 5 to 7
 6. Admin changes "Lockout Duration" from 15 to 10 minutes
 7. Admin clicks "Save Changes"
-8. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Reducing lockout to improve user experience based on support ticket analysis" and confirms.
-9. System validates inputs (max attempts 1-10, lockout 5-60 minutes)
+8. System validates inputs (max attempts 1-10, lockout 5-60 minutes)
+9. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Reducing lockout to improve user experience based on support ticket analysis" and confirms.
 10. System creates audit log entry:
     - Timestamp: 2025-11-04 10:45:22
     - Admin: <admin@hairline.com> (ID: A-12345)
@@ -211,7 +211,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   4. Patient Platform retries poll on next scheduled interval (60 seconds)
   5. On successful retry, Patient Platform receives updated settings and applies them
   6. System logs propagation delay but does not alert (self-healing)
-- **Outcome**: Settings eventually consistent across all platforms (within 2 minutes)
+- **Outcome**: Settings eventually consistent across all platforms (within 1 minute of successful retry)
 
 ---
 
@@ -270,7 +270,6 @@ The App Settings & Security Policies module provides a centralized, audited, and
 | ------------------- | -------- | -------- | --------------------------------------------------- | ---------------------------------- |
 | Max Login Attempts  | number   | Yes      | Maximum failed login attempts before lockout        | Range: 1-10, integer only          |
 | Lockout Duration    | number   | Yes      | Lockout duration in minutes                         | Range: 5-60, integer only          |
-| Apply To            | multi-select | Yes  | Platforms affected (Patient, Provider, Admin)       | At least one must be selected      |
 
 **Business Rules**:
 
@@ -289,20 +288,21 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 ### Screen 3: OTP Configuration Editor
 
-**Purpose**: Allows admin to configure OTP expiry time and resend rate limits
+**Purpose**: Allows admin to configure global OTP expiry time (shared across verification and password reset flows) and resend rate limits
 
 **Data Fields**:
 
 | Field Name           | Type               | Required | Description                                    | Validation Rules               |
 | -------------------- | ------------------ | -------- | ---------------------------------------------- | ------------------------------ |
 | OTP Code Length      | number (read-only) | N/A      | Length of OTP code (FIXED at 6)                | FIXED (not editable)           |
-| OTP Expiry Time      | number             | Yes      | OTP code expiry in minutes                     | Range: 5-30, integer only      |
+| OTP Expiry Time      | number             | Yes      | OTP code expiry in minutes (applies to ALL OTP flows: email verification and password reset) | Range: 5-30, integer only      |
 | Resend Cooldown      | number             | Yes      | Minimum seconds between OTP resend requests    | Range: 30-300, integer only    |
 | Max Resend Attempts  | number             | Yes      | Maximum OTP resend requests per hour           | Range: 3-10, integer only      |
 
 **Business Rules**:
 
 - OTP length is FIXED at 6 digits in codebase (not editable)
+- Single global OTP expiry: the configured `OTP Expiry Time` applies uniformly to **both** email verification and password reset OTP flows (no separate per-flow expiry)
 - Default OTP expiry: 15 minutes
 - Default resend cooldown: 60 seconds
 - Default max resend attempts: 5 per hour
@@ -454,6 +454,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 **Notes**:
 
+- **IMPORTANT**: This screen serves BOTH "Verification Email" and "Password Reset Email" templates. Implement a template selector/chooser (dropdown or tabs) at the top of the screen to allow admins to switch between templates without navigating away.
 - Provide rich text editor (WYSIWYG) for HTML body
 - Provide live preview panel showing rendered email
 - Highlight required variables ({code}) in editor
@@ -594,7 +595,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: S-03 consumes OTP email templates for verification and password reset emails
-  - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 5 minutes
+  - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 1 minute
 
 - **FR-024 / Module A-09: Treatment & Package Management**
   - **Why needed**: Treatments are admin-created foundation items managed through Settings UI
@@ -668,7 +669,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **Integration 1: Patient Platform → Settings API**
   - **Data format**: JSON response with version number and setting values
   - **Authentication**: OAuth 2.0 bearer token with "read:settings" scope
-  - **Error handling**: If API unreachable, Patient Platform continues using cached settings for up to 5 minutes
+  - **Error handling**: If API unreachable, Patient Platform continues using cached settings for up to 1 minute, then logs error and retries
 
 - **Integration 2: Notification Service → Settings API (Template Retrieval)**
   - **Data format**: JSON response with template name, subject, HTML body, plain text body, variables
@@ -817,9 +818,9 @@ Compliance officer requests complete audit trail of all authentication policy ch
 
 ### Edge Cases
 
-- What happens when **admin attempts to deactivate last active discovery question option**? System prevents deactivation and displays error: "At least 2 active options required. Cannot deactivate last option."
-- How does system handle **concurrent edits by two admins to same setting group**? Last write wins; second admin receives warning: "This setting was updated by another admin 30 seconds ago. Please review changes before saving."
-- What occurs if **Settings API is unreachable during Patient app polling**? Patient app logs error, continues using cached settings for up to 5 minutes, retries poll every 60 seconds.
+- What happens when **admin attempts to deactivate one of the last 2 active discovery question options**? System prevents deactivation and displays error: "At least 2 active options required. Cannot deactivate this option."
+- How does system handle **concurrent edits by two admins to same setting group**? System detects concurrent edit before save and displays modal popup: "This setting was updated by [admin email] 30 seconds ago. Your changes may conflict. Review the latest version before saving." Modal shows diff of latest changes and options: "Reload Latest Version" or "Save Anyway (Overwrite)".
+- What occurs if **Settings API is unreachable during Patient app polling**? Patient app logs error, continues using cached settings for up to 1 minute, retries poll every 60 seconds.
 - How to manage **sensitive value (API key) visibility in version history**? System masks sensitive values in version history UI (display as "[REDACTED]"); admins with "View Sensitive Settings" permission can click "Show" to unmask.
 - How does system handle **settings propagation during Patient app deployment**? Settings API remains available during deployments; Patient app retrieves settings after restart; no data loss.
 - What occurs if **admin deletes country that active patients have selected in profile**? System prevents hard delete (soft delete only); patients who selected deleted country retain selection; country hidden from new users.

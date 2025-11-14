@@ -146,7 +146,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 ### Alternative Flows
 
-**A1: Admin Edits Existing Notification Rule**
+**A1: Admin Edits Existing Notification Rule**:
 
 - **Trigger**: Admin needs to modify delivery timing or add SMS channel to existing rule
 - **Steps**:
@@ -159,7 +159,7 @@ Activation method: Notification rules activate immediately upon saving (with con
   7. System logs change with timestamp and admin user ID
 - **Outcome**: Rule updated; future notifications use new configuration; in-flight notifications use old configuration
 
-**A2: Admin Deactivates Notification Rule Temporarily**
+**A2: Admin Deactivates Notification Rule Temporarily**:
 
 - **Trigger**: Admin wants to pause notifications during system maintenance or holiday period
 - **Steps**:
@@ -171,7 +171,7 @@ Activation method: Notification rules activate immediately upon saving (with con
   6. Admin reactivates rule when ready by toggling status back to "Active"
 - **Outcome**: Notifications paused temporarily; no notifications lost (system queues events and evaluates when rule reactivated if within retry window)
 
-**A3: Admin Creates Multi-Language Notification Template**
+**A3: Admin Creates Multi-Language Notification Template**:
 
 - **Trigger**: Admin needs to support English and Turkish notification templates for same event
 - **Steps**:
@@ -188,7 +188,7 @@ Activation method: Notification rules activate immediately upon saving (with con
   11. S-03 Notification Service automatically selects template language based on recipient's language preference
 - **Outcome**: Template supports multiple languages; recipients receive notification in their preferred language
 
-**B1: Notification Delivery Fails (Email Bounce)**
+**B1: Notification Delivery Fails (Email Bounce)**:
 
 - **Trigger**: Email delivery fails due to invalid email address or mailbox full
 - **Steps**:
@@ -203,7 +203,7 @@ Activation method: Notification rules activate immediately upon saving (with con
   9. Admin contacts patient via alternative channel (phone, in-app message) to update email address
 - **Outcome**: Failed delivery logged; admin alerted for critical notifications; patient account flagged for follow-up
 
-**B2: Template Variable Missing or Invalid**
+**B2: Template Variable Missing or Invalid**:
 
 - **Trigger**: Admin creates template with variable that doesn't exist in event payload
 - **Steps**:
@@ -216,7 +216,7 @@ Activation method: Notification rules activate immediately upon saving (with con
   7. System validates successfully and saves template
 - **Outcome**: Template validation prevents runtime errors; admin corrects variable before activation
 
-**B3: Conflicting Notification Rules for Same Event**
+**B3: Conflicting Notification Rules for Same Event**:
 
 - **Trigger**: Admin accidentally creates two rules for same event type with different configurations
 - **Steps**:
