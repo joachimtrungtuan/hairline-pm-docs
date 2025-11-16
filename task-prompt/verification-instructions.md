@@ -332,21 +332,57 @@ For **EACH** missing component identified, **MUST** create a task with:
      - `[BE TASK]`: Backend-only implementation
      - `[BUG]`: Fix existing implementation issues
    - Follow with descriptive name (e.g., "OTP Expiration Implementation")
+   - **CRITICAL**: Task name ends at the end of the descriptive name line. Everything after this line is part of the task description.
 
 2. **Status**:
    - **MUST** be one of: `Drafted`, `Confirmed`, or `Added to Plane`
    - Default to `Drafted` for new tasks
+   - **CRITICAL**: Status is part of the task metadata, not the description.
 
-3. **Description** (under 500 words):
-   - **MUST** follow this template:
+3. **Task Description** (under 500 words):
+   - **MUST** follow this template with explicit start/end markers:
+   - **CRITICAL**: The task description starts after the "Status:" line and ends before the next task or section.
 
    ```markdown
+   ## TASK_NAME_START
+   [FE+BE TASK] OTP Expiration Implementation
+   ## TASK_NAME_END
+   
+   **Status**: Drafted
+   
+   ## TASK_DESCRIPTION_START
    **Overview**: [What needs to be implemented - 2-3 sentences]
    **Reference**: [GitHub PRD link with section anchor (e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow) and/or Figma link if available]
    **Current Status**: [What exists now - be specific with file paths/endpoints]
    **Expectation**: [What should be implemented - detailed requirements]
    **Acceptance Criteria**: [How to verify completion - specific, testable criteria]
+   ## TASK_DESCRIPTION_END
    ```
+
+   **IMPORTANT**: When creating tasks, **MUST** use these markers:
+   - `## TASK_NAME_START` - Marks the beginning of the task name
+   - `## TASK_NAME_END` - Marks the end of the task name (task name is everything between these markers)
+   - `## TASK_DESCRIPTION_START` - Marks the beginning of the task description
+   - `## TASK_DESCRIPTION_END` - Marks the end of the task description (description is everything between these markers)
+
+   **Alternative Format** (if markers are not used, use this structure):
+
+   ```markdown
+   ### [FE+BE TASK] OTP Expiration Implementation
+   
+   **Status**: Drafted
+   
+   **Description**:
+   **Overview**: [What needs to be implemented - 2-3 sentences]
+   **Reference**: [GitHub PRD link with section anchor...]
+   **Current Status**: [What exists now - be specific with file paths/endpoints]
+   **Expectation**: [What should be implemented - detailed requirements]
+   **Acceptance Criteria**: [How to verify completion - specific, testable criteria]
+   ```
+
+   In this alternative format:
+   - Task name is the heading text after `###` (including the prefix)
+   - Task description starts after the `**Description**:` line and continues until the next task heading or section
 
 #### 7.2 Task Categories
 
