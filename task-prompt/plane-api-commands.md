@@ -120,12 +120,18 @@ curl -s -X GET "$BASE_URL/workspaces/$WORKSPACE_SLUG/[endpoint]/" \
 
 **Defaults** (from `samasu-system-variables.md`): Workspace: `samasu-digital`, Project: `ff2d96b2-0ab2-438b-b879-fbdaa078dbd6`, Assignee: `c5bb905a-57bc-4f08-aee0-32d69f8fec78`, Priority: `medium`, State: `b189d1d2-0d1d-40f9-9a22-7e4ea5f5976f`, Issue Type: `ee71055e-0962-4d04-bab7-e434c1347d8d`
 
+**CRITICAL**: Plane.so API requires `description_html` field (not `description`). Description must be in HTML format with:
+
+- `<h2>` header tags for major sections (required)
+- No excessive spacing or blank lines
+- Proper HTML structure using `<p>`, `<strong>`, `<code>`, `<ul>`, `<li>`, etc.
+
 **If defaults not applicable**: Reference `samasu-system-variables.md` for alternative IDs (assignees, issue types, states, labels, priorities)
 
 ```bash
 WORKSPACE_SLUG="${WORKSPACE_SLUG:-${1:-$DEFAULT_WORKSPACE_SLUG}}"
 TITLE="${TITLE:-$2}"
-DESCRIPTION="${DESCRIPTION:-$3}"
+DESCRIPTION_HTML="${DESCRIPTION_HTML:-$3}"
 PROJECT_ID="${PROJECT_ID:-$DEFAULT_PROJECT_ID}"
 ASSIGNEE_ID="${ASSIGNEE_ID:-$DEFAULT_ASSIGNEE_ID}"
 STATE="${STATE:-$DEFAULT_STAGE_ID}"
@@ -139,13 +145,13 @@ ISSUE_TYPE="${ISSUE_TYPE:-$DEFAULT_ISSUE_TYPE_ID}"
 
 PAYLOAD=$(jq -n \
     --arg name "$TITLE" \
-    --arg desc "${DESCRIPTION:-}" \
+    --arg desc_html "${DESCRIPTION_HTML:-}" \
     --arg project "$PROJECT_ID" \
     --argjson assignees "[ \"$ASSIGNEE_ID\" ]" \
     --arg state "$STATE" \
     --arg priority "$PRIORITY" \
     --arg issue_type "$ISSUE_TYPE" \
-    '{name: $name, project: $project, assignees: $assignees, state: $state, priority: $priority, issue_type: $issue_type} + (if $desc != "" then {description: $desc} else {} end)')
+    '{name: $name, project: $project, assignees: $assignees, state: $state, priority: $priority, issue_type: $issue_type} + (if $desc_html != "" then {description_html: $desc_html} else {} end)')
 
 curl -s -X POST "$BASE_URL/workspaces/$WORKSPACE_SLUG/projects/$PROJECT_ID/issues/" \
      -H "X-API-Key: $PLANE_API_KEY" \
@@ -153,14 +159,7 @@ curl -s -X POST "$BASE_URL/workspaces/$WORKSPACE_SLUG/projects/$PROJECT_ID/issue
      -d "$PAYLOAD" | jq '.'
 ```
 
-**Without jq**:
-
-```bash
-PAYLOAD="{\"name\":\"$TITLE\",\"project\":\"$PROJECT_ID\",\"assignees\":[\"$ASSIGNEE_ID\"],\"state\":\"$STATE\",\"priority\":\"$PRIORITY\",\"issue_type\":\"$ISSUE_TYPE\"}"
-[ -n "$DESCRIPTION" ] && PAYLOAD=$(echo "$PAYLOAD" | sed "s/}$/,\"description\":\"$DESCRIPTION\"}/")
-curl -s -X POST "$BASE_URL/workspaces/$WORKSPACE_SLUG/projects/$PROJECT_ID/issues/" \
-     -H "X-API-Key: $PLANE_API_KEY" -H "Content-Type: application/json" -d "$PAYLOAD" | jq '.'
-```
+**Without jq**: Use `description_html` field with HTML-formatted description.
 
 **Lookup examples** (from `$SYSTEM_VARS_FILE`):
 

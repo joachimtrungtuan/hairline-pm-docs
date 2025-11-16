@@ -38,7 +38,9 @@ Verify module progress checklist accuracy by cross-checking subflows against cod
 1. `CHECKLIST_FILE` - Checklist to verify - **REQUIRED**
 2. `.specify/memory/constitution.md` - Module code definitions and architecture - **REQUIRED**
 3. `local-docs/project-requirements/system-prd.md` - System-level requirements and FR definitions - **REQUIRED**
+   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
 4. `local-docs/project-requirements/transcriptions/*.txt` - All transcription files for client requirements - **REQUIRED**
+   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
 
 ### Step 2: Understand Status Symbols
 
@@ -84,8 +86,11 @@ For **EACH** subflow item, perform checks based on module type:
 **MUST** cross-reference:
 
 1. **PRD Documents**: Load from `local-docs/project-requirements/functional-requirements/fr###-*/prd.md` - compare checklist with PRD, verify implementation matches
+   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
 2. **System Technical Spec**: Check `local-docs/project-requirements/system-technical-spec.md` if available - verify API structure matches
 3. **System PRD & Client Requirements**: Verify module codes/FR numbers match system PRD, align with client transcriptions, identify discrepancies
+   - System PRD GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
+   - Transcriptions GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
 
 ### Step 4: Status Assessment
 
@@ -149,7 +154,11 @@ For **EACH** missing component, **MUST** create a task with:
 
 2. **Status**: `Drafted` (default), `Confirmed`, or `Added to Plane` - part of metadata, not description
 
-3. **Task Description** (under 500 words) with explicit markers:
+3. **Task Description** (under 500 words) with explicit markers. **CRITICAL**:
+   - Descriptions must be in HTML format for Plane.so API (`description_html` field)
+   - **MUST** include `<h2>` header tags for major sections (e.g., Overview, Reference, Current Status, Expectation, Acceptance Criteria)
+   - Use HTML tags like `<p>`, `<strong>`, `<code>`, `<ul>`, `<li>`, etc.
+   - **NO excessive spacing** - remove unnecessary blank lines and whitespace
 
    ```markdown
    ## TASK_NAME_START
@@ -159,11 +168,16 @@ For **EACH** missing component, **MUST** create a task with:
    **Status**: Drafted
    
    ## TASK_DESCRIPTION_START
-   **Overview**: [What needs to be implemented - 2-3 sentences]
-   **Reference**: [GitHub PRD link with section anchor and/or Figma link]
-   **Current Status**: [What exists now - specific file paths/endpoints]
-   **Expectation**: [What should be implemented - detailed requirements]
-   **Acceptance Criteria**: [How to verify completion - specific, testable criteria]
+   <h2>Overview</h2>
+   <p>[What needs to be implemented - 2-3 sentences]</p>
+   <h2>Reference</h2>
+   <p>[GitHub PRD link with section anchor, e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow]</p>
+   <h2>Current Status</h2>
+   <p>[What exists now - specific file paths/endpoints]</p>
+   <h2>Expectation</h2>
+   <p>[What should be implemented - detailed requirements]</p>
+   <h2>Acceptance Criteria</h2>
+   <p>[How to verify completion - specific, testable criteria]</p>
    ## TASK_DESCRIPTION_END
    ```
 
@@ -240,3 +254,11 @@ If verification cannot be completed: Document missing files, mark unclear implem
 ## Quality Assurance
 
 Before completing, **MUST** ensure: All P1 modules verified, conflicts/gaps documented with references, report under 500 words, tasks follow template, task descriptions under 500 words, correct task prefixes, absolute file paths
+
+## References
+
+**GitHub Documentation**:
+
+- System PRD: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
+- Functional Requirements PRDs: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md` (replace `###` with FR number, e.g., `fr001-patient-authentication/prd.md`)
+- Client Transcriptions: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
