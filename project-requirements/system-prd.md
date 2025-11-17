@@ -1151,6 +1151,9 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 **Implementation Note:**
 For patient platform in FR-001 (MVP), notification preferences are limited to global Email/Push toggles; category preferences (e.g., Inquiry, Quote, Payment, Aftercare) are deferred to V2 per product management alignment.
 
+**Provider Notification Preferences:**
+Provider notification preferences are managed in FR-032 (Provider Dashboard Settings & Profile Management). Providers configure unified notification preferences including individual notification type toggles and global channel preferences (email, SMS, push) in a single settings location.
+
 ---
 
 ### FR-021: Multi-Language & Localization
@@ -1503,6 +1506,79 @@ Total Quote:                           £3,000
 - All admin-facing features require access control integration
 
 **Note**: Detailed requirements to be documented in dedicated FR-031 PRD.
+
+---
+
+### FR-032: Provider Dashboard Settings & Profile Management
+
+**Priority**: P1 (MVP)  
+**Module(s)**: PR-06: Profile & Settings Management
+
+**Requirements**:
+
+**Profile Management**:
+
+- Providers MUST be able to upload and update clinic logo/profile picture
+- Providers MUST be able to select languages from system language options (matches FR-021)
+- Providers MUST be able to add, edit, and delete awards with direct image upload (name, description, year, award image)
+- Providers MUST be able to update basic clinic information (name, description, contact details)
+
+**Account Settings**:
+
+- Providers MUST be able to update phone number with worldwide country code selection (consumes FR-026 country list)
+- Providers MUST be able to select timezone from multiple timezone options
+- Providers MUST be able to change password
+- Providers MUST be able to request account deletion (soft-delete, admin approval required)
+
+**Notification Preferences** (Unified Settings):
+
+- Providers MUST be able to configure notification preferences in a single unified settings location
+- Providers MUST be able to toggle individual notification types: quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications
+- Providers MUST be able to configure global channel preferences: email, SMS (optional), push/in-app notifications
+- Notification preferences MUST be profile-specific (applies to provider organization, not individual team members)
+- System MUST respect provider notification preferences when sending notifications (integrates with FR-020)
+
+**Billing Settings** (Separate Section):
+
+- Providers MUST have access to a dedicated billing settings section
+- Main account holder (Owner) MUST be able to manage bank account details for payouts
+- System MUST support bank account information: account holder name, bank name, account number, routing/SWIFT code, IBAN (if applicable)
+- Billing settings MUST be accessible only to Owners (per FR-009 role permissions)
+
+**Help Centre**:
+
+- Providers MUST have access to Help Centre page with categories: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
+- Help Centre content MUST be admin-managed (see FR-033)
+- Providers view read-only content; content updates managed by admins
+
+**Integration Points**:
+
+- FR-020: Notification preferences integration
+- FR-021: Language options (profile languages match system languages)
+- FR-026: Country codes and timezone lists
+- FR-009: Role-based access control (billing settings Owner-only)
+- FR-017: Billing integration (bank account details for payouts)
+
+**Note**: Detailed requirements to be documented in dedicated FR-032 PRD.
+
+---
+
+### FR-033: Help Centre Content Management
+
+**Priority**: P1 (MVP)  
+**Module(s)**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
+
+**Requirements**:
+
+- Admins MUST be able to create, edit, and manage Help Centre content for provider platform
+- System MUST support Help Centre categories: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
+- Admins MUST be able to organize FAQ content by topics with expandable/collapsible sections
+- Admins MUST be able to upload tutorial guides, videos, and resource documents
+- System MUST support content versioning and audit trail for Help Centre updates
+- Providers view Help Centre content as read-only (content managed exclusively by admins)
+- System MUST support multi-language Help Centre content (future enhancement)
+
+**Note**: Detailed requirements to be documented in dedicated FR-033 PRD.
 
 ---
 
