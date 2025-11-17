@@ -157,6 +157,7 @@ For **EACH** missing component, **MUST** create a task with:
 3. **Task Description** (under 500 words) with explicit markers. **CRITICAL**:
    - Descriptions must be in HTML format for Plane.so API (`description_html` field)
    - **MUST** include `<h2>` header tags for major sections (e.g., Overview, Reference, Current Status, Expectation, Acceptance Criteria)
+   - **MUST** include a persistent note in the Expectation section (marked as "Note (Suggestion)") clarifying that specifications are suggestions, focusing on business requirements and functional needs rather than technical implementation instructions, and that developers should use their expertise to choose the best approach
    - Use HTML tags like `<p>`, `<strong>`, `<code>`, `<ul>`, `<li>`, etc.
    - **NO excessive spacing** - remove unnecessary blank lines and whitespace
 
@@ -171,10 +172,11 @@ For **EACH** missing component, **MUST** create a task with:
    <h2>Overview</h2>
    <p>[What needs to be implemented - 2-3 sentences]</p>
    <h2>Reference</h2>
-   <p>[GitHub PRD link with section anchor, e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow]</p>
+   <p><a href="[GitHub PRD link with section anchor, e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow]">PRD Reference</a></p>
    <h2>Current Status</h2>
    <p>[What exists now - specific file paths/endpoints]</p>
-   <h2>Expectation</h2>
+   <h2>Expectation (Suggestion)</h2>
+   <p><strong>Note:</strong> The specifications provided below are suggestions based on business requirements. This section should focus on <strong>business requirements and functional needs</strong>, not technical implementation instructions. Developers should understand the business needs and use their expertise to choose the most beneficial and optimized implementation approach.</p>
    <p>[What should be implemented - detailed requirements]</p>
    <h2>Acceptance Criteria</h2>
    <p>[How to verify completion - specific, testable criteria]</p>
