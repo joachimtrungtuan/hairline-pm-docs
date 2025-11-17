@@ -106,7 +106,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 ### Alternative Flows
 
-**A1: Re-send Invitation (Token Expired)**
+**A1: Re-send Invitation (Token Expired)**:
 
 - **Trigger**: Admin team member did not activate account within 72 hours
 - **Steps**:
@@ -118,7 +118,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   6. System updates invitation status to "Pending Activation"
 - **Outcome**: New invitation email sent with fresh activation link
 
-**A2: Role Change for Existing Admin User**
+**A2: Role Change for Existing Admin User**:
 
 - **Trigger**: Admin user's responsibilities change, requiring different role
 - **Steps**:
@@ -135,7 +135,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   11. System immediately enforces new role permissions (next API call reflects new permissions)
 - **Outcome**: Admin user's permissions updated to match new role
 
-**A3: Create Custom Role**
+**A3: Create Custom Role**:
 
 - **Trigger**: Super Admin needs role not covered by standard roles (e.g., specialized analytics-only role)
 - **Steps**:
@@ -152,7 +152,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   11. New role appears in role dropdown for team member assignment
 - **Outcome**: New custom role available for assignment to admin users
 
-**B1: Invalid Email Address**
+**B1: Invalid Email Address**:
 
 - **Trigger**: Super Admin enters malformed email address
 - **Steps**:
@@ -163,7 +163,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   5. System proceeds with invitation if validation passes
 - **Outcome**: Validation error prevents invitation with invalid email
 
-**B2: Email Already in Use**
+**B2: Email Already in Use**:
 
 - **Trigger**: Super Admin attempts to invite user with email already associated with active or pending account
 - **Steps**:
@@ -172,7 +172,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   3. Super Admin cancels invitation or corrects email address
 - **Outcome**: Duplicate account prevented; user directed to re-send invitation flow if needed
 
-**B3: Unauthorized Access Attempt**
+**B3: Unauthorized Access Attempt**:
 
 - **Trigger**: Admin user attempts to access feature not permitted by their role
 - **Steps**:
@@ -183,7 +183,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   5. System sends alert to Super Admin if multiple failed attempts detected (potential security issue)
 - **Outcome**: Unauthorized access blocked; security event logged
 
-**B4: Permission Conflict on Role Assignment**
+**B4: Permission Conflict on Role Assignment**:
 
 - **Trigger**: Super Admin attempts to assign role that would create permission conflict (e.g., read-only analyst assigned to billing role)
 - **Steps**:
@@ -283,7 +283,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Permission Matrix Structure** (Expandable Categories):
 
-**Category: Patient Management (A-01)**
+**Category: Patient Management (A-01)**:
 
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
@@ -291,7 +291,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Edit Patients | Modify patient information | ☐ Write |
 | Delete Patients | Archive patient accounts | ☐ Delete |
 
-**Category: Provider Management (A-02)**
+**Category: Provider Management (A-02)**:
 
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
@@ -300,7 +300,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Onboard Providers | Create new provider accounts | ☐ Write |
 | Suspend Providers | Suspend/activate provider accounts | ☐ Delete |
 
-**Category: Aftercare Management (A-03)**
+**Category: Aftercare Management (A-03)**:
 
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
@@ -309,7 +309,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Chat with Patients | Access aftercare chat | ☐ Write |
 | Schedule Consultations | Book video consultations | ☐ Write |
 
-**Category: Billing & Financial (A-05)**
+**Category: Billing & Financial (A-05)**:
 
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
@@ -318,7 +318,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Issue Refunds | Process patient refunds | ☐ Write (requires approval) |
 | View Financial Reports | Access revenue analytics | ☐ Read |
 
-**Category: System Settings (A-09)**
+**Category: System Settings (A-09)**:
 
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
@@ -366,7 +366,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 |--------|------|-------------|--------|
 | Timestamp | datetime | When action occurred | "2025-11-14 14:32:15 UTC" |
 | Action Type | text | Type of action (Login, Role Change, Permission Grant, Access Denied) | Badge with color |
-| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Specialist' by admin@hairline.com" |
+| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Specialist' by <admin@hairline.com>" |
 | IP Address | text | IP address of action (security audit) | "192.168.1.1" |
 | Outcome | badge | Success/Failed/Denied | Color-coded |
 
@@ -478,6 +478,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 ## Dependencies
 
 ### Internal Dependencies (Other FRs/Modules)
+
+- **FR-009 / Module PR-01**: Provider Team & Role Management
+  - **Why needed**: Provider-facing team management relies on the global RBAC schema, roles, and permission definitions governed by this module
+  - **Integration point**: Admin-defined roles/permissions are surfaced to provider tenant management flows; changes to role definitions cascade to provider team capabilities
 
 - **FR-026 / Module A-09**: App Settings & Security Policies
   - **Why needed**: Provides authentication throttling, OTP configuration, password policy enforcement
@@ -607,7 +611,7 @@ As a Super Admin, I need to invite a new aftercare nurse to the admin platform s
 
 **Acceptance Scenarios**:
 
-1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "nurse@hairline.com" and role "Aftercare Specialist", **Then** invitation email sent within 1 minute and new account created with status "Pending Activation"
+1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "<nurse@hairline.com>" and role "Aftercare Specialist", **Then** invitation email sent within 1 minute and new account created with status "Pending Activation"
 
 2. **Given** new aftercare nurse receives invitation email, **When** nurse clicks activation link and sets password, **Then** account activated and nurse can log in with aftercare dashboard access
 
@@ -627,7 +631,7 @@ As a Super Admin, I need to create a custom "Analytics Viewer" role with read-on
 
 1. **Given** Super Admin navigates to Roles & Permissions, **When** Super Admin creates new role "Analytics Viewer" with permissions: View Financial Reports (read), View Patient Data (read), View Provider Data (read), **Then** role saved and available in role dropdown for user assignment
 
-2. **Given** custom role "Analytics Viewer" exists, **When** Super Admin assigns role to user "analyst@hairline.com", **Then** user can view reports but cannot edit data, process payouts, or modify settings
+2. **Given** custom role "Analytics Viewer" exists, **When** Super Admin assigns role to user "<analyst@hairline.com>", **Then** user can view reports but cannot edit data, process payouts, or modify settings
 
 3. **Given** analytics viewer is logged in, **When** user attempts to edit patient information, **Then** edit button hidden or disabled and action denied if attempted via API
 
@@ -643,7 +647,7 @@ As a Super Admin, I need to review audit trail of all administrative actions to 
 
 **Acceptance Scenarios**:
 
-1. **Given** Super Admin navigates to User Audit Trail, **When** Super Admin selects user "support@hairline.com", **Then** audit trail displays all actions by that user with timestamps, action types, and outcomes
+1. **Given** Super Admin navigates to User Audit Trail, **When** Super Admin selects user "<support@hairline.com>", **Then** audit trail displays all actions by that user with timestamps, action types, and outcomes
 
 2. **Given** admin user with "Support Staff" role attempts to access Provider Billing section, **When** access denied due to insufficient permissions, **Then** access denial logged in audit trail with: timestamp, user ID, requested feature, IP address, outcome "Denied"
 
@@ -661,7 +665,7 @@ As an admin user, I need to be notified immediately when my role or permissions 
 
 **Acceptance Scenarios**:
 
-1. **Given** admin user "support@hairline.com" has role "Support Staff", **When** Super Admin changes role to "Aftercare Specialist", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary
+1. **Given** admin user "<support@hairline.com>" has role "Support Staff", **When** Super Admin changes role to "Aftercare Specialist", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary
 
 2. **Given** role change notification received, **When** user logs in after role change, **Then** dashboard reflects new role permissions (aftercare features visible, support features hidden)
 
@@ -679,7 +683,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 
 **Acceptance Scenarios**:
 
-1. **Given** only one Super Admin account exists ("admin@hairline.com"), **When** another admin attempts to suspend this account, **Then** action blocked with error message: "Cannot suspend the last Super Admin account. Add another Super Admin first."
+1. **Given** only one Super Admin account exists ("<admin@hairline.com>"), **When** another admin attempts to suspend this account, **Then** action blocked with error message: "Cannot suspend the last Super Admin account. Add another Super Admin first."
 
 2. **Given** two Super Admin accounts exist, **When** Super Admin suspends one of the two Super Admin accounts, **Then** suspension succeeds and remaining Super Admin can continue managing platform
 

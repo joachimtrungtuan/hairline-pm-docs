@@ -533,6 +533,10 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### Internal Dependencies (Other FRs/Modules)
 
+- **FR-031 / Module A-09**: Admin Access Control & Permissions
+  - **Why needed**: Provides the master RBAC framework, default role definitions, and permission matrices that provider teams inherit
+  - **Integration point**: Provider team roles are synced with admin-defined permissions; updates from FR-031 propagate to provider invitation, role assignment, and enforcement flows
+
 - **FR-006 / Module PR-01**: Provider Authentication & Profile
   - **Why needed**: Team members must authenticate through provider auth system
   - **Integration point**: Team member accounts use same authentication service, session management, and login flows as provider owners
