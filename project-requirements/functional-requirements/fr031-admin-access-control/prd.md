@@ -483,6 +483,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   - **Why needed**: Provider-facing team management relies on the global RBAC schema, roles, and permission definitions governed by this module
   - **Integration point**: Admin-defined roles/permissions are surfaced to provider tenant management flows; changes to role definitions cascade to provider team capabilities
 
+- **FR-020 / Module S-03**: Notifications & Alerts
+  - **Why needed**: Delivers transactional email/in-app alerts for admin invitations, role changes, suspensions, and audit events
+  - **Integration point**: Admin platform emits notification events that FR-020 templates render; ensures consistent messaging across tenants
+
 - **FR-026 / Module A-09**: App Settings & Security Policies
   - **Why needed**: Provides authentication throttling, OTP configuration, password policy enforcement
   - **Integration point**: Admin user login and password reset flows use authentication settings from FR-026

@@ -3,7 +3,7 @@
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`
 **Created**: 2025-11-11
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-009 from system-prd.md
 
 ---
@@ -137,16 +137,12 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 **A3: Team member already has account (different provider)**:
 
-- **Trigger**: Invitee email address already exists in system for another provider
+- **Trigger**: Invitee email address already exists in system for another provider organization (single-membership rule)
 - **Steps**:
-  1. System detects existing account during invitation validation
-  2. System sends different email: "You've been invited to join [Provider Name] with [Role]"
-  3. Team member clicks link and logs in with existing credentials
-  4. System presents consent screen: "Accept invitation to join [Provider Name] as [Role]?"
-  5. Team member accepts
-  6. System adds provider organization to team member's account
-  7. Team member can now switch between multiple provider organizations
-- **Outcome**: Single team member account linked to multiple provider organizations
+  1. System detects existing membership during invitation validation
+  2. System displays blocking error: "This email already belongs to another provider team. Remove the member from their current provider or invite them with a different email."
+  3. Provider Owner may contact Hairline Admin to request ownership transfer (manual process in FR-031) if employment changes
+- **Outcome**: Cross-provider duplication prevented; membership transfers require admin intervention
 
 **B1: Invalid email address**:
 
@@ -202,9 +198,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 1. Provider Owner/Admin views team management dashboard
 2. System displays list of team members with current roles
-3. Provider Owner/Admin clicks "Edit" button next to team member name
+3. Provider Owner/Admin clicks "Edit" button next to team member name (Owner rows show locked badge and no edit action)
 4. System presents role selection dropdown with current role pre-selected
-5. Provider Owner/Admin selects new role from dropdown
+5. Provider Owner/Admin selects new role from dropdown (Owner role is read-only; demotion/promotion to Owner must be escalated to platform admins)
 6. System displays permission comparison: "Current permissions" vs "New permissions"
 7. Provider Owner/Admin reviews changes and clicks "Update Role"
 8. System validates actor has permission to assign selected role
@@ -224,7 +220,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
   1. System detects actor role is Admin and target role is Owner
   2. System displays error: "Only Owners can modify other Owners' roles"
   3. Edit dialog closes without making changes
-- **Outcome**: Owner role protection maintained
+- **Outcome**: Owner role protection maintained; system prompts admin to contact platform support if ownership transfer is required
 
 **A5: Last Owner being demoted**:
 
@@ -281,10 +277,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - **Trigger**: Provider Owner attempts to remove themselves
 - **Steps**:
   1. System detects actor is removing themselves
-  2. System counts remaining Owners
-  3. If other Owners exist: Allow removal with extra confirmation
-  4. If last Owner: Display error "Cannot remove last Owner. Transfer ownership first."
-- **Outcome**: Organization always has at least one Owner
+  2. System immediately blocks request with error: "Owners cannot remove their own accounts. Ask another Owner or Hairline Admin to perform this action."
+  3. Error is logged in audit trail for compliance
+- **Outcome**: Owner removal actions must be initiated by a different Owner or escalated to platform admins
 
 **A7: Remove team member with no active work**:
 
@@ -311,9 +306,11 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ## Screen Specifications
 
-### Screen 1: Team Management Dashboard
+### Provider Platform (PR-01)
 
-**Purpose**: Central interface for viewing all team members, their roles, status, and actions available
+#### Screen 1: Team Management Dashboard
+
+**Purpose**: Central interface for viewing all team members, their roles, status, quota usage, and available actions.
 
 **Data Fields**:
 
@@ -322,125 +319,254 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Team Member Name | Display (text) | N/A | Full name of team member | Display only |
 | Email | Display (email) | N/A | Team member's email address | Display only |
 | Role | Display (badge/tag) | N/A | Current role (Owner/Admin/Doctor/Coordinator) | Display only |
+| Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only |
 | Status | Display (badge) | N/A | Active, Invited, Suspended | Display only |
 | Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time |
-| Actions | Button group | N/A | Edit, Remove, View Activity buttons | Role-based visibility |
+| Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only |
+| Actions | Button group | N/A | Edit, Remove, Transfer, View Activity | Hidden for Owner rows |
+| Team Size Meter | Progress bar | N/A | Current members vs centrally approved limit | Turns amber at 90%, red at 100% |
 
 **Business Rules**:
 
-- Only Owners and Admins can access team management dashboard
-- Owners see all team members including other Owners
-- Admins cannot see or modify Owner accounts (except read-only view)
-- "Invited" status team members show "Resend Invitation" and "Cancel Invitation" actions
-- "Suspended" team members show "Reactivate" action
-- Current logged-in user's row is highlighted and shows "(You)" label
-- List sorted by: Owners first, then by role hierarchy, then alphabetically by name
-- Search/filter box allows filtering by name, email, or role
-- Empty state shows "No team members yet. Invite your first team member to get started."
+- Only Owners and Admins can access dashboard; Admins have read-only visibility into Owner rows.
+- Owner rows display lock badge with tooltip: "Ownership changes managed by Hairline Admins."
+- "Invited" status rows show "Resend Invitation" and "Cancel Invitation."
+- "Suspended" rows show "Reactivate."
+- Current logged-in user's row highlighted with "(You)."
+- Sorting: Owners (locked) → Admins → Doctors → Coordinators, alphabetical.
+- Search/filter by name, email, role, status.
+- Banner surfaces central team-size policy and provides link to "Request More Seats" modal (sends request to Admin Platform).
 
 **Notes**:
 
-- Consider pagination or infinite scroll for clinics with 50+ team members
-- Quick stats at top: Total team members, Active, Pending invitations, Suspended
-- Export button allows downloading team member list (CSV) for auditing
+- Pagination/infinite scroll for >50 members.
+- Quick stats: Total, Active, Pending, Suspended, Seats Remaining.
+- CSV export for audit.
 
 ---
 
-### Screen 2: Invite Team Member Form
+#### Screen 2: Invite Team Member Form
 
-**Purpose**: Collect information needed to invite a new team member to the provider organization
+**Purpose**: Collect info needed to invite a new team member.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | First Name | text | Yes | Team member's first name | 2-50 characters, letters, spaces, hyphens |
-| Last Name | text | Yes | Team member's last name | 2-50 characters, letters, spaces, hyphens |
-| Email | email | Yes | Team member's work email | Valid email format, unique within org |
-| Role | select/dropdown | Yes | Role to assign (Owner/Admin/Doctor/Coordinator) | Must select one option |
-| Personal Message | textarea | No | Optional message to include in invitation email | Max 500 characters |
+| Last Name | text | Yes | Team member's last name | 2-50 characters |
+| Email | email | Yes | Work email | Valid email, unique within org, not exceeding seat limit |
+| Role | select/dropdown | Yes | Owner/Admin/Doctor/Coordinator | Owner option shows warning + lock icon |
+| Personal Message | textarea | No | Optional note for invitation email | Max 500 chars |
+| Seat Limit Banner | Display | N/A | Shows remaining seats & link to request more if depleted | Display-only |
 
 **Business Rules**:
 
-- Email must not already exist as active or invited team member in this organization
-- Email format validated on blur
-- Role dropdown shows role name with brief description of permissions
-- If selecting "Owner" role, display warning banner: "Owners have full access including billing and ability to remove other team members"
-- Personal message preview shown below textarea
-- Form requires explicit "Send Invitation" button click (no auto-submit)
-- After submission, form clears and returns to team dashboard
-- Success toast notification: "Invitation sent to [email]"
+- Email uniqueness enforced per org; duplicates prompt "View member / Resend invitation" CTA.
+- Role dropdown includes inline permission summary; Owner option disabled if platform hasn't approved multiple owners.
+- Form blocked when seat limit reached; CTA changes to "Request more seats" which routes to admin workflow.
+- SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
 
 **Notes**:
 
-- Consider adding profile photo upload (optional) for immediate team roster completeness
-- Allow bulk invite via CSV upload for large clinic onboarding (future enhancement)
-- Provide "Save as Draft" option for partial invitations (future enhancement)
+- Optional profile photo upload (future).
+- CSV bulk invite (future).
+- Draft invitations backlog (future).
 
 ---
 
-### Screen 3: Edit Team Member Role Dialog
+#### Screen 3: Role & Permission Management Dialog
 
-**Purpose**: Modify an existing team member's role and view permission changes
+**Purpose**: Modify existing team member roles (non-Owner) and view permission changes.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Team Member Name | Display (text) | N/A | Full name of team member being edited | Read-only |
+| Team Member Name | Display | N/A | Full name | Read-only |
 | Current Role | Display (badge) | N/A | Existing role | Read-only |
-| New Role | select/dropdown | Yes | Role to change to | Must select different role |
-| Permission Comparison | Display (table) | N/A | Side-by-side permissions for current vs new role | Read-only |
-| Reason for Change | textarea | No | Optional reason for audit trail | Max 250 characters |
+| New Role | select/dropdown | Yes | Target role | Must differ from current; Owner option disabled |
+| Permission Comparison | Display (table) | N/A | Side-by-side diff | Read-only |
+| Reason for Change | textarea | No | Optional audit note | Max 250 chars |
+| Email Notification Toggle | checkbox | No | Allow suppressing notification (default on) | If off, requires justification |
 
 **Business Rules**:
 
-- Cannot change last Owner in organization to non-Owner role
-- Admin users cannot change Owner roles
-- Cannot change own role (must be done by another Owner/Admin)
-- Permission comparison table shows: Permission category, Current access (checkmark/X), New access (checkmark/X)
-- Permissions being removed are highlighted in red
-- Permissions being added are highlighted in green
-- "Update Role" button disabled until new role selected and different from current
-- Confirmation required if removing critical permissions (e.g., Owner → Admin loses billing access)
+- Owner records show disabled form with callout: "Contact Hairline Admin to adjust ownership."
+- Cannot change own role.
+- Permissions diff highlights removals (red) and additions (green).
+- Confirmation modal summarises risk (e.g., losing billing access).
 
 **Notes**:
 
-- Consider showing impact statement: "This change will affect X active inquiries and Y draft quotes"
-- Add "Notify team member" checkbox (default checked) to optionally suppress email notification
+- Provide impact summary (# of inquiries/quotes affected).
+- Display last role change timestamp + actor.
 
 ---
 
-### Screen 4: Team Member Activity Log
+#### Screen 4: Remove or Suspend Team Member Modal
 
-**Purpose**: View audit trail of actions performed by a specific team member for accountability and compliance
+**Purpose**: Reassign work and revoke access in a guided flow.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Timestamp | Display (datetime) | N/A | When action occurred | ISO format, display in local timezone |
-| Action Type | Display (badge) | N/A | Category: Login, Quote Created, Inquiry Viewed, etc. | Read-only |
-| Description | Display (text) | N/A | Human-readable description of action | Read-only |
-| IP Address | Display (text) | N/A | IP address of action origin | Display only for Owners |
-| Related Entity | Link | N/A | Link to related inquiry, quote, patient, etc. | Clickable if entity still exists |
+| Responsibilities List | table | N/A | Active inquiries, quotes, appointments | Auto-generated |
+| Reassignment Dropdown | select | Yes (if outstanding work) | Target team member | Filters by role compatibility |
+| Removal Reason | select + textarea | Yes | Categorized reason + optional notes | Predefined reasons |
+| Session Revocation Toggle | checkbox | Yes | Force logout all sessions | Locked to true |
+| Notification Preview | display | N/A | Email template summary | Pulls from FR-020 notification templates |
 
 **Business Rules**:
 
-- Only Owners and Admins can view activity logs
-- Admins can only view logs for non-Owner team members
-- Logs retained for minimum 2 years for compliance
-- Sensitive actions flagged: Patient data access, quote submission, payment handling
-- Filter options: Date range, action type, related entity type
-- Export button downloads filtered logs as CSV
-- Pagination: 50 events per page
-- Real-time updates: New actions appear without page refresh
+- Modal unavailable for Owners; CTA replaced with instructions to contact admin.
+- Reassignment required when outstanding work exists; otherwise option to archive.
+- Removal triggers notifications to removed member and provider owner, plus audit event.
+- Suspensions use same modal with different final state.
 
 **Notes**:
 
-- Consider anonymizing IP addresses after 90 days for privacy compliance
-- Add "Flag for Review" button for suspicious activity
-- Show geolocation of IP address for security monitoring (city/country level)
+- Provide bulk reassignment for >10 inquiries (wizard launches Screen 5).
+- Show SLA: "Transfers must complete before confirming removal."
+
+---
+
+#### Screen 5: Task Transfer Wizard
+
+**Purpose**: Handle high-volume reassignment and ensure continuity before removal.
+
+**Steps**:
+
+1. **Select Workloads**: Breakdown by entity type with counts (inquiries, quotes, appointments, messages).
+2. **Assign Targets**: Map each workload type to a target member (supports split assignments).
+3. **Review & Confirm**: Summary of transfers, notifications to recipients, and audit preview.
+
+**Business Rules**:
+
+- Wizard auto-suggests targets based on role + current workload.
+- Transfers blocked if target lacks required permissions; prompts to update role first.
+- Completion required before removal modal allows final confirmation.
+
+---
+
+### Team Member Onboarding Experience (Public/PR-01)
+
+#### Screen 6: Invitation Landing
+
+**Purpose**: Validate invitation token and orient new team member.
+
+**Key Elements**:
+
+- Provider branding (name, logo), role summary, invitation expiry countdown.
+- CTA: "Accept & Create Account" (new user) with secondary link "Already have an account with this provider? Log in to continue."
+- Security notice referencing central policies (MFA required, audit logging).
+
+**Validation**:
+
+- Token validity, seat availability (double-check), invitation status (Pending only).
+
+---
+
+#### Screen 7: Account Setup & MFA Enrollment
+
+**Purpose**: Collect credentials and enforce security before granting access.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Email | display | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token |
+| First Name | text | Yes | Editable first name | 2-50 characters; letters/spaces/hyphen |
+| Last Name | text | Yes | Editable last name | 2-50 characters; letters/spaces/hyphen |
+| Password | password | Yes | Account password | Must satisfy FR-026 policy (length + complexity) |
+| Confirm Password | password | Yes | Re-enter password | Must match Password |
+| Phone Number (for MFA) | tel | Conditional | SMS/voice MFA channel (required if policy enforces MFA) | E.164 format; uniqueness per user |
+| MFA Setup Method | radio/select | Yes | Choose MFA factor enforced by admin policy | Options limited to enabled methods (SMS, Authenticator App, Security Key) |
+| Accept Terms | checkbox | Yes | Confirm platform terms & privacy | Must be checked before submission |
+| Create Account CTA | button | N/A | Submit enrollment | Disabled until required fields valid |
+
+**Business Rules**:
+
+- Password + MFA setup must succeed before account is activated.
+- If invitee already has global Hairline account, screen switches to login-only acceptance flow.
+
+---
+
+#### Screen 8: First-Login Permission Tour
+
+**Purpose**: Educate new members on allowed actions and pending tasks.
+
+**Components**:
+
+- Role overview card (permissions summary).
+- Required next steps (e.g., complete profile, review assigned inquiries handed over via Screen 5).
+- Notification opt-in management referencing FR-020 templates.
+
+**Business Rules**:
+
+- Tour must be acknowledged before hitting dashboard.
+- Logs acceptance in audit trail.
+
+---
+
+### Admin Platform (A-01)
+
+#### Screen 9: Provider Team Directory
+
+**Purpose**: Give Hairline admins a cross-provider view for support and compliance.
+
+**Data Fields / UI Elements**:
+
+| Field Name | Type | Required | Description | Validation / Notes |
+|------------|------|----------|-------------|--------------------|
+| Global Search | input | No | Search by provider name, member email, or status | Debounced; supports wildcard |
+| Provider Name | display (link) | N/A | Provider organization name | Click opens provider profile in admin console |
+| Provider ID | display | N/A | Internal provider identifier | Read-only |
+| Team Member Name | display | N/A | Full name of team member | Read-only |
+| Email | display | N/A | Team member email | Read-only |
+| Role | badge | N/A | Owner/Admin/Doctor/Coordinator | Owner rows show lock icon |
+| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
+| Status | badge | N/A | Active, Invited, Suspended | Color-coded |
+| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
+| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate (read-only) | Buttons enabled based on admin permissions |
+| Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select |
+| Pagination Controls | pagination | N/A | Navigate through result pages | Server-driven |
+
+---
+
+#### Screen 10: Team Size Policy Console
+
+**Purpose**: Centrally configure seat limits and review provider requests.
+
+**Components**:
+
+- Provider detail pane with current limit, utilization, historical changes.
+- Request queue (submitted from Screen 1) with approve/deny workflows.
+- Automation rules (e.g., auto-approve uplift up to 10 seats for verified providers).
+
+**Business Rules**:
+
+- Changes propagate immediately to provider dashboards via pub/sub.
+- Every adjustment recorded with rationale and admin actor.
+
+---
+
+#### Screen 11: Ownership Override Panel
+
+**Purpose**: Allow platform admins to manage exceptional ownership cases.
+
+**Capabilities**:
+
+- Transfer ownership between accounts with dual confirmation.
+- Promote additional owners when contract permits.
+- Revoke ownership (e.g., compliance issue) while selecting successor.
+- Notification hooks into FR-020 templates for affected parties.
+
+**Business Rules**:
+
+- Requires MFA re-auth for admin before finalizing.
+- Generates high-priority audit entries flagged for compliance review.
 
 ---
 
@@ -448,11 +574,13 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### General Module Rules
 
-- **Rule 1**: Every provider organization must have at least one Owner at all times
-- **Rule 2**: Team member accounts are scoped to provider organizations—one email can be associated with multiple provider organizations with different roles
-- **Rule 3**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details
-- **Rule 4**: Invitation links expire after 7 days—expired invitations can be resent with new expiry
-- **Rule 5**: Maximum team size per provider organization: 100 members (soft limit, can be increased by admin)
+- **Rule 1**: Every provider organization must have at least one Owner at all times.
+- **Rule 2**: Owner role assignments cannot be changed or demoted through the provider platform UI; escalations to modify ownership route to the Admin Platform (FR-031) for manual intervention.
+- **Rule 3**: Owner accounts cannot remove themselves, even if multiple Owners exist; ownership changes must be performed by a different Owner or escalated to platform admins.
+- **Rule 4**: Team member accounts are scoped to a single provider organization—an email cannot belong to more than one provider team at a time. Transfers require platform admin intervention.
+- **Rule 5**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
+- **Rule 6**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
+- **Rule 7**: Maximum team size per provider organization defaults to 100 members and is centrally configured from the Admin Platform (FR-031). Providers submit limit-increase requests that must be approved by platform admins before additional invitations are allowed.
 
 ### Data & Privacy Rules
 
@@ -468,6 +596,8 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 **Editable by Admin (Hairline platform admins)**:
 
 - Maximum team size limit per provider (default 100, adjustable 1-500)
+- Ownership overrides (promote/demote Owner role) when compliance requires changes; actions logged and not exposed to providers
+- Force-transfer of ownership when original Owner leaves organization (performed via Admin Platform only)
 - Invitation expiry period (default 7 days, range 1-30 days)
 - Activity log retention period (default 2 years, minimum 1 year for compliance)
 - Force-suspend individual team member accounts for terms violations
@@ -536,6 +666,10 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - **FR-031 / Module A-09**: Admin Access Control & Permissions
   - **Why needed**: Provides the master RBAC framework, default role definitions, and permission matrices that provider teams inherit
   - **Integration point**: Provider team roles are synced with admin-defined permissions; updates from FR-031 propagate to provider invitation, role assignment, and enforcement flows
+
+- **FR-020 / Module S-03**: Notifications & Alerts
+  - **Why needed**: Centralizes transactional templates (email + in-app) for invitations, role changes, removals, and reassignment alerts
+  - **Integration point**: Team management flows publish notification events consumed by FR-020 channels; template changes propagate without code updates
 
 - **FR-006 / Module PR-01**: Provider Authentication & Profile
   - **Why needed**: Team members must authenticate through provider auth system
@@ -719,21 +853,20 @@ A coordinator leaves the clinic and the owner needs to remove their access to th
 
 ---
 
-### User Story 4 - Team Member Accepts Invitation to Join Second Provider (Priority: P2)
+### User Story 4 - Enforce Single-Provider Membership (Priority: P2)
 
-A doctor who already has an account with Provider A is invited by Provider B to also work with them part-time. The doctor accepts the invitation and can now switch between both provider organizations from a single account.
+A clinic owner attempts to invite a surgeon who is currently active in another provider organization. The system blocks the invitation, ensuring staff cannot belong to two providers simultaneously, and guides the owner to request an admin-managed transfer.
 
-**Why this priority**: Supports real-world scenario where medical professionals work with multiple clinics. Improves user experience by avoiding multiple accounts.
+**Why this priority**: Prevents compliance issues, billing confusion, and data leakage between providers by enforcing one-organization-per-member.
 
-**Independent Test**: Invite an existing team member (with account at different provider) to a second provider organization and verify they can switch between both organizations.
+**Independent Test**: Attempt to invite an email that already belongs to a different provider and verify the system blocks the action with the correct escalation path.
 
 **Acceptance Scenarios**:
 
-1. **Given** Provider B owner invites doctor using email that already exists for Provider A, **When** invitation is sent, **Then** system detects existing account and sends special email: "You've been invited to join [Provider B] as Doctor"
-2. **Given** doctor receives invitation email, **When** they click invitation link, **Then** they are directed to login page (not account creation) with message "Log in to accept invitation to [Provider B]"
-3. **Given** doctor logs in with existing credentials, **When** authentication succeeds, **Then** consent screen appears: "Accept invitation to join [Provider B] with role Doctor?"
-4. **Given** doctor clicks "Accept", **When** system processes acceptance, **Then** Provider B is added to doctor's account and they see organization switcher in navigation
-5. **Given** doctor has access to multiple organizations, **When** they use organization switcher dropdown, **Then** they can seamlessly switch between Provider A and Provider B with appropriate role/permissions for each
+1. **Given** Doctor Smith is an active team member of Provider A, **When** Provider B owner enters doctor.smith@clinic.com in the invite form, **Then** system detects the existing membership before sending the invitation.
+2. **Given** the conflict is detected, **When** the owner attempts to proceed, **Then** the form displays blocking error copy: "This email already belongs to another provider team. Contact Hairline Admin to request a transfer."
+3. **Given** owner clicks "Request Transfer" link, **When** request is submitted, **Then** FR-031 admin console receives a task to review and, upon approval, automatically removes the doctor from Provider A before allowing a new invitation.
+4. **Given** the transfer is approved and processed by admins, **When** Provider B re-sends the invitation, **Then** it succeeds because the email is no longer tied to another provider.
 
 ---
 
@@ -806,7 +939,7 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 - **FR-005**: System MUST allow owners and admins to remove team members with immediate access revocation
 - **FR-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
 - **FR-007**: System MUST send email notifications for team management events (invitation, role change, removal)
-- **FR-008**: System MUST support multi-organization accounts—one email can be team member at multiple providers with different roles
+- **FR-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked or escalated for admin-managed transfer
 
 ### Data Requirements
 
@@ -837,11 +970,11 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 
 - **Entity 1 - Team Member**:
   - **Key attributes**: user_id, email, first_name, last_name, status (Active/Invited/Suspended), created_at, last_active_at
-  - **Relationships**: One team member can belong to many provider organizations (multi-organization support). Each membership has a role assignment. One team member has many audit log entries.
+  - **Relationships**: One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. One team member has many audit log entries.
 
 - **Entity 2 - Team Member Organization Role**:
-  - **Key attributes**: team_member_id, provider_org_id, role (Owner/Admin/Doctor/Coordinator), assigned_at, assigned_by
-  - **Relationships**: Links team member to provider organization with specific role. Many-to-many join entity.
+  - **Key attributes**: team_member_id, provider_org_id (unique), role (Owner/Admin/Doctor/Coordinator), assigned_at, assigned_by
+  - **Relationships**: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
 
 - **Entity 3 - Invitation**:
   - **Key attributes**: invitation_id, token (secure random), email, first_name, last_name, role, provider_org_id, invited_by, status (Pending/Accepted/Expired/Cancelled), expires_at, accepted_at
