@@ -31,6 +31,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Patient Platform (P-##)**: No direct patient-facing functionality - patients are unaware of admin oversight
 - **Provider Platform (PR-##)**: No provider-facing functionality - providers don't see admin interventions
 - **Admin Platform (A-01)**: Full patient management interface with search, view, edit, and oversight capabilities
+- **Admin Platform Role Model**: MVP ships with a single Super Admin role; no ranking or tiered permissions are supported yet
 - **Shared Services (S-##)**: Uses S-03 (Notification Service) for alerts and S-05 (Media Storage Service) for accessing patient scans
 
 ### Multi-Tenant Breakdown
@@ -112,30 +113,22 @@ This is a critical operational module that ensures the platform can provide effe
 6. Admin clicks on patient row to view detailed profile
 7. System loads patient detail view with tabbed sections:
    - **Overview**: Profile summary, contact info, current status
-   - **Treatment Journey**: Timeline of inquiries, quotes, bookings, procedures
+   - **Treatment Journey**: Milestone timeline summarizing journey progress with deep links to the latest case stage/inquiry detail
    - **Medical Data**: Medical questionnaire, 3D scans, health history
    - **Payments**: Payment history, outstanding balances, refunds
    - **Communications**: Message history with providers and support
    - **Admin Actions**: Audit log of admin interventions
 8. Admin reviews information and takes action as needed
 
-### Alternative Flows
+### Alternative Flows (Manual Intervention)
 
-**A1: Admin views patient treatment timeline**:
+**A1: Admin views patient treatment milestone timeline**:
 
 - **Trigger**: Admin needs to see complete patient journey from inquiry to completion
 - **Steps**:
   1. From patient detail view, admin selects "Treatment Journey" tab
-  2. System displays chronological timeline of all patient activities:
-     - Inquiry submission with date, destination, treatment type
-     - Quotes received (provider names, amounts, dates)
-     - Quote acceptance
-     - Booking confirmation and payment
-     - Travel arrangements
-     - Procedure date and provider check-in
-     - Aftercare milestones
-     - Final review submission
-  3. Admin can click on any timeline event to see full details
+  2. System displays chronological milestone cards (Inquiry submitted, Quote approved, Booking confirmed, Travel complete, Procedure complete, Aftercare checkpoints)
+  3. Each milestone surfaces concise status + timestamp and includes a "Open Case Detail" link that launches the dedicated inquiry/case page for full context of that stage
 - **Outcome**: Admin understands patient's complete journey and can identify issues
 
 **A2: Admin accesses patient medical data**:
@@ -207,15 +200,15 @@ This is a critical operational module that ensures the platform can provide effe
 **Steps**:
 
 1. Admin locates patient account via search
-2. Admin identifies issue requiring intervention (e.g., patient unable to complete payment, booking needs emergency reschedule)
+2. Admin identifies issue requiring intervention (e.g., patient unable to complete payment, account locked, suspected fraud)
 3. Admin reviews patient's current status and determines appropriate action
 4. Admin selects action from available options:
    - Reset password
    - Unlock account (after failed login attempts)
-   - Manually modify booking dates
-   - Cancel booking with refund
    - Update patient profile information
    - Suspend account (fraud prevention)
+   - Initiate manual refund (when payment service unavailable or support requires override)
+   - Log admin note / follow-up task
 5. System displays confirmation dialog with:
    - Summary of action to be taken
    - Impact on patient (e.g., "Patient will receive password reset email")
@@ -223,10 +216,9 @@ This is a critical operational module that ensures the platform can provide effe
 6. Admin enters justification for intervention (required for audit compliance)
 7. Admin confirms action
 8. System executes action:
-   - Updates patient account/booking status
+   - Updates patient account state
    - Logs action in audit trail with admin ID, timestamp, justification
    - Sends notification to patient (if applicable)
-   - Triggers follow-up actions (e.g., provider notification if booking modified)
 9. System displays confirmation: "Action completed successfully"
 10. Admin verifies change in patient account
 
@@ -247,24 +239,6 @@ This is a critical operational module that ensures the platform can provide effe
   9. System displays: "Password reset email sent to patient"
 - **Outcome**: Patient receives reset email and can regain account access
 
-**A5: Admin manually reschedules booking**:
-
-- **Trigger**: Emergency situation requires changing appointment date (patient medical issue, clinic closure)
-- **Steps**:
-  1. Admin locates patient booking
-  2. Admin clicks "Modify Booking" button
-  3. System displays booking details and available modification options
-  4. Admin selects "Change Appointment Date"
-  5. System fetches provider's available dates
-  6. Admin selects new date in coordination with provider (via separate communication)
-  7. Admin enters justification: "Patient medical emergency - postponed by 2 weeks per provider approval"
-  8. Admin confirms modification
-  9. System updates booking with new date
-  10. System notifies patient of change
-  11. System notifies provider of confirmed new date
-  12. System logs modification in audit trail
-- **Outcome**: Booking rescheduled, all parties notified
-
 **A6: Admin suspends patient account**:
 
 - **Trigger**: Fraud detection system flags suspicious activity or multiple policy violations
@@ -283,45 +257,19 @@ This is a critical operational module that ensures the platform can provide effe
   12. System logs suspension in audit trail with full justification
 - **Outcome**: Account suspended, patient locked out, audit trail created
 
-**B3: Intervention requires approval from senior admin**:
-
-- **Trigger**: Admin attempts high-impact action (manual refund > $1000, permanent account suspension)
-- **Steps**:
-  1. Admin initiates action (e.g., full booking refund)
-  2. System detects action requires senior admin approval
-  3. System displays: "This action requires senior admin approval"
-  4. System creates approval request in admin notification queue
-  5. System notifies senior admin via email and dashboard notification
-  6. Senior admin reviews request with full context and justification
-  7. Senior admin either approves or rejects with reason
-  8. System notifies requesting admin of decision
-  9. If approved, system executes action; if rejected, system logs rejection and no action taken
-- **Outcome**: High-impact actions protected by approval workflow
-
-**B4: Intervention conflicts with active provider action**:
-
-- **Trigger**: Admin attempts to modify booking while provider is simultaneously updating treatment plan
-- **Steps**:
-  1. Admin clicks "Modify Booking"
-  2. System detects concurrent modification by provider
-  3. System displays: "This booking is currently being updated by [Provider Name]. Please wait and retry."
-  4. System prevents conflicting updates (optimistic locking)
-  5. Admin waits 1-2 minutes for provider to complete action
-  6. Admin retries modification
-  7. System allows modification if no longer locked
-- **Outcome**: Data integrity maintained, concurrent modifications prevented
+*Note: Booking modifications or cancellations occur on the dedicated case/inquiry detail page; the intervention flow links admins there rather than duplicating controls.*
 
 ---
 
 ### Main Flow: Patient Support Ticket Resolution
 
 **Actors**: Admin, Patient (indirectly), System
-**Trigger**: Patient submits support request or admin identifies issue requiring follow-up
+**Trigger**: Patient raises an issue via messaging (no direct ticket form in mobile app) or admin identifies issue requiring follow-up
 **Outcome**: Admin resolves issue, patient receives assistance, ticket closed
 
 **Steps**:
 
-1. Admin navigates to "Support Tickets" section (sub-module of patient management)
+1. Admin navigates to "Support Tickets" section (sub-module of patient management); tickets originate from support agents triaging patient messages
 2. System displays list of open tickets filtered by priority (high, medium, low)
 3. Admin selects ticket from list
 4. System displays ticket details:
@@ -336,41 +284,14 @@ This is a critical operational module that ensures the platform can provide effe
    - Payment history
    - Communications with provider
    - Any system error logs
-7. Admin determines resolution action needed (e.g., initiate refund, reset password, contact provider, escalate to technical team)
+7. Admin determines resolution action needed (e.g., initiate refund, reset password, coordinate with provider via messaging)
 8. Admin takes action via patient management interface
 9. Admin returns to ticket and enters resolution notes
 10. Admin updates ticket status to "Resolved"
 11. System sends resolution notification to patient
 12. System closes ticket and archives
 
-### Alternative Flows
-
-**A7: Ticket requires escalation to provider**:
-
-- **Trigger**: Issue involves provider behavior or service quality
-- **Steps**:
-  1. Admin reviews ticket and determines provider involvement needed
-  2. Admin clicks "Escalate to Provider" button
-  3. System creates provider notification with ticket details
-  4. System updates ticket status to "Escalated - Awaiting Provider Response"
-  5. Provider reviews issue and responds via provider dashboard
-  6. System notifies admin of provider response
-  7. Admin reviews response and determines next steps (close ticket, request more info, mediate dispute)
-- **Outcome**: Provider engaged in resolution process
-
-**A8: Ticket requires technical team investigation**:
-
-- **Trigger**: Issue involves platform bug or data integrity problem
-- **Steps**:
-  1. Admin identifies technical issue (e.g., 3D scan upload failed, payment processing error)
-  2. Admin clicks "Escalate to Technical Team" button
-  3. System creates internal engineering ticket with patient context
-  4. System updates support ticket status to "Under Investigation"
-  5. Admin adds notes with reproduction steps and error details
-  6. Technical team investigates and resolves underlying issue
-  7. Technical team notifies admin when fixed
-  8. Admin informs patient of resolution and closes ticket
-- **Outcome**: Technical issue resolved, patient informed
+*Note: Dedicated escalation workflows to providers or the technical team are out of scope for the current release; admins coordinate through existing messaging channels when additional parties are needed.*
 
 **B5: Patient requests data deletion (GDPR)**:
 
@@ -411,6 +332,23 @@ This is a critical operational module that ensures the platform can provide effe
 | Sort By | select | No | Sort results | Options: Name, Date, Status, Last Activity |
 | Results Per Page | select | No | Pagination control | Options: 25, 50, 100 |
 
+**Table Columns (per patient row)**:
+
+| Column | Description |
+|--------|-------------|
+| Patient ID | Canonical `HPID` code (sortable, copy on click) |
+| Patient Name | Avatar, full name, primary email stacked |
+| Phone Number | International format with country code |
+| Age | Derived from DOB for quick clinical context |
+| Problem | Top-level treatment focus (Hair, Beard, Both, etc.) |
+| Location | Country (and city when space allows) |
+| Requested Date | Upcoming/most recent requested treatment window |
+| Med Alerts | Badge: Critical / Standard / None, matches patient medical questionnaire severity |
+| Payment | Latest payment status badge (Paid, Pending, Deposit Due, Refund, etc.) |
+| Stage | Current journey stage badge (Inquiry, Quoted, Scheduled, In Progress, Aftercare, Complete, Cancelled) |
+| Last Active | Relative timestamp of last platform action |
+| Action | Overflow menu with shortcuts: open case, view detail, quick actions |
+
 **Business Rules**:
 
 - Default view shows all patients sorted by last activity (most recent first)
@@ -418,6 +356,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Filters are combinable (e.g., "Status: In-Progress AND Location: UK")
 - Patient list updates in real-time when new patients register (WebSocket push)
 - Patient codes always displayed alongside names for unique identification
+- Row layout mirrors inquiry list so admins immediately recognize patient intent/context
 - Status badges color-coded: Inquiry (blue), Scheduled (green), In-Progress (orange), Completed (gray)
 - Flagged patients show red alert icon with hover tooltip explaining flag reason
 - Clicking row navigates to patient detail view
@@ -428,6 +367,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Export functionality allows downloading filtered results as CSV
 - Bulk actions available for selected patients (e.g., send notification to multiple)
 - Performance: Pagination required; fetch 25 results per page to avoid slow queries
+- **Inline Edit (highlight)**: Every displayed field supports inline editing with autosave + audit logging, so admins can adjust patient info without opening detail view
 
 ---
 
@@ -474,35 +414,32 @@ This is a critical operational module that ensures the platform can provide effe
 
 ### Screen 3: Patient Detail View - Treatment Journey Tab
 
-**Purpose**: Displays chronological timeline of patient's journey from inquiry to completion
+**Purpose**: Displays milestone-level progress of the patient journey and routes admins to the canonical inquiry/case page for deep dives
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Timeline Event | component | Yes (display only) | Visual timeline with event cards | Read-only, chronological |
-| Event Type | badge | Yes (display only) | Inquiry, Quote, Booking, Payment, Treatment, Aftercare | Color-coded |
-| Event Date | datetime | Yes (display only) | When event occurred | Read-only |
-| Event Details | expandable | Yes (display only) | Summary and full details | Click to expand |
-| Event Actions | button-group | No | Admin actions for event | Context-dependent (e.g., "Modify Booking", "View Quote") |
+| Milestone List | component | Yes (display only) | Chronological list of major journey milestones | Read-only, descending |
+| Milestone Name | badge | Yes (display only) | Inquiry Submitted, Quote Approved, Booking Confirmed, Travel Complete, Procedure Complete, Aftercare Checkpoint, etc. | Color-coded |
+| Milestone Date | datetime | Yes (display only) | Timestamp milestone achieved | Read-only |
+| Summary | text | Yes (display only) | Key datapoints (provider, location, payment amount) | 1-2 lines max |
+| Case Detail Link | button | Yes | Opens inquiry/case detail focused on the stage | Opens in new tab; deep link required |
+| Admin Notes | textarea | No | Optional note per milestone | Stored with audit trail |
 
 **Business Rules**:
 
-- Timeline displays events in descending order (most recent at top)
-- Each event card shows: icon, type, date, brief summary
-- Clicking event card expands full details without leaving timeline view
-- Events grouped by journey stage with visual separators
-- Active/in-progress events highlighted with distinct styling
-- Failed actions (e.g., payment failure) marked with red warning icon
-- Admin actions available per event type (e.g., can modify bookings, cannot edit quotes)
-- "Add Admin Note" button available for each event to document interventions
+- Milestones display most recent first and collapse intermediate system events to avoid duplicating case detail
+- Each milestone card includes "Open Case Detail" which navigates to the canonical screen where full actions occur
+- Active/in-progress milestone anchored at top with live status indicator
+- Failed milestones (e.g., payment failed) show warning icon and link to relevant payment record
+- Admin notes are optional but, when provided, log to audit trail referencing the milestone
+- Export generates concise milestone report (no duplicate case data)
 
 **Notes**:
 
-- Timeline auto-scrolls to current active event on page load
-- "Export Timeline" button generates PDF report for sharing/records
-- Real-time updates: New events appear without page refresh
-- Timeline shows which admin performed interventions (admin name and timestamp)
+- Tab emphasizes summary; all rich detail/editing continues to live in Hairline overview/case page
+- Real-time updates still push new milestones without refresh
 
 ---
 
@@ -573,7 +510,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Exchange rates shown for multi-currency bookings
 - Stripe Payment ID links directly to Stripe dashboard for admins with Stripe access
 - "Issue Refund" button available only for succeeded payments
-- Refunds require admin justification and may require senior admin approval (based on amount)
+- Refunds require admin justification; amounts > $1,000 trigger extended confirmation modal (no separate role)
 - Installment plans show: total installments, paid installments, remaining installments, next due date
 
 **Notes**:
@@ -637,18 +574,17 @@ This is a critical operational module that ensures the platform can provide effe
 | Admin Action List | table | Yes (display only) | Chronological log of actions | Sortable, filterable |
 | Action Date | datetime | Yes (display only) | When action occurred | Read-only |
 | Admin Name | text | Yes (display only) | Which admin performed action | Read-only |
-| Action Type | badge | Yes (display only) | Type of intervention | Color-coded (e.g., Password Reset, Booking Modification, Account Suspension) |
+| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Admin Note |
 | Action Description | text | Yes (display only) | Summary of what changed | Read-only |
 | Justification | text | Yes (display only) | Admin reason for action | Read-only, expandable |
 | Impact | badge | No (display only) | Severity of action | Low, Medium, High |
-| Approval Status | badge | No (display only) | If action required approval | Approved, Rejected, Pending (for high-impact actions) |
 
 **Business Rules**:
 
 - **CRITICAL**: All admin actions MUST be logged (audit compliance requirement)
 - Actions displayed in descending chronological order
 - Admin name links to admin profile for accountability
-- High-impact actions (suspensions, large refunds) show approval chain
+- Action types restricted to enumerated list above; any new action type requires PRD update
 - Justification field required for every action (minimum 20 characters)
 - Actions marked as "System-Generated" if automated (e.g., auto-unlock account after lockout period)
 - Export audit log as PDF or CSV for compliance reporting
@@ -662,6 +598,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Audit log integrates with system-wide audit service (S-06)
 - Tamper-proof checksums ensure log integrity
 - Retention: Audit logs retained for minimum 10 years (compliance requirement)
+- All entries currently originate from the single Super Admin role (no role hierarchy in MVP)
 
 ---
 
@@ -671,8 +608,8 @@ This is a critical operational module that ensures the platform can provide effe
 
 - **Rule 1**: All admin actions on patient accounts MUST be logged in audit trail with timestamp, admin ID, and justification
 - **Rule 2**: Admins MUST NOT modify patient medical data (questionnaire responses, scans); medical data is immutable except by patients
-- **Rule 3**: Patient searches return results based on admin's permission level (e.g., junior admins may have restricted access to suspended accounts)
-- **Rule 4**: High-impact actions (account suspension, refunds > $1000, permanent data deletion) MUST require senior admin approval
+- **Rule 3**: MVP supports a single Super Admin role with full visibility/edit rights; granular RBAC is deferred
+- **Rule 4**: High-impact actions (account suspension, refunds > $1000, permanent data deletion) MUST require enhanced confirmation + justification, even though the same Super Admin executes them
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance)
 - **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per compliance requirements (7 years)
 - **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST notify both patient and provider within 5 minutes
@@ -706,11 +643,11 @@ This is a critical operational module that ensures the platform can provide effe
 - Audit log entries (immutable for compliance)
 - Patient password (admin can reset but cannot view current password)
 
-**Requires Senior Admin Approval**:
+**High-Impact Actions (require extended confirmation + justification)**:
 
 - Account suspension (30+ days or permanent)
 - Refunds exceeding $1,000
-- Manual booking modifications during active treatment
+- Manual booking modifications during active treatment (handled on case detail screen)
 - Bulk patient notifications
 - Patient data deletion (GDPR requests)
 
@@ -730,7 +667,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **SC-005**: 90% of patient support tickets resolved within 24 hours using patient management tools
 - **SC-006**: Average time to resolve payment issues reduced by 50% with comprehensive payment history view
 - **SC-007**: Patient satisfaction with admin support interventions rated 4.5+ stars (out of 5)
-- **SC-008**: 95% of admin interventions completed without escalation to senior admin approval
+- **SC-008**: 95% of admin interventions completed in a single pass (no rework/escalation required)
 
 ### Data Governance Metrics
 
@@ -846,7 +783,7 @@ This is a critical operational module that ensures the platform can provide effe
 ### Business Process Assumptions
 
 - **Assumption 1**: Admin team operates during business hours with on-call coverage for emergencies (24/7 monitoring not required initially)
-- **Assumption 2**: Senior admin approval for high-impact actions can be obtained within 4 hours during business hours
+- **Assumption 2**: Super admin coverage is available within 4 business hours to perform any high-impact confirmations
 - **Assumption 3**: Patient support tickets escalate to admin interventions only when support team cannot resolve via communication
 - **Assumption 4**: Admin interventions are exceptional; most patient journeys proceed smoothly without admin involvement (< 10% of patients require intervention)
 
@@ -890,7 +827,7 @@ This is a critical operational module that ensures the platform can provide effe
 ### Security Considerations
 
 - **Authentication**: Admins MUST authenticate via multi-factor authentication (MFA required for production access)
-- **Authorization**: Role-Based Access Control (RBAC) enforced on every API call; junior admins restricted from high-impact actions
+- **Authorization**: Single Super Admin role validated on every API call; additional RBAC tiers deferred but tracked for future scope
 - **Encryption**: All patient data encrypted in transit (TLS 1.3) and at rest (AES-256)
 - **Audit trail**: Every admin action logged with tamper-proof checksums; audit logs immutable (append-only)
 - **Threat mitigation**: Rate limiting on patient search API (max 100 searches per admin per minute) to prevent data scraping
@@ -1076,8 +1013,8 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 
 ### Security & Privacy Requirements
 
-- **FR-016-019**: System MUST enforce role-based access control (RBAC); junior admins restricted from high-impact actions (suspensions, large refunds)
-- **FR-016-020**: System MUST require senior admin approval for high-impact actions: suspensions > 30 days, refunds > $1,000, permanent account deletions
+- **FR-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
+- **FR-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
 - **FR-016-021**: System MUST prevent admins from downloading patient 3D scans unless granted explicit "Download Medical Data" permission
 - **FR-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
 - **FR-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
