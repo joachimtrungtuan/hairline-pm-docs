@@ -450,9 +450,94 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
+#### Screen 6: Team Member Detail Page (Provider Dashboard)
+
+**Purpose**: Provide comprehensive view of individual team member's profile, workload, permissions, and activity for provider owners/admins to manage and monitor.
+
+**Access Control**: Accessible by Owners and Admins only. Team members cannot view other members' detail pages (except their own profile in account settings).
+
+**Entry Points**:
+
+- Click team member name/row in Screen 1 (Team Management Dashboard)
+- Direct link from reassignment workflows
+- Search results in team directory
+
+**Layout Structure**: Tabbed interface with overview header
+
+**Header Section**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Profile Photo | image | No | Team member avatar (default to initials) | JPG/PNG, max 2MB, square aspect |
+| Full Name | display (text) | N/A | First name + Last name | Read-only; click to edit in modal |
+| Email | display (email) | N/A | Primary email address | Read-only |
+| Role Badge | badge | N/A | Current role with lock icon if Owner | Color-coded by role |
+| Status Indicator | badge | N/A | Active / Invited / Suspended | Real-time status |
+| Last Active | display (timestamp) | N/A | Last login or action timestamp | Relative time with tooltip |
+| Quick Actions | button group | N/A | Edit Role, Remove Member, View Activity Log | Context-aware based on actor permissions |
+
+**Tab 1: Overview**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only |
+| Phone Number | display (tel) | No | Contact phone (if provided during setup) | Masked for privacy |
+| Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Admin |
+| Working Hours | display (text) | No | Optional schedule info | Editable by Owner/Admin |
+| Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists |
+| Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes |
+| Team Member Notes | textarea | No | Internal notes visible only to Owners/Admins | Max 1000 chars; supports markdown |
+
+**Tab 2: Activity Log**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 30 days |
+| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Inquiry, Quote, Treatment, Patient Communication, Settings) | Multi-select |
+| Activity Timeline | list/table | N/A | Chronological list of actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address (if enabled) |
+| Export CSV | button | N/A | Download filtered activity log | Includes all columns plus metadata |
+| Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 50 events per page |
+
+**Tab 3: Assigned Work**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category |
+| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority |
+| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens Screen 5 (Task Transfer Wizard) |
+| Filter by Status | dropdown | No | Filter work items by status (Draft, Active, Completed) | Applies to current category tab |
+
+**Tab 4: Performance Insights** *(Optional/Future)*
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Response Time Avg | display (metric) | N/A | Average time to first response on inquiries | Last 30/90 days toggle |
+| Quote Conversion Rate | display (percentage) | N/A | Quotes accepted / total quotes sent | Read-only |
+| Patient Satisfaction | display (rating) | N/A | Average rating from patient feedback | If FR-014 implemented |
+| Activity Heatmap | chart | N/A | Visual representation of activity by day/hour | Helps identify work patterns |
+
+**Business Rules**:
+
+- Owner rows show lock badge on role field with tooltip: "Ownership managed by Hairline Admins. Contact support to change."
+- "Edit Role" action only available if actor has permission (Owners can edit all non-Owners; Admins cannot edit Owners).
+- "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4).
+- Activity log respects privacy rules: IP addresses anonymized after 90 days.
+- If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify).
+- Suspended members show banner: "This member is suspended. Reactivate to restore access."
+- Invited (pending) members show limited data: only Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
+
+**Notes**:
+
+- Real-time updates via SSE when team member is active (status indicator updates).
+- Breadcrumb navigation: Team Management > [Member Name]
+- Mobile responsive: tabs convert to accordion on small screens.
+- Link to team member's public profile (if patient-facing) from header if applicable.
+
+---
+
 ### Team Member Onboarding Experience (Public/PR-01)
 
-#### Screen 6: Invitation Landing
+#### Screen 7: Invitation Landing
 
 **Purpose**: Validate invitation token and orient new team member.
 
@@ -468,7 +553,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
-#### Screen 7: Account Setup & MFA Enrollment
+#### Screen 8: Account Setup & MFA Enrollment
 
 **Purpose**: Collect credentials and enforce security before granting access.
 
@@ -493,7 +578,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
-#### Screen 8: First-Login Permission Tour
+#### Screen 9: First-Login Permission Tour
 
 **Purpose**: Educate new members on allowed actions and pending tasks.
 
@@ -512,7 +597,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### Admin Platform (A-01)
 
-#### Screen 9: Provider Team Directory
+#### Screen 10: Provider Team Directory
 
 **Purpose**: Give Hairline admins a cross-provider view for support and compliance.
 
@@ -535,7 +620,157 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
-#### Screen 10: Team Size Policy Console
+#### Screen 11: Team Member Detail Page (Admin Console)
+
+**Purpose**: Provide platform admins with comprehensive oversight of individual team members across all providers, including audit logs, compliance monitoring, and emergency intervention capabilities.
+
+**Access Control**: Accessible by platform administrators only. Supports read-only impersonation mode for troubleshooting.
+
+**Entry Points**:
+
+- Click team member name/row in Screen 10 (Provider Team Directory)
+- Search results from global admin search
+- Audit investigation links from compliance reports
+- Alert notifications for suspicious activity
+
+**Layout Structure**: Tabbed interface with admin control header
+
+**Header Section**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Profile Photo | image | No | Team member avatar | Read-only; same as provider view |
+| Full Name | display (text) | N/A | First name + Last name | Read-only |
+| Email | display (email) | N/A | Primary email address | Read-only; clickable to send admin email |
+| Provider Organization | display (link) | N/A | Provider name this member belongs to | Click to view provider detail in admin console |
+| Role Badge | badge | N/A | Current role with ownership indicator | Color-coded by role |
+| Status Indicator | badge | N/A | Active / Invited / Suspended / Flagged | Real-time status; "Flagged" shown if compliance alert exists |
+| Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
+| Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
+| Admin Actions | button group | N/A | Force Suspend, Reset Password, Transfer Ownership (if Owner), View Sessions, Impersonate (Read-Only) | High-privilege actions require MFA re-auth |
+
+**Tab 1: Profile & Overview**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Account ID | display (text) | N/A | System-generated unique identifier | Read-only; copyable |
+| Member Since | display (date) | N/A | Invitation acceptance date | Read-only |
+| Phone Number | display (tel) | No | Contact phone | Masked; admin can reveal with MFA |
+| Department/Specialty | display (text) | No | Provider-defined label | Read-only; editable by provider only |
+| Permission Summary | table | N/A | Current role permissions | Read-only; shows effective permissions |
+| Linked Devices | list | N/A | Registered devices for MFA | Includes device type, last used, location |
+| Compliance Flags | alert list | N/A | Active compliance issues or investigations | Links to investigation records |
+| Account Notes (Admin-Only) | textarea | No | Internal admin notes not visible to provider or member | Max 2000 chars; audit-logged on every edit |
+
+**Tab 2: Complete Activity Audit Log**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 90 days; can query up to 2 years |
+| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Patient Access, Data Export, Settings Change, Communication, Treatment) | Multi-select; includes admin-specific categories |
+| Risk Level Filter | dropdown | No | Filter by risk classification (High, Medium, Low) | Auto-classified by system |
+| Activity Timeline | list/table | N/A | Chronological list of all actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address, Location, Device, Risk Level |
+| IP Address Tracking | display | N/A | Full IP history with geolocation | Shows all IPs used; flags VPN/proxy usage |
+| Export Full Audit | button | N/A | Download complete audit trail | CSV/JSON format; includes all fields; requires MFA |
+| Flag for Investigation | button | N/A | Mark activity for compliance review | Creates investigation case in FR-031 |
+| Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 100 events per page |
+
+**Tab 3: Assigned Work**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category |
+| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority; includes patient ID, status, assigned date, last activity |
+| Patient Link | link | N/A | Links to patient detail page in admin console | Opens patient record in FR-016 (Admin Patient Management) |
+| Provider Context | display (badge) | N/A | Shows which provider organization this work belongs to | Always displays since this is admin view |
+| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens reassignment workflow; admin can override provider-level restrictions |
+| Filter by Status | dropdown | No | Filter work items by status (Draft, Active, Completed, Overdue) | Applies to current category tab |
+| Filter by Priority | dropdown | No | Filter by urgency (High, Medium, Low) | Auto-calculated based on SLA deadlines |
+| Workload Metrics | display (widget) | N/A | Summary stats: Total items, Overdue count, Avg response time | Provides context for investigations |
+
+**Business Rules**:
+
+- Admins can view assigned work to understand team member's current responsibilities during investigations
+- All work items link to relevant patient/inquiry/quote records with proper permissions
+- "Overdue" status highlights items past SLA deadlines, supporting compliance reviews
+- Bulk reassign available for emergency situations (e.g., team member suspended, provider transition)
+- Work item access respects admin permissions defined in FR-031 (Admin Access Control)
+- Provides context for questions like: "Why did this member access Patient X's data?" → Check if Patient X is in their assigned work
+
+**Tab 4: Patient Data Access Log**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Patient Accessed | display (link) | N/A | Patient name (anonymized if needed) | Click to view patient detail in admin console |
+| Access Type | badge | N/A | View, Edit, Download, Print, Share | Color-coded by sensitivity |
+| Access Timestamp | display (timestamp) | N/A | When access occurred | Sortable |
+| Data Fields Accessed | list | N/A | Specific patient data fields viewed/edited | E.g., "Medical History", "Photos", "Treatment Notes" |
+| Access Reason | display (text) | No | Business justification if required by policy | Provider-defined or auto-captured |
+| Access Duration | display (duration) | N/A | How long data was viewed | Flags unusually long sessions |
+| Legitimacy Status | badge | N/A | Legitimate / Under Review / Flagged | Manual or auto-classification |
+| Filter by Patient | search | No | Filter log by specific patient | Debounced search |
+
+**Tab 5: Security & Sessions**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Active Sessions | list | N/A | Current logged-in sessions | Shows device, browser, IP, location, started timestamp |
+| Session Actions | button group | N/A | Force Logout (single session), Force Logout All | Requires MFA re-auth |
+| Login History | table | N/A | Last 100 login attempts | Columns: Timestamp, IP, Location, Device, Success/Failure, Failure Reason |
+| Failed Login Count | display (number) | N/A | Failed attempts in last 24 hours | Highlights if >5 attempts |
+| MFA Status | badge | N/A | Enabled / Disabled / Enforced | Shows MFA method (SMS, App, Key) |
+| MFA Reset | button | N/A | Force MFA re-enrollment | Requires MFA re-auth + justification |
+| Password Last Changed | display (timestamp) | N/A | Last password change date | Flags if >90 days old |
+| Force Password Reset | button | N/A | Invalidate password and require reset | Requires MFA re-auth + justification |
+| Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" |
+
+**Tab 6: Provider Relationship**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Current Provider | display (link) | N/A | Provider organization name | Click to view provider profile |
+| Membership Status | badge | N/A | Active / Pending / Suspended / Removed | Current status |
+| Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status |
+| Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason |
+| Transfer History | table | N/A | Provider membership transfers | If email was moved between providers via FR-031 |
+| Transfer to New Provider | button | N/A | Initiate ownership transfer workflow | Opens Screen 13 (Ownership Override Panel) |
+| Remove from Provider | button | N/A | Admin-forced removal | Requires MFA re-auth + justification; logs high-priority audit event |
+
+**Tab 7: Compliance & Investigations**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Active Investigations | list | N/A | Open compliance cases involving this member | Links to investigation records in FR-031 |
+| Compliance Score | display (metric) | N/A | Auto-calculated risk score based on activity patterns | 0-100 scale; <60 flagged for review |
+| Policy Violations | list | N/A | Documented policy breaches | E.g., "Excessive failed logins", "Off-hours patient access" |
+| Warning History | table | N/A | Warnings issued to member or provider | Columns: Date, Violation Type, Issued By, Resolution |
+| Suspension History | table | N/A | Past suspensions and reactivations | Columns: Suspended Date, Reason, Reactivated Date, Notes |
+| Add Compliance Note | textarea | No | Document investigation findings | Max 5000 chars; audit-logged |
+| Escalate to Legal | button | N/A | Flag for legal team review | Creates case in legal system |
+
+**Business Rules**:
+
+- All admin actions (suspend, password reset, session logout, etc.) require MFA re-authentication before execution.
+- Every admin action generates high-priority audit log entry with justification field (required).
+- Owner records show additional "Ownership Transfer" action that launches Screen 13 workflow.
+- "Impersonate (Read-Only)" mode allows admin to view platform as team member would see it, but disables all write actions and displays persistent banner: "Viewing as [Name] - Read-Only Admin Mode."
+- Patient data access log obeys data retention policies: anonymized after 1 year, deleted after 2 years (unless part of active investigation).
+- Compliance flags automatically trigger notification to admin compliance team via FR-020.
+- IP addresses shown in full for admins (not anonymized) to support security investigations.
+- Activity log export includes admin metadata (who exported, when, for what case) for chain of custody.
+
+**Notes**:
+
+- Real-time updates via SSE: session changes, login attempts, and activity updates reflected immediately.
+- Breadcrumb navigation: Admin Dashboard > Provider Team Directory > [Member Name]
+- Mobile responsive with collapsible tabs.
+- Supports "Compare Members" feature: select multiple members and compare activity patterns side-by-side (future enhancement).
+- Integration with FR-031 (Admin Access Control) for permission checks on sensitive actions.
+- Links to patient records respect admin permissions defined in FR-016 (Admin Patient Management).
+
+---
+
+#### Screen 12: Team Size Policy Console
 
 **Purpose**: Centrally configure seat limits and review provider requests.
 
@@ -552,7 +787,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
-#### Screen 11: Ownership Override Panel
+#### Screen 13: Ownership Override Panel
 
 **Purpose**: Allow platform admins to manage exceptional ownership cases.
 
@@ -863,7 +1098,7 @@ A clinic owner attempts to invite a surgeon who is currently active in another p
 
 **Acceptance Scenarios**:
 
-1. **Given** Doctor Smith is an active team member of Provider A, **When** Provider B owner enters doctor.smith@clinic.com in the invite form, **Then** system detects the existing membership before sending the invitation.
+1. **Given** Doctor Smith is an active team member of Provider A, **When** Provider B owner enters <doctor.smith@clinic.com> in the invite form, **Then** system detects the existing membership before sending the invitation.
 2. **Given** the conflict is detected, **When** the owner attempts to proceed, **Then** the form displays blocking error copy: "This email already belongs to another provider team. Contact Hairline Admin to request a transfer."
 3. **Given** owner clicks "Request Transfer" link, **When** request is submitted, **Then** FR-031 admin console receives a task to review and, upon approval, automatically removes the doctor from Provider A before allowing a new invitation.
 4. **Given** the transfer is approved and processed by admins, **When** Provider B re-sends the invitation, **Then** it succeeds because the email is no longer tied to another provider.
@@ -995,6 +1230,7 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-009: Provider Team & Role Management | Claude (AI) |
+| 2025-11-21 | 1.1 | **Screen 11 Enhancement**: Added Tab 3 "Assigned Work" to Admin Console Team Member Detail Page (Screen 11) to provide admins with context on current workload during investigations. Renumbered subsequent tabs (Patient Data Access Log → Tab 4, Security & Sessions → Tab 5, Provider Relationship → Tab 6, Compliance & Investigations → Tab 7). Verified necessity of all admin oversight tabs against original transcription requirements. | Claude (AI) |
 
 ---
 

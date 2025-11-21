@@ -3,7 +3,7 @@
 **Module**: A-01: Patient Management & Oversight
 **Feature Branch**: `fr016-admin-patient-mgmt`
 **Created**: 2025-11-11
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-016 from system-prd.md
 
 ---
@@ -162,7 +162,7 @@ This is a critical operational module that ensures the platform can provide effe
      - Payment method used
      - Currency and exchange rates
   3. Admin can click on transaction to view Stripe payment intent details
-  4. Admin can initiate refund (if authorized) with approval workflow
+  4. Admin can initiate refund with enhanced confirmation for amounts > $1,000
 - **Outcome**: Admin has complete financial picture of patient account
 
 **B1: Admin cannot find patient in search**:
@@ -177,17 +177,6 @@ This is a critical operational module that ensures the platform can provide effe
   3. Admin adjusts search criteria and retries
   4. If still no results, admin checks if patient account exists in different status or was deactivated
 - **Outcome**: Admin either finds patient with adjusted search or confirms patient doesn't exist
-
-**B2: Medical data access denied (insufficient permissions)**:
-
-- **Trigger**: Admin without medical data permissions attempts to access patient health information
-- **Steps**:
-  1. Admin clicks "Medical Data" tab
-  2. System checks admin role permissions
-  3. System displays "Access Denied: You do not have permission to view patient medical data"
-  4. System suggests admin contact supervisor to request elevated permissions
-  5. System logs access denial attempt for security audit
-- **Outcome**: Medical data remains protected; admin knows to request proper permissions
 
 ---
 
@@ -464,14 +453,14 @@ This is a critical operational module that ensures the platform can provide effe
 
 - **CRITICAL**: Admin must enter justification before viewing medical data (audit compliance)
 - Justification dialog appears immediately upon clicking "Medical Data" tab
-- Access denied if admin lacks medical data view permissions
+- All Super Admins have full access to medical data (with mandatory justification)
 - Every access logged with: admin ID, timestamp, justification, data viewed
 - Medical questionnaire responses color-coded by severity:
   - Red (Critical): HIV, blood disorders, heart conditions
   - Yellow (Standard): Allergies, medications, controlled conditions
   - Green (No alerts): No medical concerns
 - 3D scans always watermarked with patient code (prevent unauthorized distribution)
-- Interactive 3D viewer allows rotation, zoom, but NOT download (unless admin has download permission)
+- Interactive 3D viewer allows rotation and zoom; download capability available to all Super Admins (logged in audit trail)
 - Photo gallery supports zoom but prevents right-click save (security measure)
 
 **Notes**:
@@ -618,10 +607,10 @@ This is a critical operational module that ensures the platform can provide effe
 
 - **Privacy Rule 1**: Admin access to patient medical data MUST be logged with justification (Protected Health Information)
 - **Privacy Rule 2**: Patient 3D scans displayed in admin interface MUST be watermarked with patient code (prevent unauthorized distribution)
-- **Privacy Rule 3**: Admin cannot download patient scans unless granted explicit "Download Medical Data" permission
+- **Privacy Rule 3**: Super Admins can download patient scans; all downloads are logged in audit trail for compliance
 - **Privacy Rule 4**: Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance)
 - **Privacy Rule 5**: Patient data deletion requests (GDPR right to be forgotten) MUST result in anonymization + archival, not permanent deletion
-- **Privacy Rule 6**: Archived patient data MUST be inaccessible via normal admin interfaces (requires special archive access permission)
+- **Privacy Rule 6**: Archived patient data accessible only through dedicated archive interface (requires explicit justification and logged access)
 - **Audit Rule**: Every admin action MUST be logged with immutable audit trail (who, what, when, why)
 - **HIPAA/GDPR**: Patient consent required before sharing medical data with third parties; admin cannot share medical data outside platform
 
@@ -755,7 +744,7 @@ This is a critical operational module that ensures the platform can provide effe
   - **Source**: Booking module (P-03), updated throughout booking lifecycle
 
 - **State: Admin Permissions**
-  - **Why needed**: Cannot enforce role-based access control without admin permission configuration
+  - **Why needed**: Cannot authenticate Super Admin access without admin authentication configuration
   - **Source**: Admin authentication and permission module (A-09 System Settings)
 
 - **State: Provider Profiles**
@@ -803,7 +792,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 - **Integration 1**: Admin dashboard fetches patient data from patient microservice API via REST
   - **Data format**: JSON payload with patient profile, status, metadata
-  - **Authentication**: Admin JWT token with role-based permissions
+  - **Authentication**: Admin JWT token with Super Admin role validation
   - **Error handling**: Display cached data if API unavailable; show warning banner
 
 - **Integration 2**: Medical data tab requests 3D scans from media storage service
@@ -868,7 +857,7 @@ Provider claims patient misrepresented medical history. Admin needs to access pa
 1. **Given** admin navigates to patient detail view, **When** admin clicks "Medical Data" tab, **Then** system displays justification prompt requiring admin to enter reason for access (minimum 20 characters)
 2. **Given** admin enters valid justification, **When** admin submits justification, **Then** system logs access in audit trail with timestamp, admin ID, and justification, then displays medical questionnaire with severity flags
 3. **Given** medical questionnaire displayed, **When** admin reviews responses, **Then** critical conditions (HIV, blood disorders) highlighted in red, standard conditions (allergies, medications) in yellow
-4. **Given** admin clicks 3D scan viewer, **When** scan loads, **Then** interactive 3D model displayed with watermark showing patient code; admin can rotate and zoom but cannot download without additional permission
+4. **Given** admin clicks 3D scan viewer, **When** scan loads, **Then** interactive 3D model displayed with watermark showing patient code; admin can rotate, zoom, and download (with audit logging)
 
 ---
 
@@ -959,25 +948,22 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 
 ### Edge Cases
 
-- **Edge Case 1**: What happens when admin attempts to access patient medical data without required "View Medical Data" permission?
-  - **Handling**: System displays "Access Denied: You do not have permission to view patient medical data" message; logs access denial attempt in audit trail; suggests admin contact supervisor for permission elevation
-
-- **Edge Case 2**: How does system handle concurrent admin modifications (two admins modifying same patient booking simultaneously)?
+- **Edge Case 1**: How does system handle concurrent admin modifications (two admins modifying same patient booking simultaneously)?
   - **Handling**: System uses optimistic locking; first admin's change succeeds, second admin receives error: "This booking was just modified by [Admin Name]. Please refresh and retry."; forces second admin to reload current state before making changes
 
-- **Edge Case 3**: What occurs if patient submits support ticket while admin is actively viewing their account?
+- **Edge Case 2**: What occurs if patient submits support ticket while admin is actively viewing their account?
   - **Handling**: System pushes real-time notification to admin's dashboard: "New support ticket from this patient"; admin can click notification to open ticket without losing current context; ticket appears in patient's overview section
 
-- **Edge Case 4**: How to manage admin accessing patient account while patient is actively logged in and making changes?
+- **Edge Case 3**: How to manage admin accessing patient account while patient is actively logged in and making changes?
   - **Handling**: Admin sees banner: "Patient currently active on platform (last activity: 30 seconds ago)"; admin's view refreshes automatically when patient makes changes; if admin attempts modification, system warns: "Patient is actively using the platform - your changes may conflict"
 
-- **Edge Case 5**: What happens when admin tries to reset password for patient who just changed password themselves?
+- **Edge Case 4**: What happens when admin tries to reset password for patient who just changed password themselves?
   - **Handling**: System displays warning: "Patient changed password 5 minutes ago. Reset anyway?"; admin must confirm they still want to reset (logs additional justification); patient receives notification: "Your password was reset by admin - if this wasn't you, contact support immediately"
 
-- **Edge Case 6**: How does system handle patient data deletion request when patient has pending refund?
+- **Edge Case 5**: How does system handle patient data deletion request when patient has pending refund?
   - **Handling**: System prevents deletion: "Cannot process deletion request - patient has pending refund of £500. Deletion will be available after refund completes."; admin can schedule deletion for after refund clears; system sends automated notification when patient becomes eligible
 
-- **Edge Case 7**: What occurs if admin issues refund and Stripe API call fails?
+- **Edge Case 6**: What occurs if admin issues refund and Stripe API call fails?
   - **Handling**: System queues refund for automatic retry (exponential backoff: 1 min, 5 min, 15 min); admin sees status "Refund Pending"; if all retries fail after 1 hour, system alerts admin: "Refund failed - manual intervention required"; admin can review Stripe error and retry manually
 
 ---
@@ -999,7 +985,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 - **FR-016-008**: System MUST allow admins to reset patient passwords with email notification sent to patient
 - **FR-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts
 - **FR-016-010**: System MUST allow admins to manually reschedule bookings with justification, notifying both patient and provider
-- **FR-016-011**: System MUST allow admins to initiate refunds with approval workflow for amounts > $1,000
+- **FR-016-011**: System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000
 - **FR-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification
 - **FR-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
 
@@ -1015,7 +1001,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 
 - **FR-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
 - **FR-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
-- **FR-016-021**: System MUST prevent admins from downloading patient 3D scans unless granted explicit "Download Medical Data" permission
+- **FR-016-021**: System MUST log all admin downloads of patient 3D scans in audit trail with timestamp, admin ID, and justification
 - **FR-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
 - **FR-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
 
@@ -1035,7 +1021,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
   - **Relationships**: One patient has many inquiries; one patient has many bookings; one patient has many payments; one patient has many communications (with providers, support, aftercare)
 
 - **Entity 2 - Admin Action Log (Audit Trail)**
-  - **Key attributes**: action_id, admin_id, patient_id, action_type (password_reset, booking_modification, refund, suspension), action_description, justification, timestamp, impact_level (low, medium, high), approval_status (approved, pending, rejected)
+  - **Key attributes**: action_id, admin_id, patient_id, action_type (password_reset, booking_modification, refund, suspension), action_description, justification, timestamp, impact_level (low, medium, high), approval_status (approved, pending, rejected) - reserved for future RBAC implementation
   - **Relationships**: One admin performs many actions; one patient account has many admin actions performed on it
 
 - **Entity 3 - Medical Data Access Log**
@@ -1053,6 +1039,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-016 Admin Patient Management | AI Assistant |
+| 2025-11-21 | 1.1 | Updated status to ✅ Verified & Approved and aligned admin role/medical access rules | AI Assistant |
 
 ---
 
