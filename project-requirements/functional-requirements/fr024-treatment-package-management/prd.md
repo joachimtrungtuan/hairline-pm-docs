@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
 **Feature Branch**: `fr024-treatment-package-management`
 **Created**: 2025-11-12
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-024 from system-prd.md
 
 ---
@@ -78,15 +78,15 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 **Admin Entry Points**:
 
-- Admin navigates to "Settings > Treatment Catalog" in admin platform
+- Admin navigates to "Settings > Treatment Settings" in admin platform
 - Admin selects "Create New Treatment" to add treatment type
 - Admin edits existing treatment by selecting from treatment list
 
 **Provider Entry Points**:
 
-- Provider navigates to "Settings > Services" in provider platform
+- Provider navigates to "Products & Services > Treatments" in provider platform
 - Provider accesses "Treatment Pricing" to configure pricing for admin-created treatments
-- Provider navigates to "Settings > Packages" to manage their package catalog
+- Provider navigates to "Products & Services > Packages" to manage their package catalog
 - Provider selects "Create Package" to add new package offering
 - During quote creation, provider selects from available treatments and packages
 
@@ -108,7 +108,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 **Steps**:
 
-1. Admin navigates to "Settings > Treatment Catalog" in admin platform
+1. Admin navigates to "Settings > Treatment Settings" in admin platform
 2. Admin clicks "Create New Treatment" button
 3. System displays treatment creation form
 4. Admin enters treatment details:
@@ -136,7 +136,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Admin needs to update treatment information (video, description, technique details)
 - **Steps**:
-  1. Admin navigates to "Settings > Treatment Catalog"
+  1. Admin navigates to "Settings > Treatment Settings"
   2. Admin searches or filters for the treatment to edit
   3. Admin clicks "Edit" on the treatment card
   4. System displays treatment edit form with current values pre-filled
@@ -167,7 +167,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Provider wants to offer a new treatment or update pricing for existing treatment
 - **Steps**:
-  1. Provider navigates to "Settings > Services > Treatment Pricing"
+  1. Provider navigates to "Products & Services > Treatments > Treatment Pricing"
   2. System displays list of all active treatments from admin catalog
   3. Provider selects treatment to configure
   4. Provider enters pricing details:
@@ -224,7 +224,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 **Steps**:
 
-1. Provider navigates to "Settings > Packages" in provider platform
+1. Provider navigates to "Products & Services > Packages" in provider platform
 2. Provider clicks "Create New Package" button
 3. System displays package creation form
 4. Provider selects package type from dropdown:
@@ -256,7 +256,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Provider needs to update package details (pricing, description, availability)
 - **Steps**:
-  1. Provider navigates to "Settings > Packages"
+  1. Provider navigates to "Products & Services > Packages"
   2. Provider searches or filters for package to edit
   3. Provider clicks "Edit" on package card
   4. System displays package edit form with current values
@@ -272,7 +272,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Provider no longer wants to offer a specific package (seasonal unavailability, cost changes)
 - **Steps**:
-  1. Provider navigates to "Settings > Packages"
+  1. Provider navigates to "Products & Services > Packages"
   2. Provider clicks "Deactivate" on package card
   3. System checks if any active quotes include this package
   4. System displays warning: "X active quotes include this package"
@@ -286,7 +286,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Provider wants to create similar package with slight variations (e.g., 3-night vs 5-night hotel)
 - **Steps**:
-  1. Provider navigates to "Settings > Packages"
+  1. Provider navigates to "Products & Services > Packages"
   2. Provider clicks "Clone" on existing package
   3. System creates copy of package with "(Copy)" appended to name
   4. Provider modifies cloned package details (name, duration, price)
@@ -315,7 +315,9 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ## Screen Specifications
 
-### Screen 1: Admin Treatment Catalog (List View)
+### Admin Platform (A-XX)
+
+#### Screen 1: Admin Treatment Catalog (List View)
 
 **Purpose**: Display all treatments in the platform catalog, allow filtering and searching, provide access to create/edit/deactivate treatments
 
@@ -350,7 +352,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ---
 
-### Screen 2: Admin Treatment Creation/Edit Form
+#### Screen 2: Admin Treatment Creation/Edit Form
 
 **Purpose**: Allow admin to create new treatment or edit existing treatment details, upload media assets, configure technique specifications
 
@@ -391,7 +393,47 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ---
 
-### Screen 3: Provider Treatment Pricing Configuration
+### Provider Platform (PR-XX)
+
+#### Screen 3: Provider Package Catalog (List View)
+
+**Purpose**: Display all packages created by provider, allow filtering by package type, provide access to create/edit/deactivate packages
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Package Name | text | Yes | Display name of package | Max 100 chars |
+| Package Type | badge | Yes | Category: Hotel, Transport, Flights, Medication, PRP, Consultation, Custom | Display as colored badge |
+| Pricing | number | Yes | Package price | Format with currency symbol |
+| Duration | text | No | e.g., "5 nights", "1 session" | Display if applicable |
+| Availability | badge | Yes | "Available" (green) or "Unavailable" (gray) | Visual indicator |
+| Usage Count | number | N/A | Number of quotes including this package | Calculated field |
+| Last Updated | date | N/A | Timestamp of last modification | Auto-generated |
+| Actions | buttons | N/A | Edit, Clone, Deactivate, View Details buttons | N/A |
+
+**Business Rules**:
+
+- Available packages appear at top of list, unavailable packages at bottom
+- Search box filters by package name in real-time
+- Filter dropdown allows filtering by package type
+- "Create New Package" button always visible at top right
+- Clone button creates copy of package for quick variations
+- Deactivate button warns if package is in active quotes
+- Usage count shows how many times package has been included in quotes
+- Packages can be sorted by name, price, type, or usage count
+
+**Notes**:
+
+- Use card-based layout showing package thumbnail if image uploaded
+- Display package type with color-coded badges (Hotel = blue, Transport = green, etc.)
+- Show quick-edit pencil icon on hover for fast price updates
+- Pagination: 20 packages per page
+- Provide bulk actions: "Deactivate Selected", "Export to CSV"
+
+---
+
+#### Screen 4: Provider Treatment Pricing Configuration
 
 **Purpose**: Allow provider to view admin-created treatments, configure pricing for treatments they want to offer, enable/disable treatments
 
@@ -433,45 +475,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ---
 
-### Screen 4: Provider Package Catalog (List View)
-
-**Purpose**: Display all packages created by provider, allow filtering by package type, provide access to create/edit/deactivate packages
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Package Name | text | Yes | Display name of package | Max 100 chars |
-| Package Type | badge | Yes | Category: Hotel, Transport, Flights, Medication, PRP, Consultation, Custom | Display as colored badge |
-| Pricing | number | Yes | Package price | Format with currency symbol |
-| Duration | text | No | e.g., "5 nights", "1 session" | Display if applicable |
-| Availability | badge | Yes | "Available" (green) or "Unavailable" (gray) | Visual indicator |
-| Usage Count | number | N/A | Number of quotes including this package | Calculated field |
-| Last Updated | date | N/A | Timestamp of last modification | Auto-generated |
-| Actions | buttons | N/A | Edit, Clone, Deactivate, View Details buttons | N/A |
-
-**Business Rules**:
-
-- Available packages appear at top of list, unavailable packages at bottom
-- Search box filters by package name in real-time
-- Filter dropdown allows filtering by package type
-- "Create New Package" button always visible at top right
-- Clone button creates copy of package for quick variations
-- Deactivate button warns if package is in active quotes
-- Usage count shows how many times package has been included in quotes
-- Packages can be sorted by name, price, type, or usage count
-
-**Notes**:
-
-- Use card-based layout showing package thumbnail if image uploaded
-- Display package type with color-coded badges (Hotel = blue, Transport = green, etc.)
-- Show quick-edit pencil icon on hover for fast price updates
-- Pagination: 20 packages per page
-- Provide bulk actions: "Deactivate Selected", "Export to CSV"
-
----
-
-### Screen 5: Provider Package Creation/Edit Form
+#### Screen 5: Provider Package Creation/Edit Form
 
 **Purpose**: Allow provider to create new package or edit existing package details, upload package images, configure pricing and availability
 
@@ -510,48 +514,6 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Display character count for description field
 - Provide "Save as Draft" option to save incomplete package
 - Show success message: "Package saved successfully"
-
----
-
-### Screen 6: Quote Creation - Treatment & Package Selection (Provider)
-
-**Purpose**: Allow provider to select treatment and packages when creating a quote for patient inquiry, display pricing summary
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Treatment Selection | dropdown/cards | Yes | Select one treatment from configured treatments | Must select exactly one |
-| Treatment Price | number (read-only) | N/A | Base price for selected treatment | Display from configuration |
-| Graft Count | number | Yes | Estimated graft count for patient | Must be between min/max for treatment |
-| Graft Price | number (calculated) | N/A | Graft count × price per graft | Auto-calculated if applicable |
-| Package Selection | checkbox list | No | Select zero or more packages to include | Multiple selection allowed |
-| Package Prices | number (read-only) | N/A | Price for each selected package | Display from package configuration |
-| Subtotal | number (calculated) | N/A | Treatment + graft + packages | Auto-calculated |
-| Discount | number | No | Optional discount amount or percentage | Must be ≥ 0 and ≤ subtotal |
-| Total Quote Amount | number (calculated) | Yes | Final amount after discount | Auto-calculated, read-only |
-
-**Business Rules**:
-
-- Only treatments configured with "Offered" status appear in selection
-- Only packages with "Available" status appear in selection
-- Treatment selection is required, package selection is optional
-- Graft count must be within min/max range defined in treatment configuration
-- If treatment has no graft-based pricing, graft count field is hidden
-- Package selection shows package type icons for quick visual identification
-- Discount field validates that discount doesn't exceed subtotal
-- Total quote amount updates in real-time as selections change
-- Selected treatment and packages are locked into quote version upon submission
-
-**Notes**:
-
-- Display treatment cards with video thumbnail and description preview
-- Show package checkboxes with images and pricing
-- Real-time pricing calculator on right sidebar
-- Highlight recommended packages based on patient inquiry details
-- Provide "Bundle Discount" option to apply discount to specific package combinations
-- Display currency consistently throughout (based on provider account default)
-- Save quote draft automatically every 30 seconds
 
 ---
 
@@ -620,6 +582,30 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Provider can create unlimited packages (no platform-imposed limit)
 - Provider cannot modify packages already included in submitted quotes (version locked)
 
+### Localization Rules
+
+**Translatable Content** (uses i18n keys from FR-021):
+
+- Treatment descriptions and technique specifications
+- Package names and descriptions
+- All UI labels and error messages
+
+**Non-Translatable Content** (remains in English for consistency):
+
+- Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic)
+- Package type enum values (Hotel, Transport, Flights, Medication, PRP, Consultation, Custom)
+- Media file names and CDN URLs
+
+**Note**: This module depends on FR-021 (Multi-Language & Localization) for i18n infrastructure. FR-021 must be updated to include treatment and package content in its translation management scope.
+
+### Field Calculation Rules
+
+**Calculated Fields** (auto-generated, not user input):
+
+- **Number of Providers** (Screen 1): `COUNT(provider_treatment_pricing WHERE treatment_id = X AND status = 'Offered')`
+- **Usage Count** (Screen 3): `COUNT(quote_packages WHERE package_id = X AND quote.status IN ('submitted', 'accepted', 'scheduled'))`
+- **Last Updated** (all screens): Database `updated_at` timestamp, displayed in user's local timezone
+
 ---
 
 ## Success Criteria
@@ -676,6 +662,11 @@ This module directly impacts provider quote submission capabilities and ensures 
 - **FR-009 / Module PR-01**: Auth & Team Management
   - **Why needed**: Role-based permissions determine which provider staff can manage packages
   - **Integration point**: Permission checks for package creation/editing based on staff role
+
+- **FR-021 / Module A-09 + S-02**: Multi-Language & Localization
+  - **Why needed**: Treatment descriptions, package names/descriptions require multi-language support
+  - **Integration point**: Uses i18n service to store/retrieve translated content for treatment and package text fields
+  - **Action required**: FR-021 must be updated to include treatment and package content types in translation management scope
 
 - **FR-026 / Module A-09**: App Settings & Configuration (Self-Dependency)
   - **Why needed**: This module is part of A-09 and shares configuration infrastructure
@@ -802,7 +793,7 @@ Admin adds a new treatment type (FUE) to the platform catalog with video, images
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is logged into admin platform, **When** admin navigates to "Settings > Treatment Catalog" and clicks "Create New Treatment", **Then** system displays treatment creation form with all fields (name, type, description, video upload, image upload, technique specs)
+1. **Given** admin is logged into admin platform, **When** admin navigates to "Settings > Treatment Settings" and clicks "Create New Treatment", **Then** system displays treatment creation form with all fields (name, type, description, video upload, image upload, technique specs)
 2. **Given** admin fills out treatment form with valid data and uploads 50MB video, **When** admin clicks "Save Treatment", **Then** system uploads video to S3, generates CDN URL, saves treatment record with "Active" status, and displays success message
 3. **Given** new treatment is saved, **When** provider navigates to "Settings > Treatment Pricing", **Then** provider sees new treatment in available treatment list and can configure pricing
 
@@ -818,7 +809,7 @@ Provider views admin-created treatments and configures pricing for treatments th
 
 **Acceptance Scenarios**:
 
-1. **Given** provider is logged into provider platform, **When** provider navigates to "Settings > Services > Treatment Pricing", **Then** system displays list of all active treatments from admin catalog
+1. **Given** provider is logged into provider platform, **When** provider navigates to "Products & Services > Treatments > Treatment Pricing", **Then** system displays list of all active treatments from admin catalog
 2. **Given** provider selects treatment to configure, **When** provider enters base price (£2,500), price per graft (£2.00), graft range (1,000-5,000), and toggles status to "Offered", **Then** system saves pricing configuration and displays success message
 3. **Given** provider has configured treatment pricing, **When** provider creates new quote and selects treatment, **Then** treatment appears in quote with configured pricing auto-populated
 
@@ -834,7 +825,7 @@ Provider creates a hotel package offering (5-star hotel, 5 nights) with descript
 
 **Acceptance Scenarios**:
 
-1. **Given** provider is logged into provider platform, **When** provider navigates to "Settings > Packages" and clicks "Create New Package", **Then** system displays package creation form
+1. **Given** provider is logged into provider platform, **When** provider navigates to "Products & Services > Packages" and clicks "Create New Package", **Then** system displays package creation form
 2. **Given** provider fills out package form (name: "5-Star Hotel - 5 Nights", type: Hotel, description, duration: "5 nights", price: £300, uploads 3 images), **When** provider clicks "Save Package", **Then** system uploads images to S3, saves package record, and displays success message
 3. **Given** package is saved, **When** provider creates quote and views package selection, **Then** new package appears in available packages list with images and pricing displayed
 
@@ -980,6 +971,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-12 | 1.0 | Initial PRD creation for FR-024 Treatment & Package Management | AI Assistant |
+| 2025-11-28 | 1.1 | Updated navigation paths, localization scope, and marked PRD as verified | AI Assistant |
 
 ---
 
@@ -987,13 +979,13 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | Hairline Product Team | 2025-11-28 | ✅ Approved |
+| Technical Lead | Hairline Engineering | 2025-11-28 | ✅ Approved |
+| Stakeholder | Hairline Leadership | 2025-11-28 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-11-28

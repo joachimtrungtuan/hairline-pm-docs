@@ -128,7 +128,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 ### Alternative Flows
 
-**A1: Admin Saves Provider as Draft for Later Completion**
+**A1: Admin Saves Provider as Draft for Later Completion**:
 
 - **Trigger**: Admin does not have all required information during provider creation session
 - **Steps**:
@@ -139,7 +139,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
   5. When all required fields complete, admin finalizes creation and optionally activates provider
 - **Outcome**: Provider record saved as draft, admin can complete later without data loss
 
-**A2: Admin Configures Tier-Based Commission Structure**
+**A2: Admin Configures Tier-Based Commission Structure**:
 
 - **Trigger**: Admin selects "Tier-based" commission type during provider creation
 - **Steps**:
@@ -153,7 +153,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
   5. System calculates provider's current tier based on completed procedure count (initially Tier 1 for new providers)
 - **Outcome**: Tier-based commission structure configured, provider commission rate adjusts automatically as procedure count increases
 
-**A3: Admin Marks Provider as Featured for Patient App Visibility**
+**A3: Admin Marks Provider as Featured for Patient App Visibility**:
 
 - **Trigger**: Admin wants to highlight a high-quality provider in patient discovery interfaces
 - **Steps**:
@@ -167,7 +167,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
   8. System logs featured status change in audit trail
 - **Outcome**: Provider designated as featured, visible in patient app's prominent provider sections
 
-**A4: Admin Approves Uploaded Provider Documents**
+**A4: Admin Approves Uploaded Provider Documents**:
 
 - **Trigger**: Admin reviews provider documents that were uploaded during creation or by provider later
 - **Steps**:
@@ -181,7 +181,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
   8. If all required documents approved, system enables "Activate Provider" button (if provider still in Draft status)
 - **Outcome**: Document verified and approved, provider can proceed toward activation
 
-**B1: Admin Rejects Provider Document with Reason**
+**B1: Admin Rejects Provider Document with Reason**:
 
 - **Trigger**: Admin identifies issue with uploaded provider document (expired, illegible, incorrect document type)
 - **Steps**:
@@ -196,7 +196,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
   9. System prevents provider activation until all required documents approved
 - **Outcome**: Document rejected with clear reason, provider notified to correct and re-upload
 
-**B2: Admin Attempts to Activate Provider with Incomplete Documentation**
+**B2: Admin Attempts to Activate Provider with Incomplete Documentation**:
 
 - **Trigger**: Admin tries to activate provider before all required documents are approved
 - **Steps**:
