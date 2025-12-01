@@ -482,10 +482,8 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only |
 | Phone Number | display (tel) | No | Contact phone (if provided during setup) | Masked for privacy |
 | Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Admin |
-| Working Hours | display (text) | No | Optional schedule info | Editable by Owner/Admin |
 | Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists |
 | Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes |
-| Team Member Notes | textarea | No | Internal notes visible only to Owners/Admins | Max 1000 chars; supports markdown |
 
 **Tab 2: Activity Log**:
 
@@ -495,7 +493,6 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Inquiry, Quote, Treatment, Patient Communication, Settings) | Multi-select |
 | Activity Timeline | list/table | N/A | Chronological list of actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address (if enabled) |
 | Export CSV | button | N/A | Download filtered activity log | Includes all columns plus metadata |
-| Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 50 events per page |
 
 **Tab 3: Assigned Work**:
 
@@ -504,16 +501,6 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category |
 | Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority |
 | Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens Screen 5 (Task Transfer Wizard) |
-| Filter by Status | dropdown | No | Filter work items by status (Draft, Active, Completed) | Applies to current category tab |
-
-**Tab 4: Performance Insights** *(Optional/Future)*
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Response Time Avg | display (metric) | N/A | Average time to first response on inquiries | Last 30/90 days toggle |
-| Quote Conversion Rate | display (percentage) | N/A | Quotes accepted / total quotes sent | Read-only |
-| Patient Satisfaction | display (rating) | N/A | Average rating from patient feedback | If FR-014 implemented |
-| Activity Heatmap | chart | N/A | Visual representation of activity by day/hour | Helps identify work patterns |
 
 **Business Rules**:
 
@@ -524,13 +511,6 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify).
 - Suspended members show banner: "This member is suspended. Reactivate to restore access."
 - Invited (pending) members show limited data: only Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
-
-**Notes**:
-
-- Real-time updates via SSE when team member is active (status indicator updates).
-- Breadcrumb navigation: Team Management > [Member Name]
-- Mobile responsive: tabs convert to accordion on small screens.
-- Link to team member's public profile (if patient-facing) from header if applicable.
 
 ---
 
@@ -696,20 +676,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - Work item access respects admin permissions defined in FR-031 (Admin Access Control)
 - Provides context for questions like: "Why did this member access Patient X's data?" → Check if Patient X is in their assigned work
 
-**Tab 4: Patient Data Access Log**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient Accessed | display (link) | N/A | Patient name (anonymized if needed) | Click to view patient detail in admin console |
-| Access Type | badge | N/A | View, Edit, Download, Print, Share | Color-coded by sensitivity |
-| Access Timestamp | display (timestamp) | N/A | When access occurred | Sortable |
-| Data Fields Accessed | list | N/A | Specific patient data fields viewed/edited | E.g., "Medical History", "Photos", "Treatment Notes" |
-| Access Reason | display (text) | No | Business justification if required by policy | Provider-defined or auto-captured |
-| Access Duration | display (duration) | N/A | How long data was viewed | Flags unusually long sessions |
-| Legitimacy Status | badge | N/A | Legitimate / Under Review / Flagged | Manual or auto-classification |
-| Filter by Patient | search | No | Filter log by specific patient | Debounced search |
-
-**Tab 5: Security & Sessions**:
+**Tab 4: Security & Sessions**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
@@ -723,7 +690,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Force Password Reset | button | N/A | Invalidate password and require reset | Requires MFA re-auth + justification |
 | Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" |
 
-**Tab 6: Provider Relationship**:
+**Tab 5: Provider Relationship**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
@@ -734,18 +701,6 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Transfer History | table | N/A | Provider membership transfers | If email was moved between providers via FR-031 |
 | Transfer to New Provider | button | N/A | Initiate ownership transfer workflow | Opens Screen 13 (Ownership Override Panel) |
 | Remove from Provider | button | N/A | Admin-forced removal | Requires MFA re-auth + justification; logs high-priority audit event |
-
-**Tab 7: Compliance & Investigations**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Active Investigations | list | N/A | Open compliance cases involving this member | Links to investigation records in FR-031 |
-| Compliance Score | display (metric) | N/A | Auto-calculated risk score based on activity patterns | 0-100 scale; <60 flagged for review |
-| Policy Violations | list | N/A | Documented policy breaches | E.g., "Excessive failed logins", "Off-hours patient access" |
-| Warning History | table | N/A | Warnings issued to member or provider | Columns: Date, Violation Type, Issued By, Resolution |
-| Suspension History | table | N/A | Past suspensions and reactivations | Columns: Suspended Date, Reason, Reactivated Date, Notes |
-| Add Compliance Note | textarea | No | Document investigation findings | Max 5000 chars; audit-logged |
-| Escalate to Legal | button | N/A | Flag for legal team review | Creates case in legal system |
 
 **Business Rules**:
 
