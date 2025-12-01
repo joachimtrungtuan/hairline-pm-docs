@@ -41,6 +41,10 @@ Verify module progress checklist accuracy by cross-checking subflows against cod
    - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
 4. `local-docs/project-requirements/transcriptions/*.txt` - All transcription files for client requirements - **REQUIRED**
    - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
+5. **FR-Specific PRD Files** - For each FR number referenced in checklist, load corresponding PRD from `local-docs/project-requirements/functional-requirements/fr###-*/prd.md` - **REQUIRED**
+   - Extract FR numbers from checklist (e.g., FR-001, FR-003)
+   - Load matching PRD file (e.g., `fr001-patient-authentication/prd.md`)
+   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
 
 ### Step 2: Understand Status Symbols
 
@@ -60,6 +64,19 @@ Verify module progress checklist accuracy by cross-checking subflows against cod
 - **Shared Services (S-*)**: Backend only
 
 For **EACH** subflow item, perform checks based on module type:
+
+**CRITICAL**: Before verifying each subflow item, **MUST** first:
+
+1. **Read PRD Section**: Load and read the corresponding PRD section (workflow, screen specification, or business rule) that describes the subflow
+2. **Identify Implementation Areas**: From the PRD, extract:
+   - **Frontend (if applicable)**: Screen names, component names, UI elements, form fields, navigation flows mentioned in PRD
+   - **Backend**: API endpoint patterns, controller names, model names, business logic steps, validation rules mentioned in PRD
+   - **Data Requirements**: Fields, relationships, storage requirements mentioned in PRD
+3. **Map to Codebase**: Use PRD details to identify specific files/components/endpoints to verify:
+   - PRD screen names → Frontend component files (e.g., "Login Screen" → `Login.jsx` or `LoginForm.jsx`)
+   - PRD workflow steps → Backend controller methods (e.g., "Password Reset Initiation" → `PasswordResetController@initiate`)
+   - PRD data fields → Model attributes and migrations
+4. **Verify Against PRD**: Check that implementation matches PRD specifications exactly
 
 #### 3.1 Backend Verification (ALL Modules)
 
@@ -81,14 +98,38 @@ For **EACH** subflow item, perform checks based on module type:
 3. **UI Components**: Verify UI matches PRD, complete workflows/forms, correct navigation/routing
 4. **User Experience**: Check loading states, error messages, success feedback, form validation
 
-#### 3.3 Cross-Reference Verification
+#### 3.3 PRD-Guided Verification Process
+
+**CRITICAL**: For **EACH** subflow item, **MUST** follow this process:
+
+1. **Load Relevant PRD Section**:
+   - Identify which FR number the subflow belongs to from checklist
+   - Load corresponding PRD file: `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`
+   - Navigate to relevant section (Workflow, Screen Specification, or Business Rule) that describes the subflow
+   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
+
+2. **Extract Implementation Targets from PRD**:
+   - **Screen Specifications**: Extract screen names, component names, data fields, business rules
+   - **Workflow Steps**: Extract API endpoint patterns, controller actions, validation requirements
+   - **Business Rules**: Extract model relationships, data constraints, security requirements
+   - **Data Fields**: Extract required fields, validation rules, relationships
+
+3. **Map PRD to Codebase Locations**:
+   - PRD screen name → Search for matching component in `main/hairline-frontend/src/`
+   - PRD workflow step → Search for matching route/controller in `main/hairline-backend/routes/api.php` and `app/Http/Controllers/`
+   - PRD data fields → Search for matching model attributes in `app/Models/` and migrations
+
+4. **Verify Implementation Matches PRD**:
+   - Compare actual implementation with PRD specifications
+   - Check if all PRD requirements are implemented
+   - Document any discrepancies between PRD and implementation
+
+#### 3.4 Cross-Reference Verification
 
 **MUST** cross-reference:
 
-1. **PRD Documents**: Load from `local-docs/project-requirements/functional-requirements/fr###-*/prd.md` - compare checklist with PRD, verify implementation matches
-   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
-2. **System Technical Spec**: Check `local-docs/project-requirements/system-technical-spec.md` if available - verify API structure matches
-3. **System PRD & Client Requirements**: Verify module codes/FR numbers match system PRD, align with client transcriptions, identify discrepancies
+1. **System Technical Spec**: Check `local-docs/project-requirements/system-technical-spec.md` if available - verify API structure matches
+2. **System PRD & Client Requirements**: Verify module codes/FR numbers match system PRD, align with client transcriptions, identify discrepancies
    - System PRD GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
    - Transcriptions GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
 

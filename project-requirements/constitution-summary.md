@@ -137,13 +137,14 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **A-09**: System Settings & Configuration (P1)
 - **A-10**: Communication Monitoring & Support (P1)
 
-### Shared Services (5 independently deployable)
+### Shared Services (independently deployable)
 
 - **S-01**: 3D Scan Processing Service (P1)
 - **S-02**: Payment Processing Service (Stripe integration) (P1)
 - **S-03**: Notification Service (email, SMS, push notifications) (P1)
 - **S-04**: Travel API Gateway (flights, hotels) (P2)
 - **S-05**: Media Storage Service (images, 3D scans, documents) (P1)
+- **S-06**: Audit Log Service (centralized, immutable audit trail) (P1)
 
 ## Security & Compliance Highlights
 

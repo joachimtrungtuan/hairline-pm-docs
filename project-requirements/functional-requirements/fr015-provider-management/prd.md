@@ -51,8 +51,8 @@ The Provider Management module enables administrators to onboard, verify, and ma
 **Shared Services (S-XX)**:
 
 - **S-03 (Notification Service)**: Sends email/SMS notifications to providers when status changes (account activated, documents approved/rejected, account suspended)
-- **S-04 (File Storage Service)**: Stores uploaded provider documents with secure access controls and encryption
-- **S-05 (Audit Logging Service)**: Logs all provider management actions (creation, edits, status changes, document verifications) for compliance and oversight
+- **S-05 (Media Storage Service)**: Stores uploaded provider documents with secure access controls and encryption
+- **S-06 (Audit Log Service)**: Logs all provider management actions (creation, edits, status changes, document verifications) for compliance and oversight
 
 ### Communication Structure
 
@@ -515,13 +515,13 @@ The Provider Management module enables administrators to onboard, verify, and ma
   - **Why needed**: Providers must receive email/SMS notifications when admins activate accounts, approve/reject documents, or suspend/deactivate accounts
   - **Integration point**: A-02 triggers notification events to S-03 API with templates (e.g., "account_activated", "document_rejected") and provider contact details; S-03 sends templated emails/SMS asynchronously
 
-- **FR-XXX / Module S-04: File Storage Service**
+- **FR-XXX / Module S-05: Media Storage Service**
   - **Why needed**: Provider documents (licenses, certifications, insurance) must be securely stored with encryption and access controls
-  - **Integration point**: A-02 uploads documents to S-04 API with metadata (provider ID, document type, expiration date); S-04 returns secure download URLs accessible only to authorized admins
+  - **Integration point**: A-02 uploads documents to S-05 API with metadata (provider ID, document type, expiration date); S-05 returns secure download URLs accessible only to authorized admins
 
-- **FR-XXX / Module S-05: Audit Logging Service**
+- **FR-XXX / Module S-06: Audit Log Service**
   - **Why needed**: All provider management actions (creation, edits, status changes, document verifications) must be logged for compliance and audit trails
-  - **Integration point**: A-02 sends audit log events to S-05 API with structured data (timestamp, admin user ID, action type, entity ID, before/after values); S-05 persists logs and provides query interface for admin reporting
+  - **Integration point**: A-02 sends audit log events to S-06 API with structured data (timestamp, admin user ID, action type, entity ID, before/after values); S-06 persists logs and provides query interface for admin reporting
 
 ### External Dependencies (APIs, Services)
 
@@ -537,7 +537,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 - **External Service 3: Cloud File Storage (e.g., AWS S3, Google Cloud Storage)**
   - **Purpose**: Stores uploaded provider documents (licenses, certifications, insurance) with encryption at rest
-  - **Integration**: S-04 File Storage Service uploads documents to cloud storage via SDK/API with server-side encryption (AES-256)
+  - **Integration**: S-05 Media Storage Service uploads documents to cloud storage via SDK/API with server-side encryption (AES-256)
   - **Failure handling**: If upload fails, A-02 displays error to admin: "Document upload failed. Please retry." Document upload retries automatically up to 3 times before failing
 
 ### Data Dependencies
@@ -643,7 +643,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 - **Compliance**:
   - HIPAA-compliant data handling for provider medical licenses and certifications (PHI data)
   - GDPR compliance for provider personal data (name, email, phone) with data retention policies (deactivated providers' data retained 7 years, then eligible for deletion)
-  - SOC 2 Type II audit trail requirements met via S-05 Audit Logging Service integration
+  - SOC 2 Type II audit trail requirements met via S-06 Audit Log Service integration
 
 ---
 
@@ -786,10 +786,10 @@ Provider logs into Provider Platform after admin activates account and views pro
 ### Integration Requirements
 
 - **FR-015**: System MUST trigger notification events to S-03 Notification Service when provider account activated, documents approved/rejected, or status changes (suspended/deactivated), including provider email/phone and notification template ID
-- **FR-016**: System MUST upload provider documents to S-04 File Storage Service with metadata (provider ID, document type, expiration date) and receive secure download URLs for admin access
+- **FR-016**: System MUST upload provider documents to S-05 Media Storage Service with metadata (provider ID, document type, expiration date) and receive secure download URLs for admin access
 - **FR-017**: System MUST expose read-only API endpoint for Provider Platform (PR-01) to fetch individual provider's own profile data (authenticated via provider user token, cannot access other providers' data)
 - **FR-018**: System MUST expose public API endpoint for Patient Platform (P-02) to fetch featured provider listings (filtered by status = Active AND featured = true) with fields: name, clinic, specialty, profile photo URL
-- **FR-019**: System MUST send structured audit log events to S-05 Audit Logging Service for all provider management actions with event type, entity ID, admin user, timestamp, and before/after values
+- **FR-019**: System MUST send structured audit log events to S-06 Audit Log Service for all provider management actions with event type, entity ID, admin user, timestamp, and before/after values
 
 ### Functional Requirements Needing Clarification
 

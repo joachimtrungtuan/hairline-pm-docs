@@ -23,7 +23,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - **Patient Platform (P-XX)**: No direct patient-facing functionality
 - **Provider Platform (PR-01)**: Complete team management interface, role assignment, permission controls, team member invitations, activity audit logs
 - **Admin Platform (A-01)**: Oversight of all provider teams, ability to view team structures, audit team member activities across providers, manage suspended accounts
-- **Shared Services (S-02)**: Email service for team member invitations, S-04: Authentication service for team member login
+- **Shared Services (S-03, S-06)**: S-03 Notification Service for team member invitations and management emails; S-06 Audit Log Service for immutable recording of team management actions
 
 ### Multi-Tenant Breakdown
 
@@ -51,12 +51,11 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - Analytics on team sizes, role distribution across platform
 - Override capability for emergency access removal
 
-**Shared Services (S-02, S-04)**:
+**Shared Services (S-03, S-06)**:
 
-- S-02: Email service sends invitation emails with secure signup links
-- S-04: Authentication service handles team member account creation, login, password reset
-- S-04: Session management maintains role/permission context
-- S-05: Audit logging service records all team management actions
+- S-03: Notification Service sends invitation and team-management emails with secure signup links
+- Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks
+- S-06: Audit Log Service records all team management actions for compliance
 
 ### Communication Structure
 
@@ -521,7 +520,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - Owner rows show lock badge on role field with tooltip: "Ownership managed by Hairline Admins. Contact support to change."
 - "Edit Role" action only available if actor has permission (Owners can edit all non-Owners; Admins cannot edit Owners).
 - "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4).
-- Activity log respects privacy rules: IP addresses anonymized after 90 days.
+- Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period.
 - If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify).
 - Suspended members show banner: "This member is suspended. Reactivate to restore access."
 - Invited (pending) members show limited data: only Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
@@ -816,12 +815,13 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - **Rule 5**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
 - **Rule 6**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
 - **Rule 7**: Maximum team size per provider organization defaults to 100 members and is centrally configured from the Admin Platform (FR-031). Providers submit limit-increase requests that must be approved by platform admins before additional invitations are allowed.
+- **Rule 8**: Detailed permission matrices and per-feature toggles are defined centrally in FR-031; FR-009 defines provider team roles and consumes those centrally managed permissions rather than allowing clinics to edit them directly in this module.
 
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Team member email addresses are visible only within their own provider organization
 - **Privacy Rule 2**: Team member activity logs are accessible only to Owners and Admins within same organization
-- **Privacy Rule 3**: IP addresses in activity logs are anonymized after 90 days (retain only country-level location)
+- **Privacy Rule 3**: IP addresses in team member activity logs are retained in full for security and compliance investigations, subject to the global audit log retention and access rules defined in the Constitution
 - **Privacy Rule 4**: Removed team members' historical records are archived (not deleted) for compliance—visible only to Owners and platform admins
 - **Audit Rule**: All access to team member data must be logged with timestamp, accessing user, and action performed
 - **GDPR Compliance**: Team members can request data export (personal data only) and account deletion (marks as deleted, archives for compliance period)
@@ -906,31 +906,27 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
   - **Why needed**: Centralizes transactional templates (email + in-app) for invitations, role changes, removals, and reassignment alerts
   - **Integration point**: Team management flows publish notification events consumed by FR-020 channels; template changes propagate without code updates
 
-- **FR-006 / Module PR-01**: Provider Authentication & Profile
-  - **Why needed**: Team members must authenticate through provider auth system
-  - **Integration point**: Team member accounts use same authentication service, session management, and login flows as provider owners
+- **FR-015 / Module A-02**: Provider Management (Admin-Initiated)
+  - **Why needed**: Provider organizations and initial owner accounts are created and managed by admins; team members attach to these provider entities
+  - **Integration point**: Team member records reference provider organizations and owners created via FR-015 flows
 
-- **FR-007 / Module PR-02**: Provider Inquiry Management
+- **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
+  - **Why needed**: Owner-level settings (including billing, notification preferences, and profile details) rely on FR-009 roles (especially Owner) for access control
+  - **Integration point**: FR-032 screens use FR-009 role permissions (via PR-01/FR-031) to gate access to sensitive settings like billing
+
+- **FR-003 & FR-004 / Module PR-02**: Inquiry Submission & Distribution; Quote Submission & Management
   - **Why needed**: Team members need role-based access to inquiries
-  - **Integration point**: Inquiry views filter and permission checks based on team member role
-
-- **FR-008 / Module PR-03**: Provider Quote Management
-  - **Why needed**: Doctors and Coordinators need access to create and manage quotes
-  - **Integration point**: Quote creation and editing respects role permissions
+  - **Integration point**: Inquiry and quote views apply FR-009 role permissions (via PR-02) when filtering and enforcing what each team member can see and edit
 
 - **FR-010 / Module PR-04**: Treatment Execution & Documentation
   - **Why needed**: Doctors need access to record treatment details
   - **Integration point**: Treatment workflow checks team member role before allowing procedure documentation
 
-- **Module S-02**: Notification Service
+- **Module S-03**: Notification Service
   - **Why needed**: Email invitations, role change notifications, removal notifications
   - **Integration point**: Team management triggers send email events to notification service
 
-- **Module S-04**: Authentication & Authorization Service
-  - **Why needed**: Centralized auth for all team members, session management
-  - **Integration point**: Team member login, password reset, session tokens
-
-- **Module S-05**: Audit Logging Service
+- **Module S-06**: Audit Log Service
   - **Why needed**: Record all team management actions for compliance
   - **Integration point**: All team management operations write to centralized audit log
 
@@ -1152,9 +1148,6 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 - **What occurs if team member clicks invitation link on mobile device vs desktop?**
   Invitation link and account creation flow are fully responsive—works on any device. After account creation, mobile user is prompted to "Download Mobile App" (if patient platform) or "Bookmark this page" (if provider web app).
 
-- **How to manage team member who belongs to 10+ provider organizations?**
-  Organization switcher becomes dropdown menu with search/filter capability. Recent organizations appear at top. Pin favorite organizations for quick access. Limit: maximum 20 provider organizations per team member account (soft limit, can be increased by admin).
-
 - **What happens if owner removes team member while they're actively submitting a quote?**
   System allows in-progress transaction to complete (quote submission succeeds). However, after submission completes, session is invalidated on next request. Team member sees: "Your access has been removed. Please contact clinic owner."
 
@@ -1167,6 +1160,8 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 
 ### Core Requirements
 
+> Note: This section summarizes the normative requirements already described in Business Workflows, Screen Specifications, and Business Rules. In case of conflict, the Business Rules section prevails.
+
 - **FR-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry)
 - **FR-002**: System MUST support four distinct roles with hierarchical permissions: Owner, Admin, Doctor, Coordinator
 - **FR-003**: System MUST enforce role-based access control for all provider platform features and data
@@ -1178,12 +1173,16 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 
 ### Data Requirements
 
+> Note: Data requirements are summarized here for traceability; field-level definitions and provenance are specified in Screen Specifications and Key Entities.
+
 - **FR-009**: System MUST maintain team member records with: name, email, role, status (Active/Invited/Suspended), invitation date, acceptance date, last activity timestamp
 - **FR-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), sender, recipient email, role offered
 - **FR-011**: System MUST store role permission definitions in configuration (Owner, Admin, Doctor, Coordinator permission sets)
 - **FR-012**: System MUST maintain team member-to-provider organization relationships with role assignment per organization
 
 ### Security & Privacy Requirements
+
+> Note: Security and privacy requirements extend the platform-wide Constitution; see Business Rules and the Constitution for non-negotiable baselines.
 
 - **FR-013**: System MUST log all team management actions in audit trail with: timestamp, actor, action type, target team member, old values, new values, IP address
 - **FR-014**: System MUST invalidate all active sessions for a team member within 5 seconds of role change or removal
@@ -1193,6 +1192,8 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 - **FR-018**: System MUST enforce rate limiting on invitations: maximum 10 invitations per hour per provider organization
 
 ### Integration Requirements
+
+> Note: Integration requirements summarize how FR-009 interacts with shared services and other FRs; detailed interaction patterns are documented in Dependencies and Implementation Notes.
 
 - **FR-019**: System MUST integrate with email service to send invitation and notification emails with 99%+ delivery rate
 - **FR-020**: System MUST integrate with authentication service to create team member accounts and manage sessions
