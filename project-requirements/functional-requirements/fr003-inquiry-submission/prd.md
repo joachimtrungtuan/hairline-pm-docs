@@ -358,33 +358,34 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Videos: MP4 ≤ 30s, ≤ 20MB each
 - Text fields have character limits
 
-#### Screen 4: 3D Head Scan Capture
+#### Screen 4: Head Video Capture (V1 3D Scan Substitute)
 
-**Purpose**: Patient captures 3D head scan for provider assessment
+**Purpose**: Patient captures guided head video for provider assessment (V1 implementation of “3D scan”)
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| 3D Scan | capture | Yes | 3D head scan data | Quality threshold must pass |
+| Head Video | capture | Yes | Guided head video of patient’s head | Must meet duration/quality constraints from FR-002 |
 | Quality Indicators | derived | Yes | Real-time quality feedback | Retake if below threshold |
 
 **Notes**:
 
-- Scan Instructions:
-  - Visual guidance for positioning
+- Capture Instructions:
+  - Visual guidance for positioning (front, top, left, right angles)
   - Quality indicators and feedback
   - Retake options available
-- Scan Data:
-  - 3D model capture
-  - Quality validation and storage confirmation
+- Media Characteristics (V1):
+  - Guided video file (not true 3D model)
+  - Validated and processed by FR-002 engine and S-01/S-05
+  - Future 3D model capture and interactive viewer deferred to V2 (per system PRD)
 
 **Business Rules**:
 
-- Scan must meet minimum quality threshold
-- Patient can retake scan if quality poor
-- Scan data encrypted and stored securely
-- Scan accessible to providers for assessment
+- Head video must meet minimum quality threshold required by FR-002
+- Patient can retake capture if quality poor
+- Captured media encrypted and stored securely
+- Media accessible to providers for assessment via engine outputs
 
 #### Screen 5: Treatment Date Selection
 
@@ -580,7 +581,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Patient (Masked):
   - Display name: First name + last initial + asterisks (e.g., "John D*****")
   - Age, Gender, Country (contact details masked until payment)
-  - Anonymized patient identifier everywhere except admin
+  - Patient ID (HPID-based) visible; name, phone number, and email remain masked/hidden until acceptance/payment
 - Countries:
   - Full list of selected treatment countries (ISO country + display name)
   - Primary country highlighted; remaining listed in order selected
@@ -728,7 +729,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - Provider suggestions based on positive reviews and admin curation
 
 3. **Data Access Rules**
-   - Patient data anonymized until quote acceptance
+   - Patient direct identifiers (name, phone number, email) anonymized until payment confirmation
    - Provider access limited to assigned inquiries
    - Admin has full access to all inquiry data
    - All data access logged for audit trail
@@ -759,7 +760,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - All data encrypted at rest and in transit
 
 2. **Data Access**
-   - Patient data anonymized until payment confirmation
+   - Patient direct identifiers (name, phone number, email) anonymized until payment confirmation
    - Provider access limited to assigned inquiries
    - Admin access logged for audit trail
    - Cross-tenant data access through authenticated APIs only
@@ -887,7 +888,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ### Security & Privacy Requirements
 
-- **FR-008**: System MUST anonymize patient identifiers and mask names prior to acceptance.
+- **FR-008**: System MUST mask patient names and hide phone numbers and email addresses until payment confirmation; patient ID (HPID-based) may remain visible as a pseudonymous identifier.
 - **FR-009**: System MUST encrypt all inquiry-related data at rest and in transit, and maintain immutable audit logs.
 
 ### Integration Requirements
@@ -911,6 +912,17 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
   - Relationships: belongsTo Inquiry
 - **Scan**: inquiryId, storageUrl, qualityScore, metadata
   - Relationships: belongsTo Inquiry
+
+### Inquiry Payload (Composition)
+
+- Every Inquiry record MUST, at minimum, include:
+  - Destinations (selected treatment countries/locations)
+  - Treatment date ranges (up to configured limits)
+  - Problem details and questionnaireSummary (including derived medical alerts)
+  - Media attachments (photos/videos and/or head video/scanRef from FR-002)
+  - Linked patient identifier (HPID-based patientId)
+  - Distribution metadata via related ProviderInquiry records
+- These fields MUST be fully populated before an inquiry is eligible for distribution to providers.
 
 ## Dependencies
 
@@ -1049,6 +1061,7 @@ Acceptance Scenarios:
 |------|---------|---------|--------|
 | 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, field tables, FR summary, entities, appendices | Product & Engineering |
+| 2025-12-01 | 1.2 | Aligned with client scope by removing unsourced budget requirement from System PRD, defining explicit inquiry payload composition, and clarifying anonymization to keep IDs visible while masking name/phone/email until payment confirmation | Product & Engineering |
 
 ## Appendix: Approvals
 

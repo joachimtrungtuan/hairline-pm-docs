@@ -201,7 +201,7 @@ The Hairline Platform consists of four distinct applications serving different u
 
 2. **Inquiry Submission**
    - Selects preferred countries/cities for treatment
-   - Specifies budget range and preferred dates
+   - Selects preferred treatment dates
    - Submits inquiry to matching providers
    - System distributes inquiry to providers in selected locations
 
@@ -424,7 +424,6 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 **Requirements**:
 
 - Patients MUST be able to select multiple countries/cities for treatment (max 10 countries)
-- Patients MUST specify budget range (min-max in preferred currency)
 - Patients MUST indicate preferred treatment dates (max 10 date ranges, up to 2 years in future)
 - Patients MUST select preferred providers (max 5 providers) based on reviews and admin curation
 - System MUST distribute inquiry to providers in selected locations OR explicitly selected by patient
@@ -437,7 +436,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Business Rules**:
 
-- Inquiry MUST include: patient scan, medical history, preferences, budget, provider preferences
+- Inquiry MUST include: patient scan, medical history, destinations, treatment date ranges, and selected providers
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
 - System MUST filter providers by: location, active status, available capacity, patient explicit selection
 - Provider suggestions MUST be based on: positive reviews, admin curation

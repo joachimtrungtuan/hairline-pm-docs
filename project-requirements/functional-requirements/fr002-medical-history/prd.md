@@ -139,7 +139,7 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 **Response (to FR-003 / PR-02)**:
 
 - normalized { responsesNormalized, templateVersionUsed }
-- alerts RiskTag[] { code, label, severity (info|warn|critical), rationale, derivedFrom }
+- alerts RiskTag[] { code, label, severity (critical|standard|none), rationale, derivedFrom }
 - media { storedUri, watermarkRef, validationStatus }
 - audit { processingId, processedAt }
 
@@ -163,6 +163,7 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 1. Patient PII is hidden from providers until booking payment is confirmed; providers see anonymized ID only.
 2. Medical records retained minimum 7 years; deletion requests result in archival/anonymization (no hard deletes).
 3. All access is role-based; admin access is logged with justification for sensitive views.
+4. Intake payloads and media artifacts processed under this FR are encrypted in transit (TLS 1.3) and at rest (AES-256), in alignment with the Constitution and FR-026.
 
 ### Media Rules (Head Video Intake)
 
@@ -290,7 +291,7 @@ Acceptance Scenarios:
   - Key attributes: templateVersionUsed, rulesetVersion, processingId, processedAt
   - Relationships: links to stored media artifact and audit log
 
-- RiskTag: code, label, severity(info|warn|critical), rationale, derivedFrom
+- RiskTag: code, label, severity(critical|standard|none), rationale, derivedFrom
   - Relationships: belongs to IntakeProcessingResult
 
 - MediaArtifact: storedUri, watermarkRef, validationStatus, metadata
