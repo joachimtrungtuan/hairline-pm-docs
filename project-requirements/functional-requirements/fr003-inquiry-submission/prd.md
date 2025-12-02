@@ -723,7 +723,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 2. **Distribution Rules**
    - System distributes inquiry to providers in selected countries OR explicitly selected by patient
    - Providers must respond within 48 hours (configurable)
-   - Provider capacity limits affect distribution
+   - Provider capacity limits affect distribution where capacity data is available; until the dedicated Provider Capacity Management FR is delivered, capacity checks are advisory and MUST NOT block inquiry distribution
    - Admin can manually assign inquiries
    - Patient can select maximum 5 preferred providers
    - Provider suggestions based on positive reviews and admin curation

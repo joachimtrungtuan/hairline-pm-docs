@@ -426,6 +426,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Patients MUST be able to select multiple countries/cities for treatment (max 10 countries)
 - Patients MUST indicate preferred treatment dates (max 10 date ranges, up to 2 years in future)
 - Patients MUST select preferred providers (max 5 providers) based on reviews and admin curation
+- Patients can only have one active inquiry at a time
 - System MUST distribute inquiry to providers in selected locations OR explicitly selected by patient
 - System MUST limit inquiry distribution to maximum 10 providers
 - Providers MUST receive inquiry notification within 5 minutes
@@ -441,6 +442,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - System MUST filter providers by: location, active status, available capacity, patient explicit selection
 - Provider suggestions MUST be based on: positive reviews, admin curation
 - Patient names MUST be partially masked until quote acceptance
+- Admins MAY see full patient identity (unmasked) in A-01 views for compliance and support purposes
 - Medical alerts MUST be color-coded: red (critical), yellow (standard), green (no alerts)
 - Date ranges MUST display primary range prominently with tooltip for additional ranges
 - Time display MUST use relative format for recent inquiries, specific format for older ones
