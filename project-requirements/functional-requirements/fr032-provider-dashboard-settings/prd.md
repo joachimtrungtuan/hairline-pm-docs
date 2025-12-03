@@ -47,6 +47,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers (Owner role only) manage billing settings (bank account details)
 - Providers access Help Centre with read-only content
 - Providers request account deletion (soft-delete with admin approval)
+- Providers preview their public-facing profile (About card, languages, awards, staff, reviews) directly inside the dashboard
+- Providers browse a dedicated Reviews page to read patient feedback, filter by rating, and respond if workflow allows (responses handled by future enhancement; current scope is read-only)
 
 **Admin Platform (A-XX)**:
 
@@ -112,7 +114,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 6. Provider selects supported languages from multi-select dropdown (consumes FR-021 language list)
 7. Provider edits clinic name, description, contact email
 8. Provider clicks "Add Award" to add new award entry
-   - System opens award form (name, description, year, award image)
+   - System opens award form (name, issuer/organization, description, year, award image)
    - Provider fills award details and uploads award image
    - System validates award image (<2MB)
 9. Provider clicks "Save Changes"
@@ -122,6 +124,21 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 13. System logs profile change in audit trail (user, timestamp, fields changed)
 14. System updates provider profile in quote comparison views (visible to patients)
 
+### Supporting Flow: Preview Public Profile
+
+**Actors**: Provider (any role), System  
+**Trigger**: Provider clicks "Preview public profile" or navigates to Provider Profile Preview screen  
+**Outcome**: Provider reviews read-only representation of their public profile (Screen 6) with quick links back to editable sections.
+
+**Steps**:
+
+1. Provider selects "Preview public profile" from Profile screen or navigation.
+2. System loads Screen 6 showing hero, About card, languages, awards, staff, and reviews preview.
+3. Provider reviews content; if adjustments needed, provider follows contextual CTA (e.g., "Edit profile", "Add award") to return to relevant editor.
+4. Provider refreshes preview to confirm updates; system reflects latest saved data within 1 minute.
+
+**Outcome**: Provider confirms public profile accuracy and quickly returns to edit sections as needed.
+
 ### Alternative Flows
 
 **A1: Provider Edits Existing Award**:
@@ -129,7 +146,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Trigger**: Provider clicks "Edit" icon on existing award entry
 - **Steps**:
   1. System opens award editor pre-filled with existing award data
-  2. Provider modifies award name, description, year, or replaces award image
+  2. Provider modifies award name, issuer/organization, description, year, or replaces award image
   3. Provider clicks "Save"
   4. System validates changes and updates award entry
   5. System displays success message
@@ -226,6 +243,23 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 10. System logs preference change in audit trail
 11. System updates S-03 Notification Service with new preference rules
 12. S-03 enforces preferences for all future notifications (e.g., aftercare notifications will NOT be sent)
+
+### Supporting Flow: Browse Reviews
+
+**Actors**: Provider (any role), System  
+**Trigger**: Provider selects `Reviews` from navigation or from the Profile Preview "View all" link  
+**Outcome**: Provider views Screen 7 to filter/sort reviews and read full feedback that corresponds to review notifications.
+
+**Steps**:
+
+1. Provider opens Reviews page.
+2. System loads rating summary, distribution bars, filters, and first page of review cards.
+3. Provider applies rating filters or changes sort order (e.g., "Most recent").
+4. System updates list instantly; provider paginates if needed to view more results.
+5. If provider arrived via a Review Notification, the associated review is auto-highlighted/highlighted within list.
+6. Provider clicks "View on profile" (optional) to jump to Screen 6 preview anchored on reviews section.
+
+**Outcome**: Provider can quickly review patient sentiment and correlate it with notifications without modifying review content.
 
 ### Alternative Flows
 
@@ -681,9 +715,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 | Clinic Logo/Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px |
 | Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars |
 | Clinic Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars |
-| Contact Email | email | Yes | Clinic contact email | Valid email format |
+| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format |
+| Clinic Phone (Public) | text | No | Public-facing clinic phone number shown in profile \"About\" section | Numeric characters, spaces, +, -, and parentheses allowed; max 25 chars |
+| Clinic Website URL | url | No | Public-facing clinic website shown in profile \"About\" section | Valid URL format (http/https) |
+| Clinic Country | dropdown | No | Country where clinic is located | Values from system country list (shared with FR-026); optional but recommended |
+| Clinic City | text | No | City where clinic is located | Max 100 chars |
 | Supported Languages | multi-select dropdown | Yes | Languages spoken at clinic | At least 1 language required, consumes FR-021 language list |
-| Awards List | repeatable section | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) |
+| Awards List | repeatable section | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) |
 
 **Business Rules**:
 
@@ -692,8 +730,11 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Clinic description displayed in provider card in patient app
 - Supported languages shown as tags below clinic name
 - Awards displayed in expandable "Awards & Certifications" section in provider detail view
+- Contact email, clinic phone (public), website URL, and location (city/country) displayed in "About" section of provider public profile
+- Clinic city/country data is shared with discovery/search modules (FR-021/FR-003) to help patients filter providers by location; providers must keep this accurate
 - Profile changes logged in audit trail with timestamp and user
 - Profile updates propagate to patient app within 1 minute
+- All profile fields described in this screen are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable)
 
 **Notes**:
 
@@ -702,6 +743,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Allow crop/resize functionality for logo to ensure proper aspect ratio
 - Awards section should support reordering (drag-and-drop) to prioritize most important awards
 - Provide character counter for description field to help provider stay within limit
+- Awards list should be presented as cards/rows with inline **Edit** and **Delete** actions per award entry; clicking **Add award** or **Edit** opens a modal with all provider-editable award fields (name, issuer/organization, description, year, image)
+- Supported languages may surface in a dedicated `Language` sub-tab within the Profile page; the same data fields apply, but the UI should present each selected language as a removable chip/pill so providers can add/remove languages individually with immediate visual feedback
 
 ---
 
@@ -731,6 +774,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Password change event logged in audit trail (timestamp, user ID, IP address)
 - Email notification sent to provider email address after successful password change (security alert)
 - Password must be changed every 90 days per security policy (system prompts provider)
+- The `Settings → Account Information` tab also displays provider **First Name** and **Account Email** fields for the logged-in user; both are provider-editable and changes are persisted to the user account record (per PR-01/Auth)
+- All account-level fields on this screen (first name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to FR-026 security rules and FR-009 role permissions
 
 **Notes**:
 
@@ -740,6 +785,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Timezone dropdown should include offset and city examples (e.g., "(GMT+3) Istanbul")
 - Provide "Show/Hide Password" toggle icon for password fields
 - Display last password change date below password section
+- Include a dedicated **Delete Account** warning card at the bottom of the Account Information tab with explanatory copy and a red `Delete account` button; clicking the button opens the Account Deletion dialog described in the "Request Account Deletion" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
+- Account Settings shares the Settings page with Notification Preferences as a two-tab interface; the `Account Information` tab (this screen) is the default tab when landing on Settings
 
 ---
 
@@ -770,6 +817,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels
 - Preference changes logged in audit trail
 - Preference updates propagate to S-03 within 1 minute
+- All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard
 
 **Notes**:
 
@@ -778,6 +826,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Show real-time preview of notification channels (e.g., "You will receive Quote Notifications via Email and Push")
 - Display last preference update timestamp
 - Provide "Test Notification" button to send sample notification and verify settings work
+- Notification Preferences appears as the second tab on the Settings page beside Account Information; toggling between tabs should maintain unsaved changes warning if applicable
 
 ---
 
@@ -859,6 +908,67 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ---
 
+### Screen 6: Provider Public Profile Preview
+
+**Purpose**: Provide providers with an in-dashboard, read-only preview of how their clinic profile appears to patients (cover image, About card, languages, awards, staff, reviews) while surfacing quick links to edit the underlying data.
+
+**Sections / Data Sources**:
+
+| Section | Description | Data Source | Editability |
+|---------|-------------|-------------|-------------|
+| Hero / Cover | Large hero image with clinic logo, name, rating badge, and "Edit profile" button | Cover: static asset (future enhancement to allow uploads); logo/name from Provider Profile; rating from Reviews service | Cover non-editable in FR-032; logo/name editable via Screen 1 |
+| About Card | Clinic description, public email, public phone, website, city, country | Provider Profile fields defined in Screen 1 | Provider-editable |
+| Language Chips | Pill list of supported languages | Supported languages (Screen 1) | Provider-editable via language chips |
+| Awards & Recognition | Card list with medal icon, award name, issuer, year, description snippet | Awards list (Screen 1) | Provider-editable |
+| Staff Section | Grid of staff avatars with names/roles and seat usage badge | PR-01 / Team Management module | Read-only in FR-032 |
+| Reviews Preview | Snapshot of recent reviews (rating, reviewer, excerpt) with "View all" link | Reviews module (Screen 7) | Read-only content; link navigates to Screen 7 |
+
+**Business Rules**:
+
+- Preview reflects latest saved profile data; updates render within 1 minute after provider saves edits.
+- "Edit profile" CTA deep links to Screen 1; "Manage staff" (if shown) links to PR-01; "View all reviews" links to Screen 7.
+- If a section has no data (e.g., no awards), display an empty-state illustration with CTA to add data.
+- Cover/hero image remains static for MVP; future provider-uploadable hero images are out of scope for FR-032.
+
+**Notes**:
+
+- Show rating average and total review count above reviews preview, sourced from Reviews service.
+- Preview should be responsive and accessible (keyboard navigation, ARIA landmarks).
+- Include quick breadcrumb back to Provider Dashboard.
+
+---
+
+### Screen 7: Reviews
+
+**Purpose**: Allow providers to browse all patient reviews from the dashboard, apply filters/sorting, and open full review details that correspond to review notifications.
+
+**Data Fields / UI Elements**:
+
+| Element | Type | Description | Editability |
+|---------|------|-------------|-------------|
+| Overall Rating Summary | display | Average rating (e.g., 4.8/5), total reviews count, badges | Read-only |
+| Rating Distribution | bar chart | Percentage/count for 5★ through 1★ reviews | Read-only |
+| Rating Filters | checkbox/pill group | Selectable filters (5★, 4★, etc.) | Provider-editable filters (client-side) |
+| Sort Dropdown | dropdown | Values: Most recent (default), Highest rated, Lowest rated | Provider-editable control |
+| Review Cards | list | Reviewer avatar/name, treatment type, rating stars, review date, review text, optional "Respond" future CTA | Review content read-only |
+| Pagination Controls | control group | Page numbers, next/previous, page-size selector (10/20/50 per page) | Provider-editable control |
+
+**Business Rules**:
+
+- Reviews data is read-only in FR-032; providers cannot edit/delete reviews but may filter/sort/paginate locally.
+- Filters and sort selections persist per user session for convenience.
+- Clicking a review notification opens this page with the relevant review auto-highlighted/scrolled into view.
+- Data sourced from Reviews service; ensure loading/empty/error states (e.g., "No reviews found for selected filters").
+- Exporting reviews or replying to reviews may be handled in future FRs; not in current scope.
+
+**Notes**:
+
+- Provide link back to Provider Public Profile Preview to see how reviews appear to patients.
+- Show timestamp of last sync with Reviews service.
+- Display contextual helper text encouraging providers to maintain quick response times.
+
+---
+
 ## Business Rules
 
 ### General Module Rules
@@ -867,6 +977,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts which bypass preferences)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles denied access with "Access Denied" message
+- **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); conversely, reviews content, staff roster, and Help Centre articles remain read-only views fed by their respective modules
 
 ### Data & Privacy Rules
 
@@ -1242,7 +1353,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 ## Key Entities
 
 - **Entity 1 - Provider Profile**: Represents clinic public-facing profile information
-  - **Key attributes**: provider ID, clinic logo URL, clinic name, clinic description, contact email, supported languages (array), awards (array of award objects: name, description, year, image URL), last updated timestamp, updated by user ID
+  - **Key attributes**: provider ID, clinic logo URL, optional cover image URL (static asset reference), clinic name, clinic description, contact email, public clinic phone, clinic website URL, clinic country, clinic city, supported languages (array), awards (array of award objects: name, issuer/organization, description, year, image URL), last updated timestamp, updated by user ID
   - **Relationships**: One provider has one profile; one profile has many awards; profile displayed to many patients during quote comparison
 
 - **Entity 2 - Provider Account Settings**: Represents provider account configuration
@@ -1264,6 +1375,10 @@ A provider closing their clinic permanently requests account deletion, and admin
 - **Entity 6 - Help Centre Content (Admin-Managed)**: Represents help resources displayed to providers
   - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
   - **Relationships**: Help Centre content created and managed by admins (FR-033); one provider can view many help centre content items (read-only)
+
+- **Entity 7 - Provider Reviews View (Read-Only)**: Represents aggregated reviews and list data shown on Screen 7
+  - **Key attributes**: provider ID, average rating, total reviews count, rating distribution (counts per star), reviews array (review ID, reviewer name, avatar URL, rating, review text, treatment type, review date), last sync timestamp
+  - **Relationships**: Data sourced from Reviews module/service; provider can filter/sort but cannot mutate review records within FR-032
 
 ---
 

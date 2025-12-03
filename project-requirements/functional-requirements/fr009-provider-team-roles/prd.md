@@ -524,7 +524,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 - Provider branding (name, logo), role summary, invitation expiry countdown.
 - CTA: "Accept & Create Account" (new user) with secondary link "Already have an account with this provider? Log in to continue."
-- Security notice referencing central policies (MFA required, audit logging).
+- Security notice referencing central policies (strong password requirements, audit logging; MFA to be introduced in a future release—see **Future Improvements: MFA/2FA**).
 
 **Validation**:
 
@@ -532,9 +532,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ---
 
-#### Screen 8: Account Setup & MFA Enrollment
+#### Screen 8: Account Setup (MFA Enrollment – Future Enhancement)
 
-**Purpose**: Collect credentials and enforce security before granting access.
+**Purpose**: Collect core account details (including a verified contact phone) and enforce security before granting access. MFA enrollment is **not implemented in the initial release of FR-009** and is treated as a **future improvement**.
 
 **Data Fields**:
 
@@ -543,16 +543,21 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Email | display | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token |
 | First Name | text | Yes | Editable first name | 2-50 characters; letters/spaces/hyphen |
 | Last Name | text | Yes | Editable last name | 2-50 characters; letters/spaces/hyphen |
+| Phone Number | tel | Yes | Primary contact phone for this team member (also used later for MFA where applicable) | E.164 format; uniqueness per user within provider; must be verified via one-time code where possible |
 | Password | password | Yes | Account password | Must satisfy FR-026 policy (length + complexity) |
 | Confirm Password | password | Yes | Re-enter password | Must match Password |
-| Phone Number (for MFA) | tel | Conditional | SMS/voice MFA channel (required if policy enforces MFA) | E.164 format; uniqueness per user |
-| MFA Setup Method | radio/select | Yes | Choose MFA factor enforced by admin policy | Options limited to enabled methods (SMS, Authenticator App, Security Key) |
 | Accept Terms | checkbox | Yes | Confirm platform terms & privacy | Must be checked before submission |
 | Create Account CTA | button | N/A | Submit enrollment | Disabled until required fields valid |
 
+> **Deferred Fields (Future Improvement – MFA/2FA)**  
+> The following field is **explicitly out of scope for the initial implementation of FR-009** and will be implemented later once platform-wide MFA is delivered (see Constitution + FR-031 / FR-026):  
+>
+> - MFA Setup Method – selection of MFA factor (SMS, Authenticator App, Security Key)
+
 **Business Rules**:
 
-- Password + MFA setup must succeed before account is activated.
+- Password setup must succeed before account is activated.
+- MFA enrollment for provider team members will be added in a future release and is **not** enforced in the initial FR-009 scope.
 - If invitee already has global Hairline account, screen switches to login-only acceptance flow.
 
 ---
@@ -626,7 +631,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Status Indicator | badge | N/A | Active / Invited / Suspended / Flagged | Real-time status; "Flagged" shown if compliance alert exists |
 | Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
 | Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
-| Admin Actions | button group | N/A | Force Suspend, Reset Password, Transfer Ownership (if Owner), View Sessions, Impersonate (Read-Only) | High-privilege actions require MFA re-auth |
+| Admin Actions | button group | N/A | Force Suspend, Reset Password, Transfer Ownership (if Owner), View Sessions, Impersonate (Read-Only) | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
 
 **Tab 1: Profile & Overview**:
 
@@ -634,10 +639,10 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 |------------|------|----------|-------------|------------------|
 | Account ID | display (text) | N/A | System-generated unique identifier | Read-only; copyable |
 | Member Since | display (date) | N/A | Invitation acceptance date | Read-only |
-| Phone Number | display (tel) | No | Contact phone | Masked; admin can reveal with MFA |
+| Phone Number | display (tel) | No | Contact phone | Masked; admin can reveal with MFA (future enhancement; initially standard re-auth only) |
 | Department/Specialty | display (text) | No | Provider-defined label | Read-only; editable by provider only |
 | Permission Summary | table | N/A | Current role permissions | Read-only; shows effective permissions |
-| Linked Devices | list | N/A | Registered devices for MFA | Includes device type, last used, location |
+| Linked Devices | list | N/A | Registered devices for MFA | **Future improvement** – placeholder for when MFA is implemented; includes device type, last used, location |
 | Compliance Flags | alert list | N/A | Active compliance issues or investigations | Links to investigation records |
 | Account Notes (Admin-Only) | textarea | No | Internal admin notes not visible to provider or member | Max 2000 chars; audit-logged on every edit |
 
@@ -650,7 +655,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Risk Level Filter | dropdown | No | Filter by risk classification (High, Medium, Low) | Auto-classified by system |
 | Activity Timeline | list/table | N/A | Chronological list of all actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address, Location, Device, Risk Level |
 | IP Address Tracking | display | N/A | Full IP history with geolocation | Shows all IPs used; flags VPN/proxy usage |
-| Export Full Audit | button | N/A | Download complete audit trail | CSV/JSON format; includes all fields; requires MFA |
+| Export Full Audit | button | N/A | Download complete audit trail | CSV/JSON format; includes all fields; requires strong re-authentication (MFA in future release) |
 | Flag for Investigation | button | N/A | Mark activity for compliance review | Creates investigation case in FR-031 |
 | Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 100 events per page |
 
@@ -681,13 +686,13 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Active Sessions | list | N/A | Current logged-in sessions | Shows device, browser, IP, location, started timestamp |
-| Session Actions | button group | N/A | Force Logout (single session), Force Logout All | Requires MFA re-auth |
+| Session Actions | button group | N/A | Force Logout (single session), Force Logout All | Requires re-authentication; MFA re-auth will be introduced in a future release |
 | Login History | table | N/A | Last 100 login attempts | Columns: Timestamp, IP, Location, Device, Success/Failure, Failure Reason |
 | Failed Login Count | display (number) | N/A | Failed attempts in last 24 hours | Highlights if >5 attempts |
-| MFA Status | badge | N/A | Enabled / Disabled / Enforced | Shows MFA method (SMS, App, Key) |
-| MFA Reset | button | N/A | Force MFA re-enrollment | Requires MFA re-auth + justification |
+| MFA Status | badge | N/A | Enabled / Disabled / Enforced | **Future improvement** – will show MFA method (SMS, App, Key) once MFA exists |
+| MFA Reset | button | N/A | Force MFA re-enrollment | **Future improvement** – requires MFA re-auth + justification once MFA exists |
 | Password Last Changed | display (timestamp) | N/A | Last password change date | Flags if >90 days old |
-| Force Password Reset | button | N/A | Invalidate password and require reset | Requires MFA re-auth + justification |
+| Force Password Reset | button | N/A | Invalidate password and require reset | Requires re-authentication + justification (MFA re-auth in future release) |
 | Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" |
 
 **Tab 5: Provider Relationship**:
@@ -700,11 +705,11 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason |
 | Transfer History | table | N/A | Provider membership transfers | If email was moved between providers via FR-031 |
 | Transfer to New Provider | button | N/A | Initiate ownership transfer workflow | Opens Screen 13 (Ownership Override Panel) |
-| Remove from Provider | button | N/A | Admin-forced removal | Requires MFA re-auth + justification; logs high-priority audit event |
+| Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event |
 
 **Business Rules**:
 
-- All admin actions (suspend, password reset, session logout, etc.) require MFA re-authentication before execution.
+- All admin actions (suspend, password reset, session logout, etc.) require strong re-authentication before execution; MFA-based re-authentication is **planned as a future improvement** and is not part of the initial FR-009 scope.
 - Every admin action generates high-priority audit log entry with justification field (required).
 - Owner records show additional "Ownership Transfer" action that launches Screen 13 workflow.
 - "Impersonate (Read-Only)" mode allows admin to view platform as team member would see it, but disables all write actions and displays persistent banner: "Viewing as [Name] - Read-Only Admin Mode."
@@ -970,7 +975,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### Security Considerations
 
-- **Authentication**: Team member accounts use same strong authentication as provider owners (password + optional MFA)
+- **Authentication**: Team member accounts use same strong authentication as provider owners (password only in initial FR-009 scope; MFA is planned as a future enhancement per Constitution / FR-031 and will be applied platform-wide, including provider admins and staff, in a later release)
 - **Authorization**: Every API request validates role permissions before execution—fail closed on permission check errors
 - **Encryption**: All team member data encrypted at rest (AES-256), in transit (TLS 1.3)
 - **Audit trail**: All team management actions logged with actor, timestamp, IP address, action details
@@ -1111,6 +1116,24 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 
 ---
 
+## Future Improvements: MFA/2FA (Not in Initial FR-009 Scope)
+
+The system-wide Constitution and `system-prd.md` require Multi-Factor Authentication (MFA) for certain user classes (e.g., admin platform users, provider admins). However, **FR-009 focuses on team & role management** and **does not deliver MFA/2FA functionality in its initial implementation**. All MFA-related behaviors referenced in this document are explicitly treated as **future improvements**, to be implemented once the shared authentication/MFA stack is available (primarily via FR-026 App Settings & Security and FR-031 Admin Access Control).
+
+**Deferred items for future implementation (out of scope for current FR-009 build):**
+
+- **Team Member Onboarding (Provider Side)**:
+  - MFA enrollment during team member account setup (Screen 8): phone number capture for MFA, MFA factor selection, and enforcement that "password + MFA" must succeed before activation.
+- **Admin Console Security Controls**:
+  - MFA-gated actions in Screen 11 (Admin Team Member Detail): export full audit requiring MFA, session actions requiring MFA re-auth, MFA Status and MFA Reset controls, and admin-force removal/reset flows that currently mention MFA.
+  - Device-level MFA concepts such as "Linked Devices" are documented as placeholders only.
+- **Strong Re-Auth vs MFA**:
+  - Where this PRD currently mentions "re-authentication" for high-privilege actions, the **initial implementation** will rely on password-based re-auth only. Upgrading these flows to **MFA-backed re-auth** is a **future enhancement** aligned with the platform-wide MFA rollout.
+
+Implementation teams MUST treat the above as **non-blocking, non-MVP requirements** for FR-009 and track them against the corresponding security/MFA epics instead of this feature’s delivery scope.
+
+---
+
 ## Functional Requirements Summary
 
 ### Core Requirements
@@ -1187,6 +1210,7 @@ A clinic has two owners. One owner attempts to remove themselves from the team. 
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-009: Provider Team & Role Management | Claude (AI) |
 | 2025-11-21 | 1.1 | **Screen 11 Enhancement**: Added Tab 3 "Assigned Work" to Admin Console Team Member Detail Page (Screen 11) to provide admins with context on current workload during investigations. Renumbered subsequent tabs (Patient Data Access Log → Tab 4, Security & Sessions → Tab 5, Provider Relationship → Tab 6, Compliance & Investigations → Tab 7). Verified necessity of all admin oversight tabs against original transcription requirements. | Claude (AI) |
+| 2025-12-03 | 1.2 | **MFA/2FA Scope Clarification for FR-009**: Marked all MFA-related behaviors in team member signup and admin console as future improvements (not in initial implementation scope), while keeping phone number as a required field on Screen 8 for contact and future MFA use. Added explicit **Future Improvements: MFA/2FA** section summarizing deferred items and aligned wording with Constitution / FR-026 / FR-031. | GPT-5.1 (AI) |
 
 ---
 
