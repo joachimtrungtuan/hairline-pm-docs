@@ -61,7 +61,7 @@ Enable patients to search and book travel (flights and hotels) related to their 
 
 **Out of Scope**:
 
-- Direct SMS notifications (handled by S-03 Notification Service)
+- Direct SMS notifications (handled by S-03 Notification Service; **no SMS travel notifications are sent in MVP and this channel is a future enhancement owned by S-03/FR-020/FR-030**)
 - In-app messaging features (covered by communication modules)
 - Real-time airport transport booking in MVP (future enhancement)
 

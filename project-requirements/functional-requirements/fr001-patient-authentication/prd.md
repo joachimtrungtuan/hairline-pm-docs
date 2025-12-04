@@ -785,7 +785,7 @@ About
 ### External Dependencies
 
 - **Email Service**: SendGrid for verification and reset emails
-- **SMS Service**: Twilio for phone number verification (future)
+- **SMS Service**: Twilio for phone number verification (future; **no SMS-based verification is available in MVP and may be introduced in a later phase in coordination with S-03/FR-020/FR-030**)
 - **Social Auth**: Google, Apple, Facebook OAuth (future enhancement)
 - **Analytics Service**: User behavior tracking and analytics
 
@@ -832,7 +832,7 @@ About
 
 - **Patient Module**: Seamless integration with patient profile and preferences
 - **Admin Module**: Integration with admin oversight and account management
-- **Notification Module**: Automated email and SMS notifications
+- **Notification Module**: Automated email notifications in MVP; SMS notifications are a future enhancement dependent on S-03/FR-020/FR-030 and are **not** available currently
 - **Analytics Module**: User behavior tracking and security monitoring
 
 ### Scalability Considerations

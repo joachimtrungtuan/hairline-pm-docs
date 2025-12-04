@@ -50,7 +50,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 **Shared Services (S-XX)**:
 
-- **S-03 (Notification Service)**: Sends email/SMS notifications to providers when status changes (account activated, documents approved/rejected, account suspended)
+- **S-03 (Notification Service)**: Sends email notifications to providers when status changes (account activated, documents approved/rejected, account suspended). SMS notifications are envisioned for future phases once S-03 SMS support is enabled, but **no SMS is sent in MVP**.
 - **S-05 (Media Storage Service)**: Stores uploaded provider documents with secure access controls and encryption
 - **S-06 (Audit Log Service)**: Logs all provider management actions (creation, edits, status changes, document verifications) for compliance and oversight
 
@@ -59,7 +59,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 **In Scope**:
 
 - Email notifications to providers when admin activates their account
-- Email/SMS alerts to providers when documents are approved or rejected
+- Email alerts to providers when documents are approved or rejected (SMS alerts are future, not MVP)
 - Automated reminders to admins when provider documents approaching expiration (30 days before expiry)
 - Notification to providers when their account is suspended or deactivated with reason provided
 - In-app notifications to providers (within Provider Platform) for status changes
@@ -512,8 +512,8 @@ The Provider Management module enables administrators to onboard, verify, and ma
   - **Integration point**: P-02 queries A-02 provider data filtered by (status = "Active" AND featured = true) to populate featured provider listings; includes provider name, clinic, specialty, profile photo
 
 - **FR-XXX / Module S-03: Notification Service**
-  - **Why needed**: Providers must receive email/SMS notifications when admins activate accounts, approve/reject documents, or suspend/deactivate accounts
-  - **Integration point**: A-02 triggers notification events to S-03 API with templates (e.g., "account_activated", "document_rejected") and provider contact details; S-03 sends templated emails/SMS asynchronously
+  - **Why needed**: Providers must receive email notifications when admins activate accounts, approve/reject documents, or suspend/deactivate accounts; SMS may be added later for critical events
+  - **Integration point**: A-02 triggers notification events to S-03 API with templates (e.g., "account_activated", "document_rejected") and provider contact details; S-03 sends templated emails asynchronously. SMS, if enabled in future, would also be orchestrated by S-03.
 
 - **FR-XXX / Module S-05: Media Storage Service**
   - **Why needed**: Provider documents (licenses, certifications, insurance) must be securely stored with encryption and access controls
@@ -531,9 +531,9 @@ The Provider Management module enables administrators to onboard, verify, and ma
   - **Failure handling**: If email delivery fails, S-03 retries up to 3 times with exponential backoff; A-02 displays warning to admin: "Notification queued but not yet delivered"
 
 - **External Service 2: SMS Delivery Service (e.g., Twilio, AWS SNS)**
-  - **Purpose**: Sends SMS notifications to providers for critical status changes (account suspended, document rejected)
-  - **Integration**: S-03 integrates with SMS API; A-02 triggers SMS notifications via S-03 for high-priority events
-  - **Failure handling**: SMS failures logged in S-03; A-02 fallback sends email notification if SMS delivery fails
+  - **Purpose**: (Future) Sends SMS notifications to providers for critical status changes (account suspended, document rejected) once S-03 SMS support is implemented
+  - **Integration**: S-03 integrates with SMS API; A-02 would trigger SMS notifications via S-03 for high-priority events in a later phase
+  - **Failure handling**: SMS failures logged in S-03; A-02 fallback sends email notification if SMS delivery fails. **No SMS delivery is available in MVP.**
 
 - **External Service 3: Cloud File Storage (e.g., AWS S3, Google Cloud Storage)**
   - **Purpose**: Stores uploaded provider documents (licenses, certifications, insurance) with encryption at rest
@@ -547,8 +547,8 @@ The Provider Management module enables administrators to onboard, verify, and ma
   - **Source**: Admin authentication module (A-01) provides role-based access control (RBAC); admin roles (e.g., "Super Admin", "Provider Manager", "Read-Only Admin") defined with granular permissions
 
 - **Entity 2: Notification Templates (Email/SMS)**
-  - **Why needed**: Standardized notification messages for provider account lifecycle events (activation, document verification, suspension) must exist
-  - **Source**: Notification templates pre-configured in S-03 Notification Service; A-02 references template IDs (e.g., "provider_activation_email") when triggering notifications
+  - **Why needed**: Standardized notification messages for provider account lifecycle events (activation, document verification, suspension) must exist; in MVP only email templates are used, with SMS templates reserved for future phases
+  - **Source**: Notification templates pre-configured in S-03 Notification Service; A-02 references email template IDs (e.g., "provider_activation_email") when triggering notifications. SMS templates, if configured later, would be used only once SMS delivery is enabled.
 
 - **Entity 3: Document Type Configuration**
   - **Why needed**: System must know which document types are required for provider verification (medical license, board certification, malpractice insurance)

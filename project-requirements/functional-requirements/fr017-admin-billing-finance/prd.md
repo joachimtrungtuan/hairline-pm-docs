@@ -84,7 +84,7 @@ This module serves as the financial control center for the platform, ensuring ti
 
 **Out of Scope**:
 
-- SMS notifications for payment events (handled by S-03: Notification Service if enabled)
+- SMS notifications for payment events (handled by S-03: Notification Service if enabled; **no SMS payment notifications are available in MVP and will only be enabled in a future phase once S-03 SMS support is live**)
 - In-app chat for payment disputes (handled by A-10: Communication Monitoring & Support)
 - Provider-patient direct communication about payments (routed through admin support)
 

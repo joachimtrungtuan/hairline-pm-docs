@@ -1143,7 +1143,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 - System MUST send email notifications for key events
 - System MUST send push notifications to mobile app
-- System MUST send SMS notifications for urgent events (optional, configurable)
+- System MAY support SMS notifications for urgent events in future phases (optional, configurable, **not in MVP scope**)
 - Patients and providers MUST be able to configure notification preferences
 - System MUST support notification types: inquiry received, quote submitted, booking confirmed, payment received, message received, appointment reminder, aftercare milestone
 - System MUST throttle notifications to prevent spam
@@ -1153,7 +1153,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 For patient platform in FR-001 (MVP), notification preferences are limited to global Email/Push toggles; category preferences (e.g., Inquiry, Quote, Payment, Aftercare) are deferred to V2 per product management alignment.
 
 **Provider Notification Preferences:**
-Provider notification preferences are managed in FR-032 (Provider Dashboard Settings & Profile Management). Providers configure unified notification preferences including individual notification type toggles and global channel preferences (email, SMS, push) in a single settings location.
+Provider notification preferences are managed in FR-032 (Provider Dashboard Settings & Profile Management). Providers configure unified notification preferences including individual notification type toggles (quote, schedule, treatment start, aftercare, review, promotion/discount) and global channel preferences (email, push/in-app). SMS is a future enhancement and is **not** exposed as a configurable channel in MVP.
 
 ---
 
@@ -1534,8 +1534,8 @@ Total Quote:                           £3,000
 **Notification Preferences** (Unified Settings):
 
 - Providers MUST be able to configure notification preferences in a single unified settings location
-- Providers MUST be able to toggle individual notification types: quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications
-- Providers MUST be able to configure global channel preferences: email, SMS (optional), push/in-app notifications
+- Providers MUST be able to toggle individual notification types: quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications
+- Providers MUST be able to configure global channel preferences: email and push/in-app notifications (SMS channel is reserved for future enhancement and is not available in MVP)
 - Notification preferences MUST be profile-specific (applies to provider organization, not individual team members)
 - System MUST respect provider notification preferences when sending notifications (integrates with FR-020)
 

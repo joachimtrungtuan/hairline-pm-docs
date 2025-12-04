@@ -82,7 +82,7 @@ The module delivers value by:
 
 - Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module)
 - Provider notifications about payout schedule changes (handled by separate provider payout module)
-- SMS notifications for payment failures or processing issues (handled by S-03: Notification Service)
+- SMS notifications for payment failures or processing issues (handled by S-03: Notification Service; **no SMS is sent in MVP and this channel is reserved for future implementation once S-03 SMS delivery is enabled**)
 - In-app chat or support messaging (handled by separate support module)
 
 ### Entry Points

@@ -58,7 +58,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 **Out of Scope**:
 
-- Direct patient↔provider chat (handled by FR-012 scope); SMS optionality is handled by S-03 settings.
+- Direct patient↔provider chat (handled by FR-012 scope); SMS optionality is handled by S-03 settings and **does not exist in MVP (no SMS booking notifications are sent until a future phase explicitly enables SMS in S-03/FR-020/FR-030)**.
 - Travel booking details (handled by FR-008) beyond minimal itinerary placeholders.
 
 ### Entry Points

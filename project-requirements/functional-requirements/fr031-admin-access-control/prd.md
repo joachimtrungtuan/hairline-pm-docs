@@ -61,7 +61,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Out of Scope**:
 
-- SMS notifications (handled by S-03: Notification Service if needed)
+- SMS notifications (handled by S-03: Notification Service if needed; **no SMS admin notifications are available in MVP and SMS will only be enabled if/when S-03 adds SMS delivery in a later phase**)
 - Real-time permission updates via WebSocket (V2 enhancement)
 - External identity provider integration (OAuth, SAML - V2 enhancement)
 

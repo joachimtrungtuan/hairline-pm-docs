@@ -65,7 +65,7 @@ Enable secure, auditable, real-time messaging across the Hairline platform to su
 
 - Direct Patient ↔ Provider messaging (may be considered in a future release).
 - Live video calls (can be scheduled/triggered from Admin but delivered by separate module).
-- SMS channel management (handled by S-03 Notification Service configuration).
+- SMS channel management (handled by S-03 Notification Service configuration; **SMS as a transport for secure messaging is not part of MVP and will only be available if/when S-03 adds SMS support in a later phase**).
 
 ### Entry Points
 

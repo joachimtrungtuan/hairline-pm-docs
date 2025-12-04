@@ -1451,9 +1451,9 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
   - **Failure handling**: Payment failures trigger retry queue; user notified of payment issues; automatic refund processing on rejection
 
 - **Notification Service**:
-  - **Purpose**: Delivers email, SMS, and push notifications for reminders and alerts
+  - **Purpose**: Delivers email and push notifications for reminders and alerts in MVP; SMS delivery is planned as a future enhancement once S-03 SMS support is enabled
   - **Integration**: RESTful API for notification delivery with delivery status tracking
-  - **Failure handling**: Retry failed notifications; fallback to alternative channels (e.g., SMS if email fails); notification delivery failures logged for monitoring
+  - **Failure handling**: Retry failed notifications; fallback to alternative channels where available (e.g., push if email fails); notification delivery failures logged for monitoring
 
 ### Data Dependencies
 

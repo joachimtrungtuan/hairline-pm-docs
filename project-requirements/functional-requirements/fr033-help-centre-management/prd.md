@@ -41,27 +41,29 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Provider Platform (PR-06)**:
 
-- Access Help Centre page with 10 main categories
-- View FAQ content organized by topics with expandable/collapsible sections
-- Access tutorial guides, videos, and resource documents
-- View contact support information and submission forms
-- Browse troubleshooting tips and best practice guides
-- Access community forum (read-only initially, future enhancement for provider participation)
-- Submit feedback and suggestions to Hairline team
-- Check service status and system health
-- View policy information (terms of service, privacy policy, data handling)
-- Watch video tutorials for platform features
-- Search across all Help Centre content (future enhancement)
+- Access Help Centre landing page with category navigation (matches FR-032 Screen 5)
+- View FAQs in distinct accordion layout organized by topics (matches FR-032 Screen 5.1)
+- View Tutorial Guides, Troubleshooting Tips, and Policy Information in article layout (matches FR-032 Screen 5.2)
+- Access Resource Library with file viewer/download interface (matches FR-032 Screen 5.3)
+- Watch Video Tutorials with embedded video player (matches FR-032 Screen 5.4)
+- Submit Contact Support requests via form with submission tracking (matches FR-032 Screen 5.5)
+- Submit Feedback & Suggestions via form with submission tracking (matches FR-032 Screen 5.6)
+- Check Service Status with status page interface (matches FR-032 Screen 5.7)
+- Search across all Help Centre content
 
 **Admin Platform (A-09)**:
 
-- Create, edit, delete, and organize Help Centre content
-- Manage content across all 10 Help Centre categories
-- Organize FAQ content by topics with hierarchical structure
-- Upload and manage tutorial guides, videos, and resource documents
+- Create, edit, delete, and organize Help Centre content across 7 distinct subscreen types
+- Manage FAQ content with accordion/topic organization interface (for FR-032 Screen 5.1)
+- Manage article content (Tutorial Guides, Troubleshooting Tips, Policies) with article editor (for FR-032 Screen 5.2)
+- Upload and manage Resource Library files with file management interface (for FR-032 Screen 5.3)
+- Upload and manage Video Tutorials with video management interface (for FR-032 Screen 5.4)
+- Manage Contact Support submissions with tracking interface (view, respond, update status) (for FR-032 Screen 5.5)
+- Manage Feedback & Suggestions submissions with tracking interface (view, respond, update status) (for FR-032 Screen 5.6)
+- Manage Service Status components, incidents, and maintenance windows (for FR-032 Screen 5.7)
 - Publish/unpublish content to control provider visibility
 - Version control for content updates with change tracking
-- Preview content before publishing to providers
+- Preview content in provider-facing layout before publishing (matches each subscreen layout)
 - Audit trail for all content changes (who, when, what changed)
 - Bulk operations for content management
 - Content analytics (view counts, search queries, popular topics)
@@ -114,55 +116,62 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Steps**:
 
-1. Provider navigates to "Help Centre" from provider platform navigation menu
-2. System loads Help Centre landing page with 10 main categories displayed
-3. System shows category tiles with icons, category names, and brief descriptions
-4. Provider selects a category (e.g., "FAQ's", "Tutorial Guides", "Troubleshooting Tips")
-5. System displays content within selected category organized by topics/sections
-6. Provider browses content, expands/collapses sections (for FAQ), watches videos, downloads resources
+1. Provider navigates to "Help Centre" from provider platform navigation menu (Settings & Support > Help Centre)
+2. System loads Help Centre landing page with category navigation and search bar (matches FR-032 Screen 5)
+3. System shows category navigation menu linking to 7 subscreens: FAQs, Tutorial Guides/Troubleshooting Tips/Policies, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, Service Status
+4. Provider selects a category (e.g., "FAQs")
+5. System displays content in appropriate subscreen layout (e.g., FAQs in accordion layout - FR-032 Screen 5.1)
+6. Provider browses content using subscreen-specific interface (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, forms for support/feedback, status page for service status)
 7. Provider finds answer to their question or completes tutorial walkthrough
 8. System logs content access for analytics (view count, time spent)
 9. Provider returns to their workflow or explores additional Help Centre content
 
 ### Alternative Flows
 
-**A1: Provider Submits Feedback via Help Centre**
+**A1: Provider Submits Feedback via Help Centre**:
 
 - **Trigger**: Provider cannot find answer in Help Centre and wants to submit feedback
 - **Steps**:
-  1. Provider navigates to "Feedback & Suggestions" category
-  2. System displays feedback submission form (feedback type, description, contact preference)
+  1. Provider navigates to Help Centre and selects "Feedback & Suggestions" subscreen (FR-032 Screen 5.6)
+  2. System displays feedback submission form (feedback type, title, description, priority)
   3. Provider completes form with feedback details and submits
-  4. System validates form fields and creates feedback ticket
-  5. System sends confirmation message to provider
-  6. System notifies admin team of new feedback submission
-  7. Admin reviews feedback and responds via support system
-- **Outcome**: Provider feedback captured and routed to admin team for review
+  4. System validates form fields and creates feedback submission with unique ID
+  5. System displays confirmation "Thank you for your feedback! We'll review your submission."
+  6. System creates feedback record with status "Submitted" and notifies admin team
+  7. Admin reviews feedback in admin dashboard, updates status (Under Review, Planned, Implemented, Declined), and optionally responds
+  8. Provider can view submission status in their Feedback & Suggestions subscreen
+- **Outcome**: Provider feedback captured, tracked, and managed by admin team
 
-**A2: Provider Contacts Support Directly**
+**A2: Provider Contacts Support Directly**:
 
 - **Trigger**: Provider needs direct assistance beyond self-service content
 - **Steps**:
-  1. Provider navigates to "Contact Support" category
-  2. System displays support contact options (support email, support ticket form, business hours)
-  3. Provider submits support request via form or notes contact details
-  4. System creates support ticket and assigns to admin support team
-  5. System sends confirmation email to provider with ticket reference number
-  6. Admin team receives notification and responds to support request
-- **Outcome**: Support request routed to admin team for direct assistance
+  1. Provider navigates to Help Centre and selects "Contact Support" subscreen (FR-032 Screen 5.5)
+  2. System displays support request form (subject, category, message, priority, optional attachment)
+  3. Provider completes form with support request details and submits
+  4. System validates form fields and creates support ticket with unique ticket number
+  5. System displays confirmation "Support request submitted. Ticket #[number]. Our team will respond within 24 hours."
+  6. System sends confirmation email to provider with ticket reference number
+  7. Admin team receives notification and views support request in admin dashboard
+  8. Admin updates ticket status (Open → In Progress → Resolved → Closed) and responds
+  9. Provider can view ticket status and responses in their Contact Support subscreen
+- **Outcome**: Support request routed to admin team, tracked, and managed with status updates
 
-**A3: Provider Checks Service Status**
+**A3: Provider Checks Service Status**:
 
 - **Trigger**: Provider experiences platform issues and wants to check if it's a known system outage
 - **Steps**:
-  1. Provider navigates to "Service Status" category
-  2. System displays current service health status (operational, degraded performance, partial outage, major outage)
-  3. System shows recent incident history and scheduled maintenance windows
-  4. Provider verifies if issue is platform-wide or localized to their account
-  5. Provider proceeds accordingly (waits for resolution or contacts support)
-- **Outcome**: Provider informed of system status and can plan accordingly
+  1. Provider navigates to Help Centre and selects "Service Status" subscreen (FR-032 Screen 5.7)
+  2. System displays status page interface with overall status indicator (All Systems Operational, Partial Outage, Major Outage)
+  3. System shows service components status list (each component: name, status, last updated)
+  4. System displays incident history timeline (recent incidents with status, timeline, affected services)
+  5. System shows maintenance schedule (upcoming scheduled maintenance windows)
+  6. Provider verifies if issue is platform-wide or localized to their account
+  7. Provider can subscribe to status update notifications (email alerts for incidents)
+  8. Provider proceeds accordingly (waits for resolution or contacts support)
+- **Outcome**: Provider informed of system status via status page interface and can plan accordingly
 
-**B1: Content Not Found or Outdated**
+**B1: Content Not Found or Outdated**:
 
 - **Trigger**: Provider cannot find needed information in Help Centre
 - **Steps**:
@@ -174,7 +183,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   6. Admin team reviews feedback and prioritizes content creation/update
 - **Outcome**: Content gap identified and queued for admin action
 
-**B2: Uploaded File Fails to Load**
+**B2: Uploaded File Fails to Load**:
 
 - **Trigger**: Provider attempts to download tutorial guide or view video but file fails to load
 - **Steps**:
@@ -198,24 +207,30 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Steps**:
 
 1. Admin navigates to "Help Centre Management" in admin platform (A-09)
-2. System displays Help Centre content management dashboard with content list and category breakdown
-3. Admin clicks "Create New Content" button
-4. System displays content creation form with fields: category, title, content type (FAQ, tutorial, guide, video, document), content body, attachments, tags, publish status
-5. Admin selects category (e.g., "FAQ's") and content type (e.g., "FAQ item")
-6. Admin enters title and writes content body using rich text editor
-7. Admin uploads attachments if needed (images, PDFs, videos)
+2. System displays Help Centre content management dashboard with content list organized by subscreen type
+3. Admin selects subscreen type to manage (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status)
+4. Admin clicks "Create New Content" button for selected subscreen type
+5. System displays content creation form optimized for selected subscreen layout:
+   - **FAQs**: FAQ editor with question/answer fields, topic assignment, accordion preview
+   - **Articles**: Article editor with rich text, table of contents generation, article layout preview
+   - **Resources**: File upload interface with metadata (name, description, category, file type), file viewer preview
+   - **Videos**: Video upload interface with title, description, thumbnail, video player preview
+   - **Contact Support/Feedback**: Form builder interface (not applicable - forms are system-managed)
+   - **Service Status**: Status component/incident management interface
+6. Admin enters content details using subscreen-specific editor
+7. Admin uploads attachments if needed (images, PDFs, videos) - optimized for subscreen type
 8. Admin assigns tags for content organization and searchability
-9. Admin clicks "Preview" to see how content will appear to providers
-10. System renders preview in provider view format
+9. Admin clicks "Preview" to see how content will appear to providers in the specific subscreen layout
+10. System renders preview matching provider-facing layout (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status)
 11. Admin reviews preview and clicks "Save as Draft" or "Publish"
 12. System saves content with status (Draft/Published) and timestamps
 13. System logs content creation in audit trail (admin name, timestamp, action)
-14. If published, system makes content immediately available in provider Help Centre
+14. If published, system makes content immediately available in provider Help Centre subscreen
 15. System displays success confirmation with link to view published content
 
 ### Alternative Flows
 
-**A4: Admin Edits Existing Help Centre Content**
+**A4: Admin Edits Existing Help Centre Content**:
 
 - **Trigger**: Admin needs to update outdated or incorrect help content
 - **Steps**:
@@ -232,41 +247,44 @@ The Help Centre Content Management module provides a centralized knowledge base 
   11. System sends notification to admins who subscribed to content change alerts (future enhancement)
 - **Outcome**: Content updated with new version and change tracked in audit trail
 
-**A5: Admin Organizes FAQ Content into Topics**
+**A5: Admin Organizes FAQ Content into Topics**:
 
 - **Trigger**: Admin needs to organize multiple FAQ items under topic sections for better navigation
 - **Steps**:
-  1. Admin navigates to "FAQ's" category in Help Centre management
+  1. Admin navigates to FAQ Management screen (Screen 2) in Help Centre management
   2. System displays all FAQ items with current organization structure
   3. Admin clicks "Manage Topics" to create/edit FAQ topic sections
   4. System displays topic management interface with drag-and-drop organization
   5. Admin creates new topic section (e.g., "Quote Submission", "Payment Processing")
   6. Admin assigns FAQ items to topics by dragging items into topic groups
   7. Admin reorders topics and FAQ items within topics for logical flow
-  8. Admin saves organization structure
-  9. System updates FAQ navigation structure for provider Help Centre
-  10. Provider Help Centre immediately reflects new organization
-- **Outcome**: FAQ content organized into logical topic sections for easier provider navigation
+  8. Admin previews FAQ accordion layout to verify organization
+  9. Admin saves organization structure
+  10. System updates FAQ navigation structure for provider Help Centre (FR-032 Screen 5.1)
+  11. Provider Help Centre immediately reflects new organization in accordion layout
+- **Outcome**: FAQ content organized into logical topic sections displayed in accordion layout for easier provider navigation
 
-**A6: Admin Uploads Video Tutorial**
+**A6: Admin Uploads Video Tutorial**:
 
 - **Trigger**: Admin needs to add video tutorial to Help Centre
 - **Steps**:
-  1. Admin navigates to "Video Tutorials" category in Help Centre management
-  2. Admin clicks "Upload Video Tutorial"
-  3. System displays upload form with fields: title, description, category, video file upload, thumbnail image
+  1. Admin navigates to Video Tutorial Management screen (Screen 5) in Help Centre management
+  2. Admin clicks "Create New Video Tutorial"
+  3. System displays video upload form with fields: title, description, video file upload, thumbnail image, transcript (optional), tags
   4. Admin enters title and description for video tutorial
   5. Admin uploads video file (supports MP4, MOV formats, max 500MB)
   6. System validates file size, format, and begins upload to media storage (S-05)
   7. System displays upload progress bar
-  8. Admin uploads custom thumbnail image or system auto-generates thumbnail from video frame
-  9. Admin previews video and thumbnail
-  10. Admin publishes video tutorial
-  11. System processes video for streaming optimization (if applicable)
-  12. System makes video available in provider Help Centre
-- **Outcome**: Video tutorial uploaded, processed, and published to Help Centre
+  8. System auto-extracts video duration and generates thumbnail from video frame (10% mark)
+  9. Admin uploads custom thumbnail image or uses auto-generated thumbnail
+  10. Admin optionally enters video transcript for accessibility
+  11. Admin previews video in video player interface (matches FR-032 Screen 5.4)
+  12. Admin publishes video tutorial
+  13. System processes video for streaming optimization (if applicable)
+  14. System makes video available in provider Help Centre Video Tutorials subscreen (FR-032 Screen 5.4)
+- **Outcome**: Video tutorial uploaded, processed, and published to Help Centre with video player interface
 
-**A7: Admin Unpublishes Outdated Content**
+**A7: Admin Unpublishes Outdated Content**:
 
 - **Trigger**: Admin needs to remove outdated or incorrect content from provider view
 - **Steps**:
@@ -281,7 +299,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   9. Content remains in admin view as "Unpublished" for future editing or re-publishing
 - **Outcome**: Content removed from provider view but preserved in admin system for future use
 
-**B3: Content Validation Fails**
+**B3: Content Validation Fails**:
 
 - **Trigger**: Admin attempts to publish content with missing required fields or invalid format
 - **Steps**:
@@ -294,11 +312,11 @@ The Help Centre Content Management module provides a centralized knowledge base 
   7. System re-validates and proceeds with publish if all validations pass
 - **Outcome**: Validation errors corrected and content published successfully
 
-**B4: File Upload Exceeds Size Limit**
+**B4: File Upload Exceeds Size Limit**:
 
 - **Trigger**: Admin attempts to upload file larger than maximum allowed size
 - **Steps**:
-  1. Admin selects file for upload (video, PDF, image)
+  1. Admin selects file for upload (video, PDF, image) in appropriate management screen
   2. System checks file size against limits (videos: 500MB, PDFs: 50MB, images: 10MB)
   3. File exceeds size limit
   4. System displays error message with file size limit and suggested alternatives (compress file, use external video hosting)
@@ -307,24 +325,390 @@ The Help Centre Content Management module provides a centralized knowledge base 
   7. System validates new file/link and proceeds with upload
 - **Outcome**: File size issue resolved and content uploaded successfully
 
+**A8: Admin Manages Contact Support Submissions**:
+
+- **Trigger**: Admin needs to view and respond to provider support requests
+- **Steps**:
+  1. Admin navigates to Contact Support Management screen (Screen 6) in Help Centre management
+  2. System displays list of all support requests with status, ticket numbers, providers, dates
+  3. Admin filters requests by status (Open, In Progress, Resolved, Closed) or category
+  4. Admin clicks on support request to view details
+  5. System displays full request: subject, message, category, priority, attachment (if provided), provider information
+  6. Admin reviews request and updates status (e.g., Open → In Progress)
+  7. Admin adds response message in conversation thread
+  8. System saves response and updates request status
+  9. System sends email notification to provider (if implemented)
+  10. Provider can view status update and response in their Contact Support subscreen (FR-032 Screen 5.5)
+- **Outcome**: Support request managed with status tracking and admin response
+
+**A9: Admin Manages Feedback Submissions**:
+
+- **Trigger**: Admin needs to review and respond to provider feedback submissions
+- **Steps**:
+  1. Admin navigates to Feedback & Suggestions Management screen (Screen 7) in Help Centre management
+  2. System displays list of all feedback submissions with status, type, providers, dates
+  3. Admin filters submissions by type (Feature Request, Bug Report, Suggestion) or status
+  4. Admin clicks on feedback submission to view details
+  5. System displays full submission: type, title, description, priority, provider information
+  6. Admin reviews feedback and updates status (e.g., Submitted → Under Review → Planned)
+  7. Admin adds response message explaining status or implementation plan
+  8. System saves response and updates submission status
+  9. Status update visible to provider in their Feedback & Suggestions subscreen (FR-032 Screen 5.6)
+- **Outcome**: Feedback submission managed with status tracking and admin response
+
+**A10: Admin Updates Service Status**:
+
+- **Trigger**: Admin needs to update platform service status or create incident report
+- **Steps**:
+  1. Admin navigates to Service Status Management screen (Screen 8) in Help Centre management
+  2. System displays current overall status, service components list, incident history, maintenance schedule
+  3. Admin updates service component status (e.g., "API Service" → Degraded)
+  4. System automatically recalculates overall status based on component statuses
+  5. Admin creates new incident: enters title, description, selects affected services, sets status (Investigating)
+  6. System creates incident record and adds to incident history timeline
+  7. Admin updates incident status as investigation progresses (Investigating → Identified → Monitoring → Resolved)
+  8. System updates incident timeline with each status change
+  9. Status updates propagate to provider Service Status subscreen (FR-032 Screen 5.7) within 1 minute
+  10. Providers see updated status in real-time status page interface
+- **Outcome**: Service status updated and displayed to providers in status page interface
+
 ---
 
 ## Screen Specifications
 
-[Continuing with comprehensive screen specifications for all 8 screens as detailed in my previous complete PRD content...]
+### Screen 1: Admin Help Centre Management Dashboard
 
-*Note: Due to length limitations, I'm providing a summary here. The full PRD continues with:*
+**Purpose**: Central dashboard for managing all Help Centre content organized by subscreen types matching FR-032 provider-facing structure.
 
-- Screen 1: Provider Help Centre Landing Page
-- Screen 2: FAQ Category Page
-- Screen 3: Tutorial Guides Category Page
-- Screen 4: Contact Support Category Page
-- Screen 5: Service Status Category Page
-- Screen 6: Admin Help Centre Management Dashboard
-- Screen 7: Admin Content Creation/Edit Form
-- Screen 8: Admin FAQ Topic Management
+**Data Fields**:
 
-Each screen includes: Purpose, Data Fields table, Business Rules, and Notes sections.
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Content Type Filter | dropdown | No | Filter content by subscreen type (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status) | Pre-defined types matching FR-032 subscreens |
+| Content List | table/list | No | List of all content items with metadata | Each row: title, subscreen type, status (Draft/Published/Unpublished), last updated, view count |
+| Quick Stats | display cards | No | Summary statistics: total content, published content, draft content, total views | Read-only, calculated |
+| Recent Activity | timeline | No | Recent content changes and submissions | Read-only, sorted by date |
+
+**Business Rules**:
+
+- Dashboard organized by subscreen types matching FR-032 structure (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status)
+- Content list filterable by subscreen type, status, category, and searchable by title/tags
+- Quick stats update in real-time
+- Recent activity shows: content created/edited/published, support requests received, feedback submissions received, service status updates
+- Clicking content item opens appropriate editor for that subscreen type
+
+**Notes**:
+
+- Dashboard provides quick access to all Help Centre management functions
+- Visual indicators show content status (Published: green, Draft: yellow, Unpublished: gray)
+- Bulk actions available: publish multiple items, unpublish multiple items, delete multiple items
+- Export functionality for content analytics
+
+---
+
+### Screen 2: Admin FAQ Management (for FR-032 Screen 5.1)
+
+**Purpose**: Create and manage FAQ content that displays in accordion layout on provider platform (matches FR-032 Screen 5.1).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| FAQ Question | text | Yes | FAQ question text | Max 200 chars |
+| FAQ Answer | rich text | Yes | FAQ answer content | Max 5000 chars, supports HTML formatting |
+| FAQ Topic | dropdown | Yes | Topic category for organization | Pre-defined topics or create new |
+| Display Order | number | No | Order within topic | Integer, auto-incremented |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
+
+**Business Rules**:
+
+- FAQ editor optimized for accordion display format (question as header, answer as expandable content)
+- FAQs organized by topics with drag-and-drop reordering within topics
+- Preview shows exact accordion layout as providers will see (FR-032 Screen 5.1)
+- Multiple FAQs can be edited in batch
+- Topic management: create, edit, delete, reorder topics
+- Helpfulness feedback tracked per FAQ for analytics
+
+**Notes**:
+
+- FAQ editor interface: question field at top, answer field below with rich text editor
+- Topic selector with "Create New Topic" option
+- Drag-and-drop interface for reordering FAQs within topics
+- Preview button shows accordion layout with expand/collapse functionality
+- Bulk operations: assign multiple FAQs to topic, change status for multiple FAQs
+
+---
+
+### Screen 3: Admin Article Management (for FR-032 Screen 5.2)
+
+**Purpose**: Create and manage article content (Tutorial Guides, Troubleshooting Tips, Policy Information) that displays in article layout on provider platform (matches FR-032 Screen 5.2).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Article Title | text | Yes | Article title | Max 200 chars |
+| Article Content | rich text | Yes | Full article content with formatting | Max 10,000 chars, supports HTML, headings, lists, images, tables |
+| Article Type | dropdown | Yes | Tutorial Guide, Troubleshooting Tip, Policy Information | Pre-defined types |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
+| Table of Contents | auto-generated | No | Auto-generated from headings (for articles >1000 words) | Read-only, generated on save |
+| Related Articles | multi-select | No | Links to related articles | References to other articles |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
+
+**Business Rules**:
+
+- Article editor optimized for article layout format (full-width content with formatted text, images, code blocks)
+- Rich text editor supports: headings (H1-H6), bold, italic, lists, links, images, tables, code blocks
+- Table of contents auto-generated for articles with multiple headings (articles >1000 words)
+- Preview shows exact article layout as providers will see (FR-032 Screen 5.2)
+- Related articles can be manually assigned or auto-suggested based on tags/category
+- Print-friendly view available in preview
+
+**Notes**:
+
+- Article editor: full-featured rich text editor with formatting toolbar
+- Image upload inline within editor
+- Screenshot/image insertion with captions
+- Step-by-step tutorial format: numbered lists with visual separators
+- Preview shows: formatted article with table of contents (if applicable), related articles section
+- Character counter for content body
+
+---
+
+### Screen 4: Admin Resource Library Management (for FR-032 Screen 5.3)
+
+**Purpose**: Upload and manage downloadable resources (templates, documents, PDFs) that display in file viewer interface on provider platform (matches FR-032 Screen 5.3).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Resource Name | text | Yes | Display name for resource | Max 200 chars |
+| Resource Description | textarea | No | Brief description of resource | Max 500 chars |
+| Resource File | file upload | Yes | File to upload (PDF, DOCX, XLSX, etc.) | Max 50MB, whitelist: PDF, DOCX, XLSX, PNG, JPG |
+| Resource Category | dropdown | No | Category (Templates, Documents, Forms, etc.) | Pre-defined categories |
+| File Type | auto-detected | No | File format detected from upload | Read-only, auto-detected |
+| File Size | auto-calculated | No | File size in MB | Read-only, auto-calculated |
+| Thumbnail/Icon | image upload | No | Custom thumbnail or file type icon | Max 1MB, PNG/JPG, 128x128px recommended |
+| Download Count | display | No | Number of times resource downloaded | Read-only, incremented on download |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
+
+**Business Rules**:
+
+- File upload interface optimized for resource management
+- Preview shows exact file viewer interface as providers will see (FR-032 Screen 5.3)
+- File type icons auto-assigned if no custom thumbnail uploaded
+- Download count tracked per resource
+- Resources filterable by category and file type
+- Preview available for PDF and image files (opens in modal)
+
+**Notes**:
+
+- File upload: drag-and-drop or file picker with progress indicator
+- File validation: size check, format check, virus scan
+- Thumbnail generation: auto-generate from PDF first page or use custom upload
+- Preview modal: shows resource card with thumbnail, name, description, file type badge, download button
+- Bulk upload: upload multiple files at once
+- File replacement: replace existing file while keeping same resource record
+
+---
+
+### Screen 5: Admin Video Tutorial Management (for FR-032 Screen 5.4)
+
+**Purpose**: Upload and manage video tutorials that display in video viewer interface on provider platform (matches FR-032 Screen 5.4).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Video Title | text | Yes | Video tutorial title | Max 200 chars |
+| Video Description | textarea | No | Brief description of video content | Max 500 chars |
+| Video File | file upload | Yes | Video file to upload | Max 500MB, formats: MP4, MOV |
+| Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended |
+| Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file |
+| Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
+| Related Videos | multi-select | No | Links to related video tutorials | References to other videos |
+| View Count | display | No | Number of times video viewed (>30 seconds) | Read-only, incremented on view |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
+
+**Business Rules**:
+
+- Video upload interface optimized for video management
+- Video processing: system processes uploaded video for streaming optimization (if applicable)
+- Thumbnail generation: auto-generate from video frame at 10% mark or use custom upload
+- Preview shows exact video player interface as providers will see (FR-032 Screen 5.4)
+- Video transcript optional but recommended for accessibility
+- View count incremented when video plays for >30 seconds
+- Related videos can be manually assigned or auto-suggested based on tags/category
+
+**Notes**:
+
+- Video upload: file picker with progress indicator, supports large files (500MB max)
+- Upload progress: shows upload percentage and estimated time remaining
+- Video processing: background job processes video after upload (transcoding, thumbnail generation)
+- Thumbnail editor: crop/select frame from video for thumbnail
+- Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed)
+- Transcript editor: textarea with character counter, searchable text
+- Video analytics: view count, average watch time, completion rate
+
+---
+
+### Screen 6: Admin Contact Support Management (for FR-032 Screen 5.5)
+
+**Purpose**: View and manage Contact Support submissions from providers with status tracking and response capabilities (matches FR-032 Screen 5.5 provider-facing form).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Support Request List | table | No | List of all support requests | Each row: ticket number, subject, category, status, provider name, submitted date, last updated |
+| Ticket Number | display | No | Unique ticket identifier | Read-only, auto-generated |
+| Subject | text | No | Support request subject (from provider) | Read-only, from provider submission |
+| Category | display | No | Request category (from provider) | Read-only, from provider submission |
+| Priority | display | No | Request priority (from provider) | Read-only, from provider submission |
+| Message | textarea | No | Full support request message (from provider) | Read-only, from provider submission |
+| Attachment | file link | No | Attached file from provider (if provided) | Read-only, downloadable |
+| Status | dropdown | Yes | Open, In Progress, Resolved, Closed | Editable by admin |
+| Admin Response | textarea | No | Admin response message | Max 2000 chars |
+| Response History | timeline | No | Full conversation thread | Read-only, chronological |
+| Provider Information | display | No | Provider name, email, clinic | Read-only, from provider account |
+
+**Business Rules**:
+
+- Support request list filterable by status, category, priority, date range, provider
+- Status workflow: Open → In Progress → Resolved → Closed
+- Admin can add response messages to support requests (creates conversation thread)
+- Status updates trigger email notifications to provider (if implemented)
+- Support requests cannot be deleted (archived only for audit compliance)
+- Bulk actions: update status for multiple requests, assign to admin team members (if implemented)
+
+**Notes**:
+
+- Support request detail view: shows full request with conversation thread
+- Response editor: rich text editor for admin responses
+- Status badges: color-coded (Open: blue, In Progress: yellow, Resolved: green, Closed: gray)
+- Filter/sort: by status, date, priority, provider
+- Export: export support requests to CSV for reporting
+- Analytics: average response time, resolution time, request volume by category
+
+---
+
+### Screen 7: Admin Feedback & Suggestions Management (for FR-032 Screen 5.6)
+
+**Purpose**: View and manage Feedback & Suggestions submissions from providers with status tracking and response capabilities (matches FR-032 Screen 5.6 provider-facing form).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Feedback List | table | No | List of all feedback submissions | Each row: submission ID, title, type, status, provider name, submitted date, admin response |
+| Submission ID | display | No | Unique feedback identifier | Read-only, auto-generated |
+| Feedback Type | display | No | Type (Feature Request, Bug Report, Suggestion, Other) | Read-only, from provider submission |
+| Title | text | No | Feedback title (from provider) | Read-only, from provider submission |
+| Description | textarea | No | Full feedback description (from provider) | Read-only, from provider submission |
+| Priority | display | No | Suggested priority (from provider) | Read-only, from provider submission |
+| Status | dropdown | Yes | Submitted, Under Review, Planned, Implemented, Declined | Editable by admin |
+| Admin Response | textarea | No | Admin response message | Max 2000 chars |
+| Response History | timeline | No | Full conversation thread | Read-only, chronological |
+| Provider Information | display | No | Provider name, email, clinic | Read-only, from provider account |
+
+**Business Rules**:
+
+- Feedback list filterable by type, status, priority, date range, provider
+- Status workflow: Submitted → Under Review → Planned/Implemented/Declined
+- Admin can add response messages to feedback (creates conversation thread)
+- Status updates visible to provider in their Feedback & Suggestions subscreen
+- Feedback submissions cannot be deleted (archived only for audit compliance)
+- Bulk actions: update status for multiple submissions, export to CSV
+
+**Notes**:
+
+- Feedback detail view: shows full submission with conversation thread
+- Response editor: rich text editor for admin responses
+- Status badges: color-coded (Submitted: gray, Under Review: blue, Planned: yellow, Implemented: green, Declined: red)
+- Filter/sort: by type, status, priority, date, provider
+- Analytics: feedback volume by type, implementation rate, average time to implementation
+- Roadmap integration: "Planned" feedback can be linked to roadmap items (if implemented)
+
+---
+
+### Screen 8: Admin Service Status Management (for FR-032 Screen 5.7)
+
+**Purpose**: Manage service status components, incidents, and maintenance windows that display in status page interface on provider platform (matches FR-032 Screen 5.7).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage | Pre-defined statuses |
+| Service Components List | table | No | List of service components | Each row: component name, status (Operational/Degraded/Down), last updated |
+| Component Name | text | Yes | Service component name | Max 100 chars |
+| Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses |
+| Incident History | timeline | No | List of recent incidents | Each incident: title, description, status, start time, end time, affected services |
+| Incident Title | text | Yes | Brief incident title | Max 200 chars |
+| Incident Description | textarea | Yes | Detailed incident description | Max 2000 chars |
+| Incident Status | dropdown | Yes | Investigating, Identified, Monitoring, Resolved | Pre-defined statuses |
+| Affected Services | multi-select | Yes | Service components affected by incident | References to service components |
+| Maintenance Schedule | table | No | List of scheduled maintenance windows | Each maintenance: title, description, scheduled start/end time, affected services |
+| Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars |
+| Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars |
+| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime, future date |
+| Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time |
+
+**Business Rules**:
+
+- Overall status automatically calculated from service component statuses (if any component is Down → Partial/Major Outage)
+- Service components: create, edit, delete components; update status in real-time
+- Incident management: create new incidents, update status, add timeline updates, mark as resolved
+- Maintenance schedule: create scheduled maintenance, edit, cancel, mark as completed
+- Status updates propagate to provider platform within 1 minute
+- Incident timeline: system auto-logs status changes with timestamps
+- Preview shows exact status page interface as providers will see (FR-032 Screen 5.7)
+
+**Notes**:
+
+- Service component management: grid/list interface with status badges
+- Status badges: color-coded (Operational: green, Degraded: yellow, Down: red)
+- Incident editor: form with timeline view showing status progression
+- Maintenance scheduler: calendar interface for scheduling maintenance windows
+- Real-time updates: status changes reflect immediately in provider view
+- Notification settings: admins can configure email notifications for status changes (if implemented)
+- Historical data: past incidents and completed maintenance retained for historical reference
+
+---
+
+### Screen 9: Admin Content Preview
+
+**Purpose**: Preview Help Centre content exactly as it will appear to providers in each subscreen layout before publishing.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Preview Mode | dropdown | Yes | Select subscreen layout to preview (FAQs, Articles, Resources, Videos, Service Status) | Pre-defined layouts matching FR-032 |
+| Content Preview | rendered view | No | Rendered content in provider-facing layout | Read-only, matches FR-032 subscreen layouts |
+
+**Business Rules**:
+
+- Preview renders content in exact provider-facing layout for selected subscreen type
+- FAQ preview shows accordion layout with expand/collapse (matches FR-032 Screen 5.1)
+- Article preview shows article layout with table of contents (matches FR-032 Screen 5.2)
+- Resource preview shows file viewer interface (matches FR-032 Screen 5.3)
+- Video preview shows video player interface (matches FR-032 Screen 5.4)
+- Service Status preview shows status page interface (matches FR-032 Screen 5.7)
+- Preview updates in real-time as admin edits content
+- Preview includes all formatting, images, and interactive elements
+
+**Notes**:
+
+- Preview pane: side-by-side or modal view showing provider-facing layout
+- Responsive preview: toggle between desktop/tablet/mobile views
+- Print preview: available for article content
+- Preview navigation: test all interactive elements (expand/collapse, video playback, file download)
 
 ---
 
@@ -351,19 +735,22 @@ Each screen includes: Purpose, Data Fields table, Business Rules, and Notes sect
 
 **Editable by Admin**:
 
-- All Help Centre content (title, body, attachments, category assignment, publish status)
+- All Help Centre content (title, body, attachments, category assignment, publish status) organized by subscreen types matching FR-032
+- FAQ content with accordion/topic organization (for FR-032 Screen 5.1)
+- Article content (Tutorial Guides, Troubleshooting Tips, Policies) with article layout formatting (for FR-032 Screen 5.2)
+- Resource Library files with file metadata (for FR-032 Screen 5.3)
+- Video Tutorials with video metadata and transcripts (for FR-032 Screen 5.4)
+- Contact Support submissions: view, respond, update status (Open, In Progress, Resolved, Closed) (for FR-032 Screen 5.5)
+- Feedback & Suggestions submissions: view, respond, update status (Submitted, Under Review, Planned, Implemented, Declined) (for FR-032 Screen 5.6)
+- Service Status: overall status, service components, incidents, maintenance windows (for FR-032 Screen 5.7)
 - Category organization and ordering
 - FAQ topic organization and FAQ item assignment to topics
-- Help Centre category names and descriptions (within predefined 10 categories)
 - Content tags and related content links
-- Service status component names and statuses
-- Scheduled maintenance windows
 - Support contact information (email, business hours, response SLA)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Number of Help Centre categories (fixed at 10 categories)
-- Category types (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials)
+- Number of Help Centre subscreen types (fixed at 7 types matching FR-032): FAQs (Screen 5.1), Articles (Screen 5.2), Resources (Screen 5.3), Videos (Screen 5.4), Contact Support (Screen 5.5), Feedback (Screen 5.6), Service Status (Screen 5.7)
 - Content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
 - File upload size limits (PDF: 50MB, Video: 500MB, Image: 10MB)
 - Content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides)
@@ -573,39 +960,45 @@ A provider clinic coordinator encounters an issue with submitting a quote and wa
 ### Core Requirements
 
 - **FR-001**: System MUST provide Help Centre landing page accessible from provider platform navigation menu displaying 10 main content categories
-- **FR-002**: System MUST support 10 predefined Help Centre categories (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials)
+- **FR-002**: System MUST support 7 Help Centre subscreen types matching FR-032 structure (FAQs with accordion layout, Articles with article layout, Resources with file viewer, Videos with video player, Contact Support with form and tracking, Feedback with form and tracking, Service Status with status page interface)
 - **FR-003**: Admins MUST be able to create Help Centre content with category assignment, content type, title, rich text body, file attachments, tags, and publish status
 - **FR-004**: System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
 - **FR-005**: Admins MUST be able to organize FAQ content into collapsible topic sections with drag-and-drop reordering
-- **FR-006**: Providers MUST be able to access Help Centre content in read-only mode with expandable/collapsible sections, file downloads, and video playback
+- **FR-006**: Providers MUST be able to access Help Centre content in read-only mode with distinct layouts per subscreen type (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, forms for support/feedback, status page for service status) matching FR-032 Screen 5.1-5.7
 - **FR-007**: System MUST support rich text editing for content creation with formatting (bold, italic, lists, links, images, tables)
 - **FR-008**: System MUST support file uploads for Help Centre content (PDFs max 50MB, videos max 500MB, images max 10MB)
-- **FR-009**: System MUST provide content preview functionality allowing admins to view content exactly as providers will see it before publishing
+- **FR-009**: System MUST provide content preview functionality allowing admins to view content exactly as providers will see it in each subscreen layout before publishing (accordion preview for FAQs, article layout preview for guides, file viewer preview for resources, video player preview for videos, status page preview for service status) matching FR-032 Screen 5.1-5.7
 - **FR-010**: System MUST support content versioning tracking all changes with admin identity, timestamp, and version notes
 
 ### Data Requirements
 
-- **FR-011**: System MUST store Help Centre content with metadata (category, content type, title, body, tags, publish status, created date, updated date, created by admin, updated by admin)
-- **FR-012**: System MUST maintain audit trail logging all content creation, editing, publishing, unpublishing, and deletion actions with admin identity and timestamp
-- **FR-013**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion
-- **FR-014**: System MUST store file attachments in media storage service (S-05) with references in Help Centre content records
-- **FR-015**: System MUST track content view analytics (total views per content item, views over time) for performance measurement
+- **FR-011**: System MUST store Help Centre content with metadata (subscreen type matching FR-032, content type, title, body, tags, publish status, created date, updated date, created by admin, updated by admin)
+- **FR-012**: System MUST store Contact Support submissions with metadata (ticket number, provider ID, subject, category, message, priority, attachment, status, submitted date, admin responses, response history)
+- **FR-013**: System MUST store Feedback & Suggestions submissions with metadata (submission ID, provider ID, type, title, description, priority, status, submitted date, admin responses, response history)
+- **FR-014**: System MUST store Service Status data with metadata (overall status, service components with statuses, incidents with timeline, maintenance windows with schedules)
+- **FR-015**: System MUST maintain audit trail logging all content creation, editing, publishing, unpublishing, and deletion actions with admin identity and timestamp
+- **FR-016**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion
+- **FR-017**: System MUST store file attachments in media storage service (S-05) with references in Help Centre content records
+- **FR-018**: System MUST track content view analytics (total views per content item, views over time) for performance measurement
 
 ### Security & Privacy Requirements
 
-- **FR-016**: System MUST enforce authentication for Help Centre access (providers must be logged in, admins must be logged in)
-- **FR-017**: System MUST enforce authorization for content management (only admins with Help Centre management permissions can create/edit/publish content)
-- **FR-018**: System MUST scan all uploaded files for viruses before making available to providers
-- **FR-019**: System MUST sanitize rich text HTML input to prevent XSS attacks (strip dangerous tags: script, iframe, object)
-- **FR-020**: System MUST enforce file type whitelist for uploads (PDF, MP4, MOV, JPG, PNG only) rejecting all other file types
-- **FR-021**: System MUST encrypt provider feedback and support request submissions in transit (HTTPS) and at rest
+- **FR-019**: System MUST enforce authentication for Help Centre access (providers must be logged in, admins must be logged in)
+- **FR-020**: System MUST enforce authorization for content management (only admins with Help Centre management permissions can create/edit/publish content)
+- **FR-021**: System MUST scan all uploaded files for viruses before making available to providers
+- **FR-022**: System MUST sanitize rich text HTML input to prevent XSS attacks (strip dangerous tags: script, iframe, object)
+- **FR-023**: System MUST enforce file type whitelist for uploads (PDF, MP4, MOV, JPG, PNG only) rejecting all other file types
+- **FR-024**: System MUST encrypt provider feedback and support request submissions in transit (HTTPS) and at rest
 
 ### Integration Requirements
 
-- **FR-022**: System MUST provide REST API for provider platform to fetch Help Centre content with authentication
-- **FR-023**: System MUST integrate with media storage service (S-05) for file upload, retrieval, and deletion
-- **FR-024**: System MUST integrate with rich text editor library (Quill/TinyMCE/CKEditor) for content creation interface
-- **FR-025**: System MUST integrate with virus scanning service for file upload security validation
+- **FR-025**: System MUST provide REST API for provider platform to fetch Help Centre content with authentication, organized by subscreen types matching FR-032
+- **FR-026**: System MUST integrate with media storage service (S-05) for file upload, retrieval, and deletion
+- **FR-027**: System MUST integrate with rich text editor library (Quill/TinyMCE/CKEditor) for content creation interface
+- **FR-028**: System MUST integrate with virus scanning service for file upload security validation
+- **FR-026**: Admins MUST be able to view and manage Contact Support submissions with status tracking (Open, In Progress, Resolved, Closed) and response capabilities matching FR-032 Screen 5.5
+- **FR-027**: Admins MUST be able to view and manage Feedback & Suggestions submissions with status tracking (Submitted, Under Review, Planned, Implemented, Declined) and response capabilities matching FR-032 Screen 5.6
+- **FR-028**: Admins MUST be able to manage Service Status components, incidents, and maintenance windows with status page interface matching FR-032 Screen 5.7
 
 ---
 
@@ -618,11 +1011,29 @@ A provider clinic coordinator encounters an issue with submitting a quote and wa
 - **Entity 3 - FAQ Topic**
 - **Entity 4 - Content File Attachment**
 - **Entity 5 - Content Version History**
-- **Entity 6 - Provider Feedback Submission**
-- **Entity 7 - Support Request**
-- **Entity 8 - Service Status Component**
-- **Entity 9 - Incident Record**
-- **Entity 10 - Content Analytics**
+- **Entity 6 - Provider Feedback Submission**: Represents feedback submissions from providers
+  - **Key attributes**: submission ID, provider ID, feedback type (Feature Request, Bug Report, Suggestion, Other), title, description, priority, status (Submitted, Under Review, Planned, Implemented, Declined), submitted date, admin response, response history, last updated
+  - **Relationships**: One provider can submit many feedback items; feedback submissions reviewed by admins; status updates visible to provider in FR-032 Screen 5.6
+
+- **Entity 7 - Support Request**: Represents contact support submissions from providers
+  - **Key attributes**: ticket number, provider ID, subject, category, message, priority, attachment URL (if provided), status (Open, In Progress, Resolved, Closed), submitted date, admin response, response history, last updated
+  - **Relationships**: One provider can submit many support requests; support requests managed by admins; status updates visible to provider in FR-032 Screen 5.5
+
+- **Entity 8 - Service Status Component**: Represents individual service components for status monitoring
+  - **Key attributes**: component ID, component name, status (Operational, Degraded, Down), last updated timestamp, last updated by admin ID
+  - **Relationships**: Many components contribute to overall platform status; components affected by incidents
+
+- **Entity 9 - Incident Record**: Represents platform incidents and outages
+  - **Key attributes**: incident ID, title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services (array of component IDs), timeline updates (array of status changes with timestamps), created by admin ID
+  - **Relationships**: One incident affects many service components; incidents displayed in FR-032 Screen 5.7
+
+- **Entity 10 - Maintenance Window**: Represents scheduled maintenance periods
+  - **Key attributes**: maintenance ID, title, description, scheduled start time, scheduled end time, affected services (array of component IDs), status (Scheduled, In Progress, Completed, Cancelled), created by admin ID
+  - **Relationships**: One maintenance window affects many service components; maintenance displayed in FR-032 Screen 5.7
+
+- **Entity 11 - Content Analytics**: Represents content performance metrics
+  - **Key attributes**: content ID, view count, helpfulness rating (Yes/No counts), average time spent, last viewed timestamp
+  - **Relationships**: One content item has one analytics record; analytics used for content optimization
 
 ---
 
@@ -631,6 +1042,7 @@ A provider clinic coordinator encounters an issue with submitting a quote and wa
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-17 | 1.0 | Initial PRD creation for FR-033 Help Centre Content Management | Claude AI Assistant |
+| 2025-12-03 | 1.1 | Major updates to align with FR-032 changes: Reorganized screen specifications to match FR-032's 7 subscreen structure (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status); Added submission tracking management screens for Contact Support and Feedback with status workflows; Added Service Status management interface for components, incidents, and maintenance windows; Updated content creation/editing forms to match provider-facing layouts (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status); Updated preview functionality to match each subscreen layout; Updated workflows to reflect new subscreen structure; Added functional requirements for submission tracking and service status management | AI/Claude |
 
 ---
 
@@ -647,4 +1059,4 @@ A provider clinic coordinator encounters an issue with submitting a quote and wa
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD Template
-**Last Updated**: 2025-11-17
+**Last Updated**: 2025-12-03

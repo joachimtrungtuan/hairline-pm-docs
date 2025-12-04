@@ -24,7 +24,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: No direct patient-facing functionality (patients view provider profiles curated by admin)
+- **Patient Platform (P-XX)**: No direct patient-facing functionality (patients view provider profiles, which may be initially curated by admin but subsequent provider-made changes propagate directly)
 - **Provider Platform (PR-06)**: Full settings and profile management for clinic staff
 - **Admin Platform (A-XX)**: Admin manages Help Centre content, views provider profile quality metrics
 - **Shared Services (S-XX)**: S-03 (Notification Service) for preference enforcement, S-02 (Payment Service) for billing validation
@@ -107,7 +107,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - System validates image format (JPEG, PNG) and size (<5MB)
    - System displays image preview
 6. Provider selects supported languages from multi-select dropdown (consumes centrally managed language list from FR-026)
-7. Provider edits clinic name, description, contact email
+7. Provider edits clinic name, description, contact email, Location - City
 8. Provider clicks "Add Award" to add new award entry
    - System opens award form (name, issuer/organization, description, year, award image)
    - Provider fills award details and uploads award image
@@ -213,6 +213,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - ☑ Treatment Start Notifications (patient checked in, procedure started)
    - ☐ Aftercare Notifications (patient milestone completed, urgent aftercare alert) — DISABLED
    - ☑ Review Notifications (new review posted, review requires response)
+   - ☑ Promotion/Discount Notifications (new platform discounts created by admin that require provider acceptance/opt-in)
 5. Provider configures global channel preferences:
    - Email: ☑ Enabled (default email address from profile)
    - Push/In-App: ☑ Enabled (web portal notifications)
@@ -683,11 +684,12 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 | Field Name | Type | Required | Description | Validation Rules | Inline Editing |
 |------------|------|----------|-------------|------------------|----------------|
 | Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit |
+| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG only, recommended 1920x300px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit |
 | Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars | **Inline Edit**: Click text to activate edit mode; field becomes editable input; save (✓) and cancel (✗) buttons appear; validation on blur; saves immediately on save button click |
 | Review Rating | display | No | Average rating from patient reviews (read-only) | Display format: X.X/5.0 stars with total review count (e.g., "4.8/5.0 - Based on 127 reviews") | **Read-only**: Displays current average rating; clicking rating or "View all reviews" text navigates to Reviews tab (Tab 5) |
 | Edit Profile Button | button | N/A | Quick access to edit mode for all fields in tab | N/A | **Toggle Action**: Clicking button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows bulk editing of multiple fields |
 | About/Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars | **Inline Edit**: Click textarea to activate edit mode; expands to show full textarea with character counter (e.g., "245/500 characters"); save/cancel buttons appear; real-time validation; saves on save button click |
-| Contact Phone (Public) | text | No | Public-facing clinic phone number shown in profile "About" section | Numeric characters, spaces, +, -, and parentheses allowed; max 25 chars; format validation | **Inline Edit**: Click phone number to activate edit mode; field becomes editable input with format helper; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click |
+| Contact Phone (Public) | object | No | Public-facing clinic phone number shown in profile "About" section | Contains `Country Code` (dropdown, FR-026) and `Number` (text, numeric only, length validated per country code) | **Inline Edit**: Click to activate edit mode; field becomes object with dropdown for country code and input for number; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click |
 | Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique if changed | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click |
 | Location - City | text | No | City where clinic is located | Max 100 chars | **Inline Edit**: Click city name to activate edit mode; field becomes editable input; save/cancel buttons appear; saves on save button click |
 | Location - Country | dropdown | No | Country where clinic is located | Values from centrally managed country list (FR-026); optional but recommended | **Inline Edit**: Click country name to activate edit mode; field becomes dropdown selector with search; shows country list from FR-026; save/cancel buttons appear; saves on save button click |
@@ -696,6 +698,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Business Rules**:
 
 - Profile picture displayed in profile section; clicking opens upload dialog
+- Cover image displayed as a banner on the top of the provider profile in patient app;
 - If no logo uploaded, system displays clinic name initials as fallback
 - Review rating displays average rating (e.g., "4.8/5.0") with total review count (e.g., "Based on 127 reviews"); clicking navigates to Reviews tab
 - All fields support inline editing: clicking a field activates edit mode with save/cancel buttons
@@ -707,6 +710,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Notes**:
 
 - **Profile Picture**: Image upload via file picker; shows preview after upload before saving; crop/resize functionality available to ensure proper aspect ratio; if no image uploaded, displays clinic name initials as fallback
+- **Cover Image**: Image upload via file picker; shows preview after upload before saving; crop/resize functionality available to ensure proper aspect ratio;
 - **Inline Editing Behavior**: Clicking any editable field highlights it with border/background change and shows save (✓) and cancel (✗) buttons; field becomes editable input/textarea/dropdown; validation occurs on blur or save; changes persist immediately on save button click; cancel button discards changes and reverts to original value
 - **Character Counter**: About/Description field shows real-time character counter (e.g., "245/500 characters") with color change when approaching limit (yellow at 80%, red at 95%)
 - **Bulk Edit Mode**: "Edit Profile" button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows editing multiple fields before saving all at once via "Save All" button
@@ -927,6 +931,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 | Treatment Start Notifications | toggle/checkbox | No (default enabled) | Patient checked in, procedure started | Toggle on/off |
 | Aftercare Notifications | toggle/checkbox | No (default enabled) | Patient milestone completed, urgent aftercare alert | Toggle on/off |
 | Review Notifications | toggle/checkbox | No (default enabled) | New review posted, review requires response | Toggle on/off |
+| Promotion/Discount Notifications | toggle/checkbox | No (default enabled) | New platform discounts created by admin that require provider acceptance/opt-in | Toggle on/off |
 | Email Notifications | toggle/checkbox | No (default enabled) | Send notifications via email | Toggle on/off, email address from profile |
 | Push/In-App Notifications | toggle/checkbox | No (default enabled) | Show notifications in web portal | Toggle on/off |
 
@@ -1457,7 +1462,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Integration 3**: Help Centre → Admin Content Database (read-only content display)
   - **Data format**: JSON API response with Help Centre content (categories, articles, FAQs, videos, resources)
-  - **Authentication**: Internal API (no user authentication required for reading public help content)
+  - **Authentication**: Internal API (user authentication required, RBAC enforced per FR-009 as this is an authenticated provider area)
   - **Error handling**: If content unavailable, display cached version with "Content may be outdated" warning; retry after 1 minute
 
 ### Scalability Considerations
@@ -1516,7 +1521,7 @@ A provider clinic coordinator configures notification preferences to receive ema
 
 A provider updates their phone number, changes timezone to match clinic location after relocation, and changes password for security.
 
-**Why this priority**: Account settings ensure provider security and localization. Password changes required every 90 days per security policy; timezone accuracy ensures providers don't miss appointment times due to timezone confusion.
+**Why this priority**: Account settings ensure provider security and localization. Timezone accuracy ensures providers don't miss appointment times due to timezone confusion.
 
 **Independent Test**: Can be fully tested by updating phone number, timezone, and password in account settings, verifying changes saved correctly, and confirming password change email sent.
 
@@ -1605,43 +1610,43 @@ A provider closing their clinic permanently requests account deletion, and admin
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px)
-- **FR-002**: System MUST allow providers to select supported languages from centrally managed system language options (FR-026, managed together with country list)
-- **FR-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
-- **FR-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
-- **FR-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
-- **FR-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
-- **FR-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
-- **FR-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles + global channel preferences: email, push)
-- **FR-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
-- **FR-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
-- **FR-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
-- **FR-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
-- **FR-013**: System MUST allow providers to request account deletion (soft-delete with admin approval required)
+- **FR-032-001**: System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px)
+- **FR-032-002**: System MUST allow providers to select supported languages using the centrally managed system language options owned by FR-021 (Multi-Language & Localization), which are surfaced via FR-026 App Settings.
+- **FR-032-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
+- **FR-032-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
+- **FR-032-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
+- **FR-032-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
+- **FR-032-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
+- **FR-032-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles for quote, schedule, treatment start, aftercare, review, and promotion/discount notifications + global channel preferences: email, push)
+- **FR-032-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
+- **FR-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
+- **FR-032-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
+- **FR-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
+- **FR-032-013**: System MUST allow providers to request account deletion (soft-delete with admin approval required)
 
 ### Data Requirements
 
-- **FR-014**: System MUST persist provider profile data (logo, name, description, languages, awards) and propagate to patient quote comparison view within 1 minute
-- **FR-015**: System MUST persist account settings (phone number in international format, timezone, password hash)
-- **FR-016**: System MUST persist notification preferences and synchronize with S-03 Notification Service within 1 minute
-- **FR-017**: System MUST persist bank account details encrypted at rest (AES-256) and mask in UI (last 4 digits visible)
+- **FR-032-014**: System MUST persist provider profile data (logo, name, description, languages, awards) and propagate to patient quote comparison view within 1 minute
+- **FR-032-015**: System MUST persist account settings (phone number in international format, timezone, password hash)
+- **FR-032-016**: System MUST persist notification preferences and synchronize with S-03 Notification Service within 1 minute
+- **FR-032-017**: System MUST persist bank account details encrypted at rest (AES-256) and mask in UI (last 4 digits visible)
 
 ### Security & Privacy Requirements
 
-- **FR-018**: System MUST encrypt bank account details at rest using AES-256
-- **FR-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
-- **FR-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, old value, new value)
-- **FR-021**: System MUST send email notification to provider after password change (security alert)
-- **FR-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
-- **FR-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
+- **FR-032-018**: System MUST encrypt bank account details at rest using AES-256
+- **FR-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
+- **FR-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
+- **FR-032-021**: System MUST send email notification to provider after password change (security alert)
+- **FR-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
+- **FR-032-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
 
 ### Integration Requirements
 
-- **FR-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
-- **FR-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
-- **FR-026**: System MUST integrate with FR-026 to provide centrally managed language options in profile language selection (same system as country list management)
-- **FR-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
-- **FR-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
+- **FR-032-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
+- **FR-032-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
+- **FR-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
+- **FR-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
+- **FR-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 
 ---
 

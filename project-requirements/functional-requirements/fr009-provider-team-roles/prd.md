@@ -77,7 +77,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Out of Scope**:
 
-- SMS notifications for team management (handled by S-03: Notification Service if needed)
+- SMS notifications for team management (handled by S-03: Notification Service if needed; **no SMS is sent in MVP and this channel is reserved for future phases**)
 - Video tutorials for team onboarding (handled by separate content module)
 - Chat/messaging between team members (separate collaboration feature)
 
@@ -673,7 +673,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Tab 4: Security & Sessions**:
 
-*(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
+**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
@@ -689,7 +689,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Tab 5: Provider Relationship**:
 
-*(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
+**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|

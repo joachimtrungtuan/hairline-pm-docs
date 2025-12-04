@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Notification Rules & Configuration module provides comprehensive administrative control over the Hairline platform's notification system. This module enables admins to configure event-to-notification mappings, define delivery channels (email, SMS, push), manage notification templates, and establish recipient preferences across all three platform tenants (Patient, Provider, Admin). By centralizing notification configuration, the system ensures consistent, timely, and appropriate communication with all platform users while maintaining flexibility to adapt notification strategies as the business evolves.
+The Notification Rules & Configuration module provides comprehensive administrative control over the Hairline platform's notification system. This module enables admins to configure event-to-notification mappings, define delivery channels (email, push, and SMS in future phases), manage notification templates, and establish recipient preferences across all three platform tenants (Patient, Provider, Admin). By centralizing notification configuration, the system ensures consistent, timely, and appropriate communication with all platform users while maintaining flexibility to adapt notification strategies as the business evolves. **In MVP, only email and push are available; SMS is an optional channel planned for later phases once S-03 SMS support is enabled.**
 
 This module extends the foundational OTP template management capabilities from FR-026 (App Settings & Security Policies) to encompass all notification types across the platform, creating a unified notification governance system.
 
@@ -32,7 +32,7 @@ This module extends the foundational OTP template management capabilities from F
 - Patients receive notifications triggered by system events (quote received, booking confirmed, payment due, aftercare milestone, etc.)
 - Patients can view notification history in-app
 - Patients can manage personal notification preferences within boundaries set by admin (e.g., cannot disable critical payment notifications)
-- Notifications delivered via email, push notifications, and optionally SMS
+- Notifications delivered via email and push notifications in MVP; SMS delivery is optional and only becomes available in later phases when enabled in S-03/FR-020.
 
 **Provider Platform (PR-XX)**:
 
@@ -65,7 +65,7 @@ This module extends the foundational OTP template management capabilities from F
 
 - Email notification configuration and template management
 - Push notification (mobile and web) configuration and template management
-- SMS notification configuration for critical events (optional, admin-enabled)
+- SMS notification configuration for critical events (optional, admin-enabled, **not available in MVP; SMS becomes usable only when S-03 SMS delivery is implemented in a later phase**)
 - Event-to-notification mapping (which events trigger which notifications)
 - Recipient rule configuration (who receives notifications based on role, relationship, preferences)
 - Channel preference configuration per event type and recipient type
@@ -119,11 +119,11 @@ Activation method: Notification rules activate immediately upon saving (with con
 8. Admin configures channel preferences:
    - Email: Enabled (required for payment reminders)
    - Push notification: Enabled
-   - SMS: Optional (admin can enable for critical payment reminders)
+   - SMS: Optional (admin can enable for critical payment reminders in future phases; **SMS is not available in MVP**)
 9. Admin selects notification template for each enabled channel:
    - Email template: "Payment Reminder - 3 Days Before Due"
    - Push template: "Payment Due Soon"
-   - SMS template: "Payment Reminder" (if enabled)
+   - SMS template: "Payment Reminder" (if enabled in a later phase)
 10. Admin configures delivery timing:
     - Trigger: 3 days (72 hours) before installment due date
     - Delivery time: 9:00 AM in recipient's local timezone
@@ -285,8 +285,8 @@ Activation method: Notification rules activate immediately upon saving (with con
 | Email Template | select (dropdown) | Conditional | Template to use for email (required if email enabled) | Must select template if channel enabled |
 | Push Notification Channel | toggle (on/off) | No | Enable push notification delivery | Default: on for patients/providers |
 | Push Template | select (dropdown) | Conditional | Template for push notification (required if push enabled) | Must select template if channel enabled |
-| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature) | Default: off; admin approval required |
-| SMS Template | select (dropdown) | Conditional | Template for SMS (required if SMS enabled) | Must select template if channel enabled |
+| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature, **not available in MVP**) | Default: off; admin approval required |
+| SMS Template | select (dropdown) | Conditional | Template for SMS (required if SMS enabled in a future phase) | Must select template if channel enabled |
 | Delivery Timing | select (dropdown) | Yes | When to send notification (Immediate, Scheduled, Delayed) | Predefined options |
 | Schedule Time | datetime picker | Conditional | Specific time to send (required if Scheduled selected) | Future datetime only |
 | Delay Duration | number + unit | Conditional | Delay before sending (required if Delayed selected; e.g., "3 days before event", "1 hour after event") | Min 1 hour, max 90 days |
@@ -543,10 +543,10 @@ Activation method: Notification rules activate immediately upon saving (with con
   - **Integration**: RESTful API for push delivery; FCM for Android/iOS, Web Push API for browsers
   - **Failure handling**: If push service unavailable, queue notifications for retry; alert admin if outage exceeds 15 minutes; notifications expire after 24 hours (recipient sees notification history in-app instead)
 
-- **External Service 3**: SMS Gateway (e.g., Twilio, Vonage, Africa's Talking)
-  - **Purpose**: Delivers SMS notifications for critical events (optional, admin-enabled)
-  - **Integration**: RESTful API for SMS delivery; webhook for delivery status updates
-  - **Failure handling**: If SMS gateway unavailable, queue SMS for retry (max 3 attempts); fallback to email/push notification if SMS fails; alert admin of SMS delivery issues
+- **External Service 3**: SMS Gateway (e.g., Twilio, Vonage, Africa's Talking) – **future**
+  - **Purpose**: Delivers SMS notifications for critical events (optional, admin-enabled) once SMS is enabled in S-03 in a post‑MVP phase
+  - **Integration**: RESTful API for SMS delivery; webhook for delivery status updates (planned)
+  - **Failure handling**: If SMS gateway unavailable, queue SMS for retry (max 3 attempts); fallback to email/push notification if SMS fails; alert admin of SMS delivery issues. **This behaviour is future-facing; no SMS is sent in MVP.**
 
 - **External Service 4**: Template Rendering Engine (e.g., Handlebars, Twig, Blade)
   - **Purpose**: Renders notification templates with dynamic variables before delivery
@@ -761,12 +761,12 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to create notification rules by selecting event type, configuring recipient targeting, enabling delivery channels (email, push, SMS), selecting templates per channel, and defining delivery timing
+- **FR-001**: System MUST allow admins to create notification rules by selecting event type, configuring recipient targeting, enabling delivery channels (email, push, and SMS in future phases), selecting templates per channel, and defining delivery timing. In MVP, only email and push can actually be enabled; SMS is reserved for later phases once S‑03 SMS support is implemented.
 - **FR-002**: System MUST evaluate notification rules in real-time (<30 seconds) when system events occur and trigger notifications for all matching rules
 - **FR-003**: System MUST deliver email notifications via SMTP service within 2 minutes of trigger for 95% of emails
 - **FR-004**: System MUST deliver push notifications via FCM/Web Push within 1 minute of trigger for 95% of push notifications
-- **FR-005**: System MUST support optional SMS notifications for critical events (payment reminders, appointment alerts) with admin approval and cost tracking
-- **FR-006**: System MUST provide notification template editor supporting rich text (email), plain text (push, SMS), dynamic variables, and multi-language content
+- **FR-005**: System MUST support optional SMS notifications for critical events (payment reminders, appointment alerts) with admin approval and cost tracking in post‑MVP phases; **MVP does not send SMS**.
+- **FR-006**: System MUST provide notification template editor supporting rich text (email), plain text (push, SMS), dynamic variables, and multi-language content. SMS templates, if configured, are only used when SMS delivery is enabled in a later phase.
 - **FR-007**: System MUST validate notification templates before activation to ensure all variables exist in event payload and template syntax is valid
 - **FR-008**: System MUST automatically retry failed notification deliveries according to configured retry logic (max 3-5 attempts with exponential backoff)
 - **FR-009**: System MUST log all notification deliveries (successful and failed) with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)

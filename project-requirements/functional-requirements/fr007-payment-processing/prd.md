@@ -74,7 +74,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 **Out of Scope**:
 
 - Chat/messaging between patient and provider (handled elsewhere)
-- SMS channel specifics (handled by S-03 configuration)
+- SMS channel specifics (handled by S-03 configuration; **SMS payment notifications are not available in MVP and will only be enabled in a future phase via S-03/FR-020/FR-030**)
 - Any non-payment content (marketing, aftercare content)
 
 ### Entry Points

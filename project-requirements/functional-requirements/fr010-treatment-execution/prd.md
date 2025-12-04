@@ -76,7 +76,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 - Real-time chat between patient and provider during treatment (patients are physically present)
 - Video documentation of procedure (future enhancement)
 - Live streaming of treatment progress to patient's family (future enhancement)
-- SMS notifications to patient's emergency contact (handled by S-03: Notification Service configuration)
+- SMS notifications to patient's emergency contact (handled by S-03: Notification Service configuration; **no SMS treatment alerts are sent in MVP and this capability is reserved for a future phase once S-03 SMS support is enabled**)
 
 ### Entry Points
 

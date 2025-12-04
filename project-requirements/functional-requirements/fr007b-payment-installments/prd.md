@@ -69,7 +69,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Out of Scope**:
 
-- SMS notifications (handled by S-03 channel configuration)
+- SMS notifications (handled by S-03 channel configuration; **no SMS installment notifications are available in MVP and this channel is a future enhancement**)
 - Chat/messaging between patient and provider about payment terms
 - Marketing content about installment plans
 

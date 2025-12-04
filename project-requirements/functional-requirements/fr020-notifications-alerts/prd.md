@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Provide reliable, configurable notifications (email, push, optional SMS) for key lifecycle events across patients and providers. Deliver timely alerts, respect user preferences, prevent spam via throttling, and track delivery for operational visibility. MVP supports global Email/Push toggles on the patient app; fine‑grained category preferences follow in V2.
+Provide reliable, configurable notifications (email, push, optional SMS in future phases) for key lifecycle events across patients and providers. Deliver timely alerts, respect user preferences, prevent spam via throttling, and track delivery for operational visibility. MVP supports global Email/Push toggles on the patient app; fine‑grained category preferences follow in V2, and any SMS delivery is explicitly deferred beyond MVP.
 
 ---
 
@@ -21,7 +21,7 @@ Provide reliable, configurable notifications (email, push, optional SMS) for key
 - Patient Platform (P-01/P-03 overlay): Receive push/email notifications; manage global Email/Push toggles (MVP) and view notification history.
 - Provider Platform (PR-02/PR-05 overlay): Receive notifications for inquiries, quotes, bookings, payments, and messages; manage notification preferences (can choose which notification types to receive); view notifications via dropdown.
 - Admin Platform (A-09): Receive notifications for major system events (provider onboarding, payment issues, escalations, system alerts); configure default notification policies, SMS enablement, throttling thresholds, and view delivery dashboards; view notifications via dropdown.
-- Shared Services (S-03): Unified Notification Service orchestrating channels (email, push, SMS) with templates, throttling, and delivery tracking.
+- Shared Services (S-03): Unified Notification Service orchestrating channels (email, push, and SMS in future phases) with templates, throttling, and delivery tracking. SMS delivery is not implemented in MVP and is treated as a future enhancement.
 
 ### Scope Boundaries
 
@@ -31,7 +31,7 @@ In Scope:
   - **Patient notifications**: quote received, quote updated, quote expired, booking confirmed, payment received, payment reminder, message received, appointment reminder, treatment started (when provider marks patient as arrived), treatment completed (with post-op instructions), aftercare milestone, aftercare task due (3D scan, questionnaire), aftercare task overdue, cancellation (booking/treatment), standalone aftercare activation, standalone aftercare payment confirmation.
   - **Provider notifications**: inquiry received, quote accepted, quote expired (when quote expires without acceptance), booking confirmed, payment received, payout received (when admin processes provider payout with invoice), promotion/discount available (new platform discount requiring provider approval), message received, treatment start reminder (upcoming appointments), task in progress reminder (for treatments not completed), treatment completion confirmation (when treatment documentation is successfully saved), aftercare escalation, cancellation (inquiry/booking), payment reminder (for pending payments).
   - **Admin notifications**: provider onboarding requests, payment failures, system escalations, critical aftercare cases, provider document expiration warnings, high-priority support tickets, system alerts, treatment completion (for billing/payout processing), payout failures.
-- Channels: email, push; SMS optional/configurable for urgent events.
+- Channels: email, push; SMS is an optional/configurable channel for urgent events in the target architecture but is **not available in MVP** (no SMS notifications are sent until a later phase explicitly enables this capability).
 - User preferences (MVP):
   - **Patients**: global Email/Push toggles (managed in FR-001: Patient Authentication & Profile Management, Settings → Notifications section); per‑category preferences deferred to V2 (not in scope).
   - **Providers**: can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications) via notification preferences settings (managed in PR-06: Profile & Settings Management, Settings → Notifications section).
