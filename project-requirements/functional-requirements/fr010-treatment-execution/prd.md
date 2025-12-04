@@ -96,7 +96,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 **Access Requirements**:
 
-- Provider must have role: Owner, Admin, or Doctor (Coordinators cannot document treatments)
+- Provider must have role: Owner or Clinical Staff (Managers and Billing Staff may view but cannot document treatments)
 - Patient must have "Confirmed" booking status (payment completed)
 - Procedure date must be today or in the past (cannot mark future appointments as "In Progress")
 
@@ -106,7 +106,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 ### Main Flow: Treatment Execution & Documentation
 
-**Actors**: Provider (Doctor/Surgeon), Patient, System, Admin
+**Actors**: Provider (Clinical Staff), Patient, System, Admin
 **Trigger**: Patient arrives at clinic on scheduled procedure day
 **Outcome**: Treatment documented, patient receives post-op instructions, booking status moves to "Aftercare"
 
@@ -114,7 +114,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 1. **Patient Arrival**
    - Patient arrives at clinic and checks in with front desk
-   - Provider (Doctor) opens Provider Platform and navigates to "Scheduled Appointments"
+   - Provider (Clinical Staff) opens Provider Platform and navigates to "Scheduled Appointments"
    - Provider selects patient's booking from list of today's appointments
    - System displays patient summary: name, contact details (visible post-payment), booking details, treatment package, medical questionnaire with alerts, 3D scans
 
@@ -204,15 +204,15 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
   4. If confirmed, system proceeds with status transition to "In Progress"
 - **Outcome**: Treatment proceeds earlier than scheduled; original appointment time preserved in booking record
 
-**A2: Multiple Surgeons/Clinicians Involved**:
+**A2: Multiple Clinical Staff Involved**:
 
-- **Trigger**: Procedure requires multiple surgeons (e.g., large graft count, specialized technique)
+- **Trigger**: Procedure requires multiple clinicians (e.g., large graft count, specialized technique)
 - **Steps**:
-  1. Provider documents primary surgeon (selected during quote)
-  2. Provider adds secondary surgeon(s) from clinic staff list
+  1. Provider documents primary clinician (selected during quote)
+  2. Provider adds secondary clinical staff from clinic staff list
   3. System records all clinicians involved with their roles
-  4. Treatment notes can specify which surgeon handled which phase
-- **Outcome**: All involved clinicians credited in treatment record
+  4. Treatment notes can specify which clinician handled which phase
+- **Outcome**: All involved clinical staff credited in treatment record
 
 **A3: Treatment Plan Modified During Procedure**:
 
@@ -311,7 +311,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 | Procedure Time | time | Yes (read-only) | Scheduled time slot | Display only |
 | Treatment Type | select | Yes (read-only) | Hair transplant technique (FUE, DHI, FUT) | Display only |
 | Estimated Grafts | number | Yes (read-only) | Graft count from quote | Display only |
-| Assigned Surgeon | select | Yes (read-only) | Clinician selected during quote | Display only |
+| Assigned Clinician | select | Yes (read-only) | Clinical Staff member selected during quote (treating clinician/surgeon) | Display only |
 | Booking Status | badge | Yes (read-only) | Current status: "Confirmed", "In Progress", "Completed" | Color-coded: blue (confirmed), orange (in progress), green (completed) |
 | Actions | button group | Yes | "View Details", "Mark as Arrived" (if today/past), "View Treatment Record" (if completed) | Buttons enabled/disabled based on status and date |
 
@@ -321,7 +321,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 - **Mark as Arrived Enabled**: "Mark as Arrived" button enabled ONLY if:
   - Booking status = "Confirmed"
   - Procedure date ≤ today
-  - Provider role = Owner, Admin, or Doctor (not Coordinator)
+  - Provider role = Owner or Clinical Staff (Managers and Billing Staff cannot mark arrival)
 - **Status Badges**: Color-coded for quick visual scanning (blue = confirmed, orange = in progress, green = completed)
 - **Sort Order**: Default sort by procedure time (earliest first); provider can re-sort by patient name or graft count
 
@@ -345,7 +345,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 | Contact Phone | text | Yes (read-only) | Patient's phone number | Display only |
 | Treatment Package | text | Yes (read-only) | Selected treatment package from quote | Display only |
 | Estimated Graft Count | number | Yes (read-only) | Graft estimate from quote | Display only |
-| Assigned Surgeon | select | Yes | Clinician who will perform procedure | Editable if change needed before arrival marking |
+| Assigned Clinician | select | Yes | Clinical Staff member who will perform procedure | Editable if change needed before arrival marking |
 | Medical Questionnaire | expandable section | Yes (read-only) | Patient's medical history responses | Color-coded alerts: red (critical), yellow (standard), green (none) |
 | 3D Scans | image viewer | Yes (read-only) | Patient's head scans from inquiry | Interactive 3D viewer with zoom/rotate |
 | Booking Notes | text area | No (read-only) | Any special notes from booking or admin | Display only |
@@ -355,7 +355,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **Business Rules**:
 
 - **Medical Alert Display**: Critical conditions (red) displayed prominently at top; standard alerts (yellow) in expandable section; green checkmark if no alerts
-- **Surgeon Change**: If assigned surgeon is unavailable, provider can reassign to another clinician before marking arrival (change logged in audit trail)
+- **Clinician Change**: If assigned clinician is unavailable, provider can reassign to another Clinical Staff member before marking arrival (change logged in audit trail)
 - **3D Scan Viewer**: Interactive viewer allows provider to zoom, rotate, and review multiple angles captured during inquiry
 - **Confirm Arrival Action**: Upon clicking "Confirm Arrival":
   - System records arrival timestamp
@@ -383,7 +383,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 | Treatment Status | badge | Yes (read-only) | Current status: "In Progress" | Display only |
 | Procedure Start Time | time | Yes (read-only) | Timestamp when marked as arrived | Display only |
 | Elapsed Time | timer | Yes (read-only) | Live timer showing procedure duration | Updates every minute |
-| Assigned Surgeon | select | Yes | Primary surgeon performing procedure | Editable; dropdown of clinic staff with "Doctor" role |
+| Assigned Clinician | select | Yes | Primary Clinical Staff member performing procedure | Editable; dropdown of clinic staff with Clinical Staff role |
 | Additional Clinicians | multi-select | No | Other clinicians assisting (if applicable) | Optional; dropdown of clinic staff |
 | Donor Area(s) | multi-select | Yes | Body areas for graft extraction | Options: "Back of head (occipital)", "Sides of head (temporal)", "Beard area", "Chest", "Other" |
 | Recipient Area(s) | multi-select | Yes | Target areas for graft implantation | Options: "Hairline", "Crown", "Mid-scalp", "Temples", "Beard" |
@@ -473,7 +473,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 - **Rule 1**: Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages)
 - **Rule 2**: Treatment documentation MUST be initiated by marking patient as "arrived" (cannot pre-document treatments)
 - **Rule 3**: Procedure date MUST be today or in past to enable "Mark as Arrived" action (cannot mark future appointments)
-- **Rule 4**: Provider role MUST be Owner, Admin, or Doctor to document treatments (Coordinators can view but not edit)
+- **Rule 4**: Provider role MUST be Owner or Clinical Staff to document treatments (Managers and Billing Staff can view but not edit)
 - **Rule 5**: All timestamps (arrival, start, end) MUST be recorded in UTC and displayed in provider's local timezone
 - **Rule 6**: Treatment documentation MUST be completed within 24 hours of marking patient as arrived (system sends reminder notifications)
 - **Rule 7**: Maximum one treatment can be "In Progress" per patient at any time (prevents duplicate documentation)
@@ -579,8 +579,8 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
   - **Integration point**: Provider selects aftercare template in post-treatment documentation; system generates aftercare milestones, scan schedules, questionnaire cadence based on template
 
 - **FR-009 / Module PR-01: Auth & Team Management**
-  - **Why needed**: Treatment documentation requires authenticated provider with appropriate role (Owner, Admin, Doctor); surgeon assignment draws from clinic staff list
-  - **Integration point**: System validates provider role before enabling treatment documentation; surgeon dropdown populated from clinic staff with "Doctor" role
+  - **Why needed**: Treatment documentation requires authenticated provider with appropriate role (Owner or Clinical Staff); surgeon assignment draws from clinic staff list
+  - **Integration point**: System validates provider role before enabling treatment documentation; surgeon dropdown populated from clinic staff with Clinical Staff role
 
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: Status transition notifications sent to patient (treatment started, treatment completed); post-op instructions and medication schedules delivered via email/push
@@ -604,8 +604,8 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
   - **Why needed**: Treatment documentation can only be initiated for bookings with status = "Confirmed" (payment completed)
   - **Source**: P-03: Booking & Payment module; booking confirmed when patient completes payment
 
-- **Entity 2: Quote Details (Treatment Package, Graft Estimate, Surgeon)**
-  - **Why needed**: Quote details pre-fill treatment documentation fields; provider reviews estimated graft count vs. actual graft count
+- **Entity 2: Quote Details (Treatment Package, Graft Estimate, Assigned Clinician)**
+  - **Why needed**: Quote details pre-fill treatment documentation fields; provider reviews estimated graft count vs. actual graft count and which Clinical Staff member was initially assigned
   - **Source**: PR-02: Inquiry & Quote Management module; quote accepted by patient during booking
 
 - **Entity 3: Aftercare Templates**
@@ -613,8 +613,8 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
   - **Source**: Admin Platform A-09: System Settings & Configuration; admin creates and manages aftercare templates
 
 - **Entity 4: Provider Clinic Staff List**
-  - **Why needed**: Surgeon assignment and additional clinician selection require active staff members with appropriate roles
-  - **Source**: PR-01: Auth & Team Management module; provider creates staff accounts with roles (Doctor, Coordinator, etc.)
+  - **Why needed**: Clinician assignment and additional Clinical Staff selection require active staff members with appropriate roles
+  - **Source**: PR-01: Auth & Team Management module; provider creates staff accounts with roles (Owner, Manager, Clinical Staff, Billing Staff)
 
 ---
 
@@ -687,7 +687,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 ### Security Considerations
 
-- **Authentication**: Providers must authenticate via OAuth 2.0 with role-based access control (RBAC); only Owner, Admin, Doctor roles can document treatments
+- **Authentication**: Providers must authenticate via OAuth 2.0 with role-based access control (RBAC); only Owner and Clinical Staff roles can document treatments
 - **Authorization**: Providers can only document treatments for their own clinic's bookings (cross-clinic access forbidden); system validates clinic ownership before allowing documentation
 - **Encryption**: All treatment photos encrypted at rest (AES-256) in media storage service; photos transmitted over TLS 1.3; patient medical data encrypted in database
 - **Audit trail**: All treatment documentation actions logged with timestamp, provider user ID, IP address, action type (create, update, status change); audit logs immutable and retained 10 years
@@ -820,7 +820,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 ### Core Requirements
 
 - **FR-001**: System MUST allow providers to mark confirmed bookings as "arrived" when patient checks in at clinic, transitioning status to "In Progress"
-- **FR-002**: System MUST validate provider role (Owner, Admin, Doctor) before allowing treatment documentation; Coordinators cannot document treatments
+- **FR-002**: System MUST validate provider role (Owner or Clinical Staff) before allowing treatment documentation; Managers and Billing Staff cannot document treatments
 - **FR-003**: System MUST auto-save treatment documentation every 2 minutes during active procedures to prevent data loss
 - **FR-004**: System MUST require minimum documentation before allowing treatment completion: surgeon assignment, donor/recipient areas, technique, graft counts, before/after photos (min 3 each), medications (min 1), aftercare template selection
 - **FR-005**: System MUST watermark all uploaded treatment photos with anonymized patient ID and timestamp before storing in media storage service
@@ -841,7 +841,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 
 - **FR-015**: System MUST restrict treatment documentation access to provider clinic that owns the booking (no cross-clinic access)
 - **FR-016**: System MUST encrypt patient medical data (treatment notes, complications, medications) in transit (TLS 1.3) and at rest (AES-256)
-- **FR-017**: System MUST implement role-based access control (RBAC) for treatment documentation: Doctor role required to document, Coordinator role can view only
+- **FR-017**: System MUST implement role-based access control (RBAC) for treatment documentation: Clinical Staff role required to document; other provider roles (Owner, Manager, Billing Staff) can view according to their access level but cannot act as the documenting clinician
 - **FR-018**: System MUST validate file types on photo uploads (only JPG, PNG allowed) and perform virus scanning before storage
 - **FR-019**: System MUST rate-limit photo uploads (max 50 uploads per hour per provider) to prevent abuse or system overload
 

@@ -427,7 +427,7 @@ Each screen includes: Purpose, Data Fields table, Business Rules, and Notes sect
 
 - **FR-009 / Module PR-01**: Provider team member access to Help Centre
   - **Why needed**: All provider staff (regardless of role) should be able to access Help Centre for support
-  - **Integration point**: Help Centre accessible to all provider roles defined in FR-009 (Owner, Admin, Doctor, Coordinator)
+  - **Integration point**: Help Centre accessible to all provider roles defined in FR-009 (Owner, Manager, Clinical Staff, Billing Staff)
 
 ### External Dependencies (APIs, Services)
 

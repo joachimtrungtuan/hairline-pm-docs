@@ -3,14 +3,14 @@
 **Module**: PR-06: Profile & Settings Management
 **Feature Branch**: `fr032-provider-dashboard-settings`
 **Created**: 2025-11-17
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-032 from system-prd.md
 
 ---
 
 ## Executive Summary
 
-Provider Dashboard Settings & Profile Management enables clinic administrators and staff to configure their organization's profile, account settings, notification preferences, billing information, and team member permissions. This module provides providers with full control over their public-facing clinic information (logo, awards, languages), account security (password, phone, timezone), unified notification preferences (email, SMS, push), billing setup (bank accounts for payouts), and access to comprehensive help resources. The module serves as the centralized configuration hub for all provider-level settings, ensuring providers can efficiently manage their presence on the Hairline platform while maintaining security and compliance.
+Provider Dashboard Settings & Profile Management enables clinic administrators and staff to configure their organization's profile, account settings, notification preferences, billing information, and team member permissions. This module provides providers with full control over their public-facing clinic information (logo, awards, languages), account security (password, phone, timezone), unified notification preferences (email, push), billing setup (bank accounts for payouts), and access to comprehensive help resources. The module serves as the centralized configuration hub for all provider-level settings, ensuring providers can efficiently manage their presence on the Hairline platform while maintaining security and compliance.
 
 **Key Value Delivered**:
 
@@ -47,15 +47,12 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers (Owner role only) manage billing settings (bank account details)
 - Providers access Help Centre with read-only content
 - Providers request account deletion (soft-delete with admin approval)
-- Providers preview their public-facing profile (About card, languages, awards, staff, reviews) directly inside the dashboard
-- Providers browse a dedicated Reviews page to read patient feedback, filter by rating, and respond if workflow allows (responses handled by future enhancement; current scope is read-only)
+- Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and respond if workflow allows (responses handled by future enhancement; current scope is read-only)
 
 **Admin Platform (A-XX)**:
 
 - Admins create and manage Help Centre content (FAQs, guides, videos, resources)
 - Admins approve provider account deletion requests
-- Admins view provider profile completion metrics
-- Admins monitor notification preference trends
 
 **Shared Services (S-XX)**:
 
@@ -67,7 +64,6 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **In Scope**:
 
 - Email notifications based on provider preferences (quote alerts, schedule updates, review notifications)
-- SMS notifications (optional, if provider enables and provides phone number)
 - Push/In-app notifications for web portal activity
 - Help Centre contact support form submission
 
@@ -81,7 +77,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Provider-Initiated**:
 
-- Provider navigates to "Settings" or "Profile" section from main dashboard navigation
+- Provider navigates to "Settings & Support > Settings" from main dashboard navigation
 - Provider clicks on notification icon to configure preferences
 - Provider accesses Help Centre from footer or help icon
 - Provider Owner role accesses billing settings from financial dashboard
@@ -90,7 +86,6 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - System prompts provider to complete profile setup during onboarding
 - System sends notification approval requests when admin creates platform-wide discount
-- System requires password change after 90 days (security policy)
 
 ---
 
@@ -104,40 +99,26 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Steps**:
 
-1. Provider navigates to Profile section
-2. System displays current profile data (logo, name, description, languages, awards)
+1. Provider navigates to Settings & Support > Provider profile
+2. System displays current profile data (logo, name, description, languages, awards) in tabs
 3. Provider clicks "Edit Profile" button
 4. System loads profile editor with existing data pre-filled
 5. Provider uploads new clinic logo/profile picture (optional)
    - System validates image format (JPEG, PNG) and size (<5MB)
    - System displays image preview
-6. Provider selects supported languages from multi-select dropdown (consumes FR-021 language list)
+6. Provider selects supported languages from multi-select dropdown (consumes centrally managed language list from FR-026)
 7. Provider edits clinic name, description, contact email
 8. Provider clicks "Add Award" to add new award entry
    - System opens award form (name, issuer/organization, description, year, award image)
    - Provider fills award details and uploads award image
    - System validates award image (<2MB)
-9. Provider clicks "Save Changes"
-10. System validates all required fields (clinic name, description)
-11. System saves profile updates with timestamp
+9. Provider clicks "Save Changes" on the current tab
+10. System validates all required fields for the current tab (clinic name, description)
+11. System saves profile updates for the current tab with timestamp
 12. System displays success message "Profile updated successfully"
 13. System logs profile change in audit trail (user, timestamp, fields changed)
 14. System updates provider profile in quote comparison views (visible to patients)
-
-### Supporting Flow: Preview Public Profile
-
-**Actors**: Provider (any role), System  
-**Trigger**: Provider clicks "Preview public profile" or navigates to Provider Profile Preview screen  
-**Outcome**: Provider reviews read-only representation of their public profile (Screen 6) with quick links back to editable sections.
-
-**Steps**:
-
-1. Provider selects "Preview public profile" from Profile screen or navigation.
-2. System loads Screen 6 showing hero, About card, languages, awards, staff, and reviews preview.
-3. Provider reviews content; if adjustments needed, provider follows contextual CTA (e.g., "Edit profile", "Add award") to return to relevant editor.
-4. Provider refreshes preview to confirm updates; system reflects latest saved data within 1 minute.
-
-**Outcome**: Provider confirms public profile accuracy and quickly returns to edit sections as needed.
+15. System removes unsaved changes indicator for the saved tab
 
 ### Alternative Flows
 
@@ -166,7 +147,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Trigger**: Provider opens language selection dropdown
 - **Steps**:
-  1. System displays all available languages from FR-021 language list
+  1. System displays all available languages from centrally managed language list (FR-026)
   2. Provider selects multiple languages (e.g., English, Turkish, Spanish)
   3. System updates language tags in profile
   4. System saves language preferences
@@ -224,7 +205,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 1. Provider navigates to Settings → Notifications
 2. System displays unified notification settings with two sections:
    - **Section A: Notification Types** (individual toggles)
-   - **Section B: Global Channel Preferences** (email, SMS, push)
+   - **Section B: Global Channel Preferences** (email, push)
 3. Provider reviews current settings (all loaded from database)
 4. Provider toggles individual notification types:
    - ☑ Quote Notifications (new inquiry received, quote expiring soon)
@@ -234,10 +215,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - ☑ Review Notifications (new review posted, review requires response)
 5. Provider configures global channel preferences:
    - Email: ☑ Enabled (default email address from profile)
-   - SMS: ☑ Enabled (sends to phone number from account settings)
    - Push/In-App: ☑ Enabled (web portal notifications)
-6. Provider clicks "Save Preferences"
-7. System validates settings (if SMS enabled, phone number must exist)
+6. Provider clicks "Save Preferences" on the Notifications tab
+7. System validates settings
 8. System saves notification preferences to database
 9. System displays success message "Notification preferences updated"
 10. System logs preference change in audit trail
@@ -247,34 +227,20 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 ### Supporting Flow: Browse Reviews
 
 **Actors**: Provider (any role), System  
-**Trigger**: Provider selects `Reviews` from navigation or from the Profile Preview "View all" link  
-**Outcome**: Provider views Screen 7 to filter/sort reviews and read full feedback that corresponds to review notifications.
+**Trigger**: Provider selects `Reviews` tab within the Provider Profile detailed page  
+**Outcome**: Provider views Reviews tab to filter/sort reviews and read full feedback that corresponds to review notifications.
 
 **Steps**:
 
-1. Provider opens Reviews page.
+1. Provider opens Provider Profile page and selects Reviews tab.
 2. System loads rating summary, distribution bars, filters, and first page of review cards.
 3. Provider applies rating filters or changes sort order (e.g., "Most recent").
 4. System updates list instantly; provider paginates if needed to view more results.
 5. If provider arrived via a Review Notification, the associated review is auto-highlighted/highlighted within list.
-6. Provider clicks "View on profile" (optional) to jump to Screen 6 preview anchored on reviews section.
 
 **Outcome**: Provider can quickly review patient sentiment and correlate it with notifications without modifying review content.
 
 ### Alternative Flows
-
-**A4: Provider Enables SMS But No Phone Number Exists**:
-
-- **Trigger**: Provider enables SMS notifications without phone number in account settings
-- **Steps**:
-  1. Provider toggles SMS to "Enabled"
-  2. Provider clicks "Save Preferences"
-  3. System validates settings
-  4. System detects missing phone number
-  5. System displays warning "Phone number required for SMS notifications. Please add phone number in Account Settings first."
-  6. System provides link "Add Phone Number" → redirects to Account Settings
-  7. Provider either adds phone number or disables SMS preference
-- **Outcome**: Provider adds phone number and re-saves preferences, or disables SMS
 
 **A5: Provider Disables All Notification Types**:
 
@@ -487,15 +453,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **B9: Non-Owner Role Attempts to Access Billing Settings**:
 
-- **Trigger**: Provider Admin or Coordinator role tries to access billing settings
+- **Trigger**: Any non-Owner provider role (Manager, Clinical Staff, Billing Staff) tries to access billing settings
 - **Steps**:
-  1. Provider (Admin role) clicks "Billing" in settings menu
+  1. Provider (non-Owner role) navigates to Settings & Support > Settings > Billing tab
   2. System validates user role
   3. System detects user role ≠ Owner
-  4. System denies access
-  5. System displays error message "Access Denied. Only account owners can manage billing settings."
-  6. System redirects user to main settings page
-- **Outcome**: Non-owner prevented from accessing billing settings (per FR-009 role permissions)
+  4. System hides the Billing tab from navigation (non-owner cannot see or access billing settings)
+- **Outcome**: Non-owner cannot see or access billing settings (per FR-009 single-owner permissions)
 
 **B10: Invalid Bank Account Format**:
 
@@ -706,79 +670,237 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Screen 1: Profile Management
 
-**Purpose**: Allow provider to update clinic profile information visible to patients during quote comparison
+**Purpose**: Allow provider to update clinic profile information visible to patients during quote comparison. This screen is organized as 5 tabs within the Provider Profile page (Settings & Support > Provider profile).
+
+**Tab Structure**:
+
+#### Tab 1: Basic Information
+
+**Purpose**: Display and edit core clinic profile information including profile picture, name, rating, and contact details.
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Clinic Logo/Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px |
-| Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars |
-| Clinic Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars |
-| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format |
-| Clinic Phone (Public) | text | No | Public-facing clinic phone number shown in profile \"About\" section | Numeric characters, spaces, +, -, and parentheses allowed; max 25 chars |
-| Clinic Website URL | url | No | Public-facing clinic website shown in profile \"About\" section | Valid URL format (http/https) |
-| Clinic Country | dropdown | No | Country where clinic is located | Values from system country list (shared with FR-026); optional but recommended |
-| Clinic City | text | No | City where clinic is located | Max 100 chars |
-| Supported Languages | multi-select dropdown | Yes | Languages spoken at clinic | At least 1 language required, consumes FR-021 language list |
-| Awards List | repeatable section | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit |
+| Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars | **Inline Edit**: Click text to activate edit mode; field becomes editable input; save (✓) and cancel (✗) buttons appear; validation on blur; saves immediately on save button click |
+| Review Rating | display | No | Average rating from patient reviews (read-only) | Display format: X.X/5.0 stars with total review count (e.g., "4.8/5.0 - Based on 127 reviews") | **Read-only**: Displays current average rating; clicking rating or "View all reviews" text navigates to Reviews tab (Tab 5) |
+| Edit Profile Button | button | N/A | Quick access to edit mode for all fields in tab | N/A | **Toggle Action**: Clicking button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows bulk editing of multiple fields |
+| About/Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars | **Inline Edit**: Click textarea to activate edit mode; expands to show full textarea with character counter (e.g., "245/500 characters"); save/cancel buttons appear; real-time validation; saves on save button click |
+| Contact Phone (Public) | text | No | Public-facing clinic phone number shown in profile "About" section | Numeric characters, spaces, +, -, and parentheses allowed; max 25 chars; format validation | **Inline Edit**: Click phone number to activate edit mode; field becomes editable input with format helper; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click |
+| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique if changed | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click |
+| Location - City | text | No | City where clinic is located | Max 100 chars | **Inline Edit**: Click city name to activate edit mode; field becomes editable input; save/cancel buttons appear; saves on save button click |
+| Location - Country | dropdown | No | Country where clinic is located | Values from centrally managed country list (FR-026); optional but recommended | **Inline Edit**: Click country name to activate edit mode; field becomes dropdown selector with search; shows country list from FR-026; save/cancel buttons appear; saves on save button click |
+| Website URL | url | No | Public-facing clinic website shown in profile "About" section | Valid URL format (http/https); auto-prepends https:// if protocol missing | **Inline Edit**: Click URL to activate edit mode; field becomes editable input with URL validation; auto-formats on blur (adds https:// if missing); shows validation error if invalid; save/cancel buttons appear; saves on save button click |
 
 **Business Rules**:
 
-- Logo/profile picture displayed as circle avatar in patient quote comparison view
-- If no logo uploaded, system displays clinic name initials as fallback avatar
-- Clinic description displayed in provider card in patient app
-- Supported languages shown as tags below clinic name
-- Awards displayed in expandable "Awards & Certifications" section in provider detail view
-- Contact email, clinic phone (public), website URL, and location (city/country) displayed in "About" section of provider public profile
-- Clinic city/country data is shared with discovery/search modules (FR-021/FR-003) to help patients filter providers by location; providers must keep this accurate
+- Profile picture displayed in profile section; clicking opens upload dialog
+- If no logo uploaded, system displays clinic name initials as fallback
+- Review rating displays average rating (e.g., "4.8/5.0") with total review count (e.g., "Based on 127 reviews"); clicking navigates to Reviews tab
+- All fields support inline editing: clicking a field activates edit mode with save/cancel buttons
+- Unsaved changes indicator (dot/asterisk) appears on tab label when edits are made
+- Each field can be edited independently; changes saved per field or via "Save All" button
 - Profile changes logged in audit trail with timestamp and user
 - Profile updates propagate to patient app within 1 minute
-- All profile fields described in this screen are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable)
 
 **Notes**:
 
-- Image uploads should support drag-and-drop in addition to file picker
-- Show image preview after upload before saving
-- Allow crop/resize functionality for logo to ensure proper aspect ratio
-- Awards section should support reordering (drag-and-drop) to prioritize most important awards
-- Provide character counter for description field to help provider stay within limit
-- Awards list should be presented as cards/rows with inline **Edit** and **Delete** actions per award entry; clicking **Add award** or **Edit** opens a modal with all provider-editable award fields (name, issuer/organization, description, year, image)
-- Supported languages may surface in a dedicated `Language` sub-tab within the Profile page; the same data fields apply, but the UI should present each selected language as a removable chip/pill so providers can add/remove languages individually with immediate visual feedback
+- **Profile Picture**: Image upload via file picker; shows preview after upload before saving; crop/resize functionality available to ensure proper aspect ratio; if no image uploaded, displays clinic name initials as fallback
+- **Inline Editing Behavior**: Clicking any editable field highlights it with border/background change and shows save (✓) and cancel (✗) buttons; field becomes editable input/textarea/dropdown; validation occurs on blur or save; changes persist immediately on save button click; cancel button discards changes and reverts to original value
+- **Character Counter**: About/Description field shows real-time character counter (e.g., "245/500 characters") with color change when approaching limit (yellow at 80%, red at 95%)
+- **Bulk Edit Mode**: "Edit Profile" button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows editing multiple fields before saving all at once via "Save All" button
+- **Unsaved Changes**: Unsaved changes indicator (dot or asterisk) appears on tab label when any field has unsaved edits; indicator disappears when all changes saved
+- **Field Validation**: Real-time validation feedback shown inline (e.g., red border for invalid email, green checkmark for valid); error messages appear below field when invalid
+
+---
+
+#### Tab 2: Languages
+
+**Purpose**: Manage languages spoken at the clinic.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes centrally managed language list from FR-026 | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-026; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label |
+
+**Business Rules**:
+
+- Languages displayed as removable chips/pills with X button on each chip
+- Clicking "+ Add Language" opens dropdown with all available languages from FR-026
+- Selected languages immediately appear as chips; removing a chip removes it from selection
+- At least 1 language must be selected (validation prevents removing last language)
+- Changes saved automatically when language added/removed, or via "Save" button
+- Unsaved changes indicator appears on tab label when edits are made
+- Language changes logged in audit trail
+
+**Notes**:
+
+- Each language chip displays language name (e.g., "English", "Turkish", "Spanish")
+- Chips support drag-and-drop reordering to prioritize languages (most important first)
+- Visual feedback: chip highlights on hover; removal requires confirmation if it's the last language
+- Language list consumed from FR-026 (centrally managed with country list)
+
+---
+
+#### Tab 3: Staff List
+
+**Purpose**: View and manage clinic staff members (read-only view; staff management handled by PR-01/FR-009).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Staff Member List | card/list | No | Grid/list of staff members with avatars, names, roles, seat usage badges | Read-only data from PR-01/FR-009; displays: avatar (or initials), full name, role badge (Owner/Manager/Clinical Staff/Billing Staff), optional seat usage indicator | **Read-only**: Staff list displays current team members; "Manage Staff" button (visible to Owner/Manager roles) links to PR-01 team management interface; staff cards update automatically when changes made in PR-01; clicking staff card may show details (if implemented) |
+
+**Business Rules**:
+
+- Staff list displays staff members with: avatar, full name, role (Owner, Manager, Clinical Staff, Billing Staff), and seat usage badge (if applicable)
+- Staff data is read-only in FR-032; actual staff management handled by PR-01/FR-009
+- "Manage Staff" button (if user has Owner/Manager role) links to PR-01 team management interface
+- Staff list updates automatically when staff added/removed via PR-01
+- Non-owner roles may have limited visibility of staff list based on FR-009 permissions
+
+**Notes**:
+
+- Staff displayed as cards/rows in grid or list layout
+- Each staff card shows: avatar (or initials), name, role badge, and optional "View Details" link
+- Empty state: "No staff members added yet. Click 'Manage Staff' to add team members."
+- Staff management (add, edit, remove, role assignment) handled by PR-01/FR-009 module
+
+---
+
+#### Tab 4: Awards
+
+**Purpose**: Manage clinic awards, certifications, and recognitions.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) | **Inline Edit**: Add award: click "+ Add Award" button to open award form (modal or inline expansion) with fields: name (text), issuer/organization (text, optional), description (textarea, max 300 chars), year (number dropdown 1900-current), image upload (drag-and-drop or file picker, max 2MB); Edit award: click "Edit" icon/button on award card to expand inline editor with all fields editable; Delete award: click "Delete" icon/button on award card, confirmation dialog appears; Reorder: drag-and-drop award cards to prioritize; each award saves independently or via "Save All" button; unsaved changes indicator appears on tab label |
+
+**Business Rules**:
+
+- Awards displayed as cards/rows with: award image thumbnail, name, issuer/organization, year, description snippet
+- Clicking "Edit" on an award card opens inline editor (or modal) with all award fields editable
+- Clicking "+ Add Award" opens award form (name, issuer/organization, description, year, image upload)
+- Awards support drag-and-drop reordering to prioritize most important awards
+- Award image upload supports drag-and-drop; max 2MB, JPEG/PNG only
+- Changes saved per award (inline save) or via "Save All" button
+- Unsaved changes indicator appears on tab label when edits are made
+- Award changes logged in audit trail
+
+**Notes**:
+
+- Each award card displays: image thumbnail (or placeholder), award name (bold), issuer/organization, year, description (truncated with "Read more" if long)
+- Inline editing: clicking "Edit" expands award card to show editable fields with save/cancel buttons
+- Award image upload: click image area to upload/replace; supports drag-and-drop
+- Awards list supports reordering via drag-and-drop handles
+- Empty state: "No awards added yet. Click '+ Add Award' to showcase your achievements."
+
+---
+
+#### Tab 5: Reviews
+
+**Purpose**: Browse all patient reviews with filtering and sorting capabilities (read-only).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Overall Rating Summary | display | No | Average rating and total review count (e.g., "4.8/5.0 - Based on 127 reviews") | Read-only; calculated from Reviews service | **Read-only**: Displays current average rating with star display and total review count; updates automatically when new reviews added |
+| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | **Read-only**: Bar chart showing distribution of ratings (e.g., 60% 5-star, 25% 4-star, etc.) with counts; updates automatically |
+| Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Client-side filtering; selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session |
+| Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Client-side sorting; selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session |
+| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added |
+| Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Client-side pagination | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session |
+
+**Business Rules**:
+
+- Reviews data is read-only in FR-032; providers cannot edit/delete reviews
+- Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews")
+- Rating distribution shows bar chart with counts/percentages for each star rating
+- Filters and sort selections persist per user session
+- Clicking a review notification (from notifications) opens this tab with relevant review auto-highlighted
+- Data sourced from Reviews service; loading/empty/error states handled
+- Reviews update automatically when new reviews are posted
+
+**Notes**:
+
+- Review cards display: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated with "Read more")
+- Filters and sort controls at top of reviews list
+- Pagination controls: page numbers, next/previous, page-size selector (10/20/50 per page)
+- Empty state: "No reviews yet. Reviews will appear here once patients leave feedback."
+- Timestamp of last sync with Reviews service displayed at bottom
+
+---
+
+**General Business Rules (All Tabs)**:
+
+- Each tab can be saved independently; system displays unsaved changes indicator (dot/asterisk) on tab label when edits are made
+- When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
+- All profile changes logged in audit trail with timestamp and user
+- Profile updates propagate to patient app within 1 minute
+- All profile fields are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable)
+- Inline editing: clicking editable fields activates edit mode with save/cancel buttons; changes persist immediately on save
+- Staff list is read-only (managed via PR-01/FR-009); Reviews are read-only (managed by Reviews service)
 
 ---
 
 ### Screen 2: Account Settings
 
-**Purpose**: Allow provider to manage phone number, timezone, and password for account security and localization
+**Purpose**: Allow provider to manage phone number, timezone, and password for account security and localization. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Account Information tab).
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Phone Number - Country Code | dropdown | Yes (if phone provided) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) |
-| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format |
-| Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) |
-| Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash |
-| New Password | password | Yes (for password change) | New password | Min 12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char (!@#$%^&(),.?\":{}<>) per FR-026 |
-| Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field |
+| Field Name | Type | Required | Description | Validation Rules | Role-Based Behavior |
+|------------|------|----------|-------------|------------------|-------------------|
+| Account Name | text/display | Yes | Display name for the account | Max 200 chars | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) |
+| First Name | text | Yes | User's first name | Max 50 chars, letters and spaces only | Editable by all roles (Owner and Staff) |
+| Last Name | text | Yes | User's last name | Max 50 chars, letters and spaces only | Editable by all roles (Owner and Staff) |
+| Account Email | email | Yes | Email address for login and communications | Valid email format, unique in system | Editable by all roles (Owner and Staff) |
+| Phone Number - Country Code | dropdown | Yes (if phone provided) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles |
+| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles |
+| Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) | Editable by all roles |
+| Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles |
+| New Password | password | Yes (for password change) | New password | Min 12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char (!@#$%^&(),.?\":{}<>) per FR-026 | Editable by all roles |
+| Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field | Editable by all roles |
 
 **Business Rules**:
 
+- **Account Name Unification (Owner Role)**:
+  - For Owner accounts (main account holder/provider admin): Account Name is unified with the clinic name from Tab 1: Basic Information (clinic name field)
+  - Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1
+  - If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute)
+  - Account Name displays clinic name with read-only indicator (e.g., "Istanbul Hair Clinic" with lock icon or "Synced with clinic name" helper text)
+  - Rationale: Owner account represents the clinic organization, so account name should match clinic name for consistency across the platform
+  
+- **Account Name (Staff Roles)**:
+  - For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name
+  - Default Account Name for staff is "First Name + Last Name" (e.g., "John Smith")
+  - Staff can customize Account Name to any display name (e.g., "Dr. John Smith", "John S.", "J. Smith")
+  - Account Name for staff is used for display purposes in dashboard, notifications, activity logs, and team member listings
+  - Staff Account Name changes do not affect clinic name or other staff members' account names
+  - Rationale: Staff are individual team members, not the clinic itself, so they should have personalized display names
+  
 - Phone number country code and number stored together in international format (e.g., +44 7700 900123)
-- Phone number required if provider enables SMS notifications in notification preferences
 - Timezone preference applies to all date/time displays in provider dashboard
 - Existing timestamps in database remain in UTC, converted to provider's timezone for display
 - Password change requires correct current password (security measure)
 - New password must meet password policy from FR-026 (FIXED in codebase, not admin-editable)
 - Password change event logged in audit trail (timestamp, user ID, IP address)
 - Email notification sent to provider email address after successful password change (security alert)
-- Password must be changed every 90 days per security policy (system prompts provider)
-- The `Settings → Account Information` tab also displays provider **First Name** and **Account Email** fields for the logged-in user; both are provider-editable and changes are persisted to the user account record (per PR-01/Auth)
-- All account-level fields on this screen (first name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to FR-026 security rules and FR-009 role permissions
+- All account-level fields (account name, first name, last name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions
 
 **Notes**:
 
+- **Account Name Field**:
+  - For Owner: Display Account Name with read-only indicator (lock icon or "Synced with clinic name" helper text); clicking may show tooltip "Account name is unified with clinic name. Update clinic name in Profile tab to change this."
+  - For Staff: Display Account Name as editable text field with placeholder "e.g., Dr. John Smith" and helper text "This is how your name appears in the dashboard and notifications"
+  - Account Name field appears at the top of the Account Information tab for clarity
+  
 - Phone number field should auto-format based on selected country code (e.g., (555) 123-4567 for USA)
 - Provide real-time password strength indicator for new password field
 - Show password requirements checklist with visual checkmarks as user types
@@ -787,12 +909,14 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Display last password change date below password section
 - Include a dedicated **Delete Account** warning card at the bottom of the Account Information tab with explanatory copy and a red `Delete account` button; clicking the button opens the Account Deletion dialog described in the "Request Account Deletion" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
 - Account Settings shares the Settings page with Notification Preferences as a two-tab interface; the `Account Information` tab (this screen) is the default tab when landing on Settings
+- Each tab can be saved independently; system displays unsaved changes indicator on tabs with edits
+- When provider attempts to navigate away or quit, system displays reminder dialog for unsaved changes
 
 ---
 
 ### Screen 3: Notification Preferences
 
-**Purpose**: Allow provider to configure unified notification preferences (individual notification types + global channel preferences)
+**Purpose**: Allow provider to configure unified notification preferences (individual notification types + global channel preferences). This screen is organized as a tab within the Settings page (Settings & Support > Settings > Notification Preferences tab).
 
 **Data Fields**:
 
@@ -804,16 +928,16 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 | Aftercare Notifications | toggle/checkbox | No (default enabled) | Patient milestone completed, urgent aftercare alert | Toggle on/off |
 | Review Notifications | toggle/checkbox | No (default enabled) | New review posted, review requires response | Toggle on/off |
 | Email Notifications | toggle/checkbox | No (default enabled) | Send notifications via email | Toggle on/off, email address from profile |
-| SMS Notifications | toggle/checkbox | No (default disabled) | Send notifications via SMS | Toggle on/off, requires phone number in Account Settings |
 | Push/In-App Notifications | toggle/checkbox | No (default enabled) | Show notifications in web portal | Toggle on/off |
 
 **Business Rules**:
 
 - Notification preferences are profile-specific (apply to entire provider organization, not individual team members)
-- If SMS enabled but no phone number exists in Account Settings, show warning and link to add phone number
 - If all notification types disabled, show confirmation dialog warning provider may miss important updates
 - Notification preferences saved and enforced by S-03 Notification Service (FR-020)
 - Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles)
+- Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits
+- When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 - Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels
 - Preference changes logged in audit trail
 - Preference updates propagate to S-03 within 1 minute
@@ -827,12 +951,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Display last preference update timestamp
 - Provide "Test Notification" button to send sample notification and verify settings work
 - Notification Preferences appears as the second tab on the Settings page beside Account Information; toggling between tabs should maintain unsaved changes warning if applicable
+- Each tab has its own "Save" button; unsaved changes indicator appears on tab label when edits are made
 
 ---
 
 ### Screen 4: Billing Settings (Owner Role Only)
 
-**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform
+**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Billing tab). Non-owner roles cannot see or access this tab.
 
 **Data Fields**:
 
@@ -847,7 +972,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Business Rules**:
 
 - Billing settings accessible ONLY to Owner role (per FR-009 role permissions)
-- Non-owner roles see "Access Denied" message if attempting to access billing settings
+- Non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - Account number masked in read-only view (e.g., ●●●●●●1234), unmasked in edit mode
 - Bank account details encrypted at rest using AES-256
 - Bank account information validated by S-02 Payment Service before saving
@@ -869,103 +994,276 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Screen 5: Help Centre
 
-**Purpose**: Provide provider access to help resources, FAQs, guides, and contact support (content managed by admin via FR-033)
+**Purpose**: Provide provider access to help resources, FAQs, guides, and contact support (content managed by admin via FR-033). Help Centre is organized as a main landing page with subscreens for each content type, each with distinct layouts optimized for their content format.
+
+**Entry Point**: Provider navigates to "Help Centre" from settings menu or footer link
+
+**Main Landing Page**:
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Search Bar | text | No | Search help articles and FAQs | Max 200 chars |
-| FAQ Topic Selection | category filter | No | Filter FAQs by topic | Pre-defined topics from admin |
-| Support Contact Form - Subject | text | Yes (for contact) | Support request subject | Max 200 chars |
-| Support Contact Form - Message | textarea | Yes (for contact) | Detailed support request message | Max 2000 chars, min 20 chars |
-| Support Contact Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) |
+| Search Bar | text | No | Global search across all Help Centre content | Max 200 chars, autocomplete suggestions |
+| Category Navigation | navigation menu | No | Links to subscreens: FAQs, Tutorial Guides, Troubleshooting Tips, Policy Information, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, Service Status | N/A |
+| Most Popular Articles | card list | No | Top 5 most viewed/helpful articles across all categories | Read-only, sorted by view count/helpfulness |
+| Recently Updated | card list | No | Latest 5 updated articles across all categories | Read-only, sorted by update date |
 
 **Business Rules**:
 
 - All Help Centre content is read-only for providers (content managed exclusively by admins via FR-033)
-- Help Centre categories: FAQs, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum (future), Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
-- FAQs organized by topic with expandable/collapsible sections
-- Tutorial guides include step-by-step instructions with screenshots
-- Resource library provides downloadable templates and documents
-- Video tutorials embedded with play controls
-- Support contact form submissions sent to admin team
-- Support request confirmation displayed after submission: "Support request submitted. Our team will respond within 24 hours."
-- Provider can provide feedback on help articles (Was this helpful? Yes/No)
-- Feedback recorded for admin analytics
+- Search functionality searches across all content types (FAQs, articles, resources, videos)
 - Help Centre content updates (from admin) propagate to providers within 1 minute
-
-**Notes**:
-
-- Provide search functionality with autocomplete suggestions
-- Highlight matching keywords in search results
-- Display "Related Articles" recommendations at bottom of each article
-- Show "Most Popular" and "Recently Updated" sections on Help Centre home page
-- Support request form should auto-populate provider contact information (name, email, clinic)
-- Provide breadcrumb navigation for easy return to category/home
-- Display estimated response time for support requests
-- Show service status indicators (All Systems Operational / Incident Reported)
+- Breadcrumb navigation available on all subscreens for easy return to home
 
 ---
 
-### Screen 6: Provider Public Profile Preview
+#### Screen 5.1: FAQs
 
-**Purpose**: Provide providers with an in-dashboard, read-only preview of how their clinic profile appears to patients (cover image, About card, languages, awards, staff, reviews) while surfacing quick links to edit the underlying data.
+**Purpose**: Display frequently asked questions organized by topic with expandable/collapsible layout
 
-**Sections / Data Sources**:
+**Layout Type**: Distinct FAQ layout (accordion/expandable sections)
 
-| Section | Description | Data Source | Editability |
-|---------|-------------|-------------|-------------|
-| Hero / Cover | Large hero image with clinic logo, name, rating badge, and "Edit profile" button | Cover: static asset (future enhancement to allow uploads); logo/name from Provider Profile; rating from Reviews service | Cover non-editable in FR-032; logo/name editable via Screen 1 |
-| About Card | Clinic description, public email, public phone, website, city, country | Provider Profile fields defined in Screen 1 | Provider-editable |
-| Language Chips | Pill list of supported languages | Supported languages (Screen 1) | Provider-editable via language chips |
-| Awards & Recognition | Card list with medal icon, award name, issuer, year, description snippet | Awards list (Screen 1) | Provider-editable |
-| Staff Section | Grid of staff avatars with names/roles and seat usage badge | PR-01 / Team Management module | Read-only in FR-032 |
-| Reviews Preview | Snapshot of recent reviews (rating, reviewer, excerpt) with "View all" link | Reviews module (Screen 7) | Read-only content; link navigates to Screen 7 |
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| FAQ Topic Filter | category filter | No | Filter FAQs by topic (e.g., "Quote Management", "Payment Settings", "Aftercare") | Pre-defined topics from admin |
+| FAQ Questions | accordion list | No | List of FAQ items with question and expandable answer | Each FAQ: question (text), answer (rich text/HTML), topic category, helpfulness rating |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons for each FAQ | Records feedback for admin analytics |
 
 **Business Rules**:
 
-- Preview reflects latest saved profile data; updates render within 1 minute after provider saves edits.
-- "Edit profile" CTA deep links to Screen 1; "Manage staff" (if shown) links to PR-01; "View all reviews" links to Screen 7.
-- If a section has no data (e.g., no awards), display an empty-state illustration with CTA to add data.
-- Cover/hero image remains static for MVP; future provider-uploadable hero images are out of scope for FR-032.
+- FAQs organized by topic with expandable/collapsible accordion sections
+- Clicking question expands to show answer; clicking again collapses
+- Multiple FAQs can be expanded simultaneously
+- Topic filter updates list instantly (client-side filtering)
+- Feedback (Yes/No) recorded per FAQ for admin analytics
+- Search results highlight matching keywords in questions and answers
 
 **Notes**:
 
-- Show rating average and total review count above reviews preview, sourced from Reviews service.
-- Preview should be responsive and accessible (keyboard navigation, ARIA landmarks).
-- Include quick breadcrumb back to Provider Dashboard.
+- Accordion layout: question as header, answer expands below when clicked
+- Visual indicator (chevron/arrow) shows expanded/collapsed state
+- Related FAQs displayed at bottom of each FAQ answer
+- FAQ topics displayed as filter pills/chips at top of page
 
 ---
 
-### Screen 7: Reviews
+### Screen 5.2: Tutorial Guides, Troubleshooting Tips, Policy Information
 
-**Purpose**: Allow providers to browse all patient reviews from the dashboard, apply filters/sorting, and open full review details that correspond to review notifications.
+**Purpose**: Display step-by-step guides, troubleshooting articles, and policy documents in article layout
 
-**Data Fields / UI Elements**:
+**Layout Type**: Article layout (rich text content with formatting)
 
-| Element | Type | Description | Editability |
-|---------|------|-------------|-------------|
-| Overall Rating Summary | display | Average rating (e.g., 4.8/5), total reviews count, badges | Read-only |
-| Rating Distribution | bar chart | Percentage/count for 5★ through 1★ reviews | Read-only |
-| Rating Filters | checkbox/pill group | Selectable filters (5★, 4★, etc.) | Provider-editable filters (client-side) |
-| Sort Dropdown | dropdown | Values: Most recent (default), Highest rated, Lowest rated | Provider-editable control |
-| Review Cards | list | Reviewer avatar/name, treatment type, rating stars, review date, review text, optional "Respond" future CTA | Review content read-only |
-| Pagination Controls | control group | Page numbers, next/previous, page-size selector (10/20/50 per page) | Provider-editable control |
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Article Title | display | No | Title of tutorial guide/tip/policy | Read-only |
+| Article Content | rich text/HTML | No | Formatted article content with headings, lists, images, screenshots | Read-only, supports HTML formatting |
+| Article Metadata | display | No | Publication date, last updated date, author (admin), category | Read-only |
+| Table of Contents | navigation | No | Auto-generated from article headings (for long articles) | Read-only, clickable anchor links |
+| Related Articles | card list | No | Related articles from same or other categories | Read-only, links to other articles |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics |
 
 **Business Rules**:
 
-- Reviews data is read-only in FR-032; providers cannot edit/delete reviews but may filter/sort/paginate locally.
-- Filters and sort selections persist per user session for convenience.
-- Clicking a review notification opens this page with the relevant review auto-highlighted/scrolled into view.
-- Data sourced from Reviews service; ensure loading/empty/error states (e.g., "No reviews found for selected filters").
-- Exporting reviews or replying to reviews may be handled in future FRs; not in current scope.
+- Tutorial guides include step-by-step instructions with numbered lists and screenshots
+- Troubleshooting tips organized by common issues with solutions
+- Policy information displayed as formatted documents
+- Table of contents auto-generated for articles with multiple headings (articles >1000 words)
+- Related articles displayed at bottom based on category and tags
+- Feedback recorded for admin analytics
+- Print-friendly view available (removes navigation, optimizes for printing)
 
 **Notes**:
 
-- Provide link back to Provider Public Profile Preview to see how reviews appear to patients.
-- Show timestamp of last sync with Reviews service.
-- Display contextual helper text encouraging providers to maintain quick response times.
+- Article layout: full-width content area with formatted text, images, code blocks, lists
+- Screenshots/images displayed inline with captions
+- Step-by-step tutorials use numbered lists with visual separators
+- Breadcrumb navigation: Help Centre > [Category] > [Article Title]
+- Share article functionality (copy link, email link)
+
+---
+
+### Screen 5.3: Resource Library
+
+**Purpose**: Display downloadable resources (templates, documents, PDFs) in file viewer layout
+
+**Layout Type**: File viewer/download interface
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Resource List | card/grid | No | List of downloadable resources with thumbnails/icons | Each resource: name, description, file type, file size, download count, last updated |
+| Resource Category Filter | filter | No | Filter by resource type (Templates, Documents, Forms, etc.) | Pre-defined categories from admin |
+| File Type Filter | filter | No | Filter by file format (PDF, DOCX, XLSX, etc.) | Pre-defined file types |
+| Preview Button | button | No | Preview resource before download (if supported format) | Opens preview modal or new tab |
+| Download Button | button | No | Download resource file | Initiates file download |
+
+**Business Rules**:
+
+- Resources displayed as cards/grid with file type icons and metadata
+- Clicking resource card shows details: description, file size, download count, last updated date
+- Preview available for PDF and image files (opens in modal or new tab)
+- Download initiates file download; download count incremented
+- Resources can be filtered by category and file type
+- Search functionality searches resource names and descriptions
+
+**Notes**:
+
+- Grid/card layout: resource thumbnail/icon, name, file type badge, file size, download button
+- File type icons: PDF, DOCX, XLSX, PNG, etc.
+- Preview modal for PDFs with zoom controls
+- Download tracking: shows "Downloaded X times" on resource card
+- Empty state: "No resources available" when filters return no results
+
+---
+
+### Screen 5.4: Video Tutorials
+
+**Purpose**: Display video tutorials with embedded video player
+
+**Layout Type**: Video viewer interface
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Video List | card/grid | No | List of video tutorials with thumbnails | Each video: title, description, duration, thumbnail, view count, publish date |
+| Video Player | embedded player | No | Video player with play controls | Supports play, pause, volume, fullscreen, playback speed |
+| Video Transcript | expandable section | No | Text transcript of video (if available) | Read-only, expandable/collapsible |
+| Related Videos | card list | No | Related video tutorials | Read-only, links to other videos |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics |
+
+**Business Rules**:
+
+- Videos embedded with standard video player controls (play, pause, volume, fullscreen, playback speed)
+- Video thumbnails displayed in grid/list view
+- Clicking video card opens video player (inline or modal)
+- Video transcripts available (if provided by admin) in expandable section below player
+- View count incremented when video plays for >30 seconds
+- Related videos displayed based on category and tags
+- Feedback recorded for admin analytics
+
+**Notes**:
+
+- Video player: embedded HTML5 video player or YouTube/Vimeo embed
+- Thumbnail grid: video thumbnail, title, duration badge, view count
+- Video player supports: play/pause, volume control, fullscreen, playback speed (0.5x, 1x, 1.5x, 2x), progress bar
+- Transcript: expandable section below video with searchable text
+- Related videos: horizontal scrollable list or grid below current video
+
+---
+
+### Screen 5.5: Contact Support
+
+**Purpose**: Submit support requests via contact form with submission tracking
+
+**Layout Type**: Form interface with submission tracking
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Support Request Form - Subject | text | Yes | Support request subject line | Max 200 chars |
+| Support Request Form - Category | dropdown | No | Request category (Technical Issue, Billing Question, Feature Request, etc.) | Pre-defined categories |
+| Support Request Form - Message | textarea | Yes | Detailed support request message | Max 2000 chars, min 20 chars |
+| Support Request Form - Priority | dropdown | No | Request priority (Low, Medium, High, Urgent) | Default: Medium |
+| Support Request Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) |
+| Submission Tracking | list | No | List of submitted support requests with status | Each request: subject, category, status (Open, In Progress, Resolved, Closed), submitted date, last updated, ticket number |
+
+**Business Rules**:
+
+- Support contact form auto-populates provider contact information (name, email, clinic name)
+- Form submission creates support ticket with unique ticket number
+- Support request confirmation displayed: "Support request submitted. Ticket #[number]. Our team will respond within 24 hours."
+- Submission tracking shows all user's support requests with status updates
+- Status updates: Open → In Progress → Resolved → Closed
+- Provider can view request details and add follow-up messages (if implemented)
+- Email notification sent to provider when admin responds or updates status
+
+**Notes**:
+
+- Form layout: fields stacked vertically with clear labels and validation
+- File upload: drag-and-drop or file picker, shows upload progress
+- Submission tracking: table/list view with status badges, sortable by date/status
+- Ticket details: expandable view showing full conversation thread (if multi-message support implemented)
+- Estimated response time displayed: "Average response time: 24 hours"
+
+---
+
+### Screen 5.6: Feedback & Suggestions
+
+**Purpose**: Submit feedback and feature requests with submission tracking
+
+**Layout Type**: Form interface with submission tracking
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Feedback Form - Type | dropdown | Yes | Feedback type (Feature Request, Bug Report, Suggestion, Other) | Pre-defined types |
+| Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars |
+| Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 2000 chars, min 20 chars |
+| Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low |
+| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Submitted, Under Review, Planned, Implemented, Declined), submitted date, admin response |
+
+**Business Rules**:
+
+- Feedback form allows providers to submit feature requests, bug reports, and suggestions
+- Form submission creates feedback record with unique ID
+- Confirmation displayed: "Thank you for your feedback! We'll review your submission."
+- Submission tracking shows all user's feedback submissions with status
+- Status updates: Submitted → Under Review → Planned/Implemented/Declined
+- Admin can respond to feedback (if implemented); response visible in tracking list
+- Feedback helps prioritize platform improvements
+
+**Notes**:
+
+- Form layout: similar to Contact Support form
+- Feedback type selector determines form fields (e.g., Bug Report may include "Steps to Reproduce")
+- Submission tracking: table/list view with status badges
+- Status badges: color-coded (Submitted: gray, Under Review: blue, Planned: yellow, Implemented: green, Declined: red)
+- Admin response visible in expanded feedback details view
+
+---
+
+### Screen 5.7: Service Status
+
+**Purpose**: Display platform service status and incident reports
+
+**Layout Type**: Status page interface
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Overall Status Indicator | badge | No | Current platform status (All Systems Operational, Partial Outage, Major Outage) | Color-coded: green/yellow/red |
+| Service Components Status | list | No | Status of individual services/components | Each component: name, status (Operational, Degraded, Down), last updated |
+| Incident History | timeline | No | Recent incidents and maintenance windows | Each incident: title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services |
+| Maintenance Schedule | list | No | Upcoming scheduled maintenance | Each maintenance: title, description, scheduled start/end time, affected services |
+
+**Business Rules**:
+
+- Service status page displays real-time platform health
+- Overall status: "All Systems Operational" (green), "Partial Outage" (yellow), "Major Outage" (red)
+- Individual service components show status: Operational (green), Degraded (yellow), Down (red)
+- Incident history shows recent incidents with timeline and resolution details
+- Maintenance schedule shows upcoming planned maintenance windows
+- Status updates automatically when admin updates status via admin platform
+- Providers can subscribe to status updates (email notifications for incidents)
+
+**Notes**:
+
+- Status page layout: dashboard-style with status indicators and timeline
+- Overall status badge: large, prominent, color-coded
+- Service components: grid/list with status badges and last updated timestamps
+- Incident timeline: chronological list with expandable details
+- Maintenance schedule: calendar view or list view with countdown timers
+- Subscribe button: "Get email notifications for service incidents"
 
 ---
 
@@ -976,7 +1274,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute
 - **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts which bypass preferences)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
-- **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles denied access with "Access Denied" message
+- **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); conversely, reviews content, staff roster, and Help Centre articles remain read-only views fed by their respective modules
 
 ### Data & Privacy Rules
@@ -986,13 +1284,14 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Privacy Rule 3**: Account deletion requests result in soft-delete (account status = "Deleted", data archived per FR-023 data retention: minimum 7 years)
 - **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account deletion requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value
 - **GDPR Compliance**: Provider account deletion request allows provider to exercise "right to erasure" (soft-delete with data archival, not permanent deletion)
+- **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 
 ### Admin Editability Rules
 
 **Editable by Admin (via A-09: System Settings & Configuration and FR-033: Help Centre Content Management)**:
 
 - Help Centre content (FAQs, tutorial guides, troubleshooting tips, resource library, video tutorials, policy information)
-- System language options available in profile language selection (FR-021)
+- System language options available in profile language selection (centrally managed with country list in FR-026)
 - Country calling codes available in phone number selection (FR-026)
 - Timezone options available in account settings (FR-026)
 - Password policy parameters (configurable: max login attempts, lockout duration, OTP expiry, resend cooldown; FIXED in codebase: password complexity rules) (FR-026)
@@ -1014,7 +1313,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Billing Rule 1**: Bank account details validated by S-02 Payment Service before saving (format validation only, no funds verification)
 - **Billing Rule 2**: Bank account details used by FR-017 billing workflow for provider payouts (admin-triggered after treatment completion)
-- **Billing Rule 3**: Bank account changes require Owner role; non-owner roles prevented from viewing or editing billing settings
+- **Billing Rule 3**: Bank account changes require Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Billing Rule 4**: Bank account details encrypted at rest and masked in UI (only last 4 digits visible in read-only view)
 
 ---
@@ -1062,9 +1361,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   - **Why needed**: Provider notification preferences must be enforced when S-03 sends notifications (quote alerts, schedule reminders, review notifications)
   - **Integration point**: When provider saves notification preferences, system updates S-03 preference rules; S-03 checks preferences before sending each notification
 
-- **FR-021 / A-09: Multi-Language & Localization**: Language options for profile
+- **FR-026 / A-09: App Settings & Security Policies**: Language options for profile (centrally managed with country list)
   - **Why needed**: Profile language selection must display available system languages
-  - **Integration point**: Profile language dropdown consumes language list from FR-021 system configuration
+  - **Integration point**: Profile language dropdown consumes centrally managed language list from FR-026 system configuration (same as country list management)
 
 - **FR-026 / A-09: App Settings & Security Policies**: Country codes, timezone options, password policy
   - **Why needed**: Account settings require worldwide country calling codes, timezone list, and password validation rules
@@ -1100,9 +1399,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   - **Why needed**: Settings module requires existing provider account with clinic name, email, and role information
   - **Source**: Provider onboarding module (A-02: Provider Management & Onboarding creates provider account; PR-01 manages team members)
 
-- **Entity 2: System Configuration Data (from A-09: System Settings & Configuration)**: Language list, country codes, timezone list, password policy
+- **Entity 2: System Configuration Data (from A-09: System Settings & Configuration / FR-026)**: Language list (centrally managed with country list), country codes, timezone list, password policy
   - **Why needed**: Account settings and profile require system-wide configuration data
-  - **Source**: A-09 provides centrally managed lists consumed by settings module
+  - **Source**: FR-026 provides centrally managed language and country lists consumed by settings module
 
 - **Entity 3: Help Centre Content (from FR-033: Help Centre Content Management)**: FAQs, guides, videos, resources
   - **Why needed**: Help Centre displays admin-managed content
@@ -1115,7 +1414,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 ### User Behavior Assumptions
 
 - **Assumption 1**: Providers will complete profile setup (logo, description, awards) within first 7 days of account activation to maximize patient quote requests
-- **Assumption 2**: Providers will enable at least email notifications (most providers prefer email over SMS/push)
+- **Assumption 2**: Providers will enable at least email notifications (most providers prefer email over push)
 - **Assumption 3**: Provider Owners will add bank account details before completing first treatment (required for receiving payouts)
 - **Assumption 4**: Providers will use Help Centre for common questions before contacting support (self-service first)
 
@@ -1147,7 +1446,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 ### Integration Points
 
 - **Integration 1**: Provider Settings → S-03 Notification Service (notification preference enforcement)
-  - **Data format**: JSON payload with provider ID, notification type toggles (quote, schedule, treatment, aftercare, review), channel preferences (email, SMS, push)
+  - **Data format**: JSON payload with provider ID, notification type toggles (quote, schedule, treatment, aftercare, review), channel preferences (email, push)
   - **Authentication**: OAuth 2.0 bearer token (service-to-service)
   - **Error handling**: Retry with exponential backoff on 5xx errors; if S-03 unavailable for >5 minutes, log error and notify admin
 
@@ -1208,15 +1507,14 @@ A provider clinic coordinator configures notification preferences to receive ema
 
 **Acceptance Scenarios**:
 
-1. **Given** provider has default notification preferences (all types enabled, email and push enabled), **When** provider navigates to Settings → Notifications, disables "Aftercare Notifications" toggle, enables SMS notifications, saves preferences, **Then** system validates SMS preference (phone number exists in account settings), saves preferences, displays "Notification preferences updated" message, updates S-03 Notification Service, and provider receives no aftercare notifications but receives quote/schedule notifications via email, SMS, and push
-2. **Given** provider enables SMS notifications but has no phone number in account settings, **When** provider saves notification preferences, **Then** system validates SMS requirement, displays warning "Phone number required for SMS notifications. Please add phone number in Account Settings first.", provides link to Account Settings, and prevents saving SMS preference until phone number added
-3. **Given** provider disables all notification types, **When** provider clicks "Save Preferences", **Then** system displays confirmation dialog "Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?", requires provider confirmation, and if confirmed, saves "all disabled" preference and S-03 stops sending notifications (except critical system alerts)
+1. **Given** provider has default notification preferences (all types enabled, email and push enabled), **When** provider navigates to Settings → Notifications, disables "Aftercare Notifications" toggle, saves preferences, **Then** system saves preferences, displays "Notification preferences updated" message, updates S-03 Notification Service, and provider receives no aftercare notifications but receives quote/schedule notifications via email and push
+2. **Given** provider disables all notification types, **When** provider clicks "Save Preferences", **Then** system displays confirmation dialog "Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?", requires provider confirmation, and if confirmed, saves "all disabled" preference and S-03 stops sending notifications (except critical system alerts)
 
 ---
 
 ### User Story 3 - Update Account Settings (Phone, Timezone, Password) (Priority: P1)
 
-A provider updates their phone number to enable SMS notifications, changes timezone to match clinic location after relocation, and changes password for security.
+A provider updates their phone number, changes timezone to match clinic location after relocation, and changes password for security.
 
 **Why this priority**: Account settings ensure provider security and localization. Password changes required every 90 days per security policy; timezone accuracy ensures providers don't miss appointment times due to timezone confusion.
 
@@ -1242,7 +1540,7 @@ A provider Owner adds bank account details for receiving payouts from Hairline p
 
 1. **Given** provider Owner has completed first treatment and needs to receive payout, **When** provider Owner navigates to Settings → Billing, enters bank account details (Account Holder: "Istanbul Hair Clinic Ltd", Bank: "Garanti BBVA", Account Number: "TR123456789012345678901234", SWIFT: "TGBATRISXXX", IBAN: "TR12 0001 0012 3456 7890 1234 56"), clicks "Save Bank Account", **Then** system sends validation request to S-02 Payment Service, S-02 validates bank account format, system saves bank account details encrypted with AES-256, logs billing settings change in audit trail, displays "Bank account details saved successfully" message, sends confirmation email to Owner, and bank account used for next provider payout
 2. **Given** provider Owner enters invalid IBAN format (too short), **When** provider Owner submits bank account form with IBAN "TR1234", **Then** system validates IBAN format, detects invalid format (Turkey IBAN requires 26 chars), displays error "Invalid IBAN format. Turkey IBAN must be 26 characters (e.g., TR12 0001 0012 3456 7890 1234 56)", and prevents saving until valid IBAN entered
-3. **Given** provider has Admin role (not Owner), **When** provider Admin attempts to navigate to Settings → Billing, **Then** system validates user role, detects role ≠ Owner, denies access, displays error "Access Denied. Only account owners can manage billing settings.", and redirects user to main settings page
+3. **Given** provider has Admin role (not Owner), **When** provider Admin navigates to Settings & Support > Settings, **Then** system validates user role, detects role ≠ Owner, and hides the Billing tab from navigation (non-owner cannot see or access billing settings)
 
 ---
 
@@ -1289,14 +1587,11 @@ A provider closing their clinic permanently requests account deletion, and admin
 - What occurs if **S-03 Notification Service unavailable when provider saves notification preferences**?
   - System attempts to update S-03 with new preferences, detects S-03 unavailable (timeout or 5xx error), queues preference update for retry (exponential backoff), displays success message to provider "Notification preferences updated" (optimistic UI), logs error for admin monitoring, and retries preference update every 1 minute for up to 5 minutes; if S-03 still unavailable after 5 minutes, admin receives alert
 
-- How to manage **provider enables SMS notifications, adds phone number, then later removes phone number**?
-  - When provider removes phone number from account settings, system checks if SMS notifications enabled, detects conflict, automatically disables SMS notifications, displays warning "SMS notifications disabled because phone number was removed", logs preference change, and updates S-03 to stop SMS notifications
-
 - What happens when **S-02 Payment Service returns validation error for bank account details**?
   - System receives validation error from S-02 (e.g., "Bank not found" or "SWIFT code mismatch"), displays error message to provider "Bank account validation failed: [error detail from S-02]. Please verify your bank details and try again.", prevents saving bank account details, and provider must correct details and retry
 
 - How does system handle **provider Owner changes role to Admin (no longer Owner)**?
-  - When admin changes provider's role from Owner to Admin (via FR-009), system detects role change, removes access to billing settings for this user, and next time user attempts to access billing settings, displays "Access Denied. Only account owners can manage billing settings."; existing bank account details remain saved and accessible to new Owner role user
+  - When admin changes provider's role from Owner to Admin (via FR-009), system detects role change, and next time user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details remain saved and accessible to new Owner role user
 
 - What occurs if **Help Centre content fails to load due to network issue**?
   - System attempts to fetch Help Centre content from admin content database, detects network timeout or error, displays cached version of Help Centre content (if available) with warning banner "Content may be outdated. Please refresh to load latest updates.", and provides "Retry" button for manual refresh
@@ -1311,13 +1606,13 @@ A provider closing their clinic permanently requests account deletion, and admin
 ### Core Requirements
 
 - **FR-001**: System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px)
-- **FR-002**: System MUST allow providers to select supported languages from system language options (FR-021 language list)
+- **FR-002**: System MUST allow providers to select supported languages from centrally managed system language options (FR-026, managed together with country list)
 - **FR-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
 - **FR-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
 - **FR-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
 - **FR-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
 - **FR-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
-- **FR-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles + global channel preferences: email, SMS, push)
+- **FR-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles + global channel preferences: email, push)
 - **FR-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
 - **FR-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
 - **FR-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
@@ -1337,14 +1632,14 @@ A provider closing their clinic permanently requests account deletion, and admin
 - **FR-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
 - **FR-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, old value, new value)
 - **FR-021**: System MUST send email notification to provider after password change (security alert)
-- **FR-022**: System MUST enforce role-based access control for billing settings (Owner role only)
+- **FR-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
 - **FR-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
 
 ### Integration Requirements
 
 - **FR-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
 - **FR-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
-- **FR-026**: System MUST integrate with FR-021 to provide language options in profile language selection
+- **FR-026**: System MUST integrate with FR-026 to provide centrally managed language options in profile language selection (same system as country list management)
 - **FR-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
 - **FR-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 
@@ -1361,7 +1656,7 @@ A provider closing their clinic permanently requests account deletion, and admin
   - **Relationships**: One provider has one account settings record; account settings linked to provider profile
 
 - **Entity 3 - Provider Notification Preferences**: Represents provider notification configuration
-  - **Key attributes**: provider ID, quote notifications (boolean), schedule notifications (boolean), treatment start notifications (boolean), aftercare notifications (boolean), review notifications (boolean), email enabled (boolean), SMS enabled (boolean), push enabled (boolean), last updated timestamp
+  - **Key attributes**: provider ID, quote notifications (boolean), schedule notifications (boolean), treatment start notifications (boolean), aftercare notifications (boolean), review notifications (boolean), email enabled (boolean), push enabled (boolean), last updated timestamp
   - **Relationships**: One provider has one notification preferences record; notification preferences enforced by S-03 Notification Service
 
 - **Entity 4 - Provider Billing Settings**: Represents provider bank account details for payouts
@@ -1376,7 +1671,7 @@ A provider closing their clinic permanently requests account deletion, and admin
   - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
   - **Relationships**: Help Centre content created and managed by admins (FR-033); one provider can view many help centre content items (read-only)
 
-- **Entity 7 - Provider Reviews View (Read-Only)**: Represents aggregated reviews and list data shown on Screen 7
+- **Entity 7 - Provider Reviews View (Read-Only)**: Represents aggregated reviews and list data shown in Tab 5 (Reviews tab) within Screen 1 (Provider Profile)
   - **Key attributes**: provider ID, average rating, total reviews count, rating distribution (counts per star), reviews array (review ID, reviewer name, avatar URL, rating, review text, treatment type, review date), last sync timestamp
   - **Relationships**: Data sourced from Reviews module/service; provider can filter/sort but cannot mutate review records within FR-032
 
@@ -1387,6 +1682,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-17 | 1.0 | Initial PRD creation for FR-032: Provider Dashboard Settings & Profile Management | AI/Claude |
+| 2025-12-03 | 1.1 | Major updates: Removed SMS functionality throughout; Reorganized Screen 1 (Profile Management) into 5 tabs (Basic Information, Languages, Staff List, Awards, Reviews) with detailed inline editing specifications; Added account name unification rules (Owner accounts unified with clinic name, Staff accounts editable); Removed Screen 6 (Reviews now Tab 5 in Screen 1); Reorganized Screen 5 (Help Centre) into 7 subscreens with distinct layouts (FAQs, Articles, Resource Library, Video Tutorials, Contact Support, Feedback, Service Status); Updated navigation paths to "Settings & Support > Settings" and "Settings & Support > Provider profile"; Removed password change after 90 days requirement; Added per-tab save functionality with unsaved changes indicators; Updated language list references to FR-026 (centrally managed with country list); Removed admin metrics (profile completion, notification trends); Updated non-owner access restrictions (hidden tabs instead of error messages); Removed preview public profile functionality; Removed profile picture circle shape requirement and drag-and-drop; Updated all field specifications with inline editing details | AI/Claude |
 
 ---
 
@@ -1394,13 +1690,13 @@ A provider closing their clinic permanently requests account deletion, and admin
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Pending] | [Pending] | [Pending] |
-| Technical Lead | [Pending] | [Pending] | [Pending] |
-| Stakeholder | [Pending] | [Pending] | [Pending] |
+| Product Owner | [Name] | 2025-12-03 | ✅ Approved |
+| Technical Lead | [Name] | 2025-12-03 | ✅ Approved |
+| Stakeholder | [Name] | 2025-12-03 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2025-11-17
+**Last Updated**: 2025-12-03

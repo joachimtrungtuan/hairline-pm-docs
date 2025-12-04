@@ -30,7 +30,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 ```sh
 project-requirements/
 ├── constitution-summary.md      # 🎯 START HERE - Project overview & principles
-├── system-prd.md                # 📋 Functional requirements (25 FRs with module mapping)
+├── system-prd.md                # 📋 Functional requirements (33 FRs with module mapping)
 ├── system-technical-spec.md     # ⚙️ Technical architecture & implementation
 ├── system-data-schema.md        # 🗄️ Database design (97 tables)
 ├── transcriptions/              # 📝 Original requirement sources
@@ -80,11 +80,11 @@ task-prompt/                     # 📝 Task generation templates
 - **Patient Modules**: P-01 through P-07 (Auth, Quotes, Booking, Travel, Aftercare, Communication, 3D Scanning)
 - **Provider Modules**: PR-01 through PR-06 (Auth, Inquiries & Quotes, Treatment, Aftercare, Financial, Settings)
 - **Admin Modules**: A-01 through A-10 (Patient Mgmt, Provider Mgmt, Aftercare, Travel, Billing, Discounts, Affiliates, Analytics, Settings, Communication)
-- **Shared Services**: S-01 through S-05 (3D Processing, Payment, Notifications, Travel API, Media Storage)
+- **Shared Services**: S-01 through S-06 (3D Processing, Payment, Notifications, Travel API, Media Storage, Audit Log)
 
 ## 📋 Functional Requirements
 
-The system includes **25 Functional Requirements** (FR-001 through FR-025) covering:
+The system includes **33 Functional Requirements** (FR-001 through FR-033) covering:
 
 - **Patient Journey**: Registration → Inquiry → Quote Comparison → Booking → Payment → Treatment → Aftercare
 - **Provider Operations**: Team management, quote submission, appointment scheduling, treatment execution

@@ -664,19 +664,19 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 **Requirements**:
 
 - Providers MUST be able to invite team members to platform
-- System MUST support role-based permissions (Owner, Admin, Doctor, Coordinator)
+- System MUST support role-based permissions (Owner, Manager, Clinical Staff, Billing Staff)
 - Each role MUST have specific access rights to features and data
 - Team members MUST be able to collaborate on inquiries and quotes
 - System MUST log all actions by user for audit trail
-- Providers MUST be able to remove or suspend team members
+- Providers MUST be able to remove or suspend team members (within Owner/Manager permissions)
 - System MUST send email invitations to new team members
 
 **Role Permissions**:
 
-- **Owner**: Full access, billing, team management
-- **Admin**: All except billing and owner-level settings
-- **Doctor**: View inquiries, create quotes, manage treatments
-- **Coordinator**: Manage bookings, schedules, communicate with patients
+- **Owner (Main Account Holder)**: Full access, billing, team management, and legal/contract responsibility; only role allowed to manage bank account details and ownership changes (via Admin Platform workflows).
+- **Manager (Clinic Manager / Operations)**: Broad operational access across inquiries, quotes, schedules, and day-to-day team management, but no ability to change ownership or bank account details.
+- **Clinical Staff**: Access to in-progress and aftercare sections, treatment execution and documentation, and clinical notes; limited or no access to billing configuration.
+- **Billing Staff**: Access to financial views (quotes, payouts, revenue metrics) and reconciliation screens; no access to treatment documentation or team structure changes.
 
 ---
 

@@ -57,6 +57,15 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 - Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks
 - S-06: Audit Log Service records all team management actions for compliance
 
+### Provider Role Model
+
+The provider platform uses four clinic-side roles that directly reflect how real clinics operate, while keeping clear separation from Hairline's own Admin Platform roles:
+
+- **Owner (Main Account Holder)**: Single primary account per provider organization. Responsible for bank details and payouts, contract acceptance, and high-risk configuration. Mapped to the "provider admin / main account holder" described in the client transcription.
+- **Manager (Clinic Manager / Operations)**: Operational lead and front-of-staff representative. Can see and manage the full patient journey in the provider portal (inquiries, quotes, schedules, day-to-day operations), coordinate staff work, and manage most team settings, but cannot change bank details or ownership.
+- **Clinical Staff**: Medical staff who perform procedures and aftercare (surgeons, clinicians, nurses). Focused on in-progress and aftercare sections, treatment documentation, scans, and medical notes. Limited or no access to billing or sensitive configuration.
+- **Billing Staff**: Finance-oriented staff who work with quotes and payouts ("how much they're making"). Can view and reconcile financial information but cannot alter clinical records or manage team structure/ownership.
+
 ### Communication Structure
 
 **In Scope**:
@@ -75,7 +84,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 ### Entry Points
 
 - **Provider Owner**: Accesses team management from provider dashboard main navigation ("Team" tab)
-- **Provider Admin**: Accesses limited team management features from settings menu
+- **Provider Manager**: Accesses operational team management features from settings menu (within Owner-defined limits)
 - **New Team Member**: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role
 - **Admin Platform**: System administrators access team management oversight from admin dashboard provider detail view
 
@@ -95,7 +104,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 2. System displays current team members with their roles and status
 3. Provider Owner clicks "Invite Team Member" button
 4. System presents invitation form with fields: email address, first name, last name, role selection
-5. Provider Owner enters team member details and selects role (Owner, Admin, Doctor, Coordinator)
+5. Provider Owner enters team member details and selects role (Manager, Clinical, Billing). Owner role is not assignable from this flow and is reserved for the single primary account holder managed via Admin Platform (FR-031).
 6. System validates email format and checks for duplicate email within organization
 7. Provider Owner reviews invitation details and clicks "Send Invitation"
 8. System generates secure invitation token (expires in 7 days)
@@ -113,15 +122,6 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 20. New Team Member can immediately log in with new credentials
 
 ### Alternative Flows
-
-**A1: Owner invites another Owner**:
-
-- **Trigger**: Provider Owner selects "Owner" role for new team member
-- **Steps**:
-  1. System displays warning: "Owners have full access including billing and team removal. Are you sure?"
-  2. Provider Owner confirms understanding
-  3. Invitation proceeds with Owner role
-- **Outcome**: New Owner has equal privileges to existing Owner(s)
 
 **A2: Reinvite expired invitation**:
 
@@ -212,24 +212,14 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### Alternative Flows
 
-**A4: Admin trying to change Owner role**:
+**A4: Attempt to modify Owner role via provider UI**:
 
-- **Trigger**: Provider Admin attempts to modify a Provider Owner's role
+- **Trigger**: Any provider user (Owner or Admin) attempts to modify the Owner's role from the provider platform
 - **Steps**:
-  1. System detects actor role is Admin and target role is Owner
-  2. System displays error: "Only Owners can modify other Owners' roles"
+  1. System detects target role is Owner (single primary account holder)
+  2. System displays error: "Ownership for this provider is managed by Hairline Admins. Please contact support to request changes."
   3. Edit dialog closes without making changes
-- **Outcome**: Owner role protection maintained; system prompts admin to contact platform support if ownership transfer is required
-
-**A5: Last Owner being demoted**:
-
-- **Trigger**: Provider Owner attempts to change own role or another Owner's role when only one Owner remains
-- **Steps**:
-  1. System counts total Owners in organization
-  2. System detects only 1 Owner exists
-  3. System displays error: "At least one Owner must remain. Promote another team member to Owner first."
-  4. System prevents role change
-- **Outcome**: Organization always has at least one Owner
+- **Outcome**: Ownership is never changed from the provider platform; all ownership transfers/demotions happen via Admin Platform (FR-031), preserving the single-owner invariant
 
 **B5: Team member currently performing critical action**:
 
@@ -317,7 +307,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 |------------|------|----------|-------------|------------------|
 | Team Member Name | Display (text) | N/A | Full name of team member | Display only |
 | Email | Display (email) | N/A | Team member's email address | Display only |
-| Role | Display (badge/tag) | N/A | Current role (Owner/Admin/Doctor/Coordinator) | Display only |
+| Role | Display (badge/tag) | N/A | Current role (Owner/Manager/Clinical/Billing) | Display only |
 | Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only |
 | Status | Display (badge) | N/A | Active, Invited, Suspended | Display only |
 | Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time |
@@ -327,12 +317,12 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 **Business Rules**:
 
-- Only Owners and Admins can access dashboard; Admins have read-only visibility into Owner rows.
+- Only Owners and Managers can access dashboard; Managers have read-only visibility into Owner rows.
 - Owner rows display lock badge with tooltip: "Ownership changes managed by Hairline Admins."
 - "Invited" status rows show "Resend Invitation" and "Cancel Invitation."
 - "Suspended" rows show "Reactivate."
 - Current logged-in user's row highlighted with "(You)."
-- Sorting: Owners (locked) → Admins → Doctors → Coordinators, alphabetical.
+- Sorting: Owners (locked) → Managers → Clinical → Billing, alphabetical.
 - Search/filter by name, email, role, status.
 - Banner surfaces central team-size policy and provides link to "Request More Seats" modal (sends request to Admin Platform).
 
@@ -355,14 +345,14 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | First Name | text | Yes | Team member's first name | 2-50 characters, letters, spaces, hyphens |
 | Last Name | text | Yes | Team member's last name | 2-50 characters |
 | Email | email | Yes | Work email | Valid email, unique within org, not exceeding seat limit |
-| Role | select/dropdown | Yes | Owner/Admin/Doctor/Coordinator | Owner option shows warning + lock icon |
+| Role | select/dropdown | Yes | Owner/Manager/Clinical/Billing | Owner option shows warning + lock icon |
 | Personal Message | textarea | No | Optional note for invitation email | Max 500 chars |
 | Seat Limit Banner | Display | N/A | Shows remaining seats & link to request more if depleted | Display-only |
 
 **Business Rules**:
 
 - Email uniqueness enforced per org; duplicates prompt "View member / Resend invitation" CTA.
-- Role dropdown includes inline permission summary; Owner option disabled if platform hasn't approved multiple owners.
+- Role dropdown includes inline permission summary; Owner option is always disabled in this screen and annotated: "Primary Owner can only be set or changed by Hairline Admins."
 - Form blocked when seat limit reached; CTA changes to "Request more seats" which routes to admin workflow.
 - SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
 
@@ -594,7 +584,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Provider ID | display | N/A | Internal provider identifier | Read-only |
 | Team Member Name | display | N/A | Full name of team member | Read-only |
 | Email | display | N/A | Team member email | Read-only |
-| Role | badge | N/A | Owner/Admin/Doctor/Coordinator | Owner rows show lock icon |
+| Role | badge | N/A | Owner/Manager/Clinical/Billing | Owner rows show lock icon |
 | Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
 | Status | badge | N/A | Active, Invited, Suspended | Color-coded |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
@@ -683,6 +673,8 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 **Tab 4: Security & Sessions**:
 
+*(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
+
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Active Sessions | list | N/A | Current logged-in sessions | Shows device, browser, IP, location, started timestamp |
@@ -696,6 +688,8 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 | Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" |
 
 **Tab 5: Provider Relationship**:
+
+*(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
@@ -753,8 +747,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 **Capabilities**:
 
 - Transfer ownership between accounts with dual confirmation.
-- Promote additional owners when contract permits.
-- Revoke ownership (e.g., compliance issue) while selecting successor.
+- Revoke ownership from the current Owner (e.g., compliance issue) while selecting a single successor Owner, preserving the one-owner-per-provider rule.
 - Notification hooks into FR-020 templates for affected parties.
 
 **Business Rules**:
@@ -768,9 +761,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### General Module Rules
 
-- **Rule 1**: Every provider organization must have at least one Owner at all times.
-- **Rule 2**: Owner role assignments cannot be changed or demoted through the provider platform UI; escalations to modify ownership route to the Admin Platform (FR-031) for manual intervention.
-- **Rule 3**: Owner accounts cannot remove themselves, even if multiple Owners exist; ownership changes must be performed by a different Owner or escalated to platform admins.
+- **Rule 1**: Every provider organization must have exactly one Owner at all times (single primary account holder).
+- **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI; all ownership creation/transfer/removal flows route to the Admin Platform (FR-031) for manual intervention and audit.
+- **Rule 3**: Owner accounts can never perform management actions on their own ownership (no self-removal or self-demotion); ownership changes must be performed by a different authorized actor in the Admin Platform.
 - **Rule 4**: Team member accounts are scoped to a single provider organization—an email cannot belong to more than one provider team at a time. Transfers require platform admin intervention.
 - **Rule 5**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
 - **Rule 6**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
@@ -800,7 +793,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 **Fixed in Codebase (Not Editable)**:
 
-- Role hierarchy and permissions model (Owner > Admin > Doctor > Coordinator)
+- Role hierarchy and permissions model (Owner > Manager > Clinical > Billing)
 - Minimum number of Owners required (always 1)
 - Audit log structure and required fields
 - Email invitation template structure (content editable, structure fixed)
@@ -878,9 +871,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
   - **Why needed**: Team members need role-based access to inquiries
   - **Integration point**: Inquiry and quote views apply FR-009 role permissions (via PR-02) when filtering and enforcing what each team member can see and edit
 
-- **FR-010 / Module PR-04**: Treatment Execution & Documentation
-  - **Why needed**: Doctors need access to record treatment details
-  - **Integration point**: Treatment workflow checks team member role before allowing procedure documentation
+- **FR-010 / Module PR-03**: Treatment Execution & Documentation
+  - **Why needed**: Clinical Staff need access to record treatment details
+  - **Integration point**: Treatment workflow checks team member role before allowing procedure documentation (only Clinical Staff and, where appropriate, the Owner can act as documenting providers)
 
 - **Module S-03**: Notification Service
   - **Why needed**: Email invitations, role change notifications, removal notifications
@@ -906,7 +899,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 - **Entity 1**: Provider Organization Profile
   - **Why needed**: Team members must be associated with a valid provider organization
-  - **Source**: Provider onboarding (FR-001)
+  - **Source**: Provider Management (FR-015)
 
 - **Entity 2**: Provider Subscription/Billing Status
   - **Why needed**: Future consideration—team member limits may be tied to subscription tier
@@ -991,7 +984,7 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 
 ### User Story 1 - Owner Invites First Team Member (Priority: P1)
 
-A clinic owner has been using the platform solo and now wants to bring their office coordinator onto the platform to help manage patient inquiries and scheduling. The owner invites the coordinator, who successfully creates an account and starts managing inquiries.
+A clinic owner has been using the platform solo and now wants to bring their office coordinator/front-of-staff onto the platform to help manage patient inquiries and scheduling. The owner invites this team member, who successfully creates a Manager account and starts managing inquiries.
 
 **Why this priority**: Core functionality—without team invitations, multi-user collaboration is impossible. This is the foundational feature that unlocks all other team management capabilities.
 
@@ -1000,16 +993,16 @@ A clinic owner has been using the platform solo and now wants to bring their off
 **Acceptance Scenarios**:
 
 1. **Given** clinic owner is logged into provider dashboard, **When** they navigate to "Team" tab and click "Invite Team Member", **Then** invitation form appears with fields for name, email, role, and optional message
-2. **Given** owner fills out invitation form with coordinator details and role "Coordinator", **When** they click "Send Invitation", **Then** system sends email to coordinator with invitation link and displays success confirmation
-3. **Given** coordinator receives invitation email, **When** they click the invitation link, **Then** they are directed to account creation page with email and name pre-filled
-4. **Given** coordinator creates password and accepts terms, **When** they submit account creation form, **Then** account is created with Coordinator role and they can immediately log in
-5. **Given** coordinator logs in for first time, **When** they access dashboard, **Then** they see only features and data appropriate to Coordinator role (can view inquiries, manage schedules, but cannot access billing)
+2. **Given** owner fills out invitation form with coordinator/front-of-staff details and role "Manager", **When** they click "Send Invitation", **Then** system sends email to the new Manager with invitation link and displays success confirmation
+3. **Given** the new Manager receives invitation email, **When** they click the invitation link, **Then** they are directed to account creation page with email and name pre-filled
+4. **Given** the new Manager creates password and accepts terms, **When** they submit account creation form, **Then** account is created with Manager role and they can immediately log in
+5. **Given** the new Manager logs in for first time, **When** they access dashboard, **Then** they see only features and data appropriate to Manager role (can view inquiries, manage schedules, but cannot access billing/ownership settings)
 
 ---
 
 ### User Story 2 - Owner Changes Team Member Role (Priority: P1)
 
-A doctor who was initially invited as a "Doctor" (limited to treatment execution) is being promoted to "Admin" to help with operational management and team oversight. The owner changes their role and the doctor immediately gains access to additional features.
+A clinician who was initially invited as "Clinical Staff" (limited to treatment execution) is being promoted to "Manager" to help with operational management and team oversight. The owner changes their role and the clinician immediately gains access to additional operational features.
 
 **Why this priority**: Role changes are common as team members grow in responsibility or as organizational needs change. Must work reliably to maintain proper access control.
 
@@ -1018,9 +1011,9 @@ A doctor who was initially invited as a "Doctor" (limited to treatment execution
 **Acceptance Scenarios**:
 
 1. **Given** owner is viewing team management dashboard, **When** they click "Edit" on a team member row, **Then** role editing dialog appears showing current role and dropdown to select new role
-2. **Given** owner selects new role "Admin" for team member currently "Doctor", **When** permission comparison table is displayed, **Then** owner can see which permissions are being added (e.g., team management, analytics) and which remain unchanged
+2. **Given** owner selects new role "Manager" for team member currently "Clinical Staff", **When** permission comparison table is displayed, **Then** owner can see which permissions are being added (e.g., team management, analytics) and which remain unchanged
 3. **Given** owner reviews permission changes and clicks "Update Role", **When** system processes the change, **Then** team member's role is updated in database and email notification sent to affected team member
-4. **Given** affected team member is actively logged in during role change, **When** they navigate to a new page or refresh, **Then** new permissions are immediately reflected (can now access Admin menu items)
+4. **Given** affected team member is actively logged in during role change, **When** they navigate to a new page or refresh, **Then** new permissions are immediately reflected (can now access Manager-level menu items)
 5. **Given** audit log is enabled, **When** role change completes, **Then** activity log records timestamp, owner who made change, old role, new role, and reason (if provided)
 
 ---
@@ -1054,7 +1047,7 @@ A clinic owner attempts to invite a surgeon who is currently active in another p
 
 **Acceptance Scenarios**:
 
-1. **Given** Doctor Smith is an active team member of Provider A, **When** Provider B owner enters <doctor.smith@clinic.com> in the invite form, **Then** system detects the existing membership before sending the invitation.
+1. **Given** a clinician (e.g., Dr. Smith) is an active Clinical Staff member of Provider A, **When** Provider B owner enters <doctor.smith@clinic.com> in the invite form, **Then** system detects the existing membership before sending the invitation.
 2. **Given** the conflict is detected, **When** the owner attempts to proceed, **Then** the form displays blocking error copy: "This email already belongs to another provider team. Contact Hairline Admin to request a transfer."
 3. **Given** owner clicks "Request Transfer" link, **When** request is submitted, **Then** FR-031 admin console receives a task to review and, upon approval, automatically removes the doctor from Provider A before allowing a new invitation.
 4. **Given** the transfer is approved and processed by admins, **When** Provider B re-sends the invitation, **Then** it succeeds because the email is no longer tied to another provider.
@@ -1079,21 +1072,20 @@ A clinic admin needs to review team activity for a specific period to understand
 
 ---
 
-### User Story 6 - System Enforces "At Least One Owner" Rule (Priority: P1)
+### User Story 6 - System Enforces "Single Owner" Rule (Priority: P1)
 
-A clinic has two owners. One owner attempts to remove themselves from the team. The system allows the removal since another owner remains. However, when the second owner tries to remove themselves or change their role, the system prevents it to ensure at least one owner always exists.
+Each clinic has exactly one primary Owner account. All other elevated users are Admins. The system must prevent creation of additional Owners from the provider UI and ensure that ownership can only be transferred via the Admin Platform (FR-031).
 
-**Why this priority**: Critical business rule that protects organizational integrity—without an owner, the provider organization would be orphaned and unmanageable.
+**Why this priority**: Critical business rule that protects organizational integrity—having a single clearly identified Owner simplifies billing, legal responsibility, and access control.
 
-**Independent Test**: Create scenario with two owners, remove one successfully, then attempt to remove or demote the last owner and verify system prevents it.
+**Independent Test**: Attempt to create or assign a second Owner via all provider-facing flows (invitation form, role edit dialog, admin console actions) and verify that every attempt is blocked with guidance to contact Hairline Admins; verify that system surfaces which account is the current Owner without allowing in-app changes.
 
 **Acceptance Scenarios**:
 
-1. **Given** provider organization has two owners (Owner A and Owner B), **When** Owner A clicks "Remove" on their own account, **Then** system allows removal with confirmation: "Another owner will remain (Owner B). Proceed?"
-2. **Given** Owner A confirms self-removal, **When** system processes removal, **Then** Owner A's access is revoked and Owner B remains as sole owner
-3. **Given** Owner B (now sole owner) attempts to remove themselves, **When** they click "Remove" on own account, **Then** system displays error: "Cannot remove last owner. Promote another team member to Owner first or transfer ownership."
-4. **Given** Owner B attempts to change own role from Owner to Admin, **When** they select new role in edit dialog, **Then** system displays error: "At least one Owner must remain. Promote another team member to Owner first."
-5. **Given** Owner B promotes another team member to Owner, **When** promotion completes, **Then** Owner B can now remove themselves or change own role (since two owners exist again)
+1. **Given** provider Owner opens the "Invite Team Member" form, **When** they open the Role dropdown, **Then** Owner is visible as a non-selectable option with tooltip "Primary Owner can only be set or changed by Hairline Admins."
+2. **Given** any provider user (Owner or Admin) opens the role edit dialog for the current Owner, **When** they attempt to change the role, **Then** the form is disabled and displays callout: "Ownership is managed by Hairline Admins. Please contact support to request changes."
+3. **Given** an Admin attempts to update a team member's role to Owner via any provider UI, **When** they submit the change, **Then** system blocks the request with error: "Cannot assign Owner role from provider portal. Contact Hairline Admins."
+4. **Given** ownership has been transferred via Admin Platform (FR-031), **When** the provider Owner next logs in, **Then** they see updated Owner designation in the team management screens and cannot modify it themselves.
 
 ---
 
@@ -1141,10 +1133,10 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 > Note: This section summarizes the normative requirements already described in Business Workflows, Screen Specifications, and Business Rules. In case of conflict, the Business Rules section prevails.
 
 - **FR-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry)
-- **FR-002**: System MUST support four distinct roles with hierarchical permissions: Owner, Admin, Doctor, Coordinator
+- **FR-002**: System MUST support four distinct provider roles with hierarchical permissions: Owner (Main Account Holder), Manager (Clinic Operations), Clinical Staff, Billing Staff
 - **FR-003**: System MUST enforce role-based access control for all provider platform features and data
-- **FR-004**: System MUST allow owners and admins to modify team member roles with immediate permission updates
-- **FR-005**: System MUST allow owners and admins to remove team members with immediate access revocation
+- **FR-004**: System MUST allow Owners and Managers to modify non-Owner team member roles with immediate permission updates
+- **FR-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
 - **FR-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
 - **FR-007**: System MUST send email notifications for team management events (invitation, role change, removal)
 - **FR-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked or escalated for admin-managed transfer
@@ -1155,7 +1147,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 - **FR-009**: System MUST maintain team member records with: name, email, role, status (Active/Invited/Suspended), invitation date, acceptance date, last activity timestamp
 - **FR-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), sender, recipient email, role offered
-- **FR-011**: System MUST store role permission definitions in configuration (Owner, Admin, Doctor, Coordinator permission sets)
+- **FR-011**: System MUST store role permission definitions in configuration (Owner, Manager, Clinical Staff, Billing Staff permission sets)
 - **FR-012**: System MUST maintain team member-to-provider organization relationships with role assignment per organization
 
 ### Security & Privacy Requirements
@@ -1187,7 +1179,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
   - **Relationships**: One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. One team member has many audit log entries.
 
 - **Entity 2 - Team Member Organization Role**:
-  - **Key attributes**: team_member_id, provider_org_id (unique), role (Owner/Admin/Doctor/Coordinator), assigned_at, assigned_by
+  - **Key attributes**: team_member_id, provider_org_id (unique), role (Owner/Manager/Clinical/Billing), assigned_at, assigned_by
   - **Relationships**: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
 
 - **Entity 3 - Invitation**:
@@ -1195,7 +1187,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
   - **Relationships**: One invitation belongs to one provider organization. One invitation invited by one existing team member (owner/admin). One invitation may result in one team member account.
 
 - **Entity 4 - Role Permission Definition**:
-  - **Key attributes**: role_name (Owner/Admin/Doctor/Coordinator), permissions[] (array of permission strings like "inquiries.view", "quotes.create", "team.manage")
+  - **Key attributes**: role_name (Owner/Manager/Clinical/Billing), permissions[] (array of permission strings like "inquiries.view", "quotes.create", "team.manage")
   - **Relationships**: Static configuration entity. Each team member organization role references one role permission definition.
 
 - **Entity 5 - Team Activity Audit Log**:
