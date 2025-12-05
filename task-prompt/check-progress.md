@@ -199,7 +199,12 @@ For **EACH** missing component, **MUST** create a task with:
    - Descriptions must be in HTML format for Plane.so API (`description_html` field)
    - **MUST** include `<h2>` header tags for major sections (e.g., Overview, Reference, Current Status, Expectation, Acceptance Criteria)
    - **MUST** include a persistent note in the Expectation section (marked as "Note (Suggestion)") clarifying that specifications are suggestions, focusing on business requirements and functional needs rather than technical implementation instructions, and that developers should use their expertise to choose the best approach
-   - Use HTML tags like `<p>`, `<strong>`, `<code>`, `<ul>`, `<li>`, etc.
+   - **CRITICAL - HTML Formatting Rules**:
+     - Use `<p>` tag for **single paragraphs only** (one cohesive paragraph)
+     - Use `<ul>` (unordered) or `<ol>` (ordered) with `<li>` tags for **multiple items** (lists, bullet points, numbered items, multiple requirements)
+     - **DO NOT** use multiple `<p>` tags for multiple items - always use list tags (`<ul>`, `<ol>`, `<li>`) instead
+     - **Lists can contain any number of items** - there is no limit (e.g., 2 items, 5 items, 10 items, etc.). Use as many `<li>` items as needed to fully describe the requirements
+     - Use HTML tags like `<strong>`, `<code>`, `<a>`, etc. as needed
    - **NO excessive spacing** - remove unnecessary blank lines and whitespace
 
    ```markdown
@@ -211,16 +216,28 @@ For **EACH** missing component, **MUST** create a task with:
    
    ## TASK_DESCRIPTION_START
    <h2>Overview</h2>
-   <p>[What needs to be implemented - 2-3 sentences]</p>
+   <p>[What needs to be implemented - 2-3 sentences as a single paragraph]</p>
    <h2>Reference</h2>
    <p><a href="[GitHub PRD link with section anchor, e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow]">PRD Reference</a></p>
    <h2>Current Status</h2>
-   <p>[What exists now - specific file paths/endpoints]</p>
+   <ul>
+   <li>[First existing component/file/endpoint]</li>
+   <li>[Second existing component/file/endpoint]</li>
+   <li>[Add as many items as needed - no limit]</li>
+   </ul>
    <h2>Expectation (Suggestion)</h2>
    <p><strong>Note:</strong> The specifications provided below are suggestions based on business requirements. This section should focus on <strong>business requirements and functional needs</strong>, not technical implementation instructions. Developers should understand the business needs and use their expertise to choose the most beneficial and optimized implementation approach.</p>
-   <p>[What should be implemented - detailed requirements]</p>
+   <ul>
+   <li>[First requirement item]</li>
+   <li>[Second requirement item]</li>
+   <li>[Add as many requirement items as needed - no limit]</li>
+   </ul>
    <h2>Acceptance Criteria</h2>
-   <p>[How to verify completion - specific, testable criteria]</p>
+   <ol>
+   <li>[First testable criterion]</li>
+   <li>[Second testable criterion]</li>
+   <li>[Add as many criteria as needed - no limit]</li>
+   </ol>
    ## TASK_DESCRIPTION_END
    ```
 
