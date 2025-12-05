@@ -1188,10 +1188,10 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ---
 
-### 24. Notification Preferences
+### 24. ProviderPreference
 
-**Table**: `notification_preferences`  
-**Description**: Provider notification settings
+**Table**: `provider_preferences`  
+**Description**: Provider notification preference settings (maps to FR-020 `ProviderPreference` entity)
 
 **Columns**:
 
