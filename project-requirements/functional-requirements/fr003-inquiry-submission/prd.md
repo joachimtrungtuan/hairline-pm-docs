@@ -875,30 +875,30 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow patients to create and submit inquiries with destinations, media, date ranges, 3D scan, and medical questionnaire.
-- **FR-002**: System MUST distribute completed inquiries to matching providers in selected countries and those explicitly chosen by the patient.
-- **FR-003**: Providers MUST see anonymized patient data and tiered medical alerts until payment/acceptance per system PRD.
-- **FR-004**: System MUST support draft autosave and resume with 7-day inactivity expiry for incomplete inquiries.
-- **FR-005**: Admin MUST be able to view, edit (with warnings), reassign, soft delete, and override distribution/expiration with full audit trail.
+- **REQ-003-001**: System MUST allow patients to create and submit inquiries with destinations, media, date ranges, 3D scan, and medical questionnaire.
+- **REQ-003-002**: System MUST distribute completed inquiries to matching providers in selected countries and those explicitly chosen by the patient.
+- **REQ-003-003**: Providers MUST see anonymized patient data and tiered medical alerts until payment/acceptance per system PRD.
+- **REQ-003-004**: System MUST support draft autosave and resume with 7-day inactivity expiry for incomplete inquiries.
+- **REQ-003-005**: Admin MUST be able to view, edit (with warnings), reassign, soft delete, and override distribution/expiration with full audit trail.
 
 ### Data Requirements
 
-- **FR-006**: System MUST retain inquiry data for at least 7 years; scan retention per system policy.
-- **FR-007**: System MUST link inquiries to patients, providers, locations, 3D scans, and questionnaire responses.
+- **REQ-003-006**: System MUST retain inquiry data for at least 7 years; scan retention per system policy.
+- **REQ-003-007**: System MUST link inquiries to patients, providers, locations, 3D scans, and questionnaire responses.
 
 ### Security & Privacy Requirements
 
-- **FR-008**: System MUST mask patient names and hide phone numbers and email addresses until payment confirmation; patient ID (HPID-based) may remain visible as a pseudonymous identifier.
-- **FR-009**: System MUST encrypt all inquiry-related data at rest and in transit, and maintain immutable audit logs.
+- **REQ-003-008**: System MUST mask patient names and hide phone numbers and email addresses until payment confirmation; patient ID (HPID-based) may remain visible as a pseudonymous identifier.
+- **REQ-003-009**: System MUST encrypt all inquiry-related data at rest and in transit, and maintain immutable audit logs.
 
 ### Integration Requirements
 
-- **FR-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
-- **FR-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
+- **REQ-003-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
+- **REQ-003-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
 
 ### Marking Unclear Requirements
 
-- **FR-012**: Provider capacity management is referenced but handled by a separate FR (TBD); integration expectations remain.
+- **REQ-003-012**: Provider capacity management is referenced but handled by a separate FR (TBD); integration expectations remain.
 
 ## Key Entities
 

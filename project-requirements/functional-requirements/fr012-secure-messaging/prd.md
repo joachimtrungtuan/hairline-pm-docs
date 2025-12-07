@@ -446,27 +446,27 @@ Acceptance Scenarios:
 
 ### Core Requirements
 
-- FR-001: System MUST enable in-app messaging for Patient ↔ Support and Patient ↔ Aftercare with text and media.
-- FR-002: System MUST deliver real-time notifications for new messages to intended recipients.
-- FR-003: Users MUST be able to view complete conversation history with timestamps and read receipts.
-- FR-004: System MUST enforce attachment type and size limits and provide user feedback on violations.
-- FR-005: System MUST log message lifecycle events (sent, delivered, read, escalated) for audit.
+- **REQ-012-001**: System MUST enable in-app messaging for Patient ↔ Support and Patient ↔ Aftercare with text and media.
+- **REQ-012-002**: System MUST deliver real-time notifications for new messages to intended recipients.
+- **REQ-012-003**: Users MUST be able to view complete conversation history with timestamps and read receipts.
+- **REQ-012-004**: System MUST enforce attachment type and size limits and provide user feedback on violations.
+- **REQ-012-005**: System MUST log message lifecycle events (sent, delivered, read, escalated) for audit.
 
 ### Data Requirements
 
-- FR-006: System MUST maintain conversations per participant with searchable metadata (channel, status, flags).
-- FR-007: System MUST store attachments securely with links to their parent messages and access controls.
+- **REQ-012-006**: System MUST maintain conversations per participant with searchable metadata (channel, status, flags).
+- **REQ-012-007**: System MUST store attachments securely with links to their parent messages and access controls.
 
 ### Security & Privacy Requirements
 
-- FR-008: System MUST restrict visibility so patients cannot directly message providers in V1.
-- FR-009: System MUST encrypt all message content and media in transit and at rest and protect access by role.
-- FR-010: System MUST retain medical communications for at least 7 years and support audit export for compliance.
+- **REQ-012-008**: System MUST restrict visibility so patients cannot directly message providers in V1.
+- **REQ-012-009**: System MUST encrypt all message content and media in transit and at rest and protect access by role.
+- **REQ-012-010**: System MUST retain medical communications for at least 7 years and support audit export for compliance.
 
 ### Integration Requirements
 
-- FR-011: System MUST integrate with Notification Service to send alerts on message events.
-- FR-012: System MUST integrate with Media Storage Service for attachments with secure retrieval.
+- **REQ-012-011**: System MUST integrate with Notification Service to send alerts on message events.
+- **REQ-012-012**: System MUST integrate with Media Storage Service for attachments with secure retrieval.
 
 ### Marking Unclear Requirements
 

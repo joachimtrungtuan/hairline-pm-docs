@@ -370,30 +370,30 @@ Notes:
 
 ### Core Requirements
 
-- **FR-001**: Providers MUST create, edit, and submit quotes with treatment, package, customization, dates, and per-date pricing.
-- **FR-002**: System MUST enforce admin-controlled expiry window (default 48h) and compute deadlines per quote.
-- **FR-003**: System MUST auto-cancel other quotes for the same inquiry upon one acceptance and notify affected providers.
-- **FR-004**: System MUST support provider withdrawal after acceptance with admin resolution workflow and full audit.
-- **FR-005**: Admin MUST be able to inline edit policy-bound fields with required reason and re-notifications.
+- **REQ-004-001**: Providers MUST create, edit, and submit quotes with treatment, package, customization, dates, and per-date pricing.
+- **REQ-004-002**: System MUST enforce admin-controlled expiry window (default 48h) and compute deadlines per quote.
+- **REQ-004-003**: System MUST auto-cancel other quotes for the same inquiry upon one acceptance and notify affected providers.
+- **REQ-004-004**: System MUST support provider withdrawal after acceptance with admin resolution workflow and full audit.
+- **REQ-004-005**: Admin MUST be able to inline edit policy-bound fields with required reason and re-notifications.
 
 ### Data Requirements
 
-- **FR-006**: Quotes MUST reference original inquiry and patient; quote data appends, never overwrites inquiry data.
-- **FR-007**: All quote edits and state transitions MUST be versioned and auditable.
+- **REQ-004-006**: Quotes MUST reference original inquiry and patient; quote data appends, never overwrites inquiry data.
+- **REQ-004-007**: All quote edits and state transitions MUST be versioned and auditable.
 
 ### Security & Privacy Requirements
 
-- **FR-008**: Patient identifiers MUST remain anonymized to providers until payment confirmation.
-- **FR-009**: All quote data MUST be encrypted at rest and in transit; soft deletes only.
+- **REQ-004-008**: Patient identifiers MUST remain anonymized to providers until payment confirmation.
+- **REQ-004-009**: All quote data MUST be encrypted at rest and in transit; soft deletes only.
 
 ### Integration Requirements
 
-- **FR-010**: Module MUST integrate with FR-003 for inquiry context and FR-020 for notifications.
-- **FR-011**: Admin settings (expiry window) MUST be applied from A-09.
+- **REQ-004-010**: Module MUST integrate with FR-003 for inquiry context and FR-020 for notifications.
+- **REQ-004-011**: Admin settings (expiry window) MUST be applied from A-09.
 
 ### Clarifications
 
-- **FR-012**: Refund/penalty policy depth for provider withdrawal may move to a dedicated FR if expanded.
+- **REQ-004-012**: Refund/penalty policy depth for provider withdrawal may move to a dedicated FR if expanded.
 
 ## Key Entities
 

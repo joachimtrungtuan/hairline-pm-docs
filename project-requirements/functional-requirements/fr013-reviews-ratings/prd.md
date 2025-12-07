@@ -369,27 +369,27 @@ Acceptance Scenarios:
 
 ### Core Requirements
 
-- FR-001: System MUST allow eligible patients to submit reviews (overall + categories, feedback, optional photos).
-- FR-002: System MUST enforce time gating (≥ 3 months) and single review per completed procedure.
-- FR-003: System MUST provide admin moderation with approve/reject/request edits and audit trail.
-- FR-004: System MUST publish approved reviews on provider profiles with provider responses.
-- FR-005: System MUST calculate and display provider average rating, count, and distribution.
+- **REQ-013-001**: System MUST allow eligible patients to submit reviews (overall + categories, feedback, optional photos).
+- **REQ-013-002**: System MUST enforce time gating (≥ 3 months) and single review per completed procedure.
+- **REQ-013-003**: System MUST provide admin moderation with approve/reject/request edits and audit trail.
+- **REQ-013-004**: System MUST publish approved reviews on provider profiles with provider responses.
+- **REQ-013-005**: System MUST calculate and display provider average rating, count, and distribution.
 
 ### Data Requirements
 
-- FR-006: System MUST link reviews to patient, provider, and completed procedure records.
-- FR-007: System MUST securely store and retrieve review photos with metadata.
+- **REQ-013-006**: System MUST link reviews to patient, provider, and completed procedure records.
+- **REQ-013-007**: System MUST securely store and retrieve review photos with metadata.
 
 ### Security & Privacy Requirements
 
-- FR-008: System MUST alias reviewer identity by default and prevent exposure of PII in public views.
-- FR-009: System MUST encrypt review data and photos in transit and at rest and maintain auditable logs.
-- FR-010: System MUST support unpublish + archival for takedown and compliance requests.
+- **REQ-013-008**: System MUST alias reviewer identity by default and prevent exposure of PII in public views.
+- **REQ-013-009**: System MUST encrypt review data and photos in transit and at rest and maintain auditable logs.
+- **REQ-013-010**: System MUST support unpublish + archival for takedown and compliance requests.
 
 ### Integration Requirements
 
-- FR-011: System MUST send invite/reminder and status notifications via Notification Service.
-- FR-012: System MUST provide ratings summary endpoints for provider profiles with caching.
+- **REQ-013-011**: System MUST send invite/reminder and status notifications via Notification Service.
+- **REQ-013-012**: System MUST provide ratings summary endpoints for provider profiles with caching.
 
 ### Marking Unclear Requirements
 

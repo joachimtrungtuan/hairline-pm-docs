@@ -1610,43 +1610,43 @@ A provider closing their clinic permanently requests account deletion, and admin
 
 ### Core Requirements
 
-- **FR-032-001**: System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px)
-- **FR-032-002**: System MUST allow providers to select supported languages using the centrally managed system language options owned by FR-021 (Multi-Language & Localization), which are surfaced via FR-026 App Settings.
-- **FR-032-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
-- **FR-032-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
-- **FR-032-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
-- **FR-032-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
-- **FR-032-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
-- **FR-032-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles for quote, schedule, treatment start, aftercare, review, and promotion/discount notifications + global channel preferences: email, push)
-- **FR-032-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
-- **FR-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
-- **FR-032-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
-- **FR-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
-- **FR-032-013**: System MUST allow providers to request account deletion (soft-delete with admin approval required)
+- **REQ-032-001**: System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px)
+- **REQ-032-002**: System MUST allow providers to select supported languages using the centrally managed system language options owned by FR-021 (Multi-Language & Localization), which are surfaced via FR-026 App Settings.
+- **REQ-032-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
+- **REQ-032-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
+- **REQ-032-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
+- **REQ-032-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
+- **REQ-032-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
+- **REQ-032-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles for quote, schedule, treatment start, aftercare, review, and promotion/discount notifications + global channel preferences: email, push)
+- **REQ-032-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
+- **REQ-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
+- **REQ-032-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
+- **REQ-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
+- **REQ-032-013**: System MUST allow providers to request account deletion (soft-delete with admin approval required)
 
 ### Data Requirements
 
-- **FR-032-014**: System MUST persist provider profile data (logo, name, description, languages, awards) and propagate to patient quote comparison view within 1 minute
-- **FR-032-015**: System MUST persist account settings (phone number in international format, timezone, password hash)
-- **FR-032-016**: System MUST persist notification preferences and synchronize with S-03 Notification Service within 1 minute
-- **FR-032-017**: System MUST persist bank account details encrypted at rest (AES-256) and mask in UI (last 4 digits visible)
+- **REQ-032-014**: System MUST persist provider profile data (logo, name, description, languages, awards) and propagate to patient quote comparison view within 1 minute
+- **REQ-032-015**: System MUST persist account settings (phone number in international format, timezone, password hash)
+- **REQ-032-016**: System MUST persist notification preferences and synchronize with S-03 Notification Service within 1 minute
+- **REQ-032-017**: System MUST persist bank account details encrypted at rest (AES-256) and mask in UI (last 4 digits visible)
 
 ### Security & Privacy Requirements
 
-- **FR-032-018**: System MUST encrypt bank account details at rest using AES-256
-- **FR-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
-- **FR-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
-- **FR-032-021**: System MUST send email notification to provider after password change (security alert)
-- **FR-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
-- **FR-032-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
+- **REQ-032-018**: System MUST encrypt bank account details at rest using AES-256
+- **REQ-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
+- **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
+- **REQ-032-021**: System MUST send email notification to provider after password change (security alert)
+- **REQ-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
+- **REQ-032-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
 
 ### Integration Requirements
 
-- **FR-032-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
-- **FR-032-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
-- **FR-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
-- **FR-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
-- **FR-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
+- **REQ-032-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
+- **REQ-032-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
+- **REQ-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
+- **REQ-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
+- **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 
 ---
 

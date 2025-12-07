@@ -718,37 +718,37 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow Super Admins to invite new admin team members via email with role assignment
-- **FR-002**: System MUST support creation of custom roles with granular permission assignment per admin module (A-01 through A-10)
-- **FR-003**: System MUST enforce role-based access control on all admin API endpoints and UI components
-- **FR-004**: System MUST provide predefined roles: Super Admin, Aftercare Specialist, Billing Staff, Support Staff
-- **FR-005**: System MUST log all administrative actions (role changes, permission grants, user suspensions, access denials) in immutable audit trail
-- **FR-006**: System MUST prevent suspension or deletion of the last Super Admin account (system protection)
-- **FR-007**: System MUST send email notifications for: new invitations, role changes, password resets, repeated access denials
+- **REQ-031-001**: System MUST allow Super Admins to invite new admin team members via email with role assignment
+- **REQ-031-002**: System MUST support creation of custom roles with granular permission assignment per admin module (A-01 through A-10)
+- **REQ-031-003**: System MUST enforce role-based access control on all admin API endpoints and UI components
+- **REQ-031-004**: System MUST provide predefined roles: Super Admin, Aftercare Specialist, Billing Staff, Support Staff
+- **REQ-031-005**: System MUST log all administrative actions (role changes, permission grants, user suspensions, access denials) in immutable audit trail
+- **REQ-031-006**: System MUST prevent suspension or deletion of the last Super Admin account (system protection)
+- **REQ-031-007**: System MUST send email notifications for: new invitations, role changes, password resets, repeated access denials
 
 ### Data Requirements
 
-- **FR-008**: System MUST maintain admin user accounts with: email, name, password hash, assigned role(s), status (active/pending/suspended), creation date, last login timestamp
-- **FR-009**: System MUST maintain role definitions with: role name, description, assigned permissions (as permission matrix)
-- **FR-010**: System MUST maintain audit trail entries with: timestamp, user ID, action type, action details, IP address, outcome (success/failed/denied)
-- **FR-011**: System MUST retain audit trail for minimum 10 years per compliance requirements (Constitution Principle VI)
+- **REQ-031-008**: System MUST maintain admin user accounts with: email, name, password hash, assigned role(s), status (active/pending/suspended), creation date, last login timestamp
+- **REQ-031-009**: System MUST maintain role definitions with: role name, description, assigned permissions (as permission matrix)
+- **REQ-031-010**: System MUST maintain audit trail entries with: timestamp, user ID, action type, action details, IP address, outcome (success/failed/denied)
+- **REQ-031-011**: System MUST retain audit trail for minimum 10 years per compliance requirements (Constitution Principle VI)
 
 ### Security & Privacy Requirements
 
-- **FR-012**: System MUST enforce Multi-Factor Authentication (MFA) for all admin platform users (per Constitution Principle II)
-- **FR-013**: System MUST use bcrypt (cost factor 12+) for password hashing
-- **FR-014**: System MUST enforce password requirements: minimum 12 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
-- **FR-015**: System MUST sign JWT tokens with RS256 (asymmetric encryption) to prevent tampering
-- **FR-016**: System MUST include role and permission claims in JWT tokens for stateless authorization
-- **FR-017**: System MUST invalidate user sessions immediately upon account suspension
-- **FR-018**: System MUST anonymize admin user PII (email, name) on account deletion request, while preserving audit trail with anonymized identifier
+- **REQ-031-012**: System MUST enforce Multi-Factor Authentication (MFA) for all admin platform users (per Constitution Principle II)
+- **REQ-031-013**: System MUST use bcrypt (cost factor 12+) for password hashing
+- **REQ-031-014**: System MUST enforce password requirements: minimum 12 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
+- **REQ-031-015**: System MUST sign JWT tokens with RS256 (asymmetric encryption) to prevent tampering
+- **REQ-031-016**: System MUST include role and permission claims in JWT tokens for stateless authorization
+- **REQ-031-017**: System MUST invalidate user sessions immediately upon account suspension
+- **REQ-031-018**: System MUST anonymize admin user PII (email, name) on account deletion request, while preserving audit trail with anonymized identifier
 
 ### Integration Requirements
 
-- **FR-019**: System MUST integrate with Notification Service (S-03) for email delivery (invitations, role changes, password resets)
-- **FR-020**: System MUST provide permission check API for all admin modules to enforce access control
-- **FR-021**: System MUST cache permission matrix in memory for fast authorization checks (< 50ms per check)
-- **FR-022**: System MUST invalidate permission cache within 5 seconds of role or permission changes
+- **REQ-031-019**: System MUST integrate with Notification Service (S-03) for email delivery (invitations, role changes, password resets)
+- **REQ-031-020**: System MUST provide permission check API for all admin modules to enforce access control
+- **REQ-031-021**: System MUST cache permission matrix in memory for fast authorization checks (< 50ms per check)
+- **REQ-031-022**: System MUST invalidate permission cache within 5 seconds of role or permission changes
 
 ---
 

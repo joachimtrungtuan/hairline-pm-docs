@@ -959,46 +959,46 @@ A provider clinic coordinator encounters an issue with submitting a quote and wa
 
 ### Core Requirements
 
-- **FR-001**: System MUST provide Help Centre landing page accessible from provider platform navigation menu displaying 10 main content categories
-- **FR-002**: System MUST support 7 Help Centre subscreen types matching FR-032 structure (FAQs with accordion layout, Articles with article layout, Resources with file viewer, Videos with video player, Contact Support with form and tracking, Feedback with form and tracking, Service Status with status page interface)
-- **FR-003**: Admins MUST be able to create Help Centre content with category assignment, content type, title, rich text body, file attachments, tags, and publish status
-- **FR-004**: System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
-- **FR-005**: Admins MUST be able to organize FAQ content into collapsible topic sections with drag-and-drop reordering
-- **FR-006**: Providers MUST be able to access Help Centre content in read-only mode with distinct layouts per subscreen type (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, forms for support/feedback, status page for service status) matching FR-032 Screen 5.1-5.7
-- **FR-007**: System MUST support rich text editing for content creation with formatting (bold, italic, lists, links, images, tables)
-- **FR-008**: System MUST support file uploads for Help Centre content (PDFs max 50MB, videos max 500MB, images max 10MB)
-- **FR-009**: System MUST provide content preview functionality allowing admins to view content exactly as providers will see it in each subscreen layout before publishing (accordion preview for FAQs, article layout preview for guides, file viewer preview for resources, video player preview for videos, status page preview for service status) matching FR-032 Screen 5.1-5.7
-- **FR-010**: System MUST support content versioning tracking all changes with admin identity, timestamp, and version notes
+- **REQ-033-001**: System MUST provide Help Centre landing page accessible from provider platform navigation menu displaying 10 main content categories
+- **REQ-033-002**: System MUST support 7 Help Centre subscreen types matching FR-032 structure (FAQs with accordion layout, Articles with article layout, Resources with file viewer, Videos with video player, Contact Support with form and tracking, Feedback with form and tracking, Service Status with status page interface)
+- **REQ-033-003**: Admins MUST be able to create Help Centre content with category assignment, content type, title, rich text body, file attachments, tags, and publish status
+- **REQ-033-004**: System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
+- **REQ-033-005**: Admins MUST be able to organize FAQ content into collapsible topic sections with drag-and-drop reordering
+- **REQ-033-006**: Providers MUST be able to access Help Centre content in read-only mode with distinct layouts per subscreen type (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, forms for support/feedback, status page for service status) matching FR-032 Screen 5.1-5.7
+- **REQ-033-007**: System MUST support rich text editing for content creation with formatting (bold, italic, lists, links, images, tables)
+- **REQ-033-008**: System MUST support file uploads for Help Centre content (PDFs max 50MB, videos max 500MB, images max 10MB)
+- **REQ-033-009**: System MUST provide content preview functionality allowing admins to view content exactly as providers will see it in each subscreen layout before publishing (accordion preview for FAQs, article layout preview for guides, file viewer preview for resources, video player preview for videos, status page preview for service status) matching FR-032 Screen 5.1-5.7
+- **REQ-033-010**: System MUST support content versioning tracking all changes with admin identity, timestamp, and version notes
 
 ### Data Requirements
 
-- **FR-011**: System MUST store Help Centre content with metadata (subscreen type matching FR-032, content type, title, body, tags, publish status, created date, updated date, created by admin, updated by admin)
-- **FR-012**: System MUST store Contact Support submissions with metadata (ticket number, provider ID, subject, category, message, priority, attachment, status, submitted date, admin responses, response history)
-- **FR-013**: System MUST store Feedback & Suggestions submissions with metadata (submission ID, provider ID, type, title, description, priority, status, submitted date, admin responses, response history)
-- **FR-014**: System MUST store Service Status data with metadata (overall status, service components with statuses, incidents with timeline, maintenance windows with schedules)
-- **FR-015**: System MUST maintain audit trail logging all content creation, editing, publishing, unpublishing, and deletion actions with admin identity and timestamp
-- **FR-016**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion
-- **FR-017**: System MUST store file attachments in media storage service (S-05) with references in Help Centre content records
-- **FR-018**: System MUST track content view analytics (total views per content item, views over time) for performance measurement
+- **REQ-033-011**: System MUST store Help Centre content with metadata (subscreen type matching FR-032, content type, title, body, tags, publish status, created date, updated date, created by admin, updated by admin)
+- **REQ-033-012**: System MUST store Contact Support submissions with metadata (ticket number, provider ID, subject, category, message, priority, attachment, status, submitted date, admin responses, response history)
+- **REQ-033-013**: System MUST store Feedback & Suggestions submissions with metadata (submission ID, provider ID, type, title, description, priority, status, submitted date, admin responses, response history)
+- **REQ-033-014**: System MUST store Service Status data with metadata (overall status, service components with statuses, incidents with timeline, maintenance windows with schedules)
+- **REQ-033-015**: System MUST maintain audit trail logging all content creation, editing, publishing, unpublishing, and deletion actions with admin identity and timestamp
+- **REQ-033-016**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion
+- **REQ-033-017**: System MUST store file attachments in media storage service (S-05) with references in Help Centre content records
+- **REQ-033-018**: System MUST track content view analytics (total views per content item, views over time) for performance measurement
 
 ### Security & Privacy Requirements
 
-- **FR-019**: System MUST enforce authentication for Help Centre access (providers must be logged in, admins must be logged in)
-- **FR-020**: System MUST enforce authorization for content management (only admins with Help Centre management permissions can create/edit/publish content)
-- **FR-021**: System MUST scan all uploaded files for viruses before making available to providers
-- **FR-022**: System MUST sanitize rich text HTML input to prevent XSS attacks (strip dangerous tags: script, iframe, object)
-- **FR-023**: System MUST enforce file type whitelist for uploads (PDF, MP4, MOV, JPG, PNG only) rejecting all other file types
-- **FR-024**: System MUST encrypt provider feedback and support request submissions in transit (HTTPS) and at rest
+- **REQ-033-019**: System MUST enforce authentication for Help Centre access (providers must be logged in, admins must be logged in)
+- **REQ-033-020**: System MUST enforce authorization for content management (only admins with Help Centre management permissions can create/edit/publish content)
+- **REQ-033-021**: System MUST scan all uploaded files for viruses before making available to providers
+- **REQ-033-022**: System MUST sanitize rich text HTML input to prevent XSS attacks (strip dangerous tags: script, iframe, object)
+- **REQ-033-023**: System MUST enforce file type whitelist for uploads (PDF, MP4, MOV, JPG, PNG only) rejecting all other file types
+- **REQ-033-024**: System MUST encrypt provider feedback and support request submissions in transit (HTTPS) and at rest
 
 ### Integration Requirements
 
-- **FR-025**: System MUST provide REST API for provider platform to fetch Help Centre content with authentication, organized by subscreen types matching FR-032
-- **FR-026**: System MUST integrate with media storage service (S-05) for file upload, retrieval, and deletion
-- **FR-027**: System MUST integrate with rich text editor library (Quill/TinyMCE/CKEditor) for content creation interface
-- **FR-028**: System MUST integrate with virus scanning service for file upload security validation
-- **FR-026**: Admins MUST be able to view and manage Contact Support submissions with status tracking (Open, In Progress, Resolved, Closed) and response capabilities matching FR-032 Screen 5.5
-- **FR-027**: Admins MUST be able to view and manage Feedback & Suggestions submissions with status tracking (Submitted, Under Review, Planned, Implemented, Declined) and response capabilities matching FR-032 Screen 5.6
-- **FR-028**: Admins MUST be able to manage Service Status components, incidents, and maintenance windows with status page interface matching FR-032 Screen 5.7
+- **REQ-033-025**: System MUST provide REST API for provider platform to fetch Help Centre content with authentication, organized by subscreen types matching FR-032
+- **REQ-033-026**: System MUST integrate with media storage service (S-05) for file upload, retrieval, and deletion
+- **REQ-033-027**: System MUST integrate with rich text editor library (Quill/TinyMCE/CKEditor) for content creation interface
+- **REQ-033-028**: System MUST integrate with virus scanning service for file upload security validation
+- **REQ-033-029**: Admins MUST be able to view and manage Contact Support submissions with status tracking (Open, In Progress, Resolved, Closed) and response capabilities matching FR-032 Screen 5.5
+- **REQ-033-030**: Admins MUST be able to view and manage Feedback & Suggestions submissions with status tracking (Submitted, Under Review, Planned, Implemented, Declined) and response capabilities matching FR-032 Screen 5.6
+- **REQ-033-031**: Admins MUST be able to manage Service Status components, incidents, and maintenance windows with status page interface matching FR-032 Screen 5.7
 
 ---
 

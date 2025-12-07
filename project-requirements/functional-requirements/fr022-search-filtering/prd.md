@@ -716,47 +716,47 @@ An admin needs to generate a monthly report of all scheduled patients for billin
 
 ### Core Requirements (P1 - MVP)
 
-- **FR-001**: System MUST allow admins to search patients by name, email, phone number, and patient ID (HPID format)
-- **FR-002**: System MUST allow admins to filter patients by status, location, registration date range, and treatment type
-- **FR-003**: System MUST allow admins to search providers by clinic name, location, and certifications
-- **FR-004**: System MUST allow admins to filter providers by status, location, specialties, years of experience, and rating
-- **FR-005**: System MUST return search results within 500ms for 95% of queries (p95 latency)
-- **FR-006**: System MUST paginate search results (25 results per page for admin platform)
-- **FR-007**: System MUST support case-insensitive partial matching for search terms
-- **FR-008**: System MUST apply filters cumulatively using AND logic (all criteria must match)
-- **FR-009**: System MUST allow admins to export search results to CSV or Excel format
-- **FR-010**: System MUST display patient status, location, and last activity date in search results
-- **FR-011**: System MUST display provider status, location, rating, and active patient count in search results
-- **FR-012**: System MUST implement search input debounce (500ms) to reduce server load
+- **REQ-022-001**: System MUST allow admins to search patients by name, email, phone number, and patient ID (HPID format)
+- **REQ-022-002**: System MUST allow admins to filter patients by status, location, registration date range, and treatment type
+- **REQ-022-003**: System MUST allow admins to search providers by clinic name, location, and certifications
+- **REQ-022-004**: System MUST allow admins to filter providers by status, location, specialties, years of experience, and rating
+- **REQ-022-005**: System MUST return search results within 500ms for 95% of queries (p95 latency)
+- **REQ-022-006**: System MUST paginate search results (25 results per page for admin platform)
+- **REQ-022-007**: System MUST support case-insensitive partial matching for search terms
+- **REQ-022-008**: System MUST apply filters cumulatively using AND logic (all criteria must match)
+- **REQ-022-009**: System MUST allow admins to export search results to CSV or Excel format
+- **REQ-022-010**: System MUST display patient status, location, and last activity date in search results
+- **REQ-022-011**: System MUST display provider status, location, rating, and active patient count in search results
+- **REQ-022-012**: System MUST implement search input debounce (500ms) to reduce server load
 
 ### Enhanced Requirements (P2 - Post-MVP)
 
-- **FR-013**: System MUST allow patients to search providers by name, location, and specialty [P2 - Post-MVP]
-- **FR-014**: System MUST allow patients to filter providers by rating, price range, years of experience [P2 - Post-MVP]
-- **FR-015**: System MUST support autocomplete suggestions for location searches (max 10 suggestions) [P2 - Post-MVP]
-- **FR-016**: System MUST allow patients to sort providers by Recommended, Rating, Price, Experience [P2 - Post-MVP]
-- **FR-017**: System MUST limit patient provider selection to maximum 5 providers per quote request [P2 - Post-MVP]
-- **FR-018**: System MUST display provider card with name, location, rating, starting price, before/after photo [P2 - Post-MVP]
-- **FR-019**: System MUST support infinite scroll pagination for patient mobile app (10 results per page) [P2 - Post-MVP]
-- **FR-020**: System MUST prioritize admin-featured providers in "Recommended" sort order [P2 - Post-MVP]
+- **REQ-022-013**: System MUST allow patients to search providers by name, location, and specialty [P2 - Post-MVP]
+- **REQ-022-014**: System MUST allow patients to filter providers by rating, price range, years of experience [P2 - Post-MVP]
+- **REQ-022-015**: System MUST support autocomplete suggestions for location searches (max 10 suggestions) [P2 - Post-MVP]
+- **REQ-022-016**: System MUST allow patients to sort providers by Recommended, Rating, Price, Experience [P2 - Post-MVP]
+- **REQ-022-017**: System MUST limit patient provider selection to maximum 5 providers per quote request [P2 - Post-MVP]
+- **REQ-022-018**: System MUST display provider card with name, location, rating, starting price, before/after photo [P2 - Post-MVP]
+- **REQ-022-019**: System MUST support infinite scroll pagination for patient mobile app (10 results per page) [P2 - Post-MVP]
+- **REQ-022-020**: System MUST prioritize admin-featured providers in "Recommended" sort order [P2 - Post-MVP]
 
 ### Security & Privacy Requirements
 
-- **FR-021**: System MUST require valid JWT authentication for all search endpoints
-- **FR-022**: System MUST enforce role-based access control (admin-only for patient/provider search)
-- **FR-023**: System MUST log all admin searches with user ID, timestamp, search terms, and result count
-- **FR-024**: System MUST sanitize all search inputs to prevent SQL injection and XSS attacks
-- **FR-025**: System MUST rate-limit search queries to 100 per hour per user
-- **FR-026**: System MUST anonymize patient names in search results if patient has not confirmed payment
-- **FR-027**: System MUST encrypt audit logs containing patient/provider search history
+- **REQ-022-021**: System MUST require valid JWT authentication for all search endpoints
+- **REQ-022-022**: System MUST enforce role-based access control (admin-only for patient/provider search)
+- **REQ-022-023**: System MUST log all admin searches with user ID, timestamp, search terms, and result count
+- **REQ-022-024**: System MUST sanitize all search inputs to prevent SQL injection and XSS attacks
+- **REQ-022-025**: System MUST rate-limit search queries to 100 per hour per user
+- **REQ-022-026**: System MUST anonymize patient names in search results if patient has not confirmed payment
+- **REQ-022-027**: System MUST encrypt audit logs containing patient/provider search history
 
 ### Performance Requirements
 
-- **FR-028**: System MUST create database indexes on all searchable fields for query optimization
-- **FR-029**: System MUST cache autocomplete results for 5 minutes to reduce database load
-- **FR-030**: System MUST handle 100 concurrent admin searches without performance degradation
-- **FR-031**: System MUST handle 500 concurrent patient searches without performance degradation [P2 - Post-MVP]
-- **FR-032**: System MUST complete database queries in under 100ms for indexed searches
+- **REQ-022-028**: System MUST create database indexes on all searchable fields for query optimization
+- **REQ-022-029**: System MUST cache autocomplete results for 5 minutes to reduce database load
+- **REQ-022-030**: System MUST handle 100 concurrent admin searches without performance degradation
+- **REQ-022-031**: System MUST handle 500 concurrent patient searches without performance degradation [P2 - Post-MVP]
+- **REQ-022-032**: System MUST complete database queries in under 100ms for indexed searches
 
 ---
 

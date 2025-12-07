@@ -227,13 +227,13 @@ Acceptance Scenarios:
 
 ## Functional Requirements Summary
 
-- FR-001: System MUST support multiple languages (initial EN, TR; RTL planned).
-- FR-002: Users MUST be able to select preferred language; preference persists across sessions/devices.
-- FR-003: System MUST translate UI strings, emails, and push notifications for supported locales with fallback.
-- FR-004: System MUST display dates/times in user timezone.
-- FR-005: System MUST display local currency with conversion and correct formatting.
-- FR-006: Admins MUST be able to manage supported locales, defaults, and currency settings.
-- FR-007: System MUST log missing translations and locale coverage metrics.
+- **REQ-021-001**: System MUST support multiple languages (initial EN, TR; RTL planned).
+- **REQ-021-002**: Users MUST be able to select preferred language; preference persists across sessions/devices.
+- **REQ-021-003**: System MUST translate UI strings, emails, and push notifications for supported locales with fallback.
+- **REQ-021-004**: System MUST display dates/times in user timezone.
+- **REQ-021-005**: System MUST display local currency with conversion and correct formatting.
+- **REQ-021-006**: Admins MUST be able to manage supported locales, defaults, and currency settings.
+- **REQ-021-007**: System MUST log missing translations and locale coverage metrics.
 
 ---
 

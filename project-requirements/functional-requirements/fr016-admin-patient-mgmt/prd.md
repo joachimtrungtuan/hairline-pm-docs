@@ -972,45 +972,45 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 
 ### Core Requirements
 
-- **FR-016-001**: System MUST allow admins to search patients by name, email, patient code, or phone number with results returned in < 2 seconds
-- **FR-016-002**: System MUST display comprehensive patient profile including: personal info, current journey status, registration date, last activity, and flags/alerts
-- **FR-016-003**: System MUST provide complete treatment journey timeline showing all inquiries, quotes, bookings, payments, procedures, and aftercare milestones
-- **FR-016-004**: System MUST allow admins to view patient medical questionnaire and 3D scans with mandatory access justification prompt (HIPAA/GDPR compliance)
-- **FR-016-005**: System MUST display complete payment history including successful transactions, failed attempts, refunds, outstanding balances, and installment schedules
-- **FR-016-006**: System MUST allow admins to view all patient communications (with providers, support, aftercare) for compliance monitoring
-- **FR-016-007**: System MUST log every admin action on patient accounts in immutable audit trail with timestamp, admin ID, action type, and justification
+- **REQ-016-001**: System MUST allow admins to search patients by name, email, patient code, or phone number with results returned in < 2 seconds
+- **REQ-016-002**: System MUST display comprehensive patient profile including: personal info, current journey status, registration date, last activity, and flags/alerts
+- **REQ-016-003**: System MUST provide complete treatment journey timeline showing all inquiries, quotes, bookings, payments, procedures, and aftercare milestones
+- **REQ-016-004**: System MUST allow admins to view patient medical questionnaire and 3D scans with mandatory access justification prompt (HIPAA/GDPR compliance)
+- **REQ-016-005**: System MUST display complete payment history including successful transactions, failed attempts, refunds, outstanding balances, and installment schedules
+- **REQ-016-006**: System MUST allow admins to view all patient communications (with providers, support, aftercare) for compliance monitoring
+- **REQ-016-007**: System MUST log every admin action on patient accounts in immutable audit trail with timestamp, admin ID, action type, and justification
 
 ### Admin Intervention Requirements
 
-- **FR-016-008**: System MUST allow admins to reset patient passwords with email notification sent to patient
-- **FR-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts
-- **FR-016-010**: System MUST allow admins to manually reschedule bookings with justification, notifying both patient and provider
-- **FR-016-011**: System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000
-- **FR-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification
-- **FR-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
+- **REQ-016-008**: System MUST allow admins to reset patient passwords with email notification sent to patient
+- **REQ-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts
+- **REQ-016-010**: System MUST allow admins to manually reschedule bookings with justification, notifying both patient and provider
+- **REQ-016-011**: System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000
+- **REQ-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification
+- **REQ-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
 
 ### Data Governance Requirements
 
-- **FR-016-014**: System MUST require admins to enter access justification before viewing patient medical data (minimum 20 characters)
-- **FR-016-015**: System MUST log all medical data access in audit trail (who accessed, when, what data viewed, justification)
-- **FR-016-016**: System MUST process patient data deletion requests (GDPR) via anonymization + archival workflow, retaining compliance records (7 years)
-- **FR-016-017**: System MUST prevent hard deletion of patient accounts; all deletions must be soft-deletes with anonymization
-- **FR-016-018**: System MUST watermark all patient 3D scans displayed in admin interface with patient code
+- **REQ-016-014**: System MUST require admins to enter access justification before viewing patient medical data (minimum 20 characters)
+- **REQ-016-015**: System MUST log all medical data access in audit trail (who accessed, when, what data viewed, justification)
+- **REQ-016-016**: System MUST process patient data deletion requests (GDPR) via anonymization + archival workflow, retaining compliance records (7 years)
+- **REQ-016-017**: System MUST prevent hard deletion of patient accounts; all deletions must be soft-deletes with anonymization
+- **REQ-016-018**: System MUST watermark all patient 3D scans displayed in admin interface with patient code
 
 ### Security & Privacy Requirements
 
-- **FR-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
-- **FR-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
-- **FR-016-021**: System MUST log all admin downloads of patient 3D scans in audit trail with timestamp, admin ID, and justification
-- **FR-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
-- **FR-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
+- **REQ-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
+- **REQ-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
+- **REQ-016-021**: System MUST log all admin downloads of patient 3D scans in audit trail with timestamp, admin ID, and justification
+- **REQ-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
+- **REQ-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
 
 ### Integration Requirements
 
-- **FR-016-024**: System MUST integrate with patient authentication module (P-01) for password reset and account unlock functionality
-- **FR-016-025**: System MUST integrate with payment module (P-03) to display transaction history and initiate refunds via Stripe API
-- **FR-016-026**: System MUST integrate with 3D scan storage service (S-05) to display patient scans with secure signed URLs
-- **FR-016-027**: System MUST integrate with notification service (S-03) to send notifications when admin takes actions affecting patients
+- **REQ-016-024**: System MUST integrate with patient authentication module (P-01) for password reset and account unlock functionality
+- **REQ-016-025**: System MUST integrate with payment module (P-03) to display transaction history and initiate refunds via Stripe API
+- **REQ-016-026**: System MUST integrate with 3D scan storage service (S-05) to display patient scans with secure signed URLs
+- **REQ-016-027**: System MUST integrate with notification service (S-03) to send notifications when admin takes actions affecting patients
 
 ---
 

@@ -441,43 +441,43 @@ Patients can view all confirmed travel (flights and hotels) in a single itinerar
 
 ### Core Requirements (FR-008)
 
-- The system MUST integrate with a flight booking provider to search and book flights.
-- The system MUST integrate with a hotel booking provider to search curated hotels and book stays.
-- Patients MUST be able to search flights by origin/destination and date range with real-time pricing.
-- Patients MUST be able to select and book provider-recommended hotels.
-- The system MUST aggregate all confirmed bookings into a unified itinerary per appointment.
+- **REQ-008-001**: The system MUST integrate with a flight booking provider to search and book flights.
+- **REQ-008-002**: The system MUST integrate with a hotel booking provider to search curated hotels and book stays.
+- **REQ-008-003**: Patients MUST be able to search flights by origin/destination and date range with real-time pricing.
+- **REQ-008-004**: Patients MUST be able to select and book provider-recommended hotels.
+- **REQ-008-005**: The system MUST aggregate all confirmed bookings into a unified itinerary per appointment.
 
 ### Price Preview Requirements
 
-- During inquiry date selection, the system MUST display estimated flight costs (cheapest and average) for the chosen date range.
-- The system MUST refresh price preview when dates change.
-- The system MUST clearly indicate when prices are estimates vs final at checkout.
+- **REQ-008-006**: During inquiry date selection, the system MUST display estimated flight costs (cheapest and average) for the chosen date range.
+- **REQ-008-007**: The system MUST refresh price preview when dates change.
+- **REQ-008-008**: The system MUST clearly indicate when prices are estimates vs final at checkout.
 
 ### Confirmation & Notifications
 
-- The system MUST send booking confirmations for flights and hotels (in-app and email).
-- The system MUST reflect booking changes (cancellations/changes) in the itinerary.
+- **REQ-008-009**: The system MUST send booking confirmations for flights and hotels (in-app and email).
+- **REQ-008-010**: The system MUST reflect booking changes (cancellations/changes) in the itinerary.
 
 ### Commission Tracking
 
-- The system MUST track platform commissions on completed bookings separately from procedure commissions.
-- The system SHOULD support commission ranges: flights (3–5%), hotels (10–15%), configurable by admin.
+- **REQ-008-011**: The system MUST track platform commissions on completed bookings separately from procedure commissions.
+- **REQ-008-012**: The system SHOULD support commission ranges: flights (3–5%), hotels (10–15%), configurable by admin.
 
 ### Security & Privacy
 
-- The system MUST avoid storing any payment card data; payments occur via external, compliant providers.
-- The system MUST log all booking events for audit (who, when, what changed).
+- **REQ-008-013**: The system MUST avoid storing any payment card data; payments occur via external, compliant providers.
+- **REQ-008-014**: The system MUST log all booking events for audit (who, when, what changed).
 
 ### Admin & Config
 
-- Admins MUST be able to configure preferred providers (flight/hotel) and commission parameters.
-- Admins MUST be able to manage provider-recommended hotel lists.
+- **REQ-008-015**: Admins MUST be able to configure preferred providers (flight/hotel) and commission parameters.
+- **REQ-008-016**: Admins MUST be able to manage provider-recommended hotel lists.
 
 ### [NEEDS CLARIFICATION]
 
-- Preferred flight provider? [NEEDS CLARIFICATION: Amadeus vs Skyscanner]
-- Preferred hotel provider? [NEEDS CLARIFICATION: Booking.com vs Expedia]
-- Booking payment flow? [NEEDS CLARIFICATION: In-app redirect vs deep link vs voucher]
+- **REQ-008-017**: Preferred flight provider? [NEEDS CLARIFICATION: Amadeus vs Skyscanner]
+- **REQ-008-018**: Preferred hotel provider? [NEEDS CLARIFICATION: Booking.com vs Expedia]
+- **REQ-008-019**: Booking payment flow? [NEEDS CLARIFICATION: In-app redirect vs deep link vs voucher]
 
 ---
 

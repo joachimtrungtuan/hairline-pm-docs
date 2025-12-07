@@ -762,40 +762,40 @@ Provider logs into Provider Platform after admin activates account and views pro
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to create new provider accounts with complete profile setup including basic information (name, email, license, specialty, experience), contact details, clinic information, document uploads (license, certification, insurance), and commission configuration (percentage or tier-based)
-- **FR-002**: System MUST enforce admin-initiated provider creation only—no self-service provider registration allowed; provider creation restricted to authenticated admins with "Provider Management" role permission
-- **FR-003**: System MUST support provider status lifecycle: Draft → Active → Suspended → (Reactivated OR Deactivated), with validation preventing invalid state transitions (e.g., cannot transition from Deactivated to any other status)
-- **FR-004**: System MUST require all three document types (medical license, board certification, malpractice insurance) uploaded and approved before allowing provider activation
-- **FR-005**: System MUST log all provider management actions (creation, edits, status changes, document approvals/rejections) in immutable audit trail with timestamp, admin user ID, IP address, and action details
+- **REQ-015-001**: System MUST allow admins to create new provider accounts with complete profile setup including basic information (name, email, license, specialty, experience), contact details, clinic information, document uploads (license, certification, insurance), and commission configuration (percentage or tier-based)
+- **REQ-015-002**: System MUST enforce admin-initiated provider creation only—no self-service provider registration allowed; provider creation restricted to authenticated admins with "Provider Management" role permission
+- **REQ-015-003**: System MUST support provider status lifecycle: Draft → Active → Suspended → (Reactivated OR Deactivated), with validation preventing invalid state transitions (e.g., cannot transition from Deactivated to any other status)
+- **REQ-015-004**: System MUST require all three document types (medical license, board certification, malpractice insurance) uploaded and approved before allowing provider activation
+- **REQ-015-005**: System MUST log all provider management actions (creation, edits, status changes, document approvals/rejections) in immutable audit trail with timestamp, admin user ID, IP address, and action details
 
 ### Data Requirements
 
-- **FR-006**: System MUST maintain provider profile data including personal information (name, email, phone), clinic details (name, address, operating hours), document verification statuses (pending, approved, rejected), commission configuration (percentage or tier-based), and featured designation (true/false)
-- **FR-007**: System MUST track provider document expiration dates and automatically send reminder notifications to admins 30 days before expiry
-- **FR-008**: System MUST store uploaded provider documents (licenses, certifications, insurance) in secure cloud storage with encryption at rest (AES-256) and generate secure access URLs for admin document preview
-- **FR-009**: System MUST record provider status change history with fields: previous status, new status, change date, admin user who made change, and reason (required for suspension/deactivation)
+- **REQ-015-006**: System MUST maintain provider profile data including personal information (name, email, phone), clinic details (name, address, operating hours), document verification statuses (pending, approved, rejected), commission configuration (percentage or tier-based), and featured designation (true/false)
+- **REQ-015-007**: System MUST track provider document expiration dates and automatically send reminder notifications to admins 30 days before expiry
+- **REQ-015-008**: System MUST store uploaded provider documents (licenses, certifications, insurance) in secure cloud storage with encryption at rest (AES-256) and generate secure access URLs for admin document preview
+- **REQ-015-009**: System MUST record provider status change history with fields: previous status, new status, change date, admin user who made change, and reason (required for suspension/deactivation)
 
 ### Security & Privacy Requirements
 
-- **FR-010**: System MUST encrypt provider documents at rest (AES-256) and in transit (TLS 1.3) to protect sensitive credentials and personal information
-- **FR-011**: System MUST restrict provider document access to authenticated admins with "Provider Management" or "Document Verification" role permissions; providers can view their own documents only
-- **FR-012**: System MUST mask provider medical license numbers in audit logs and activity reports (display last 4 digits only, e.g., "****1234") to prevent unauthorized credential exposure
-- **FR-013**: System MUST validate provider email uniqueness across platform before allowing account creation (prevent duplicate provider accounts with same email)
-- **FR-014**: System MUST retain deactivated provider data for 7 years minimum for legal/audit compliance, then mark eligible for deletion per GDPR/data retention policies
+- **REQ-015-010**: System MUST encrypt provider documents at rest (AES-256) and in transit (TLS 1.3) to protect sensitive credentials and personal information
+- **REQ-015-011**: System MUST restrict provider document access to authenticated admins with "Provider Management" or "Document Verification" role permissions; providers can view their own documents only
+- **REQ-015-012**: System MUST mask provider medical license numbers in audit logs and activity reports (display last 4 digits only, e.g., "****1234") to prevent unauthorized credential exposure
+- **REQ-015-013**: System MUST validate provider email uniqueness across platform before allowing account creation (prevent duplicate provider accounts with same email)
+- **REQ-015-014**: System MUST retain deactivated provider data for 7 years minimum for legal/audit compliance, then mark eligible for deletion per GDPR/data retention policies
 
 ### Integration Requirements
 
-- **FR-015**: System MUST trigger notification events to S-03 Notification Service when provider account activated, documents approved/rejected, or status changes (suspended/deactivated), including provider email/phone and notification template ID
-- **FR-016**: System MUST upload provider documents to S-05 Media Storage Service with metadata (provider ID, document type, expiration date) and receive secure download URLs for admin access
-- **FR-017**: System MUST expose read-only API endpoint for Provider Platform (PR-01) to fetch individual provider's own profile data (authenticated via provider user token, cannot access other providers' data)
-- **FR-018**: System MUST expose public API endpoint for Patient Platform (P-02) to fetch featured provider listings (filtered by status = Active AND featured = true) with fields: name, clinic, specialty, profile photo URL
-- **FR-019**: System MUST send structured audit log events to S-06 Audit Log Service for all provider management actions with event type, entity ID, admin user, timestamp, and before/after values
+- **REQ-015-015**: System MUST trigger notification events to S-03 Notification Service when provider account activated, documents approved/rejected, or status changes (suspended/deactivated), including provider email/phone and notification template ID
+- **REQ-015-016**: System MUST upload provider documents to S-05 Media Storage Service with metadata (provider ID, document type, expiration date) and receive secure download URLs for admin access
+- **REQ-015-017**: System MUST expose read-only API endpoint for Provider Platform (PR-01) to fetch individual provider's own profile data (authenticated via provider user token, cannot access other providers' data)
+- **REQ-015-018**: System MUST expose public API endpoint for Patient Platform (P-02) to fetch featured provider listings (filtered by status = Active AND featured = true) with fields: name, clinic, specialty, profile photo URL
+- **REQ-015-019**: System MUST send structured audit log events to S-06 Audit Log Service for all provider management actions with event type, entity ID, admin user, timestamp, and before/after values
 
 ### Functional Requirements Needing Clarification
 
-- **FR-020**: System MUST validate commission rate configuration with range 5-30% for percentage-based, 5-30% per tier for tier-based [NEEDS CLARIFICATION: Should system allow commission rates outside this range for special cases with admin override?]
-- **FR-021**: System MUST prevent provider activation if any required document expired [NEEDS CLARIFICATION: Should system allow activation with expired documents if admin provides justification/override reason?]
-- **FR-022**: System MUST automatically unfeatured suspended/deactivated providers [NEEDS CLARIFICATION: Should system automatically re-feature providers when reactivated from suspended status, or require manual admin action?]
+- **REQ-015-020**: System MUST validate commission rate configuration with range 5-30% for percentage-based, 5-30% per tier for tier-based [NEEDS CLARIFICATION: Should system allow commission rates outside this range for special cases with admin override?]
+- **REQ-015-021**: System MUST prevent provider activation if any required document expired [NEEDS CLARIFICATION: Should system allow activation with expired documents if admin provides justification/override reason?]
+- **REQ-015-022**: System MUST automatically unfeatured suspended/deactivated providers [NEEDS CLARIFICATION: Should system automatically re-feature providers when reactivated from suspended status, or require manual admin action?]
 
 ---
 

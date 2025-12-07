@@ -1545,28 +1545,28 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### Core Requirements
 
-- FR-011-CR1: System MUST support treatment-linked and standalone aftercare activation paths
-- FR-011-CR2: Patients MUST be able to complete milestone tasks (3D scans, questionnaires) with reminders and quality validation
-- FR-011-CR3: Providers MUST be able to configure and activate aftercare plans with template customization
-- FR-011-CR4: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
+- **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths
+- **REQ-011-002**: Patients MUST be able to complete milestone tasks (3D scans, questionnaires) with reminders and quality validation
+- **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
+- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
 
 ### Data Requirements
 
-- FR-011-DR1: System MUST track milestones, tasks, progress, and adherence as structured entities
-- FR-011-DR2: System MUST retain all aftercare artifacts (scans, questionnaires, communications) per retention policy
-- FR-011-DR3: Progress MUST be derived deterministically from plan and task completion
+- **REQ-011-005**: System MUST track milestones, tasks, progress, and adherence as structured entities
+- **REQ-011-006**: System MUST retain all aftercare artifacts (scans, questionnaires, communications) per retention policy
+- **REQ-011-007**: Progress MUST be derived deterministically from plan and task completion
 
 ### Security & Privacy Requirements
 
-- FR-011-SP1: All aftercare data MUST be encrypted in transit and at rest
-- FR-011-SP2: Access MUST be role-based (patient, provider, admin) and fully audited
-- FR-011-SP3: PII visibility MUST follow payment-confirmation policy and admin exemptions
+- **REQ-011-008**: All aftercare data MUST be encrypted in transit and at rest
+- **REQ-011-009**: Access MUST be role-based (patient, provider, admin) and fully audited
+- **REQ-011-010**: PII visibility MUST follow payment-confirmation policy and admin exemptions
 
 ### Integration Requirements
 
-- FR-011-IR1: System MUST integrate with Notification Service for reminders/alerts
-- FR-011-IR2: System MUST store media artifacts in secure storage with controlled access
-- FR-011-IR3: System MUST reference questionnaires managed in FR-025 for aftercare context
+- **REQ-011-011**: System MUST integrate with Notification Service for reminders/alerts
+- **REQ-011-012**: System MUST store media artifacts in secure storage with controlled access
+- **REQ-011-013**: System MUST reference questionnaires managed in FR-025 for aftercare context
 
 ## User Scenarios & Testing
 

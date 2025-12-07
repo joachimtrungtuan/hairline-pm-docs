@@ -901,44 +901,44 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to create treatments with name, type, description, video, images, and technique specifications
-- **FR-002**: System MUST allow admins to edit existing treatments, creating new versions without modifying historical records
-- **FR-003**: System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes only
-- **FR-004**: System MUST allow providers to view all active treatments from admin catalog
-- **FR-005**: System MUST allow providers to configure pricing for treatments they want to offer (base price, price per graft, graft ranges)
-- **FR-006**: System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration
-- **FR-007**: System MUST allow providers to create packages with name, type, description, pricing, images, and availability status
-- **FR-008**: System MUST allow providers to edit existing packages, creating new versions without affecting active quotes
-- **FR-009**: System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes
-- **FR-010**: System MUST allow providers to select one treatment and zero or more packages when creating quotes
-- **FR-011**: System MUST calculate quote total dynamically based on selected treatment, graft count, and packages
-- **FR-012**: System MUST lock treatment and package versions in quotes to prevent retroactive price changes
+- **REQ-024-001**: System MUST allow admins to create treatments with name, type, description, video, images, and technique specifications
+- **REQ-024-002**: System MUST allow admins to edit existing treatments, creating new versions without modifying historical records
+- **REQ-024-003**: System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes only
+- **REQ-024-004**: System MUST allow providers to view all active treatments from admin catalog
+- **REQ-024-005**: System MUST allow providers to configure pricing for treatments they want to offer (base price, price per graft, graft ranges)
+- **REQ-024-006**: System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration
+- **REQ-024-007**: System MUST allow providers to create packages with name, type, description, pricing, images, and availability status
+- **REQ-024-008**: System MUST allow providers to edit existing packages, creating new versions without affecting active quotes
+- **REQ-024-009**: System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes
+- **REQ-024-010**: System MUST allow providers to select one treatment and zero or more packages when creating quotes
+- **REQ-024-011**: System MUST calculate quote total dynamically based on selected treatment, graft count, and packages
+- **REQ-024-012**: System MUST lock treatment and package versions in quotes to prevent retroactive price changes
 
 ### Data Requirements
 
-- **FR-013**: System MUST maintain versioned treatment records with immutable history (no update-in-place)
-- **FR-014**: System MUST maintain versioned package records with immutable history
-- **FR-015**: System MUST store media files (videos, images) in S3-compatible object storage with CDN delivery
-- **FR-016**: System MUST track which providers offer which treatments (provider-treatment pricing configuration)
-- **FR-017**: System MUST link packages to provider accounts (package ownership)
-- **FR-018**: System MUST preserve treatment and package versions used in historical quotes and bookings
+- **REQ-024-013**: System MUST maintain versioned treatment records with immutable history (no update-in-place)
+- **REQ-024-014**: System MUST maintain versioned package records with immutable history
+- **REQ-024-015**: System MUST store media files (videos, images) in S3-compatible object storage with CDN delivery
+- **REQ-024-016**: System MUST track which providers offer which treatments (provider-treatment pricing configuration)
+- **REQ-024-017**: System MUST link packages to provider accounts (package ownership)
+- **REQ-024-018**: System MUST preserve treatment and package versions used in historical quotes and bookings
 
 ### Security & Privacy Requirements
 
-- **FR-019**: System MUST restrict treatment creation/editing to admin users only
-- **FR-020**: System MUST restrict package management to provider users (edit only their own packages)
-- **FR-021**: System MUST serve media files via CDN over TLS 1.3 (HTTPS)
-- **FR-022**: System MUST log all treatment and package modifications with timestamp, user ID, IP address, and old/new values
-- **FR-023**: System MUST validate uploaded media files for type, size, and malicious content
-- **FR-024**: System MUST prevent providers from viewing other providers' package catalogs
+- **REQ-024-019**: System MUST restrict treatment creation/editing to admin users only
+- **REQ-024-020**: System MUST restrict package management to provider users (edit only their own packages)
+- **REQ-024-021**: System MUST serve media files via CDN over TLS 1.3 (HTTPS)
+- **REQ-024-022**: System MUST log all treatment and package modifications with timestamp, user ID, IP address, and old/new values
+- **REQ-024-023**: System MUST validate uploaded media files for type, size, and malicious content
+- **REQ-024-024**: System MUST prevent providers from viewing other providers' package catalogs
 
 ### Integration Requirements
 
-- **FR-025**: System MUST expose REST API for treatment CRUD operations (admin access only)
-- **FR-026**: System MUST expose REST API for package CRUD operations (provider access only)
-- **FR-027**: System MUST integrate with S-05: Media Storage Service for video and image uploads
-- **FR-028**: System MUST integrate with CDN service for media file delivery
-- **FR-029**: System MUST integrate with PR-02: Inquiry & Quote Management for treatment and package selection during quote creation
+- **REQ-024-025**: System MUST expose REST API for treatment CRUD operations (admin access only)
+- **REQ-024-026**: System MUST expose REST API for package CRUD operations (provider access only)
+- **REQ-024-027**: System MUST integrate with S-05: Media Storage Service for video and image uploads
+- **REQ-024-028**: System MUST integrate with CDN service for media file delivery
+- **REQ-024-029**: System MUST integrate with PR-02: Inquiry & Quote Management for treatment and package selection during quote creation
 
 ---
 

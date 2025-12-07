@@ -399,26 +399,26 @@ Patient attempts to accept a quote that has expired.
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow patients to view and compare all quotes for an inquiry within the Inquiry Dashboard (FR-003 Screen 8).  
-- **FR-002**: System MUST allow patients to accept exactly one valid quote per inquiry.  
-- **FR-003**: System MUST auto-cancel all non-selected quotes for the same inquiry with reason and notifications.  
-- **FR-004**: System MUST block acceptance of expired/withdrawn/archived quotes with clear messaging.  
-- **FR-005**: System MUST prepare booking/payment handoff upon acceptance without collecting funds in this module.
+- **REQ-005-001**: System MUST allow patients to view and compare all quotes for an inquiry within the Inquiry Dashboard (FR-003 Screen 8).  
+- **REQ-005-002**: System MUST allow patients to accept exactly one valid quote per inquiry.  
+- **REQ-005-003**: System MUST auto-cancel all non-selected quotes for the same inquiry with reason and notifications.  
+- **REQ-005-004**: System MUST block acceptance of expired/withdrawn/archived quotes with clear messaging.  
+- **REQ-005-005**: System MUST prepare booking/payment handoff upon acceptance without collecting funds in this module.
 
 ### Data Requirements
 
-- **FR-006**: System MUST preserve immutable audit logs for acceptance and auto-cancellation events.  
-- **FR-007**: System MUST retain acceptance and related quote records for ≥ 7 years.
+- **REQ-005-006**: System MUST preserve immutable audit logs for acceptance and auto-cancellation events.  
+- **REQ-005-007**: System MUST retain acceptance and related quote records for ≥ 7 years.
 
 ### Security & Privacy Requirements
 
-- **FR-008**: System MUST keep patient identity masked to providers until payment confirmation.  
-- **FR-009**: System MUST encrypt data at rest and in transit and enforce RBAC for actions.
+- **REQ-005-008**: System MUST keep patient identity masked to providers until payment confirmation.  
+- **REQ-005-009**: System MUST encrypt data at rest and in transit and enforce RBAC for actions.
 
 ### Integration Requirements
 
-- **FR-010**: System MUST integrate with FR-004 for quote states and FR-020 for notifications.  
-- **FR-011**: System MUST emit booking handoff payload to the Booking & Payment module.
+- **REQ-005-010**: System MUST integrate with FR-004 for quote states and FR-020 for notifications.  
+- **REQ-005-011**: System MUST emit booking handoff payload to the Booking & Payment module.
 
 ---
 

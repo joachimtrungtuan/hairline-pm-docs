@@ -941,35 +941,35 @@ A patient successfully updates their profile information and manages account set
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow patients to register accounts via mobile app only with email and password
-- **FR-002**: System MUST require email verification via 6-digit OTP before account activation
-- **FR-003**: System MUST authenticate patients with email and password credentials
-- **FR-004**: System MUST support password reset via email OTP verification
-- **FR-005**: System MUST allow patients to view and edit their profile information
-- **FR-006**: System MUST enforce password strength requirements (12+ chars, mixed case, numbers, special chars)
-- **FR-007**: System MUST track and lock accounts after 5 failed login attempts
-- **FR-008**: System MUST log all authentication events for audit trail
+- **REQ-001-001**: System MUST allow patients to register accounts via mobile app only with email and password
+- **REQ-001-002**: System MUST require email verification via 6-digit OTP before account activation
+- **REQ-001-003**: System MUST authenticate patients with email and password credentials
+- **REQ-001-004**: System MUST support password reset via email OTP verification
+- **REQ-001-005**: System MUST allow patients to view and edit their profile information
+- **REQ-001-006**: System MUST enforce password strength requirements (12+ chars, mixed case, numbers, special chars)
+- **REQ-001-007**: System MUST track and lock accounts after 5 failed login attempts
+- **REQ-001-008**: System MUST log all authentication events for audit trail
 
 ### Data Requirements
 
-- **FR-009**: System MUST maintain unique email addresses across all patient accounts
-- **FR-010**: System MUST store patient profile data (name, email, phone, DOB, gender, country)
-- **FR-011**: System MUST maintain session management for authenticated users
-- **FR-012**: System MUST retain patient data for minimum 7 years per healthcare compliance
+- **REQ-001-009**: System MUST maintain unique email addresses across all patient accounts
+- **REQ-001-010**: System MUST store patient profile data (name, email, phone, DOB, gender, country)
+- **REQ-001-011**: System MUST maintain session management for authenticated users
+- **REQ-001-012**: System MUST retain patient data for minimum 7 years per healthcare compliance
 
 ### Security & Privacy Requirements
 
-- **FR-013**: System MUST hash passwords using bcrypt (cost factor 12+)
-- **FR-014**: System MUST encrypt patient data at rest and in transit
-- **FR-015**: System MUST anonymize patient data when shared with providers (until payment confirmation)
-- **FR-016**: System MUST require re-authentication for sensitive actions (delete account, password change)
-- **FR-017**: System MUST log all admin profile modifications with reason and timestamp
+- **REQ-001-013**: System MUST hash passwords using bcrypt (cost factor 12+)
+- **REQ-001-014**: System MUST encrypt patient data at rest and in transit
+- **REQ-001-015**: System MUST anonymize patient data when shared with providers (until payment confirmation)
+- **REQ-001-016**: System MUST require re-authentication for sensitive actions (delete account, password change)
+- **REQ-001-017**: System MUST log all admin profile modifications with reason and timestamp
 
 ### Integration Requirements
 
-- **FR-018**: System MUST integrate with email service for OTP delivery and notifications
-- **FR-019**: System MUST expose APIs for profile management and authentication
-- **FR-020**: System MUST integrate with notification service (FR-020) for account-related alerts
+- **REQ-001-018**: System MUST integrate with email service for OTP delivery and notifications
+- **REQ-001-019**: System MUST expose APIs for profile management and authentication
+- **REQ-001-020**: System MUST integrate with notification service (FR-020) for account-related alerts
 
 ---
 

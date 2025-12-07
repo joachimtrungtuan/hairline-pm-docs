@@ -357,26 +357,26 @@ Acceptance Scenarios:
 
 ### Core Requirements
 
-- FR-001: System MUST allow admins to create platform discounts with type, value, dates, usage limits, and targeting.
-- FR-002: System MUST allow providers to create provider‑specific discounts with similar controls.
-- FR-003: System MUST validate and apply a single discount at quote and booking.
-- FR-004: System MUST enforce priority and non‑stacking rules (patient > provider > affiliate when conflicts arise).
-- FR-005: System MUST track usage and financial impact with exports and dashboards.
+- **REQ-019-001**: System MUST allow admins to create platform discounts with type, value, dates, usage limits, and targeting.
+- **REQ-019-002**: System MUST allow providers to create provider‑specific discounts with similar controls.
+- **REQ-019-003**: System MUST validate and apply a single discount at quote and booking.
+- **REQ-019-004**: System MUST enforce priority and non‑stacking rules (patient > provider > affiliate when conflicts arise).
+- **REQ-019-005**: System MUST track usage and financial impact with exports and dashboards.
 
 ### Data Requirements
 
-- FR-006: System MUST persist discount definitions, approvals, and usage records with audit details.
-- FR-007: System MUST link applied discounts to quotes/bookings and participant entities.
+- **REQ-019-006**: System MUST persist discount definitions, approvals, and usage records with audit details.
+- **REQ-019-007**: System MUST link applied discounts to quotes/bookings and participant entities.
 
 ### Security & Privacy Requirements
 
-- FR-008: System MUST restrict creation/approval/apply actions to authorized roles; patient sees only necessary pricing info.
-- FR-009: System MUST encrypt sensitive data and preserve tamper‑evident audit logs.
+- **REQ-019-008**: System MUST restrict creation/approval/apply actions to authorized roles; patient sees only necessary pricing info.
+- **REQ-019-009**: System MUST encrypt sensitive data and preserve tamper‑evident audit logs.
 
 ### Integration Requirements
 
-- FR-010: System MUST send provider approval notifications via Notification Service.
-- FR-011: System MUST integrate with calculation/settlement services for consistent totals.
+- **REQ-019-010**: System MUST send provider approval notifications via Notification Service.
+- **REQ-019-011**: System MUST integrate with calculation/settlement services for consistent totals.
 
 ### Marking Unclear Requirements
 

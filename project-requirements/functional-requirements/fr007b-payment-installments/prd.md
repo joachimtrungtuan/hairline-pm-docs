@@ -605,45 +605,45 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 ### Core Requirements
 
-- **FR-001**: System MUST offer interest-free installment payment plans with 2-9 monthly payments
-- **FR-002**: System MUST calculate maximum available installments based on time until procedure: (days until procedure - 30) ÷ 30, capped at 9
-- **FR-003**: System MUST enforce 30-day buffer: final installment must complete 30 days before procedure date
-- **FR-004**: System MUST calculate installment amounts as: total procedure cost ÷ number of installments
-- **FR-005**: System MUST charge first installment immediately upon booking confirmation
-- **FR-006**: System MUST schedule remaining installments at 30-day intervals
+- **REQ-007b-001**: System MUST offer interest-free installment payment plans with 2-9 monthly payments
+- **REQ-007b-002**: System MUST calculate maximum available installments based on time until procedure: (days until procedure - 30) ÷ 30, capped at 9
+- **REQ-007b-003**: System MUST enforce 30-day buffer: final installment must complete 30 days before procedure date
+- **REQ-007b-004**: System MUST calculate installment amounts as: total procedure cost ÷ number of installments
+- **REQ-007b-005**: System MUST charge first installment immediately upon booking confirmation
+- **REQ-007b-006**: System MUST schedule remaining installments at 30-day intervals
 
 ### Data Requirements
 
-- **FR-007**: System MUST maintain installment schedule with amounts and due dates per booking
-- **FR-008**: System MUST track installment payment status: scheduled, paid, failed, retried, overdue
-- **FR-009**: System MUST persist patient payment method securely for recurring charges (tokenized)
+- **REQ-007b-007**: System MUST maintain installment schedule with amounts and due dates per booking
+- **REQ-007b-008**: System MUST track installment payment status: scheduled, paid, failed, retried, overdue
+- **REQ-007b-009**: System MUST persist patient payment method securely for recurring charges (tokenized)
 
 ### Security & Privacy Requirements
 
-- **FR-010**: System MUST tokenize payment methods (never store full card numbers)
-- **FR-011**: System MUST encrypt all installment payment records at rest and in transit
-- **FR-012**: System MUST log all installment payment attempts with timestamp, amount, status, and user
+- **REQ-007b-010**: System MUST tokenize payment methods (never store full card numbers)
+- **REQ-007b-011**: System MUST encrypt all installment payment records at rest and in transit
+- **REQ-007b-012**: System MUST log all installment payment attempts with timestamp, amount, status, and user
 
 ### Integration Requirements
 
-- **FR-013**: System MUST integrate with payment processor for scheduled/recurring charges
-- **FR-014**: System MUST send payment reminders 3 days before each installment due date
-- **FR-015**: System MUST automatically charge payment method on installment due date
-- **FR-016**: System MUST send confirmation notification after successful installment charge
+- **REQ-007b-013**: System MUST integrate with payment processor for scheduled/recurring charges
+- **REQ-007b-014**: System MUST send payment reminders 3 days before each installment due date
+- **REQ-007b-015**: System MUST automatically charge payment method on installment due date
+- **REQ-007b-016**: System MUST send confirmation notification after successful installment charge
 
 ### Error Handling Requirements
 
-- **FR-017**: System MUST detect failed installment charges and notify patient immediately
-- **FR-018**: System MUST execute 3 automatic retry attempts for failed installments: 1 day, 3 days, 7 days later
-- **FR-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts
-- **FR-020**: System MUST notify admin of defaulted installment plans for intervention
+- **REQ-007b-017**: System MUST detect failed installment charges and notify patient immediately
+- **REQ-007b-018**: System MUST execute 3 automatic retry attempts for failed installments: 1 day, 3 days, 7 days later
+- **REQ-007b-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts
+- **REQ-007b-020**: System MUST notify admin of defaulted installment plans for intervention
 
 ### Cancellation & Refund Requirements
 
-- **FR-021**: System MUST support patient-initiated payment method updates for active installment plans
-- **FR-022**: System MUST calculate refunds for canceled bookings with partial installments paid per cancellation policy
-- **FR-023**: System MUST cancel remaining installments when booking is canceled
-- **FR-024**: System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment
+- **REQ-007b-021**: System MUST support patient-initiated payment method updates for active installment plans
+- **REQ-007b-022**: System MUST calculate refunds for canceled bookings with partial installments paid per cancellation policy
+- **REQ-007b-023**: System MUST cancel remaining installments when booking is canceled
+- **REQ-007b-024**: System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment
 
 ---
 

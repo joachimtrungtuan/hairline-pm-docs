@@ -15,6 +15,7 @@ The Admin Billing & Financial Management module provides Hairline administrators
 This module serves as the financial control center for the platform, ensuring timely payments, accurate commission calculations, transparent billing, and complete audit trails for all financial transactions. It enables Hairline to scale its medical tourism operations while maintaining financial integrity and regulatory compliance.
 
 **Key Capabilities**:
+
 - View and manage all patient billing and payment transactions
 - Process provider payouts with automated commission calculations
 - Manage affiliate commission tracking and payments
@@ -91,10 +92,12 @@ This module serves as the financial control center for the platform, ensuring ti
 ### Entry Points
 
 **Admin Access**:
+
 - Admin logs into Admin Platform → navigates to "Billing & Finance" section
 - Dashboard displays: upcoming payouts, outstanding patient invoices, pending provider payments, affiliate commissions due
 
 **Automated Triggers**:
+
 - Treatment completion triggers provider payout eligibility calculation
 - Scheduled cron jobs check for upcoming installment payments (daily at 3 AM UTC)
 - Scheduled cron jobs generate monthly affiliate payout summaries (1st of each month)
@@ -102,6 +105,7 @@ This module serves as the financial control center for the platform, ensuring ti
 - Failed payment events trigger admin alerts and retry mechanisms
 
 **Provider Access**:
+
 - Provider logs into Provider Platform → navigates to "Financial Management" section
 - Providers view upcoming payouts based on configured schedule (weekly/bi-weekly/monthly)
 - Providers download invoices after successful payouts
@@ -146,7 +150,7 @@ This module serves as the financial control center for the platform, ensuring ti
 
 ### Alternative Flows
 
-**A1: Admin Adds Note to Payout**
+**A1: Admin Adds Note to Payout**:
 
 - **Trigger**: Admin needs to document special payout circumstances (e.g., delayed payment due to bank issue)
 - **Steps**:
@@ -158,7 +162,7 @@ This module serves as the financial control center for the platform, ensuring ti
   6. Admin continues with payout approval (returns to step 6)
 - **Outcome**: Note saved for internal reference; visible in payout history
 
-**A2: Bulk Payout Processing (Multiple Providers)**
+**A2: Bulk Payout Processing (Multiple Providers)**:
 
 - **Trigger**: Admin wants to process all weekly payouts at once (e.g., every Friday)
 - **Steps**:
@@ -176,7 +180,7 @@ This module serves as the financial control center for the platform, ensuring ti
   9. Admin reviews failed payouts and retries individually
 - **Outcome**: Batch payout processed; failed transactions flagged for manual review
 
-**A3: Provider Payment Schedule Change**
+**A3: Provider Payment Schedule Change**:
 
 - **Trigger**: Provider requests to change payout frequency (e.g., weekly → monthly)
 - **Steps**:
@@ -189,7 +193,7 @@ This module serves as the financial control center for the platform, ensuring ti
   7. System sends notification to provider: "Your payment schedule has been updated to monthly. Next payout: [date]"
 - **Outcome**: Payment schedule updated; provider notified; next payout rescheduled
 
-**B1: Payout Fails Due to Invalid Bank Account**
+**B1: Payout Fails Due to Invalid Bank Account**:
 
 - **Trigger**: Stripe returns error "Invalid bank account" during payout processing (step 8)
 - **Steps**:
@@ -204,7 +208,7 @@ This module serves as the financial control center for the platform, ensuring ti
   9. System re-initiates payout with updated bank account
 - **Outcome**: Payout retried after bank account correction; transaction logged as "retry attempt"
 
-**B2: Provider Disputes Payout Amount**
+**B2: Provider Disputes Payout Amount**:
 
 - **Trigger**: Provider claims missing booking revenue in payout calculation
 - **Steps**:
@@ -224,7 +228,7 @@ This module serves as the financial control center for the platform, ensuring ti
   9. System logs dispute resolution in audit trail
 - **Outcome**: Dispute resolved; missing booking added to next payout; provider notified
 
-**B3: Currency Conversion Rate Protection Triggers Alert**
+**B3: Currency Conversion Rate Protection Triggers Alert**:
 
 - **Trigger**: System detects exchange rate fluctuation exceeding configured threshold
 - **Steps**:
@@ -1037,42 +1041,42 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to view all patient invoices with filtering by payment status (Pending, Partial, Paid, Overdue, Refunded)
-- **FR-002**: System MUST allow admins to view all provider payment schedules (weekly, bi-weekly, monthly) and process payouts with itemized treatment breakdowns
-- **FR-003**: System MUST allow admins to create discount codes (platform-wide, provider-specific, affiliate) with approval workflows for "Both Fees" discounts
-- **FR-004**: System MUST automatically generate invoices (PDF) immediately upon successful patient payment (deposit, installment, final)
-- **FR-005**: System MUST automatically schedule and charge installment payments on configured dates, with 3 retry attempts for failed charges
-- **FR-006**: System MUST calculate provider payouts based on completed treatments (status "Completed" or "Aftercare"), deducting platform commission
-- **FR-007**: System MUST lock currency exchange rates at time of booking acceptance for all multi-currency transactions
-- **FR-008**: System MUST generate financial dashboard with real-time metrics: total revenue, platform commission, provider payouts, outstanding invoices
-- **FR-009**: System MUST track affiliate commissions based on discount code usage and process monthly payouts
-- **FR-010**: System MUST send payment reminder emails 3 days before installment due date and 7 days if overdue
+- **REQ-017-001**: System MUST allow admins to view all patient invoices with filtering by payment status (Pending, Partial, Paid, Overdue, Refunded)
+- **REQ-017-002**: System MUST allow admins to view all provider payment schedules (weekly, bi-weekly, monthly) and process payouts with itemized treatment breakdowns
+- **REQ-017-003**: System MUST allow admins to create discount codes (platform-wide, provider-specific, affiliate) with approval workflows for "Both Fees" discounts
+- **REQ-017-004**: System MUST automatically generate invoices (PDF) immediately upon successful patient payment (deposit, installment, final)
+- **REQ-017-005**: System MUST automatically schedule and charge installment payments on configured dates, with 3 retry attempts for failed charges
+- **REQ-017-006**: System MUST calculate provider payouts based on completed treatments (status "Completed" or "Aftercare"), deducting platform commission
+- **REQ-017-007**: System MUST lock currency exchange rates at time of booking acceptance for all multi-currency transactions
+- **REQ-017-008**: System MUST generate financial dashboard with real-time metrics: total revenue, platform commission, provider payouts, outstanding invoices
+- **REQ-017-009**: System MUST track affiliate commissions based on discount code usage and process monthly payouts
+- **REQ-017-010**: System MUST send payment reminder emails 3 days before installment due date and 7 days if overdue
 
 ### Data Requirements
 
-- **FR-011**: System MUST maintain complete transaction history for all payments, refunds, and payouts with timestamp, amount, currency, and affected parties
-- **FR-012**: System MUST store provider bank account details encrypted at rest (AES-256) and display masked (last 4 digits only) in UI
-- **FR-013**: System MUST track discount code usage with metrics: times used, total discount amount, bookings generated, ROI
-- **FR-014**: System MUST store locked exchange rates per booking for multi-currency transactions (rate never changes after booking)
-- **FR-015**: System MUST maintain separate payout records for providers and affiliates with status tracking (Pending, Processing, Paid, Failed)
+- **REQ-017-011**: System MUST maintain complete transaction history for all payments, refunds, and payouts with timestamp, amount, currency, and affected parties
+- **REQ-017-012**: System MUST store provider bank account details encrypted at rest (AES-256) and display masked (last 4 digits only) in UI
+- **REQ-017-013**: System MUST track discount code usage with metrics: times used, total discount amount, bookings generated, ROI
+- **REQ-017-014**: System MUST store locked exchange rates per booking for multi-currency transactions (rate never changes after booking)
+- **REQ-017-015**: System MUST maintain separate payout records for providers and affiliates with status tracking (Pending, Processing, Paid, Failed)
 
 ### Security & Privacy Requirements
 
-- **FR-016**: System MUST require admin multi-factor authentication (MFA) for all financial operations (payout approval, refund processing)
-- **FR-017**: System MUST implement role-based access control (RBAC) with granular permissions: Billing Admin (full access), Billing Viewer (read-only), Super Admin (secondary approval)
-- **FR-018**: System MUST log ALL financial actions with audit trail: admin ID, timestamp, IP address, action type, before/after values
-- **FR-019**: System MUST mask patient payment methods in UI (display "Visa ending in 1234" NOT full card number)
-- **FR-020**: System MUST soft-delete financial records (no hard deletion); retain records for minimum 7 years (compliance requirement)
-- **FR-021**: System MUST encrypt provider bank account details at rest using AES-256; decrypt ONLY during payout processing
-- **FR-022**: System MUST verify Stripe webhook signatures to prevent spoofing and ensure event authenticity
+- **REQ-017-016**: System MUST require admin multi-factor authentication (MFA) for all financial operations (payout approval, refund processing)
+- **REQ-017-017**: System MUST implement role-based access control (RBAC) with granular permissions: Billing Admin (full access), Billing Viewer (read-only), Super Admin (secondary approval)
+- **REQ-017-018**: System MUST log ALL financial actions with audit trail: admin ID, timestamp, IP address, action type, before/after values
+- **REQ-017-019**: System MUST mask patient payment methods in UI (display "Visa ending in 1234" NOT full card number)
+- **REQ-017-020**: System MUST soft-delete financial records (no hard deletion); retain records for minimum 7 years (compliance requirement)
+- **REQ-017-021**: System MUST encrypt provider bank account details at rest using AES-256; decrypt ONLY during payout processing
+- **REQ-017-022**: System MUST verify Stripe webhook signatures to prevent spoofing and ensure event authenticity
 
 ### Integration Requirements
 
-- **FR-023**: System MUST integrate with Stripe Payment API for payment intents, transfers, refunds, and webhook event processing
-- **FR-024**: System MUST integrate with Currency Exchange API (xe.com or equivalent) with hourly rate updates and 1-hour caching
-- **FR-025**: System MUST use idempotent Stripe API calls (unique idempotency keys per transaction) to prevent duplicate charges/transfers
-- **FR-026**: System MUST process Stripe webhook events asynchronously via job queue (Redis Queue or AWS SQS)
-- **FR-027**: System MUST provide read-only API for Provider Platform to query payout history and earnings analytics
+- **REQ-017-023**: System MUST integrate with Stripe Payment API for payment intents, transfers, refunds, and webhook event processing
+- **REQ-017-024**: System MUST integrate with Currency Exchange API (xe.com or equivalent) with hourly rate updates and 1-hour caching
+- **REQ-017-025**: System MUST use idempotent Stripe API calls (unique idempotency keys per transaction) to prevent duplicate charges/transfers
+- **REQ-017-026**: System MUST process Stripe webhook events asynchronously via job queue (Redis Queue or AWS SQS)
+- **REQ-017-027**: System MUST provide read-only API for Provider Platform to query payout history and earnings analytics
 
 ---
 

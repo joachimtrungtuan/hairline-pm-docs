@@ -770,38 +770,38 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to onboard affiliates with unique email, payment method, and commission structure (percentage or fixed amount)
-- **FR-002**: System MUST generate unique affiliate discount codes with configurable parameters (discount amount, expiration date, usage limits)
-- **FR-003**: System MUST validate affiliate discount codes at patient checkout and apply discount from Hairline's commission (not provider payout)
-- **FR-004**: System MUST track discount code applications separately as "applied" (code entered) and "completed" (booking paid)
-- **FR-005**: System MUST calculate affiliate commission automatically when booking completes with payment confirmation
-- **FR-006**: System MUST provide affiliates with real-time dashboard showing referral count, revenue generated, commission earned, and pending payout
-- **FR-007**: System MUST generate monthly payout list automatically on 7th of each month for previous month's completed bookings
-- **FR-008**: System MUST integrate with payment gateway to process affiliate commission payouts via bank transfer or PayPal
-- **FR-009**: System MUST send payout confirmation emails to affiliates with transaction details within 24 hours of payment processing
-- **FR-010**: System MUST enforce single discount code per booking rule (priority: Patient code > Provider code > Affiliate code)
+- **REQ-018-001**: System MUST allow admins to onboard affiliates with unique email, payment method, and commission structure (percentage or fixed amount)
+- **REQ-018-002**: System MUST generate unique affiliate discount codes with configurable parameters (discount amount, expiration date, usage limits)
+- **REQ-018-003**: System MUST validate affiliate discount codes at patient checkout and apply discount from Hairline's commission (not provider payout)
+- **REQ-018-004**: System MUST track discount code applications separately as "applied" (code entered) and "completed" (booking paid)
+- **REQ-018-005**: System MUST calculate affiliate commission automatically when booking completes with payment confirmation
+- **REQ-018-006**: System MUST provide affiliates with real-time dashboard showing referral count, revenue generated, commission earned, and pending payout
+- **REQ-018-007**: System MUST generate monthly payout list automatically on 7th of each month for previous month's completed bookings
+- **REQ-018-008**: System MUST integrate with payment gateway to process affiliate commission payouts via bank transfer or PayPal
+- **REQ-018-009**: System MUST send payout confirmation emails to affiliates with transaction details within 24 hours of payment processing
+- **REQ-018-010**: System MUST enforce single discount code per booking rule (priority: Patient code > Provider code > Affiliate code)
 
 ### Data Requirements
 
-- **FR-011**: System MUST maintain affiliate account records with contact details, payment information (encrypted), commission structure, and status
-- **FR-012**: System MUST link discount codes to affiliate accounts with one-to-many relationship (one affiliate can have multiple codes)
-- **FR-013**: System MUST store booking records with affiliate code reference for commission tracking
-- **FR-014**: System MUST maintain payout history with transaction ID, date, amount, status for minimum 7 years (audit compliance)
+- **REQ-018-011**: System MUST maintain affiliate account records with contact details, payment information (encrypted), commission structure, and status
+- **REQ-018-012**: System MUST link discount codes to affiliate accounts with one-to-many relationship (one affiliate can have multiple codes)
+- **REQ-018-013**: System MUST store booking records with affiliate code reference for commission tracking
+- **REQ-018-014**: System MUST maintain payout history with transaction ID, date, amount, status for minimum 7 years (audit compliance)
 
 ### Security & Privacy Requirements
 
-- **FR-015**: System MUST encrypt affiliate payment details (bank accounts, PayPal emails) at rest using AES-256
-- **FR-016**: System MUST mask affiliate payment details in UI (display last 4 characters only)
-- **FR-017**: System MUST anonymize patient identity in affiliate dashboard (affiliates see only aggregated statistics, not patient names)
-- **FR-018**: System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type
-- **FR-019**: System MUST require secure authentication for affiliate dashboard access (username/password with optional MFA)
+- **REQ-018-015**: System MUST encrypt affiliate payment details (bank accounts, PayPal emails) at rest using AES-256
+- **REQ-018-016**: System MUST mask affiliate payment details in UI (display last 4 characters only)
+- **REQ-018-017**: System MUST anonymize patient identity in affiliate dashboard (affiliates see only aggregated statistics, not patient names)
+- **REQ-018-018**: System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type
+- **REQ-018-019**: System MUST require secure authentication for affiliate dashboard access (username/password with optional MFA)
 
 ### Integration Requirements
 
-- **FR-020**: System MUST expose API for discount code validation during patient checkout (response time <500ms)
-- **FR-021**: System MUST integrate with payment gateway API to initiate affiliate payouts (bank transfer or PayPal)
-- **FR-022**: System MUST integrate with email service provider to send affiliate notifications (onboarding, payouts, code creation)
-- **FR-023**: System MUST emit booking completion events to trigger affiliate commission calculation asynchronously
+- **REQ-018-020**: System MUST expose API for discount code validation during patient checkout (response time <500ms)
+- **REQ-018-021**: System MUST integrate with payment gateway API to initiate affiliate payouts (bank transfer or PayPal)
+- **REQ-018-022**: System MUST integrate with email service provider to send affiliate notifications (onboarding, payouts, code creation)
+- **REQ-018-023**: System MUST emit booking completion events to trigger affiliate commission calculation asynchronously
 
 ---
 

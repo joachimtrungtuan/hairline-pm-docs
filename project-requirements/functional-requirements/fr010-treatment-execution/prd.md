@@ -819,39 +819,39 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow providers to mark confirmed bookings as "arrived" when patient checks in at clinic, transitioning status to "In Progress"
-- **FR-002**: System MUST validate provider role (Owner or Clinical Staff) before allowing treatment documentation; Managers and Billing Staff cannot document treatments
-- **FR-003**: System MUST auto-save treatment documentation every 2 minutes during active procedures to prevent data loss
-- **FR-004**: System MUST require minimum documentation before allowing treatment completion: surgeon assignment, donor/recipient areas, technique, graft counts, before/after photos (min 3 each), medications (min 1), aftercare template selection
-- **FR-005**: System MUST watermark all uploaded treatment photos with anonymized patient ID and timestamp before storing in media storage service
-- **FR-006**: System MUST transition booking status from "In Progress" → "Aftercare" upon treatment completion, triggering aftercare plan activation and final payment collection
-- **FR-007**: System MUST send real-time status notifications to patient mobile app when treatment starts ("In Progress") and when treatment completes ("Aftercare")
-- **FR-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
-- **FR-009**: System MUST activate patient's aftercare plan based on provider-selected template, generating milestones, scan schedules, and questionnaire cadence
-- **FR-010**: System MUST enforce treatment documentation completion within 24 hours of marking patient as arrived; send reminder notifications at 12 and 24 hours if incomplete
+- **REQ-010-001**: System MUST allow providers to mark confirmed bookings as "arrived" when patient checks in at clinic, transitioning status to "In Progress"
+- **REQ-010-002**: System MUST validate provider role (Owner or Clinical Staff) before allowing treatment documentation; Managers and Billing Staff cannot document treatments
+- **REQ-010-003**: System MUST auto-save treatment documentation every 2 minutes during active procedures to prevent data loss
+- **REQ-010-004**: System MUST require minimum documentation before allowing treatment completion: surgeon assignment, donor/recipient areas, technique, graft counts, before/after photos (min 3 each), medications (min 1), aftercare template selection
+- **REQ-010-005**: System MUST watermark all uploaded treatment photos with anonymized patient ID and timestamp before storing in media storage service
+- **REQ-010-006**: System MUST transition booking status from "In Progress" → "Aftercare" upon treatment completion, triggering aftercare plan activation and final payment collection
+- **REQ-010-007**: System MUST send real-time status notifications to patient mobile app when treatment starts ("In Progress") and when treatment completes ("Aftercare")
+- **REQ-010-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
+- **REQ-010-009**: System MUST activate patient's aftercare plan based on provider-selected template, generating milestones, scan schedules, and questionnaire cadence
+- **REQ-010-010**: System MUST enforce treatment documentation completion within 24 hours of marking patient as arrived; send reminder notifications at 12 and 24 hours if incomplete
 
 ### Data Requirements
 
-- **FR-011**: System MUST persist all treatment documentation fields with audit trail: graft counts, techniques, donor/recipient areas, photos, medications, notes, timestamps, provider actions
-- **FR-012**: System MUST link treatment documentation to original quote details, allowing providers to compare estimated vs. actual graft counts
-- **FR-013**: System MUST store treatment photos encrypted at rest (AES-256) with retention period of 7+ years per healthcare compliance regulations
-- **FR-014**: System MUST maintain immutable audit log of all treatment documentation actions: who documented, what changed, when changed (timestamp), IP address
+- **REQ-010-011**: System MUST persist all treatment documentation fields with audit trail: graft counts, techniques, donor/recipient areas, photos, medications, notes, timestamps, provider actions
+- **REQ-010-012**: System MUST link treatment documentation to original quote details, allowing providers to compare estimated vs. actual graft counts
+- **REQ-010-013**: System MUST store treatment photos encrypted at rest (AES-256) with retention period of 7+ years per healthcare compliance regulations
+- **REQ-010-014**: System MUST maintain immutable audit log of all treatment documentation actions: who documented, what changed, when changed (timestamp), IP address
 
 ### Security & Privacy Requirements
 
-- **FR-015**: System MUST restrict treatment documentation access to provider clinic that owns the booking (no cross-clinic access)
-- **FR-016**: System MUST encrypt patient medical data (treatment notes, complications, medications) in transit (TLS 1.3) and at rest (AES-256)
-- **FR-017**: System MUST implement role-based access control (RBAC) for treatment documentation: Clinical Staff role required to document; other provider roles (Owner, Manager, Billing Staff) can view according to their access level but cannot act as the documenting clinician
-- **FR-018**: System MUST validate file types on photo uploads (only JPG, PNG allowed) and perform virus scanning before storage
-- **FR-019**: System MUST rate-limit photo uploads (max 50 uploads per hour per provider) to prevent abuse or system overload
+- **REQ-010-015**: System MUST restrict treatment documentation access to provider clinic that owns the booking (no cross-clinic access)
+- **REQ-010-016**: System MUST encrypt patient medical data (treatment notes, complications, medications) in transit (TLS 1.3) and at rest (AES-256)
+- **REQ-010-017**: System MUST implement role-based access control (RBAC) for treatment documentation: Clinical Staff role required to document; other provider roles (Owner, Manager, Billing Staff) can view according to their access level but cannot act as the documenting clinician
+- **REQ-010-018**: System MUST validate file types on photo uploads (only JPG, PNG allowed) and perform virus scanning before storage
+- **REQ-010-019**: System MUST rate-limit photo uploads (max 50 uploads per hour per provider) to prevent abuse or system overload
 
 ### Integration Requirements
 
-- **FR-020**: System MUST integrate with S-05 Media Storage Service for secure photo uploads with automatic watermarking, encryption, and retrieval
-- **FR-021**: System MUST integrate with S-02 Payment Processing Service to trigger final payment collection upon treatment completion (if deposit-only booking)
-- **FR-022**: System MUST integrate with S-03 Notification Service to send status notifications, post-op instructions, and medication schedules to patients
-- **FR-023**: System MUST integrate with P-05 Aftercare Module to activate patient's aftercare plan based on provider-selected template at treatment completion
-- **FR-024**: System MUST expose RESTful API endpoints for treatment documentation CRUD operations (create treatment record, update progress, upload photos, complete treatment)
+- **REQ-010-020**: System MUST integrate with S-05 Media Storage Service for secure photo uploads with automatic watermarking, encryption, and retrieval
+- **REQ-010-021**: System MUST integrate with S-02 Payment Processing Service to trigger final payment collection upon treatment completion (if deposit-only booking)
+- **REQ-010-022**: System MUST integrate with S-03 Notification Service to send status notifications, post-op instructions, and medication schedules to patients
+- **REQ-010-023**: System MUST integrate with P-05 Aftercare Module to activate patient's aftercare plan based on provider-selected template at treatment completion
+- **REQ-010-024**: System MUST expose RESTful API endpoints for treatment documentation CRUD operations (create treatment record, update progress, upload photos, complete treatment)
 
 ---
 

@@ -831,39 +831,39 @@ Compliance officer requests complete audit trail of all authentication policy ch
 
 ### Core Requirements
 
-- **FR-001**: System MUST provide Settings Management UI accessible only to admins with "Settings Manager" or "Settings Viewer" role
-- **FR-002**: System MUST require change reason (10-500 characters) for all setting modifications
-- **FR-003**: System MUST version all setting changes with auto-incremented version numbers (v1.0, v1.1, v1.2, etc.)
-- **FR-004**: System MUST create immutable audit log for every change capturing: timestamp, admin ID, admin email, setting group, old values, new values, change reason
-- **FR-005**: System MUST propagate setting changes to dependent services within 1 minute via polling mechanism
-- **FR-006**: System MUST invalidate settings cache immediately upon save to trigger propagation
-- **FR-007**: System MUST NOT support rollback. Admins make forward-only changes; version history is read-only.
-- **FR-008**: System MUST display version history in reverse chronological order with diff highlighting (old → new)
+- **REQ-026-001**: System MUST provide Settings Management UI accessible only to admins with "Settings Manager" or "Settings Viewer" role
+- **REQ-026-002**: System MUST require change reason (10-500 characters) for all setting modifications
+- **REQ-026-003**: System MUST version all setting changes with auto-incremented version numbers (v1.0, v1.1, v1.2, etc.)
+- **REQ-026-004**: System MUST create immutable audit log for every change capturing: timestamp, admin ID, admin email, setting group, old values, new values, change reason
+- **REQ-026-005**: System MUST propagate setting changes to dependent services within 1 minute via polling mechanism
+- **REQ-026-006**: System MUST invalidate settings cache immediately upon save to trigger propagation
+- **REQ-026-007**: System MUST NOT support rollback. Admins make forward-only changes; version history is read-only.
+- **REQ-026-008**: System MUST display version history in reverse chronological order with diff highlighting (old → new)
 
 ### Data Requirements
 
-- **FR-009**: System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)
-- **FR-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
-- **FR-011**: System MUST store centrally managed country list: country name, ISO code, calling code, display order, active status
-- **FR-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
-- **FR-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
+- **REQ-026-009**: System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)
+- **REQ-026-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
+- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, display order, active status
+- **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
+- **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
 
-- **FR-014**: System MUST mask sensitive values (API keys, secrets) in UI and audit logs (display as "••••••••" or "[REDACTED]")
-- **FR-015**: System MUST restrict "View Sensitive Settings" permission to authorized admins only
-- **FR-016**: System MUST encrypt sensitive values at rest using AES-256
-- **FR-017**: System MUST enforce multi-factor authentication for admin access to Settings Management UI
-- **FR-018**: System MUST rate limit Settings API to 100 requests/minute per admin to prevent abuse
-- **FR-019**: System MUST retain audit logs for minimum 10 years per compliance requirements
-- **FR-020**: System MUST validate all admin inputs to prevent XSS, SQL injection, command injection attacks
+- **REQ-026-014**: System MUST mask sensitive values (API keys, secrets) in UI and audit logs (display as "••••••••" or "[REDACTED]")
+- **REQ-026-015**: System MUST restrict "View Sensitive Settings" permission to authorized admins only
+- **REQ-026-016**: System MUST encrypt sensitive values at rest using AES-256
+- **REQ-026-017**: System MUST enforce multi-factor authentication for admin access to Settings Management UI
+- **REQ-026-018**: System MUST rate limit Settings API to 100 requests/minute per admin to prevent abuse
+- **REQ-026-019**: System MUST retain audit logs for minimum 10 years per compliance requirements
+- **REQ-026-020**: System MUST validate all admin inputs to prevent XSS, SQL injection, command injection attacks
 
 ### Integration Requirements
 
-- **FR-021**: System MUST expose Settings API (RESTful) for dependent services to poll configurations
-- **FR-022**: Settings API MUST return JSON response with version number, setting values, and last modified timestamp
-- **FR-023**: Settings API MUST support OAuth 2.0 authentication with "read:settings" or "write:settings" scopes
-- **FR-024**: System MUST NOT expose a rollback API.
+- **REQ-026-021**: System MUST expose Settings API (RESTful) for dependent services to poll configurations
+- **REQ-026-022**: Settings API MUST return JSON response with version number, setting values, and last modified timestamp
+- **REQ-026-023**: Settings API MUST support OAuth 2.0 authentication with "read:settings" or "write:settings" scopes
+- **REQ-026-024**: System MUST NOT expose a rollback API.
 
 ---
 

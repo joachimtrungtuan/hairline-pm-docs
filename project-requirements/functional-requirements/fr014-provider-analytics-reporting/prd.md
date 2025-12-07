@@ -770,55 +770,55 @@ An admin monitors platform-wide provider analytics and identifies a provider wit
 
 ### Core Requirements
 
-- **FR-001**: System MUST display provider performance dashboard with key metrics: inquiry count, quote count, quote acceptance rate, booking conversion rate, total revenue, average quote amount, average price per graft, average response time
-- **FR-002**: System MUST calculate metrics from operational data (inquiries, quotes, bookings, payments) with maximum 15-minute lag between transaction and analytics reflection
-- **FR-003**: Providers MUST be able to filter dashboard by date range (last 7/30/90 days, last 12 months, custom range)
-- **FR-004**: Providers MUST be able to filter analytics by treatment type (FUE, FUT, DHI, etc.)
-- **FR-005**: System MUST display conversion funnel visualization showing patient journey stages: Inquiries Received → Quotes Submitted → Quotes Accepted → Bookings Confirmed → Treatments Completed
-- **FR-006**: System MUST provide comparative benchmarks showing provider performance against anonymized industry averages (regional, clinic size, treatment type segments)
-- **FR-007**: Providers MUST be able to export analytics reports in PDF (formatted summary) and CSV (detailed data) formats
-- **FR-008**: System MUST generate financial reports including revenue trends, earnings breakdown by treatment type, upcoming payment schedules, previous payment history
+- **REQ-014-001**: System MUST display provider performance dashboard with key metrics: inquiry count, quote count, quote acceptance rate, booking conversion rate, total revenue, average quote amount, average price per graft, average response time
+- **REQ-014-002**: System MUST calculate metrics from operational data (inquiries, quotes, bookings, payments) with maximum 15-minute lag between transaction and analytics reflection
+- **REQ-014-003**: Providers MUST be able to filter dashboard by date range (last 7/30/90 days, last 12 months, custom range)
+- **REQ-014-004**: Providers MUST be able to filter analytics by treatment type (FUE, FUT, DHI, etc.)
+- **REQ-014-005**: System MUST display conversion funnel visualization showing patient journey stages: Inquiries Received → Quotes Submitted → Quotes Accepted → Bookings Confirmed → Treatments Completed
+- **REQ-014-006**: System MUST provide comparative benchmarks showing provider performance against anonymized industry averages (regional, clinic size, treatment type segments)
+- **REQ-014-007**: Providers MUST be able to export analytics reports in PDF (formatted summary) and CSV (detailed data) formats
+- **REQ-014-008**: System MUST generate financial reports including revenue trends, earnings breakdown by treatment type, upcoming payment schedules, previous payment history
 
 ### Data Requirements
 
-- **FR-009**: System MUST aggregate data from inquiry, quote, booking, payment, and treatment execution modules to calculate analytics
-- **FR-010**: System MUST maintain 24-month historical analytics data for trend analysis and year-over-year comparisons
-- **FR-011**: System MUST convert multi-currency financial data to provider's preferred currency using daily exchange rates
-- **FR-012**: System MUST store pre-aggregated metrics (daily inquiry counts, revenue totals) for fast dashboard loading
+- **REQ-014-009**: System MUST aggregate data from inquiry, quote, booking, payment, and treatment execution modules to calculate analytics
+- **REQ-014-010**: System MUST maintain 24-month historical analytics data for trend analysis and year-over-year comparisons
+- **REQ-014-011**: System MUST convert multi-currency financial data to provider's preferred currency using daily exchange rates
+- **REQ-014-012**: System MUST store pre-aggregated metrics (daily inquiry counts, revenue totals) for fast dashboard loading
 
 ### Visualization Requirements
 
-- **FR-013**: System MUST render interactive charts (line charts for trends, bar charts for comparisons, pie charts for distribution, funnel charts for conversion)
-- **FR-014**: Charts MUST support tooltips displaying exact values on hover
-- **FR-015**: Charts MUST be responsive and render correctly on desktop and tablet viewports
-- **FR-016**: System MUST display trend indicators (up/down arrows) comparing current period to previous equivalent period
+- **REQ-014-013**: System MUST render interactive charts (line charts for trends, bar charts for comparisons, pie charts for distribution, funnel charts for conversion)
+- **REQ-014-014**: Charts MUST support tooltips displaying exact values on hover
+- **REQ-014-015**: Charts MUST be responsive and render correctly on desktop and tablet viewports
+- **REQ-014-016**: System MUST display trend indicators (up/down arrows) comparing current period to previous equivalent period
 
 ### Security & Privacy Requirements
 
-- **FR-017**: System MUST enforce authentication and authorization - only logged-in provider users can access their own analytics
-- **FR-018**: System MUST anonymize patient personal identifiers in all analytics views (no names, contact details, only counts and IDs)
-- **FR-019**: System MUST fully anonymize provider identities in benchmark calculations (no provider can identify competitors in averages)
-- **FR-020**: System MUST log all analytics data access with user ID, timestamp, and data accessed for audit compliance
+- **REQ-014-017**: System MUST enforce authentication and authorization - only logged-in provider users can access their own analytics
+- **REQ-014-018**: System MUST anonymize patient personal identifiers in all analytics views (no names, contact details, only counts and IDs)
+- **REQ-014-019**: System MUST fully anonymize provider identities in benchmark calculations (no provider can identify competitors in averages)
+- **REQ-014-020**: System MUST log all analytics data access with user ID, timestamp, and data accessed for audit compliance
 
 ### Integration Requirements
 
-- **FR-021**: Analytics pipeline MUST extract data from inquiry, quote, booking, payment, treatment modules every 15 minutes
-- **FR-022**: System MUST integrate with currency conversion API for multi-currency reporting (daily rate updates)
-- **FR-023**: Report generation service MUST accept configuration (date range, sections, format) and produce PDF or CSV output within 60 seconds
+- **REQ-014-021**: Analytics pipeline MUST extract data from inquiry, quote, booking, payment, treatment modules every 15 minutes
+- **REQ-014-022**: System MUST integrate with currency conversion API for multi-currency reporting (daily rate updates)
+- **REQ-014-023**: Report generation service MUST accept configuration (date range, sections, format) and produce PDF or CSV output within 60 seconds
 
 ### Export & Reporting Requirements
 
-- **FR-024**: System MUST allow providers to schedule recurring reports (weekly, monthly, quarterly) with automated email delivery
-- **FR-025**: System MUST store generated reports for 7 days in "Report History" for re-download
-- **FR-026**: Exported PDF reports MUST include provider branding (logo, colors) and formatted visualizations
-- **FR-027**: Exported CSV files MUST include raw data with column headers and be compatible with Excel/Google Sheets
+- **REQ-014-024**: System MUST allow providers to schedule recurring reports (weekly, monthly, quarterly) with automated email delivery
+- **REQ-014-025**: System MUST store generated reports for 7 days in "Report History" for re-download
+- **REQ-014-026**: Exported PDF reports MUST include provider branding (logo, colors) and formatted visualizations
+- **REQ-014-027**: Exported CSV files MUST include raw data with column headers and be compatible with Excel/Google Sheets
 
 ### Admin Requirements
 
-- **FR-028**: Admin platform MUST aggregate provider analytics across entire platform for oversight dashboard
-- **FR-029**: Admin MUST be able to configure benchmark calculation methodology (segments, minimums, refresh frequency)
-- **FR-030**: Admin MUST be able to identify underperforming providers via platform analytics dashboard
-- **FR-031**: Admin MUST be able to audit individual provider analytics access logs for compliance
+- **REQ-014-028**: Admin platform MUST aggregate provider analytics across entire platform for oversight dashboard
+- **REQ-014-029**: Admin MUST be able to configure benchmark calculation methodology (segments, minimums, refresh frequency)
+- **REQ-014-030**: Admin MUST be able to identify underperforming providers via platform analytics dashboard
+- **REQ-014-031**: Admin MUST be able to audit individual provider analytics access logs for compliance
 
 ---
 

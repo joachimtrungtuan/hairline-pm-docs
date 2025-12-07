@@ -176,30 +176,30 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Core Requirements
 
-- FR-027.1: Admins MUST be able to create, edit, preview, and publish legal documents (T&C, Privacy, Consent)
-- FR-027.2: System MUST maintain version history with timestamps and change tracking; previous versions are preserved for reference
-- FR-027.3: Admins MUST be able to schedule an effective date and target locales/regions for publication
-- FR-027.4: System MUST require acceptance for material changes as configured, prompting users appropriately
-- FR-027.5: System MUST track which user accepted which document type and version, with timestamp and locale displayed
-- FR-027.6: System MUST provide a coverage view for Admin to see acceptance status and follow‑up needs
-- FR-027.7: All legal content changes MUST be logged with who/when/what changed (audit trail)
+- **REQ-027-001**: Admins MUST be able to create, edit, preview, and publish legal documents (T&C, Privacy, Consent)
+- **REQ-027-002**: System MUST maintain version history with timestamps and change tracking; previous versions are preserved for reference
+- **REQ-027-003**: Admins MUST be able to schedule an effective date and target locales/regions for publication
+- **REQ-027-004**: System MUST require acceptance for material changes as configured, prompting users appropriately
+- **REQ-027-005**: System MUST track which user accepted which document type and version, with timestamp and locale displayed
+- **REQ-027-006**: System MUST provide a coverage view for Admin to see acceptance status and follow‑up needs
+- **REQ-027-007**: All legal content changes MUST be logged with who/when/what changed (audit trail)
 
 ### Data Requirements
 
-- FR-027.D1: Legal document entities MUST include: type, locale, version, status (draft/current/archived), effective date, change summary
-- FR-027.D2: Acceptance records MUST include: user, document type, version, timestamp, locale, and acceptance channel
-- FR-027.D3: Version comparisons MUST present human‑readable change summaries (no raw diffs required for end‑users)
+- **REQ-027-008**: Legal document entities MUST include: type, locale, version, status (draft/current/archived), effective date, change summary
+- **REQ-027-009**: Acceptance records MUST include: user, document type, version, timestamp, locale, and acceptance channel
+- **REQ-027-010**: Version comparisons MUST present human‑readable change summaries (no raw diffs required for end‑users)
 
 ### Security & Privacy Requirements
 
-- FR-027.S1: Only authorized Admin roles can create/edit/publish legal documents; publication actions require explicit confirmation
-- FR-027.S2: Users MUST have clear access to read the full content prior to acceptance; records are retained to demonstrate consent
-- FR-027.S3: Audit trail MUST be immutable and reviewable by authorized Admins
+- **REQ-027-011**: Only authorized Admin roles can create/edit/publish legal documents; publication actions require explicit confirmation
+- **REQ-027-012**: Users MUST have clear access to read the full content prior to acceptance; records are retained to demonstrate consent
+- **REQ-027-013**: Audit trail MUST be immutable and reviewable by authorized Admins
 
 ### Integration/Communication Requirements
 
-- FR-027.I1: Users SHOULD receive clear prompts and reminders for pending acceptance respecting rate limits
-- FR-027.I2: Legal content visibility and acceptance prompts MUST be available across Patient and Provider applications
+- **REQ-027-014**: Users SHOULD receive clear prompts and reminders for pending acceptance respecting rate limits
+- **REQ-027-015**: Legal content visibility and acceptance prompts MUST be available across Patient and Provider applications
 
 ### Clarifications (Resolved)
 

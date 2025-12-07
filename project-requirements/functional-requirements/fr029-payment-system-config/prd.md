@@ -15,6 +15,7 @@ The Payment System Configuration module empowers platform administrators to mana
 This configuration layer is critical because Hairline operates across multiple countries with different currencies, banking systems, and regulatory requirements. Admins need the flexibility to assign different Stripe accounts to different regions, protect the platform against currency fluctuations through configurable markup rates, and offer patients flexible payment options (2-9 installments) while ensuring full payment completion before procedure dates.
 
 The module delivers value by:
+
 - Enabling multi-country payment operations with region-specific Stripe account management
 - Protecting revenue through configurable currency conversion markup (e.g., 5% buffer)
 - Increasing booking conversion rates by offering flexible deposit rates (20-30%) and installment plans
@@ -191,7 +192,7 @@ The module delivers value by:
 
 ### Alternative Flows
 
-**A1: Add Stripe Account with Regional Grouping Override**
+**A1: Add Stripe Account with Regional Grouping Override**:
 
 - **Trigger**: Admin wants to assign a Stripe account to a regional grouping that already has another account assigned
 - **Steps**:
@@ -204,7 +205,7 @@ The module delivers value by:
   7. System logs conflict resolution to audit trail
 - **Outcome**: New Stripe account assigned to region, replacing or supplementing previous assignment
 
-**A2: Configure Provider-Specific Deposit Rate**
+**A2: Configure Provider-Specific Deposit Rate**:
 
 - **Trigger**: Admin wants to set custom deposit rate for specific provider(s) different from global default
 - **Steps**:
@@ -218,7 +219,7 @@ The module delivers value by:
   8. System displays confirmation with list of affected providers
 - **Outcome**: Selected providers have custom deposit rate, overriding global default
 
-**A3: Enable Automatic Currency Conversion Rate Updates**
+**A3: Enable Automatic Currency Conversion Rate Updates**:
 
 - **Trigger**: Admin wants to enable fully automated rate updates without manual approval
 - **Steps**:
@@ -231,7 +232,7 @@ The module delivers value by:
   7. System sends email digest to admin showing rate changes from last sync
 - **Outcome**: Currency conversion rates update automatically without manual admin intervention
 
-**A4: Configure Different Installment Options for Different Booking Amounts**
+**A4: Configure Different Installment Options for Different Booking Amounts**:
 
 - **Trigger**: Admin wants to offer more installment options for higher-value bookings
 - **Steps**:
@@ -244,7 +245,7 @@ The module delivers value by:
   7. System applies appropriate installment options based on booking amount during checkout
 - **Outcome**: Patients see installment options appropriate for their booking amount
 
-**B1: Stripe API Credential Validation Fails**
+**B1: Stripe API Credential Validation Fails**:
 
 - **Trigger**: Admin enters invalid Stripe API credentials or Stripe API is unreachable
 - **Steps**:
@@ -258,7 +259,7 @@ The module delivers value by:
   8. System re-attempts validation
 - **Outcome**: Admin corrects credentials and successfully adds Stripe account, or admin contacts support for assistance
 
-**B2: Currency Conversion API Connection Failure**
+**B2: Currency Conversion API Connection Failure**:
 
 - **Trigger**: Currency conversion rate sync job fails due to API downtime or network issue
 - **Steps**:
@@ -271,7 +272,7 @@ The module delivers value by:
   7. Admin investigates API status or switches to alternative rate source if prolonged outage
 - **Outcome**: System gracefully handles API failure by using cached rates and alerting admin
 
-**B3: Deposit Rate Outside Allowed Range**
+**B3: Deposit Rate Outside Allowed Range**:
 
 - **Trigger**: Admin attempts to set deposit rate below 20% or above 30%
 - **Steps**:
@@ -285,7 +286,7 @@ The module delivers value by:
   8. System accepts valid deposit rate
 - **Outcome**: Admin sets deposit rate within allowed range, ensuring business rule compliance
 
-**B4: Split Payment Cutoff Date Conflict**
+**B4: Split Payment Cutoff Date Conflict**:
 
 - **Trigger**: Admin configures cutoff date that would prevent any installment options from being offered
 - **Steps**:
@@ -298,7 +299,7 @@ The module delivers value by:
   7. System stores configuration but logs warning to admin activity log
 - **Outcome**: Admin is informed of potential issue and can adjust cutoff date or accept restrictive configuration
 
-**B5: Currency Fluctuation Exceeds Rate Protection Threshold**
+**B5: Currency Fluctuation Exceeds Rate Protection Threshold**:
 
 - **Trigger**: Scheduled sync detects currency rate change exceeding configured alert threshold (e.g., 3% in 24 hours)
 - **Steps**:
@@ -312,7 +313,7 @@ The module delivers value by:
   8. System applies new markup and logs admin action to audit trail
 - **Outcome**: Admin is alerted to significant rate fluctuation and can adjust markup to protect revenue
 
-**B6: No Stripe Account Available for Patient Location**
+**B6: No Stripe Account Available for Patient Location**:
 
 - **Trigger**: Patient from country with no assigned Stripe account attempts booking
 - **Steps**:
@@ -858,60 +859,60 @@ As a platform administrator managing international payments, I need to receive t
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to add, edit, and manage multiple Stripe accounts with API credentials (publishable key, secret key, webhook secret)
-- **FR-002**: System MUST allow admins to assign Stripe accounts to specific countries or regional groupings (multi-select assignment)
-- **FR-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
-- **FR-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
-- **FR-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
-- **FR-006**: System MUST allow admins to configure currency conversion rate sources (xe.com, fixer.io, or manual entry)
-- **FR-007**: System MUST allow admins to set currency conversion markup percentages (0-20% range) per currency pair
-- **FR-008**: System MUST fetch currency conversion rates automatically on scheduled intervals (configurable sync frequency: 6h, 12h, 24h)
-- **FR-009**: System MUST apply admin-configured markup percentage to fetched currency rates before displaying prices to patients
-- **FR-010**: System MUST allow admins to configure rate protection thresholds (1-50% range) and send alerts when thresholds exceeded
-- **FR-011**: System MUST allow admins to enable or disable automatic rate application (if disabled, admin must manually approve rate updates)
-- **FR-012**: System MUST gracefully handle currency conversion API failures by using last cached rates and alerting admin
-- **FR-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
-- **FR-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
-- **FR-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate)
-- **FR-016**: System MUST calculate deposit amount by multiplying booking total by configured deposit rate percentage
-- **FR-017**: System MUST allow admins to enable or disable split payment (installment) feature globally
-- **FR-018**: System MUST allow admins to select available installment options (2-9 installments) via multi-select checkboxes
-- **FR-019**: System MUST allow admins to configure cutoff days (7-90 day range) requiring full payment completion before procedure date
-- **FR-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
-- **FR-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
-- **FR-022**: System MUST generate installment payment schedules with first installment equal to deposit amount and remaining balance split equally
-- **FR-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
+- **REQ-029-001**: System MUST allow admins to add, edit, and manage multiple Stripe accounts with API credentials (publishable key, secret key, webhook secret)
+- **REQ-029-002**: System MUST allow admins to assign Stripe accounts to specific countries or regional groupings (multi-select assignment)
+- **REQ-029-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
+- **REQ-029-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
+- **REQ-029-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
+- **REQ-029-006**: System MUST allow admins to configure currency conversion rate sources (xe.com, fixer.io, or manual entry)
+- **REQ-029-007**: System MUST allow admins to set currency conversion markup percentages (0-20% range) per currency pair
+- **REQ-029-008**: System MUST fetch currency conversion rates automatically on scheduled intervals (configurable sync frequency: 6h, 12h, 24h)
+- **REQ-029-009**: System MUST apply admin-configured markup percentage to fetched currency rates before displaying prices to patients
+- **REQ-029-010**: System MUST allow admins to configure rate protection thresholds (1-50% range) and send alerts when thresholds exceeded
+- **REQ-029-011**: System MUST allow admins to enable or disable automatic rate application (if disabled, admin must manually approve rate updates)
+- **REQ-029-012**: System MUST gracefully handle currency conversion API failures by using last cached rates and alerting admin
+- **REQ-029-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
+- **REQ-029-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
+- **REQ-029-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate)
+- **REQ-029-016**: System MUST calculate deposit amount by multiplying booking total by configured deposit rate percentage
+- **REQ-029-017**: System MUST allow admins to enable or disable split payment (installment) feature globally
+- **REQ-029-018**: System MUST allow admins to select available installment options (2-9 installments) via multi-select checkboxes
+- **REQ-029-019**: System MUST allow admins to configure cutoff days (7-90 day range) requiring full payment completion before procedure date
+- **REQ-029-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
+- **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
+- **REQ-029-022**: System MUST generate installment payment schedules with first installment equal to deposit amount and remaining balance split equally
+- **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
 
 ### Data Requirements
 
-- **FR-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, split payment rules) with full audit history
-- **FR-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
-- **FR-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
-- **FR-027**: System MUST retain payment configuration audit history for minimum 7 years for financial compliance
+- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, split payment rules) with full audit history
+- **REQ-029-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
+- **REQ-029-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
+- **REQ-029-027**: System MUST retain payment configuration audit history for minimum 7 years for financial compliance
 
 ### Security & Privacy Requirements
 
-- **FR-028**: System MUST encrypt Stripe API secret keys and webhook secrets at rest using AES-256 encryption
-- **FR-029**: System MUST never log Stripe secret keys in plain text to audit logs or error logs (mask all but last 4 characters)
-- **FR-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
-- **FR-031**: System MUST use TLS 1.3 for all connections to Payment Configuration API (no plain HTTP allowed)
-- **FR-032**: System MUST comply with PCI DSS Level 1 requirements for payment data handling
+- **REQ-029-028**: System MUST encrypt Stripe API secret keys and webhook secrets at rest using AES-256 encryption
+- **REQ-029-029**: System MUST never log Stripe secret keys in plain text to audit logs or error logs (mask all but last 4 characters)
+- **REQ-029-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
+- **REQ-029-031**: System MUST use TLS 1.3 for all connections to Payment Configuration API (no plain HTTP allowed)
+- **REQ-029-032**: System MUST comply with PCI DSS Level 1 requirements for payment data handling
 
 ### Integration Requirements
 
-- **FR-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency rates, deposit rates, installment rules)
-- **FR-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests
-- **FR-035**: System MUST send email notifications to admins for payment configuration changes and rate protection alerts
-- **FR-036**: System MUST propagate payment configuration changes to Payment Processing Service within 5 minutes maximum (cache TTL)
+- **REQ-029-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency rates, deposit rates, installment rules)
+- **REQ-029-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests
+- **REQ-029-035**: System MUST send email notifications to admins for payment configuration changes and rate protection alerts
+- **REQ-029-036**: System MUST propagate payment configuration changes to Payment Processing Service within 5 minutes maximum (cache TTL)
 
 ### Validation & Error Handling Requirements
 
-- **FR-037**: System MUST validate deposit rate percentage is within allowed range (20-30%) and display error if out of range
-- **FR-038**: System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range
-- **FR-039**: System MUST validate cutoff days is within allowed range (7-90 days) and display error if out of range
-- **FR-040**: System MUST prevent deletion of Stripe accounts with transactions in last 90 days (archive instead)
-- **FR-041**: System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)
-- **FR-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
+- **REQ-029-037**: System MUST validate deposit rate percentage is within allowed range (20-30%) and display error if out of range
+- **REQ-029-038**: System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range
+- **REQ-029-039**: System MUST validate cutoff days is within allowed range (7-90 days) and display error if out of range
+- **REQ-029-040**: System MUST prevent deletion of Stripe accounts with transactions in last 90 days (archive instead)
+- **REQ-029-041**: System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)
+- **REQ-029-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
 
 ---
 

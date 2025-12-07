@@ -818,31 +818,31 @@ Late cancellation applies refund schedule; provider cancellation triggers full r
 
 ### Core Requirements
 
-- **FR-006.1**: Patients MUST be able to proceed to payment after accepting a quote (appointment slot already pre-scheduled and confirmed by provider during quote creation - no slot selection needed).
-- **FR-006.2**: System MUST confirm booking only after successful deposit/initial installment and unmask patient identity to provider.
-- **FR-006.3**: System MUST auto-block provider calendar for confirmed bookings and prevent overlapping appointments (first payment confirmation wins; second attempt fails with conflict error).
-- **FR-006.4**: System MUST enforce cancellation policy with scheduled refunds per policy (rescheduling deferred to V2).
-- **FR-006.5**: System MUST hold accepted quote and appointment slot for configurable duration (default 48 hours) after payment failure to allow retry.
+- **REQ-006-001**: Patients MUST be able to proceed to payment after accepting a quote (appointment slot already pre-scheduled and confirmed by provider during quote creation - no slot selection needed).
+- **REQ-006-002**: System MUST confirm booking only after successful deposit/initial installment and unmask patient identity to provider.
+- **REQ-006-003**: System MUST auto-block provider calendar for confirmed bookings and prevent overlapping appointments (first payment confirmation wins; second attempt fails with conflict error).
+- **REQ-006-004**: System MUST enforce cancellation policy with scheduled refunds per policy (rescheduling deferred to V2).
+- **REQ-006-005**: System MUST hold accepted quote and appointment slot for configurable duration (default 48 hours) after payment failure to allow retry.
 
 ### Data Requirements
 
-- **FR-006.6**: System MUST store booking reference, slot, status history, payment state, refund state, and audit trail ≥7 years.
-- **FR-006.7**: System MUST link bookings to accepted quotes, treatments, packages, and provider calendars.
+- **REQ-006-006**: System MUST store booking reference, slot, status history, payment state, refund state, and audit trail ≥7 years.
+- **REQ-006-007**: System MUST link bookings to accepted quotes, treatments, packages, and provider calendars.
 
 ### Security & Privacy Requirements
 
-- **FR-006.8**: System MUST keep patient identity masked until payment confirmation; encrypt PII at rest and in transit.
-- **FR-006.9**: System MUST log all booking state changes and accesses with user, timestamp, and reason.
+- **REQ-006-008**: System MUST keep patient identity masked until payment confirmation; encrypt PII at rest and in transit.
+- **REQ-006-009**: System MUST log all booking state changes and accesses with user, timestamp, and reason.
 
 ### Integration Requirements
 
-- **FR-006.10**: System MUST integrate with Payment Service for deposits, installments, refunds, and lock exchange rate.
-- **FR-006.11**: System MUST integrate with Notification Service for confirmations, reminders, and policy notices.
+- **REQ-006-010**: System MUST integrate with Payment Service for deposits, installments, refunds, and lock exchange rate.
+- **REQ-006-011**: System MUST integrate with Notification Service for confirmations, reminders, and policy notices.
 
 ### Configuration Requirements
 
-- **FR-006.12**: Admin MUST be able to configure deposit percentage (default: 20-30% range) via **FR-029: Payment System Configuration** (Module A-09: System Settings & Configuration).
-- **FR-006.13**: Admin MUST be able to configure payment failure hold duration (default: 48 hours) via A-09: System Settings & Configuration.
+- **REQ-006-012**: Admin MUST be able to configure deposit percentage (default: 20-30% range) via **FR-029: Payment System Configuration** (Module A-09: System Settings & Configuration).
+- **REQ-006-013**: Admin MUST be able to configure payment failure hold duration (default: 48 hours) via A-09: System Settings & Configuration.
 
 ### Marking Unclear Requirements
 

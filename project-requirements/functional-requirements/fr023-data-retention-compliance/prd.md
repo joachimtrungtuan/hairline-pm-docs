@@ -162,35 +162,35 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ### Core Requirements
 
-- FR-023.1: System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- FR-023.2: System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- FR-023.3: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability.
-- FR-023.4: System MUST provide GDPR-compliant data export in a machine-readable, portable format (with media referenced via secure links) including account/profile, bookings, messages, and media references; raw audit logs are excluded by default and provided only upon explicit request subject to review.
-- FR-023.5: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected medical/financial records are retained without anonymization but with strict access restrictions and documented legal basis.
-- FR-023.6: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
-- FR-023.7: System MUST maintain audit logs for all read and write access to protected records, including actor, timestamp, object, action, outcome.
-- FR-023.8: System MUST provide Admin views to configure retention by data category and jurisdiction and to manage DSR queues.
-- FR-023.9: System MUST notify Patients and Admins about DSR status updates and completion outcomes.
+- **REQ-023-001**: System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.
+- **REQ-023-002**: System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.
+- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability.
+- **REQ-023-004**: System MUST provide GDPR-compliant data export in a machine-readable, portable format (with media referenced via secure links) including account/profile, bookings, messages, and media references; raw audit logs are excluded by default and provided only upon explicit request subject to review.
+- **REQ-023-005**: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected medical/financial records are retained without anonymization but with strict access restrictions and documented legal basis.
+- **REQ-023-006**: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
+- **REQ-023-007**: System MUST maintain audit logs for all read and write access to protected records, including actor, timestamp, object, action, outcome.
+- **REQ-023-008**: System MUST provide Admin views to configure retention by data category and jurisdiction and to manage DSR queues.
+- **REQ-023-009**: System MUST notify Patients and Admins about DSR status updates and completion outcomes.
 
 ### Data Requirements
 
-- FR-023.D1: System MUST classify data into categories: Medical Records, Financial Records, Communications, Media, Account Profile, Analytics.
-- FR-023.D2: Each category MUST have an assigned retention policy and legal basis (with jurisdiction overrides).
-- FR-023.D3: Audit log entries MUST be immutable and retained for at least 7 years.
-- FR-023.D4: Backups MUST occur at least every 6 hours with 30-day retention (per system PRD) and exclude already-deleted personal data beyond backup windows.
+- **REQ-023-010**: System MUST classify data into categories: Medical Records, Financial Records, Communications, Media, Account Profile, Analytics.
+- **REQ-023-011**: Each category MUST have an assigned retention policy and legal basis (with jurisdiction overrides).
+- **REQ-023-012**: Audit log entries MUST be immutable and retained for at least 7 years.
+- **REQ-023-013**: Backups MUST occur at least every 6 hours with 30-day retention (per system PRD) and exclude already-deleted personal data beyond backup windows.
 
 ### Security & Privacy Requirements
 
-- FR-023.S1: Exports MUST be delivered via secure, time-bound links; access requires identity verification.
-- FR-023.S2: Deletion actions MUST purge search indexes and caches for impacted personal data.
-- FR-023.S3: Anonymization MUST remove direct identifiers and reduce re-identification risk for quasi-identifiers.
-- FR-023.S4: System MUST capture consent for analytics usage where applicable and honor opt-outs in non-essential analytics.
+- **REQ-023-014**: Exports MUST be delivered via secure, time-bound links; access requires identity verification.
+- **REQ-023-015**: Deletion actions MUST purge search indexes and caches for impacted personal data.
+- **REQ-023-016**: Anonymization MUST remove direct identifiers and reduce re-identification risk for quasi-identifiers.
+- **REQ-023-017**: System MUST capture consent for analytics usage where applicable and honor opt-outs in non-essential analytics.
 
 ### Integration Requirements
 
-- FR-023.I1: Provide Admin export of audit logs and retention reports in portable, non-proprietary formats.
-- FR-023.I2: Provide programmatic access for DSR submission/status for Patient app integration.
-- FR-023.I3: Provide event notifications for DSR lifecycle events to internal communication channels.
+- **REQ-023-018**: Provide Admin export of audit logs and retention reports in portable, non-proprietary formats.
+- **REQ-023-019**: Provide programmatic access for DSR submission/status for Patient app integration.
+- **REQ-023-020**: Provide event notifications for DSR lifecycle events to internal communication channels.
 
 ### Clarifications (Resolved)
 

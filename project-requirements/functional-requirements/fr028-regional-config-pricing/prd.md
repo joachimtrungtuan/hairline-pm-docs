@@ -728,35 +728,35 @@ This module provides the administrative infrastructure to:
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to create regional groupings by selecting group name, countries, and location presentation order
-- **FR-002**: System MUST allow admins to configure starting price estimates per location per currency
-- **FR-003**: System MUST apply regional grouping to patient destination list based on patient's location from profile or IP geolocation
-- **FR-004**: System MUST display starting prices in patient's preferred currency, falling back to location's default currency with conversion if specific currency not configured
-- **FR-005**: System MUST propagate configuration changes to patient-facing APIs within 1 minute via cache invalidation
-- **FR-006**: System MUST resolve overlapping regional groupings by applying grouping with fewest countries (most specific match)
-- **FR-007**: System MUST support fallback pricing for locations when patient's specific currency is not configured
-- **FR-008**: System MUST allow admins to preview how configurations will appear to patients from different regions before saving
+- **REQ-028-001**: System MUST allow admins to create regional groupings by selecting group name, countries, and location presentation order
+- **REQ-028-002**: System MUST allow admins to configure starting price estimates per location per currency
+- **REQ-028-003**: System MUST apply regional grouping to patient destination list based on patient's location from profile or IP geolocation
+- **REQ-028-004**: System MUST display starting prices in patient's preferred currency, falling back to location's default currency with conversion if specific currency not configured
+- **REQ-028-005**: System MUST propagate configuration changes to patient-facing APIs within 1 minute via cache invalidation
+- **REQ-028-006**: System MUST resolve overlapping regional groupings by applying grouping with fewest countries (most specific match)
+- **REQ-028-007**: System MUST support fallback pricing for locations when patient's specific currency is not configured
+- **REQ-028-008**: System MUST allow admins to preview how configurations will appear to patients from different regions before saving
 
 ### Data Requirements
 
-- **FR-009**: System MUST store regional grouping configuration with grouping name, country list, location ordering, and status (active/inactive)
-- **FR-010**: System MUST store starting price configuration with location, currency, amount, effective date, expiry date, and fallback flag
-- **FR-011**: System MUST maintain audit trail of all configuration changes with admin user, timestamp, and change details
-- **FR-012**: System MUST retain pricing history for 3 years for trend analysis and compliance audit
+- **REQ-028-009**: System MUST store regional grouping configuration with grouping name, country list, location ordering, and status (active/inactive)
+- **REQ-028-010**: System MUST store starting price configuration with location, currency, amount, effective date, expiry date, and fallback flag
+- **REQ-028-011**: System MUST maintain audit trail of all configuration changes with admin user, timestamp, and change details
+- **REQ-028-012**: System MUST retain pricing history for 3 years for trend analysis and compliance audit
 
 ### Security & Privacy Requirements
 
-- **FR-013**: System MUST restrict regional configuration and pricing management to admin users with "System Configuration" role (per FR-031)
-- **FR-014**: System MUST log all configuration changes with admin user ID, timestamp, IP address, and full change details for audit trail
-- **FR-015**: System MUST validate all admin inputs server-side (country codes, currency codes, positive pricing amounts) to prevent invalid configurations
-- **FR-016**: System MUST rate-limit admin configuration API to 100 requests/minute per admin user to prevent abuse
+- **REQ-028-013**: System MUST restrict regional configuration and pricing management to admin users with "System Configuration" role (per FR-031)
+- **REQ-028-014**: System MUST log all configuration changes with admin user ID, timestamp, IP address, and full change details for audit trail
+- **REQ-028-015**: System MUST validate all admin inputs server-side (country codes, currency codes, positive pricing amounts) to prevent invalid configurations
+- **REQ-028-016**: System MUST rate-limit admin configuration API to 100 requests/minute per admin user to prevent abuse
 
 ### Integration Requirements
 
-- **FR-017**: System MUST integrate with FR-026 country list API for country selection in regional grouping configuration
-- **FR-018**: System MUST integrate with FR-029 currency API for currency validation and conversion rate retrieval
-- **FR-019**: System MUST provide REST API for patient apps to fetch regional configuration (location ordering + starting prices) based on patient location and currency
-- **FR-020**: System MUST expose admin configuration API for CRUD operations on regional groupings and starting prices with role-based access control
+- **REQ-028-017**: System MUST integrate with FR-026 country list API for country selection in regional grouping configuration
+- **REQ-028-018**: System MUST integrate with FR-029 currency API for currency validation and conversion rate retrieval
+- **REQ-028-019**: System MUST provide REST API for patient apps to fetch regional configuration (location ordering + starting prices) based on patient location and currency
+- **REQ-028-020**: System MUST expose admin configuration API for CRUD operations on regional groupings and starting prices with role-based access control
 
 ---
 

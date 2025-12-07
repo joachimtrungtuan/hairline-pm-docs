@@ -761,40 +761,40 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow admins to create notification rules by selecting event type, configuring recipient targeting, enabling delivery channels (email, push, and SMS in future phases), selecting templates per channel, and defining delivery timing. In MVP, only email and push can actually be enabled; SMS is reserved for later phases once S‑03 SMS support is implemented.
-- **FR-002**: System MUST evaluate notification rules in real-time (<30 seconds) when system events occur and trigger notifications for all matching rules
-- **FR-003**: System MUST deliver email notifications via SMTP service within 2 minutes of trigger for 95% of emails
-- **FR-004**: System MUST deliver push notifications via FCM/Web Push within 1 minute of trigger for 95% of push notifications
-- **FR-005**: System MUST support optional SMS notifications for critical events (payment reminders, appointment alerts) with admin approval and cost tracking in post‑MVP phases; **MVP does not send SMS**.
-- **FR-006**: System MUST provide notification template editor supporting rich text (email), plain text (push, SMS), dynamic variables, and multi-language content. SMS templates, if configured, are only used when SMS delivery is enabled in a later phase.
-- **FR-007**: System MUST validate notification templates before activation to ensure all variables exist in event payload and template syntax is valid
-- **FR-008**: System MUST automatically retry failed notification deliveries according to configured retry logic (max 3-5 attempts with exponential backoff)
-- **FR-009**: System MUST log all notification deliveries (successful and failed) with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)
-- **FR-010**: System MUST provide real-time notification delivery analytics dashboard with metrics: total sent, delivered, failed, opened (email), clicked (email), grouped by event type, channel, recipient type
+- **REQ-030-001**: System MUST allow admins to create notification rules by selecting event type, configuring recipient targeting, enabling delivery channels (email, push, and SMS in future phases), selecting templates per channel, and defining delivery timing. In MVP, only email and push can actually be enabled; SMS is reserved for later phases once S‑03 SMS support is implemented.
+- **REQ-030-002**: System MUST evaluate notification rules in real-time (<30 seconds) when system events occur and trigger notifications for all matching rules
+- **REQ-030-003**: System MUST deliver email notifications via SMTP service within 2 minutes of trigger for 95% of emails
+- **REQ-030-004**: System MUST deliver push notifications via FCM/Web Push within 1 minute of trigger for 95% of push notifications
+- **REQ-030-005**: System MUST support optional SMS notifications for critical events (payment reminders, appointment alerts) with admin approval and cost tracking in post‑MVP phases; **MVP does not send SMS**.
+- **REQ-030-006**: System MUST provide notification template editor supporting rich text (email), plain text (push, SMS), dynamic variables, and multi-language content. SMS templates, if configured, are only used when SMS delivery is enabled in a later phase.
+- **REQ-030-007**: System MUST validate notification templates before activation to ensure all variables exist in event payload and template syntax is valid
+- **REQ-030-008**: System MUST automatically retry failed notification deliveries according to configured retry logic (max 3-5 attempts with exponential backoff)
+- **REQ-030-009**: System MUST log all notification deliveries (successful and failed) with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)
+- **REQ-030-010**: System MUST provide real-time notification delivery analytics dashboard with metrics: total sent, delivered, failed, opened (email), clicked (email), grouped by event type, channel, recipient type
 
 ### Data Requirements
 
-- **FR-011**: System MUST store notification rules with: event type, recipient targeting rules, channel preferences, template IDs, delivery timing, retry configuration, escalation rules, rule status (active/paused/draft)
-- **FR-012**: System MUST store notification templates with: template name, event type, channel type, language, content (subject, body), variables, status (active/draft/archived), version history
-- **FR-013**: System MUST maintain notification delivery logs for 90 days in operational database; archive logs for 2 years for compliance; permanently delete after 2 years
-- **FR-014**: System MUST track notification engagement metrics (email opens, email clicks) via pixel tracking and link tracking from SMTP service
+- **REQ-030-011**: System MUST store notification rules with: event type, recipient targeting rules, channel preferences, template IDs, delivery timing, retry configuration, escalation rules, rule status (active/paused/draft)
+- **REQ-030-012**: System MUST store notification templates with: template name, event type, channel type, language, content (subject, body), variables, status (active/draft/archived), version history
+- **REQ-030-013**: System MUST maintain notification delivery logs for 90 days in operational database; archive logs for 2 years for compliance; permanently delete after 2 years
+- **REQ-030-014**: System MUST track notification engagement metrics (email opens, email clicks) via pixel tracking and link tracking from SMTP service
 
 ### Security & Privacy Requirements
 
-- **FR-015**: System MUST encrypt notification templates at rest using AES-256; decrypt only during template rendering in S-03 Notification Service
-- **FR-016**: System MUST mask recipient contact information (email, phone) in admin interfaces to protect privacy (e.g., "mar***@example.com", "+44***1234")
-- **FR-017**: System MUST enforce rate limiting to prevent notification spam: maximum 10 notifications per hour per recipient (critical notifications exempt from rate limiting)
-- **FR-018**: System MUST HTML-escape all template variables during rendering to prevent XSS attacks from user-generated content
-- **FR-019**: System MUST respect recipient opt-out preferences for non-critical notifications (marketing, general updates); critical notifications (payment, appointment) override opt-out with in-app explanation
-- **FR-020**: System MUST log all notification rule modifications with admin user ID, timestamp, change summary, IP address; logs retained for 10 years for audit compliance
+- **REQ-030-015**: System MUST encrypt notification templates at rest using AES-256; decrypt only during template rendering in S-03 Notification Service
+- **REQ-030-016**: System MUST mask recipient contact information (email, phone) in admin interfaces to protect privacy (e.g., "mar***@example.com", "+44***1234")
+- **REQ-030-017**: System MUST enforce rate limiting to prevent notification spam: maximum 10 notifications per hour per recipient (critical notifications exempt from rate limiting)
+- **REQ-030-018**: System MUST HTML-escape all template variables during rendering to prevent XSS attacks from user-generated content
+- **REQ-030-019**: System MUST respect recipient opt-out preferences for non-critical notifications (marketing, general updates); critical notifications (payment, appointment) override opt-out with in-app explanation
+- **REQ-030-020**: System MUST log all notification rule modifications with admin user ID, timestamp, change summary, IP address; logs retained for 10 years for audit compliance
 
 ### Integration Requirements
 
-- **FR-021**: System MUST integrate with SMTP service (SendGrid, Amazon SES, Mailgun) for email delivery via RESTful API or SMTP protocol
-- **FR-022**: System MUST integrate with push notification services (Firebase Cloud Messaging for mobile, Web Push API for web) for push notification delivery
-- **FR-023**: System MUST integrate with SMS gateway (Twilio, Vonage) for SMS delivery via RESTful API (optional, admin-enabled)
-- **FR-024**: System MUST receive delivery status updates (bounces, opens, clicks) from external services via webhooks with signature verification to prevent spoofing
-- **FR-025**: System MUST publish notification events to audit log service (Elasticsearch, CloudWatch Logs) for compliance and troubleshooting
+- **REQ-030-021**: System MUST integrate with SMTP service (SendGrid, Amazon SES, Mailgun) for email delivery via RESTful API or SMTP protocol
+- **REQ-030-022**: System MUST integrate with push notification services (Firebase Cloud Messaging for mobile, Web Push API for web) for push notification delivery
+- **REQ-030-023**: System MUST integrate with SMS gateway (Twilio, Vonage) for SMS delivery via RESTful API (optional, admin-enabled)
+- **REQ-030-024**: System MUST receive delivery status updates (bounces, opens, clicks) from external services via webhooks with signature verification to prevent spoofing
+- **REQ-030-025**: System MUST publish notification events to audit log service (Elasticsearch, CloudWatch Logs) for compliance and troubleshooting
 
 ---
 

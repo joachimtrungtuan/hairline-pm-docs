@@ -1132,43 +1132,43 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 > Note: This section summarizes the normative requirements already described in Business Workflows, Screen Specifications, and Business Rules. In case of conflict, the Business Rules section prevails.
 
-- **FR-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry)
-- **FR-002**: System MUST support four distinct provider roles with hierarchical permissions: Owner (Main Account Holder), Manager (Clinic Operations), Clinical Staff, Billing Staff
-- **FR-003**: System MUST enforce role-based access control for all provider platform features and data
-- **FR-004**: System MUST allow Owners and Managers to modify non-Owner team member roles with immediate permission updates
-- **FR-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
-- **FR-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
-- **FR-007**: System MUST send email notifications for team management events (invitation, role change, removal)
-- **FR-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked or escalated for admin-managed transfer
+- **REQ-009-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry)
+- **REQ-009-002**: System MUST support four distinct provider roles with hierarchical permissions: Owner (Main Account Holder), Manager (Clinic Operations), Clinical Staff, Billing Staff
+- **REQ-009-003**: System MUST enforce role-based access control for all provider platform features and data
+- **REQ-009-004**: System MUST allow Owners and Managers to modify non-Owner team member roles with immediate permission updates
+- **REQ-009-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
+- **REQ-009-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
+- **REQ-009-007**: System MUST send email notifications for team management events (invitation, role change, removal)
+- **REQ-009-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked or escalated for admin-managed transfer
 
 ### Data Requirements
 
 > Note: Data requirements are summarized here for traceability; field-level definitions and provenance are specified in Screen Specifications and Key Entities.
 
-- **FR-009**: System MUST maintain team member records with: name, email, role, status (Active/Invited/Suspended), invitation date, acceptance date, last activity timestamp
-- **FR-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), sender, recipient email, role offered
-- **FR-011**: System MUST store role permission definitions in configuration (Owner, Manager, Clinical Staff, Billing Staff permission sets)
-- **FR-012**: System MUST maintain team member-to-provider organization relationships with role assignment per organization
+- **REQ-009-009**: System MUST maintain team member records with: name, email, role, status (Active/Invited/Suspended), invitation date, acceptance date, last activity timestamp
+- **REQ-009-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), sender, recipient email, role offered
+- **REQ-009-011**: System MUST store role permission definitions in configuration (Owner, Manager, Clinical Staff, Billing Staff permission sets)
+- **REQ-009-012**: System MUST maintain team member-to-provider organization relationships with role assignment per organization
 
 ### Security & Privacy Requirements
 
 > Note: Security and privacy requirements extend the platform-wide Constitution; see Business Rules and the Constitution for non-negotiable baselines.
 
-- **FR-013**: System MUST log all team management actions in audit trail with: timestamp, actor, action type, target team member, old values, new values, IP address
-- **FR-014**: System MUST invalidate all active sessions for a team member within 5 seconds of role change or removal
-- **FR-015**: System MUST validate actor permissions before allowing any team management action (invite, role change, removal)
-- **FR-016**: System MUST generate cryptographically secure, single-use invitation tokens that expire after 7 days
-- **FR-017**: System MUST encrypt all team member data at rest (AES-256) and in transit (TLS 1.3)
-- **FR-018**: System MUST enforce rate limiting on invitations: maximum 10 invitations per hour per provider organization
+- **REQ-009-013**: System MUST log all team management actions in audit trail with: timestamp, actor, action type, target team member, old values, new values, IP address
+- **REQ-009-014**: System MUST invalidate all active sessions for a team member within 5 seconds of role change or removal
+- **REQ-009-015**: System MUST validate actor permissions before allowing any team management action (invite, role change, removal)
+- **REQ-009-016**: System MUST generate cryptographically secure, single-use invitation tokens that expire after 7 days
+- **REQ-009-017**: System MUST encrypt all team member data at rest (AES-256) and in transit (TLS 1.3)
+- **REQ-009-018**: System MUST enforce rate limiting on invitations: maximum 10 invitations per hour per provider organization
 
 ### Integration Requirements
 
 > Note: Integration requirements summarize how FR-009 interacts with shared services and other FRs; detailed interaction patterns are documented in Dependencies and Implementation Notes.
 
-- **FR-019**: System MUST integrate with email service to send invitation and notification emails with 99%+ delivery rate
-- **FR-020**: System MUST integrate with authentication service to create team member accounts and manage sessions
-- **FR-021**: System MUST publish role change events to session management service for real-time permission updates
-- **FR-022**: System MUST write all team management events to centralized audit logging service
+- **REQ-009-019**: System MUST integrate with email service to send invitation and notification emails with 99%+ delivery rate
+- **REQ-009-020**: System MUST integrate with authentication service to create team member accounts and manage sessions
+- **REQ-009-021**: System MUST publish role change events to session management service for real-time permission updates
+- **REQ-009-022**: System MUST write all team management events to centralized audit logging service
 
 ---
 

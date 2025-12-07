@@ -239,28 +239,28 @@ Acceptance Scenarios:
 
 ### Core Requirements
 
-- FR-002-CR1: Engine MUST validate responses against FR-025 template requirements
-- FR-002-CR2: Engine MUST derive risk/alert tags deterministically from rules
-- FR-002-CR3: Engine MUST validate, watermark, and persist media artifacts
-- FR-002-CR4: Engine MUST return normalized payload, alerts, media URIs, and audit fields
+- **REQ-002-001**: Engine MUST validate responses against FR-025 template requirements
+- **REQ-002-002**: Engine MUST derive risk/alert tags deterministically from rules
+- **REQ-002-003**: Engine MUST validate, watermark, and persist media artifacts
+- **REQ-002-004**: Engine MUST return normalized payload, alerts, media URIs, and audit fields
 
 ### Data Requirements
 
-- FR-002-DR1: Responses MUST be stamped with templateVersionUsed and rulesetVersion
-- FR-002-DR2: Media artifacts MUST store watermarkRef and validationStatus
-- FR-002-DR3: Audit records MUST capture processingId and processedAt
+- **REQ-002-005**: Responses MUST be stamped with templateVersionUsed and rulesetVersion
+- **REQ-002-006**: Media artifacts MUST store watermarkRef and validationStatus
+- **REQ-002-007**: Audit records MUST capture processingId and processedAt
 
 ### Security & Privacy Requirements
 
-- FR-002-SP1: No PII in engine responses; anonymized identifiers only
-- FR-002-SP2: Media MUST be watermarked with anonymizedPatientId
-- FR-002-SP3: All operations MUST be fully auditable and retention-compliant
+- **REQ-002-008**: No PII in engine responses; anonymized identifiers only
+- **REQ-002-009**: Media MUST be watermarked with anonymizedPatientId
+- **REQ-002-010**: All operations MUST be fully auditable and retention-compliant
 
 ### Integration Requirements
 
-- FR-002-IR1: Engine MUST consume questionnaire templates/rules from FR-025 (read-only)
-- FR-002-IR2: Engine MUST expose processing API consumed by FR-003
-- FR-002-IR3: Engine MUST return structured error codes for validation failures
+- **REQ-002-011**: Engine MUST consume questionnaire templates/rules from FR-025 (read-only)
+- **REQ-002-012**: Engine MUST expose processing API consumed by FR-003
+- **REQ-002-013**: Engine MUST return structured error codes for validation failures
 
 ## Dependencies
 

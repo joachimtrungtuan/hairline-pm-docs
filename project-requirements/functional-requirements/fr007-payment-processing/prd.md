@@ -938,33 +938,33 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 ### Core Requirements
 
-- **FR-001**: System MUST allow patients to pay deposit to confirm bookings and final amount by due date
-- **FR-002**: System MUST support card, bank transfer, and digital wallet methods for payments
-- **FR-003**: System MUST support multiple currencies (at minimum USD, EUR, GBP, TRY) and display accurate totals
-- **FR-004**: System MUST generate and deliver receipts/invoices for successful payments and refunds
-- **FR-005**: System MUST mark bookings confirmed on deposit, fully paid after final payment, and update related statuses
+- **REQ-007-001**: System MUST allow patients to pay deposit to confirm bookings and final amount by due date
+- **REQ-007-002**: System MUST support card, bank transfer, and digital wallet methods for payments
+- **REQ-007-003**: System MUST support multiple currencies (at minimum USD, EUR, GBP, TRY) and display accurate totals
+- **REQ-007-004**: System MUST generate and deliver receipts/invoices for successful payments and refunds
+- **REQ-007-005**: System MUST mark bookings confirmed on deposit, fully paid after final payment, and update related statuses
 
 ### Data Requirements
 
-- **FR-006**: System MUST maintain complete payment history per booking, including refunds and payout references
-- **FR-007**: System MUST compute platform commission per transaction and link to provider payout records
+- **REQ-007-006**: System MUST maintain complete payment history per booking, including refunds and payout references
+- **REQ-007-007**: System MUST compute platform commission per transaction and link to provider payout records
 
 ### Security & Privacy Requirements
 
-- **FR-008**: System MUST ensure no card numbers are stored by the platform; only the processor handles them
-- **FR-009**: System MUST log all financial events with actor, timestamp, booking ID, and outcomes
-- **FR-010**: System MUST support additional authentication for payments when required by issuer/regulation
+- **REQ-007-008**: System MUST ensure no card numbers are stored by the platform; only the processor handles them
+- **REQ-007-009**: System MUST log all financial events with actor, timestamp, booking ID, and outcomes
+- **REQ-007-010**: System MUST support additional authentication for payments when required by issuer/regulation
 
 ### Integration Requirements
 
-- **FR-011**: System MUST support processor-driven payment flows for authorization, capture, and refund
-- **FR-012**: System MUST support payout execution with commission deduction and statement generation
+- **REQ-007-011**: System MUST support processor-driven payment flows for authorization, capture, and refund
+- **REQ-007-012**: System MUST support payout execution with commission deduction and statement generation
 
 ### Marking Unclear Requirements
 
-- **FR-013**: Platform is Merchant of Record; platform issues patient invoices, manages refunds and tax implications, and pays out net to providers
-- **FR-014**: Commission is deducted on the total procedure cost at the time of provider payout after treatment completion (admin‑triggered); not pro‑rata across deposit/final
-- **FR-015**: Refunds require Admin approval with an SLA to approve/deny within 2 business days; the decision and reason are logged and notifications sent
+- **REQ-007-013**: Platform is Merchant of Record; platform issues patient invoices, manages refunds and tax implications, and pays out net to providers
+- **REQ-007-014**: Commission is deducted on the total procedure cost at the time of provider payout after treatment completion (admin‑triggered); not pro‑rata across deposit/final
+- **REQ-007-015**: Refunds require Admin approval with an SLA to approve/deny within 2 business days; the decision and reason are logged and notifications sent
 
 ---
 
