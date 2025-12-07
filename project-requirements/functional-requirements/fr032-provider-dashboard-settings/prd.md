@@ -671,7 +671,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Screen 1: Profile Management
 
-**Purpose**: Allow provider to update clinic profile information visible to patients during quote comparison. This screen is organized as 5 tabs within the Provider Profile page (Settings & Support > Provider profile).
+**Purpose**: Allow provider to update clinic profile information visible to patients during quote comparison. This screen is organized as 6 tabs within the Provider Profile page (Settings & Support > Provider profile).
 
 **Tab Structure**:
 
@@ -750,28 +750,11 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 #### Tab 3: Staff List
 
-**Purpose**: View and manage clinic staff members (read-only view; staff management handled by PR-01/FR-009).
+**Purpose**: Manage clinic staff members and team roles.
 
-**Data Fields**:
+**Implementation**: This tab displays **FR-009: Provider Team & Roles Management > Screen 1**.
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Staff Member List | card/list | No | Grid/list of staff members with avatars, names, roles, seat usage badges | Read-only data from PR-01/FR-009; displays: avatar (or initials), full name, role badge (Owner/Manager/Clinical Staff/Billing Staff), optional seat usage indicator | **Read-only**: Staff list displays current team members; "Manage Staff" button (visible to Owner/Manager roles) links to PR-01 team management interface; staff cards update automatically when changes made in PR-01; clicking staff card may show details (if implemented) |
-
-**Business Rules**:
-
-- Staff list displays staff members with: avatar, full name, role (Owner, Manager, Clinical Staff, Billing Staff), and seat usage badge (if applicable)
-- Staff data is read-only in FR-032; actual staff management handled by PR-01/FR-009
-- "Manage Staff" button (if user has Owner/Manager role) links to PR-01 team management interface
-- Staff list updates automatically when staff added/removed via PR-01
-- Non-owner roles may have limited visibility of staff list based on FR-009 permissions
-
-**Notes**:
-
-- Staff displayed as cards/rows in grid or list layout
-- Each staff card shows: avatar (or initials), name, role badge, and optional "View Details" link
-- Empty state: "No staff members added yet. Click 'Manage Staff' to add team members."
-- Staff management (add, edit, remove, role assignment) handled by PR-01/FR-009 module
+See FR-009 Screen 1 for complete field specifications, business rules, and staff management functionality.
 
 ---
 
@@ -841,6 +824,65 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ---
 
+#### Tab 6: Documents
+
+**Purpose**: Manage clinic documents including medical licenses, certifications, insurance, and other compliance documents. Providers can upload, replace, delete, and view their documents. Admins can also upload additional documents via FR-015 for oversight purposes.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
+|------------|------|----------|-------------|------------------|----------------|
+| Upload Document Button | button | No | Primary action to upload new document | Opens upload modal | **Interactive**: Click to open "Upload Document" modal with fields: Document Type (dropdown), Document File (file picker), optional notes |
+| Document List | list/cards | No | List of uploaded documents with metadata | Displays all provider and admin-uploaded documents | **Interactive**: Document cards in list/grid format; each card shows document name, type badge, upload date, file size, uploaded by (Provider/Admin), and action buttons (View, Replace, Delete) |
+| Document Name | text (display/edit) | Yes | Filename of document | Auto-generated from uploaded file; max 200 chars; editable via "Rename" action | **Editable**: Click "Rename" icon/button on document card to edit filename; save on blur or Enter key |
+| Document Type | dropdown | Yes | Document type selection | Options: "Medical License", "Board Certification", "Insurance", "Malpractice Insurance", "Business License", "Other" | **Editable**: Select from dropdown when uploading; can be changed via "Edit" action on document card |
+| Document File | file upload | Yes | Upload document file | Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB per file | **Interactive**: Drag-and-drop or click to browse; file picker validates format/size before upload |
+| Upload Date | date (display) | N/A | Date when document was uploaded | Timestamp format: "MMM DD, YYYY" (e.g., "Jan 15, 2025"); auto-generated | **Read-only**: Displays upload date with relative time on hover (e.g., "Uploaded 3 months ago") |
+| Uploaded By | badge (display) | N/A | Who uploaded the document: "Provider" or "Admin" | Badge displays "You" for provider uploads, "Admin" for admin uploads | **Read-only**: Badge color: green for "You", blue for "Admin" |
+| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB"; auto-calculated | **Read-only**: Displays file size |
+| Notes | text (optional) | No | Optional notes about document | Max 500 chars; editable | **Editable**: Click "Edit Notes" on document card to add/edit notes; save on blur or via Save button |
+| View/Download Button | button | No | Action button to view or download document | Opens document in new browser tab or downloads file depending on file type | **Interactive**: Click to view PDF in browser or download file; button label: "View" for PDFs, "Download" for other file types |
+| Replace Button | button | No | Action button to replace existing document with new version | Opens file picker to upload replacement | **Interactive**: Click "Replace" button on document card; file picker opens; validates format/size; on upload, old version archived (soft delete) and new version becomes active; confirmation toast: "Document replaced successfully" |
+| Delete Button | button | No | Action button to delete document | Opens confirmation dialog; performs soft delete | **Interactive**: Click "Delete" button on document card; confirmation dialog: "Are you sure you want to delete [document name]? This action cannot be undone." On confirm, document soft-deleted; confirmation toast: "Document deleted successfully" |
+
+**Business Rules**:
+
+- **Provider Document Management**: Providers can upload, replace, delete, and view their own documents
+- **Admin Oversight**: Admins can upload additional documents via FR-015 Tab 6 (e.g., documents received via email, external verifications). Admin-uploaded documents display "Admin" badge
+- **Document Sync**: Documents uploaded by provider in FR-032 sync to FR-015 within 1 minute for admin visibility
+- **Empty State**: If no documents uploaded yet, display message: "No documents on file. Upload your clinic documents (medical license, certifications, insurance) to get started." with prominent "Upload Document" button
+- **Upload Modal Fields**:
+  - Document Type: Dropdown (required) - "Medical License", "Board Certification", "Insurance", "Malpractice Insurance", "Business License", "Other"
+  - Document File: File picker (required) - Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB
+  - Notes: Text area (optional) - Max 500 chars; helpful for adding context (e.g., "License expires Dec 2026")
+  - On submit: Document uploaded, confirmation toast: "Document uploaded successfully"
+- **Replace Document**: Clicking "Replace" on a document card opens file picker; uploading new file replaces current version; old version archived (soft delete) with timestamp
+- **Delete Document**: Clicking "Delete" opens confirmation dialog; on confirm, document soft-deleted (not permanently removed); admin can view deleted documents in FR-015 for audit purposes
+- **Document Permissions**: Providers can only delete/replace documents they uploaded; Admin-uploaded documents display "View Only" (providers cannot delete/replace, but can download)
+- **Audit Logging**: All document actions (upload/replace/delete/view/download) logged with timestamp, user, action type, and IP address (visible in FR-015 Tab 8: Activity Log)
+- **Security**: Document URLs are secure, time-limited signed URLs; direct file access not allowed
+- **File Validation**:
+  - Accepted formats: PDF, JPG, PNG, DOCX, XLSX
+  - Max file size: 10MB per document
+  - File name sanitization: Remove special characters, limit to 200 chars
+  - Virus scanning: All uploaded files scanned before storage
+- **Sort/Filter Options**:
+  - Sort by: Upload Date (newest first - default), Document Type, File Name
+  - Filter by: Document Type, Uploaded By (Provider/Admin)
+
+**Notes**:
+
+- Providers have full control over documents they upload; admin-uploaded documents are view-only for providers
+- Admin can view all provider-uploaded documents in FR-015 Tab 6 for oversight and compliance verification
+- Document versioning: When replaced, old versions archived with timestamp (not shown to provider, but admin can view in FR-015)
+- Document list sorted by upload date (most recent first) by default
+- Loading state: Display skeleton loaders while fetching documents
+- Error state: If document fetch fails, display "Unable to load documents. Please refresh or contact support."
+- Document cards display icon based on file type (PDF icon for PDFs, image icon for JPG/PNG, generic doc icon for DOCX/XLSX)
+- Drag-and-drop upload: Providers can drag files directly onto the Documents tab to upload (opens upload modal with file pre-selected)
+
+---
+
 **General Business Rules (All Tabs)**:
 
 - Each tab can be saved independently; system displays unsaved changes indicator (dot/asterisk) on tab label when edits are made
@@ -849,7 +891,10 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Profile updates propagate to patient app within 1 minute
 - All profile fields are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable)
 - Inline editing: clicking editable fields activates edit mode with save/cancel buttons; changes persist immediately on save
-- Staff list is read-only (managed via PR-01/FR-009); Reviews are read-only (managed by Reviews service)
+- **Tab Editability**:
+  - **Fully Editable**: Tab 1 (Basic Information), Tab 2 (Languages), Tab 4 (Awards), Tab 6 (Documents) - providers can add, edit, delete content inline
+  - **External Module**: Tab 3 (Staff List) - displays FR-009 Screen 1; see FR-009 for functionality
+  - **Read-Only**: Tab 5 (Reviews) - completely read-only; managed by Reviews service, providers cannot edit/delete reviews
 
 ---
 
@@ -1688,6 +1733,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 |------|---------|---------|--------|
 | 2025-11-17 | 1.0 | Initial PRD creation for FR-032: Provider Dashboard Settings & Profile Management | AI/Claude |
 | 2025-12-03 | 1.1 | Major updates: Removed SMS functionality throughout; Reorganized Screen 1 (Profile Management) into 5 tabs (Basic Information, Languages, Staff List, Awards, Reviews) with detailed inline editing specifications; Added account name unification rules (Owner accounts unified with clinic name, Staff accounts editable); Removed Screen 6 (Reviews now Tab 5 in Screen 1); Reorganized Screen 5 (Help Centre) into 7 subscreens with distinct layouts (FAQs, Articles, Resource Library, Video Tutorials, Contact Support, Feedback, Service Status); Updated navigation paths to "Settings & Support > Settings" and "Settings & Support > Provider profile"; Removed password change after 90 days requirement; Added per-tab save functionality with unsaved changes indicators; Updated language list references to FR-026 (centrally managed with country list); Removed admin metrics (profile completion, notification trends); Updated non-owner access restrictions (hidden tabs instead of error messages); Removed preview public profile functionality; Removed profile picture circle shape requirement and drag-and-drop; Updated all field specifications with inline editing details | AI/Claude |
+| 2025-12-07 | 1.2 | **Major update - Full document management capabilities:** Added Tab 6: Documents to Screen 1 (Profile Management) with full provider document management (upload, replace, delete, view); Providers can now manage their own compliance documents (medical licenses, certifications, insurance) with drag-and-drop upload, file validation (PDF/JPG/PNG/DOCX/XLSX, max 10MB), document versioning (old versions archived on replace), soft delete, and optional notes; Admin-uploaded documents display "Admin" badge and are view-only for providers; Added document sync with FR-015 (bidirectional, within 1 minute); Updated Tab 3: Staff List to clarify display-only nature with "Manage Team" button linking to FR-009 for full staff management; Added Seat Usage Summary to Tab 3 showing current usage vs. seat limit; Updated Screen 1 tab count from 5 to 6 tabs; Updated General Business Rules to accurately reflect tab editability (Fully Editable: Tabs 1,2,4,6; Display-Only with External Management: Tab 3 via FR-009; Read-Only: Tab 5 Reviews); Added security rules (time-limited signed URLs), audit logging, sort/filter options, and comprehensive empty/error/loading state handling | AI/Claude |
 
 ---
 

@@ -10,7 +10,11 @@
 
 ## Executive Summary
 
-The Provider Management module enables administrators to onboard, verify, and manage hair transplant providers who will serve patients through the Hairline platform. This module is strictly admin-initiated—there is no self-service provider registration. Admins manually create provider accounts, upload and verify required documentation (medical licenses, certifications, insurance), configure commission structures, and manage provider lifecycle status from draft through active, suspended, and deactivated states. The module also includes featured provider designation to control visibility in the patient-facing application, enabling admins to highlight high-quality providers for patient discovery and booking. This module operates as the foundational gateway that determines which providers can participate in the platform ecosystem, establishing the trusted provider network that patients will access for consultations, quotes, and treatment bookings.
+The Provider Management module enables administrators to onboard and manage hair transplant providers who will serve patients through the Hairline platform. This module is strictly admin-initiated—there is no self-service provider registration. Admins manually create provider accounts using a wizard-style interface, upload required documentation (for record-keeping), configure commission structures (Percentage or Flat Rate), and manage provider lifecycle status. The module also includes featured provider designation to control visibility in the patient-facing application. This module operates as the foundational gateway for the provider network, ensuring that all providers have valid profiles and agreed-upon commission terms before accepting bookings.
+
+**Cross-Module Integration:** Providers can manage their own profile information (Bio, Languages, Awards, Logo) through **FR-032: Provider Dashboard Settings & Profile Management**. Changes made by providers in their dashboard automatically sync with the admin view, ensuring data consistency across platforms.
+
+**Note:** Document verification is performed externally; the system treats uploaded documents as pre-verified records and does not block account activation based on document status.
 
 ---
 
@@ -18,57 +22,50 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: Views featured provider listings (data consumed from A-02), no direct interaction with provider management workflows
-- **Provider Platform (PR-XX)**: Providers view their own profile status and documentation verification progress (read-only access to data managed by A-02)
-- **Admin Platform (A-02)**: Full provider lifecycle management including creation, document verification, commission configuration, status changes, and featured designation
-- **Shared Services (S-XX)**: S-03 (Notification Service) for provider status change notifications; S-04 (File Storage) for document uploads
+- **Patient Platform (P-XX)**: Views featured provider listings (data consumed from A-02).
+- **Provider Platform (PR-XX)**: Providers view their own profile status and uploaded documents (read-only access to data managed by A-02). **Fields must align with FR-032**.
+- **Admin Platform (A-02)**: Full provider lifecycle management including creation, document upload (record-keeping), commission configuration, and status changes.
+- **Shared Services (S-XX)**: S-03 (Notification Service) for account creation emails; S-05 (Media Storage) for profile images and document storage.
 
 ### Multi-Tenant Breakdown
 
 **Patient Platform (P-XX)**:
 
-- Display featured providers in provider discovery/search interfaces
-- Show verified provider badges and basic profile information (name, specialties, clinic location)
-- No ability to view or modify provider management data
+- Display featured providers in provider discovery/search interfaces.
+- Show provider bio, languages, awards, and clinic location.
 
 **Provider Platform (PR-XX)**:
 
-- Providers view their own account status (draft, active, suspended, deactivated)
-- Providers see document verification status (pending, approved, rejected) for licenses, certifications, insurance
-- Providers view configured commission rates (read-only)
-- Providers cannot self-register, edit commission rates, or change their own status
+- Providers view their own profile (synced with A-02).
+- Providers see uploaded documents (for reference).
+- Providers view configured commission rates (read-only).
+- **Note**: Providers can edit profile fields (Bio, Languages, Awards, Profile Picture, Contact details) via **FR-032: Provider Dashboard Settings & Profile Management**, which updates the A-02 record. All editable fields must align between FR-015 and FR-032 to ensure consistency.
 
 **Admin Platform (A-02)**:
 
-- Create new provider accounts with complete profile setup
-- Upload and verify provider documentation (medical licenses, board certifications, malpractice insurance)
-- Configure commission structures (percentage-based or tier-based)
-- Transition provider status through lifecycle (Draft → Active → Suspended → Deactivated)
-- Toggle featured provider designation to control patient app visibility
-- Manage document expiration reminders and re-verification workflows
-- View comprehensive audit logs of all provider management actions
+- Create new provider accounts with complete profile setup (Wizard Flow).
+- Upload provider documents (Medical License, etc.) for internal records.
+- Configure commission structures (Percentage or Flat Rate).
+- Manage provider status (Active, Suspended, Deactivated).
+- Toggle featured provider designation.
 
 **Shared Services (S-XX)**:
 
-- **S-03 (Notification Service)**: Sends email notifications to providers when status changes (account activated, documents approved/rejected, account suspended). SMS notifications are envisioned for future phases once S-03 SMS support is enabled, but **no SMS is sent in MVP**.
-- **S-05 (Media Storage Service)**: Stores uploaded provider documents with secure access controls and encryption
-- **S-06 (Audit Log Service)**: Logs all provider management actions (creation, edits, status changes, document verifications) for compliance and oversight
+- **S-03 (Notification Service)**: Sends welcome emails with login credentials.
+- **S-05 (Media Storage Service)**: Stores uploaded provider documents and profile images.
+- **S-06 (Audit Log Service)**: Logs creation and status changes.
 
 ### Communication Structure
 
 **In Scope**:
 
-- Email notifications to providers when admin activates their account
-- Email alerts to providers when documents are approved or rejected (SMS alerts are future, not MVP)
-- Automated reminders to admins when provider documents approaching expiration (30 days before expiry)
-- Notification to providers when their account is suspended or deactivated with reason provided
-- In-app notifications to providers (within Provider Platform) for status changes
+- Email notifications to providers when account is created/activated.
+- Notification to providers when their account is suspended/deactivated.
 
 **Out of Scope**:
 
-- Direct messaging between admin and provider (handled by separate communication module if needed)
-- Provider onboarding welcome sequences beyond initial account activation notification (handled by provider onboarding communication flows)
-- Patient notifications about new providers joining platform (handled by P-XX marketing notification flows)
+- Document verification workflow (documents are for record-keeping only)
+- "Save as Draft" functionality
 
 ### Entry Points
 
@@ -91,124 +88,107 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 1. Admin navigates to Admin Platform → "Provider Management" section
 2. Admin clicks "Add New Provider" button
-3. System displays Provider Creation Form with sections: Basic Information, Contact Details, Clinic/Practice Information, Document Upload, Commission Configuration
-4. Admin enters provider basic information:
-   - Full name (first, last, middle initial)
-   - Medical license number
-   - Specialty (e.g., "Hair Transplant Surgeon", "Dermatologist")
-   - Years of experience
-5. Admin enters contact details:
+3. System displays Provider Creation Form with sections: Basic Information, Professional Details, Clinic Information, Document Upload, Commission Configuration
+4. Admin enters provider basic information (Step 1):
+   - Profile Picture/Logo (optional)
+   - Cover Image (optional)
+   - Full name (first, last)
    - Email address (will be used for provider login)
    - Phone number (with country code)
-   - Secondary contact email (optional)
-6. Admin enters clinic/practice information:
+   - Bio/Description (min 50 chars)
+   - Seat Limit (default: 100, range 1-500, optional - can be adjusted later)
+5. Admin enters professional details (Step 2):
+   - Specialty (e.g., "Hair Transplant Surgeon", "Dermatologist")
+   - Medical license number
+   - Years of experience
+   - Languages Spoken (at least 1 required)
+   - Awards & Recognition (optional)
+6. Admin enters clinic/practice information (Step 3):
    - Clinic name
    - Clinic address (street, city, state/province, postal code, country)
    - Clinic phone number
    - Operating hours
-7. Admin uploads required documents:
-   - Medical license (PDF/image file, must include expiration date)
-   - Board certifications (PDF/image, expiration date)
-   - Malpractice insurance certificate (PDF/image, expiration date)
-   - System extracts expiration dates from documents or prompts admin to enter manually
-8. Admin configures commission structure:
-   - Selects commission type: "Percentage-based" or "Tier-based"
-   - If percentage-based: enters percentage rate (5-30%, system validates range)
-   - If tier-based: defines tiers (e.g., 0-10 procedures = 20%, 11-50 procedures = 15%, 51+ procedures = 10%)
-9. Admin reviews all entered information in summary view
-10. Admin clicks "Create Provider (Draft)" button
-11. System validates all required fields, creates provider record with status = "Draft"
-12. System generates temporary password and sends welcome email to provider with login instructions
-13. Admin navigates to newly created provider profile → clicks "Activate Provider" button
-14. System prompts admin to confirm: "Are you sure you want to activate [Provider Name]? Provider will be able to log in and receive patient bookings."
-15. Admin confirms activation
-16. System changes provider status from "Draft" to "Active"
-17. System sends "Account Activated" email notification to provider with login credentials and onboarding instructions
-18. Provider can now log into Provider Platform and accept patient consultations/bookings
+7. Admin uploads required documents (Step 4):
+   - Medical license (PDF/image file, required)
+   - Board certifications (PDF/image, optional)
+   - Malpractice insurance certificate (PDF/image, optional)
+   - Documents are stored for internal record-keeping only and do NOT block activation
+8. Admin configures commission structure (Step 5):
+   - Selects commission model: "Percentage" or "Flat Rate"
+   - Enters value (e.g., "15%" or "£150")
+9. Admin reviews all entered information in summary view (Step 6).
+10. Admin clicks "Create Provider" button.
+11. System validates all required fields (First Name, Last Name, Email, Clinic Name, Bio min 50 chars, at least 1 Language).
+12. System creates provider record with status = "Active" and initializes provider credentials.
+13. System sends account activation email to provider with:
+    - Welcome message and platform introduction
+    - Secure one-time link to set password (expires in 24 hours)
+    - Provider's email address (login username)
+    - Instructions for first login and profile completion
+14. Provider receives email and clicks "Set Password" link.
+15. System displays password creation form (requires strong password: min 8 chars, uppercase, lowercase, number, special char).
+16. Provider creates password and confirms.
+17. System validates password strength, saves encrypted password, and redirects to Provider Platform login.
+18. Provider logs in with email and new password.
+19. System displays "Welcome to Hairline" onboarding screen prompting provider to complete profile (via FR-032):
+    - Upload clinic logo and cover image
+    - Review and enhance Bio/Description
+    - Add languages if only 1 set by admin
+    - Add awards and certifications
+    - Review contact information
+20. Provider completes profile setup via FR-032 (changes sync to admin view in FR-015).
+21. Provider can now receive quote requests from patients.
 
 ### Alternative Flows
 
-**A1: Admin Saves Provider as Draft for Later Completion**:
+**A1: Provider Requests Activation Email Resend**:
 
-- **Trigger**: Admin does not have all required information during provider creation session
+- **Trigger**: Provider didn't receive activation email, email went to spam, or activation link expired (24 hours passed).
 - **Steps**:
-  1. Admin enters partial provider information in creation form
-  2. Admin clicks "Save as Draft" button (instead of "Create Provider (Draft)")
-  3. System saves partial provider record with status = "Draft" and marks incomplete fields
-  4. Admin can return later to "Providers (Draft)" list, select incomplete provider, and continue editing
-  5. When all required fields complete, admin finalizes creation and optionally activates provider
-- **Outcome**: Provider record saved as draft, admin can complete later without data loss
+  1. Provider navigates to Provider Platform login page.
+  2. Provider clicks "Didn't receive activation email?" link below login form.
+  3. System displays email resend form with provider's email address field.
+  4. Provider enters their email address (the one admin used during account creation).
+  5. Provider clicks "Resend Activation Email" button.
+  6. System validates email exists in provider database and account status = "Active" (account created but password not set).
+  7. System generates new one-time password setup link (expires in 24 hours, invalidates previous link).
+  8. System sends new activation email to provider with fresh link.
+  9. System displays success message: "Activation email sent! Please check your inbox (and spam folder). The link expires in 24 hours."
+  10. Provider receives email and proceeds with password setup (Main Flow steps 14-21).
+- **Outcome**: Provider receives new activation email with valid link and can complete password setup.
+- **Business Rules**:
+  - Rate limited to 3 resend requests per hour per email address (prevents spam).
+  - Previous activation links are invalidated when new link is generated.
+  - If provider email not found or account already activated (password already set), system displays generic message: "If an account exists with this email, an activation link will be sent." (security: don't reveal if email exists).
+  - Admin can also manually resend activation email from provider profile in FR-015 (button: "Resend Activation Email").
 
-**A2: Admin Configures Tier-Based Commission Structure**:
+**A2: Admin Configures Flat Rate Commission**:
 
-- **Trigger**: Admin selects "Tier-based" commission type during provider creation
+- **Trigger**: Admin selects "Flat Rate" commission model.
 - **Steps**:
-  1. System displays tier configuration interface with fields: "Tier Name", "Procedure Count Range (From - To)", "Commission Rate (%)"
-  2. Admin adds multiple tiers (minimum 2 tiers required):
-     - Tier 1: "Starter" | 0-10 procedures | 20% commission
-     - Tier 2: "Standard" | 11-50 procedures | 15% commission
-     - Tier 3: "Premium" | 51+ procedures | 10% commission
-  3. System validates tier ranges do not overlap and cover all procedure counts sequentially
-  4. Admin saves tier configuration
-  5. System calculates provider's current tier based on completed procedure count (initially Tier 1 for new providers)
-- **Outcome**: Tier-based commission structure configured, provider commission rate adjusts automatically as procedure count increases
+  1. Admin enters fixed amount (e.g., £200).
+  2. System saves configuration.
+  3. Commission is calculated as a fixed deduction per completed procedure, regardless of procedure price.
+- **Outcome**: Flat rate commission configured.
 
-**A3: Admin Marks Provider as Featured for Patient App Visibility**:
+**A3: Admin Marks Provider as Featured**:
 
-- **Trigger**: Admin wants to highlight a high-quality provider in patient discovery interfaces
+- **Trigger**: Admin wants to highlight a high-quality provider.
 - **Steps**:
-  1. Admin navigates to active provider profile
-  2. Admin opens "Visibility Settings" section
-  3. Admin toggles "Featured Provider" switch to ON
-  4. System prompts: "Featured providers appear prominently in patient search results and homepage. Confirm?"
-  5. Admin confirms
-  6. System sets provider.featured = true
-  7. Provider profile now appears in "Featured Providers" section of Patient Platform with badge
-  8. System logs featured status change in audit trail
-- **Outcome**: Provider designated as featured, visible in patient app's prominent provider sections
+  1. Admin toggles "Featured Provider" switch.
+  2. System updates `provider.featured = true`.
+  3. Provider appears in "Featured" lists in Patient App.
+- **Outcome**: Provider visibility boosted.
 
-**A4: Admin Approves Uploaded Provider Documents**:
+**A4: Admin Updates Provider Documents**:
 
-- **Trigger**: Admin reviews provider documents that were uploaded during creation or by provider later
+- **Trigger**: Admin receives updated license/insurance from provider.
 - **Steps**:
-  1. Admin navigates to provider profile → "Documents" tab
-  2. System displays list of uploaded documents with status: "Pending Review"
-  3. Admin clicks on document (e.g., "Medical License") to view full-screen preview
-  4. Admin verifies document authenticity, expiration date, and issuing authority
-  5. Admin clicks "Approve Document" button
-  6. System updates document verification status to "Approved" and records admin ID, timestamp
-  7. System sends notification to provider: "Your [Document Type] has been verified and approved"
-  8. If all required documents approved, system enables "Activate Provider" button (if provider still in Draft status)
-- **Outcome**: Document verified and approved, provider can proceed toward activation
-
-**B1: Admin Rejects Provider Document with Reason**:
-
-- **Trigger**: Admin identifies issue with uploaded provider document (expired, illegible, incorrect document type)
-- **Steps**:
-  1. Admin reviews document in provider profile → "Documents" tab
-  2. Admin identifies issue (e.g., medical license expired 6 months ago)
-  3. Admin clicks "Reject Document" button
-  4. System prompts admin to enter rejection reason: "License expired on [date]. Please upload current valid license."
-  5. Admin enters reason and clicks "Confirm Rejection"
-  6. System updates document status to "Rejected", stores rejection reason and timestamp
-  7. System sends email notification to provider: "Your [Document Type] was not approved. Reason: [rejection reason]. Please upload a corrected document."
-  8. Provider receives in-app notification to re-upload document
-  9. System prevents provider activation until all required documents approved
-- **Outcome**: Document rejected with clear reason, provider notified to correct and re-upload
-
-**B2: Admin Attempts to Activate Provider with Incomplete Documentation**:
-
-- **Trigger**: Admin tries to activate provider before all required documents are approved
-- **Steps**:
-  1. Admin navigates to provider profile with status = "Draft"
-  2. Admin clicks "Activate Provider" button
-  3. System validates provider record:
-     - Checks if medical license approved: NO (status = "Pending Review")
-     - Checks if board certification approved: YES
-     - Checks if malpractice insurance approved: NO (status = "Rejected")
-  4. System displays error message: "Cannot activate provider. Missing required documents: Medical License (pending review), Malpractice Insurance (rejected - re-upload required)."
-  5. Admin must approve pending documents and ensure rejected documents are corrected before activation allowed
-- **Outcome**: Activation blocked, admin directed to resolve documentation issues before proceeding
+  1. Admin navigates to provider profile → "Documents" tab.
+  2. Admin uploads new file for "Medical License".
+  3. System replaces old file (or archives it) and updates timestamp.
+  4. No approval workflow required; document is immediately available for record.
+- **Outcome**: Document record updated.
 
 ---
 
@@ -233,10 +213,10 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 - **Default View**: Dashboard displays all providers with status = "Active" by default on initial load
 - **Search**: Search queries match against provider name, clinic name, email, medical license number (case-insensitive)
-- **Status Badge Colors**: Draft (gray), Active (green), Suspended (yellow), Deactivated (red)
+- **Status Badge Colors**: Active (green), Suspended (yellow), Deactivated (red)
 - **Featured Badge**: Gold star icon displayed next to provider name if featured = true
-- **Documents Status Column**: Shows "Complete" (all approved), "Pending" (some pending review), "Rejected" (some rejected), "Incomplete" (some missing)
-- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Suspend" (if active), "Activate" (if draft/suspended), "Deactivate" (if active/suspended)
+- **Documents Status Column**: Shows "Complete" (all required documents uploaded) or "Incomplete" (some required documents missing)
+- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Suspend" (if active), "Activate" (if suspended), "Deactivate" (if active/suspended)
 - **Sorting**: Table columns sortable by name (alphabetical), created date (chronological), commission rate (numerical)
 - **Pagination**: Display 50 providers per page, with page navigation controls
 
@@ -249,103 +229,328 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 ---
 
-### Screen 2: Provider Creation/Edit Form
+### Screen 2: Provider Creation Wizard
 
-**Purpose**: Allows admins to create new provider accounts or edit existing provider information with comprehensive profile setup
+**Purpose**: Allows admins to create new provider accounts through a structured, multi-step wizard process. The wizard interface is used for creation; editing uses the tabbed interface (Screen 3).
 
-**Data Fields**:
+**Cross-Module Alignment**: This screen's data structure aligns with **FR-032: Provider Dashboard Settings & Profile Management**. All profile fields (Bio, Languages, Awards, Profile Picture, Contact details) must stay synchronized between Admin (A-02) and Provider (PR-XX) platforms. When providers edit these fields via FR-032, changes are immediately reflected in the admin view.
+
+**Wizard Steps**:
+
+#### Step 1: Basic Information
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| First Name | text | Yes | Provider's legal first name | Max 50 chars, letters only |
-| Last Name | text | Yes | Provider's legal last name | Max 50 chars, letters only |
-| Middle Initial | text | No | Provider's middle initial | 1 char, letter only |
-| Medical License Number | text | Yes | Government-issued medical license identifier | Max 50 chars, alphanumeric |
-| Specialty | select dropdown | Yes | Provider's medical specialty | Options: "Hair Transplant Surgeon", "Dermatologist", "Plastic Surgeon", "Other" |
-| Years of Experience | number | Yes | Total years practicing medicine | Range: 1-60 |
-| Email Address | email | Yes | Provider's primary email (used for login) | Valid email format, unique in system |
-| Phone Number | phone | Yes | Provider's contact phone with country code | Valid phone format, country code required |
-| Secondary Email | email | No | Alternate contact email | Valid email format |
-| Clinic Name | text | Yes | Name of provider's clinic/practice | Max 100 chars |
-| Clinic Address | address | Yes | Full clinic address (street, city, state, postal, country) | All address fields required |
-| Clinic Phone | phone | Yes | Clinic's main phone number | Valid phone format |
-| Operating Hours | text | No | Clinic operating hours (e.g., "Mon-Fri 9AM-5PM") | Max 200 chars |
-| Medical License Upload | file upload | Yes | PDF or image of medical license | Max 10MB, PDF/JPEG/PNG only |
-| License Expiration Date | date | Yes | Expiration date of medical license | Must be future date |
-| Board Certification Upload | file upload | Yes | PDF or image of board certification | Max 10MB, PDF/JPEG/PNG only |
-| Certification Expiration | date | Yes | Expiration date of certification | Must be future date |
-| Malpractice Insurance Upload | file upload | Yes | PDF or image of insurance certificate | Max 10MB, PDF/JPEG/PNG only |
-| Insurance Expiration | date | Yes | Expiration date of insurance | Must be future date |
-| Commission Type | radio button | Yes | Commission structure type | Options: "Percentage-based", "Tier-based" |
-| Commission Percentage | number | Conditional (if Percentage-based) | Commission rate percentage | Range: 5-30, decimal allowed (e.g., 12.5) |
-| Tier Configuration | dynamic form | Conditional (if Tier-based) | Define tiers with ranges and rates | Minimum 2 tiers, ranges sequential, rates 5-30% |
+| Profile Picture / Logo | file upload | No | Provider's photo or clinic logo (aligns with FR-032 Tab 1) | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px |
+| Cover Image | file upload | No | Large banner image for clinic profile (aligns with FR-032 Tab 1) | Max 10MB, JPEG/PNG, recommended 1920x300px |
+| First Name | text | Yes | Provider's legal first name | Max 50 chars |
+| Last Name | text | Yes | Provider's legal last name | Max 50 chars |
+| Email Address | email | Yes | Primary email (login ID) | Valid email, unique |
+| Phone Number | phone | Yes | Contact phone with country code | Valid format |
+| Bio / Description | textarea | Yes | Public-facing provider biography (aligns with FR-032 Tab 1 "About/Description") | Max 500 chars, min 50 chars |
+| Seat Limit | number | No | Maximum number of team members (staff) the provider can invite (aligns with FR-009 team management) | Integer, range 1-500, default: 100. Can be adjusted later by admin if provider requests increase |
 
-**Business Rules**:
+#### Step 2: Professional Details
 
-- **Email Uniqueness**: System must validate provider email does not already exist in database before allowing creation
-- **Document Upload**: All three document types (license, certification, insurance) required before provider can be activated
-- **Expiration Date Validation**: System must ensure all expiration dates are in the future (cannot create provider with expired documents)
-- **Commission Type Conditional Logic**: If "Percentage-based" selected, show single percentage input field; if "Tier-based" selected, show tier configuration interface
-- **Tier Validation**: For tier-based commissions, system must validate:
-  - Minimum 2 tiers defined
-  - Tier procedure count ranges are sequential with no gaps or overlaps (e.g., 0-10, 11-50, 51+)
-  - Commission rates within 5-30% range for all tiers
-- **Save vs. Activate**: Form includes two submit buttons:
-  - "Save as Draft": Creates provider with status = "Draft" (can be edited later)
-  - "Save and Activate": Creates provider with status = "Active" (requires all required fields complete and documents uploaded)
-- **Edit Mode**: When editing existing provider, form pre-populates with current values; "Save Changes" button replaces creation buttons
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Specialty | select | Yes | Primary medical specialty | List: "Hair Transplant", "Dermatology", etc. |
+| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars |
+| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 |
+| Languages Spoken | multi-select chip/pill | Yes | Languages spoken at clinic (aligns with FR-032 Tab 2) | At least 1 language required; consumes centrally managed language list from FR-026 |
+| Awards & Recognition | dynamic list | No | List of awards (aligns with FR-032 Tab 4) | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current), award image (max 2MB, JPEG/PNG) |
 
-**Notes**:
+#### Step 3: Clinic Information
 
-- Implement file preview for uploaded documents (inline viewer or modal)
-- Show file upload progress indicator for large documents
-- Provide clear error messages for validation failures (e.g., "Email already in use by another provider")
-- For tier-based commissions, include "Add Tier" and "Remove Tier" buttons for dynamic tier management
-- Include "Cancel" button that discards unsaved changes and returns to provider dashboard
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Clinic Name | text | Yes | Name of practice/clinic | Max 100 chars |
+| Clinic Address | address | Yes | Full physical address | Google Places or manual entry |
+| Location - City | text | No | City where clinic is located (aligns with FR-032 Tab 1) | Max 100 chars |
+| Location - Country | dropdown | No | Country where clinic is located (aligns with FR-032 Tab 1) | Values from centrally managed country list (FR-026) |
+| Clinic Phone | phone | No | Public clinic phone number (aligns with FR-032 "Contact Phone (Public)") | Contains Country Code (dropdown, FR-026) and Number (numeric only, length validated per country code) |
+| Website URL | url | No | Public-facing clinic website (aligns with FR-032 Tab 1) | Valid URL format (http/https); auto-prepends https:// if protocol missing |
+| Operating Hours | text | No | e.g., "Mon-Fri 9am-5pm" | Free text |
+
+#### Step 4: Documents (Record Keeping)
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Medical License | file upload | Yes | Copy of license | PDF/Image, Max 10MB |
+| Board Certification | file upload | No | Copy of certification | PDF/Image, Max 10MB |
+| Insurance Certificate | file upload | No | Proof of malpractice insurance | PDF/Image, Max 10MB |
+
+*Note: Documents are for internal record-keeping only and are pre-verified outside the system. Documents do NOT block account activation.*
+
+#### Step 5: Commission & Settings
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Commission Model | radio | Yes | "Percentage" or "Flat Rate" | Default: Percentage |
+| Commission Value | number | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) |
+| Featured Provider | toggle | No | Highlight in patient search | Default: Off |
+
+#### Step 6: Review & Create
+
+- **Read-only Summary**: Displays all entered data for final review.
+- **Actions**:
+  - "Back": Navigate to previous steps.
+  - "Create Provider": Finalizes creation and sets status to **Active**.
 
 ---
 
-### Screen 3: Provider Profile Details View
+### Screen 3: Provider Profile Details (Tabbed View)
 
-**Purpose**: Displays comprehensive view of individual provider's profile, documents, status history, and allows admin actions (activate, suspend, deactivate, edit)
+**Purpose**: Comprehensive view of a provider's account, organized by tabs for manageability. This view is used for editing existing provider records.
+
+**Cross-Module Alignment**: Tab structure and field definitions align with **FR-032: Provider Dashboard Settings & Profile Management** to ensure consistency between admin and provider views. Screen 3 includes all 6 tabs from FR-032 (Basic Information, Languages, Staff List, Awards, Reviews, Documents) plus additional admin-only tabs (Commission & Financials, Activity Log).
+
+**Header Area**:
+
+- **Provider Name / Status Badge** (Active/Suspended/etc.)
+- **Quick Actions**:
+  - "Edit Profile" (opens all tabs in edit mode)
+  - "Resend Activation Email" (visible only if password not yet set; sends new one-time password setup link)
+  - "Suspend/Deactivate" (status management)
+  - "Login as Provider" (Super Admin only, for support/debugging)
+
+**Tabs**:
+
+#### Tab 1: Basic Information (Profile Overview)
+
+**Purpose**: Display and edit core clinic profile information. Mirrors FR-032 Tab 1 structure with additional admin-only settings.
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Provider Name | text (read-only) | N/A | Full name displayed prominently at top | Display format: "Dr. [First] [Last]" |
-| Status Badge | visual indicator | N/A | Current status with color-coded badge | Draft (gray), Active (green), Suspended (yellow), Deactivated (red) |
-| Featured Toggle | toggle switch | No | Admin can toggle featured status on/off | Only editable if provider status = Active |
-| Basic Information Section | read-only display | N/A | Shows: Specialty, License Number, Years of Experience, Email, Phone | Display only, edit via "Edit Profile" button |
-| Clinic Information Section | read-only display | N/A | Shows: Clinic Name, Address, Phone, Operating Hours | Display only |
-| Commission Configuration | read-only display | N/A | Shows commission type (Percentage/Tier-based) and current rate or tier breakdown | Display only |
-| Documents Tab | tabbed interface | N/A | Lists all uploaded documents with status: Medical License, Board Certification, Malpractice Insurance | Each document shows: filename, upload date, verification status, expiration date, admin actions (Approve/Reject/View) |
-| Status History Tab | tabbed interface | N/A | Chronological log of status changes | Shows: Date, Previous Status, New Status, Admin (who made change), Reason (if applicable) |
-| Activity Log Tab | tabbed interface | N/A | Comprehensive audit trail of all provider-related actions | Shows: Timestamp, Action Type, Admin User, Details |
-| Action Buttons | button group | N/A | Context-sensitive actions based on current status | Options: Edit Profile, Activate Provider, Suspend Provider, Deactivate Provider, Send Notification |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Profile Picture / Logo | image upload | No | Clinic branding image | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px | Both (Provider via FR-032) |
+| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG, recommended 1920x300px | Both (Provider via FR-032) |
+| First Name | text | Yes | Provider's legal first name | Max 50 chars | Admin only |
+| Last Name | text | Yes | Provider's legal last name | Max 50 chars | Admin only |
+| Email Address | email | Yes | Primary email (login ID) | Valid email, unique | Admin only |
+| Phone Number | phone | Yes | Primary contact phone | Valid format with country code | Admin only |
+| Bio / Description | textarea | Yes | Public-facing provider biography | Max 500 chars, min 50 chars | Both (Provider via FR-032) |
+| Specialty | select | Yes | Primary medical specialty | List: "Hair Transplant", "Dermatology", etc. | Admin only |
+| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars | Admin only |
+| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 | Admin only |
+| Clinic Name | text | Yes | Name of practice/clinic | Max 100 chars | Both (Provider via FR-032) |
+| Clinic Address | address | Yes | Full physical address | Google Places or manual entry | Admin only |
+| Location - City | text | No | City where clinic is located | Max 100 chars | Both (Provider via FR-032) |
+| Location - Country | dropdown | No | Country where clinic is located | Values from FR-026 country list | Both (Provider via FR-032) |
+| Contact Phone (Public) | phone | No | Public clinic phone number | Country Code dropdown + Number | Both (Provider via FR-032) |
+| Contact Email | email | Yes | Public clinic contact email | Valid email format | Both (Provider via FR-032) |
+| Website URL | url | No | Public-facing clinic website | Valid URL, auto-prepends https:// | Both (Provider via FR-032) |
+| Operating Hours | text | No | Operating hours (e.g., "Mon-Fri 9am-5pm") | Free text | Admin only |
+| Seat Limit | number | No | Maximum team members (staff) capacity | Integer, range 1-500, default 100 | Admin only |
+| Commission Model | radio | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only |
+| Commission Value | number | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) | Admin only |
+| Featured Provider | toggle | No | Highlight in patient search | Boolean, default: Off | Admin only |
+| Status | badge/display | Yes | Provider account status | Enum: Active, Suspended, Deactivated | Admin only |
+| Total Bookings | display | No | Count of completed procedures | Read-only, calculated | Read-only |
+| Average Rating | display | No | Average rating from patient reviews | Read-only, format: X.X/5.0 stars | Read-only |
 
 **Business Rules**:
 
-- **Status-Based Action Visibility**:
-  - If status = "Draft": Show "Edit Profile", "Activate Provider" buttons
-  - If status = "Active": Show "Edit Profile", "Suspend Provider", "Deactivate Provider", "Toggle Featured" buttons
-  - If status = "Suspended": Show "Reactivate Provider", "Deactivate Provider" buttons
-  - If status = "Deactivated": No action buttons (deactivation is final, must create new provider if re-onboarding needed)
-- **Featured Toggle**: Only enabled if provider status = "Active"; disabled for draft/suspended/deactivated providers
-- **Document Approval**: Each document row in Documents tab includes:
-  - "Approve" button (if status = Pending or Rejected)
-  - "Reject" button (if status = Pending or Approved) — opens modal to enter rejection reason
-  - "View Document" button — opens full-screen document viewer
-- **Expiration Warnings**: System displays warning badge next to documents expiring within 30 days: "Expires in [X] days"
-- **Status History**: Automatically logged whenever provider status changes; includes admin who made change, timestamp, and optional reason (required for suspension/deactivation)
-- **Activity Log**: Captures all actions: profile edits, document uploads/approvals/rejections, status changes, commission configuration changes, featured status toggles
+- Fields marked "Both" can be edited by provider via FR-032 and changes sync to admin view in real-time
+- Fields marked "Admin only" can only be edited by admin users with provider management permissions
+- Profile changes logged in audit trail with timestamp, user, and changed fields
+- Commission and Seat Limit changes require admin MFA re-authentication for security
 
 **Notes**:
 
-- Use tabbed interface to organize information (Profile, Documents, Status History, Activity Log) without overwhelming single view
-- Implement confirmation modals for critical actions (Activate, Suspend, Deactivate) with required reason input for suspension/deactivation
-- Display document expiration dates prominently with visual indicators (green = >30 days, yellow = 7-30 days, red = <7 days or expired)
-- Include "Send Notification" button to manually trigger emails to provider (e.g., remind to update expiring documents)
+- Admin view includes all provider profile fields plus admin-only settings (Seat Limit, Commission, Status)
+- Provider-editable fields sync bidirectionally with FR-032
+- Admin can override any provider changes if needed (logged in audit trail)
+
+---
+
+#### Tab 2: Languages
+
+**Purpose**: View and manage languages spoken at the clinic. Mirrors FR-032 Tab 2 structure.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes centrally managed language list from FR-026 | Both (Provider via FR-032) |
+
+**Business Rules**:
+
+- Languages displayed as removable chips/pills with X button on each chip
+- Admin can add/remove languages; provider can also manage via FR-032 Tab 2
+- At least 1 language must be selected (validation prevents removing last language)
+- Changes logged in audit trail with timestamp and user
+- Language list consumed from FR-026 (centrally managed)
+
+**Notes**:
+
+- Admin view identical to FR-032 Tab 2 (same interface, same functionality)
+- Changes made by provider in FR-032 reflect immediately in admin view
+- Drag-and-drop reordering supported to prioritize languages
+
+---
+
+#### Tab 3: Staff List
+
+**Purpose**: View and manage provider's clinic staff members and team roles (admin view).
+
+**Implementation**: This tab displays **FR-009: Provider Team & Roles Management > Screen 10** (Admin view of provider team).
+
+See FR-009 Screen 10 for complete field specifications, business rules, and team management functionality from the admin perspective.
+
+---
+
+#### Tab 4: Awards
+
+**Purpose**: View and manage clinic awards, certifications, and recognitions. Mirrors FR-032 Tab 4 structure.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) | Both (Provider via FR-032) |
+
+**Business Rules**:
+
+- Awards displayed as cards with: award image thumbnail, name, issuer, year, description
+- Admin can add/edit/delete awards; provider can also manage via FR-032 Tab 4
+- Awards support drag-and-drop reordering to prioritize most important awards
+- Award image upload supports drag-and-drop; max 2MB, JPEG/PNG only
+- Changes logged in audit trail with timestamp and user
+
+**Notes**:
+
+- Admin view identical to FR-032 Tab 4 (same interface, same functionality)
+- Changes made by provider in FR-032 reflect immediately in admin view
+- Empty state: "No awards added yet. Click '+ Add Award' to showcase achievements."
+
+---
+
+#### Tab 5: Reviews
+
+**Purpose**: Browse all patient reviews with filtering and sorting capabilities (read-only). Mirrors FR-032 Tab 5 structure.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Overall Rating Summary | display | No | Average rating and total review count | Read-only; calculated from Reviews service | Read-only |
+| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | Read-only |
+| Review List | list | No | List of individual patient reviews with rating, comment, date, patient name | Read-only; sourced from Reviews service | Read-only |
+| Rating Filters | checkbox/pill | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★) | Multiple selections allowed | Interactive filter |
+
+**Business Rules**:
+
+- Reviews displayed with: star rating, patient name (anonymized if requested), date, review text
+- Admin can filter by rating, search by keyword, sort by date/rating
+- Admin cannot edit or delete reviews (data integrity); only flag for review if inappropriate
+- Reviews are read-only for both admin and provider
+- Review data sourced from Reviews service (handled by separate FR module)
+
+**Notes**:
+
+- Admin view identical to FR-032 Tab 5 (same interface, same functionality)
+- Reviews help admin assess provider quality and patient satisfaction
+- Admin can flag inappropriate reviews for further investigation
+
+---
+
+#### Tab 6: Documents
+
+**Purpose**: View and manage provider documents (license, certification, insurance) for oversight and record-keeping. Providers manage their own documents via FR-032; admins can view all documents and upload additional documents received via external channels (email, postal mail, in-person).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Upload Document Button | button | No | Admin action to upload additional documents | Opens upload modal | Admin only |
+| Document List | list/cards | No | List of all provider and admin-uploaded documents | Displays: document name, type, upload date, file size, uploaded by (Provider/Admin) | View-only for admin; sortable/filterable |
+| Document Name | text (display) | N/A | Filename of uploaded document | Auto-generated from file; max 200 chars | Display only |
+| Document Type | badge (display) | N/A | Type of document | Enum: Medical License, Board Certification, Insurance, Malpractice Insurance, Business License, Other | Display only |
+| Upload Date | datetime (display) | N/A | When document was uploaded | Auto-generated timestamp; format: "MMM DD, YYYY HH:mm" | Display only |
+| Uploaded By | badge (display) | N/A | Who uploaded document: "Provider" or "Admin [Name]" | Badge displays "Provider" for provider uploads, "Admin - [admin name]" for admin uploads | Display only |
+| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB" | Display only |
+| Notes | text (display/edit) | No | Optional notes about document | Max 500 chars; admin can add/edit notes | Admin editable (via "Edit Notes" action) |
+| Actions | button group | No | View, Download, Replace, Delete actions | Context menu or action buttons per document | Admin only (view/download/replace/delete) |
+
+**Business Rules**:
+
+- **Provider Document Management**: Providers upload, replace, delete their documents via **FR-032 Tab 6: Documents**. Provider-uploaded documents sync to FR-015 within 1 minute
+- **Admin Oversight**: Admins can view all provider-uploaded documents for compliance and oversight purposes
+- **Admin Additional Uploads**: Admins can upload additional documents received externally (e.g., documents sent via email, postal mail, scanned at in-person meeting). These admin-uploaded documents display "Admin - [admin name]" badge
+- **Document Permissions**:
+  - Provider-uploaded documents: Admin can view, download, add notes, but **cannot replace or delete** (only provider can via FR-032)
+  - Admin-uploaded documents: Admin has full control (view, download, replace, delete, add notes)
+- **Document Requirements**: At least one Medical License document recommended but not enforced (documents do NOT block provider activation)
+- **Audit Logging**: All document actions (upload/view/download/replace/delete/note edits) logged in Tab 8: Activity Log with timestamp, user (admin/provider), action type, and IP address
+- **Soft Delete**: Deleted documents (by provider or admin) retained in archive for compliance; visible in Activity Log but not in main document list
+- **File Validation**: Same as FR-032 - Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB per file
+- **Sort/Filter Options**:
+  - Sort by: Upload Date (newest first - default), Document Type, Uploaded By
+  - Filter by: Document Type, Uploaded By (Provider/Admin)
+
+**Notes**:
+
+- **Primary Document Management**: Providers manage their documents via FR-032 Tab 6; admins use FR-015 Tab 6 for oversight and supplementary uploads
+- **Use Case for Admin Uploads**: Admin receives provider's license via email → Admin uploads to FR-015 Tab 6 → Document visible to provider in FR-032 with "Admin" badge
+- **Document Sync**: Provider uploads in FR-032 → Syncs to FR-015 within 1 minute. Admin uploads in FR-015 → Syncs to FR-032 within 1 minute
+- **Empty State**: If no documents uploaded yet, display message: "No documents on file yet. Provider can upload documents via their dashboard, or you can upload documents received externally."
+- **Document Verification**: Performed externally; system treats all documents as pre-verified records
+- Document cards/rows display icon based on file type (PDF icon, image icon, doc icon) and "Uploaded By" badge (green for Provider, blue for Admin)
+
+---
+
+#### Tab 7: Commission & Financials (Admin-Only)
+
+**Purpose**: View and manage commission configuration and financial history. This tab is admin-only and not visible in FR-032.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Commission Model | radio (display/edit) | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only (edit) |
+| Commission Value | number (display/edit) | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) | Admin only (edit) |
+| Current Configuration | display | N/A | Summary of active commission settings | Display format: "15% per transaction" or "£200 flat rate" | Display only |
+| Commission History | list | No | Audit log of past commission changes | Each entry: date, admin user, old value, new value, reason | Display only |
+
+**Business Rules**:
+
+- Commission configuration displayed prominently with current model and value
+- Admin can edit commission settings (requires MFA re-authentication)
+- Commission changes take effect immediately for new transactions
+- All commission changes logged in history with timestamp, admin user, old/new values
+- Provider can view commission rate read-only via FR-032 (but not edit)
+
+**Notes**:
+
+- This tab is admin-only; provider sees commission rate read-only in their dashboard (FR-032)
+- Commission changes require admin justification (logged in audit trail)
+
+---
+
+#### Tab 8: Activity Log (Admin-Only)
+
+**Purpose**: View chronological audit trail of all provider account actions. This tab is admin-only and not visible in FR-032.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
+|------------|------|----------|-------------|------------------|------------------------|
+| Activity Log List | list | No | Chronological list of account actions | Each entry: timestamp, user (admin or provider), action type, changed fields, IP address | Read-only |
+
+**Business Rules**:
+
+- Activity log displays all actions: profile edits, status changes, document uploads, logins, commission changes
+- Each log entry includes: timestamp, user (admin or provider via FR-032), action type, changed fields, IP address
+- Logs are immutable (cannot be edited or deleted)
+- Admin can filter by action type, date range, user
+- Admin can export activity log for compliance reporting
+
+**Notes**:
+
+- This tab is admin-only and provides full transparency of provider account changes
+- Logs help with compliance, security investigations, and dispute resolution
 
 ---
 
@@ -397,61 +602,57 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 ### General Module Rules
 
-- **Rule 1**: All provider accounts must be created by admins—no self-service provider registration allowed (enforced at application and API level)
-- **Rule 2**: Provider cannot be activated until all required documents (medical license, board certification, malpractice insurance) are uploaded and approved by admin
-- **Rule 3**: Provider status transitions follow strict lifecycle: Draft → Active → Suspended → (Reactivated to Active OR Deactivated)
-- **Rule 4**: Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required
-- **Rule 5**: Commission rates apply to all transactions processed after rate configuration; retroactive rate changes do not affect past transactions
-- **Rule 6**: System automatically sends reminder notifications to admins 30 days before provider document expiration dates
-- **Rule 7**: Featured provider designation only available for providers with status = "Active"; suspended/deactivated providers automatically unfeatured
+- **Rule 1**: All provider accounts must be created by admins—no self-service provider registration allowed.
+- **Rule 2**: Provider activation requires mandatory profile fields to be complete: First Name, Last Name, Email, Clinic Name, Bio/Description (min 50 chars), and at least 1 Language. Document uploads are for record-keeping and do NOT block activation.
+- **Rule 3**: Provider status transitions follow lifecycle: Active → Suspended → (Reactivated OR Deactivated). Providers are created as Active when all required fields are complete.
+- **Rule 4**: Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required.
+- **Rule 5**: Commission rates apply to all transactions processed after rate configuration.
+- **Rule 6**: Featured provider designation only available for providers with status = "Active".
+- **Rule 7**: Seat limit (maximum team members) defaults to 100 and can be adjusted by admin (range 1-500). Providers can request seat limit increases through support, which must be approved by admin. Seat limit blocks staff invitations when reached (enforced by FR-009).
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Provider contact information (email, phone) visible only to admins; patients see clinic phone/email (not provider's personal contact)
-- **Privacy Rule 2**: Uploaded provider documents (licenses, certifications, insurance) encrypted at rest using AES-256 and accessible only to admins with document verification permissions
-- **Privacy Rule 3**: Provider medical license numbers and sensitive credentials masked in activity logs (e.g., "License Number: ****1234") to prevent unauthorized exposure
-- **Audit Rule**: All provider management actions logged with timestamp, admin user ID, IP address, and action details for compliance and dispute resolution
-- **HIPAA/GDPR Compliance**: Provider personal data (name, email, phone, documents) subject to data retention policies; deactivated providers' data retained for 7 years for legal/regulatory compliance, then eligible for deletion
-- **Data Access Control**: Only admins with "Provider Management" role permission can create, edit, or change provider status; read-only admins can view but not modify
+- **Privacy Rule 1**: Provider contact information (email, phone) visible only to admins; patients see clinic phone/email.
+- **Privacy Rule 2**: Uploaded provider documents (licenses, certifications, insurance) encrypted at rest using AES-256.
+- **Audit Rule**: All provider management actions logged with timestamp, admin user ID, and action details.
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- Provider basic information (name, specialty, years of experience, contact details)
-- Clinic information (name, address, phone, operating hours)
-- Commission configuration (percentage rate or tier structure)
-- Document uploads (can replace existing documents, request re-upload)
-- Provider status (Draft, Active, Suspended, Deactivated) with required reason for suspension/deactivation
-- Featured provider designation (toggle on/off for active providers)
-- Document verification status (Approve, Reject with reason)
+- Provider basic information (name, specialty, bio, languages, awards)
+- Clinic information (name, address, phone, logo, contact email)
+- Commission configuration (Model: Percentage/Flat, Value)
+- Seat limit (maximum team members, range 1-500, default 100)
+- Document uploads (Add/Replace/Remove)
+- Provider status (Active, Suspended, Deactivated)
+- Featured provider designation
 
-**Fixed in Codebase (Not Editable)**:
+**Editable by Provider (via FR-032)**:
 
-- Provider status lifecycle flow (Draft → Active → Suspended → Deactivated/Reactivated) — cannot skip states or reverse deactivation
-- Commission rate range constraints (5-30% for percentage-based, 5-30% per tier for tier-based)
-- Required document types (medical license, board certification, malpractice insurance) — cannot be changed or made optional
-- Document expiration reminder timing (30 days before expiry) — hardcoded in notification service
-- Deactivation finality rule (deactivated providers cannot be reactivated) — enforced at database and application layers
-- Encryption standards for document storage (AES-256) — cannot be downgraded
+- Profile Picture/Logo
+- Cover Image
+- Bio/Description
+- Languages Spoken
+- Awards & Recognition (add/edit/delete with images)
+- Contact Phone (Public)
+- Contact Email
+- Location (City, Country)
+- Website URL
 
-**Configurable with Restrictions**:
+**Fixed in Codebase**:
 
-- Document file size limits (default 10MB per file; admin can configure up to 50MB via system settings, but cannot exceed 50MB hard limit)
-- Provider dashboard pagination (default 50 rows per page; admin can configure 25/50/100 via user preferences)
-- Commission rate adjustment frequency (admin can change provider commission rates anytime, but changes apply only to future transactions, not retroactively)
+- Deactivation finality rule
+- Encryption standards
+- Commission calculation logic
 
 ### Payment & Billing Rules
 
-- **Commission Rule 1**: Commission rates configured in this module apply to all provider earnings from patient bookings (consultations, procedures, aftercare services)
-- **Commission Rule 2**: Percentage-based commissions calculated as: Provider Payout = Transaction Amount × (1 - Commission Rate)
-  - Example: $1000 procedure, 15% commission → Provider receives $850, platform retains $150
-- **Commission Rule 3**: Tier-based commissions calculated based on provider's cumulative completed procedure count in current billing period (monthly)
-  - Provider's tier automatically updated at end of each month based on procedures completed in that month
-  - Example: Provider completes 12 procedures in January → moves from Tier 1 (20% commission) to Tier 2 (15% commission) for February
-- **Commission Rule 4**: Commission configuration changes take effect immediately for new transactions; in-progress transactions use commission rate active at time of booking
-- **Billing Rule 1**: Provider payouts calculated weekly and transferred to provider's registered bank account (configured separately in provider financial settings, not in this module)
-- **Billing Rule 2**: Admins can view provider commission history and earnings reports in separate "Provider Financials" module (out of scope for FR-015)
+- **Commission Rule 1**: Commissions apply to all provider earnings from patient bookings.
+- **Commission Rule 2**: **Percentage Model**: Calculated as `Transaction Amount * (Commission Rate / 100)`.
+- **Commission Rule 3**: **Flat Rate Model**: Fixed amount deducted per completed procedure (e.g., £150 flat fee).
+- **Commission Rule 4**: Commission changes take effect immediately for new transactions.
+- **Billing Rule 1**: Provider payouts calculated weekly (or per agreement) and transferred to provider's bank account.
 
 ---
 
@@ -473,9 +674,9 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 - **SC-007**: Admins can create a complete provider profile (all sections filled, documents uploaded, commission configured) in under 10 minutes on average
 - **SC-008**: Admins can filter and search provider list (1000+ providers) and retrieve results in under 2 seconds, enabling efficient provider oversight
-- **SC-009**: Admins can approve or reject a provider document in under 30 seconds per document, streamlining verification workflows
+- **SC-009**: Providers and admins can upload and manage documents in under 30 seconds per document, streamlining record-keeping workflows. Document changes sync between FR-032 and FR-015 within 1 minute
 - **SC-010**: 100% of provider status changes (activate, suspend, deactivate) logged in audit trail with timestamp, admin user, and reason (full accountability)
-- **SC-011**: Admins receive automated reminder notifications 30 days before provider document expiration for 100% of expiring documents (no manual tracking needed)
+- **SC-011**: System maintains complete audit trail of all document uploads, replacements, and deletions with 100% accuracy
 - **SC-012**: Admin dashboard displays real-time provider status counts (draft, active, suspended, deactivated) with <1 second refresh latency
 
 ### System Performance Metrics
@@ -489,8 +690,8 @@ The Provider Management module enables administrators to onboard, verify, and ma
 ### Business Impact Metrics
 
 - **SC-018**: Provider onboarding time reduced by 60% compared to manual/offline provider onboarding processes (baseline: 5 hours manual → target: 2 hours in-system)
-- **SC-019**: Provider document verification errors reduced by 80% through structured validation and expiration tracking (fewer expired/invalid documents accepted)
-- **SC-020**: 95% of providers have complete, verified profiles (all documents approved, commission configured) within 48 hours of initial account creation
+- **SC-019**: Provider document management errors reduced by 80% through structured upload validation and clear file type requirements
+- **SC-020**: 95% of providers have complete profiles (all required fields filled, commission configured) within 48 hours of initial account creation
 - **SC-021**: Featured provider designation increases patient booking conversion rate by 25% compared to non-featured providers (measured in Patient Platform analytics)
 
 ---
@@ -561,9 +762,9 @@ The Provider Management module enables administrators to onboard, verify, and ma
 ### User Behavior Assumptions
 
 - **Assumption 1**: Admins have direct access to provider documentation (licenses, certifications) either physically or digitally before initiating provider creation (e.g., provider sends documents via email or postal mail to admin)
-- **Assumption 2**: Admins will verify provider document authenticity manually (e.g., cross-reference medical license number with state medical board database) before approving in system
-- **Assumption 3**: Providers check their email regularly (at least daily) to receive account activation and document verification notifications
-- **Assumption 4**: Admins will proactively monitor document expiration dates and follow up with providers to obtain updated documents before expiry (reminder notifications assist but do not replace manual follow-up)
+- **Assumption 2**: Admins will verify provider document authenticity manually (e.g., cross-reference medical license number with state medical board database) before or during provider onboarding
+- **Assumption 3**: Providers check their email regularly (at least daily) to receive account activation notifications
+- **Assumption 4**: Admins will proactively communicate with providers regarding document updates and renewals as needed through direct contact
 
 ### Technology Assumptions
 
@@ -576,7 +777,7 @@ The Provider Management module enables administrators to onboard, verify, and ma
 
 - **Assumption 1**: Provider onboarding is admin-initiated only—providers cannot register themselves; admins control provider network quality through manual vetting
 - **Assumption 2**: Commission rate configuration occurs at provider creation time, but admins can adjust rates later as provider performance changes (e.g., reward high-performing providers with lower commission rates)
-- **Assumption 3**: Document expiration reminders (30 days before expiry) provide sufficient lead time for providers to obtain and upload renewed documents
+- **Assumption 3**: Providers will proactively provide updated documents when renewals occur without system-prompted reminders
 - **Assumption 4**: Suspended providers' existing bookings remain active (admin must manually cancel if needed); suspension only prevents new bookings
 - **Assumption 5**: Deactivated providers' data retained indefinitely for legal/audit purposes; GDPR/data deletion requests handled via separate data privacy workflows (not in-scope for A-02)
 
@@ -589,8 +790,8 @@ The Provider Management module enables administrators to onboard, verify, and ma
 - **Architecture**: Provider Management module follows admin-initiated CRUD (Create, Read, Update, Delete) pattern with state machine for status lifecycle (Draft → Active → Suspended → Deactivated)
 - **Technology**: Document upload functionality should support chunked/resumable uploads for large files (up to 10MB) to handle unreliable admin connections
 - **Performance**: Provider list dashboard with 1000+ providers requires pagination, indexing on status/created_date columns, and client-side filtering/sorting for responsive UI
-- **Storage**: Provider documents stored in cloud object storage (S3-compatible) with server-side encryption (AES-256); document metadata (filename, upload date, verification status) stored in relational database
-- **Validation**: Commission rate validation (5-30% range) enforced at both client-side (immediate feedback) and server-side (security) to prevent invalid configurations
+- **Storage**: Provider documents stored in cloud object storage (S3-compatible) with server-side encryption (AES-256); document metadata (filename, upload date, document type, uploaded by) stored in relational database
+- **Validation**: Commission rate validation enforced at both client-side (immediate feedback) and server-side (security) to prevent invalid configurations. Percentage model: 0-100%; Flat Rate model: > 0
 - **State Machine**: Provider status transitions implemented as finite state machine with validation rules (e.g., cannot transition from Deactivated to any other status; must include reason for Suspend/Deactivate transitions)
 
 ### Integration Points
@@ -665,96 +866,71 @@ Admin receives provider application materials (resume, licenses, certifications,
 
 ---
 
-### User Story 2 - Admin Reviews and Approves Provider Documents (Priority: P1)
+### User Story 2 - Admin Uploads Provider Documents for Record Keeping (Priority: P1)
 
-Admin reviews uploaded provider documents (medical license, board certification, malpractice insurance) in provider profile, verifies authenticity and expiration dates, and approves all documents. Provider receives notification that documents are verified.
+Admin uploads provider documents (medical license, board certification, insurance) to the provider profile for compliance records. Documents are for record-keeping only; no verification workflow is involved.
 
-**Why this priority**: Document verification is critical gate-keeping function ensuring only qualified, licensed providers onboarded; without document approval, providers cannot be activated.
+**Why this priority**: Critical for maintaining compliance records and regulatory documentation.
 
-**Independent Test**: Admin navigates to provider profile → Documents tab, clicks on each document to preview, verifies details, and clicks "Approve Document" for all three required documents; verify provider receives "Documents Approved" email notification.
+**Independent Test**: Admin navigates to provider profile → Documents tab, uploads a PDF; verify document appears in the list with timestamp, document type, and download link.
 
 **Acceptance Scenarios**:
 
-1. **Given** provider has status = "Draft" with three documents uploaded (license, certification, insurance) with status = "Pending Review", **When** admin navigates to provider profile → Documents tab → clicks "View Document" on medical license → verifies details → clicks "Approve Document", **Then** system updates license verification status to "Approved", logs action in audit trail, and sends notification to provider: "Your Medical License has been verified and approved"
-2. **Given** admin approves all three required documents (license, certification, insurance), **When** admin returns to provider profile page, **Then** system displays "Activate Provider" button enabled (was disabled while documents pending)
-3. **Given** admin identifies expired license (expiration date in past), **When** admin clicks "Reject Document" → enters reason: "License expired on [date]. Please upload current valid license." → clicks "Confirm Rejection", **Then** system updates document status to "Rejected", stores reason, sends rejection email to provider, and keeps "Activate Provider" button disabled
+1. **Given** admin is on the "Documents" tab of a provider profile, **When** admin uploads a "Medical License" file, **Then** system stores the file securely and displays it in the document list immediately with type "Medical License", upload date, and uploaded by admin name.
+2. **Given** a document is uploaded, **When** admin clicks "Download", **Then** the file opens/downloads correctly.
+3. **Given** an incorrect file was uploaded, **When** admin clicks "Delete/Remove", **Then** system displays confirmation dialog, and upon confirmation, removes the file from the list (soft delete with audit log entry).
 
 ---
 
 ### User Story 3 - Admin Suspends Provider Due to Policy Violation (Priority: P2)
 
-Admin identifies provider violating platform terms (e.g., patient complaint, fraudulent billing) and suspends provider account with detailed reason. Provider receives suspension notification and cannot receive new bookings but can log in to view suspension notice.
+Admin identifies provider violating platform terms (e.g., fraudulent reviews, inappropriate conduct, non-response to patient inquiries) and suspends provider account temporarily to investigate.
 
-**Why this priority**: Essential for platform trust and safety; admins must be able to quickly suspend problematic providers to protect patients and platform reputation.
+**Why this priority**: Important for platform integrity and patient safety, but less urgent than core provider onboarding workflows.
 
-**Independent Test**: Admin navigates to active provider profile, clicks "Suspend Provider", enters detailed reason, confirms action; verify provider status changes to "Suspended", provider receives suspension email, and provider cannot appear in patient search results.
-
-**Acceptance Scenarios**:
-
-1. **Given** provider has status = "Active" with featured = true, **When** admin clicks "Suspend Provider" → enters reason: "Multiple patient complaints regarding unprofessional conduct. Under investigation." → checks "Notify Provider" → clicks "Confirm Suspension", **Then** system changes status to "Suspended", sends suspension email to provider with reason, automatically sets featured = false, and removes provider from patient-facing search results
-2. **Given** provider is suspended, **When** provider logs into Provider Platform, **Then** provider sees "Account Suspended" banner at top of page with message: "Your account has been suspended. Reason: [admin reason]. Contact support for assistance."
-3. **Given** suspended provider has 5 upcoming patient bookings, **When** admin reviews bookings in separate booking management module, **Then** admin sees list of affected bookings and can manually cancel/reassign (suspension does not automatically cancel bookings)
-
----
-
-### User Story 4 - Admin Configures Tier-Based Commission for High-Volume Provider (Priority: P2)
-
-Admin creates provider account with tier-based commission structure to incentivize high procedure volumes. Commission rate automatically adjusts as provider completes more procedures each month.
-
-**Why this priority**: Important for provider incentive alignment and platform economics; tier-based commissions encourage provider growth and loyalty but not critical for basic provider onboarding.
-
-**Independent Test**: Admin creates provider with tier-based commission (3 tiers: 0-10 procedures = 20%, 11-50 = 15%, 51+ = 10%); verify tiers are saved, provider sees tier structure in their profile, and commission calculation reflects current tier based on procedure count.
+**Independent Test**: Admin selects active provider, clicks "Suspend", enters reason "Multiple patient complaints about unprofessional conduct - under investigation"; verify provider status changes to "Suspended", provider cannot receive new quotes, and provider receives suspension notification email.
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is creating new provider, **When** admin selects commission type = "Tier-based" → adds Tier 1 (0-10 procedures, 20%) → adds Tier 2 (11-50 procedures, 15%) → adds Tier 3 (51+ procedures, 10%) → clicks "Save as Draft", **Then** system validates tier ranges (sequential, no gaps/overlaps), saves tier configuration, and displays tiers in provider profile commission section
-2. **Given** provider created with tier-based commission starting at Tier 1 (20%), **When** provider completes 12 procedures in current month (crosses into Tier 2), **Then** system automatically updates provider's current tier to Tier 2 (15% commission) at end of month, applies new rate to next month's transactions, and sends notification to provider: "Congratulations! You've moved to Tier 2 (15% commission) based on 12 procedures completed."
-3. **Given** admin edits existing provider's tier configuration (changes Tier 2 range from 11-50 to 11-30), **When** admin saves changes, **Then** system validates new tier ranges, updates configuration, applies changes to future transactions only (does not recalculate past commissions), and logs change in audit trail
+1. **Given** admin views provider with multiple policy violations (e.g., 5 patient complaints), **When** admin clicks "Suspend Provider", enters reason "Under investigation for patient complaints", enables "Notify Provider" checkbox, clicks "Submit", **Then** system changes provider status to "Suspended", blocks new quote requests, sends notification email to provider with suspension reason, and logs action in audit trail.
+2. **Given** provider has 3 upcoming confirmed appointments when suspended, **When** admin suspends provider, **Then** system displays warning "Provider has 3 upcoming appointments. Suspending will block new quotes but existing appointments remain active. Cancel appointments manually if needed." Admin confirms suspension, and existing appointments remain active (admin must manually cancel if required).
+3. **Given** suspended provider attempts to log into Provider Platform, **When** provider enters credentials and submits login, **Then** system allows login but displays prominent "Account Suspended" banner with message "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact <support@hairlineapp.com> for assistance." Provider can view profile and documents but cannot accept new inquiries.
+4. **Given** admin investigates and resolves policy violation, **When** admin clicks "Reactivate Provider" on suspended account, enters reason "Investigation complete - no violations found", **Then** system changes status to "Active", provider can receive new quotes again, sends reactivation email to provider, and logs action in audit trail.
 
 ---
 
-### User Story 5 - Admin Receives Document Expiration Reminder and Requests Renewal (Priority: P3)
+### User Story 4 - Admin Configures Flat Rate Commission (Priority: P2)
 
-System automatically sends reminder to admin 30 days before provider's medical license expires. Admin contacts provider to request renewed license, provider uploads new document, admin reviews and approves.
+Admin configures a provider account with a fixed commission fee (e.g., £200 per procedure) instead of a percentage.
 
-**Why this priority**: Important for compliance and provider qualification maintenance, but not critical for initial onboarding; can be handled manually if automated reminders not yet implemented.
+**Why this priority**: Supports flexible business models with different clinics.
 
-**Independent Test**: Set provider medical license expiration date to 30 days from today; verify admin receives automated reminder email with provider name and expiring document type; admin navigates to provider profile, requests renewal, provider uploads new license, admin approves.
+**Independent Test**: Admin creates/edits provider, selects "Flat Rate" commission, enters value "200"; verify calculations for bookings use the flat rate deduction.
 
 **Acceptance Scenarios**:
 
-1. **Given** provider's medical license has expiration date = 30 days from today, **When** system runs daily document expiration check (cron job at midnight UTC), **Then** system sends email to admin: "Reminder: Provider [Name]'s Medical License expires in 30 days on [date]. Please follow up to obtain renewed license."
-2. **Given** admin receives expiration reminder, **When** admin navigates to provider profile → Documents tab, **Then** system displays yellow warning badge next to medical license: "Expires in 30 days" and highlights row in yellow
-3. **Given** admin manually sends notification to provider requesting license renewal, **When** provider uploads new license with future expiration date, **Then** system updates document, sets status = "Pending Review", admin receives notification to review new document, and expiration warning clears after admin approves new license
+1. **Given** admin is editing provider commission settings, **When** admin selects "Flat Rate" and enters "200", **Then** system saves the configuration.
+2. **Given** a provider has a £200 flat rate, **When** a £3000 booking is completed, **Then** system calculates Platform Commission as £200 (not a percentage).
 
 ---
 
-### User Story 6 - Provider Views Own Profile Status in Provider Platform (Priority: P3)
-
-Provider logs into Provider Platform after admin activates account and views profile information including account status, document verification statuses, commission configuration, and clinic details. Provider cannot edit any data (read-only view).
-
-**Why this priority**: Useful for provider transparency and reducing support inquiries, but not critical for core provider onboarding workflow; providers can function without self-service profile view if admins communicate status manually.
-
-**Independent Test**: Provider logs into Provider Platform after account activation, navigates to "My Profile" section; verify provider sees current status (Active), document verification statuses (all approved), commission rate (read-only), and clinic information; verify provider cannot edit any fields.
-
-**Acceptance Scenarios**:
-
-1. **Given** provider account status = "Active" with all documents approved, **When** provider logs into Provider Platform → navigates to "My Profile", **Then** provider sees profile page with status badge = "Active" (green), document verification statuses (Medical License: Approved, Board Certification: Approved, Malpractice Insurance: Approved), and commission rate (e.g., "15% per transaction")
-2. **Given** provider has one document rejected (malpractice insurance), **When** provider views profile, **Then** provider sees rejected document highlighted in red with rejection reason displayed: "Insurance expired. Please upload current policy." and call-to-action button: "Upload New Document"
-3. **Given** provider attempts to edit clinic name in profile view, **When** provider clicks on clinic name field, **Then** field remains read-only (not editable), tooltip displays: "Contact admin to update clinic information"
-
----
+**Note**: Provider-side user stories (viewing/editing profile, managing settings) are documented in **FR-032: Provider Dashboard Settings & Profile Management**. FR-015 focuses exclusively on admin-initiated provider management actions.
 
 ### Edge Cases
 
 - What happens when **admin attempts to create provider with email already used by another provider**? System displays validation error: "Email address already in use by another provider. Please use a different email." Provider creation blocked until unique email provided.
-- How does system handle **provider document upload fails mid-upload (network interruption)**? System supports resumable uploads; if upload interrupted, admin can retry from last successful chunk (does not restart entire 10MB upload from beginning).
+- How does system handle **provider document upload fails mid-upload (network interruption)**? System supports resumable uploads; if upload interrupted, admin can retry upload (system may resume from last successful chunk if implemented, otherwise restarts upload).
 - What occurs if **admin activates provider but notification email delivery fails (email service down)**? System queues notification for retry (up to 3 attempts over 1 hour); admin sees warning message: "Provider activated but notification email not yet delivered. Email delivery in progress." Admin can manually resend notification via "Send Notification" button.
 - How to manage **two admins simultaneously editing same provider profile (concurrent edits)**? System implements optimistic locking; second admin to save receives error: "Provider profile was modified by another admin. Please refresh and re-enter your changes." Last-write-wins conflict resolution prevents data loss.
 - What happens when **admin deactivates provider with 10 upcoming patient bookings**? System displays confirmation modal: "This provider has 10 upcoming bookings. Deactivation will automatically cancel all future bookings and notify affected patients. Continue?" If admin confirms, system cancels bookings, sends cancellation notifications to patients, and offers rebooking options.
-- How does system handle **provider document expiration date passes while status = Draft (not yet activated)**? System does not send expiration reminders for draft providers (only active/suspended); when admin attempts to activate provider with expired document, system blocks activation: "Cannot activate provider. Medical License expired on [date]. Please upload renewed license."
-- What occurs if **admin attempts to set commission rate outside 5-30% range (e.g., 35%)**? System displays client-side validation error immediately: "Commission rate must be between 5% and 30%." Server-side validation also enforces range; API returns 400 Bad Request if invalid rate submitted.
+- What happens if **admin attempts to create provider without filling required fields**? System validates required fields on each wizard step: First Name, Last Name, Email, Clinic Name, Bio (min 50 chars), and at least 1 Language. System displays error: "Please complete all required fields before proceeding" and highlights missing fields in red.
+- What occurs if **admin attempts to set invalid commission rate (e.g., negative percentage or zero flat rate)**? System displays client-side validation error immediately: "Percentage must be between 0-100%" or "Flat rate must be greater than 0." Server-side validation also enforces rules; API returns 400 Bad Request if invalid rate submitted.
 - How to manage **provider requests account closure (wants to be deactivated)**? Provider contacts admin (no self-service deactivation); admin navigates to provider profile → clicks "Deactivate Provider" → enters reason: "Provider requested account closure on [date]" → confirms deactivation. System deactivates account, cancels future bookings, sends confirmation email to provider.
+- What happens if **admin sets seat limit below current team size**? System validates seat limit against current team member count from FR-009. If seat limit is set below current count (e.g., provider has 50 staff but admin sets limit to 30), system displays warning: "Current team size (50) exceeds new seat limit (30). Existing team members will not be removed, but no new invitations can be sent until limit is increased or team size is reduced." Admin must confirm to proceed. Existing team members remain active; only new invitations are blocked.
+- What happens if **provider doesn't receive activation email**? Provider can click "Didn't receive activation email?" link on login page, enter their email, and request resend. System generates new one-time password setup link (expires 24 hours), invalidates previous link, and sends new email. Rate limited to 3 resend requests per hour per email. Admin can also manually resend from provider profile in FR-015 by clicking "Resend Activation Email" button in Quick Actions (visible only if password not yet set).
+- What happens if **activation link expires (24 hours passed)**? Provider can request new activation email via login page resend flow or contact admin. Admin can manually resend from provider profile. When provider clicks expired link, system displays: "This activation link has expired. Request a new activation email or contact support."
+- What happens if **provider tries to request activation resend but already activated account**? System displays generic message: "If an account exists with this email, an activation link will be sent." (doesn't reveal if account already activated for security). No email sent. This prevents email enumeration attacks.
+- What happens if **admin accidentally creates duplicate provider with same email**? System validates email uniqueness during provider creation. If email already exists, system displays error: "Email address already in use by another provider (Provider Name: [existing provider]). Please use a different email or edit the existing provider." Creation blocked until unique email provided.
 
 ---
 
@@ -762,64 +938,44 @@ Provider logs into Provider Platform after admin activates account and views pro
 
 ### Core Requirements
 
-- **REQ-015-001**: System MUST allow admins to create new provider accounts with complete profile setup including basic information (name, email, license, specialty, experience), contact details, clinic information, document uploads (license, certification, insurance), and commission configuration (percentage or tier-based)
-- **REQ-015-002**: System MUST enforce admin-initiated provider creation only—no self-service provider registration allowed; provider creation restricted to authenticated admins with "Provider Management" role permission
-- **REQ-015-003**: System MUST support provider status lifecycle: Draft → Active → Suspended → (Reactivated OR Deactivated), with validation preventing invalid state transitions (e.g., cannot transition from Deactivated to any other status)
-- **REQ-015-004**: System MUST require all three document types (medical license, board certification, malpractice insurance) uploaded and approved before allowing provider activation
-- **REQ-015-005**: System MUST log all provider management actions (creation, edits, status changes, document approvals/rejections) in immutable audit trail with timestamp, admin user ID, IP address, and action details
+- **REQ-015-001**: System MUST allow admins to create new provider accounts via a multi-step wizard, including profile (Bio, Languages, Awards), clinic details, seat limit (team member capacity), and commission settings.
+- **REQ-015-002**: System MUST enforce admin-initiated provider creation only (no self-service registration).
+- **REQ-015-003**: System MUST support provider status lifecycle: Active → Suspended → (Reactivated OR Deactivated).
+- **REQ-015-004**: System MUST allow providers to upload and manage their documents (license, certification, insurance) via FR-032. System MUST also allow admins to upload supplementary documents received externally. Documents are for record-keeping and do not block activation.
+- **REQ-015-005**: System MUST log all provider management actions (creation, edits, status changes) in an immutable audit trail.
+- **REQ-015-006**: System MUST send account activation email with one-time password setup link (expires 24 hours) when provider account is created. System MUST support activation email resend via self-service (provider login page) and admin manual resend (provider profile Quick Actions), with rate limiting (3 requests per hour per email) and automatic invalidation of previous links.
 
 ### Data Requirements
 
-- **REQ-015-006**: System MUST maintain provider profile data including personal information (name, email, phone), clinic details (name, address, operating hours), document verification statuses (pending, approved, rejected), commission configuration (percentage or tier-based), and featured designation (true/false)
-- **REQ-015-007**: System MUST track provider document expiration dates and automatically send reminder notifications to admins 30 days before expiry
-- **REQ-015-008**: System MUST store uploaded provider documents (licenses, certifications, insurance) in secure cloud storage with encryption at rest (AES-256) and generate secure access URLs for admin document preview
-- **REQ-015-009**: System MUST record provider status change history with fields: previous status, new status, change date, admin user who made change, and reason (required for suspension/deactivation)
+- **REQ-015-007**: System MUST maintain provider profile data aligned with FR-032 (Bio, Languages, Awards, Profile Picture, Contact details, etc.). Changes made by providers in FR-032 must sync to admin view in real-time.
+- **REQ-015-008**: System MUST store uploaded provider documents in secure cloud storage (AES-256).
+- **REQ-015-009**: System MUST store commission configuration (Model: Percentage/Flat, Value) per provider.
+- **REQ-015-010**: System MUST store seat limit (maximum team members) per provider with default value of 100, adjustable range 1-500. Seat limit must be enforced by FR-009 when providers invite staff members.
+- **REQ-015-011**: System MUST store activation token (one-time password setup link), token expiry timestamp (24 hours from generation), and password_set status per provider. System MUST invalidate previous tokens when new token is generated.
 
 ### Security & Privacy Requirements
 
-- **REQ-015-010**: System MUST encrypt provider documents at rest (AES-256) and in transit (TLS 1.3) to protect sensitive credentials and personal information
-- **REQ-015-011**: System MUST restrict provider document access to authenticated admins with "Provider Management" or "Document Verification" role permissions; providers can view their own documents only
-- **REQ-015-012**: System MUST mask provider medical license numbers in audit logs and activity reports (display last 4 digits only, e.g., "****1234") to prevent unauthorized credential exposure
-- **REQ-015-013**: System MUST validate provider email uniqueness across platform before allowing account creation (prevent duplicate provider accounts with same email)
-- **REQ-015-014**: System MUST retain deactivated provider data for 7 years minimum for legal/audit compliance, then mark eligible for deletion per GDPR/data retention policies
-
-### Integration Requirements
-
-- **REQ-015-015**: System MUST trigger notification events to S-03 Notification Service when provider account activated, documents approved/rejected, or status changes (suspended/deactivated), including provider email/phone and notification template ID
-- **REQ-015-016**: System MUST upload provider documents to S-05 Media Storage Service with metadata (provider ID, document type, expiration date) and receive secure download URLs for admin access
-- **REQ-015-017**: System MUST expose read-only API endpoint for Provider Platform (PR-01) to fetch individual provider's own profile data (authenticated via provider user token, cannot access other providers' data)
-- **REQ-015-018**: System MUST expose public API endpoint for Patient Platform (P-02) to fetch featured provider listings (filtered by status = Active AND featured = true) with fields: name, clinic, specialty, profile photo URL
-- **REQ-015-019**: System MUST send structured audit log events to S-06 Audit Log Service for all provider management actions with event type, entity ID, admin user, timestamp, and before/after values
-
-### Functional Requirements Needing Clarification
-
-- **REQ-015-020**: System MUST validate commission rate configuration with range 5-30% for percentage-based, 5-30% per tier for tier-based [NEEDS CLARIFICATION: Should system allow commission rates outside this range for special cases with admin override?]
-- **REQ-015-021**: System MUST prevent provider activation if any required document expired [NEEDS CLARIFICATION: Should system allow activation with expired documents if admin provides justification/override reason?]
-- **REQ-015-022**: System MUST automatically unfeatured suspended/deactivated providers [NEEDS CLARIFICATION: Should system automatically re-feature providers when reactivated from suspended status, or require manual admin action?]
+- **REQ-015-012**: System MUST encrypt provider documents at rest and in transit.
+- **REQ-015-013**: System MUST restrict document access to authenticated users (providers can access their own documents, admins can access all provider documents) with role-based permissions (providers can edit their own uploads, admins can edit admin uploads only).
+- **REQ-015-014**: System MUST validate provider email uniqueness across the platform.
+- **REQ-015-015**: System MUST enforce strong password requirements for providers (min 8 chars, uppercase, lowercase, number, special character) and store passwords using industry-standard hashing (bcrypt/Argon2).
+- **REQ-015-016**: System MUST rate limit activation email resend requests to 3 per hour per email address to prevent abuse and email flooding.
 
 ---
 
 ## Key Entities
 
 - **Entity 1 - Provider**
-  - **Key attributes**: provider_id (UUID), first_name, last_name, email (unique), phone, medical_license_number, specialty, years_experience, status (enum: draft, active, suspended, deactivated), featured (boolean), commission_type (enum: percentage, tier), commission_percentage (decimal, nullable), created_at, updated_at, created_by_admin_id
-  - **Relationships**: One provider has many documents (one-to-many); one provider has one commission configuration (one-to-one if tier-based); one provider has many status history records (one-to-many); one provider has many audit log entries (one-to-many)
+  - **Key attributes**: provider_id (UUID), first_name, last_name, email (unique), phone, bio, languages (JSON), awards (JSON), medical_license_number, specialty, years_experience, status (enum: active, suspended, deactivated), featured (boolean), seat_limit (integer, default 100, range 1-500), commission_model (enum: percentage, flat), commission_value (decimal), password_hash (encrypted), password_set (boolean, default false), activation_token (UUID, nullable), activation_token_expiry (timestamp, nullable), activation_email_sent_count (integer, for rate limiting), last_activation_email_sent_at (timestamp), created_at, updated_at.
+  - **Relationships**: One provider has many documents; one provider has one clinic; one provider has many status history records; seat_limit enforced by FR-009 when providers invite team members.
 
 - **Entity 2 - Provider Document**
-  - **Key attributes**: document_id (UUID), provider_id (foreign key), document_type (enum: medical_license, board_certification, malpractice_insurance), file_url (secure cloud storage URL), upload_date, expiration_date, verification_status (enum: pending, approved, rejected), verified_by_admin_id (nullable), verified_at (nullable), rejection_reason (text, nullable)
-  - **Relationships**: Many documents belong to one provider (many-to-one); one document verified by one admin user (many-to-one)
+  - **Key attributes**: document_id (UUID), provider_id (foreign key), document_name, document_type (enum: medical_license, board_certification, insurance), file_url, upload_date, uploaded_by (admin_user_id), deleted (boolean for soft delete), deleted_at (timestamp).
+  - **Relationships**: Many documents belong to one provider.
 
 - **Entity 3 - Clinic Information**
-  - **Key attributes**: clinic_id (UUID), provider_id (foreign key), clinic_name, street_address, city, state_province, postal_code, country, clinic_phone, operating_hours (text)
-  - **Relationships**: One clinic belongs to one provider (one-to-one); one provider has one clinic (one-to-one)
-
-- **Entity 4 - Commission Tier (for tier-based commission only)**
-  - **Key attributes**: tier_id (UUID), provider_id (foreign key), tier_name, procedure_count_min (integer), procedure_count_max (integer, nullable for open-ended top tier), commission_rate_percentage (decimal)
-  - **Relationships**: Many tiers belong to one provider (many-to-one with provider if tier-based commission selected)
-
-- **Entity 5 - Provider Status History**
-  - **Key attributes**: history_id (UUID), provider_id (foreign key), previous_status (enum), new_status (enum), changed_at (timestamp), changed_by_admin_id (foreign key), reason (text, nullable but required for suspend/deactivate)
-  - **Relationships**: Many status history records belong to one provider (many-to-one); one status change made by one admin (many-to-one)
+  - **Key attributes**: clinic_id, provider_id, clinic_name, logo_url (profile picture), cover_image_url, address_fields, location_city, location_country, contact_phone, website_url, operating_hours.
+  - **Relationships**: One clinic belongs to one provider (one-to-one).
 
 ---
 
@@ -828,6 +984,8 @@ Provider logs into Provider Platform after admin activates account and views pro
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-015 Provider Management (Admin-Initiated) | Claude (AI Assistant) |
+| 2025-12-07 | 1.1 | **Major alignment update with FR-032:** <br>• Added cross-module integration notes linking to FR-032 (Provider Dashboard Settings) in Executive Summary and Module Scope<br>• Removed all document expiration date fields and related workflows (documents are for record-keeping only)<br>• Removed all out-of-scope items: Save Draft functionality, Tier-based commission references, Document verification workflow (approve/reject)<br>• Aligned all profile fields with FR-032: Profile Picture (5MB, 200x200px min), Cover Image (10MB, 1920x300px), Bio/Description (500 chars, min 50), Languages (multi-select chips from FR-026), Awards (with issuer, description, year, image), Contact Phone, Location (City, Country), Website URL<br>• Clarified activation logic: only required fields block activation (First Name, Last Name, Email, Clinic Name, Bio min 50 chars, at least 1 Language); documents do NOT block activation<br>• Updated Success Criteria to remove verification/expiration references and focus on record-keeping approach<br>• Updated Business Workflows, Screen Specifications (Wizard Steps and Tabbed View), User Stories, Edge Cases, and Entity definitions<br>• Added Admin Editability Rules section distinguishing admin-only vs provider-editable fields (via FR-032)<br>• Updated document entity to include document_type, uploaded_by, soft delete fields<br>• **Added Seat Limit field** to Screen 2 Step 1 (Basic Information): Maximum team members (staff) capacity per provider, default 100, range 1-500, adjustable by admin. Aligns with FR-009 team management enforcement. Added to Business Rules (Rule 7), Entity definitions, Functional Requirements (REQ-015-009), and Edge Cases<br>• **Completely restructured Screen 3** to table format matching FR-032 structure with all 5 tabs: (1) Basic Information, (2) Languages, (3) Staff List, (4) Awards, (5) Reviews, plus admin-only tabs: (6) Documents, (7) Commission & Financials, (8) Activity Log. All fields now documented in table format with Admin/Provider editability clearly marked<br>• **Added provider onboarding workflow** to Main Flow: Secure password setup via one-time email link (expires 24 hours), first login prompts profile completion via FR-032, changes sync to admin view<br>• **Added activation email resend functionality** (Alternative Flow A1): Provider self-service resend via login page + Admin manual resend via Quick Actions button in Screen 3. Rate limited to 3 requests/hour, previous tokens invalidated, secure handling of expired links. Added to Edge Cases, Functional Requirements (REQ-015-006, REQ-015-011, REQ-015-015, REQ-015-016), and Entity definitions with activation_token fields<br>• **Enhanced User Story 3** with detailed suspension workflow scenarios including existing appointments handling, suspended login experience, and reactivation process<br>• **Removed redundant User Stories 5 & 6** (provider-side actions) as these are fully covered in FR-032 User Story 1 | Claude (AI Assistant) |
+| 2025-12-07 | 1.2 | **Major cross-module update - Document management redesign:** Completely restructured Tab 6: Documents to reflect new document management model. Removed "Admin-Only" designation. Providers now manage their own documents via FR-032 Tab 6 (upload, replace, delete); admin role shifted to oversight and supplementary uploads. Updated tab to display all documents with "Uploaded By" badge (Provider/Admin); Admin can view all documents, upload additional documents received externally (email, postal mail), and add notes, but cannot replace/delete provider-uploaded documents (only provider can via FR-032); Admin-uploaded documents show "Admin - [name]" badge and admin has full control over these. Added bidirectional document sync (FR-032 ↔ FR-015 within 1 minute); Updated Business Rules to clarify provider primary management vs. admin oversight model; Added sort/filter options, audit logging enhancements, and comprehensive use case notes. Aligns with FR-032 v1.2 which added full document management capabilities for providers | Claude (AI Assistant) |
 
 ---
 
