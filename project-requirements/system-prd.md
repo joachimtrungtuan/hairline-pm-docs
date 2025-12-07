@@ -1022,21 +1022,20 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 - Admins MUST be able to create new provider accounts
 - System MUST capture provider details: clinic name, location, credentials, licenses, certifications
-- Admins MUST be able to upload and verify provider documents (licenses, insurance, certifications)
+- Admins MUST be able to upload provider documents (licenses, insurance, certifications) for record-keeping; document authenticity verification is handled manually outside the system and MUST NOT block account activation.
 - Admins MUST be able to activate or deactivate provider accounts
 - Admins MUST be able to suspend providers for policy violations
-- System MUST set provider commission rate (per provider or tier-based)
+- System MUST set provider commission rate per provider using configurable Percentage or Flat Rate models (tier-based commission structures are out of scope for MVP and may be defined in a future FR).
 - Admins MUST be able to feature providers in patient-facing app
 - System MUST track provider status (draft, active, suspended, deactivated)
 
 **Admin Workflow**:
 
 1. Admin creates provider account (manual entry)
-2. Admin uploads provider credentials (licenses, certifications, insurance)
-3. Admin verifies documents
-4. Admin sets commission rate
-5. Admin activates provider account
-6. Provider receives login credentials and can access platform
+2. Admin uploads provider credentials (licenses, certifications, insurance) for record-keeping
+3. Admin sets commission rate (Percentage or Flat Rate)
+4. Admin activates provider account (activation is not blocked by document status; documents are assumed to have been pre-verified offline)
+5. Provider receives login credentials and can access platform
 
 **Note**: Providers do NOT self-register. All provider accounts are created by admin team.
 

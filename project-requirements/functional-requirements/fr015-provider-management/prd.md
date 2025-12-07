@@ -355,7 +355,7 @@ The Provider Management module enables administrators to onboard and manage hair
 - Fields marked "Both" can be edited by provider via FR-032 and changes sync to admin view in real-time
 - Fields marked "Admin only" can only be edited by admin users with provider management permissions
 - Profile changes logged in audit trail with timestamp, user, and changed fields
-- Commission and Seat Limit changes require admin MFA re-authentication for security
+- Commission and Seat Limit changes require admin re-authentication for security. In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
 
 **Notes**:
 
@@ -517,7 +517,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 **Business Rules**:
 
 - Commission configuration displayed prominently with current model and value
-- Admin can edit commission settings (requires MFA re-authentication)
+- Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
 - Commission changes take effect immediately for new transactions
 - All commission changes logged in history with timestamp, admin user, old/new values
 - Provider can view commission rate read-only via FR-032 (but not edit)
@@ -958,7 +958,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 - **REQ-015-012**: System MUST encrypt provider documents at rest and in transit.
 - **REQ-015-013**: System MUST restrict document access to authenticated users (providers can access their own documents, admins can access all provider documents) with role-based permissions (providers can edit their own uploads, admins can edit admin uploads only).
 - **REQ-015-014**: System MUST validate provider email uniqueness across the platform.
-- **REQ-015-015**: System MUST enforce strong password requirements for providers (min 8 chars, uppercase, lowercase, number, special character) and store passwords using industry-standard hashing (bcrypt/Argon2).
+- **REQ-015-015**: System MUST enforce the platform-wide password policy defined in the Hairline Platform Constitution and shared authentication spec: passwords MUST be at least 12 characters long and include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character from !@#$%^&(),.?\":{}|<>. This policy is centrally defined and NOT configurable per FR. Passwords MUST be hashed using bcrypt with a minimum cost factor of 12.
 - **REQ-015-016**: System MUST rate limit activation email resend requests to 3 per hour per email address to prevent abuse and email flooding.
 
 ---
