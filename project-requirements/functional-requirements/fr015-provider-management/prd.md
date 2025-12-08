@@ -71,8 +71,7 @@ The Provider Management module enables administrators to onboard and manage hair
 
 - **Admin-Initiated**: Admin accesses "Provider Management" section in Admin Platform dashboard → selects "Add New Provider" to initiate provider creation workflow
 - **Admin Oversight**: Admin opens "Providers" list view to see all providers across all statuses (draft, active, suspended, deactivated) with filtering and search
-- **Document Verification**: Admin navigates to individual provider profile → "Documents" tab to review, approve, or reject uploaded licenses, certifications, and insurance
-- **Provider Profile Access (Provider-Side)**: Provider logs into Provider Platform → views "My Profile" section to see account status, document verification progress, and commission configuration (read-only)
+- **Provider Profile Access (Provider-Side)**: Provider logs into Provider Platform → views "My Profile" section to see account status, list of uploaded documents, and commission configuration (read-only)
 
 ---
 
@@ -126,7 +125,7 @@ The Provider Management module enables administrators to onboard and manage hair
     - Provider's email address (login username)
     - Instructions for first login and profile completion
 14. Provider receives email and clicks "Set Password" link.
-15. System displays password creation form (requires strong password: min 8 chars, uppercase, lowercase, number, special char).
+15. System displays password creation form (requires strong password: min 12 chars, uppercase, lowercase, number, special char).
 16. Provider creates password and confirms.
 17. System validates password strength, saves encrypted password, and redirects to Provider Platform login.
 18. Provider logs in with email and new password.
@@ -667,7 +666,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 ### Provider Efficiency Metrics
 
 - **SC-004**: Providers receive account activation notification within 1 minute of admin activating their account, enabling immediate platform access
-- **SC-005**: Providers can view their document verification status and commission configuration in Provider Platform within 2 seconds of navigation
+- **SC-005**: Providers can view their uploaded documents list and commission configuration in Provider Platform within 2 seconds of navigation
 - **SC-006**: 90% of providers successfully log in and access their profile on first attempt after receiving activation credentials (low login failure rate)
 
 ### Admin Management Metrics
@@ -704,8 +703,8 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
   - **Why needed**: Admins must be authenticated and have "Provider Management" role permissions to access provider creation, editing, and status management features
   - **Integration point**: A-02 verifies admin user session token and role permissions before allowing provider management actions; API endpoints protected by role-based access control (RBAC)
 
-- **FR-XXX / Module PR-01: Provider Authentication & Profile Management**
-  - **Why needed**: Providers created in A-02 must be able to log into Provider Platform to view their profile status and document verification progress
+- **FR-XXX / Module PR-01: Auth & Team Management**
+  - **Why needed**: Providers created in A-02 must be able to log into Provider Platform to view their profile status, uploaded documents, and commission configuration (all sourced from A-02/FR-032).
   - **Integration point**: A-02 creates provider user account credentials (email/password) and passes to PR-01 authentication service; providers authenticate via PR-01 to access read-only profile data sourced from A-02
 
 - **FR-XXX / Module P-02: Provider Discovery & Search (Patient-Facing)**
@@ -713,21 +712,21 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
   - **Integration point**: P-02 queries A-02 provider data filtered by (status = "Active" AND featured = true) to populate featured provider listings; includes provider name, clinic, specialty, profile photo
 
 - **FR-XXX / Module S-03: Notification Service**
-  - **Why needed**: Providers must receive email notifications when admins activate accounts, approve/reject documents, or suspend/deactivate accounts; SMS may be added later for critical events
-  - **Integration point**: A-02 triggers notification events to S-03 API with templates (e.g., "account_activated", "document_rejected") and provider contact details; S-03 sends templated emails asynchronously. SMS, if enabled in future, would also be orchestrated by S-03.
+  - **Why needed**: Providers must receive email notifications when admins activate accounts or suspend/deactivate accounts; SMS may be added later for critical events
+  - **Integration point**: A-02 triggers notification events to S-03 API with templates (e.g., "account_activated", "account_suspended") and provider contact details; S-03 sends templated emails asynchronously. SMS, if enabled in future, would also be orchestrated by S-03.
 
 - **FR-XXX / Module S-05: Media Storage Service**
   - **Why needed**: Provider documents (licenses, certifications, insurance) must be securely stored with encryption and access controls
   - **Integration point**: A-02 uploads documents to S-05 API with metadata (provider ID, document type, expiration date); S-05 returns secure download URLs accessible only to authorized admins
 
 - **FR-XXX / Module S-06: Audit Log Service**
-  - **Why needed**: All provider management actions (creation, edits, status changes, document verifications) must be logged for compliance and audit trails
+  - **Why needed**: All provider management actions (creation, edits, status changes, and document-related actions) must be logged for compliance and audit trails
   - **Integration point**: A-02 sends audit log events to S-06 API with structured data (timestamp, admin user ID, action type, entity ID, before/after values); S-06 persists logs and provides query interface for admin reporting
 
 ### External Dependencies (APIs, Services)
 
 - **External Service 1: Email Delivery Service (e.g., SendGrid, AWS SES)**
-  - **Purpose**: Sends provider notification emails (account activation, document verification, status changes)
+  - **Purpose**: Sends provider notification emails (account activation and status changes)
   - **Integration**: S-03 Notification Service integrates with email delivery API via REST/SMTP; A-02 does not directly call external email service
   - **Failure handling**: If email delivery fails, S-03 retries up to 3 times with exponential backoff; A-02 displays warning to admin: "Notification queued but not yet delivered"
 
@@ -748,12 +747,12 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
   - **Source**: Admin authentication module (A-01) provides role-based access control (RBAC); admin roles (e.g., "Super Admin", "Provider Manager", "Read-Only Admin") defined with granular permissions
 
 - **Entity 2: Notification Templates (Email/SMS)**
-  - **Why needed**: Standardized notification messages for provider account lifecycle events (activation, document verification, suspension) must exist; in MVP only email templates are used, with SMS templates reserved for future phases
+  - **Why needed**: Standardized notification messages for provider account lifecycle events (activation and suspension) must exist; in MVP only email templates are used, with SMS templates reserved for future phases
   - **Source**: Notification templates pre-configured in S-03 Notification Service; A-02 references email template IDs (e.g., "provider_activation_email") when triggering notifications. SMS templates, if configured later, would be used only once SMS delivery is enabled.
 
 - **Entity 3: Document Type Configuration**
-  - **Why needed**: System must know which document types are required for provider verification (medical license, board certification, malpractice insurance)
-  - **Source**: Document type definitions configured in admin settings or hardcoded in A-02 codebase; includes required fields (expiration date), validation rules (file size, format), and verification status options (pending, approved, rejected)
+  - **Why needed**: System must know which document types are required to be stored for each provider (medical license, board certification, malpractice insurance)
+  - **Source**: Document type definitions configured in admin settings or hardcoded in A-02 codebase; includes required fields (e.g., expiration date for offline checks) and validation rules (file size, format). No in-system document status workflow is tracked in this FR.
 
 ---
 
@@ -771,7 +770,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 - **Assumption 1**: Admins access Admin Platform via desktop/laptop computers (not mobile devices) due to complexity of provider creation forms and document review workflows
 - **Assumption 2**: Admins have reliable broadband internet connectivity for uploading provider documents (up to 10MB per file)
 - **Assumption 3**: Providers access Provider Platform to view profile status via both desktop and mobile devices (responsive design required for provider profile view)
-- **Assumption 4**: Cloud file storage (S-04) provides 99.99% availability for document uploads and retrieval
+- **Assumption 4**: Media Storage Service (S-05) provides 99.99% availability for document uploads and retrieval
 
 ### Business Process Assumptions
 
@@ -801,10 +800,10 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
   - **Authentication**: Service-to-service authentication via API key in request header
   - **Error handling**: S-03 returns 202 Accepted (notification queued) or 4xx/5xx error; A-02 logs notification failures and displays warning to admin
 
-- **Integration 2: Admin Platform (A-02) → File Storage Service (S-04)**
+- **Integration 2: Admin Platform (A-02) → Media Storage Service (S-05)**
   - **Data format**: Multipart form-data for document uploads with metadata (provider ID, document type, expiration date)
-  - **Authentication**: OAuth 2.0 service account token for S-04 API access
-  - **Error handling**: S-04 returns 200 OK with document URL or 4xx/5xx error; A-02 retries upload up to 3 times with exponential backoff before failing
+  - **Authentication**: OAuth 2.0 service account token for S-05 API access
+  - **Error handling**: S-05 returns 200 OK with document URL or 4xx/5xx error; A-02 retries upload up to 3 times with exponential backoff before failing
 
 - **Integration 3: Provider Platform (PR-01) → Provider Data (A-02 Database)**
   - **Data format**: REST API calls from PR-01 to fetch provider profile data (read-only) for display in provider's profile view
@@ -826,7 +825,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
   - Database indexing on provider.status, provider.created_at, provider.featured for fast dashboard queries
   - Document storage in cloud object storage (S3) with CDN for admin document preview (reduces server load)
   - Pagination and lazy loading in provider dashboard (load 50 providers per page) to minimize initial page load time
-  - Async document upload processing (upload to S-04 asynchronously, update database when complete) to prevent blocking admin UI
+  - Async document upload processing (upload to S-05 asynchronously, update database when complete) to prevent blocking admin UI
 
 ### Security Considerations
 
@@ -861,7 +860,7 @@ Admin receives provider application materials (resume, licenses, certifications,
 **Acceptance Scenarios**:
 
 1. **Given** admin is logged into Admin Platform with "Provider Management" role, **When** admin navigates to Provider Management → "Add New Provider" → fills all required fields (name, email, license, clinic, documents, commission) → clicks "Save and Activate", **Then** system creates provider with status = "Active", sends activation email to provider, and displays success message: "Provider [Name] activated successfully"
-2. **Given** provider receives activation email with login credentials, **When** provider clicks login link and enters credentials, **Then** provider successfully logs into Provider Platform and sees profile page with status = "Active", document verification statuses (all approved), and commission rate displayed
+2. **Given** provider receives activation email with login credentials, **When** provider clicks login link and enters credentials, **Then** provider successfully logs into Provider Platform and sees profile page with status = "Active", list of uploaded documents, and commission rate displayed
 3. **Given** admin activates provider with featured = true, **When** patient opens Patient Platform provider search, **Then** newly activated provider appears in "Featured Providers" section with gold star badge
 
 ---
@@ -986,6 +985,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-015 Provider Management (Admin-Initiated) | Claude (AI Assistant) |
 | 2025-12-07 | 1.1 | **Major alignment update with FR-032:** <br>• Added cross-module integration notes linking to FR-032 (Provider Dashboard Settings) in Executive Summary and Module Scope<br>• Removed all document expiration date fields and related workflows (documents are for record-keeping only)<br>• Removed all out-of-scope items: Save Draft functionality, Tier-based commission references, Document verification workflow (approve/reject)<br>• Aligned all profile fields with FR-032: Profile Picture (5MB, 200x200px min), Cover Image (10MB, 1920x300px), Bio/Description (500 chars, min 50), Languages (multi-select chips from FR-026), Awards (with issuer, description, year, image), Contact Phone, Location (City, Country), Website URL<br>• Clarified activation logic: only required fields block activation (First Name, Last Name, Email, Clinic Name, Bio min 50 chars, at least 1 Language); documents do NOT block activation<br>• Updated Success Criteria to remove verification/expiration references and focus on record-keeping approach<br>• Updated Business Workflows, Screen Specifications (Wizard Steps and Tabbed View), User Stories, Edge Cases, and Entity definitions<br>• Added Admin Editability Rules section distinguishing admin-only vs provider-editable fields (via FR-032)<br>• Updated document entity to include document_type, uploaded_by, soft delete fields<br>• **Added Seat Limit field** to Screen 2 Step 1 (Basic Information): Maximum team members (staff) capacity per provider, default 100, range 1-500, adjustable by admin. Aligns with FR-009 team management enforcement. Added to Business Rules (Rule 7), Entity definitions, Functional Requirements (REQ-015-009), and Edge Cases<br>• **Completely restructured Screen 3** to table format matching FR-032 structure with all 5 tabs: (1) Basic Information, (2) Languages, (3) Staff List, (4) Awards, (5) Reviews, plus admin-only tabs: (6) Documents, (7) Commission & Financials, (8) Activity Log. All fields now documented in table format with Admin/Provider editability clearly marked<br>• **Added provider onboarding workflow** to Main Flow: Secure password setup via one-time email link (expires 24 hours), first login prompts profile completion via FR-032, changes sync to admin view<br>• **Added activation email resend functionality** (Alternative Flow A1): Provider self-service resend via login page + Admin manual resend via Quick Actions button in Screen 3. Rate limited to 3 requests/hour, previous tokens invalidated, secure handling of expired links. Added to Edge Cases, Functional Requirements (REQ-015-006, REQ-015-011, REQ-015-015, REQ-015-016), and Entity definitions with activation_token fields<br>• **Enhanced User Story 3** with detailed suspension workflow scenarios including existing appointments handling, suspended login experience, and reactivation process<br>• **Removed redundant User Stories 5 & 6** (provider-side actions) as these are fully covered in FR-032 User Story 1 | Claude (AI Assistant) |
 | 2025-12-07 | 1.2 | **Major cross-module update - Document management redesign:** Completely restructured Tab 6: Documents to reflect new document management model. Removed "Admin-Only" designation. Providers now manage their own documents via FR-032 Tab 6 (upload, replace, delete); admin role shifted to oversight and supplementary uploads. Updated tab to display all documents with "Uploaded By" badge (Provider/Admin); Admin can view all documents, upload additional documents received externally (email, postal mail), and add notes, but cannot replace/delete provider-uploaded documents (only provider can via FR-032); Admin-uploaded documents show "Admin - [name]" badge and admin has full control over these. Added bidirectional document sync (FR-032 ↔ FR-015 within 1 minute); Updated Business Rules to clarify provider primary management vs. admin oversight model; Added sort/filter options, audit logging enhancements, and comprehensive use case notes. Aligns with FR-032 v1.2 which added full document management capabilities for providers | Claude (AI Assistant) |
+| 2025-12-08 | 1.3 | **Constitution & System PRD alignment update:** <br>• Updated REQ-015-015 to reference the platform-wide password policy from the Hairline Platform Constitution and shared authentication spec (minimum 12 characters, required character classes, bcrypt with minimum cost factor 12, not configurable per FR)<br>• Clarified that sensitive actions (Commission and Seat Limit changes, Commission editing) require admin re-authentication via password in MVP, and MUST transition to MFA-based re-authentication once the shared MFA stack from FR-026 / FR-031 is delivered (all MFA references in this FR are future, non-MVP behavior)<br>• Aligned high-level system behaviour with system-prd.md FR-015 by explicitly reflecting the record-keeping-only document model and Percentage/Flat Rate commission configuration (tier-based commissions deferred to a future FR) | Claude (AI Assistant) |
 
 ---
 
