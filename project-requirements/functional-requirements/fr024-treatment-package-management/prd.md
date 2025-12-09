@@ -20,10 +20,10 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: Views treatment information and package details within provider quotes
+- **Patient Platform (P-02)**: Views treatment information and package details within provider quotes
 - **Provider Platform (PR-06)**: Manages their own packages and selects from admin-created treatments when building quotes
 - **Admin Platform (A-09)**: Creates and manages the master treatment catalog available to all providers
-- **Shared Services (S-XX)**: None specific to this module
+- **Shared Services (S-05)**: Media storage and CDN delivery for treatment/package assets
 
 ### Multi-Tenant Breakdown
 
@@ -315,7 +315,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ## Screen Specifications
 
-### Admin Platform (A-XX)
+### Admin Platform (A-09: System Settings & Configuration)
 
 #### Screen 1: Admin Treatment Catalog (List View)
 
@@ -393,47 +393,9 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 ---
 
-### Provider Platform (PR-XX)
+### Provider Platform (PR-06: Profile & Settings Management)
 
-#### Screen 3: Provider Package Catalog (List View)
-
-**Purpose**: Display all packages created by provider, allow filtering by package type, provide access to create/edit/deactivate packages
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Package Name | text | Yes | Display name of package | Max 100 chars |
-| Package Type | badge | Yes | Category: Hotel, Transport, Flights, Medication, PRP, Consultation, Custom | Display as colored badge |
-| Pricing | number | Yes | Package price | Format with currency symbol |
-| Duration | text | No | e.g., "5 nights", "1 session" | Display if applicable |
-| Availability | badge | Yes | "Available" (green) or "Unavailable" (gray) | Visual indicator |
-| Usage Count | number | N/A | Number of quotes including this package | Calculated field |
-| Last Updated | date | N/A | Timestamp of last modification | Auto-generated |
-| Actions | buttons | N/A | Edit, Clone, Deactivate, View Details buttons | N/A |
-
-**Business Rules**:
-
-- Available packages appear at top of list, unavailable packages at bottom
-- Search box filters by package name in real-time
-- Filter dropdown allows filtering by package type
-- "Create New Package" button always visible at top right
-- Clone button creates copy of package for quick variations
-- Deactivate button warns if package is in active quotes
-- Usage count shows how many times package has been included in quotes
-- Packages can be sorted by name, price, type, or usage count
-
-**Notes**:
-
-- Use card-based layout showing package thumbnail if image uploaded
-- Display package type with color-coded badges (Hotel = blue, Transport = green, etc.)
-- Show quick-edit pencil icon on hover for fast price updates
-- Pagination: 20 packages per page
-- Provide bulk actions: "Deactivate Selected", "Export to CSV"
-
----
-
-#### Screen 4: Provider Treatment Pricing Configuration
+#### Screen 3: Provider Treatment Pricing Configuration
 
 **Purpose**: Allow provider to view admin-created treatments, configure pricing for treatments they want to offer, enable/disable treatments
 
@@ -472,6 +434,44 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Highlight treatments not yet configured with banner at top
 - Save button becomes "Update" button when editing existing configuration
 - Display confirmation message: "Treatment pricing saved successfully"
+
+---
+
+#### Screen 4: Provider Package Catalog (List View)
+
+**Purpose**: Display all packages created by provider, allow filtering by package type, provide access to create/edit/deactivate packages
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Package Name | text | Yes | Display name of package | Max 100 chars |
+| Package Type | badge | Yes | Category: Hotel, Transport, Flights, Medication, PRP, Consultation, Custom | Display as colored badge |
+| Pricing | number | Yes | Package price | Format with currency symbol |
+| Duration | text | No | e.g., "5 nights", "1 session" | Display if applicable |
+| Availability | badge | Yes | "Available" (green) or "Unavailable" (gray) | Visual indicator |
+| Usage Count | number | N/A | Number of quotes including this package | Calculated field |
+| Last Updated | date | N/A | Timestamp of last modification | Auto-generated |
+| Actions | buttons | N/A | Edit, Clone, Deactivate, View Details buttons | N/A |
+
+**Business Rules**:
+
+- Available packages appear at top of list, unavailable packages at bottom
+- Search box filters by package name in real-time
+- Filter dropdown allows filtering by package type
+- "Create New Package" button always visible at top right
+- Clone button creates copy of package for quick variations
+- Deactivate button warns if package is in active quotes
+- Usage count shows how many times package has been included in quotes
+- Packages can be sorted by name, price, type, or usage count
+
+**Notes**:
+
+- Use card-based layout showing package thumbnail if image uploaded
+- Display package type with color-coded badges (Hotel = blue, Transport = green, etc.)
+- Show quick-edit pencil icon on hover for fast price updates
+- Pagination: 20 packages per page
+- Provide bulk actions: "Deactivate Selected", "Export to CSV"
 
 ---
 
@@ -533,10 +533,10 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Privacy Rule 1**: Provider package catalogs are private (not visible to other providers)
 - **Privacy Rule 2**: Admin can view provider packages in read-only mode for support purposes only
-- **Privacy Rule 3**: Treatment videos and images are publicly accessible via CDN (no authentication required)
+- **Privacy Rule 3**: Treatment videos and images are served via CDN using time-limited, signed URLs (no unauthenticated bulk access)
 - **Privacy Rule 4**: Package images are accessible only to patients viewing quotes from that provider
 - **Audit Rule**: All treatment and package modifications logged with timestamp, user, and action
-- **Data Retention**: Deactivated treatments and packages archived, not deleted (7-year retention for audit)
+- **Data Retention**: Deactivated treatments and packages archived, not deleted, with retention period governed by FR-023: Data Retention & Compliance
 
 ### Admin Editability Rules
 
@@ -590,6 +590,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Package names and descriptions
 - All UI labels and error messages
 
+Before production release, implementation must ensure all treatment- and package-related strings are registered with the translation management system defined in FR-021 (translation readiness checklist).
+
 **Non-Translatable Content** (remains in English for consistency):
 
 - Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic)
@@ -603,7 +605,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 **Calculated Fields** (auto-generated, not user input):
 
 - **Number of Providers** (Screen 1): `COUNT(provider_treatment_pricing WHERE treatment_id = X AND status = 'Offered')`
-- **Usage Count** (Screen 3): `COUNT(quote_packages WHERE package_id = X AND quote.status IN ('submitted', 'accepted', 'scheduled'))`
+- **Usage Count** (Screen 4): `COUNT(quote_packages WHERE package_id = X AND quote.status IN ('submitted', 'accepted', 'scheduled'))`
 - **Last Updated** (all screens): Database `updated_at` timestamp, displayed in user's local timezone
 
 ---
