@@ -441,7 +441,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
 - System MUST filter providers by: location, active status, available capacity, patient explicit selection
 - Provider suggestions MUST be based on: positive reviews, admin curation
-- Patient names MUST be partially masked until quote acceptance
+- Patient names MUST be partially masked for providers until booking/payment confirmation (full identity only visible after successful payment, per Constitution)
 - Admins MAY see full patient identity (unmasked) in A-01 views for compliance and support purposes
 - Medical alerts MUST be color-coded: red (critical), yellow (standard), green (no alerts)
 - Date ranges MUST display primary range prominently with tooltip for additional ranges

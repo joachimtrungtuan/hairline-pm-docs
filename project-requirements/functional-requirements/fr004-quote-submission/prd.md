@@ -264,6 +264,8 @@ Notes:
 | Actions | actions | Yes | Accept/Decline | State & confirmation rules |
 | Notifications | note | No | New/updated/expired indicators | Read-only |
 
+**Governance Note**: This screen’s field/visual specification is defined here in FR-004, but the end-to-end patient quote comparison and acceptance flows (including edge cases, blocking rules, and booking handoff) are governed primarily by **FR-005: Quote Comparison & Acceptance (P-02)**. FR-005 may extend or refine the actions on this screen while preserving the privacy constraints and data structure specified in FR-004.
+
 ### Admin Platform
 
 #### Screen 5: Quote List (Admin)
@@ -397,7 +399,7 @@ Notes:
 
 ## Key Entities
 
-- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], clinicianId, plan, note, status, expiresAt, createdAt, updatedAt
+- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
   - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
 - **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
   - Relationships: belongsTo Quote
@@ -411,6 +413,7 @@ Notes:
 - FR-003: Inquiry Submission (quote distribution and reference)
 - FR-020: Notifications & Alerts (quote distribution/updates)
 - Admin-managed treatment catalog/package definitions (A-09)
+- FR-019: Promotions & Discount Management (A-06)
 
 ### External Dependencies (APIs, Services)
 
@@ -419,7 +422,7 @@ Notes:
 
 ### Data Dependencies
 
-- Inquiry ID, Patient anonymized ID, Provider ID, Audit log IDs
+- Inquiry ID, Patient anonymized ID, Provider ID, Promotion ID (from A-06/FR-019), Audit log IDs
 
 ## Assumptions
 
@@ -451,6 +454,7 @@ Notes:
 - FR-003: Inquiry context and distribution inputs
 - FR-020: Notifications for creation/updates/expiry/status
 - Admin (A-09): Treatment catalog/package definitions and expiry policy
+- FR-019 / A-06: Promotions & Discount Management for promotionId, promotion configuration, and discount application rules
 
 ### Scalability Considerations
 
