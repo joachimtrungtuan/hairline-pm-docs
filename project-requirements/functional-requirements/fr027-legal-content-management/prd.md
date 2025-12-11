@@ -110,14 +110,6 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
   2. On effective date, new version becomes current; prompts begin
 - Outcome: Controlled rollout with clear timing
 
-**A2: Locale‑Specific Publication**:
-
-- Trigger: Admin publishes only for selected locales or regions
-- Steps:
-  1. System targets prompts and acceptance rules by locale/region
-  2. Prior version remains current elsewhere
-- Outcome: Regionalized compliance
-
 **B1: Publication Reversion**:
 
 - Trigger: Admin needs to revert to previous version due to error
@@ -125,6 +117,155 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
   1. System marks previous version current again
   2. Prompts update accordingly; audit entry recorded
 - Outcome: Rapid recovery with traceability
+
+---
+
+## Screen Specifications
+
+### Screen 1: Admin — Legal Documents List
+
+**Purpose**: List all legal document types and versions, and provide entry points to draft, edit, preview, and publish.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Document Type | select | Yes | T&C, Privacy, Consent | Must be one of supported types |
+| Locale | select | Yes | Display locale for translation; global content only | Must be supported locale |
+| Version | text | Yes | Version identifier | Must be unique per document type |
+| Status | badge | Yes | Draft / Current / Archived | Only one Current per type |
+| Effective Date | date | Yes | Scheduled go-live date | Must be today or future |
+| Requires Acceptance | boolean | Yes | Indicates if material change gating applies | Tied to Material flag from draft |
+| Last Updated By/At | text | Yes | Audit info | Read-only |
+| Actions | buttons | Yes | Draft new version, Edit draft, View history, Preview, Publish (if draft ready) | Edit shown for Draft/Archived versions; Publish disabled unless draft passes validation |
+
+**Business Rules**:
+
+- Only authorized Admin roles can access this list.
+- Only one Current version per document type at a time; publishing a new version auto-archives the prior Current.
+- Publish action is global (no region targeting); locale is for translation display only.
+- Edit action opens the Draft/Edit screen for Draft versions; Current/Archived versions are view-only (preview/history).
+
+**Notes**:
+
+- Provide filters by Document Type, Status, and Locale.
+- Show warning banners for pending acceptance coverage below threshold.
+
+---
+
+### Screen 2: Admin — Draft/Edit Legal Document
+
+**Purpose**: Author or edit content for a legal document version prior to publication.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Document Type | select | Yes | T&C, Privacy, Consent | Locked after version creation |
+| Locale | select | Yes | Translation locale (content is uniform globally) | Must be supported locale |
+| Content | rich text editor with Markdown toggle | Yes | Full legal text | Min 200 chars; max 50k chars |
+| Change Summary | textarea | Yes | Human-readable summary of changes | Max 500 chars |
+| Material Change | boolean | Yes | Marks if re-acceptance required | Required to set acceptance gating |
+| Effective Date | date/time | Yes | When this version becomes current | Cannot be in the past |
+| Version Label | text | Yes | Semantic or numeric label | Must be unique per type |
+
+**Business Rules**:
+
+- Autosave drafts; warn on unsaved changes before exit.
+- Material Change=true triggers acceptance requirement after publish.
+- Effective Date controls activation; content remains Draft until published.
+
+**Notes**:
+
+- Provide side-by-side preview while editing.
+- Show prior version summary for context.
+- Editor supports toolbar for headings, lists, links, tables; allows paste with cleanup; block quotes disabled to avoid nesting signatures.
+
+---
+
+### Screen 3: Admin — Preview & Publish
+
+**Purpose**: Review draft content, confirm details, and publish globally.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Content Preview | read-only | Yes | Rendered legal text | N/A |
+| Version Diff Summary | read-only | Yes | Key changes vs. prior version | Must be generated from draft |
+| Effective Date | read-only | Yes | Activation time | Must be set in draft |
+| Material Change | read-only | Yes | Indicates acceptance requirement | Must match draft flag |
+| Publish Button | button | Yes | Executes publish | Disabled until all validations pass |
+
+**Business Rules**:
+
+- Publish sets status to Current on Effective Date; prior Current auto-archives.
+- Publishing logs an audit entry (who/when/what) and triggers acceptance prompts if Material Change=true.
+- Publication is global; no regional/locale targeting.
+
+**Notes**:
+
+- Show acceptance impact summary (number of users who must re-accept).
+- Provide link back to edit draft if issues are found.
+
+---
+
+### Screen 4: Admin — Acceptance Coverage Dashboard
+
+**Purpose**: Monitor acceptance coverage for current and recent versions.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Document Type | select | Yes | Filter by T&C, Privacy, Consent | Must be supported type |
+| Version | select | Yes | Target version for coverage view | Must exist |
+| Published/Eff. Dates | text | Yes | Publication and activation timestamps | Read-only |
+| Material Change | badge | Yes | Indicates gating requirement | Read-only |
+| Acceptance Rate | metric | Yes | % accepted | Computed from acceptance ledger |
+| Pending Users | list/count | Yes | Users who haven’t accepted | Supports pagination/export |
+| Reminders Sent | count | Yes | Reminder notifications issued | Read-only |
+
+**Business Rules**:
+
+- Data is read-only; reminders respect rate limits.
+- Filters by document type and version; supports date range for trend.
+
+**Notes**:
+
+- Export pending list (CSV) for follow-up.
+- Show audit link for the publication event.
+
+---
+
+### Screen 4A: Admin — Acceptance Detail List (Drilldown)
+
+**Purpose**: Provide a paginated list of users per version, showing accepted vs. not accepted with filters and export.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Document Type | select | Yes | T&C, Privacy, Consent | Must be supported type |
+| Version | select | Yes | Version for the detail list | Must exist |
+| User Filter | search/filter | No | Search by name/email/user ID | Input sanitized |
+| Status Filter | select | Yes | Accepted / Pending | Defaults to Pending |
+| Locale | select | No | Filter by locale | Must be supported locale |
+| Acceptance Timestamp | text | Yes (when accepted) | When the user accepted | Read-only |
+| Acceptance Channel | text | No | Web / Mobile | Read-only |
+| Reminder Status | text | No | Last reminder sent timestamp | Read-only |
+| Export | button | No | Export current filtered set (CSV) | Enforces rate limits |
+
+**Business Rules**:
+
+- Mirrors filters from Screen 4 and inherits selected version/type.
+- Status defaults to Pending to focus on outstanding users.
+- Export constrained by role permissions and rate limits.
+
+**Notes**:
+
+- Accessed via drilldown from Pending Users on Screen 4 or via a “View Details” link.
+- Include pagination and sorting by acceptance timestamp and user ID.
 
 ---
 
@@ -140,7 +281,6 @@ As an Admin, I can draft, preview, and publish a new version of a legal document
 
 1. Given a draft version, When Admin publishes with an effective date, Then the system sets it as current at the scheduled time and archives the prior version
 2. Given a published version, When Admin reviews audit logs, Then the change is recorded with who/when/what changed
-3. Given locale‑specific publication, When Admin targets a region, Then only users in targeted locales are prompted
 
 ### User Story 2 — Accept New Terms (Priority: P1)
 
@@ -178,7 +318,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 - **REQ-027-001**: Admins MUST be able to create, edit, preview, and publish legal documents (T&C, Privacy, Consent)
 - **REQ-027-002**: System MUST maintain version history with timestamps and change tracking; previous versions are preserved for reference
-- **REQ-027-003**: Admins MUST be able to schedule an effective date and target locales/regions for publication
+- **REQ-027-003**: Admins MUST be able to schedule an effective date for publication; publication applies globally (no regional variants)
 - **REQ-027-004**: System MUST require acceptance for material changes as configured, prompting users appropriately
 - **REQ-027-005**: System MUST track which user accepted which document type and version, with timestamp and locale displayed
 - **REQ-027-006**: System MUST provide a coverage view for Admin to see acceptance status and follow‑up needs
@@ -186,7 +326,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Data Requirements
 
-- **REQ-027-008**: Legal document entities MUST include: type, locale, version, status (draft/current/archived), effective date, change summary
+- **REQ-027-008**: Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/current/archived), effective date, change summary
 - **REQ-027-009**: Acceptance records MUST include: user, document type, version, timestamp, locale, and acceptance channel
 - **REQ-027-010**: Version comparisons MUST present human‑readable change summaries (no raw diffs required for end‑users)
 
@@ -206,6 +346,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 - CL‑1: Enforcement for existing users — Block core actions until acceptance; allow read‑only access where safe. Show rate‑limited reminders. Gating occurs at sign‑in and before core transactional flows.
 - CL‑2: Material vs. minor changes — Material includes changes to obligations, data use/sharing, user rights, or liability; Minor includes formatting, typo fixes, or clarifications without policy change. Only material changes require re‑acceptance; Admin marks the publish accordingly.
 - CL‑3: Locale handling — If a localized version is unavailable, default to the primary language and display a discreet notice. Log a task to add the missing locale. Acceptance using the fallback is considered valid.
+- CL‑4: Regional customization — Legal content is uniform globally; no location‑based variants or region‑specific publication paths are required.
 
 ---
 
