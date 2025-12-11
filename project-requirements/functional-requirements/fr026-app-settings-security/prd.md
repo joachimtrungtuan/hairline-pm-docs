@@ -45,11 +45,11 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Discovery questions ("How did you find us?") display options from centralized list
 - Changes to settings propagate to patient app within 1 minute
 
-**Provider Platform (PR-06)**:
+**Provider Platform (PR-06 & PR-01)**:
 
-- Provider staff management indirectly uses centrally managed lists
-- Authentication throttling applies to provider login attempts
-- OTP parameters apply to provider email verification flows
+- Provider staff management (PR-06) indirectly uses centrally managed lists
+- Authentication throttling (PR-01) applies to provider login attempts
+- OTP parameters (PR-01) apply to provider email verification flows
 
 **Admin Platform (A-09)**:
 
@@ -105,7 +105,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 ### Main Flow: Admin Edits Authentication Throttling Policy
 
-**Actors**: Admin, System, Patient Platform (P-01), Provider Platform (PR-06)
+**Actors**: Admin, System, Patient Platform (P-01), Provider Platform (PR-01)
 **Trigger**: Admin determines that current lockout policy (5 attempts, 15-minute lockout) is too strict and needs adjustment
 **Outcome**: Updated throttling policy (7 attempts, 10-minute lockout) is saved, versioned, audited, and propagated to all platforms within 1 minute
 
@@ -561,7 +561,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ### Data Integrity Metrics
 
-- **SC-010**: Zero production incidents linked to settings drift after enabling versioning and rollback
+- **SC-010**: Zero production incidents linked to settings drift after enabling versioning and forward-only changes
 - **SC-011**: 100% of setting changes successfully propagate to all dependent services (no data loss)
 - **SC-012**: Audit logs capture 100% of changes with no gaps or missing entries
 
@@ -596,6 +596,10 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: S-03 consumes OTP email templates for verification and password reset emails
   - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 1 minute
+
+- **Module S-05: Media Storage Service**
+  - **Why needed**: S-05 stores country flag assets (SVG/PNG) uploaded via Country Manager UI
+  - **Integration point**: Settings UI uploads flag file to S-05 API, receives URL, and stores URL in country settings
 
 - **FR-024 / Module A-09: Treatment & Package Management**
   - **Why needed**: Treatments are admin-created foundation items managed through Settings UI
@@ -720,6 +724,26 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
     4. Template containing `<div style="background:url('javascript:alert(1)')">` MUST strip dangerous CSS
     5. Template containing `{code}<script>alert(1)</script>` MUST render variable substitution but sanitize script tag
 - **Compliance**: Audit logs retained for 10 years per compliance requirements; immutable (no deletion)
+
+### Initial Configuration / Seeding
+
+**Database Seeding Requirements**:
+
+- **Authentication Throttling**:
+  - Max Login Attempts: 5
+  - Lockout Duration: 15 minutes
+- **OTP Configuration**:
+  - Expiry Time: 15 minutes
+  - Resend Cooldown: 60 seconds
+  - Max Resend Attempts: 5 per hour
+- **Discovery Questions**:
+  - Initial Option 1: "Search Engine" (Order: 1)
+  - Initial Option 2: "Social Media" (Order: 2)
+  - Initial Option 3: "Friend Recommendation" (Order: 3)
+- **Countries**:
+  - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
+- **Templates**:
+  - Default "Verification Email" and "Password Reset Email" templates MUST be seeded with standard branding and variables
 
 ---
 
@@ -853,7 +877,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - **REQ-026-014**: System MUST mask sensitive values (API keys, secrets) in UI and audit logs (display as "••••••••" or "[REDACTED]")
 - **REQ-026-015**: System MUST restrict "View Sensitive Settings" permission to authorized admins only
 - **REQ-026-016**: System MUST encrypt sensitive values at rest using AES-256
-- **REQ-026-017**: System MUST enforce multi-factor authentication for admin access to Settings Management UI
+- **REQ-026-017**: Multi-factor authentication for admin access to Settings Management UI is a future (non-MVP) requirement and MUST be enforced once the shared MFA stack (FR-031) is delivered.
 - **REQ-026-018**: System MUST rate limit Settings API to 100 requests/minute per admin to prevent abuse
 - **REQ-026-019**: System MUST retain audit logs for minimum 10 years per compliance requirements
 - **REQ-026-020**: System MUST validate all admin inputs to prevent XSS, SQL injection, command injection attacks
