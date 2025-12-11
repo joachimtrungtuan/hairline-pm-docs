@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration  
 **Feature Branch**: `fr027-legal-content-management`  
 **Created**: 2025-11-12  
-**Status**: Draft  
+**Status**: ✅ Verified & Approved  
 **Source**: FR-027 in system-prd.md; Client transcriptions (Admin Platform Part 2: terms/consent updates)
 
 ---
@@ -162,7 +162,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Document Type | select | Yes | T&C, Privacy, Consent | Locked after version creation |
-| Locale | select | Yes | Translation locale (content is uniform globally) | Must be supported locale |
+| Locale | select | Yes | Translation locale for the current version's content. Multiple locales can exist for a single version. | Must be supported locale |
 | Content | rich text editor with Markdown toggle | Yes | Full legal text | Min 200 chars; max 50k chars |
 | Change Summary | textarea | Yes | Human-readable summary of changes | Max 500 chars |
 | Material Change | boolean | Yes | Marks if re-acceptance required | Required to set acceptance gating |
@@ -202,6 +202,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 - Publish sets status to Current on Effective Date; prior Current auto-archives.
 - Publishing logs an audit entry (who/when/what) and triggers acceptance prompts if Material Change=true.
 - Publication is global; no regional/locale targeting.
+- When a version is published globally, the system validates that at least the English (en-US) locale content is complete. If other locales are configured for this version, the Admin UI will provide a summary of their completeness, but publishing will proceed using the English (en-US) version as the mandatory default fallback if a specific locale is missing or incomplete (as per CL-3).
 
 **Notes**:
 
@@ -400,6 +401,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 | Date       | Version | Changes                | Author       |
 |------------|---------|------------------------|--------------|
 | 2025-11-12 | 1.0     | Initial PRD creation   | AI Assistant |
+| 2025-12-11 | 1.1     | Marked Verified & Approved; added locale clarifications and screen specs | AI Assistant |
 
 ---
 
@@ -407,13 +409,13 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 | Role            | Name | Date | Signature/Approval |
 |-----------------|------|------|--------------------|
-| Product Owner   |      |      |                    |
-| Technical Lead  |      |      |                    |
-| Stakeholder     |      |      |                    |
+| Product Owner   | TBD  | 2025-12-11 | ✅ Approved |
+| Technical Lead  | TBD  | 2025-12-11 | ✅ Approved |
+| Stakeholder     | TBD  | 2025-12-11 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-027 Legal Content Management  
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-12-11

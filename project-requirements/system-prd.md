@@ -1377,7 +1377,7 @@ Total Quote:                           £3,000
 
 ### FR-027: Legal Content Management
 
-**Priority**: P3 (Future)
+**Priority**: P1 (MVP Cross-Cutting)
 **Module(s)**: A-09: System Settings & Configuration
 
 **Goal**: Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms) with versioning, preview, and audit trail capabilities.
