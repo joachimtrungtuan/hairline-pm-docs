@@ -21,7 +21,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - **Patient Platform (P-02)**: Quote Request & Management  
 - **Provider Platform (PR-02)**: Inquiry & Quote Management  
 - **Admin Platform (A-01)**: Patient Management & Oversight  
-- **Shared Services (S-XX)**: Notification service, audit logging, retention/archival utilities
+- **Shared Services (S-03, S-06)**: Notification service, audit logging, retention/archival utilities
 
 ### Multi-Tenant Breakdown
 
@@ -45,7 +45,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - Soft-delete/restore capabilities with audit trail.  
 - Conflict resolution (rare): e.g., simultaneous accept attempts; manual remediation with rationale.
 
-**Shared Services (S-XX)**:
+**Shared Services (S-03, S-06)**:
 
 - Notifications for acceptance/expiry events and auto-cancellation of non-selected quotes.  
 - Audit logging service for all state transitions.  
@@ -57,6 +57,8 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 - System → Patient: Quote update/expiry/acceptance notifications.  
 - Patient → System: Accept action on eligible quotes (acceptance auto-cancels all other quotes).  
+- Patient → Hairline Support: Ask questions about quotes via secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support).  
+- System → Hairline Support: Notify support of patient quote questions within 5 minutes.  
 - System → Provider: Acceptance outcome and auto-cancellation updates for non-selected quotes.  
 - Admin → All: Oversight and policy-bound interventions.
 
@@ -149,7 +151,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Estimated Travel Costs | currency | No | Estimated travel costs to destination | Derived from A-09 baseline travel estimate table (until FR-008 provides live estimates) |
 | Expiry Timer | timer | Yes | Countdown until quote expiry | Derived from FR-004 settings; per quote |
 | Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
-| Actions | buttons | Yes | View Details, Accept | State-aware enabling; per quote |
+| Actions | buttons | Yes | View Details, Accept, Ask Question | State-aware enabling; per quote; Ask Question routes to Hairline Support via FR-012 |
 | Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
 | Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
 
@@ -274,6 +276,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 - Acceptance prepares booking/payment handoff; no funds are collected in this module.  
 - Selected quote’s pre-scheduled appointment slot (date/time) and associated pricing feed the next module for payment intent creation.  
+- On acceptance, the system MUST ensure the quote exchange rate is locked at the time of acceptance per FR-004 / System PRD pricing rules.  
 - Pricing and discounts shown are those defined in FR-004; acceptance does not modify financial terms.
 - Post-Acceptance Hold: After acceptance, the system reserves the pre-selected appointment slot for 48 hours to allow the patient to complete the initial payment (deposit or first installment) in FR-006. If payment is not completed within 48 hours, the reservation is released and the slot may be reallocated by the provider.
 
@@ -317,6 +320,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - **FR-003 / P-02, PR-02, A-01**: Inquiry submission & distribution (source inquiry and medical context).  
 - **FR-004 / PR-02**: Quote submission & lifecycle (quotes, expiry, withdrawal, audit).  
 - **FR-020 / S-03**: Notifications & alerts (event delivery).  
+- **FR-012 / P-06, A-10**: Messaging & communication (Patient ↔ Hairline Support quote questions).  
 - **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
 - **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary).  
 - **FR-008 / P-03** (or **A-09**): Travel cost data/estimation inputs for "Estimated Travel Costs" field.  
@@ -435,6 +439,9 @@ Patient attempts to accept a quote that has expired.
 - **REQ-005-012**: System MUST allow patients to filter and sort quotes by defined comparison criteria.  
 - **REQ-005-013**: System MUST support side-by-side comparison view of up to 3 quotes.  
 - **REQ-005-014**: System MUST display comparison differentiators: price per graft, review rating/count, provider credentials summary, included services checklist, and estimated travel costs.
+- **REQ-005-015**: Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support).  
+- **REQ-005-016**: System MUST notify Hairline support of patient quote questions within 5 minutes.  
+- **REQ-005-017**: System MUST lock quote exchange rate at time of patient acceptance (per FR-004 pricing rules).
 
 ---
 

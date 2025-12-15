@@ -520,7 +520,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support)
 - System MUST notify Hairline support of patient questions within 5 minutes
 - Patients MUST be able to accept one quote at a time
-- System MUST mark other quotes as "not selected" when one is accepted
+- System MUST mark other quotes as "cancelled (other accepted)" when one is accepted
 - System MUST notify patient and provider immediately upon quote acceptance
 
 **Comparison Features**:
