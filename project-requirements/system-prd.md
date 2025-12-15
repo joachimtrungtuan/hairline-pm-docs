@@ -517,8 +517,8 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Patients MUST be able to view all received quotes in comparison dashboard
 - System MUST display key differentiators: price, graft count, reviews, credentials
 - Patients MUST be able to filter and sort quotes by criteria
-- Patients MUST be able to ask questions to providers through secure messaging
-- System MUST notify providers of patient questions within 5 minutes
+- Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support)
+- System MUST notify Hairline support of patient questions within 5 minutes
 - Patients MUST be able to accept one quote at a time
 - System MUST mark other quotes as "not selected" when one is accepted
 - System MUST notify patient and provider immediately upon quote acceptance
@@ -965,6 +965,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
   - Currently unclear from requirements if this is needed
   - Patients can communicate with Hairline support who can relay messages if needed
   - May be added in V2 if business case is validated
+  - Quote Q&A should be specified in FR-012; other FRs (e.g., FR-005) should reference this capability rather than redefining it
 
 ---
 

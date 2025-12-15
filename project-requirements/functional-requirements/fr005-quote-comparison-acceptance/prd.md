@@ -62,7 +62,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 **Out of Scope**:
 
-- Direct patient-provider chat (handled by future FR-012).  
+- Direct patient-provider chat (see FR-012: Messaging & Communication).  
 - Payment collection and invoice issuance (handled in Booking & Payment FR).  
 - Revealing patient contact/identity to provider prior to payment confirmation.
 
@@ -135,9 +135,18 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Timeline | timeline | Yes | Chronological status changes | Timestamps present |
 | Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
 | Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
+| Sort & Filter | controls | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined |
+| Compare Selection | checkbox | No | Select quotes to compare side-by-side (max 3) | Max 3 selected |
+| Comparison View | panel | No | Side-by-side comparison of selected quotes | Renders only when ≥2 selected |
 | Treatment | text | Yes | Treatment name from catalog | Read-only; per quote |
 | Inclusions | chips | No | Package/customizations | Read-only; per quote |
+| Included Services | checklist | No | Included services checklist | Derived from quote inclusions; per quote |
 | Per-date Pricing | table | Yes | Price for each offered date | All dates priced; per quote |
+| Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time for this quote | Read-only; sourced from FR-004 |
+| Price per Graft | number | Yes | Derived unit price (total ÷ graft count) | Calculated; per quote |
+| Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 |
+| Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
+| Estimated Travel Costs | currency | No | Estimated travel costs to destination | Derived from A-09 baseline travel estimate table (until FR-008 provides live estimates) |
 | Expiry Timer | timer | Yes | Countdown until quote expiry | Derived from FR-004 settings; per quote |
 | Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
 | Actions | buttons | Yes | View Details, Accept | State-aware enabling; per quote |
@@ -149,6 +158,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - Quotes are displayed within the inquiry dashboard context (not a separate screen).  
 - Expired/withdrawn quotes are visually disabled.  
 - Exactly one acceptance permitted per inquiry.
+- Patient can sort/filter quotes and compare up to 3 quotes side-by-side (criteria must include at least: total price, price per graft, graft count, review rating, soonest appointment slot).
 - Patient can view quote details and accept directly from the dashboard.
 
 #### Screen 2: Quote Detail with Accept Action (Extension of FR-004 Screen 4)
@@ -263,7 +273,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 ### Payment & Billing Rules (for Handoff)
 
 - Acceptance prepares booking/payment handoff; no funds are collected in this module.  
-- Selected quote’s per-date pricing and chosen date feed the next module for payment intent creation.  
+- Selected quote’s pre-scheduled appointment slot (date/time) and associated pricing feed the next module for payment intent creation.  
 - Pricing and discounts shown are those defined in FR-004; acceptance does not modify financial terms.
 - Post-Acceptance Hold: After acceptance, the system reserves the pre-selected appointment slot for 48 hours to allow the patient to complete the initial payment (deposit or first installment) in FR-006. If payment is not completed within 48 hours, the reservation is released and the slot may be reallocated by the provider.
 
@@ -307,6 +317,9 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - **FR-003 / P-02, PR-02, A-01**: Inquiry submission & distribution (source inquiry and medical context).  
 - **FR-004 / PR-02**: Quote submission & lifecycle (quotes, expiry, withdrawal, audit).  
 - **FR-020 / S-03**: Notifications & alerts (event delivery).  
+- **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
+- **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary).  
+- **FR-008 / P-03** (or **A-09**): Travel cost data/estimation inputs for "Estimated Travel Costs" field.  
 - **Upcoming FR / P-03, A-05**: Booking & Payment (payment intent, invoice, PII reveal post-payment).  
 - **A-09**: System settings (legal copy, terms acknowledgment text).
 
@@ -419,12 +432,16 @@ Patient attempts to accept a quote that has expired.
 
 - **REQ-005-010**: System MUST integrate with FR-004 for quote states and FR-020 for notifications.  
 - **REQ-005-011**: System MUST emit booking handoff payload to the Booking & Payment module.
+- **REQ-005-012**: System MUST allow patients to filter and sort quotes by defined comparison criteria.  
+- **REQ-005-013**: System MUST support side-by-side comparison view of up to 3 quotes.  
+- **REQ-005-014**: System MUST display comparison differentiators: price per graft, review rating/count, provider credentials summary, included services checklist, and estimated travel costs.
 
 ---
 
 ## Key Entities
 
 - **AcceptanceEvent**: inquiryId, acceptedQuoteId, actorId (patient), timestamp, metadata (handoff)  
+  - metadata includes pre-scheduled appointment slot (datetime + timezone) and handoff payload identifiers  
   - Relationships: belongsTo Inquiry; belongsTo Quote  
 - **Quote** (from FR-004): id, providerId, status (Accepted/Expired/Cancelled - other accepted), expiresAt  
 - **AuditEntry**: entityType, entityId, action, actorId, reason, before, after, timestamp

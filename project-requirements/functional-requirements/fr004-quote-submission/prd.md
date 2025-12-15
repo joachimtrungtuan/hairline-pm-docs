@@ -166,6 +166,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 | 3D Markup | drawing | No | Draw on 3D image | Stored with audit |
 | Treatment Dates | multiselect (dates) | Yes | Subset of patient-requested ranges | Non-overlapping; from FR-003 ranges |
 | Price per Date | repeater | Yes | Price for each selected date | Currency rules; one-to-one with dates |
+| Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time (start) | Must map to one of the selected Treatment Dates; timezone required |
 | Promotion | select/text | No | Optional promotion | Valid code or text note |
 | Clinician | select | Yes | Responsible clinician | Must be active/eligible |
 | Treatment Plan (per-day) | repeater | Yes | Consecutive per-day plan entries | No date gaps; sequential dates |
@@ -227,6 +228,7 @@ Notes:
 |  • Media/Scan | links/viewer | No | Photos/videos/3D scan viewer | Read-only |
 | Quote Summary | group | Yes | Treatment, package, custom services, per-day plan | Read-only |
 | Dates & Prices | table | Yes | Each selected date with price | One-to-one mapping; currency rules |
+| Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time (start) | Read-only; timezone required |
 | Custom Services | list | No | Provider-defined services | Name/desc/cost shown |
 | Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
 | Promotion | text/select | No | Promotion applied | Code or description |
@@ -372,7 +374,7 @@ Notes:
 
 ### Core Requirements
 
-- **REQ-004-001**: Providers MUST create, edit, and submit quotes with treatment, package, customization, dates, and per-date pricing.
+- **REQ-004-001**: Providers MUST create, edit, and submit quotes with treatment, package, customization, dates, pre-scheduled appointment slot (date/time), and per-date pricing.
 - **REQ-004-002**: System MUST enforce admin-controlled expiry window (default 48h) and compute deadlines per quote.
 - **REQ-004-003**: System MUST auto-cancel other quotes for the same inquiry upon one acceptance and notify affected providers.
 - **REQ-004-004**: System MUST support provider withdrawal after acceptance with admin resolution workflow and full audit.
@@ -399,7 +401,7 @@ Notes:
 
 ## Key Entities
 
-- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
+- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], appointmentSlotAt, appointmentTimeZone, clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
   - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
 - **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
   - Relationships: belongsTo Quote
