@@ -17,6 +17,7 @@ This configuration layer is critical because Hairline operates across multiple c
 The module delivers value by:
 
 - Enabling multi-country payment operations with region-specific Stripe account management
+- Making Stripe account assignments the rails for collecting patient payments (charges for deposits/installments) per region/country
 - Protecting revenue through configurable currency conversion markup (e.g., 5% buffer)
 - Increasing booking conversion rates by offering flexible deposit rates (20-30%) and installment plans
 - Reducing manual administrative overhead through centralized payment configuration
@@ -45,10 +46,10 @@ The module delivers value by:
 
 **Provider Platform (PR-XX)**:
 
-- Providers receive payments through the Stripe account assigned to their region
+- Patient payments are collected into the Stripe account mapped to the patient’s region; provider payouts are later executed in FR-017 using those funds (provider bank details in FR-032). Providers do not configure Stripe accounts here.
 - Providers have no direct interaction with payment system configuration
 - Providers see booking payments processed according to deposit rates and installment rules
-- Provider payout schedules follow Stripe account settings configured by admins
+- Provider payout schedules follow the Stripe account’s settlement rules, but payout processing is handled in FR-017 (Admin Billing & Financial Management)
 
 **Admin Platform (A-09: System Settings & Configuration)**:
 
@@ -63,7 +64,7 @@ The module delivers value by:
 
 **Shared Services (S-02: Payment Processing Service)**:
 
-- Payment Processing Service routes transactions to appropriate Stripe account based on patient location
+- Payment Processing Service routes patient payment transactions (deposits/installments/finals) to the appropriate Stripe account based on patient location
 - Currency conversion service fetches real-time rates and applies admin-configured markup
 - Deposit calculation service applies configured deposit rate to booking totals
 - Installment calculation service generates payment schedules based on configured options and cutoff dates
@@ -102,7 +103,7 @@ The module delivers value by:
 
 **Actors**: Admin, System, Stripe API
 **Trigger**: Admin navigates to "Payment Configuration > Stripe Accounts" and clicks "Add New Account"
-**Outcome**: New Stripe account added and mapped to specific countries/regions, ready to process payments
+**Outcome**: New Stripe account added and mapped to specific countries/regions (regional groupings defined in FR-028), ready to process patient payments for those regions
 
 **Steps**:
 
@@ -111,7 +112,7 @@ The module delivers value by:
 3. Admin enters Stripe account details (account name, publishable key, secret key, webhook secret)
 4. Admin selects "Test Mode" or "Live Mode" for the Stripe account
 5. System validates Stripe API credentials by making test connection to Stripe API
-6. Admin assigns countries or regional groupings to this Stripe account
+6. Admin assigns countries or regional groupings (from FR-028) to this Stripe account (one account per country/grouping; overrides required to replace existing mappings)
 7. Admin configures supported currencies for this Stripe account (e.g., USD, EUR, GBP)
 8. Admin sets default currency for the account
 9. Admin reviews configuration summary and clicks "Save & Activate"
@@ -198,9 +199,9 @@ The module delivers value by:
 - **Steps**:
   1. Admin attempts to assign countries to new Stripe account that overlap with existing account
   2. System detects conflict and displays warning: "Countries [list] are already assigned to Stripe account [name]"
-  3. Admin selects conflict resolution: "Override" (replace existing assignment) or "Add as Secondary" (both accounts can serve region)
+  3. Admin must choose "Override" to replace existing assignment (no secondary accounts; one account per country/regional grouping)
   4. Admin confirms override action
-  5. System updates country-to-account mappings, prioritizing most recently configured account
+  5. System updates country-to-account mappings, replacing prior assignment with the new account
   6. System propagates updated mappings to Payment Processing Service
   7. System logs conflict resolution to audit trail
 - **Outcome**: New Stripe account assigned to region, replacing or supplementing previous assignment
@@ -343,7 +344,7 @@ The module delivers value by:
 | Secret Key | password | Yes | Stripe secret API key (starts with sk_) | Must start with "sk_test_" or "sk_live_", max 200 chars |
 | Webhook Secret | password | Yes | Stripe webhook signing secret | Min 32 chars, max 200 chars |
 | Account Mode | select | Yes | Test Mode or Live Mode | Must select one option |
-| Assigned Countries | multi-select | Yes | Countries or regional groupings served by this account | Must select at least one country |
+| Assigned Countries | multi-select | Yes | Countries **or** regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Must select at least one; each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |
 | Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency |
 | Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies |
 | Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) |
@@ -351,7 +352,8 @@ The module delivers value by:
 **Business Rules**:
 
 - Stripe API credentials must be validated before account can be activated (test connection to Stripe API)
-- Same country can be assigned to multiple Stripe accounts (system prioritizes most recent assignment)
+- One account per country/regional grouping (from FR-028); reassignments require explicit override
+- Country-level assignment supersedes group-level assignment for any country already in that group (most-specific mapping wins)
 - Cannot delete Stripe account if it has processed transactions in last 90 days (archive instead)
 - Admin can test Stripe connection at any time by clicking "Test Connection" button
 - Webhook secret is required for payment event verification and cannot be left blank
@@ -365,6 +367,10 @@ The module delivers value by:
 - Provide inline help text explaining difference between Test Mode and Live Mode
 - Display transaction count and total volume processed by each account (last 30 days) for admin reference
 - Use password masking for Secret Key and Webhook Secret fields, with "Show" toggle button
+- Include "Test Connection" action button that opens a modal/sub-screen:
+  - Shows account name, mode (Test/Live), and endpoint being validated
+  - On submit, system calls Stripe with provided keys/webhook secret; displays success/failure with error details
+  - Logs test attempt (admin, timestamp, result) and updates "Last Tested" timestamp/status badge
 
 ---
 
@@ -378,7 +384,7 @@ The module delivers value by:
 |------------|------|----------|-------------|------------------|
 | Conversion Rate Source | select | Yes | API provider for currency rates (e.g., xe.com, fixer.io, manual entry) | Must select one option |
 | API Credentials | text | Conditional | API key for selected rate source provider | Required if source is API-based (not manual) |
-| Currency Pair | multi-select | Yes | Currency pairs to configure (e.g., USD/EUR, GBP/USD) | Must select at least one pair |
+| Currency Pair | multi-select | Yes | Currency pairs to configure (USD as primary/base; e.g., USD/EUR, USD/GBP). Non-USD cross-pairs (e.g., EUR/GBP) require explicit entry; otherwise conversion uses USD pivot. | Must select at least one pair |
 | Markup Percentage | number | Yes | Percentage to add on top of fetched rate (e.g., 5%) | Range: 0-20%, decimal precision: 0.01% |
 | Rate Protection Threshold | number | Yes | Alert if rate changes more than this percentage in 24 hours | Range: 1-50%, decimal precision: 0.1% |
 | Sync Frequency | select | Yes | How often to fetch updated rates (e.g., every 6 hours, every 12 hours, daily) | Must select one option |
@@ -395,6 +401,7 @@ The module delivers value by:
 - Manual entry mode allows admin to set fixed conversion rates (no API sync), useful for stable currency pairs
 - System uses last successfully fetched rates if API sync fails (displays "using cached rates" warning)
 - Currency pairs must match currencies supported by configured Stripe accounts
+- USD is the pivot/base currency for display and storage. Cross-currency conversions (e.g., EUR→GBP) use USD as pivot unless an explicit pair is configured. Manual entry and display should show rates relative to USD to reduce confusion.
 
 **Notes**:
 
@@ -592,7 +599,7 @@ The module delivers value by:
 
 - **FR-028 / Module A-09**: Regional Configuration & Pricing
   - **Why needed**: Stripe account assignments must align with regional groupings defined in FR-028
-  - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions
+  - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions; FR-028 enforces one-country-to-one-grouping, so Stripe account mapping must respect that uniqueness (conflicts resolved via override)
 
 - **FR-006 / Module P-03**: Booking & Scheduling
   - **Why needed**: Booking flow uses configured deposit rates to calculate deposit amount at booking confirmation
@@ -639,7 +646,7 @@ The module delivers value by:
 
 - **Entity 2**: Regional Groupings and Country Mappings
   - **Why needed**: Cannot map Stripe accounts to regions without defined regional groupings
-  - **Source**: Regional Configuration & Pricing module (FR-028 / A-09)
+  - **Source**: Regional Configuration & Pricing module (FR-028 / A-09), which enforces one country per grouping; Stripe mappings must honor that uniqueness
 
 - **Entity 3**: Active Booking Records with Procedure Dates
   - **Why needed**: Cannot calculate installment schedules without knowing booking date and procedure date

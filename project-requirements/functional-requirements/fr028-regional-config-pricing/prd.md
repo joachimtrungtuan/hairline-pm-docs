@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration | P-02: Quote Request & Management | PR-02: Inquiry & Quote Management
 **Feature Branch**: `fr028-regional-config-pricing`
 **Created**: 2025-11-13
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-028 from system-prd.md, Hairline-AdminPlatformPart2.txt transcription
 
 ---
@@ -120,12 +120,13 @@ This module provides the administrative infrastructure to:
    - Drags and drops destination countries into preferred order
    - First position = shown first to patients, second position = shown second, etc.
    - System displays preview of how patients from this region will see destinations
-6. Admin saves regional grouping
-7. System validates configuration completeness
-8. System saves configuration to database
-9. System clears location presentation cache
-10. System displays success confirmation: "Regional grouping saved. Changes will be live for patients within 1 minute."
-11. System logs configuration change in audit trail (admin user, timestamp, change details)
+6. Admin enters change reason (required)
+7. Admin saves regional grouping
+8. System validates configuration completeness, including change reason (10-500 chars)
+9. System saves configuration to database
+10. System clears location presentation cache
+11. System displays success confirmation: "Regional grouping saved. Changes will be live for patients within 1 minute."
+12. System logs configuration change in audit trail (admin user, timestamp, change reason, change details)
 
 ### Alternative Flows
 
@@ -136,8 +137,9 @@ This module provides the administrative infrastructure to:
   1. Admin selects existing regional grouping from list
   2. System displays current configuration (countries, location order)
   3. Admin modifies countries or reorders destinations
-  4. Admin saves changes
-  5. System validates, saves, clears cache, and confirms (same as main flow steps 7-11)
+  4. Admin enters change reason (required)
+  5. Admin saves changes
+  6. System validates, saves, clears cache, and confirms (same as main flow steps 8-12)
 - **Outcome**: Regional grouping updated; patients from affected region see updated location ordering within 1 minute
 
 **A2: Admin Deletes Regional Grouping**:
@@ -145,11 +147,11 @@ This module provides the administrative infrastructure to:
 - **Trigger**: Admin needs to remove obsolete regional grouping
 - **Steps**:
   1. Admin selects regional grouping to delete
-  2. System displays warning: "Deleting this grouping will affect patients from [X countries]. They will fall back to default location ordering. Continue?"
-  3. Admin confirms deletion
+  2. System displays warning: "Deleting this grouping will affect patients from [X countries]. They will fall back to proximity-based destination ordering. Continue?"
+  3. Admin enters change reason (required) and confirms deletion
   4. System archives grouping (soft delete) and clears cache
-  5. System displays confirmation: "Regional grouping archived. Patients from affected countries will now see default location ordering."
-- **Outcome**: Regional grouping archived; patients from affected countries fall back to default ordering
+  5. System displays confirmation: "Regional grouping archived. Patients from affected countries will now see proximity-based destination ordering."
+- **Outcome**: Regional grouping archived; patients from affected countries fall back to proximity-based ordering
 
 **B1: Admin Attempts to Save Regional Grouping Without Countries**:
 
@@ -167,6 +169,15 @@ This module provides the administrative infrastructure to:
   1. Admin attempts to save
   2. System displays validation error: "At least one destination must be ordered for this regional grouping."
   3. Admin adds destination ordering or cancels
+- **Outcome**: Configuration not saved until validation passes
+
+**B3: Admin Attempts to Save Without Change Reason**:
+
+- **Trigger**: Admin attempts to save a regional grouping change without providing a change reason
+- **Steps**:
+  1. Admin attempts to save
+  2. System displays validation error: "Change reason is required (10-500 characters)."
+  3. Admin enters change reason or cancels
 - **Outcome**: Configuration not saved until validation passes
 
 ---
@@ -190,14 +201,16 @@ This module provides the administrative infrastructure to:
 6. Admin enters starting price amount for selected destination-currency combination
    - System validates amount is positive number
    - System displays format guidance: "Enter base starting price (e.g., 2500 for £2,500)"
-7. Admin saves currency-price configuration
-8. System validates configuration:
+7. Admin enters change reason (required)
+8. Admin saves currency-price configuration
+9. System validates configuration:
    - Currency is supported (exists in system currency list)
    - Price is valid positive number
    - Decimal places appropriate for currency (2 for GBP/EUR/USD, 0 for JPY)
-9. System saves pricing configuration to database
-10. System displays success confirmation: "Starting price for [Location] in [Currency] set to [Amount]."
-11. System logs pricing change in audit trail
+   - Change reason is present and within 10-500 chars
+10. System saves pricing configuration to database
+11. System displays success confirmation: "Starting price for [Location] in [Currency] set to [Amount]."
+12. System logs pricing change in audit trail (admin user, timestamp, change reason, change details)
 
 **Alternative Flows**:
 
@@ -209,8 +222,9 @@ This module provides the administrative infrastructure to:
   2. Admin selects destination location
   3. Admin enables fallback pricing option
   4. Admin enters fallback price per currency
-  5. System saves fallback configuration
-  6. System confirms: "Fallback pricing enabled for [Location]. Patients from unconfigured countries will see these prices."
+  5. Admin enters change reason (required)
+  6. System saves fallback configuration
+  7. System confirms: "Fallback pricing enabled for [Location]. Patients from unconfigured countries will see these prices."
 - **Outcome**: Fallback pricing active; patients without specific regional pricing see fallback prices
 
 **A4: Admin Bulk Updates Pricing Across Multiple Currencies**:
@@ -222,7 +236,7 @@ This module provides the administrative infrastructure to:
   3. Admin selects update method (percentage increase/decrease or fixed amount adjustment)
   4. Admin enters adjustment value
   5. System displays preview of new prices for all currencies
-  6. Admin confirms or adjusts
+  6. Admin enters change reason (required) and confirms or adjusts
   7. System saves all currency price updates simultaneously
   8. System confirms: "[X] currency prices updated for [Location]."
 - **Outcome**: All currency prices for destination updated proportionally
@@ -245,6 +259,15 @@ This module provides the administrative infrastructure to:
   3. Admin navigates to General Settings > Payment System Configuration > Currency Management (FR-029) or cancels
 - **Outcome**: Price not saved for unsupported currency
 
+**B5: Admin Attempts to Save Pricing Without Change Reason**:
+
+- **Trigger**: Admin attempts to save a pricing change without providing a change reason
+- **Steps**:
+  1. Admin attempts to save
+  2. System displays validation error: "Change reason is required (10-500 characters)."
+  3. Admin enters change reason or cancels
+- **Outcome**: Pricing not saved until validation passes
+
 ---
 
 ### Main Flow: Patient Views Personalized Location Recommendations
@@ -264,7 +287,7 @@ This module provides the administrative infrastructure to:
    - First location in regional config displayed first
    - Second location displayed second
    - Continue through configured order
-   - Additional locations not in config appear at end in default order
+   - Additional locations not in config appear at end ordered by proximity to patient location
 7. For each displayed location, system fetches starting price:
    - System identifies patient's currency preference (from profile or location default)
    - System queries pricing configuration for [Location + Currency] combination
@@ -285,7 +308,7 @@ This module provides the administrative infrastructure to:
 - **Trigger**: Patient's country is not assigned to any regional grouping
 - **Steps**:
   1. System detects no matching regional grouping
-  2. System falls back to default location ordering (alphabetical or admin-defined default)
+  2. System falls back to proximity-based location ordering (FR-003 default behavior)
   3. System displays all available destinations in default order
   4. Starting prices displayed using fallback pricing or system defaults
 - **Outcome**: Patient sees all destinations in default order with appropriate pricing
@@ -318,6 +341,7 @@ This module provides the administrative infrastructure to:
 | Countries | Multi-select | Yes | List of countries that belong to this grouping | At least 1 country must be selected |
 | Location Order | Drag-and-drop list | Yes | Ordered list of destination locations to display | At least 1 location must be ordered |
 | Status | Toggle | Yes | Active/Inactive status | Active = applies to patients, Inactive = archived |
+| Change Reason | Text | Yes | Reason for grouping change (create/update/archive) | 10-500 chars |
 | Created Date | Date (read-only) | - | When grouping was created | Auto-generated |
 | Last Modified | Date (read-only) | - | When grouping was last updated | Auto-updated on save |
 | Modified By | Text (read-only) | - | Admin user who last modified | Auto-populated |
@@ -325,8 +349,7 @@ This module provides the administrative infrastructure to:
 **Business Rules**:
 
 - **Unique Membership**: Each country can only belong to one regional grouping at a time. If admin attempts to add a country that already exists in another grouping, system blocks save and shows error with list of conflicting groupings.
-- **Priority Resolution**: If patient's country appears in multiple regional groupings, system applies grouping with fewest countries (most specific match)
-- **Default Fallback**: If no regional grouping matches, system uses default location ordering (configured separately)
+- **Default Fallback**: If no regional grouping matches, system orders destinations by proximity to patient location (FR-003 default behavior)
 - **Cache Propagation**: Configuration changes propagate to patient-facing APIs within 1 minute via cache invalidation
 - **Audit Trail**: All changes logged with timestamp, admin user, and change details (added/removed countries, reordered locations)
 - **Soft Delete**: Deleted groupings are archived, not permanently deleted, for audit trail purposes
@@ -358,7 +381,7 @@ This module provides the administrative infrastructure to:
 | Fallback Price | Checkbox | No | Use as fallback for unconfigured patient locations | - |
 | Last Updated | Date (read-only) | - | When price was last changed | Auto-updated |
 | Updated By | Text (read-only) | - | Admin who updated price | Auto-populated |
-| Change Reason | Text | No | Reason for price change (for audit) | Max 500 chars |
+| Change Reason | Text | Yes | Reason for price change (for audit) | 10-500 chars |
 
 **Business Rules**:
 
@@ -436,14 +459,15 @@ This module provides the administrative infrastructure to:
 - **Rule 4**: All configuration changes propagate to patient-facing APIs within 1 minute via cache invalidation (cache TTL = 60 seconds).
 - **Rule 5**: Maximum of 50 regional groupings to prevent administrative complexity (soft limit with admin warning).
 - **Rule 6**: Inactive regional groupings are retained in system but not applied to patient location presentation.
+- **Rule 7**: All create/update/archive actions require a change reason (10-500 chars)
 
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Patient location data used for regional matching is stored in patient profile (already compliant with PHI encryption requirements per Principle II)
 - **Privacy Rule 2**: Starting price estimates are public data and not subject to encryption requirements
 - **Privacy Rule 3**: Pricing history includes admin user who made changes for accountability, but not patient-level pricing data
-- **Audit Rule**: All configuration changes (regional groupings, location ordering, starting prices) logged with timestamp, admin user, and full change details
-- **Retention Rule**: Pricing history retained for 3 years for trend analysis and audit purposes
+- **Audit Rule**: All configuration changes (regional groupings, location ordering, starting prices) logged with timestamp, admin user, change reason, and full change details
+- **Retention Rule**: Pricing history and configuration change audit logs retained for 10 years (Constitution compliance)
 - **GDPR Compliance**: Patient location data handling follows existing GDPR requirements from FR-001 (no additional requirements)
 
 ### Admin Editability Rules
@@ -461,7 +485,6 @@ This module provides the administrative infrastructure to:
 
 - Cache propagation timing (1-minute TTL fixed for performance/consistency balance)
 - Currency decimal precision rules (2 decimals for major currencies, 0 for yen/won)
-- Regional grouping priority resolution algorithm (most specific = fewest countries)
 - Maximum regional groupings limit (50 groupings)
 
 **Configurable with Restrictions**:
@@ -679,7 +702,7 @@ This module provides the administrative infrastructure to:
 **Acceptance Scenarios**:
 
 1. **Given** admin has configured fallback pricing for Turkey in USD at $3,200, **When** Australian patient (no regional grouping, currency preference=AUD) views Turkey destination, **Then** patient sees "Starting from $3,200 (approx. A$4,800)" with conversion note
-2. **Given** patient is from unconfigured region, **When** patient views destination list, **Then** patient sees locations in default alphabetical order (not custom regional ordering)
+2. **Given** patient is from unconfigured region, **When** patient views destination list, **Then** patient sees locations ordered by proximity to patient location (FR-003 default behavior)
 3. **Given** admin views preview tool, **When** admin selects "Australia" as preview location, **Then** preview shows fallback indicator (e.g., info icon tooltip "Using fallback pricing - AUD pricing not configured for this location")
 
 ---
@@ -753,13 +776,13 @@ This module provides the administrative infrastructure to:
 
 - **REQ-028-009**: System MUST store regional grouping configuration with grouping name, country list, location ordering, and status (active/inactive)
 - **REQ-028-010**: System MUST store starting price configuration with location, currency, amount, effective date, expiry date, and fallback flag
-- **REQ-028-011**: System MUST maintain audit trail of all configuration changes with admin user, timestamp, and change details
+- **REQ-028-011**: System MUST maintain audit trail of all configuration changes with admin user, timestamp, change reason, and change details
 - **REQ-028-012**: System MUST retain pricing history for 3 years for trend analysis and compliance audit
 
 ### Security & Privacy Requirements
 
 - **REQ-028-013**: System MUST restrict regional configuration and pricing management to admin users with "System Configuration" role (per FR-031)
-- **REQ-028-014**: System MUST log all configuration changes with admin user ID, timestamp, IP address, and full change details for audit trail
+- **REQ-028-014**: System MUST log all configuration changes with admin user ID, timestamp, IP address, change reason, and full change details for audit trail
 - **REQ-028-015**: System MUST validate all admin inputs server-side (country codes, currency codes, positive pricing amounts) to prevent invalid configurations
 - **REQ-028-016**: System MUST rate-limit admin configuration API to 100 requests/minute per admin user to prevent abuse
 
@@ -783,7 +806,7 @@ This module provides the administrative infrastructure to:
   - **Relationships**: One location has many starting prices (one per currency) (one-to-many); one currency is used for many location starting prices (one-to-many); one admin user updates many starting prices (many-to-one)
 
 - **Entity 3 - Configuration Change Audit Log**: Tracks all changes to regional configuration and pricing for compliance and troubleshooting
-  - **Key attributes**: audit_id (PK), entity_type (regional_grouping/starting_price), entity_id (FK), admin_user_id (FK), change_timestamp, change_details (JSON with old_value/new_value), ip_address
+  - **Key attributes**: audit_id (PK), entity_type (regional_grouping/starting_price), entity_id (FK), admin_user_id (FK), change_timestamp, change_reason, change_details (JSON with old_value/new_value), ip_address
   - **Relationships**: One audit log entry references one regional grouping or starting price (polymorphic FK); one admin user creates many audit log entries (many-to-one)
 
 ---
@@ -793,6 +816,7 @@ This module provides the administrative infrastructure to:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-13 | 1.0 | Initial PRD creation from FR-028 system-prd.md and Hairline-AdminPlatformPart2.txt transcription | Claude (Sonnet 4.5) |
+| 2025-12-16 | 1.1 | Verification updates: Constitution-compliant 10-year audit retention; resolved destination ordering with FR-003 (regional config + proximity fallback); removed overlapping grouping priority logic; required change reason for all config writes; updated status to Verified & Approved | Product Team |
 
 ---
 
@@ -800,13 +824,13 @@ This module provides the administrative infrastructure to:
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | TBD | TBD | Pending |
-| Technical Lead | TBD | TBD | Pending |
-| Stakeholder | TBD | TBD | Pending |
+| Product Owner |  | 2025-12-16 | ✅ Approved |
+| Technical Lead |  | 2025-12-16 | ✅ Approved |
+| Stakeholder |  | 2025-12-16 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-13
+**Last Updated**: 2025-12-16

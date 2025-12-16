@@ -305,7 +305,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Countries | multiselect | Yes | Up to 10 preferred countries | Max 10; ordered by proximity |
+| Countries | multiselect | Yes | Up to 10 preferred countries | Max 10; ordered by FR-028 regional configuration when available, otherwise proximity |
 | Price Display | derived | No | Starting price per country | Fallback currency support |
 
 **Notes**:
@@ -322,7 +322,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Business Rules**:
 
 - Maximum 10 countries selectable
-- Countries ordered by proximity to patient location
+- Countries ordered by FR-028 regional configuration when available, otherwise by proximity to patient location
 - Starting prices displayed for transparency
 - Fallback pricing for unsupported currencies
 
@@ -1062,6 +1062,7 @@ Acceptance Scenarios:
 | 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, field tables, FR summary, entities, appendices | Product & Engineering |
 | 2025-12-01 | 1.2 | Aligned with client scope by removing unsourced budget requirement from System PRD, defining explicit inquiry payload composition, and clarifying anonymization to keep IDs visible while masking name/phone/email until payment confirmation | Product & Engineering |
+| 2025-12-16 | 1.3 | Aligned destination selection ordering with FR-028 (regional configuration when available, proximity fallback) | Product & Engineering |
 
 ## Appendix: Approvals
 
