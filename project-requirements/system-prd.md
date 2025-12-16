@@ -541,12 +541,12 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Requirements**:
 
-- Patients MUST be able to select procedure date from provider's available slots
-- System MUST integrate with provider's calendar to show real-time availability
+- Booking uses an **auto-scheduled** model: provider pre-schedules an appointment slot during quote creation (FR-004); patient accepts that specific slot in FR-005 and proceeds directly to payment in FR-006 (no slot picker in FR-006).
+- System MUST integrate with provider's calendar to validate availability at quote creation time and to block the slot upon payment-confirmed booking
 - Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of total, configured via FR-029)
 - System MUST generate booking confirmation with reference number
 - System MUST send confirmation emails to patient and provider
-- System MUST allow rescheduling up to 14 days before procedure (subject to provider approval)
+- **Rescheduling is deferred to V2**; in MVP, post-confirmation date/time changes require admin intervention or cancellation/rebooking (see FR-006 PRD)
 - System MUST enforce cancellation policy with graduated refund schedule
 - System MUST block out provider calendar upon confirmed booking
 
@@ -1649,9 +1649,9 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 - System MUST retry payment up to 3 times
 - System MUST notify patient of payment failure with clear error message
-- System MUST hold booking for 24 hours to allow patient to retry payment
-- System MUST release booking if payment not completed within 24 hours
-- System MUST notify provider of booking cancellation
+- System MUST hold the accepted quote + reserved slot for **48 hours** (admin-configurable) to allow patient to retry payment
+- System MUST release the reservation if payment not completed within the hold window
+- System MUST notify provider and patient of slot release
 
 ### EC-002: Provider Cancellation
 

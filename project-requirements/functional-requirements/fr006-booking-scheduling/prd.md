@@ -162,6 +162,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - Show clear breakdown: total amount, deposit amount, remaining balance, currency.
 - Display time zone relative labels and local time conversions for appointment slot.
 - If installment plan selected, show installment schedule and completion date (must be ≥30 days before procedure).
+- Disable installment option if procedure is less than 60 days away (per FR-007B eligibility); show explanatory message and allow Pay-in-Full.
 
 **Notes**:
 
@@ -597,6 +598,12 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - Notification templates for booking confirmations/reminders; booking confirmation content.
 - Commission settings.
 
+**Confirmed Booking Data Integrity (Admin Override)**:
+
+- Confirmed bookings are **read-only for patients and providers**.
+- Admins MAY perform emergency modifications (e.g., appointment date/time, status corrections), but MUST do so as **append-only, versioned intervention events** (who/when/what/why) rather than overwriting historical records.
+- Financial transactions (payments/refunds) remain immutable once confirmed; admin actions reference the original transaction IDs and create new adjustment/refund events as needed.
+
 **Fixed in Codebase (Not Editable)**:
 
 - Password policy and OTP length; identity unmasking rule tied to payment confirmation.
@@ -723,8 +730,8 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 ### Integration Points
 
-- Patient app to booking API for slot selection and payment initiation.
-  - Data: accepted quote ID, slot ID, payment choice, acknowledgments.
+- Patient app to booking API for payment initiation (slot is pre-scheduled and read-only).
+  - Data: accepted quote ID, pre-scheduled slot ID (read-only), payment choice, acknowledgments.
   - Auth: patient token; RBAC enforcing ownership.
   - Errors: validation feedback; recoverable payment failures.
 - Provider calendar API for blocking/unblocking; admin oversight API for audit and dispute actions.
@@ -746,11 +753,11 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 ### User Story 1 - Confirm Booking with Deposit (Priority: P1)
 
-Patient confirms a booking from an accepted quote by selecting a pre-scheduled slot and paying the deposit.
+Patient confirms a booking from an accepted quote by paying the deposit (slot is pre-scheduled in the accepted quote; no slot selection).
 
 **Why this priority**: Core conversion event from interest to revenue.
 
-**Independent Test**: Accept a quote, select slot, pay deposit, verify confirmation, calendar block, and notifications.
+**Independent Test**: Accept a quote, pay deposit, verify confirmation, calendar block, and notifications.
 
 **Acceptance Scenarios**:
 
@@ -878,9 +885,9 @@ None.
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner |  | 2025-11-12 | ✅ Approved |
-| Technical Lead |  | 2025-11-12 | ✅ Approved |
-| Stakeholder |  | 2025-11-12 | ✅ Approved |
+| Product Owner | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved |
+| Technical Lead | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved |
+| Stakeholder | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved |
 
 ---
 
