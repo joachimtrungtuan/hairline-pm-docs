@@ -80,8 +80,8 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 **Steps**:
 
 1. Patient opens Accepted Quote detail view (from FR-005) and reviews quote details including pre-scheduled appointment slot (already confirmed - no selection needed).
-2. Patient proceeds directly to payment screen (deposit or installment plan per FR-007B eligibility).
-3. System calculates required deposit (admin-configurable percentage, default 20–30% range) and presents cancellation policy.
+2. Patient proceeds directly to payment screen (deposit or installment plan per FR-029 split payment configuration and FR-007B eligibility).
+3. System queries FR-029 payment settings and calculates required deposit (admin-configurable percentage, default 20–30% range) and presents cancellation policy.
 4. Patient confirms and submits payment.
 5. Payment Service authorizes and captures deposit (or schedules installments).
 6. System sets booking to Confirmed, unmasking patient identity to provider per constitution.
@@ -94,8 +94,8 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 - **Trigger**: Patient chooses an eligible installment plan.
 - **Steps**:
-  1. System computes max installments based on time until procedure; ensures completion ≥30 days before procedure.
-  2. Schedule installment charges and reminders; mark booking Confirmed upon successful initial charge.
+  1. System determines feasible installment options based on FR-029 split payment settings (enabled installment counts, cutoff days, minimum booking amount) and procedure date constraints (completion ≥30 days before procedure).
+  2. Schedule installment charges and reminders per FR-007B; mark booking Confirmed upon successful initial charge.
 - **Outcome**: Booking confirmed; payment schedule tracked; reminders enabled.
 
 **A2: Reschedule Request (Patient-Initiated)** - **DEFERRED TO V2**:
@@ -146,7 +146,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 | Deposit Amount | number | Yes | Calculated deposit (admin-configurable %, default 20-30%) | Within configured bounds |
 | Deposit Percentage | text | Yes | Display deposit percentage used | Read-only; for transparency |
 | Remaining Balance | number | Yes | Total - Deposit | Calculated automatically |
-| Payment Option | select | Yes | Full payment or Installments (2–9 months) | Max installments based on date buffer (FR-007B) |
+| Payment Option | select | Yes | Full payment or Installments (2–9) | Feasible installment options based on FR-029 split payment settings and FR-007B schedule rules (completion ≥30 days before procedure) |
 | Installment Plan | select | Conditional | Number of installments if selected | Only shown if installment option selected |
 | Currency | text | Yes | Payment currency | Read-only; from accepted quote |
 | Cancellation Policy | text | Yes | Policy summary with refund schedule | Read-only; admin-configured |
@@ -676,7 +676,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - **FR-020 / S-03**: Notifications; confirmations, reminders, and alerts.
 - **FR-010 / PR-03**: Post-confirmation treatment execution starts on arrival.
 - **FR-026 / Module A-09**: System Settings & Configuration; deposit rate configuration, payment failure hold duration configuration.
-- **FR-029 / Module A-09**: Payment System Configuration; deposit rate configuration is managed here (admin-configurable percentage, default 20-30% range, per-provider or global settings).
+- **FR-029 / Module A-09**: Payment System Configuration; deposit, split payment, and commission settings are managed here (deposit default 20-30% range; installment options and cutoff rules; commission default 15-25% range, per-provider or global settings).
 
 ### External Dependencies (APIs, Services)
 
@@ -870,6 +870,7 @@ None.
 | 2025-11-04 | 1.1 | Major revisions: Removed slot selection step (slot auto-confirmed on quote acceptance); Added deposit rate management (admin-configurable); Deferred rescheduling to V2; Defined payment failure handling (48-hour hold); Added all 3 tenant screen specifications with data continuity; Updated provider dashboard to table-only format; Added overlapping appointment prevention logic | AI |
 | 2025-11-04 | 1.2 | Enhanced booking detail screens: Added comprehensive data from all previous stages (FR-003 inquiry, FR-004 quote, FR-005 acceptance) to provider and admin booking detail screens; Clarified deposit rate management is handled in FR-029: Payment System Configuration | AI |
 | 2025-11-12 | 1.3 | Status updated to Verified & Approved; All approvals completed | Product Team |
+| 2025-12-16 | 1.4 | Documentation alignment: Clarified installment option eligibility and payment option wording to reference FR-029 as the configuration source for deposit/split payment/commission settings (no functional change). | AI |
 
 ---
 
@@ -886,4 +887,4 @@ None.
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-12-16

@@ -3,14 +3,14 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 
 ---
 
 ## Executive Summary
 
-The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), and define split payment (installment) plans with cutoff rules.
+The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), configure platform commission rates (global default and provider-specific), and define split payment (installment) plans with cutoff rules.
 
 This configuration layer is critical because Hairline operates across multiple countries with different currencies, banking systems, and regulatory requirements. Admins need the flexibility to assign different Stripe accounts to different regions, protect the platform against currency fluctuations through configurable markup rates, and offer patients flexible payment options (2-9 installments) while ensuring full payment completion before procedure dates.
 
@@ -30,9 +30,9 @@ The module delivers value by:
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-03)**: Uses configured payment settings during booking flow (deposit calculation, installment options)
-- **Provider Platform (PR-XX)**: No direct interaction (inherits region-based payment configuration)
+- **Provider Platform (PR-05)**: No direct interaction (inherits region-based payment configuration; configuration is managed in Admin Platform)
 - **Admin Platform (A-09)**: Full payment system configuration management interface
-- **Shared Services (S-02)**: Payment Processing Service implements configured rules for Stripe integration, currency conversion, and deposit/installment calculations
+- **Shared Services (S-02)**: Payment Processing Service implements configured rules for Stripe integration, currency conversion, deposit/commission calculation, and installment rules
 
 ### Multi-Tenant Breakdown
 
@@ -44,7 +44,7 @@ The module delivers value by:
 - Patients cannot view or modify payment system configuration settings
 - Patients experience seamless payment processing using the appropriate Stripe account for their region
 
-**Provider Platform (PR-XX)**:
+**Provider Platform (PR-05: Financial Management & Reporting)**:
 
 - Patient payments are collected into the Stripe account mapped to the patient’s region; provider payouts are later executed in FR-017 using those funds (provider bank details in FR-032). Providers do not configure Stripe accounts here.
 - Providers have no direct interaction with payment system configuration
@@ -58,6 +58,7 @@ The module delivers value by:
 - Admins configure currency conversion rate sources (e.g., xe.com API integration)
 - Admins set currency conversion markup percentages (e.g., 5-10%) to protect against rate fluctuations
 - Admins configure deposit rate percentage (20-30%) globally or per provider
+- Admins configure platform commission rates (15-25%) globally or per provider (used for payout and reconciliation calculations)
 - Admins define split payment options (2-9 installments) and cutoff rules (e.g., 30 days before procedure)
 - Admins monitor payment configuration health and receive alerts for rate protection thresholds
 - Admins audit configuration change history for compliance
@@ -67,6 +68,7 @@ The module delivers value by:
 - Payment Processing Service routes patient payment transactions (deposits/installments/finals) to the appropriate Stripe account based on patient location
 - Currency conversion service fetches real-time rates and applies admin-configured markup
 - Deposit calculation service applies configured deposit rate to booking totals
+- Commission calculation service applies configured commission rate to booking totals for reconciliation and payout reporting
 - Installment calculation service generates payment schedules based on configured options and cutoff dates
 - Rate protection service monitors currency fluctuations and alerts admins when thresholds exceeded
 - Payment audit logging service tracks all transactions for compliance and reconciliation
@@ -167,6 +169,27 @@ The module delivers value by:
 12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
 13. System sends email notification to affected providers (if provider-specific change)
 
+### Main Flow: Configure Commission Rate Rules
+
+**Actors**: Admin, System
+**Trigger**: Admin navigates to "Payment Configuration > Commission Rates" to configure platform commission percentage
+**Outcome**: Commission rate configured globally or per provider, applied to all new bookings
+
+**Steps**:
+
+1. Admin clicks "Commission Rates" tab on Payment Configuration page
+2. System displays current commission rate configuration (global default and provider-specific overrides)
+3. Admin selects configuration scope: "Global Default" or "Provider-Specific"
+4. Admin sets commission percentage (range: 15-25% with validation)
+5. If provider-specific: Admin searches and selects provider(s) to apply custom rate
+6. Admin reviews summary showing which bookings will be affected (new bookings only)
+7. Admin clicks "Apply Commission Rate"
+8. System validates commission percentage is within allowed range (15-25%)
+9. System stores commission rate configuration with effective date (now) and scope (global or provider IDs)
+10. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
+11. System displays confirmation message: "Commission rate updated. New bookings will use [X]% commission rate."
+12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
+
 ### Main Flow: Configure Split Payment (Installment) Plans
 
 **Actors**: Admin, System
@@ -183,7 +206,7 @@ The module delivers value by:
 6. Admin configures installment schedule rules (e.g., equal installments, first installment = deposit, etc.)
 7. Admin reviews preview showing example installment schedules for different booking amounts and dates
 8. Admin clicks "Save Split Payment Configuration"
-9. System validates cutoff date is reasonable (e.g., minimum 7 days, maximum 90 days)
+9. System validates cutoff date is reasonable (e.g., minimum 30 days, maximum 90 days)
 10. System stores split payment rules with enabled installment options and cutoff date
 11. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
 12. System calculates which installment options will be available to patients based on booking date and procedure date
@@ -459,10 +482,10 @@ The module delivers value by:
 |------------|------|----------|-------------|------------------|
 | Enable Split Payments | toggle | Yes | Master switch to enable or disable split payment feature globally | Boolean (enabled = feature active) |
 | Available Installments | checkbox-group | Yes | Select which installment options to offer (2, 3, 4, 5, 6, 7, 8, 9) | Must select at least one if feature enabled |
-| Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 7-90 days, integer only |
+| Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 30-90 days, integer only |
 | Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only |
 | First Installment Amount | select | Yes | First installment equals deposit or equal split | Must select: "Deposit Amount" or "Equal Split" |
-| Installment Frequency | select | Yes | Payment schedule frequency (e.g., weekly, bi-weekly, monthly) | Must select one option |
+| Installment Frequency | display-only | N/A | Payment schedule frequency | Fixed: Monthly (30-day intervals) |
 | Late Payment Grace Period | number | Yes | Days after missed payment before booking cancellation | Range: 0-14 days, integer only |
 
 **Business Rules**:
@@ -475,17 +498,48 @@ The module delivers value by:
 - Late payment grace period allows patients short extension before booking cancellation (0 = no grace period)
 - Split payment configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
 - Cannot modify split payment rules for bookings with active installment plans (changes apply to new bookings only)
+- System enforces a minimum 30-day cutoff before procedure date (per system booking/payment rules); admins may increase the cutoff up to 90 days
 
 **Notes**:
 
-- Display preview calculator: "For $3,000 booking with 5 installments, 30-day cutoff, booking 90 days before procedure:"
+- Display preview calculator: "For $3,000 booking with 5 installments, 30-day cutoff, booking 210 days before procedure:"
   - First installment (deposit 25%): $750 due at booking
-  - Remaining 4 installments: $562.50 each, due every 14 days
+  - Remaining 4 installments: $562.50 each, due monthly (every ~30 days)
   - Final payment due: 30 days before procedure date
 - Show example scenarios for different booking amounts and installment options
 - Provide "Preview Installment Schedule" button that generates detailed payment schedule
 - Display warning if cutoff days is very aggressive (e.g., >60 days): "This may limit installment availability"
 - Show statistics: "In last 30 days, 42% of bookings used installment plans (avg: 3.8 installments)"
+
+---
+
+### Screen 5: Commission Rate Configuration
+
+**Purpose**: Allows admins to configure platform commission rates (global default and provider-specific overrides) used in billing, reconciliation, and provider payout calculations
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Configuration Scope | radio | Yes | Global Default or Provider-Specific | Must select one option |
+| Global Commission Rate | number | Conditional | Default commission percentage applied platform-wide | Range: 15-25%, decimal precision: 0.1%, required if scope is Global |
+| Provider Search | search | Conditional | Search for provider by name or ID | Required if scope is Provider-Specific |
+| Selected Providers | list | Conditional | List of providers for custom commission rate | Required if scope is Provider-Specific |
+| Provider Commission Rate | number | Conditional | Custom commission percentage for selected providers | Range: 15-25%, decimal precision: 0.1%, required if scope is Provider-Specific |
+| Effective Date | display-only | N/A | Shows when this rate takes effect (applies to new bookings) | Auto-populated: current timestamp |
+
+**Business Rules**:
+
+- Commission rate changes apply to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
+- Provider-specific commission rates override global default rate for selected providers
+- System calculates commission amount by multiplying booking total by commission rate percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
+- Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
+- All commission rate changes must be logged to audit trail with before/after state
+
+**Notes**:
+
+- Display preview calculation: "For $2,000 booking, 20% commission = $400"
+- Provide in-app link from reconciliation/payout screens to commission configuration (read-only for non-authorized roles)
 
 ---
 
@@ -504,9 +558,10 @@ The module delivers value by:
 - **Privacy Rule 1**: Stripe API secret keys and webhook secrets must be encrypted at rest using AES-256 encryption
 - **Privacy Rule 2**: Stripe secret keys must never be logged in plain text to audit logs or error logs (mask all but last 4 characters)
 - **Privacy Rule 3**: Admin access to payment configuration must require elevated permissions (not available to standard admin users)
+- **Privacy Rule 4**: Stripe webhook signatures must be verified for all incoming webhook events using the configured webhook secret
 - **Audit Rule**: All payment configuration changes must be logged with before/after state for audit compliance
 - **Compliance Rule**: Payment data handling must comply with PCI DSS requirements (no storage of full card numbers, CVVs, or PINs)
-- **Data Retention**: Payment configuration history retained for 7 years for financial audit and compliance purposes
+- **Data Retention**: Payment configuration audit history retained for 10 years for financial audit and compliance purposes
 
 ### Admin Editability Rules
 
@@ -515,15 +570,17 @@ The module delivers value by:
 - Stripe account credentials, assigned countries, supported currencies, and active/inactive status
 - Currency conversion rate source, API credentials, markup percentages, and rate protection thresholds
 - Deposit rate percentage (20-30% range) globally or per provider
-- Split payment available installment options (2-9), cutoff days (7-90), minimum booking amount ($100-$10,000)
-- Installment schedule rules (first installment amount, frequency, late payment grace period)
+- Commission rate percentage (15-25% range) globally or per provider
+- Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
+- Installment schedule rules (first installment amount, late payment grace period)
 - Rate protection alert thresholds and sync frequency for currency conversion
 
 **Fixed in Codebase (Not Editable)**:
 
 - Deposit rate allowed range (20-30% hard-coded business rule)
 - Split payment installment range (2-9 installments hard-coded limit)
-- Cutoff days allowed range (7-90 days hard-coded limits)
+- Cutoff days allowed range (30-90 days hard-coded limits)
+- Installment frequency (monthly; 30-day intervals)
 - Encryption algorithms for Stripe secret keys (AES-256)
 - Cache TTL for configuration propagation (5 minutes hard-coded)
 - Payment audit logging requirements (always enabled, cannot be disabled)
@@ -545,7 +602,9 @@ The module delivers value by:
 - **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
 - **Billing Rule 1**: First installment defaults to deposit amount unless admin configures equal split across all installments
 - **Billing Rule 2**: Remaining balance after deposit split equally across remaining installments (rounded to 2 decimal places, last installment absorbs rounding difference)
-- **Currency Rule**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
+- **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
+- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at time of booking confirmation and stored per booking/transaction; subsequent displays and installment/final payments use the locked rate (no rate fluctuation after booking)
+- **Commission Rule**: Commission rate MUST be determined (global or provider-specific) at booking confirmation and stored per booking/transaction for payout and reconciliation consistency
 - **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
 
 ---
@@ -561,7 +620,7 @@ The module delivers value by:
 
 ### Provider Efficiency Metrics
 
-- **SC-005**: Providers receive deposit payments immediately upon booking confirmation with 99.5% reliability
+- **SC-005**: Deposit payments are captured successfully upon booking confirmation with 99.5% reliability
 - **SC-006**: Provider payout schedules align with Stripe account configuration for their region with zero discrepancies
 - **SC-007**: Providers experience zero payment processing delays due to misconfigured Stripe accounts or currency conversion issues
 
@@ -602,12 +661,12 @@ The module delivers value by:
   - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions; FR-028 enforces one-country-to-one-grouping, so Stripe account mapping must respect that uniqueness (conflicts resolved via override)
 
 - **FR-006 / Module P-03**: Booking & Scheduling
-  - **Why needed**: Booking flow uses configured deposit rates to calculate deposit amount at booking confirmation
-  - **Integration point**: Booking service queries Payment Configuration API for deposit rate based on provider ID
+  - **Why needed**: Booking flow uses configured deposit rates and split payment rules to calculate deposit amount and determine feasible installment options at booking confirmation
+  - **Integration point**: Booking service queries Payment Configuration API for deposit rate, commission rate, and split payment rules based on provider ID
 
 - **FR-007 / Module S-02**: Payment Processing
   - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
-  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency rates, deposit rates
+  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency rates, deposit rates, commission rates, and split payment rules
 
 - **FR-007B / Module S-02**: Split Payment / Installment Plans
   - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules
@@ -617,9 +676,9 @@ The module delivers value by:
   - **Why needed**: Patient location (country) from profile determines which Stripe account processes payments
   - **Integration point**: Payment service queries patient profile for country to route payment to correct Stripe account
 
-- **FR-XXX / Module PR-01**: Provider Onboarding & Profile Management
-  - **Why needed**: Provider region determines which Stripe account handles provider payouts and deposit rates
-  - **Integration point**: Payment Configuration displays provider list for provider-specific deposit rate assignment
+- **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
+  - **Why needed**: Provider identity and profile context supports provider-scoped payment configuration (deposit/commission overrides) and payout alignment
+  - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit/commission assignment; payout settings are managed in FR-032 and payout execution in FR-017
 
 ### External Dependencies (APIs, Services)
 
@@ -681,7 +740,7 @@ The module delivers value by:
 - **Assumption 1**: Admins configure Stripe accounts before launching in new geographic regions (cannot process payments without configured account)
 - **Assumption 2**: Admins review currency conversion rates at least weekly to ensure markup percentages are appropriate
 - **Assumption 3**: Deposit rate percentage (20-30% range) is acceptable to both patients (affordability) and providers (cash flow)
-- **Assumption 4**: 30-day cutoff before procedure date is standard business rule, but admins may adjust for specific business needs (7-90 day range)
+- **Assumption 4**: 30-day cutoff before procedure date is standard business rule, but admins may adjust for specific business needs (30-90 day range)
 - **Assumption 5**: Provider-specific deposit rates are exception rather than norm (most providers use global default rate)
 
 ---
@@ -693,7 +752,7 @@ The module delivers value by:
 - **Architecture**: Payment configuration data must be cached with 5-minute TTL to minimize database queries during high-volume payment processing
 - **Technology**: Stripe API credentials (secret keys) must be encrypted at rest using AES-256 and never logged in plain text
 - **Performance**: Currency conversion rate sync should run as background job on scheduled intervals (not synchronous during payment processing)
-- **Storage**: Payment configuration history requires time-series storage for audit trail (7-year retention for financial compliance)
+- **Storage**: Payment configuration history requires time-series storage for audit trail (10-year retention for financial compliance)
 - **Concurrency**: Payment configuration updates must use optimistic locking to prevent race conditions when multiple admins edit simultaneously
 
 ### Integration Points
@@ -779,7 +838,7 @@ As a platform administrator managing international payments, I need to configure
 3. **Given** I configure 5% markup for USD/EUR currency pair, **When** I click "Save Configuration", **Then** system stores markup percentage and applies it to all USD/EUR conversions
 4. **Given** I enable automatic rate application with 6-hour sync frequency, **When** next sync job runs, **Then** system fetches latest rates, applies markup, and updates cached rates without admin intervention
 5. **Given** EUR/USD rate increases by 4% in 24 hours (exceeds 3% threshold), **When** sync detects rate change, **Then** system sends rate protection alert to admin email: "Currency alert: EUR/USD increased 4%"
-6. **Given** currency conversion is configured, **When** UK patient views US provider's $2,000 procedure, **Then** patient sees "£1,701 GBP" (using current rate 0.85 + 5% markup = 0.8925)
+6. **Given** currency conversion is configured, **When** UK patient views US provider's $2,000 procedure, **Then** patient sees "£1,785 GBP" (using current rate 0.85 + 5% markup = 0.8925)
 
 ---
 
@@ -789,17 +848,17 @@ As a platform administrator aiming to increase booking conversion rates, I need 
 
 **Why this priority**: Split payments significantly improve booking conversion by reducing upfront cost burden. This can be configured independently of other payment settings and delivers immediate business value.
 
-**Independent Test**: Can be fully tested by enabling 2, 3, 4, 5 installment options with 30-day cutoff, then submitting test booking 90 days before procedure and verifying patient sees all installment options, while booking 40 days before procedure only shows 2 installments.
+**Independent Test**: Can be fully tested by enabling 2, 3, 4, 5, 6 installment options with 30-day cutoff, then submitting a test booking 210 days before procedure and verifying patient sees all enabled options, while a booking 90 days before procedure only shows feasible options (e.g., 2-3 installments).
 
 **Acceptance Scenarios**:
 
 1. **Given** I am an admin, **When** I navigate to Payment Configuration > Split Payment, **Then** I see configuration form for available installments, cutoff days, and minimum booking amount
 2. **Given** I enable 2, 3, 4, 5, 6 installment options, **When** I set cutoff days to 30 and minimum booking amount to $500, **Then** system stores split payment rules
-3. **Given** split payment is configured with 30-day cutoff, **When** patient books $2,000 procedure 90 days in advance, **Then** patient sees all enabled installment options (2-6 installments)
-4. **Given** same configuration, **When** patient books $2,000 procedure 40 days in advance, **Then** patient sees only 2 installments (not enough time for more payments before 30-day cutoff)
-5. **Given** patient selects 4 installments for $2,000 booking with 25% deposit rate, **When** patient completes booking, **Then** system calculates payment schedule:
+3. **Given** split payment is configured with 30-day cutoff, **When** patient books $2,000 procedure 210 days in advance, **Then** patient sees all enabled installment options (2-6 installments)
+4. **Given** same configuration, **When** patient books $2,000 procedure 90 days in advance, **Then** patient sees only feasible installment options (e.g., 2-3 installments)
+5. **Given** patient selects 3 installments for $2,000 booking with 25% deposit rate, **When** patient completes booking, **Then** system calculates payment schedule:
    - First installment: $500 (25% deposit) due at booking
-   - Remaining 3 installments: $500 each, due every 20 days
+   - Remaining 2 installments: $750 each, due monthly (every ~30 days) with final payment completed by the 30-day cutoff
    - Final payment due: 30 days before procedure date
 6. **Given** patient has active installment plan, **When** patient misses second installment payment deadline, **Then** system sends reminder notification during grace period, then cancels booking if not paid within grace period
 
@@ -884,18 +943,21 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-016**: System MUST calculate deposit amount by multiplying booking total by configured deposit rate percentage
 - **REQ-029-017**: System MUST allow admins to enable or disable split payment (installment) feature globally
 - **REQ-029-018**: System MUST allow admins to select available installment options (2-9 installments) via multi-select checkboxes
-- **REQ-029-019**: System MUST allow admins to configure cutoff days (7-90 day range) requiring full payment completion before procedure date
+- **REQ-029-019**: System MUST allow admins to configure cutoff days (30-90 day range) requiring full payment completion before procedure date
 - **REQ-029-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
 - **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
 - **REQ-029-022**: System MUST generate installment payment schedules with first installment equal to deposit amount and remaining balance split equally
 - **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
+- **REQ-029-043**: System MUST allow admins to configure platform commission rates (global default and provider-specific overrides; allowed range 15-25%) applied to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
+- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at booking confirmation and store them per booking/transaction (no rate fluctuation after booking)
+- **REQ-029-045**: System MUST snapshot commission rate at booking confirmation and store it per booking/transaction for payout and reconciliation consistency
 
 ### Data Requirements
 
-- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, split payment rules) with full audit history
+- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, commission rates, split payment rules) with full audit history
 - **REQ-029-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
 - **REQ-029-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
-- **REQ-029-027**: System MUST retain payment configuration audit history for minimum 7 years for financial compliance
+- **REQ-029-027**: System MUST retain payment configuration audit history for minimum 10 years for financial compliance
 
 ### Security & Privacy Requirements
 
@@ -904,6 +966,7 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
 - **REQ-029-031**: System MUST use TLS 1.3 for all connections to Payment Configuration API (no plain HTTP allowed)
 - **REQ-029-032**: System MUST comply with PCI DSS Level 1 requirements for payment data handling
+- **REQ-029-046**: System MUST verify Stripe webhook signatures for all incoming webhook events using the configured webhook secret
 
 ### Integration Requirements
 
@@ -916,7 +979,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - **REQ-029-037**: System MUST validate deposit rate percentage is within allowed range (20-30%) and display error if out of range
 - **REQ-029-038**: System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range
-- **REQ-029-039**: System MUST validate cutoff days is within allowed range (7-90 days) and display error if out of range
+- **REQ-029-039**: System MUST validate cutoff days is within allowed range (30-90 days) and display error if out of range
 - **REQ-029-040**: System MUST prevent deletion of Stripe accounts with transactions in last 90 days (archive instead)
 - **REQ-029-041**: System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)
 - **REQ-029-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
@@ -938,12 +1001,16 @@ As a platform administrator managing international payments, I need to receive t
   - **Relationships**: One global deposit rate; many provider-specific deposit rate overrides (one per provider); many bookings reference deposit rate configuration
 
 - **Entity 4 - Split Payment Configuration**:
-  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, first_installment_type (deposit/equal_split), installment_frequency (weekly/bi-weekly/monthly), late_payment_grace_period_days, effective_date, created_by_admin_id
+  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, first_installment_type (deposit/equal_split), late_payment_grace_period_days, effective_date, created_by_admin_id
   - **Relationships**: One split payment configuration (global); many bookings reference split payment rules; many installment schedules generated based on configuration
 
 - **Entity 5 - Payment Configuration Audit Log**:
-  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/split_payment), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
+  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/commission_rate/split_payment), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
   - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
+
+- **Entity 6 - Commission Rate Configuration**:
+  - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), commission_percentage, effective_date, created_by_admin_id, created_date
+  - **Relationships**: One global commission rate; many provider-specific commission rate overrides (one per provider); bookings and payouts reference the commission rate snapshot captured at booking confirmation
 
 ---
 
@@ -952,6 +1019,8 @@ As a platform administrator managing international payments, I need to receive t
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-13 | 1.0 | Initial PRD creation for FR-029: Payment System Configuration | Claude (AI Assistant) |
+| 2025-12-16 | 1.1 | Major revisions: Added commission rate configuration (global + provider-specific) and aligned split payment rules with cross-FR constraints (monthly cadence, 30+ day cutoff). Added Constitution compliance requirements (webhook signature verification, FX and commission snapshot at booking, audit retention 10 years). Fixed module code placeholders and corrected currency conversion example. | AI |
+| 2025-12-16 | 1.2 | Status updated to Verified & Approved; All approvals completed | Product Team |
 
 ---
 
@@ -959,13 +1028,13 @@ As a platform administrator managing international payments, I need to receive t
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner |  | 2025-12-16 | ✅ Approved |
+| Technical Lead |  | 2025-12-16 | ✅ Approved |
+| Stakeholder |  | 2025-12-16 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2025-11-13
+**Last Updated**: 2025-12-16

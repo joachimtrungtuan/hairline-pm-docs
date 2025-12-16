@@ -20,7 +20,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 - **Patient Platform (P-03)**: Patient selects installment plan at checkout; views installment schedule and payment history; receives reminders before each installment; sees available installment options based on procedure date
 - **Provider Platform (PR-05)**: Provider views booking payment status (installment plan active, payments on track, overdue installments)
-- **Admin Platform (A-05)**: Admin monitors installment plans across all bookings; configures installment plan parameters (number of installments, buffer period); handles defaulted installment plans; processes refunds for installment plans
+- **Admin Platform (A-05)**: Admin monitors and manages installment plans across bookings; handles defaulted installment plans and refunds. Customer-facing installment configuration (enabled installment counts, cutoff days, minimum booking amount, grace period) is managed in **FR-029 (A-09)**.
 - **Shared Services (S-02/S-03)**: Payment Processing Service executes scheduled installment charges and retry logic; Notification Service sends installment reminders and payment confirmations
 
 ### Multi-Tenant Breakdown
@@ -44,7 +44,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Admin Platform (A-05)**:
 
-- Configure installment plan parameters: allowed number of installments (2-9), mandatory buffer period before procedure (default 30 days)
+- View installment plan configuration (managed in FR-029) and link to configuration screen for authorized users
 - Monitor all active installment plans across the platform
 - View installment payment success/failure rates
 - Handle defaulted installment plans (failed payments after retries)
@@ -88,12 +88,12 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Actors**: Patient, System (Payment Processing Service), Admin
 **Trigger**: Patient proceeds to checkout after accepting a quote
-**Outcome**: Booking confirmed with installment plan; scheduled installments charged automatically; booking fully paid 30 days before procedure
+**Outcome**: Booking confirmed with installment plan; scheduled installments charged automatically; booking fully paid by the configured cutoff date (minimum 30 days before procedure, configured via FR-029)
 
 **Steps**:
 
 1. Patient reviews booking summary with total procedure cost
-2. System calculates maximum available installments based on time until procedure date (procedure date minus 30-day buffer, divided by monthly installments)
+2. System calculates feasible installment options based on time until procedure date and the configured cutoff days (minimum 30 days before procedure, configured via FR-029) with monthly installments
 3. System displays installment options (e.g., "Pay in 2-5 installments" if procedure is in 6 months)
 4. Patient selects desired installment plan (e.g., 4 monthly installments)
 5. System calculates installment amount (total ÷ number of installments) and displays payment schedule with dates
@@ -105,7 +105,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 11. On due date, System automatically charges payment method
 12. On successful charge, System updates installment status and sends confirmation
 13. System repeats steps 10-12 for each remaining installment
-14. When final installment completes (30 days before procedure), System marks booking as "Fully Paid"
+14. When final installment completes by the cutoff date, System marks booking as "Fully Paid"
 
 ### Alternative Flows
 
@@ -117,6 +117,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   2. System calculates higher installment amount with same total
   3. System adjusts payment schedule accordingly
 - **Outcome**: Booking completed with shorter payment timeline; same 30-day buffer maintained
+- **Outcome**: Booking completed with shorter payment timeline; same cutoff window maintained
 
 **A2: Patient Opts for Full Payment Instead of Installments**:
 
@@ -283,10 +284,9 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 ### General Module Rules
 
 - Installment plans are interest-free (0% APR) for all patients
-- Available installment options: 2, 3, 4, 5, 6, 7, 8, or 9 monthly payments
-- Final payment MUST complete 30 days before scheduled procedure date (mandatory buffer)
-- Maximum installments calculated as: (days until procedure - 30) ÷ 30, capped at 9
-- Minimum time for installment plan: 60 days (allows 2 installments + 30-day buffer)
+- Available installment options: 2, 3, 4, 5, 6, 7, 8, or 9 monthly payments (enabled in FR-029)
+- Final payment MUST complete by the configured cutoff days before scheduled procedure date (minimum 30 days; configured in FR-029)
+- System offers only installment counts that are feasible given booking date, procedure date, monthly frequency, and the cutoff window
 - First installment charged immediately upon booking confirmation
 - Subsequent installments charged monthly (30-day intervals)
 - Installment amount calculated as: total procedure cost ÷ number of installments (rounded to 2 decimal places)
@@ -306,17 +306,21 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Editable by Admin**:
 
-- Installment buffer period (default 30 days, configurable range 14-60 days)
-- Maximum number of installments allowed (default 9, configurable range 2-12)
-- Retry attempt timing (default: 1 day, 3 days, 7 days)
-- Payment reminder timing (default: 3 days before due)
-- Late fees for failed installments (optional, configurable per policy)
+- Customer-facing installment plan settings are configured via **FR-029 (A-09)**:
+  - Enabled installment counts (2-9)
+  - Cutoff days (30-90) requiring full payment completion before procedure date
+  - Minimum booking amount eligibility threshold
+  - First installment type (deposit vs equal split)
+  - Late payment grace period before booking cancellation
 
 **Fixed in Codebase (Not Editable)**:
 
 - Interest rate (always 0% - interest-free policy)
+- Installment frequency (monthly; 30-day intervals)
 - Core payment security controls and encryption standards
 - Number of retry attempts for failed payments (3 attempts)
+- Retry schedule for failed payments (1 day, 3 days, 7 days later)
+- Reminder timing (3 days before due date)
 - Audit logging scope for payment events
 
 **Configurable with Restrictions**:
@@ -331,7 +335,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - After 3 failed retries, installment plan marked as "Defaulted" and admin notified
 - Patient can update payment method anytime before next installment
 - Cancellation refunds calculated based on timing: >30 days = 90% of paid installments; 15-30 days = 50%; <15 days = no refund
-- Platform commission calculated on total procedure cost, deducted from provider payout after final installment completes
+- Platform commission calculated on total procedure cost (commission rate configured in FR-029 and snapshotted at booking), deducted from provider payout after final installment completes
 - Provider payout delayed until all installments completed and booking reaches "Fully Paid" status
 - Rescheduling procedure date may require installment plan adjustment or immediate payment of remaining balance
 
@@ -595,7 +599,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - How does system handle procedure date rescheduled after installment plan established? (Recalculate installment schedule if sufficient time; otherwise require immediate payment of remaining balance)
 - What occurs if first installment fails at checkout? (Booking not confirmed; patient prompted to retry immediately or use different payment method)
 - How to manage patient requesting fewer installments mid-plan? (Not supported; patient can pay remaining balance early to complete plan)
-- What if admin changes installment buffer period from 30 to 14 days? (Applies only to new bookings; existing installment plans unchanged)
+- What if admin increases the cutoff window from 30 to 45 days via FR-029? (Applies only to new bookings; existing installment plans unchanged)
 - How does system handle refund for partial installments if patient disputes charge? (Admin reviews dispute; processes refund per resolution; may cancel booking or allow continuation)
 - What if payment processor webhook fails to deliver charge status? (System polls payment status as fallback; ensures no missed confirmations or retries)
 
@@ -606,8 +610,8 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 ### Core Requirements
 
 - **REQ-007b-001**: System MUST offer interest-free installment payment plans with 2-9 monthly payments
-- **REQ-007b-002**: System MUST calculate maximum available installments based on time until procedure: (days until procedure - 30) ÷ 30, capped at 9
-- **REQ-007b-003**: System MUST enforce 30-day buffer: final installment must complete 30 days before procedure date
+- **REQ-007b-002**: System MUST determine feasible installment options based on time until procedure, monthly frequency, and cutoff days configured in FR-029 (minimum 30 days); offered options are limited to enabled installment counts configured in FR-029 (2-9)
+- **REQ-007b-003**: System MUST enforce the cutoff window: final installment must complete by the configured cutoff days before procedure date (minimum 30 days; configured in FR-029)
 - **REQ-007b-004**: System MUST calculate installment amounts as: total procedure cost ÷ number of installments
 - **REQ-007b-005**: System MUST charge first installment immediately upon booking confirmation
 - **REQ-007b-006**: System MUST schedule remaining installments at 30-day intervals
@@ -650,7 +654,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 ## Key Entities
 
 - **Entity 1 - Installment Plan**: Represents the payment schedule for a booking
-  - **Key attributes**: booking ID, total amount, number of installments, installment amount, buffer period, creation date, status (active, completed, defaulted, canceled)
+  - **Key attributes**: booking ID, total amount, number of installments, installment amount, cutoff_days, creation date, status (active, completed, defaulted, canceled)
   - **Relationships**: belongs to one booking; has many installment payments; linked to one patient payment method
 
 - **Entity 2 - Installment Payment**: Represents a single scheduled/completed installment charge
@@ -668,7 +672,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | Date       | Version | Changes                 | Author |
 |------------|---------|-------------------------|--------|
 | 2025-11-10 | 1.0     | Initial PRD creation    | AI     |
-| [DATE]     | 1.1     | [Description of changes]| [Name] |
+| 2025-12-16 | 1.1     | Documentation alignment: Moved customer-facing installment configuration ownership to FR-029 (cutoff days, enabled installment counts, eligibility thresholds) and removed conflicting admin-configurable ranges/formulas; retained monthly schedule execution and retry/reminder behavior here. | AI |
 
 ---
 
@@ -685,4 +689,4 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007B from system-prd.md (Split Payment / Installment Plans)
-**Last Updated**: 2025-11-10
+**Last Updated**: 2025-12-16
