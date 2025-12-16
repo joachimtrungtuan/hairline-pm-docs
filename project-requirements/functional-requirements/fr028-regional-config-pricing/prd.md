@@ -87,7 +87,7 @@ This module provides the administrative infrastructure to:
 
 **Admin Entry Point**:
 
-- Admin navigates to Settings > Hairline App Settings > Location Presentation & Pricing
+- Admin navigates to Settings > General Settings > Location Presentation & Pricing tab (Hairline app settings now live under General Settings)
 - Access requires admin role with "System Configuration" permissions (per FR-031)
 - Configuration changes take effect immediately upon save (within 1-minute cache propagation)
 
@@ -110,12 +110,12 @@ This module provides the administrative infrastructure to:
 
 **Steps**:
 
-1. Admin navigates to Settings > Hairline App Settings > Location Presentation by Country
+1. Admin navigates to Settings > General Settings > Location Presentation by Country tab
 2. Admin clicks "Add New Regional Grouping"
 3. Admin enters grouping name (e.g., "Europe", "Eastern Europe", "UK Only")
 4. Admin selects countries that belong to this grouping from multi-select country list
    - System validates at least one country is selected
-   - System warns if countries already exist in other groupings (allows overlaps but warns admin)
+   - System blocks selection of countries that already exist in other groupings and displays error: "Each country can only belong to one regional grouping. Remove it from the other grouping first."
 5. Admin defines location presentation order for this grouping:
    - Drags and drops destination countries into preferred order
    - First position = shown first to patients, second position = shown second, etc.
@@ -179,7 +179,8 @@ This module provides the administrative infrastructure to:
 
 **Steps**:
 
-1. Admin navigates to Settings > Hairline App Settings > Location Pricing
+1. Admin navigates to Settings > General Settings > Location Pricing tab
+   - Currency dropdown is populated from FR-029's supported currency list (General Settings > Payment System Configuration > Currency Management)
 2. Admin selects destination location (e.g., Turkey, Poland, UK)
 3. System displays current pricing configuration for selected location:
    - List of currencies with configured starting prices
@@ -241,7 +242,7 @@ This module provides the administrative infrastructure to:
 - **Steps**:
   1. Admin attempts to save price for unsupported currency
   2. System displays error: "[Currency] is not currently supported. Add currency to system first via Currency Management."
-  3. Admin navigates to Currency Management or cancels
+  3. Admin navigates to General Settings > Payment System Configuration > Currency Management (FR-029) or cancels
 - **Outcome**: Price not saved for unsupported currency
 
 ---
@@ -323,7 +324,7 @@ This module provides the administrative infrastructure to:
 
 **Business Rules**:
 
-- **Overlap Warning**: If admin selects countries already in other regional groupings, system displays warning: "The following countries already exist in other groupings: [list]. This patient region will match multiple groupings - the most specific grouping will be applied."
+- **Unique Membership**: Each country can only belong to one regional grouping at a time. If admin attempts to add a country that already exists in another grouping, system blocks save and shows error with list of conflicting groupings.
 - **Priority Resolution**: If patient's country appears in multiple regional groupings, system applies grouping with fewest countries (most specific match)
 - **Default Fallback**: If no regional grouping matches, system uses default location ordering (configured separately)
 - **Cache Propagation**: Configuration changes propagate to patient-facing APIs within 1 minute via cache invalidation
@@ -335,7 +336,7 @@ This module provides the administrative infrastructure to:
 - Provide drag-and-drop interface for location ordering (intuitive reordering)
 - Display preview pane showing how patients from selected countries will see location list
 - Show country flags next to country names for visual clarity
-- Display warning icon next to countries that appear in multiple groupings
+- Disable selection state or visually indicate countries already assigned to another grouping (e.g., greyed out with tooltip "Already assigned to [Grouping Name]")
 - Provide bulk actions: duplicate grouping, export configuration, import from template
 
 ---
@@ -351,9 +352,10 @@ This module provides the administrative infrastructure to:
 | Destination Location | Select | Yes | Treatment destination (country/city) | Must be valid location in system |
 | Currency | Select | Yes | Currency for pricing (GBP, EUR, USD, etc.) | Must be supported currency |
 | Starting Price | Number | Yes | Base starting price estimate | Positive number, decimals per currency rules |
-| Fallback Price | Checkbox | No | Use as fallback for unconfigured patient locations | - |
 | Price Effective Date | Date | No | When this pricing becomes active | Future date optional, defaults to immediate |
 | Price Expiry Date | Date | No | When this pricing expires | Must be after effective date if set |
+| Bulk Update Pricing | Button/Action | No | Opens bulk update modal (percentage or fixed adjustment across all currencies for selected destination) | Enabled only when a destination is selected (or pricing rows are selected); requires change reason inside modal before apply |
+| Fallback Price | Checkbox | No | Use as fallback for unconfigured patient locations | - |
 | Last Updated | Date (read-only) | - | When price was last changed | Auto-updated |
 | Updated By | Text (read-only) | - | Admin who updated price | Auto-populated |
 | Change Reason | Text | No | Reason for price change (for audit) | Max 500 chars |
@@ -372,12 +374,22 @@ This module provides the administrative infrastructure to:
 
 **Notes**:
 
+- Action bar: "Bulk Update Pricing" primary button visible when a destination is selected (or when at least one row is checked in pricing table)
 - Display pricing table with locations as rows, currencies as columns for quick overview
 - Highlight cells without configured pricing in yellow (missing pricing)
 - Show "Last Updated" timestamp and admin name on hover for each price
 - Provide CSV import/export for bulk pricing updates
 - Display exchange rate reference for admin guidance (from FR-029 currency service)
 - Include calculator tool: enter price in one currency, auto-suggest prices for other currencies based on exchange rates
+- Currency list is read-only from FR-029 Payment System Configuration; add/edit currencies via General Settings > Payment System Configuration > Currency Management
+- Currency dropdown on this screen is populated from FR-029's supported currency list; no inline currency creation here
+- Bulk Update modal (triggered by "Bulk Update Pricing") includes:
+  - Method selector: percentage increase/decrease or fixed amount adjustment
+  - Adjustment value input with validation (numeric, allows negative for decrease)
+  - Optional rounding rule (e.g., round to nearest 5/10/50 of currency unit)
+  - Preview table showing current vs. new prices per currency before applying
+  - Required change reason text field (logged in audit trail)
+  - Confirmation banner: "[X] currency prices updated for [Location]" after apply
 
 ---
 
@@ -418,7 +430,7 @@ This module provides the administrative infrastructure to:
 
 ### General Module Rules
 
-- **Rule 1**: Regional groupings can overlap - the same country can appear in multiple groupings. When a patient's country appears in multiple groupings, the system applies the grouping with the fewest countries (most specific match).
+- **Rule 1**: Regional groupings MUST NOT overlap - each country can belong to at most one grouping at a time. System enforces uniqueness and blocks saves that would assign a country to multiple groupings.
 - **Rule 2**: Location ordering is strictly advisory for patient presentation - it does not restrict which locations patients can select or providers can serve.
 - **Rule 3**: Starting prices are estimates only and do not constrain provider quote pricing. Providers can quote higher or lower than starting prices.
 - **Rule 4**: All configuration changes propagate to patient-facing APIs within 1 minute via cache invalidation (cache TTL = 60 seconds).
@@ -482,7 +494,7 @@ This module provides the administrative infrastructure to:
 - **SC-007**: Admins can create or modify a regional grouping (including location ordering) in under 3 minutes
 - **SC-008**: Admins can update starting prices for a location across all currencies in under 2 minutes using bulk update feature
 - **SC-009**: Configuration changes propagate to patient-facing app within 1 minute of admin save action (100% of changes)
-- **SC-010**: Zero configuration conflicts requiring admin intervention (system automatically resolves overlapping regional groupings via priority rules)
+- **SC-010**: Zero configuration conflicts at runtime related to overlapping regional groupings (system prevents overlaps at configuration time by enforcing unique country-to-grouping assignment)
 
 ### System Performance Metrics
 
@@ -629,7 +641,7 @@ This module provides the administrative infrastructure to:
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is logged in with System Configuration permissions, **When** admin navigates to Settings > Location Presentation by Country, **Then** admin sees list of existing regional groupings and "Add New Regional Grouping" button
+1. **Given** admin is logged in with System Configuration permissions, **When** admin navigates to Settings > General Settings > Location Presentation by Country tab, **Then** admin sees list of existing regional groupings and "Add New Regional Grouping" button
 2. **Given** admin clicks "Add New Regional Grouping", **When** admin enters name "UK", selects "United Kingdom" from country list, and orders locations (Turkey 1st, Poland 2nd, UK 3rd), **Then** system displays preview showing UK patients will see Turkey first
 3. **Given** admin has configured regional grouping with valid data, **When** admin clicks "Save", **Then** system validates configuration, saves to database, clears cache, and displays confirmation "Regional grouping saved. Changes will be live within 1 minute."
 4. **Given** regional grouping has been saved for 60+ seconds, **When** UK patient reaches destination selection screen, **Then** patient sees Turkey as first location option, Poland as second, UK as third (matching configured order)
@@ -647,7 +659,7 @@ This module provides the administrative infrastructure to:
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is logged in with System Configuration permissions, **When** admin navigates to Settings > Location Pricing and selects "Turkey", **Then** admin sees pricing table with currencies as columns and current configured prices
+1. **Given** admin is logged in with System Configuration permissions, **When** admin navigates to Settings > General Settings > Location Pricing tab and selects "Turkey", **Then** admin sees pricing table with currencies as columns and current configured prices
 2. **Given** admin clicks "Add Currency" for Turkey, **When** admin selects "GBP" and enters "2500", **Then** system validates amount is positive number, displays formatted price "£2,500" in preview, and enables save
 3. **Given** admin has entered valid prices for GBP, EUR, and USD for Turkey, **When** admin clicks "Save", **Then** system saves all three currency prices, displays confirmation "Starting prices for Turkey updated for 3 currencies", and logs changes in audit trail
 4. **Given** starting prices have been configured for Turkey, **When** UK patient (location=UK, currency=GBP) views destination list, **Then** patient sees Turkey with starting price "Starting from £2,500"
@@ -708,7 +720,7 @@ This module provides the administrative infrastructure to:
 
 ### Edge Cases
 
-- **What happens when patient's country appears in multiple overlapping regional groupings?** System applies grouping with fewest countries (most specific match). Example: UK patient could match "UK Only" (1 country) and "Europe" (28 countries) - system applies "UK Only" grouping.
+- **What happens when admin tries to assign a country to more than one regional grouping?** System blocks the change, shows error listing conflicting groupings, and requires admin to resolve by keeping the country in only one grouping.
 
 - **How does system handle location with no pricing configured for patient's currency?** System falls back to location's fallback pricing (if configured), then converts from location's default currency using real-time exchange rate (from FR-029), displaying converted price with note: "Starting from €2,200 (approx. £2,500)".
 
@@ -733,7 +745,7 @@ This module provides the administrative infrastructure to:
 - **REQ-028-003**: System MUST apply regional grouping to patient destination list based on patient's location from profile or IP geolocation
 - **REQ-028-004**: System MUST display starting prices in patient's preferred currency, falling back to location's default currency with conversion if specific currency not configured
 - **REQ-028-005**: System MUST propagate configuration changes to patient-facing APIs within 1 minute via cache invalidation
-- **REQ-028-006**: System MUST resolve overlapping regional groupings by applying grouping with fewest countries (most specific match)
+- **REQ-028-006**: System MUST prevent overlapping regional groupings by enforcing one-to-one mapping between country and regional grouping at configuration time
 - **REQ-028-007**: System MUST support fallback pricing for locations when patient's specific currency is not configured
 - **REQ-028-008**: System MUST allow admins to preview how configurations will appear to patients from different regions before saving
 

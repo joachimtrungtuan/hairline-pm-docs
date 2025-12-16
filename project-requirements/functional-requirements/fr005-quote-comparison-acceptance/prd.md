@@ -148,7 +148,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Price per Graft | number | Yes | Derived unit price (total ÷ graft count) | Calculated; per quote |
 | Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 |
 | Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
-| Estimated Travel Costs | currency | No | Estimated travel costs to destination | Derived from A-09 baseline travel estimate table (until FR-008 provides live estimates) |
+| Estimated Travel Costs | currency | No | Estimated travel costs to destination | Manually input by Provider (FR-004) or via FR-008 integration |
 | Expiry Timer | timer | Yes | Countdown until quote expiry | Derived from FR-004 settings; per quote |
 | Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
 | Actions | buttons | Yes | View Details, Accept, Ask Question | State-aware enabling; per quote; Ask Question routes to Hairline Support via FR-012 |
@@ -246,6 +246,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 4. All acceptance-related state transitions are immutably audited (who, when, what, reason).  
 5. Quotes that are expired, withdrawn, or archived are ineligible for acceptance.  
 6. All deletes are soft deletes; no hard deletes permitted.
+7. Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price.
 
 ### Data & Privacy Rules
 
@@ -276,6 +277,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 - Acceptance prepares booking/payment handoff; no funds are collected in this module.  
 - Selected quote’s pre-scheduled appointment slot (date/time) and associated pricing feed the next module for payment intent creation.  
+- The Quote entity includes a specific, provider-defined appointment slot. Patient acceptance of the Quote constitutes acceptance of this specific date/time. No further date selection is required or performed in the Booking (FR-006) phase.
 - On acceptance, the system MUST ensure the quote exchange rate is locked at the time of acceptance per FR-004 / System PRD pricing rules.  
 - Pricing and discounts shown are those defined in FR-004; acceptance does not modify financial terms.
 - Post-Acceptance Hold: After acceptance, the system reserves the pre-selected appointment slot for 48 hours to allow the patient to complete the initial payment (deposit or first installment) in FR-006. If payment is not completed within 48 hours, the reservation is released and the slot may be reallocated by the provider.
@@ -323,7 +325,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - **FR-012 / P-06, A-10**: Messaging & communication (Patient ↔ Hairline Support quote questions).  
 - **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
 - **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary).  
-- **FR-008 / P-03** (or **A-09**): Travel cost data/estimation inputs for "Estimated Travel Costs" field.  
+- **FR-008 / P-03 (or A-09)**: Travel cost data/estimation inputs for "Estimated Travel Costs" field (or manual input from FR-004).  
 - **Upcoming FR / P-03, A-05**: Booking & Payment (payment intent, invoice, PII reveal post-payment).  
 - **A-09**: System settings (legal copy, terms acknowledgment text).
 
