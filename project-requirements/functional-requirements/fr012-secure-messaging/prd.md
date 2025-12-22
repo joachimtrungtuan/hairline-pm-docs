@@ -1,6 +1,6 @@
 # Product Requirements Document: Messaging & Communication
 
-**Module**: P-06: Communication | PR-06: Communication | A-10: Communication Monitoring & Support  
+**Module**: P-06: Communication | A-10: Communication Monitoring & Support  
 **Feature Branch**: `fr012-secure-messaging`  
 **Created**: 2025-11-11  
 **Status**: ✅ Verified & Approved  
@@ -19,7 +19,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; notifications for new messages; view conversation history; send text and media.
-- **Provider Platform (PR-06)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; view conversation history; send text and media responses.
+- **Provider Platform (P-06)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; view conversation history; send text and media responses.
 - **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request 3D scans or schedule reviews.
 - **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages.
 
@@ -37,7 +37,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 - Receive real-time notifications for new provider messages; badge counts for unread in inbox and app navigation.
 - Chat available from quote received through post-procedure phases.
 
-**Provider Platform (PR-06)**:
+**Provider Platform (P-06)**:
 
 - Access Messages popup/submenu from header navigation showing recent patient conversations with unread counts.
 - Quick view of most recent 10 conversations in popup; "View All" for full list.
@@ -614,7 +614,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 
 ### Admin Editability Rules
 
-  Reference Principle VIII from constitution: Admin-Editable Content
+  Reference Constitution: Medical Data Privacy & Security (Core Principles II) and Data Integrity & Audit Trail (Core Principles VI)
 
 **Editable by Admin**:
 
@@ -639,15 +639,11 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 
 ### Payment & Billing Rules *(if applicable)*
 
-  Delete this section if not applicable
-
 Not applicable to messaging scope; no payment flows in this module.
 
 ---
 
 ## Success Criteria
-
-  These should be testable without knowing implementation details
 
 ### Patient Experience Metrics
 
@@ -697,6 +693,10 @@ Not applicable to messaging scope; no payment flows in this module.
 - P-01: Auth & Profile Management
   - Why needed: Identity and access control for participants.
   - Integration point: Use authenticated user context and roles for conversation access.
+
+- FR-003: Inquiry Submission & Distribution
+  - Why needed: Defines patient anonymization/masking rules and pseudonymous identifiers used across patient/provider views.
+  - Integration point: Apply FR-003 anonymization rules to participant display fields until payment confirmation.
 
 - FR-004: Quote Submission & Management
   - Why needed: Enable patient-provider chat only when provider has sent quote to patient.
@@ -901,7 +901,7 @@ Acceptance Scenarios:
 - **Excessive attachments**: Enforce 5 attachments max per message; display clear error "Maximum 5 attachments per message" if exceeded.
 - **Oversized attachments**: Block upload and show specific error based on type (e.g., "Image must be under 5MB", "Video must be under 10MB", "PDF must be under 10MB").
 - **Unsupported file types**: Block upload and show "Only JPG/PNG images (max 5MB), MP4 videos (max 10MB), and PDF files (max 10MB) are allowed."
-- **No provider response within 48 hours**: Auto-remind provider; if still no response after 72 hours, admin may intervene via emergency mode to follow up.
+- **No provider response within 48 hours**: Auto-remind provider; if still no response after 72 hours, system escalates to an admin follow-up queue (e.g., manual observation flag "Follow-Up Needed") and sends additional provider reminders via notifications. Admin messaging remains emergency-only.
 - **Account deletion request with open conversations**: Archive conversations; restrict access per policy; admin emergency messages preserved in archive.
 - **Simultaneous sends**: Maintain message ordering and idempotency safeguards; admin emergency messages sorted chronologically with patient/provider messages.
 - **Provider persistent off-platform solicitation**: Admin intervenes with warning via emergency mode; repeated violations may trigger provider review/suspension.
@@ -1016,6 +1016,6 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)  
-**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
+**Constitution Reference**: Hairline Platform Constitution v1.0.0, Governance → PRD Standards & Requirements (NON-NEGOTIABLE)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD  
 **Last Updated**: 2025-12-22
