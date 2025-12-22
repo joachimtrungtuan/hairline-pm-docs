@@ -98,6 +98,12 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-11-04**: `FR005_PRD_VERIFIED_2025-11-04.md` - FR-005 PRD verification
 - **2025-11-06**: `FR026_ANALYSIS_C1_RESOLVED_2025-11-06.md` - FR-026 analysis and critical issues resolution
 
+### 2025-12-22/ (1 file)
+
+#### **Provider Module Catalog Extension**
+
+- `PROVIDER_COMMUNICATION_MODULE_2025-12-22.md` - Added `PR-07: Communication & Messaging` and aligned FR-012 + tracking docs
+
 ---
 
 ## Purpose

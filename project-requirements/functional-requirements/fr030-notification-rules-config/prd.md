@@ -89,9 +89,8 @@ Admins access notification configuration through:
 
 1. **Admin Dashboard → Settings → Alerts & Notifications**: Primary entry point for notification rule management and notification template setup
 2. **Admin Dashboard → Settings → Alerts & Notifications**: Dedicated area for managing notification templates (email, push, SMS in future)
-3. **Admin Dashboard → Analytics → Notification Metrics**: Monitoring and troubleshooting view for delivery status
-4. **Event-driven**: System events automatically trigger notification evaluation based on configured rules (S-03)
-5. **Template Testing**: Admins can send test notifications to themselves before activating rules
+3. **Event-driven**: System events automatically trigger notification evaluation based on configured rules (S-03)
+4. **Template Testing**: Admins can send test notifications to themselves before activating rules
 
 Activation method: Notification rules activate immediately upon saving (with confirmation prompt). Template changes apply to new notifications immediately; in-flight notifications use the template version active at creation time.
 
@@ -160,21 +159,23 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ## Business Workflows
 
-### Main Flow: Admin Configures Notification Rule for an Event Type (From Backend Event Catalog)
+### Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules
 
 **Actors**: Admin (Hairline operations team), S-03 Notification Service (system), Recipient (Patient/Provider)
-**Trigger**: Admin wants to configure notifications for an event type available in the backend event catalog (e.g., "Payment Installment Due - 3 Days Before"). Event types are predefined by backend services and are not created in the admin UI.
-**Outcome**: Notification rule configured, tested, and activated; recipients receive notifications when event occurs
+**Trigger**: Admin opens `Settings → Alerts & Notifications` to review the backend event catalog and (per event) enable/disable notifications and configure channels/timing/templates.
+**Outcome**: Selected event(s) are enabled/disabled and/or configured; S-03 uses the saved configuration when those backend events occur
 
 **Steps**:
 
-1. Admin navigates to Admin Platform → Settings → Alerts & Notifications
-2. System displays list of configured notification rules grouped by event category (Booking, Payment, Aftercare, etc.)
-3. Admin clicks "Add New Notification Rule"
-4. System displays notification rule creation form
-5. Admin selects event type from the backend event catalog dropdown (e.g., "Payment Installment Due - 3 Days Before")
-6. System displays event-specific configuration options
-7. Admin configures recipient rules:
+1. Admin navigates to Admin Platform → `Settings → Alerts & Notifications`
+2. System displays the **backend event catalog** (grouped by category) with each row showing current status (Enabled/Disabled), channels, and last modified
+3. Admin selects an event row (e.g., "Payment Due Reminder") and reviews its current configuration
+4. Admin toggles the event **On/Off**:
+   - If toggled **Off**, S-03 will not send notifications for this event (except where policy marks it critical/non-disableable)
+   - If toggled **On**, the event becomes active using its saved configuration
+5. Admin clicks **Configure** (or expands the row) to edit settings for that event
+6. System displays event-specific configuration options (channels, timing, templates, retries, escalation)
+7. Admin configures recipient rules (where applicable):
    - Recipient type: Patient (booking owner)
    - Additional recipients: None (or specify admin roles if escalation needed)
 8. Admin configures channel preferences:
@@ -193,12 +194,12 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
     - If payment still not received 24 hours after reminder, escalate to admin billing team
 12. Admin previews notification templates with sample data
 13. System renders templates with placeholder data and displays preview
-14. Admin clicks "Save Draft" to save configuration without activating
+14. Admin clicks "Save Draft" to save configuration without activating (if Draft supported for this event)
 15. System validates rule configuration and saves as draft
 16. Admin clicks "Test Rule" to send test notification to themselves
 17. System generates test notification and delivers to admin's email/phone
 18. Admin receives test notification and verifies content, formatting, and delivery
-19. Admin clicks "Activate Rule"
+19. Admin clicks "Activate Rule" (or toggles status to Active)
 20. System prompts: "This rule will activate immediately and apply to all matching events. Continue?"
 21. Admin confirms activation
 22. System activates rule and notifies S-03 Notification Service of new rule
@@ -234,19 +235,19 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 **A3: Admin Creates Multi-Language Notification Template**:
 
-- **Trigger**: Admin needs to support English and Turkish notification templates for same event
+- **Trigger**: Admin needs to support multiple locales for the same event (initially English and Turkish per FR-021)
 - **Steps**:
   1. Admin navigates to Settings → Alerts & Notifications and opens the Templates section
   2. Admin selects event type: "Quote Received"
-  3. Admin selects language: English (default)
+  3. Admin selects language: English (default) from the **supported locales list** (managed in FR-021)
   4. Admin edits email template with subject, body, variables
   5. Admin clicks "Add Translation"
-  6. System displays language dropdown
+  6. System displays language dropdown populated from **FR-021 supported locales**
   7. Admin selects Turkish
   8. Admin edits Turkish version of template (subject, body, same variables)
   9. Admin saves template with both languages
   10. System validates both templates have matching variables
-  11. S-03 Notification Service automatically selects template language based on recipient's language preference
+  11. S-03 Notification Service selects template language based on recipient's language preference and fallback rules (FR-021)
 - **Outcome**: Template supports multiple languages; recipients receive notification in their preferred language
 
 **B1: Notification Delivery Fails (Email Bounce)**:
@@ -277,25 +278,23 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   7. System validates successfully and saves template
 - **Outcome**: Template validation prevents runtime errors; admin corrects variable before activation
 
-**B3: Conflicting Notification Rules for Same Event**:
+**B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI)**:
 
-- **Trigger**: Admin accidentally creates two rules for same event type with different configurations
+- **Trigger**: Admin attempts to create a second rule for the same event type
 - **Steps**:
-  1. Admin creates second notification rule for "Quote Received" event
-  2. System detects existing active rule for "Quote Received"
-  3. System displays warning: "Active rule already exists for this event. Creating duplicate may result in multiple notifications. Continue?"
-  4. Admin reviews existing rule and realizes duplication
-  5. Admin cancels duplicate rule creation
-  6. Admin edits existing rule instead
-- **Outcome**: Duplicate notification prevented; admin maintains single rule per event to avoid notification spam
+  1. Admin navigates to `Settings → Alerts & Notifications`
+  2. System displays one canonical configuration entry per backend event type (event catalog row)
+  3. Admin selects the event (e.g., "Quote Submitted") and clicks "Configure"
+  4. System opens the existing configuration for that event; there is no "create duplicate rule" action
+- **Outcome**: Conflicting duplicate rules cannot exist because configuration is **one-per-event** in the admin UI
 
 ---
 
 ## Screen Specifications
 
-### Screen 1: Notification Rules Dashboard
+### Screen 1: Alerts & Notifications (Rules Dashboard)
 
-**Purpose**: Provides admin with overview of all configured notification rules, grouped by event category, with quick access to edit, test, and deactivate rules.
+**Purpose**: Provides admin with overview of all configurable notification events (from the backend event catalog) and their configured rules, grouped by category, with quick access to edit, test, and pause/activate rules.
 
 **Data Fields**:
 
@@ -304,13 +303,13 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Event Category | select (dropdown) | No | Filter rules by category (All, Booking, Payment, Aftercare, Travel, Provider, Admin) | Predefined categories only |
 | Rule Status | select (dropdown) | No | Filter by status (All, Active, Paused, Draft) | Predefined statuses only |
 | Search Rules | text | No | Search by event name, template name, or recipient type | Max 100 characters |
-| Rules List | table | Yes | Displays all rules matching filters | Sortable by event name, status, last modified |
-| Rule Row: Event Name | text (read-only) | Yes | Event that triggers notification (e.g., "Quote Received") | Display only |
-| Rule Row: Recipient Type | badge | Yes | Who receives notification (Patient, Provider, Admin, Multiple) | Display only |
-| Rule Row: Channels | icon set | Yes | Enabled channels (email icon, push icon, SMS icon) | Display only |
-| Rule Row: Status | badge | Yes | Active (green), Paused (yellow), Draft (gray) | Display only |
-| Rule Row: Last Modified | datetime | Yes | Timestamp of last modification | Display in admin's local timezone |
-| Rule Row: Actions | button group | Yes | Edit, Test, Duplicate, Deactivate/Activate, Delete | Permission-based visibility |
+| Rules List | table | Yes | Displays all rules matching filters | Sortable by event name, status, last modified; **each row is a “Rule Row” described by the fields below** |
+| Rules List – Rule Row: Event Name | link | Yes | Event that triggers notification (e.g., "Quote Submitted", "Payment Received") | Sourced from backend event catalog; click opens this event’s Rule Editor |
+| Rules List – Rule Row: Recipient Type | badge | Yes | Who receives notification (Patient, Provider, Admin, Multiple) | Display only |
+| Rules List – Rule Row: Channels | icon set | Yes | Enabled channels (email icon, push icon, SMS icon) | Display only |
+| Rules List – Rule Row: Status | badge | Yes | Active (green), Paused (yellow), Draft (gray) | Display only |
+| Rules List – Rule Row: Last Modified | datetime | Yes | Timestamp of last modification | Display in admin's local timezone |
+| Rules List – Rule Row: Actions | button group | Yes | Configure, Test, Deactivate/Activate (and Delete if permitted) | Permission-based visibility |
 
 **Business Rules**:
 
@@ -319,7 +318,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Critical event rules (payment confirmations, procedure reminders) cannot be deleted, only paused
 - Deleting a rule requires confirmation prompt: "This will stop notifications for this event. Continue?"
 - Testing a rule sends sample notification to admin's registered email/phone immediately
-- Duplicate rule creates copy with "(Copy)" suffix and status "Draft"
+- Clicking a rule row (or the Event Name link / "Configure" action) opens **Screen 2: Alerts & Notifications (Rule Editor)** for that event
+- Rule Editor MUST include a clear "Back to list" / breadcrumb link returning to the Rules Dashboard with the previous filters preserved
 
 **Notes**:
 
@@ -329,7 +329,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ---
 
-### Screen 2: Notification Rule Editor
+### Screen 2: Alerts & Notifications (Rule Editor)
 
 **Purpose**: Allows admin to create or edit notification rules, configure recipient targeting, channel preferences, delivery timing, and template selection.
 
@@ -377,10 +377,11 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - "Test Rule" button sends test notification to admin's contact info
 - "Save Draft" allows saving without activating; "Save & Activate" activates immediately
 - Change log displayed at bottom showing rule modification history
+- Provide breadcrumb and a "Back to list" action to return to **Screen 1: Alerts & Notifications (Rules Dashboard)** without losing the admin’s filters/search context
 
 ---
 
-### Screen 3: Notification Template Editor
+### Screen 3: Alerts & Notifications (Template Editor)
 
 **Purpose**: Allows admin to create and edit notification templates for email, push, and SMS channels with support for dynamic variables, multi-language content, and rich formatting.
 
@@ -391,7 +392,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Template Name | text | Yes | Internal name for template | Max 100 chars, unique per event + channel |
 | Event Type | select (dropdown) | Yes | Event this template applies to | Predefined event list |
 | Channel Type | select (dropdown) | Yes | Delivery channel (Email, Push Notification, SMS) | Fixed at creation (cannot change) |
-| Language | select (dropdown) | Yes | Template language (English, Turkish, etc.) | Can create multiple language versions |
+| Language | select (dropdown) | Yes | Template language (locale) | Must be in supported locales list (FR-021); can create multiple language versions |
 | Email Subject | text | Conditional | Email subject line (required for email channel) | Max 200 chars, supports variables |
 | Email Body | rich text editor | Conditional | Email body content (required for email channel) | Max 10,000 chars, supports HTML/variables |
 | Push Title | text | Conditional | Push notification title (required for push channel) | Max 100 chars, supports variables |
@@ -419,53 +420,6 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - "Insert Variable" dropdown inserts variable at cursor position
 - "Send Test" button sends test notification to admin with preview values
 - Template version history displayed at bottom with rollback capability
-
----
-
-### Screen 4: Notification Delivery Analytics Dashboard
-
-**Purpose**: Provides admin with real-time insights into notification delivery performance, including delivery rates, failures, engagement metrics, and troubleshooting tools.
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Date Range Filter | date range picker | Yes | Filter metrics by date range | Default: Last 7 days |
-| Event Type Filter | multi-select | No | Filter by event types | All events by default |
-| Channel Type Filter | multi-select | No | Filter by channels (Email, Push, SMS) | All channels by default |
-| Recipient Type Filter | multi-select | No | Filter by recipient type (Patient, Provider, Admin) | All recipients by default |
-| Total Sent | number (read-only) | Yes | Total notifications sent in period | Display only |
-| Successfully Delivered | number + percentage | Yes | Notifications delivered successfully | Display only; percentage of total sent |
-| Failed Deliveries | number + percentage | Yes | Notifications that failed permanently | Display only; percentage of total sent |
-| Pending Retries | number | Yes | Notifications queued for retry | Display only |
-| Opened (Email) | number + percentage | No | Email notifications opened by recipients | Display only; percentage of delivered emails |
-| Clicked (Email) | number + percentage | No | Email links clicked by recipients | Display only; percentage of opened emails |
-| Delivery Rate by Channel | chart | Yes | Delivery success rate per channel (Email, Push, SMS) | Bar chart or line chart |
-| Failed Deliveries by Reason | chart | Yes | Breakdown of failure reasons (Invalid Address, Bounce, Timeout, etc.) | Pie chart |
-| Delivery Timeline | chart | Yes | Notifications sent over time (hourly/daily) | Line chart |
-| Failed Notifications List | table | Yes | Detailed list of failed notifications for troubleshooting | Paginated; sortable by failure reason, timestamp |
-| Failed Notification: Recipient | text (masked) | Yes | Masked recipient identifier (e.g., "mar***@example.com") | Privacy-protected display |
-| Failed Notification: Event | text | Yes | Event that triggered notification | Display only |
-| Failed Notification: Channel | badge | Yes | Delivery channel (Email, Push, SMS) | Display only |
-| Failed Notification: Failure Reason | text | Yes | Reason for failure (e.g., "Invalid email address", "SMS delivery failed") | Display only |
-| Failed Notification: Timestamp | datetime | Yes | When delivery failed | Display in admin's local timezone |
-| Failed Notification: Actions | button group | Yes | Retry, View Logs, Mark Resolved | Permission-based |
-
-**Business Rules**:
-
-- Delivery metrics update in near-real-time (5-minute refresh interval)
-- Email open tracking requires recipient email client support (may not be 100% accurate)
-- Failed deliveries grouped by failure reason to identify systemic issues (e.g., all emails to specific domain bouncing)
-- Admin can manually retry failed notifications (useful after fixing recipient contact info)
-- Marking failed notification as "Resolved" removes it from active failures list but retains in logs
-- Export analytics data to CSV for external reporting
-
-**Notes**:
-
-- Dashboard auto-refreshes every 5 minutes
-- Color-coded metrics: green (>95% delivery), yellow (90-95%), red (<90%)
-- Drill-down capability: click on metric to view detailed notification list
-- Alert badges for critical issues (e.g., "SMS gateway down - 50 messages pending")
 
 ---
 
@@ -574,6 +528,10 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Why needed**: FR-030 extends OTP template management capabilities from FR-026 to encompass all notification types
   - **Integration point**: Uses centralized template storage and audit trail infrastructure from FR-026
 
+- **FR-021 / Module A-09**: Multi‑Language & Localization (i18n)
+  - **Why needed**: Notification templates and delivery must respect supported locales, user language preference, and fallback rules
+  - **Integration point**: Template language dropdown and validation use FR-021 supported locales; S-03 selects template variant using recipient locale + fallback order defined in FR-021
+
 - **FR-001 / Module P-01**: Auth & Profile Management (Patient)
   - **Why needed**: Requires patient profile data for notification personalization (name, email, phone, language preference, timezone)
   - **Integration point**: S-03 Notification Service queries P-01 APIs to retrieve recipient profile data before rendering templates
@@ -663,7 +621,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - **Assumption 1**: Critical notifications (payment confirmations, appointment reminders, medical escalations) must be delivered with higher priority and stricter SLAs than non-critical notifications (marketing, general updates)
 - **Assumption 2**: Notification templates will be updated infrequently (quarterly or less) once initial templates finalized
-- **Assumption 3**: Multi-language notification support required for English and Turkish initially; additional languages added based on market expansion
+- **Assumption 3**: Multi-language notification support required for English and Turkish initially (per FR-021); additional languages added based on market expansion
 - **Assumption 4**: Notification delivery metrics reviewed weekly by admin team to identify and resolve delivery issues
 - **Assumption 5**: Admins will test notification rules in staging environment before activating in production to prevent erroneous notifications to real users
 
@@ -738,7 +696,7 @@ Admin needs to configure automated payment reminder notifications to reduce over
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is logged into Admin Platform → Settings → Alerts & Notifications, **When** admin clicks "Add New Notification Rule" and selects event type "Payment Installment Due - 3 Days Before", **Then** system displays notification rule creation form with event-specific configuration options
+1. **Given** admin is logged into Admin Platform → Settings → Alerts & Notifications, **When** admin selects the "Payment Due Reminder" event from the event catalog and clicks "Configure", **Then** system displays the event configuration form with event-specific configuration options
 2. **Given** admin configures rule with email and push channels enabled, delivery timing "3 days before due date at 9:00 AM recipient local time", retry enabled (max 3 attempts), **When** admin clicks "Save Draft", **Then** system validates rule configuration and saves as draft status
 3. **Given** admin clicks "Test Rule", **When** system generates test notification with sample payment data (patient name "Test Patient", amount due "$200", due date "2025-11-16"), **Then** admin receives test email and push notification within 2 minutes with correct personalized content
 4. **Given** admin reviews test notification and verifies content correct, **When** admin clicks "Activate Rule", **Then** system prompts for confirmation, activates rule upon confirmation, and displays success message "Notification rule activated successfully"
@@ -766,7 +724,7 @@ Admin needs to create email notification template for "Quote Received" event in 
 
 ---
 
-### User Story 3 - Admin Monitors Notification Delivery Metrics and Troubleshoots Failures (Priority: P2)
+### User Story 3 - Admin Monitors Notification Delivery and Troubleshoots Failures (Priority: P2)
 
 Admin needs to monitor notification delivery performance to identify and resolve delivery issues. Admin should see real-time delivery rates, failure reasons, and drill down into specific failed notifications for troubleshooting.
 
@@ -776,7 +734,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 **Acceptance Scenarios**:
 
-1. **Given** admin navigates to Admin Platform → Analytics → Notification Metrics, **When** dashboard loads, **Then** system displays real-time delivery metrics for last 7 days: total sent, successfully delivered (number + percentage), failed deliveries (number + percentage), pending retries
+1. **Given** admin navigates to Admin Platform → Settings → Alerts & Notifications, **When** admin views delivery/log information for an event or runs a test notification, **Then** system displays delivery status and failure reasons (where applicable) and allows export to CSV for troubleshooting
 2. **Given** dashboard shows 950 emails sent, 900 delivered (94.7%), 50 failed (5.3%), **When** admin clicks on "Failed Deliveries" metric, **Then** system displays detailed list of 50 failed notifications with recipient (masked), event type, channel, failure reason, timestamp
 3. **Given** failed notifications list shows 30 failures with reason "Invalid email address", 15 with reason "Mailbox full", 5 with reason "SMTP timeout", **When** admin filters by failure reason "Invalid email address", **Then** system displays 30 failed notifications with invalid email addresses
 4. **Given** admin identifies pattern (all failures for email domain "@oldprovideremail.com"), **When** admin contacts affected patients to update email addresses, **Then** patients update their profiles with new email addresses

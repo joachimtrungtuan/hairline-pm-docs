@@ -1,6 +1,6 @@
 # Product Requirements Document: Messaging & Communication
 
-**Module**: P-06: Communication | A-10: Communication Monitoring & Support  
+**Module**: P-06: Communication | PR-07: Communication & Messaging | A-10: Communication Monitoring & Support  
 **Feature Branch**: `fr012-secure-messaging`  
 **Created**: 2025-11-11  
 **Status**: ✅ Verified & Approved  
@@ -19,7 +19,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; notifications for new messages; view conversation history; send text and media.
-- **Provider Platform (P-06)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; view conversation history; send text and media responses.
+- **Provider Platform (PR-07)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; view conversation history; send text and media responses.
 - **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request 3D scans or schedule reviews.
 - **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages.
 
@@ -37,7 +37,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 - Receive real-time notifications for new provider messages; badge counts for unread in inbox and app navigation.
 - Chat available from quote received through post-procedure phases.
 
-**Provider Platform (P-06)**:
+**Provider Platform (PR-07)**:
 
 - Access Messages popup/submenu from header navigation showing recent patient conversations with unread counts.
 - Quick view of most recent 10 conversations in popup; "View All" for full list.

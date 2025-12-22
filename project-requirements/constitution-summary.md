@@ -115,7 +115,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **P-06**: Communication (P2)
 - **P-07**: 3D Scan Capture & Viewing (P1)
 
-### Provider Platform Modules (6 core)
+### Provider Platform Modules (7 core)
 
 - **PR-01**: Auth & Team Management (P1)
 - **PR-02**: Inquiry & Quote Management (P1) - Enhanced to include pre-scheduling
@@ -123,6 +123,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **PR-04**: Aftercare Participation (P2 - optional)
 - **PR-05**: Financial Management & Reporting (P1)
 - **PR-06**: Profile & Settings Management (P1)
+- **PR-07**: Communication & Messaging (P2)
 
 ### Admin Platform Modules (10 core)
 

@@ -940,7 +940,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 ### FR-012: Messaging & Communication
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: P-06: Communication | A-10: Communication Monitoring & Support
+**Module(s)**: P-06: Communication | PR-07: Communication & Messaging | A-10: Communication Monitoring & Support
 
 **Requirements**:
 
