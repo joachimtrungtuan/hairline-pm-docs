@@ -20,21 +20,21 @@ This module extends the foundational OTP template management capabilities from F
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: Receives notifications based on configured rules; users cannot modify system-level notification rules but can manage their personal preferences
-- **Provider Platform (PR-XX)**: Receives notifications based on configured rules; providers can manage personal notification preferences within admin-defined boundaries
+- **Patient Platform (Mobile App)**: Receives notifications based on configured rules; users cannot modify system-level notification rules but can manage their personal preferences
+- **Provider Platform (Web)**: Receives notifications based on configured rules; providers can manage personal notification preferences within admin-defined boundaries
 - **Admin Platform (A-09)**: Full administrative control over notification rule configuration, template management, channel preferences, and testing capabilities
 - **Shared Services (S-03)**: Notification Service executes configured rules, manages delivery across channels, tracks delivery status, and maintains notification logs
 
 ### Multi-Tenant Breakdown
 
-**Patient Platform (P-XX)**:
+**Patient Platform (Mobile App)**:
 
 - Patients receive notifications triggered by system events (quote received, booking confirmed, payment due, aftercare milestone, etc.)
 - Patients can view notification history in-app
 - Patients can manage personal notification preferences within boundaries set by admin (e.g., cannot disable critical payment notifications)
 - Notifications delivered via email and push notifications in MVP; SMS delivery is optional and only becomes available in later phases when enabled in S-03/FR-020.
 
-**Provider Platform (PR-XX)**:
+**Provider Platform (Web)**:
 
 - Providers receive notifications for inquiries, quote responses, booking confirmations, payment receipts, patient arrivals, aftercare escalations
 - Providers can manage team notification routing (which staff members receive which notification types)
@@ -115,8 +115,8 @@ Notes:
 
 | Category | Event (Display Name) | Example Backend Event Key | Primary Recipients | Notes |
 |----------|-----------------------|---------------------------|--------------------|-------|
-| Account/Auth | Email Verification / OTP Code | `account.email_verification_code` | Patient, Provider, Admin | Extends FR-026 OTP templates; typically **critical** |
-| Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | Critical |
+| Account/Auth | Email Verification / OTP Code | `account.email_verification_code` | Patient, Provider, Admin | Extends FR-026 OTP templates; **security-critical** and non-disableable by default |
+| Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
@@ -171,7 +171,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 2. System displays the **backend event catalog** (grouped by category) with each row showing current status (Enabled/Disabled), channels, and last modified
 3. Admin selects an event row (e.g., "Payment Due Reminder") and reviews its current configuration
 4. Admin toggles the event **On/Off**:
-   - If toggled **Off**, S-03 will not send notifications for this event (except where policy marks it critical/non-disableable)
+   - If toggled **Off**, S-03 will not send notifications for this event (except where policy marks it critical/non-disableable). **Security-critical events (OTP verification, password reset) are non-disableable by default** and must show a locked toggle.
    - If toggled **On**, the event becomes active using its saved configuration
 5. Admin clicks **Configure** (or expands the row) to edit settings for that event
 6. System displays event-specific configuration options (channels, timing, templates, retries, escalation)
@@ -306,7 +306,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Rules List | table | Yes | Displays all rules matching filters | Sortable by event name, status, last modified; **each row is a “Rule Row” described by the fields below** |
 | Rules List – Rule Row: Event Name | link | Yes | Event that triggers notification (e.g., "Quote Submitted", "Payment Received") | Sourced from backend event catalog; click opens this event’s Rule Editor |
 | Rules List – Rule Row: Recipient Type | badge | Yes | Who receives notification (Patient, Provider, Admin, Multiple) | Display only |
-| Rules List – Rule Row: Channels | icon set | Yes | Enabled channels (email icon, push icon, SMS icon) | Display only |
+| Rules List – Rule Row: Channels | icon set | Yes | Enabled channels (email icon, push icon; SMS icon shown only post‑MVP when SMS is enabled) | Display only |
 | Rules List – Rule Row: Status | badge | Yes | Active (green), Paused (yellow), Draft (gray) | Display only |
 | Rules List – Rule Row: Last Modified | datetime | Yes | Timestamp of last modification | Display in admin's local timezone |
 | Rules List – Rule Row: Actions | button group | Yes | Configure, Test, Deactivate/Activate (and Delete if permitted) | Permission-based visibility |
@@ -346,7 +346,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Email Template | select (dropdown) | Conditional | Template to use for email (required if email enabled) | Must select template if channel enabled |
 | Push Notification Channel | toggle (on/off) | No | Enable push notification delivery | Default: on for patients/providers |
 | Push Template | select (dropdown) | Conditional | Template for push notification (required if push enabled) | Must select template if channel enabled |
-| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature, **not available in MVP**) | Default: off; admin approval required |
+| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature). **Hidden/disabled in MVP**; only shown when SMS delivery is enabled in S-03 in a post‑MVP phase | Default: off; admin approval required |
 | SMS Template | select (dropdown) | Conditional | Template for SMS (required if SMS enabled in a future phase) | Must select template if channel enabled |
 | Delivery Timing | select (dropdown) | Yes | When to send notification (Immediate, Scheduled, Delayed) | Predefined options |
 | Schedule Time | datetime picker | Conditional | Specific time to send (required if Scheduled selected) | Future datetime only |
@@ -362,7 +362,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 **Business Rules**:
 
-- At least one delivery channel (email, push, or SMS) must be enabled
+- **MVP**: At least one delivery channel (email or push) must be enabled (SMS is hidden/disabled)
+- **Post‑MVP**: SMS may be enabled where available, but at least one channel must be enabled overall
 - If event is time-sensitive (payment reminder, appointment reminder), admin must configure retry logic
 - SMS channel requires admin approval and incurs additional cost per message
 - Template selection filtered by channel type (only email templates shown for email channel)
@@ -383,7 +384,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ### Screen 3: Alerts & Notifications (Template Editor)
 
-**Purpose**: Allows admin to create and edit notification templates for email, push, and SMS channels with support for dynamic variables, multi-language content, and rich formatting.
+**Purpose**: Allows admin to create and edit notification templates for email and push (and SMS post‑MVP) with support for dynamic variables, multi-language content, and rich formatting.
 
 **Data Fields**:
 
@@ -391,14 +392,14 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 |------------|------|----------|-------------|------------------|
 | Template Name | text | Yes | Internal name for template | Max 100 chars, unique per event + channel |
 | Event Type | select (dropdown) | Yes | Event this template applies to | Predefined event list |
-| Channel Type | select (dropdown) | Yes | Delivery channel (Email, Push Notification, SMS) | Fixed at creation (cannot change) |
+| Channel Type | select (dropdown) | Yes | Delivery channel (Email, Push Notification; SMS post‑MVP only) | Fixed at creation (cannot change) |
 | Language | select (dropdown) | Yes | Template language (locale) | Must be in supported locales list (FR-021); can create multiple language versions |
 | Email Subject | text | Conditional | Email subject line (required for email channel) | Max 200 chars, supports variables |
 | Email Body | rich text editor | Conditional | Email body content (required for email channel) | Max 10,000 chars, supports HTML/variables |
 | Push Title | text | Conditional | Push notification title (required for push channel) | Max 100 chars, supports variables |
 | Push Body | textarea | Conditional | Push notification body (required for push channel) | Max 500 chars, supports variables |
 | SMS Body | textarea | Conditional | SMS message body (required for SMS channel) | Max 160 chars (1 SMS segment), supports variables |
-| Available Variables | list (read-only) | Yes | Variables available for this event type (e.g., `{{patient.name}}`, `{{booking.date}}`) | Display only; click to insert |
+| Available Variables | list (read-only) | Yes | Variables available for this event type (e.g., `{{patient.display_name}}`, `{{booking.date}}`) | Display only; click to insert |
 | Variable Preview Values | JSON editor | No | Sample values for template preview | Valid JSON; used only for preview |
 | Template Status | select (dropdown) | Yes | Active, Draft, Archived | Default: Draft |
 
@@ -408,7 +409,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Push notification templates support plain text only with limited formatting (bold, italic via markdown)
 - SMS templates support plain text only; no formatting; 160 characters per SMS segment (platform warns if exceeds 1 segment)
 - Variables must be enclosed in double curly braces: `{{variable.name}}`
-- System validates all variables exist in event payload before allowing template activation
+- System validates all variables exist in event payload before allowing template activation (recipient-specific payload schemas apply; provider recipients pre-confirmation MUST NOT have access to unmasked patient PII fields per the platform masking rules)
 - Templates can be versioned; changes create new version while preserving previous versions for audit
 - Archived templates cannot be selected in notification rules but remain for historical records
 - Multi-language templates must have matching variable usage across all language versions
@@ -419,7 +420,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Preview automatically updates as admin types
 - "Insert Variable" dropdown inserts variable at cursor position
 - "Send Test" button sends test notification to admin with preview values
-- Template version history displayed at bottom with rollback capability
+- Template version history displayed at bottom with **“Revert by Creating New Version”** capability (no in-place rollback; reverting creates a new version from a selected prior version)
 
 ---
 
@@ -429,7 +430,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - **Rule 1**: All notification rule changes logged in audit trail with admin user ID, timestamp, old configuration, and new configuration
 - **Rule 2**: Critical event notifications (payment confirmations, procedure reminders, medical escalations) cannot be deleted, only paused temporarily
-- **Rule 3**: Maximum 5 notification rules per event type to prevent conflicting configurations and notification spam
+- **Rule 3**: Exactly **one** notification rule configuration exists per event type (one row per backend event in the catalog UI); duplicate rules for the same event type are not supported
 - **Rule 4**: Notification templates must be activated before they can be selected in notification rules
 - **Rule 5**: All timestamps in notifications displayed in recipient's local timezone (derived from profile settings)
 - **Rule 6**: System enforces rate limiting per recipient to prevent notification spam: maximum 10 notifications per hour per recipient (critical notifications exempt)
@@ -441,7 +442,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Privacy Rule 2**: Notification content must not include sensitive medical information unless encrypted (email encryption via TLS, SMS not used for sensitive data)
 - **Privacy Rule 3**: Notification templates stored with encryption at rest; only decrypted during delivery
 - **Privacy Rule 4**: Recipients can opt out of non-critical notifications via profile preferences; system must respect opt-out for all non-critical notification types
-- **Privacy Rule 5**: Notification logs retained for 90 days for operational purposes; archived after 90 days; permanently deleted after 2 years
+- **Privacy Rule 5**: **Provider-facing notifications MUST follow the existing patient-identity masking rules used across the platform**: until treatment is confirmed via completed payment, patient identifiers remain masked/hidden (examples in FR-003 and FR-006). Provider templates MUST NOT be able to reference unmasked patient name/email/phone pre-confirmation; they may only use the same masked display fields used elsewhere (e.g., `patient.display_name` which renders masked pre-confirmation and unmasked post-confirmation).
+- **Privacy Rule 6**: Notification logs retained for 90 days for operational purposes; then archived (immutable) for audit/compliance retention. **No hard deletes** of notification logs; when a user requests deletion, the system must **anonymize/redact personal identifiers** in archived logs per platform retention/compliance policy (see FR-023).
 - **Audit Rule**: All notification rule modifications logged with admin user ID, timestamp, change summary, and reason (if provided)
 - **GDPR**: Recipients can request export of all notifications sent to them; system provides notification history in machine-readable format (JSON/CSV)
 
@@ -467,6 +469,15 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Encryption algorithms for notification content (AES-256 at rest, TLS 1.3 in transit)
 - Delivery channel integrations (SMTP provider, push notification service, SMS gateway API)
 
+**Non-Disableable by Default (Security-Critical)**:
+
+- **Account/Auth notifications (OTP verification, password reset)** are security-critical and MUST be **non-disableable by default** in the admin UI (toggle locked; no pause).
+- If the product explicitly allows a break-glass disable path, it MUST:
+  - Require Super Admin permission (FR-031) + re-authentication
+  - Show an imminent critical warning explaining impact (users cannot sign up/reset passwords)
+  - Require multiple confirmation steps (e.g., typed event name + final confirm)
+  - Require an audit reason and log it as a security event
+
 **Event Catalog Source**:
 
 - The list of available notification events is maintained by backend services (S-03 + core modules) as a central "event catalog".
@@ -477,7 +488,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - SMS channel availability: Admin can enable SMS for specific event types, but each SMS incurs cost; requires budget approval for high-volume events
 - Notification testing: Admins can send test notifications to themselves or designated test accounts; cannot send to production recipients without rule activation
-- Template versioning: Admins can create new template versions; system retains previous versions for audit; rollback requires admin confirmation
+- Template versioning: Admins can create new template versions; system retains previous versions for audit; “revert” creates a **new** version copied from a selected prior version and requires admin confirmation
 
 ---
 
@@ -509,7 +520,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **SC-013**: Email delivery initiated within 2 minutes of notification trigger for 95% of email notifications
 - **SC-014**: Push notification delivery initiated within 1 minute of notification trigger for 95% of push notifications
 - **SC-015**: System processes 1,000+ concurrent notification deliveries without performance degradation
-- **SC-016**: Notification delivery success rate: 95%+ for email, 98%+ for push, 90%+ for SMS (SMS lower due to carrier issues)
+- **SC-016**: Notification delivery success rate: 95%+ for email, 98%+ for push
 - **SC-017**: Failed notification retries executed within configured intervals (e.g., 1 hour, 3 hours, 6 hours) with 98%+ punctuality
 
 ### Business Impact Metrics
@@ -659,7 +670,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Current scale**: Expected 500 notifications per day at launch (inquiries, quotes, bookings across 100 patients and 10 providers)
 - **Growth projection**: Plan for 10,000 notifications per day within 12 months (2,000 patients, 50 providers, multiple notifications per booking lifecycle)
 - **Peak load**: Handle 1,000 simultaneous notifications during promotional campaigns or system-wide reminders (e.g., Black Friday sale, daylight saving time change triggering rescheduled notifications)
-- **Data volume**: Expect 100 MB of notification logs per month (retained for 90 days = 300 MB; archived for 2 years = 2.4 GB total)
+- **Data volume**: Expect 100 MB of notification logs per month (retained for 90 days = 300 MB operational). Archived retention duration follows platform audit/compliance policy (see FR-023); size scales linearly with retention.
 - **Scaling strategy**:
   - Horizontal scaling of S-03 Notification Service workers (Kubernetes pod autoscaling based on queue depth)
   - Distributed message queue (RabbitMQ cluster or AWS SQS) to handle high event throughput
@@ -670,6 +681,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - **Authentication**: Admin access to notification configuration requires authentication via FR-031 admin authentication system; admins cannot impersonate recipients for notification testing
 - **Authorization**: Granular permission checks enforced via FR-031 permission matrix; some admins can configure rules, others only view analytics
+- **PII Redaction (Provider Pre-Confirmation)**: When the recipient is a provider and treatment is not yet confirmed via completed payment, S-03 MUST apply the same patient-identity masking rules used elsewhere in the platform (e.g., FR-003/FR-006) and MUST NOT include unmasked patient identifiers (full name, email, phone) in the provider recipient payload.
 - **Encryption**: Notification templates stored encrypted at rest (AES-256); decrypted only during template rendering in S-03 Notification Service
 - **Audit trail**: All notification rule modifications logged with admin user ID, timestamp, change summary, IP address; logs retained for 10 years for compliance
 - **Threat mitigation**:
@@ -688,7 +700,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ### User Story 1 - Admin Configures Payment Reminder Notifications (Priority: P1)
 
-Admin needs to configure automated payment reminder notifications to reduce overdue installments. Patient should receive email and push notifications 3 days before installment due date, with fallback SMS if payment still not received 1 day before due date.
+Admin needs to configure automated payment reminder notifications to reduce overdue installments. Patient should receive email and push notifications 3 days before installment due date. (SMS is post‑MVP only.)
 
 **Why this priority**: Payment reminders are critical for cash flow and reducing payment defaults. This is the highest-value notification type for the business.
 
@@ -801,7 +813,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 - **REQ-030-011**: System MUST store notification rules with: event type, recipient targeting rules, channel preferences, template IDs, delivery timing, retry configuration, escalation rules, rule status (active/paused/draft)
 - **REQ-030-012**: System MUST store notification templates with: template name, event type, channel type, language, content (subject, body), variables, status (active/draft/archived), version history
-- **REQ-030-013**: System MUST maintain notification delivery logs for 90 days in operational database; archive logs for 2 years for compliance; permanently delete after 2 years
+- **REQ-030-013**: System MUST maintain notification delivery logs for 90 days in operational database; archive logs for audit/compliance retention (no hard delete). If a user requests deletion, the system MUST anonymize/redact personal identifiers in those logs per platform retention/compliance policy (see FR-023).
 - **REQ-030-014**: System MUST track notification engagement metrics (email opens, email clicks) via pixel tracking and link tracking from SMTP service
 
 ### Security & Privacy Requirements
