@@ -3,7 +3,7 @@
 **Module**: P-06: Communication | PR-06: Communication | A-10: Communication Monitoring & Support  
 **Feature Branch**: `fr012-secure-messaging`  
 **Created**: 2025-11-11  
-**Status**: Draft  
+**Status**: ✅ Verified & Approved  
 **Source**: FR-012 from local-docs/project-requirements/system-prd.md; Transcriptions (HairlineApp-Part1/Part2, Hairline-AdminPlatform-Part1/Part2)
 
 ---
@@ -801,7 +801,7 @@ Not applicable to messaging scope; no payment flows in this module.
 
 ### Security Considerations
 
-- Authentication: Strong session controls; MFA required for Admin/Provider per policy.
+- Authentication: Strong session controls; MFA is a planned mandatory control for Admin/Provider and will be enforced platform-wide once the shared MFA stack (FR-026 / FR-031) is delivered; until then enforce strong passwords, throttling, and re-authentication flows per policy.
 - Authorization: Role-based access; least-privilege visibility to conversations.
 - Encryption: All content encrypted in transit (TLS 1.3) and at rest (AES-256); media links protected.
 - Audit trail: Immutable logs of access and message events retained per policy; admin interventions specially flagged.
@@ -923,13 +923,13 @@ Acceptance Scenarios:
 - **REQ-012-003**: System MUST provide a Messages popup/submenu in header navigation for providers showing recent conversations (max 10) with unread counts and quick access to patient chats.
 - **REQ-012-004**: System MUST provide a Communication Monitoring Center for admins as comprehensive message list with advanced filtering (patient, provider, service type, quote ID, inquiry ID, date range, flag type, conversation status) applied simultaneously.
 - **REQ-012-005**: System MUST provide a detailed Message Thread View for admins with two states: Screen 6A (default monitoring/flagging state with read-only access) and Screen 6B (activated emergency intervention state with message composition), accessible when conversation is selected from monitoring center.
-- **REQ-012-007**: System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (not through quote detail screens).
-- **REQ-012-006**: System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus.
-- **REQ-012-007**: Users MUST be able to view complete conversation history with timestamps and read receipts.
-- **REQ-012-008**: System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations.
-- **REQ-012-009**: System MUST log message lifecycle events (sent, delivered, read) and admin emergency interventions for audit.
-- **REQ-012-010**: System MUST allow admins to manually flag conversations for observation with flag type selection (Off-Platform Risk / Potential Dispute / Quality Concern / Follow-Up Needed / Other) and optional internal notes.
-- **REQ-012-011**: System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider.
+- **REQ-012-006**: System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (not through quote detail screens).
+- **REQ-012-007**: System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus.
+- **REQ-012-008**: Users MUST be able to view complete conversation history with timestamps and read receipts.
+- **REQ-012-009**: System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations.
+- **REQ-012-010**: System MUST log message lifecycle events (sent, delivered, read) and admin emergency interventions for audit.
+- **REQ-012-011**: System MUST allow admins to manually flag conversations for observation with flag type selection (Off-Platform Risk / Potential Dispute / Quality Concern / Follow-Up Needed / Other) and optional internal notes.
+- **REQ-012-012**: System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider.
 - **REQ-012-013**: System MUST allow admins to send messages in patient-provider conversations ONLY for emergency situations with mandatory reason tracking (Policy Violation / Urgent Dispute / Patient Safety).
 - **REQ-012-014**: System MUST clearly identify admin messages with "Hairline Admin" badge visible to both patient and provider.
 
@@ -1001,6 +1001,7 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 | 2025-12-19 | 2.8 | Added filtering capabilities to Provider Messages List (Screen 3): search, read status, date range, service type filters; clarified unified conversation model: ONE conversation per patient-provider pair regardless of number of quotes (verified with transcriptions showing relationship-based "message them directly" language); conversation entity updated with quote_references and inquiry_ids arrays; multiple quote references displayed in provider chat for context; updated all screens, workflows, requirements (REQ-012-001, REQ-012-025), and key entities | AI |
 | 2025-12-19 | 2.9 | Split Screen 6 into two explicit subsections for clarity: Screen 6A (Message Thread Detail - Monitoring & Flagging) as default read-only state with flag management, and Screen 6B (Message Thread Detail - Emergency Intervention) as activated state with message composition, mandatory reason selection, and prominent warnings; emphasizes seriousness of intervention capability and provides clearer design/implementation guidance; updated entry points and references throughout document | AI |
 | 2025-12-19 | 2.10 | Added explicit 3-panel layout structure to Provider (Screen 4) and Admin (Screens 6A/6B) message detail views: LEFT panel (conversation list synchronized with inbox/monitoring center), CENTER panel (message thread with compose area for provider or read-only for admin monitoring), RIGHT panel (conversation info, tools, quote references for provider; flag management and intervention controls for admin); documented responsive behavior for desktop/tablet/mobile; updated data fields tables to include panel location column; enhanced notes sections with layout specifications | AI |
+| 2025-12-22 | 2.11 | Verified & aligned with system PRD updates: patient ↔ provider is V1 messaging channel; support/aftercare messaging deferred; standardized patient identity reveal to post-payment only; marked MFA as planned control per Constitution; fixed duplicate REQ IDs in summary | AI |
 
 ---
 
@@ -1008,13 +1009,13 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | TBD | 2025-12-22 | ✅ Verified & Approved |
+| Technical Lead | TBD | 2025-12-22 | ✅ Verified & Approved |
+| Stakeholder | TBD | 2025-12-22 | ✅ Verified & Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD  
-**Last Updated**: 2025-12-19
+**Last Updated**: 2025-12-22

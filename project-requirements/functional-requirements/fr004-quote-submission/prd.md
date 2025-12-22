@@ -50,7 +50,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 **Out of Scope**:
 
-- Direct patient-provider chat (handled by FR-012, future)
+- Direct patient-provider chat (handled by FR-012)
 
 ### Entry Points
 

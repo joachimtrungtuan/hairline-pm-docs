@@ -56,7 +56,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Out of Scope**:
 
-- Direct patient-provider chat (moved to backlog; future FR-012)
+- Direct patient-provider chat (handled by FR-012)
 
 ### Entry Points
 
@@ -176,7 +176,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - System tracks distribution timestamps
 
 4. **Provider Access Control**
-   - Providers see anonymized patient information until quote acceptance
+   - Providers see anonymized patient information until payment confirmation
    - Patient names partially masked (e.g., "John D*****")
    - Contact details hidden until payment confirmation
    - Medical alerts prominently displayed
@@ -525,7 +525,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Patient ID | column | Yes | HPID + YY + MM + 4-digit sequence | Sortable; searchable |
-| Patient Name | column | Yes | Partially masked name | Mask until acceptance |
+| Patient Name | column | Yes | Partially masked name | Mask until payment confirmation |
 | Age | column | No | Patient age | Number; sortable |
 | Problem/Concern | column | No | Primary concern enum | Filterable |
 | Requested Date Ranges | column | Yes | Primary + tooltip for others | Non-overlap; tooltip expansion |
@@ -539,14 +539,14 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Notes**:
 
 - Requested Date Ranges: primary displayed; all ranges via tooltip
-- Patient Name: masked until acceptance
+- Patient Name: masked until payment confirmation
 - Time Display: relative for recent; formatted for older
 - Empty States: Loading, Error, No permission
 
 **Business Rules**:
 
 - Only shows inquiries for provider's countries OR explicitly selected by patient
-- Patient names partially masked until quote acceptance
+- Patient names partially masked until payment confirmation
 - Medical alerts prominently displayed with color coding
 - Inquiry expiration configurable by admin
 - Date ranges display primary range with tooltip for additional ranges
@@ -563,7 +563,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 |------------|------|----------|-------------|------------------|
 | Inquiry ID | text | Yes | Unique ID and current stage | Read-only |
 | Timestamps | group | Yes | Created/updated/activity times | ISO 8601 |
-| Patient (masked) | group | Yes | Partially masked identity | Reveal post-acceptance |
+| Patient (masked) | group | Yes | Partially masked identity | Reveal post-payment confirmation |
 | Countries | list | Yes | Selected treatment countries | Non-empty |
 | Problem Details | group | Yes | Concern text, duration, previous treatments | Complete |
 | Media | gallery | No | Photos/videos previews | File constraints enforced |
@@ -581,7 +581,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Patient (Masked):
   - Display name: First name + last initial + asterisks (e.g., "John D*****")
   - Age, Gender, Country (contact details masked until payment)
-  - Patient ID (HPID-based) visible; name, phone number, and email remain masked/hidden until acceptance/payment
+  - Patient ID (HPID-based) visible; name, phone number, and email remain masked/hidden until payment confirmation
 - Countries:
   - Full list of selected treatment countries (ISO country + display name)
   - Primary country highlighted; remaining listed in order selected
@@ -614,7 +614,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Business Rules**:
 
-- Full patient details visible only after quote acceptance
+- Full patient details visible only after payment confirmation
 - Medical alerts color-coded by severity
 - 3D scan requires special viewer
 - All data editable by admin
@@ -816,7 +816,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 5. **Patient Name Masking**
    - Format: First name + last initial + asterisks (e.g., "John D*****")
-   - Full name revealed only after quote acceptance
+   - Full name revealed only after payment confirmation
 
 ### Validation and Constraints
 

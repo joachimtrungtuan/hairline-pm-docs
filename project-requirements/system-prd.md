@@ -517,8 +517,8 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Patients MUST be able to view all received quotes in comparison dashboard
 - System MUST display key differentiators: price, graft count, reviews, credentials
 - Patients MUST be able to filter and sort quotes by criteria
-- Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support)
-- System MUST notify Hairline support of patient questions within 5 minutes
+- Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Provider)
+- System MUST notify providers of patient questions within 5 minutes (via real-time messaging notifications)
 - Patients MUST be able to accept one quote at a time
 - System MUST mark other quotes as "cancelled (other accepted)" when one is accepted
 - System MUST notify patient and provider immediately upon quote acceptance
@@ -944,28 +944,25 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Requirements**:
 
-- System MUST provide secure messaging between patients and Hairline support
-- System MUST provide secure messaging between patients and aftercare specialists
-- Messages MUST support text, images, and video
+- System MUST provide secure messaging between patients and providers (quote clarification, booking coordination, post-procedure questions)
+- Messages MUST support text, images, video, and PDFs
 - System MUST deliver real-time notifications for new messages
 - System MUST maintain conversation history
 - System MUST support read receipts
 - System MUST log all communications for compliance and dispute resolution
+- Admins MUST be able to monitor patient ↔ provider conversations with audit-ready exports
+- Admins MUST be able to intervene ONLY in emergency situations with mandatory reason logging
 
 **Communication Channels**:
 
-- Patient ↔ Hairline Support (general inquiries, quote questions)
-- Patient ↔ Aftercare Team (recovery support, post-op questions)
-- Provider ↔ Admin (operational questions, billing issues)
-- Admin ↔ Patient (dispute resolution, support escalation)
+- Patient ↔ Provider (in-app)
+- Admin ↔ Patient/Provider (emergency-only intervention within a monitored conversation)
 
 **Backlog (Future Enhancement)**:
 
-- ⏸️ Patient ↔ Provider direct messaging (quote negotiation, booking coordination)
-  - Currently unclear from requirements if this is needed
-  - Patients can communicate with Hairline support who can relay messages if needed
-  - May be added in V2 if business case is validated
-  - Quote Q&A should be specified in FR-012; other FRs (e.g., FR-005) should reference this capability rather than redefining it
+- ⏸️ Patient ↔ Hairline Support secure messaging (general support and escalations)
+- ⏸️ Patient ↔ Aftercare Team secure messaging (recovery support)
+- ⏸️ Provider ↔ Admin operational messaging (billing/ops questions)
 
 ---
 

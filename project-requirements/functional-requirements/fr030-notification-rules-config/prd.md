@@ -87,8 +87,8 @@ This module extends the foundational OTP template management capabilities from F
 
 Admins access notification configuration through:
 
-1. **Admin Dashboard → Settings → Notification Settings**: Primary entry point for notification rule management
-2. **Admin Dashboard → Settings → Email Templates**: Dedicated template editor for email notifications
+1. **Admin Dashboard → Settings → Alerts & Notifications**: Primary entry point for notification rule management and notification template setup
+2. **Admin Dashboard → Settings → Alerts & Notifications**: Dedicated area for managing notification templates (email, push, SMS in future)
 3. **Admin Dashboard → Analytics → Notification Metrics**: Monitoring and troubleshooting view for delivery status
 4. **Event-driven**: System events automatically trigger notification evaluation based on configured rules (S-03)
 5. **Template Testing**: Admins can send test notifications to themselves before activating rules
@@ -97,21 +97,82 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 ---
 
+## Admin-Configurable Notification Event Catalog (Preset by Backend)
+
+### Core Rule
+
+- The list of notification events that appear in **`Settings → Alerts & Notifications`** is a **preset backend event catalog**.
+- Admins can **only configure events that appear in this catalog UI** (enable/disable, channels, timing, templates, retries, escalation).
+- **If an event does not appear in the catalog UI, it cannot be configured** (it is either not implemented, not enabled for the current environment, or intentionally not exposed).
+
+### MVP: Admin-Configurable Event Types (Shown in UI)
+
+Below is the minimum, platform-wide set of events that MUST be configurable by admins in MVP.
+
+Notes:
+
+- **Backend event keys** below are **illustrative**. The backend owns the final canonical keys, but they MUST be stable identifiers exposed via the event catalog API.
+- If an event is not present in this table, it should **not appear** in `Settings → Alerts & Notifications` and therefore **cannot be configured**.
+
+| Category | Event (Display Name) | Example Backend Event Key | Primary Recipients | Notes |
+|----------|-----------------------|---------------------------|--------------------|-------|
+| Account/Auth | Email Verification / OTP Code | `account.email_verification_code` | Patient, Provider, Admin | Extends FR-026 OTP templates; typically **critical** |
+| Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | Critical |
+| Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
+| Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
+| Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
+| Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
+| Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
+| Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
+| Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
+| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
+| Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
+| Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
+| Booking/Schedule | Booking Rescheduled | `booking.rescheduled` | Patient, Provider | Critical if schedule changes |
+| Booking/Schedule | Booking Cancelled | `booking.cancelled` | Patient, Provider, Admin (optional) | Include cancellation reason where appropriate |
+| Booking/Schedule | Appointment Reminder | `booking.appointment_reminder` | Patient, Provider | Scheduled reminders; policy-driven |
+| Treatment | Treatment Start / Day-1 Starting | `treatment.started` | Patient, Provider | “Treatment start notifications” |
+| Payment | Payment Received / Receipt | `payment.received` | Patient, Provider, Admin (optional) | Critical |
+| Payment | Payment Failed | `payment.failed` | Patient, Admin (optional) | Critical |
+| Payment | Payment Due Reminder (Installment / Balance) | `payment.due_reminder` | Patient | “Installment reminder” (split-pay compatible) |
+| Billing/Payouts | Provider Payout Processed | `payout.provider_processed` | Provider, Admin (optional) | “They’ve been paid” notification to provider |
+| Billing/Payouts | Affiliate Payout Processed | `payout.affiliate_processed` | Affiliate, Admin (optional) | If affiliate program is enabled |
+| Messaging/Support | New Message Received | `message.received` | Patient, Provider, Admin (optional) | Real-time notification for new messages |
+| Messaging/Support | Support Ticket Updated / Reply Added | `support.ticket_updated` | Patient, Admin | Support center communications |
+| Aftercare | Aftercare Activated | `aftercare.activated` | Patient, Provider | Includes assigned provider/clinician info where applicable |
+| Aftercare | Aftercare Milestone Due | `aftercare.milestone_due` | Patient, Provider (optional) | Milestone-driven reminders |
+| Aftercare | Scan Due / Missed Scan Reminder | `aftercare.scan_due` / `aftercare.scan_missed` | Patient | “Missed scans MUST trigger reminder notifications” |
+| Aftercare | Questionnaire Due / Missed Questionnaire Reminder | `aftercare.questionnaire_due` / `aftercare.questionnaire_missed` | Patient | “Questionnaire due” + reminder if missed |
+| Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
+| Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
+| Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
+
+### Post‑MVP / Hidden Events (Not Shown in UI Until Enabled)
+
+These event types may exist in backend roadmap but MUST NOT appear in admin UI until the backend supports them end-to-end and product enables them.
+
+| Category | Event (Display Name) | Example Backend Event Key | Notes |
+|----------|-----------------------|---------------------------|-------|
+| Channels | SMS Delivery Enabled | `channel.sms_enabled` | SMS is future; **not available in MVP** |
+| Aftercare | Medication / Washing / Activity Reminders | `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` | Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules |
+| Travel | Passport / Travel Document Required | `travel.passport_required` | Only show once travel module + event publishing exists |
+| Travel | Flight / Hotel Itinerary Updates | `travel.itinerary_updated` | Post‑release travel roadmap |
+
 ## Business Workflows
 
-### Main Flow: Admin Configures Notification Rule for New Event Type
+### Main Flow: Admin Configures Notification Rule for an Event Type (From Backend Event Catalog)
 
 **Actors**: Admin (Hairline operations team), S-03 Notification Service (system), Recipient (Patient/Provider)
-**Trigger**: Admin wants to configure notifications for a new business event (e.g., "Payment Installment Reminder 3 Days Before Due")
+**Trigger**: Admin wants to configure notifications for an event type available in the backend event catalog (e.g., "Payment Installment Due - 3 Days Before"). Event types are predefined by backend services and are not created in the admin UI.
 **Outcome**: Notification rule configured, tested, and activated; recipients receive notifications when event occurs
 
 **Steps**:
 
-1. Admin navigates to Admin Platform → Settings → Notification Settings
+1. Admin navigates to Admin Platform → Settings → Alerts & Notifications
 2. System displays list of configured notification rules grouped by event category (Booking, Payment, Aftercare, etc.)
 3. Admin clicks "Add New Notification Rule"
 4. System displays notification rule creation form
-5. Admin selects event type from dropdown (e.g., "Payment Installment Due - 3 Days Before")
+5. Admin selects event type from the backend event catalog dropdown (e.g., "Payment Installment Due - 3 Days Before")
 6. System displays event-specific configuration options
 7. Admin configures recipient rules:
    - Recipient type: Patient (booking owner)
@@ -150,7 +211,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 - **Trigger**: Admin needs to modify delivery timing or add SMS channel to existing rule
 - **Steps**:
-  1. Admin navigates to Notification Settings and filters by event type
+  1. Admin navigates to Settings → Alerts & Notifications and filters by event type
   2. Admin clicks "Edit" on existing rule
   3. Admin modifies delivery timing from 3 days to 5 days before due date
   4. Admin enables SMS channel and selects SMS template
@@ -163,7 +224,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 - **Trigger**: Admin wants to pause notifications during system maintenance or holiday period
 - **Steps**:
-  1. Admin navigates to Notification Settings
+  1. Admin navigates to Settings → Alerts & Notifications
   2. Admin toggles rule status from "Active" to "Paused"
   3. System prompts: "Paused rules will not trigger notifications. Reactivate when ready."
   4. Admin confirms pause
@@ -175,7 +236,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 - **Trigger**: Admin needs to support English and Turkish notification templates for same event
 - **Steps**:
-  1. Admin navigates to Email Templates editor
+  1. Admin navigates to Settings → Alerts & Notifications and opens the Templates section
   2. Admin selects event type: "Quote Received"
   3. Admin selects language: English (default)
   4. Admin edits email template with subject, body, variables
@@ -277,7 +338,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Rule Name | text | Yes | Internal name for rule (not shown to recipients) | Max 100 chars, unique per event |
-| Event Type | select (dropdown) | Yes | System event that triggers notification | Predefined event list from system |
+| Event Type | select (dropdown) | Yes | System event that triggers notification | Predefined event list from backend; admin cannot create or rename event types here |
 | Event Category | text (read-only) | Yes | Auto-populated based on event type | Display only |
 | Recipient Type | multi-select | Yes | Who receives notification (Patient, Provider, Admin, Affiliate) | At least one recipient type required |
 | Recipient Filter Rules | JSON editor | No | Advanced filtering (e.g., only patients in specific regions) | Valid JSON schema |
@@ -452,6 +513,12 @@ Activation method: Notification rules activate immediately upon saving (with con
 - Encryption algorithms for notification content (AES-256 at rest, TLS 1.3 in transit)
 - Delivery channel integrations (SMTP provider, push notification service, SMS gateway API)
 
+**Event Catalog Source**:
+
+- The list of available notification events is maintained by backend services (S-03 + core modules) as a central "event catalog".
+- Admin UIs (e.g., `Settings → Alerts & Notifications`) can only **select from this catalog**; they cannot create arbitrary new event types.
+- New event types are introduced via backend/product releases and then exposed to the admin as selectable items for configuration (rule on/off, channels, timing, templates).
+
 **Configurable with Restrictions**:
 
 - SMS channel availability: Admin can enable SMS for specific event types, but each SMS incurs cost; requires budget approval for high-volume events
@@ -477,7 +544,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 ### Admin Management Metrics
 
-- **SC-008**: Admins can create and activate new notification rule for new event type in under 10 minutes
+- **SC-008**: Admins can create and activate a notification rule for an event type (from the backend event catalog) in under 10 minutes
 - **SC-009**: Admins can edit notification template and see changes applied to new notifications immediately (within 1 minute)
 - **SC-010**: Admins can view notification delivery metrics in real-time dashboard with 5-minute data refresh
 - **SC-011**: Admins receive alerts for critical notification delivery issues (e.g., email gateway down) within 5 minutes of issue detection
@@ -671,7 +738,7 @@ Admin needs to configure automated payment reminder notifications to reduce over
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is logged into Admin Platform → Settings → Notification Settings, **When** admin clicks "Add New Notification Rule" and selects event type "Payment Installment Due - 3 Days Before", **Then** system displays notification rule creation form with event-specific configuration options
+1. **Given** admin is logged into Admin Platform → Settings → Alerts & Notifications, **When** admin clicks "Add New Notification Rule" and selects event type "Payment Installment Due - 3 Days Before", **Then** system displays notification rule creation form with event-specific configuration options
 2. **Given** admin configures rule with email and push channels enabled, delivery timing "3 days before due date at 9:00 AM recipient local time", retry enabled (max 3 attempts), **When** admin clicks "Save Draft", **Then** system validates rule configuration and saves as draft status
 3. **Given** admin clicks "Test Rule", **When** system generates test notification with sample payment data (patient name "Test Patient", amount due "$200", due date "2025-11-16"), **Then** admin receives test email and push notification within 2 minutes with correct personalized content
 4. **Given** admin reviews test notification and verifies content correct, **When** admin clicks "Activate Rule", **Then** system prompts for confirmation, activates rule upon confirmation, and displays success message "Notification rule activated successfully"
@@ -690,7 +757,7 @@ Admin needs to create email notification template for "Quote Received" event in 
 
 **Acceptance Scenarios**:
 
-1. **Given** admin navigates to Admin Platform → Settings → Email Templates, **When** admin clicks "Create New Template" and selects event type "Quote Received", channel "Email", language "English", **Then** system displays email template editor with available variables for Quote Received event
+1. **Given** admin navigates to Admin Platform → Settings → Alerts & Notifications, **When** admin clicks "Create New Template" and selects event type "Quote Received", channel "Email", language "English", **Then** system displays email template editor with available variables for Quote Received event
 2. **Given** admin edits template with subject "Your Hair Transplant Quote from {{provider.name}}", body "Hello {{patient.first_name}}, You've received a quote for {{quote.treatment_type}} from {{provider.name}}. Quote Amount: {{quote.total_amount}} {{quote.currency}}. Quote expires on {{quote.expiry_date}}. View your quote in the app.", **When** admin clicks "Save Draft", **Then** system validates template variables against event payload schema and saves template as draft
 3. **Given** admin clicks "Add Translation", **When** admin selects language "Turkish" and edits Turkish template with translated subject and body (same variables), **Then** system validates both templates have matching variables and saves Turkish version
 4. **Given** admin clicks "Activate Template", **When** system validates both language versions active, **Then** system activates template and displays success message
