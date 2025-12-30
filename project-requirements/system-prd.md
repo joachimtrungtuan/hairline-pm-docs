@@ -960,7 +960,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Backlog (Future Enhancement)**:
 
-- ⏸️ Patient ↔ Hairline Support secure messaging (general support and escalations)
+- ⏸️ Patient ↔ Hairline Support Support Center / ticketing (general support and escalations; see FR-034)
 - ⏸️ Patient ↔ Aftercare Team secure messaging (recovery support)
 - ⏸️ Provider ↔ Admin operational messaging (billing/ops questions)
 
@@ -1052,6 +1052,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Admins MUST be able to manually intervene in patient-provider disputes
 - Admins MUST be able to reset patient passwords
 - Admins MUST be able to suspend or deactivate patient accounts
+- Admins SHOULD be able to access patient support case context via Support Center (see FR-034)
 - System MUST log all admin actions on patient accounts for audit trail
 
 ---
@@ -1577,6 +1578,24 @@ Total Quote:                           £3,000
 - System MUST support multi-language Help Centre content (future enhancement)
 
 **Note**: Detailed requirements to be documented in dedicated FR-033 PRD.
+
+---
+
+### FR-034: Patient Support Center & Ticketing
+
+**Priority**: P2 (Enhanced)  
+**Module(s)**: A-10: Communication Monitoring & Support | A-01: Patient Management & Oversight
+
+**Requirements**:
+
+- System MUST provide a formal Support Center for patient support case intake, tracking, and resolution
+- Staff MUST be able to create support cases, categorize them, set priority, and assign ownership
+- System MUST support a case lifecycle: Open → In Progress → Resolved → Closed, with immutable history
+- Support cases MUST be linkable to patient records (HPID/email/phone) and deep-link to A-01 for interventions
+- System MUST maintain an auditable case timeline (messages, notes, attachments) and support exports for disputes/compliance
+- System MUST support patient notifications on meaningful updates (status changes/replies) via S-03 when enabled
+
+**Note**: FR-034 is currently tracked at the system level only. A dedicated FR-034 PRD will be authored when implementation planning begins.
 
 ---
 

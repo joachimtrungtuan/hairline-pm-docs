@@ -1,5 +1,5 @@
 ---
-description: Verify module progress checklist accuracy by cross-checking each subflow against the actual codebase implementation.
+description: Update a specific checklist row (Module+FR) by deriving core subflows from the FR PRD, cross-checking client transcriptions, and validating implementation progress in the codebase.
 ---
 
 ## User Input
@@ -10,315 +10,235 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
-**CRITICAL**: The user will specify which checklist file to verify in their prompt. The file path will be provided in `$ARGUMENTS`. If no file is specified, you **MUST** ask the user to provide the checklist file path.
+## Required Inputs (Do Not Proceed Without These)
+
+This prompt checks progress for exactly **one** `(MODULE_CODE, FR_CODE)` pair at a time.
+
+The user must provide:
+
+1. **Checklist file path** (the progress checklist to update)
+2. **Module code** (e.g., `P-01`, `PR-02`, `A-04`, `S-03`)
+3. **FR code** (e.g., `FR-001`, `FR-007B`)
+
+If **ANY** of these is missing:
+
+- **DO NOT** proceed with checking.
+- Ask the user to re-confirm **all three** (checklist path + module code + FR code) in one message.
+
+## Hard Rules
+
+- **Row scope rule**: Each checklist row represents exactly one tenant context for a `(MODULE_CODE, FR_CODE)` pair. Do not mix tenants or modules.
+- **Section integrity rule**: When reading the FR PRD, process sections strictly one-by-one; do not combine sections.
+- **File rule**: Do **NOT** create any new files in this prompt. Only update the checklist file itself.
+- If the user wants task generation, point them to: `local-docs/task-prompt/create-implementation-tasks.md`.
 
 ## Outline
 
-Verify module progress checklist accuracy by cross-checking subflows against codebase implementation:
-
-1. **Codebase Analysis**: Search for API endpoints, controllers, models, and frontend components
-2. **Status Validation**: Compare checklist status (✅/🟨/🟥) against actual implementation
-3. **Gap Identification**: Document discrepancies, missing features, and implementation conflicts
-4. **Task Generation**: Create implementation tasks for missing components
+1. Confirm inputs and locate the exact checklist row
+2. Scan FR PRD structure (headers only)
+3. Derive the core subflow list (section-by-section)
+4. Cross-check the core subflow list with client transcriptions
+5. Reconcile the checklist subflow items (append/update/remove)
+6. Verify progress item-by-item in code (existence + correctness)
+7. Compute progress % and update the checklist row
 
 ## Execution Flow
 
-### Step 1: Parse User Input and Load Required Files
+### Step 0: Todo Tracking (Mandatory)
 
-**MUST** first parse the user input to extract:
+**MUST** create and maintain a todo list so the agent stays on track and does not stray.
 
-1. **Checklist File Path**: The file path to the checklist that needs verification
-   - Extract from `$ARGUMENTS` or user prompt
-   - If not provided, **MUST** ask user: "Please specify the checklist file path to verify"
-   - Validate file exists before proceeding
-   - Store as `CHECKLIST_FILE` variable
+Create initial todos similar to:
 
-**MUST** then load these files (use absolute paths; convert relative paths to absolute):
+1. Parse inputs (checklist + module + FR)
+2. Locate matching checklist row
+3. Locate FR PRD and extract structure
+4. Analyze PRD sections one-by-one
+5. Cross-check with transcriptions
+6. Reconcile checklist subflow items
+7. Verify each item in code (FE/BE)
+8. Compute progress % and update row
+9. Final consistency check and summary
 
-1. `CHECKLIST_FILE` - Checklist to verify - **REQUIRED**
+### Step 1: Parse Inputs and Load Required Files
+
+**MUST** extract from `$ARGUMENTS` or user prompt:
+
+1. `CHECKLIST_FILE` (required)
+2. `MODULE_CODE` (required)
+3. `FR_CODE` (required)
+
+**CRITICAL**: If only `MODULE_CODE` or only `FR_CODE` is provided, ask the user to provide the missing one and **re-confirm both** before proceeding.
+
+**MUST** load these files (use absolute paths; convert relative paths to absolute):
+
+1. `CHECKLIST_FILE` - Checklist to update - **REQUIRED**
 2. `.specify/memory/constitution.md` - Module code definitions and architecture - **REQUIRED**
 3. `local-docs/project-requirements/system-prd.md` - System-level requirements and FR definitions - **REQUIRED**
-   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
-4. `local-docs/project-requirements/transcriptions/*.txt` - All transcription files for client requirements - **REQUIRED**
-   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
-5. **FR-Specific PRD Files** - For each FR number referenced in checklist, load corresponding PRD from `local-docs/project-requirements/functional-requirements/fr###-*/prd.md` - **REQUIRED**
-   - Extract FR numbers from checklist (e.g., FR-001, FR-003)
-   - Load matching PRD file (e.g., `fr001-patient-authentication/prd.md`)
-   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
+4. `local-docs/project-requirements/transcriptions/*.txt` - Client requirements (cross-check intent) - **REQUIRED**
+5. **FR PRD** for `FR_CODE`: `local-docs/project-requirements/functional-requirements/fr###-*/prd.md` - **REQUIRED**
 
-### Step 2: Understand Status Symbols
+### Step 2: Determine Verification Scope From `MODULE_CODE`
 
-**CRITICAL**: Status definitions:
+**CRITICAL**: Scope depends on module tenant:
+
+- **Patient (P-*)**:
+  - **Flutter app frontend**: `main/hairline-app/`
+  - **Backend API**: `main/hairline-backend/`
+- **Provider (PR-*)**:
+  - **Web frontend**: `main/hairline-frontend/`
+  - **Backend API**: `main/hairline-backend/`
+- **Admin (A-*)**:
+  - **Web frontend**: `main/hairline-frontend/`
+  - **Backend API**: `main/hairline-backend/`
+- **Shared Services (S-*)**:
+  - **Backend only**: `main/hairline-backend/`
+
+### Step 3: Locate the Exact Checklist Row (Module + FR)
+
+**MUST** find the table row in `CHECKLIST_FILE` matching:
+
+- The exact `MODULE_CODE` cell (e.g., `P-02`)
+- A Functional Requirements cell that contains `FR_CODE` (e.g., `FR-005`)
+
+If no row matches, ask the user to confirm:
+
+- The correct `MODULE_CODE`
+- The correct `FR_CODE`
+- Whether the checklist file is the correct version
+
+If multiple rows match, treat them as separate tenants/contexts and ask the user which one to update (do not merge rows).
+
+### Step 4: Status Symbols and Progress Calculation
+
+Status definitions:
 
 - ✅ **Completed** (≥90%): Fully implemented, functional, matches PRD, no critical bugs
 - 🟨 **Partially Implemented** (≥50%): Core functionality exists but missing edge cases, validation, or non-critical features
-- 🟥 **Not Yet Implemented** (<50%): No implementation found, only placeholders/stubs, or feature missing from codebase
+- 🟥 **Not Yet Implemented** (<50%): Missing or mostly stubbed
 
-### Step 3: Verification Methodology
+Progress % calculation (for the row):
 
-**CRITICAL**: Determine module type first - verification scope depends on type:
+- Assign scores per item: ✅ = 1.0, 🟨 = 0.5, 🟥 = 0.0
+- Progress % = `round( (sum(scores) / item_count) * 100 )`
+- **Preserve** any additional markers already used in the checklist text (e.g., `⏳`) unless the user explicitly asks to change them.
 
-- **Patient (P-*)**: Backend API only (mobile app is separate project)
-- **Provider (PR-*)**: Backend API + Frontend components in `main/hairline-frontend/`
-- **Admin (A-*)**: Backend API + Frontend components in `main/hairline-frontend/`
-- **Shared Services (S-*)**: Backend only
+### Step 5: Derive Core Subflows From the FR PRD (Section-By-Section)
 
-For **EACH** subflow item, perform checks based on module type:
+This step produces the “analysis subflow list” for the specified `(MODULE_CODE, FR_CODE)` pair.
 
-**CRITICAL**: Before verifying each subflow item, **MUST** first:
+#### 5.1 Scan PRD Structure First (Headers Only)
 
-1. **Read PRD Section**: Load and read the corresponding PRD section (workflow, screen specification, or business rule) that describes the subflow
-2. **Identify Implementation Areas**: From the PRD, extract:
-   - **Frontend (if applicable)**: Screen names, component names, UI elements, form fields, navigation flows mentioned in PRD
-   - **Backend**: API endpoint patterns, controller names, model names, business logic steps, validation rules mentioned in PRD
-   - **Data Requirements**: Fields, relationships, storage requirements mentioned in PRD
-3. **Map to Codebase**: Use PRD details to identify specific files/components/endpoints to verify:
-   - PRD screen names → Frontend component files (e.g., "Login Screen" → `Login.jsx` or `LoginForm.jsx`)
-   - PRD workflow steps → Backend controller methods (e.g., "Password Reset Initiation" → `PasswordResetController@initiate`)
-   - PRD data fields → Model attributes and migrations
-4. **Verify Against PRD**: Check that implementation matches PRD specifications exactly
+- Locate the PRD file for `FR_CODE` (glob `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`)
+- Extract section headers (H2) without loading full content (e.g., `rg -n "^## " prd.md`)
+- Add one todo per section and process in order
 
-#### 3.1 Backend Verification (ALL Modules)
+#### 5.2 Process Each PRD Section One-By-One (Integrity Rule)
 
-**MUST** verify for all modules:
+For each section (in order):
 
-1. **API Routes**: Search `main/hairline-backend/routes/api.php` - document path, HTTP method, controller method
-2. **Controller Methods**: Verify in `main/hairline-backend/app/Http/Controllers/` - method exists, implemented (not stub), has validation/error handling/business logic
-3. **Model Relationships**: Check `main/hairline-backend/app/Models/` - relationships correct, migrations include required tables/columns
-4. **Functionality**: Verify response structure, authentication/authorization middleware, error handling, validation rules
+1. Load only that section’s content (bounded by header line numbers)
+2. Read the section once to understand intent and identify the main content
+3. Extract candidate subflows/features:
+   - Workflows / steps
+   - Screens / UI behaviors
+   - Core business requirements that must exist for the feature to work
+4. Keep only items relevant to the specified `MODULE_CODE` tenant
+5. Discard the section content before moving to the next section
 
-#### 3.2 Frontend Verification (Provider & Admin Modules ONLY)
+At the end, produce a concise **core subflow list**:
 
-**CRITICAL**: **DO NOT** verify frontend for Patient modules (P-*) - mobile app is separate project.
+- The minimum set of items required for the module+FR to work end-to-end
+- Written in checklist-item style (short, testable)
 
-**MUST** verify for Provider (PR-*) and Admin (A-*) modules:
+### Step 6: Cross-Check Core Subflows Against Client Transcriptions
 
-1. **React Components**: Search `main/hairline-frontend/src/` - component exists, not placeholder
-2. **API Integration**: Verify API calls (`useQuery`, `useMutation`, `fetch`, `axios`) match backend endpoints, proper error handling
-3. **UI Components**: Verify UI matches PRD, complete workflows/forms, correct navigation/routing
-4. **User Experience**: Check loading states, error messages, success feedback, form validation
+For each derived subflow item:
 
-#### 3.3 PRD-Guided Verification Process
+- Search `local-docs/project-requirements/transcriptions/*.txt` for supporting evidence
+- Confirm it aligns with client intent (and isn’t contradicted elsewhere)
+- If transcriptions introduce a must-have item missing from PRD, include it in the analysis list and mark it as “from transcription”
 
-**CRITICAL**: For **EACH** subflow item, **MUST** follow this process:
+### Step 7: Reconcile With Existing Checklist Items (Update the Checklist List)
 
-1. **Load Relevant PRD Section**:
-   - Identify which FR number the subflow belongs to from checklist
-   - Load corresponding PRD file: `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`
-   - Navigate to relevant section (Workflow, Screen Specification, or Business Rule) that describes the subflow
-   - GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
+**MUST** compare:
 
-2. **Extract Implementation Targets from PRD**:
-   - **Screen Specifications**: Extract screen names, component names, data fields, business rules
-   - **Workflow Steps**: Extract API endpoint patterns, controller actions, validation requirements
-   - **Business Rules**: Extract model relationships, data constraints, security requirements
-   - **Data Fields**: Extract required fields, validation rules, relationships
+- The derived core subflow list (Steps 5–6)
+- The existing subflow items in the checklist row for `(MODULE_CODE, FR_CODE)`
 
-3. **Map PRD to Codebase Locations**:
-   - PRD screen name → Search for matching component in `main/hairline-frontend/src/`
-   - PRD workflow step → Search for matching route/controller in `main/hairline-backend/routes/api.php` and `app/Http/Controllers/`
-   - PRD data fields → Search for matching model attributes in `app/Models/` and migrations
+Rules:
 
-4. **Verify Implementation Matches PRD**:
-   - Compare actual implementation with PRD specifications
-   - Check if all PRD requirements are implemented
-   - Document any discrepancies between PRD and implementation
+- Any **missing** item (in analysis but not in checklist) → **append** to checklist
+- Any item in checklist but not in analysis → **evaluate**:
+  - If far from PRD/transcriptions → remove or rewrite to fit
+  - If similar but slightly different (**<10% difference**) → accept as-is
+- Do not import items from other tenants/modules; keep this row strictly scoped to `(MODULE_CODE, FR_CODE)`
 
-#### 3.4 Cross-Reference Verification
+### Step 8: Verify Implementation Progress (Item-By-Item)
 
-**MUST** cross-reference:
+For each final subflow item, **MUST** create a small sub-todo list (so the agent stays on track per item), then verify:
 
-1. **System Technical Spec**: Check `local-docs/project-requirements/system-technical-spec.md` if available - verify API structure matches
-2. **System PRD & Client Requirements**: Verify module codes/FR numbers match system PRD, align with client transcriptions, identify discrepancies
-   - System PRD GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
-   - Transcriptions GitHub: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`
+1. **Presence**: relevant files/endpoints/components exist
+2. **Correctness**: logic is implemented (not stubbed), handles key validation/edge cases, matches PRD intent
+3. **Integration**: UI triggers the right actions; backend routes call the right controllers/services; data flows exist
 
-### Step 4: Status Assessment
+Then set the correct status icon (✅/🟨/🟥) and update the evidence note in parentheses (e.g., `FE: <screen/file>` / `BE: <endpoint/controller>`).
 
-For **EACH** subflow item, **MUST** determine correct status based on module type:
+### Step 9: Compute Progress % and Update the Checklist Row
 
-**Common Criteria**:
+After updating all item statuses in the row:
 
-- ✅ **Completed**: All required components exist, functional, match PRD, proper validation/error handling/auth, no critical bugs
-- 🟨 **Partially Implemented**: Core functionality exists (≥50%) but missing edge cases, validation, or non-critical features
-- 🟥 **Not Yet Implemented**: No implementation found, only placeholders/stubs, or <50% complete
+- Compute progress % using Step 4 formula
+- Update the `Progress` column for that row
 
-**Module-Specific Requirements**:
+### Step 10: Output Summary (No New Files)
 
-- **Patient (P-*)**: Backend API only - verify endpoints, controllers, business logic (frontend NOT required)
-- **Provider/Admin (PR-*, A-*)**: Backend API + Frontend - verify both complete, API integration works
-- **Shared Services (S-*)**: Backend only - verify service implementation, methods, integration points
+**MUST** output:
 
-**CRITICAL**: If checklist status differs from actual implementation, document as a **CONFLICT**.
+- Which checklist row was updated (Module + FR)
+- What changed: items appended/removed/rewritten, status changes, new progress %
+- Any critical caveats (missing PRD, ambiguous requirement, conflicting transcription evidence)
 
-### Step 5: Document Findings
+## Search Commands Reference
 
-For **EACH** subflow item, **MUST** document:
-
-1. **Alignment**: "✅ Verified: [feature] - Status matches implementation"
-2. **Gaps**: "❌ Gap: [feature] - Checklist shows ✅ but code missing" or "⚠️ Gap: [feature] - Checklist shows 🟨 but should be 🟥"
-3. **Conflicts**: "🔴 Conflict: [feature] - Checklist: ✅, Actual: 🟥" or "🟡 Conflict: [feature] - Checklist: 🟨, Actual: ✅"
-4. **Recommendations**: "📝 Recommendation: Update [feature] from ✅ to 🟨"
-
-### Step 6: Get Current Date and Generate Verification Report
-
-**MUST** get current date: Run `date +%Y-%m-%d`, store as `CURRENT_DATE` (or use system date/derive from `CHECKLIST_FILE`). Used for:
-
-- Subfolder: `local-docs/task-creation/{CURRENT_DATE}/`
-- Files: `verification-report-{CURRENT_DATE}.md`, `implementation-tasks-{CURRENT_DATE}.md`
-
-**MUST** create brief report (under 500 words) with:
-
-1. **Summary**: Total verified, alignment percentage, top 3 critical gaps
-2. **Alignment Findings**: Modules matching implementation (codes/FR numbers), 100% alignment modules
-3. **Gap Analysis**: Missing features marked complete, incomplete marked done, incorrect status indicators
-4. **Conflict Resolution**: All discrepancies, status update recommendations with justification, priority (High/Medium/Low)
-5. **Next Steps**: Top 5 priority items, modules needing re-verification, task creation requirements
-
-### Step 7: Create Directory Structure and Files
-
-**CRITICAL**: **MUST** create date-based subfolder first: `local-docs/task-creation/{CURRENT_DATE}/` (create if doesn't exist, use absolute paths). Then create files inside:
-
-1. `verification-report-{CURRENT_DATE}.md` - Verification report
-2. `implementation-tasks-{CURRENT_DATE}.md` - Implementation tasks
-
-#### 7.1 Task Structure
-
-For **EACH** missing component, **MUST** create a task with:
-
-1. **Task Name**: Start with prefix `[FE+BE TASK]`, `[FE TASK]`, `[BE TASK]`, or `[BUG]` + descriptive name
-   - `[FE+BE TASK]`: Both frontend and backend work
-   - `[FE TASK]`: Frontend-only
-   - `[BE TASK]`: Backend-only
-   - `[BUG]`: Fix existing issues
-   - **CRITICAL**: Task name ends at descriptive name line; everything after is description
-
-2. **Status**: `Drafted` (default), `Confirmed`, or `Added to Plane` - part of metadata, not description
-
-3. **Task Description** (under 500 words) with explicit markers. **CRITICAL**:
-   - Descriptions must be in HTML format for Plane.so API (`description_html` field)
-   - **MUST** include `<h2>` header tags for major sections (e.g., Overview, Reference, Current Status, Expectation, Acceptance Criteria)
-   - **MUST** include a persistent note in the Expectation section (marked as "Note (Suggestion)") clarifying that specifications are suggestions, focusing on business requirements and functional needs rather than technical implementation instructions, and that developers should use their expertise to choose the best approach
-   - **CRITICAL - HTML Formatting Rules**:
-     - Use `<p>` tag for **single paragraphs only** (one cohesive paragraph)
-     - Use `<ul>` (unordered) or `<ol>` (ordered) with `<li>` tags for **multiple items** (lists, bullet points, numbered items, multiple requirements)
-     - **DO NOT** use multiple `<p>` tags for multiple items - always use list tags (`<ul>`, `<ol>`, `<li>`) instead
-     - **Lists can contain any number of items** - there is no limit (e.g., 2 items, 5 items, 10 items, etc.). Use as many `<li>` items as needed to fully describe the requirements
-     - Use HTML tags like `<strong>`, `<code>`, `<a>`, etc. as needed
-   - **NO excessive spacing** - remove unnecessary blank lines and whitespace
-
-   ```markdown
-   ## TASK_NAME_START
-   [FE+BE TASK] OTP Expiration Implementation
-   ## TASK_NAME_END
-   
-   **Status**: Drafted
-   
-   ## TASK_DESCRIPTION_START
-   <h2>Overview</h2>
-   <p>[What needs to be implemented - 2-3 sentences as a single paragraph]</p>
-   <h2>Reference</h2>
-   <p><a href="[GitHub PRD link with section anchor, e.g., https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md#workflow-1-patient-registration-primary-flow]">PRD Reference</a></p>
-   <h2>Current Status</h2>
-   <ul>
-   <li>[First existing component/file/endpoint]</li>
-   <li>[Second existing component/file/endpoint]</li>
-   <li>[Add as many items as needed - no limit]</li>
-   </ul>
-   <h2>Expectation (Suggestion)</h2>
-   <p><strong>Note:</strong> The specifications provided below are suggestions based on business requirements. This section should focus on <strong>business requirements and functional needs</strong>, not technical implementation instructions. Developers should understand the business needs and use their expertise to choose the most beneficial and optimized implementation approach.</p>
-   <ul>
-   <li>[First requirement item]</li>
-   <li>[Second requirement item]</li>
-   <li>[Add as many requirement items as needed - no limit]</li>
-   </ul>
-   <h2>Acceptance Criteria</h2>
-   <ol>
-   <li>[First testable criterion]</li>
-   <li>[Second testable criterion]</li>
-   <li>[Add as many criteria as needed - no limit]</li>
-   </ol>
-   ## TASK_DESCRIPTION_END
-   ```
-
-   **Alternative Format** (if markers not used):
-   - Task name: Heading text after `###` (including prefix)
-   - Description: Starts after `**Description**:` line until next task heading
-
-#### 7.2 Task Categories & Summary
-
-**MUST** categorize by: Module code (P-01, PR-01, A-01, etc.), FR number (FR-001, etc.), Priority (P1/P2/P3)
-
-**MUST** include summary at end: Total tasks, status breakdown, priority distribution, next steps
-
-### Step 8: Tools and Commands Reference
-
-**Backend Search**:
+**Backend (Laravel)**:
 
 ```bash
-grep -r "Route::" main/hairline-backend/routes/
-find main/hairline-backend/app/Http/Controllers -name "*Controller.php"
-find main/hairline-backend/app/Models -name "*.php"
+rg -n "Route::" main/hairline-backend/routes
+rg -n "function " main/hairline-backend/app/Http/Controllers
+rg -n "class " main/hairline-backend/app/Models
 ```
 
-**Frontend Search** (Provider/Admin ONLY - **DO NOT** search frontend for Patient modules):
+**Web frontend (React, Provider/Admin)**:
 
 ```bash
-find main/hairline-frontend/src -name "*.jsx" -o -name "*.tsx"
-grep -r "useQuery\|useMutation\|fetch\|axios" main/hairline-frontend/src
+rg -n "useQuery|useMutation|fetch\\(|axios" main/hairline-frontend/src
+rg -n "route|navigate|router" main/hairline-frontend/src
 ```
 
-**Semantic Search**: Use for API endpoints, component patterns, missing features, related functionality
-
-**Directory Creation**:
+**Patient app (Flutter)**:
 
 ```bash
-CURRENT_DATE=$(date +%Y-%m-%d)
-mkdir -p "local-docs/task-creation/${CURRENT_DATE}"
+rg -n "Widget|build\\(|Navigator\\.|GoRouter" main/hairline-app/lib
+rg -n "dio|http|graphql|api" main/hairline-app/lib
 ```
 
-### Step 9: Verification Checklist Template
+**PRD structure scan**:
 
-**MUST** use appropriate checklist based on module type:
+```bash
+rg -n "^## " local-docs/project-requirements/functional-requirements/fr*/prd.md
+```
 
-**Patient (P-*) - Backend Only**: API endpoint exists, controller implemented (not stub), model relationships correct, migrations complete, error handling, validation matches PRD, auth middleware, status matches checklist
+**Transcriptions evidence search**:
 
-**Provider/Admin (PR-*, A-*) - Backend + Frontend**: All backend checks above + frontend component exists, API integration complete, error handling (both), validation (both), status matches checklist
-
-**Shared Services (S-*) - Backend Only**: Service implementation exists, methods implemented (not stubs), integration points correct, error handling, business logic matches PRD, status matches checklist
-
-**CRITICAL**: If any item unchecked, document as gap or conflict.
-
-### Step 10: Report Completion
-
-**MUST** report completion with:
-
-1. **Source Information**: Checklist file path, System PRD, client transcriptions
-2. **Verification Summary**: Total verified, alignment percentage, conflicts count, gaps count
-3. **Files Created**: Verification report and implementation tasks paths (in date subfolder)
-4. **Key Findings**: Top 3 critical gaps, top 3 conflicts, priority recommendations
-5. **Next Steps**: Review report, confirm tasks, update checklist if needed
-
-## Important Notes
-
-- Focus on P1 modules first (highest priority)
-- Verify against actual code, not documentation
-- **CRITICAL**: Understand module type - Patient (P-*): backend only; Provider/Admin (PR-*, A-*): backend + frontend; Shared (S-*): backend only
-- Document discrepancies clearly, reference specific file paths/line numbers
-- If unsure about status, mark as 🟨 and document uncertainty
-
-## Error Handling
-
-If verification cannot be completed: Document missing files, mark unclear implementations as 🟨, document conflicting sources, note codebase accessibility limitations
-
-## Quality Assurance
-
-Before completing, **MUST** ensure: All P1 modules verified, conflicts/gaps documented with references, report under 500 words, tasks follow template, task descriptions under 500 words, correct task prefixes, absolute file paths
+```bash
+rg -n "keyword" local-docs/project-requirements/transcriptions
+```
 
 ## References
 
 **GitHub Documentation**:
 
 - System PRD: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/system-prd.md`
-- Functional Requirements PRDs: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md` (replace `###` with FR number, e.g., `fr001-patient-authentication/prd.md`)
+- FR PRDs: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr###-*/prd.md`
 - Client Transcriptions: `https://github.com/joachimtrungtuan/hairline-pm-docs/tree/main/project-requirements/transcriptions`

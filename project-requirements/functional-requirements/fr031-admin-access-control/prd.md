@@ -480,8 +480,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 ### Internal Dependencies (Other FRs/Modules)
 
 - **FR-009 / Module PR-01**: Provider Team & Role Management
-  - **Why needed**: Provider-facing team management relies on the global RBAC schema, roles, and permission definitions governed by this module
-  - **Integration point**: Admin-defined roles/permissions are surfaced to provider tenant management flows; changes to role definitions cascade to provider team capabilities
+  - **Why needed**: Defines the canonical **provider-side** role model (Owner, Manager, Clinical Staff, Billing Staff) and provider RBAC behavior; FR-031 must remain consistent with FR-009 when surfacing provider roles inside the Admin Platform.
+  - **Integration point**: Admin Platform may **view** provider team structures and roles defined by FR-009 but does not modify provider role definitions; both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) separate from **provider roles**.
 
 - **FR-020 / Module S-03**: Notifications & Alerts
   - **Why needed**: Delivers transactional email/in-app alerts for admin invitations, role changes, suspensions, and audit events

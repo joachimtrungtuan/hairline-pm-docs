@@ -107,7 +107,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 - **Trigger**: Deposit payment fails.
 - **Steps**:
-  1. System retries payment up to 3 times automatically.
+  1. Payment Service applies retry policy per **FR-007 (exponential backoff with idempotency)**.
   2. System holds the accepted quote and appointment slot for 48 hours (admin-configurable) to allow patient to retry payment.
   3. During the hold period, the slot remains reserved; patient can retry payment from the Accepted Quote view.
   4. If payment still fails after 48 hours, system releases the slot and moves quote status back to "Quote" (available for acceptance again, but slot may no longer be available if provider has reallocated it).
@@ -162,7 +162,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - Show clear breakdown: total amount, deposit amount, remaining balance, currency.
 - Display time zone relative labels and local time conversions for appointment slot.
 - If installment plan selected, show installment schedule and completion date (must be ≥30 days before procedure).
-- Disable installment option if procedure is less than 60 days away (per FR-007B eligibility); show explanatory message and allow Pay-in-Full.
+- Only show installment options returned as feasible per FR-029 configuration + FR-007B schedule rules; if none are feasible, allow Pay-in-Full only with a clear explanation.
 
 **Notes**:
 
@@ -621,7 +621,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - Installments must complete ≥30 days before procedure; failures trigger retries, then flag for admin.
 - **Post-Acceptance Hold**: After quote acceptance, the system holds the reserved appointment slot for 48 hours to allow the patient to complete initial payment (deposit or first installment). If no payment is completed within 48 hours, the reservation is released and the slot becomes available again.
 - **Payment Failure Handling**:
-  - If deposit payment fails, system retries up to 3 times automatically.
+  - If deposit payment fails, Payment Service applies retry policy per FR-007 (exponential backoff) and surfaces failures for patient action when needed.
   - Accepted quote and appointment slot are held for 48 hours (admin-configurable) to allow patient to retry payment.
   - During hold period, slot remains reserved; patient can retry payment from Accepted Quote view.
   - If payment still fails after hold period, slot is released and quote status reverts to "Quote" (available for acceptance again, but slot availability not guaranteed).

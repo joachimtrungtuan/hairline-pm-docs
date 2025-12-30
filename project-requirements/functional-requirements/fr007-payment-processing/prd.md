@@ -137,8 +137,10 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 - **Trigger**: Payment is declined or fails
 - **Steps**:
-  1. System displays clear error and suggested next steps (retry, use different method)
-  2. Patient retries or selects another method
+  1. System classifies failure type (hard decline vs transient error).
+  2. For transient errors, Payment Service performs up to 3 automatic retries using exponential backoff (per Constitution) with idempotency safeguards; surface progress and final failure to patient if retries exhaust.
+  3. For hard declines, System displays clear error and suggested next steps (retry, use different method).
+  4. Patient retries or selects another method.
 - **Outcome**: Booking remains unconfirmed until a successful deposit payment
 
 ---
@@ -703,6 +705,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 - Full payment option is always available as an alternative to split payments
 - Receipts and invoices are generated for every successful transaction
 - Provider payout occurs only after treatment completion and admin-triggered execution
+- **Retry Policy (Constitution-aligned)**: For transient processor/network failures, Payment Service MUST perform up to 3 automatic retries using exponential backoff with jitter (and idempotency) before marking a payment attempt failed; hard declines require explicit patient action to retry.
 
 ### Data & Privacy Rules
 

@@ -56,7 +56,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Manually intervene in bookings (reschedule, modify, cancel)
 - Reset patient passwords and unlock accounts
 - Suspend or deactivate patient accounts
-- Handle patient support tickets
+- View patient support escalations/context via Support Center (see FR-034)
 - Generate patient reports and analytics
 
 **Shared Services (S-##)**:
@@ -70,13 +70,13 @@ This is a critical operational module that ensures the platform can provide effe
 **In Scope**:
 
 - Admin viewing patient-provider message history (read-only monitoring)
-- Admin viewing patient-support chat history
+- Admin viewing patient support history/context via Support Center (see FR-034)
 - Admin ability to flag/review communications for policy violations
 - System-generated notifications to patients when admin takes action
 
 **Out of Scope**:
 
-- Direct admin-to-patient messaging (handled by patient support system, not this module)
+- Direct admin-to-patient messaging (handled by Support Center & Ticketing system; see FR-034)
 - Admin intercepting or modifying patient-provider messages in real-time
 
 ### Entry Points
@@ -85,7 +85,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Admin searches for specific patient by name, email, patient code, or ID
 - Admin filters patient list by status (inquiry, quoted, scheduled, in-progress, aftercare, completed)
 - System alerts admin to patients requiring attention (failed payments, flagged communications, disputes)
-- Admin receives escalation from patient support team requiring account-level intervention
+- Admin receives escalations requiring account-level intervention (via Support Center; see FR-034)
 
 ---
 
@@ -109,7 +109,7 @@ This is a critical operational module that ensures the platform can provide effe
    - Registration date
    - Last activity timestamp
    - Provider assignment (if applicable)
-   - Flags/alerts (payment issues, compliance concerns, support tickets)
+   - Flags/alerts (payment issues, compliance concerns, support escalations)
 6. Admin clicks on patient row to view detailed profile
 7. System loads patient detail view with tabbed sections:
    - **Overview**: Profile summary, contact info, current status
@@ -220,7 +220,7 @@ This is a critical operational module that ensures the platform can provide effe
   1. Admin locates patient account
   2. Admin clicks "Reset Password" button
   3. System displays confirmation dialog: "Send password reset email to [patient email]?"
-  4. Admin enters justification: "Patient requested password reset via support ticket #1234"
+  4. Admin enters justification: "Patient requested password reset via Support Center case #1234"
   5. Admin confirms action
   6. System generates password reset token
   7. System sends email to patient with reset link (6-digit OTP)
@@ -250,43 +250,15 @@ This is a critical operational module that ensures the platform can provide effe
 
 ---
 
-### Main Flow: Patient Support Ticket Resolution
+### Note: Patient Support Center / Ticketing
 
-**Actors**: Admin, Patient (indirectly), System
-**Trigger**: Patient raises an issue via messaging (no direct ticket form in mobile app) or admin identifies issue requiring follow-up
-**Outcome**: Admin resolves issue, patient receives assistance, ticket closed
-
-**Steps**:
-
-1. Admin navigates to "Support Tickets" section (sub-module of patient management); tickets originate from support agents triaging patient messages
-2. System displays list of open tickets filtered by priority (high, medium, low)
-3. Admin selects ticket from list
-4. System displays ticket details:
-   - Patient name and account link
-   - Issue category (payment, booking, technical, complaint)
-   - Patient description of issue
-   - Ticket creation timestamp
-   - Previous admin responses (if any)
-5. Admin clicks patient account link to review context
-6. Admin investigates issue by reviewing:
-   - Patient treatment journey
-   - Payment history
-   - Communications with provider
-   - Any system error logs
-7. Admin determines resolution action needed (e.g., initiate refund, reset password, coordinate with provider via messaging)
-8. Admin takes action via patient management interface
-9. Admin returns to ticket and enters resolution notes
-10. Admin updates ticket status to "Resolved"
-11. System sends resolution notification to patient
-12. System closes ticket and archives
-
-*Note: Dedicated escalation workflows to providers or the technical team are out of scope for the current release; admins coordinate through existing messaging channels when additional parties are needed.*
+FR-016 references patient support escalations, but **formal Support Center + Ticketing** (intake, triage, ticket lifecycle, and agent workflows) is specified in a dedicated requirement: **FR-034** (system-level entry in `local-docs/project-requirements/system-prd.md`).
 
 **B5: Patient requests data deletion (GDPR)**:
 
 - **Trigger**: Patient exercises "right to be forgotten" under GDPR
 - **Steps**:
-  1. Admin receives data deletion request ticket
+  1. Admin receives data deletion request (via Support Center / compliant support channel; see FR-034)
   2. Admin verifies patient identity and confirms legitimate request
   3. Admin checks if patient has active bookings or outstanding financial obligations
   4. If active obligations exist, admin explains data cannot be deleted yet (legal requirement)
@@ -298,7 +270,7 @@ This is a critical operational module that ensures the platform can provide effe
   6. System executes deletion workflow (soft delete with anonymization)
   7. System generates data deletion certificate for audit
   8. Admin sends confirmation to patient: "Your data has been deleted per GDPR requirements"
-  9. Admin closes ticket
+  9. Admin closes the request
 - **Outcome**: Patient data deleted while maintaining compliance with retention laws
 
 ---
@@ -622,7 +594,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Patient account status (active, suspended, deactivated)
 - Booking dates and details (emergency reschedules with provider coordination)
 - Payment status (manual refund issuance, payment retry)
-- Support ticket assignments and status
+- Support escalations context (view-only link to Support Center; see FR-034)
 
 **Fixed (Not Editable by Admin)**:
 
@@ -653,7 +625,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 ### Patient Support Metrics
 
-- **SC-005**: 90% of patient support tickets resolved within 24 hours using patient management tools
+- **SC-005**: 90% of patient support escalations resolved within 24 hours using patient management tools (in coordination with Support Center; see FR-034)
 - **SC-006**: Average time to resolve payment issues reduced by 50% with comprehensive payment history view
 - **SC-007**: Patient satisfaction with admin support interventions rated 4.5+ stars (out of 5)
 - **SC-008**: 95% of admin interventions completed in a single pass (no rework/escalation required)
@@ -667,7 +639,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 ### Platform Health Metrics
 
-- **SC-013**: Admin monitoring identifies and resolves 80% of patient friction points before they escalate to support tickets
+- **SC-013**: Admin monitoring identifies and resolves 80% of patient friction points before they escalate to Support Center cases (see FR-034)
 - **SC-014**: Admin dispute resolution reduces patient-provider conflicts by 60% through mediation tools
 - **SC-015**: Manual booking interventions account for < 5% of total bookings (most bookings proceed smoothly)
 - **SC-016**: Admin-flagged communications for policy violations reviewed and resolved within 48 hours
@@ -760,7 +732,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Assumption 1**: Admins have basic understanding of patient journey stages and platform workflows
 - **Assumption 2**: Admins will enter meaningful justifications when prompted (audit compliance)
 - **Assumption 3**: Admins will use search filters effectively rather than scrolling through entire patient list
-- **Assumption 4**: Most admin interventions are reactive (responding to support tickets) rather than proactive monitoring
+- **Assumption 4**: Most admin interventions are reactive (responding to Support Center escalations; see FR-034) rather than proactive monitoring
 
 ### Technology Assumptions
 
@@ -773,7 +745,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 - **Assumption 1**: Admin team operates during business hours with on-call coverage for emergencies (24/7 monitoring not required initially)
 - **Assumption 2**: Super admin coverage is available within 4 business hours to perform any high-impact confirmations
-- **Assumption 3**: Patient support tickets escalate to admin interventions only when support team cannot resolve via communication
+- **Assumption 3**: Patient support escalations escalate to admin interventions only when support team cannot resolve via communication (see FR-034)
 - **Assumption 4**: Admin interventions are exceptional; most patient journeys proceed smoothly without admin involvement (< 10% of patients require intervention)
 
 ---
@@ -827,13 +799,13 @@ This is a critical operational module that ensures the platform can provide effe
 
 ## User Scenarios & Testing
 
-### User Story 1 - Admin Searches for Patient to Resolve Support Ticket (Priority: P1)
+### User Story 1 - Admin Searches for Patient to Resolve Support Escalation (Priority: P1)
 
-Admin receives support ticket from patient unable to complete payment. Admin needs to quickly locate patient account, review payment history, identify issue, and initiate manual intervention to resolve.
+Admin receives a support escalation (via Support Center; see FR-034) from a patient unable to complete payment. Admin needs to quickly locate patient account, review payment history, identify issue, and initiate manual intervention to resolve.
 
 **Why this priority**: This is the most common admin workflow - responding to patient support requests. Platform success depends on effective patient support.
 
-**Independent Test**: Can be fully tested by creating test patient account, simulating failed payment, submitting support ticket, and verifying admin can locate patient, view payment details, and take action (retry payment or issue refund).
+**Independent Test**: Can be fully tested by creating test patient account, simulating failed payment, creating a support escalation (via Support Center; see FR-034), and verifying admin can locate patient, view payment details, and take action (retry payment or issue refund).
 
 **Acceptance Scenarios**:
 
@@ -889,7 +861,7 @@ Patient locked out of account after multiple failed login attempts. Patient cont
 **Acceptance Scenarios**:
 
 1. **Given** admin locates locked patient account, **When** admin views account status, **Then** system displays "Account Status: Locked" badge and "Unlock Account" button
-2. **Given** admin clicks "Reset Password" button, **When** system displays confirmation dialog, **Then** admin enters justification ("Patient requested via support ticket #1234") and confirms action
+2. **Given** admin clicks "Reset Password" button, **When** system displays confirmation dialog, **Then** admin enters justification ("Patient requested via Support Center case #1234") and confirms action
 3. **Given** admin confirms password reset, **When** system processes request, **Then** system generates 6-digit OTP reset code, sends email to patient with reset link, logs admin action in audit trail
 4. **Given** password reset email sent, **When** patient receives email and completes reset, **Then** patient can log in with new password and account status changes to "Active"
 
@@ -951,8 +923,8 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 - **Edge Case 1**: How does system handle concurrent admin modifications (two admins modifying same patient booking simultaneously)?
   - **Handling**: System uses optimistic locking; first admin's change succeeds, second admin receives error: "This booking was just modified by [Admin Name]. Please refresh and retry."; forces second admin to reload current state before making changes
 
-- **Edge Case 2**: What occurs if patient submits support ticket while admin is actively viewing their account?
-  - **Handling**: System pushes real-time notification to admin's dashboard: "New support ticket from this patient"; admin can click notification to open ticket without losing current context; ticket appears in patient's overview section
+- **Edge Case 2**: What occurs if a new Support Center case is created while an admin is actively viewing the patient's account?
+  - **Handling**: System pushes real-time notification to admin's dashboard: "New support escalation from this patient"; admin can click notification to open the Support Center case without losing current context; escalation appears in patient's overview section (via link to Support Center)
 
 - **Edge Case 3**: How to manage admin accessing patient account while patient is actively logged in and making changes?
   - **Handling**: Admin sees banner: "Patient currently active on platform (last activity: 30 seconds ago)"; admin's view refreshes automatically when patient makes changes; if admin attempts modification, system warns: "Patient is actively using the platform - your changes may conflict"
@@ -1028,9 +1000,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
   - **Key attributes**: access_id, admin_id, patient_id, data_type (medical_questionnaire, 3d_scan, photos), access_timestamp, justification, data_accessed (specific fields/scans viewed)
   - **Relationships**: One admin has many medical data access logs; one patient has many medical data access logs
 
-- **Entity 4 - Patient Support Ticket**
-  - **Key attributes**: ticket_id, patient_id, issue_category (payment, booking, technical, complaint), description, priority (high, medium, low), status (open, in_progress, escalated, resolved), created_date, assigned_admin_id, resolution_notes, closed_date
-  - **Relationships**: One patient submits many tickets; one admin handles many tickets
+*Note*: Patient Support Ticket entities and lifecycle are specified in **FR-034** (Support Center & Ticketing).
 
 ---
 
@@ -1040,6 +1010,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-016 Admin Patient Management | AI Assistant |
 | 2025-11-21 | 1.1 | Updated status to ✅ Verified & Approved and aligned admin role/medical access rules | AI Assistant |
+| 2025-12-29 | 1.2 | Removed formal Support Ticket system scope from FR-016 and referenced dedicated FR-034 (Support Center & Ticketing) | AI Assistant |
 
 ---
 

@@ -602,7 +602,7 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 
 ### User Story 1 - Admin Patient Lookup for Support (Priority: P1)
 
-An admin receives a support ticket from a patient asking about their quote status. The admin needs to quickly locate the patient's record to view their inquiry history and provide an update.
+An admin receives a patient support escalation/case (via Support Center; see FR-034) asking about quote status. The admin needs to quickly locate the patient's record to view their inquiry history and provide an update.
 
 **Why this priority**: Critical for customer support operations and platform oversight. Admins must be able to find patient records quickly to resolve issues.
 
