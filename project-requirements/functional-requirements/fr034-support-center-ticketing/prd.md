@@ -1,0 +1,1001 @@
+# Product Requirements Document: Patient Support Center & Ticketing
+
+**Module**: A-10: Communication Monitoring & Support | A-01: Patient Management & Oversight  
+**Feature Branch**: `fr034-support-center-ticketing`  
+**Created**: December 30, 2025  
+**Status**: Draft  
+**Source**: FR-034 from system-prd.md, Client transcription (Hairline-AdminPlatform-Part1.txt)
+
+---
+
+## Executive Summary
+
+The Patient Support Center & Ticketing module provides a formal support system for managing patient inquiries, technical issues, and general support requests outside of aftercare-specific communications. This module enables Hairline admin staff to create, track, and resolve support cases systematically, ensuring consistent service quality and maintaining comprehensive audit trails for compliance and dispute resolution.
+
+**Purpose**: This feature establishes a structured support case management system to handle patient questions and issues such as:
+
+- "I don't understand how this works"
+- "This feature is not working for me"
+- Payment or booking clarification questions
+- Account access issues
+- General platform navigation help
+
+**Problem Solved**: Without a formal support system, patient inquiries risk being lost, duplicated, or inconsistently resolved. This module ensures every support request is tracked, prioritized, assigned, and resolved with complete accountability and auditability.
+
+**Business Value**:
+
+- **Improved Patient Satisfaction**: Faster, more consistent support response times
+- **Operational Efficiency**: Centralized support case tracking reduces staff workload and prevents duplicate efforts
+- **Compliance & Audit Trail**: Immutable case history supports dispute resolution and regulatory compliance
+- **Provider Support**: Includes ticketing for provider platform issues and questions
+- **Data-Driven Improvements**: Case analytics identify recurring issues, informing product improvements
+
+---
+
+## Module Scope
+
+### Multi-Tenant Architecture
+
+- **Patient Platform (P-06)**: NOT IN SCOPE for MVP - patients contact support via external channels (email, phone); future enhancement may include in-app support request submission
+- **Provider Platform (PR-07)**: NOT IN SCOPE for MVP - providers contact support via external channels; future enhancement may include in-app support ticketing
+- **Admin Platform (A-10, A-01)**: Core support case management interface for admin staff to intake, track, categorize, prioritize, assign, and resolve support cases for both patient and provider inquiries
+- **Shared Services (S-03)**: Notification Service used to send status updates and replies to patients/providers via email
+
+### Multi-Tenant Breakdown
+
+**Patient Platform (P-06)**:
+
+- OUT OF SCOPE for MVP - No patient-facing support ticket submission UI in mobile app
+- Future enhancement: In-app "Contact Support" button to submit support cases directly from patient mobile app
+
+**Provider Platform (PR-07)**:
+
+- OUT OF SCOPE for MVP - No provider-facing support ticket submission UI in web app
+- Future enhancement: In-app "Contact Support" section for providers to submit operational questions and technical issues
+
+**Admin Platform (A-10: Communication Monitoring & Support)**:
+
+- Admin staff create support cases manually (from incoming emails, phone calls, chat messages)
+- Admin staff categorize cases by type (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry)
+- Admin staff set case priority (Low, Medium, High, Urgent)
+- Admin staff assign cases to specific support team members or departments
+- Admin staff track case lifecycle: Open → In Progress → Resolved → Closed
+- Admin staff view comprehensive case timeline with all messages, notes, attachments, and status changes
+- Admin staff can link cases to specific patient records (by Hairline Patient ID, email, or phone number)
+- Admin staff can deep-link from case to patient management module (A-01) for account interventions
+- Admin staff export case data for compliance audits or dispute resolution
+- Admin staff view case analytics (open case count, average resolution time, case volume by category)
+
+**Admin Platform (A-01: Patient Management & Oversight)**:
+
+- Admins accessing patient records can view linked support cases for that patient
+- Support case context appears in patient detail view (e.g., "3 open support cases" with links)
+- Admins can initiate account interventions (password reset, account suspension) directly from support cases
+
+**Shared Services (S-03: Notification Service)**:
+
+- Sends email notifications to patients when:
+  - Support case status changes (Open → In Progress, In Progress → Resolved)
+  - Admin replies to patient inquiry
+  - Case is closed with resolution summary
+- Sends email notifications to providers when:
+  - Support case is created for their inquiry
+  - Admin replies to provider question
+  - Case is resolved
+- Notification preferences configurable per case category
+
+### Communication Structure
+
+**In Scope**:
+
+- Admin-to-patient email notifications for support case updates (via S-03)
+- Admin-to-provider email notifications for support case updates (via S-03)
+- Internal admin notes within support cases (not visible to patients/providers)
+- Admin-to-admin case assignment notifications
+- Case timeline with complete message history
+- Attachment support for case communications (screenshots, documents)
+
+**Out of Scope**:
+
+- Real-time in-app chat between patient and admin (future enhancement)
+- Real-time in-app chat between provider and admin (future enhancement)
+- Aftercare-specific communications (handled by FR-011: Aftercare & Recovery Management)
+- Provider ↔ Patient secure messaging (handled by FR-012: Secure Messaging)
+- Video consultations for support (future enhancement)
+- SMS notifications for support case updates (future enhancement - S-03 SMS integration)
+- Phone call integration or VoIP (future enhancement)
+
+### Entry Points
+
+**Admin Platform Entry**:
+
+- Admin staff access Support Center module from main admin navigation menu
+- Admin dashboard displays support case metrics (open cases, urgent cases, unassigned cases)
+- Admin receives email notification when new support case is assigned to them
+- Admin can create new support case manually from Support Center interface
+
+**System-Triggered Entry**:
+
+- Admin creates support case when patient contacts via email (manual case creation from email content)
+- Admin creates support case when patient contacts via phone (manual case entry after call)
+- Future: Automated case creation from patient app "Contact Support" submission
+
+**Integration Entry**:
+
+- Support cases linkable from patient management module (A-01) - admins view patient's support history
+- Support cases linkable from provider management module (A-02) - admins view provider's support history
+- Deep-link from support case to patient/provider record for account interventions
+
+---
+
+## Business Workflows
+
+### Main Flow: Patient Support Case Lifecycle
+
+**Actors**: Admin Staff, Patient (external), System, S-03 Notification Service  
+**Trigger**: Patient contacts Hairline via email, phone, or external channel with support inquiry  
+**Outcome**: Support case created, tracked, resolved, and closed with complete audit trail
+
+**Steps**:
+
+1. **Admin Staff** receives patient inquiry via email, phone, or other external channel
+2. **Admin Staff** logs into Admin Platform and navigates to Support Center module
+3. **Admin Staff** clicks "Create New Support Case" button
+4. **System** displays case creation form
+5. **Admin Staff** enters case details:
+   - **Case Title**: Brief description (e.g., "Cannot login to account")
+   - **Category**: Selects from predefined categories (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry)
+   - **Priority**: Sets priority level (Low, Medium, High, Urgent)
+   - **Patient Identifier**: Links case to patient by HPID, email, or phone number
+   - **Description**: Full details of patient's inquiry or issue
+   - **Attachments**: Uploads any relevant screenshots or documents patient provided
+6. **System** validates inputs and creates support case record with status "Open"
+7. **System** assigns unique case ID (e.g., "CASE-2025-12345")
+8. **System** records case creation timestamp and admin user who created it
+9. **Admin Staff** assigns case to appropriate team member or department
+10. **System** sends email notification to assigned admin staff member
+11. **System** optionally sends confirmation email to patient (via S-03) acknowledging case creation
+12. **Assigned Admin Staff** reviews case details and changes status to "In Progress"
+13. **System** logs status change in case timeline
+14. **Assigned Admin Staff** investigates issue and communicates with patient via email
+15. **Admin Staff** adds internal notes to case (e.g., "Password reset completed")
+16. **Admin Staff** updates case status to "Resolved" once issue is fixed
+17. **System** logs resolution timestamp and sends email to patient with resolution summary (via S-03)
+18. **Admin Staff** closes case after confirming patient satisfaction or after 7-day auto-close period
+19. **System** sets case status to "Closed" and marks case lifecycle complete
+20. **System** archives case data with immutable audit trail for compliance retention
+
+### Alternative Flows
+
+**A1: Case Requires Escalation**:
+
+- **Trigger**: Admin determines case requires senior staff or technical team involvement
+- **Steps**:
+  1. Admin clicks "Escalate Case" button
+  2. System displays escalation form with reason field
+  3. Admin selects escalation recipient (senior admin or technical team)
+  4. System updates case priority to "High" or "Urgent"
+  5. System sends escalation notification to selected recipient
+  6. System logs escalation action in case timeline
+- **Outcome**: Case reassigned to higher-level support staff with increased priority
+
+**A2: Case Requires Patient Account Intervention**:
+
+- **Trigger**: Admin needs to reset patient password, suspend account, or modify patient data
+- **Steps**:
+  1. Admin clicks "View Patient Record" link in support case
+  2. System deep-links to patient management module (A-01) with patient HPID pre-filled
+  3. Admin performs account intervention (password reset, account unlock, data correction)
+  4. Admin returns to support case and adds note documenting intervention
+  5. System logs intervention in both support case timeline and patient account audit trail
+- **Outcome**: Patient account issue resolved with audit trail across both modules
+
+**A3: Case Requires Provider Account Intervention**:
+
+- **Trigger**: Provider contacts support with operational question or technical issue
+- **Steps**:
+  1. Admin creates support case with category "Provider Support"
+  2. Admin links case to provider record by provider ID or clinic name
+  3. Admin assigns case to provider support team
+  4. System sends confirmation email to provider contact email
+  5. Admin resolves provider issue and documents resolution
+  6. System sends resolution email to provider
+- **Outcome**: Provider inquiry resolved with tracking in Support Center
+
+**A4: Multiple Cases for Same Issue (Duplicate Detection)**:
+
+- **Trigger**: Admin identifies multiple patients reporting same issue (e.g., login outage)
+- **Steps**:
+  1. Admin creates "Master Case" for the issue
+  2. Admin links related individual cases to Master Case
+  3. System displays "Linked to Master Case" badge on related cases
+  4. Admin resolves Master Case and auto-resolves all linked cases
+  5. System sends resolution emails to all affected patients simultaneously
+- **Outcome**: Efficient handling of widespread issues affecting multiple users
+
+**B1: Invalid Patient Identifier**:
+
+- **Trigger**: Admin enters patient email/phone/HPID that doesn't exist in system
+- **Steps**:
+  1. System validates patient identifier against patient database
+  2. System displays error message: "Patient not found. Please verify identifier or create case without patient link."
+  3. Admin corrects identifier or selects "No Patient Link" option for anonymous inquiries
+  4. System allows case creation without patient linkage
+- **Outcome**: Case created for inquiry from non-registered user or with corrected patient identifier
+
+**B2: Case Reassignment (Assigned Admin Unavailable)**:
+
+- **Trigger**: Assigned admin is out of office or unable to handle case
+- **Steps**:
+  1. Admin manager or colleague opens case
+  2. Admin clicks "Reassign Case" button
+  3. System displays team member list with availability indicators
+  4. Admin selects new assignee and enters reassignment reason
+  5. System updates case assignment and notifies new assignee
+  6. System logs reassignment action in case timeline
+- **Outcome**: Case ownership transferred with audit trail
+
+**B3: Patient Requests Case Reopening**:
+
+- **Trigger**: Patient responds to closed case email stating issue not fully resolved
+- **Steps**:
+  1. Admin receives patient email reply
+  2. Admin locates closed case by case ID
+  3. Admin clicks "Reopen Case" button
+  4. System prompts for reopening reason
+  5. System changes case status from "Closed" to "Open"
+  6. System logs reopening action with timestamp and reason
+  7. Admin reassigns or continues investigation
+- **Outcome**: Case lifecycle extended to ensure full resolution
+
+**B4: Attachment Upload Failure**:
+
+- **Trigger**: Admin attempts to upload file exceeding size limit or unsupported format
+- **Steps**:
+  1. System validates file size (max 10MB per file) and format (images, PDFs, documents)
+  2. System displays error: "File exceeds 10MB limit" or "Unsupported file format"
+  3. Admin compresses file or converts format
+  4. Admin retries upload
+  5. System accepts valid file and attaches to case
+- **Outcome**: Attachment successfully added to case or admin uses alternative method (email file separately)
+
+**B5: Case Export Failure (Compliance Request)**:
+
+- **Trigger**: Admin attempts to export case data for audit but export times out or fails
+- **Steps**:
+  1. System detects export query exceeds performance threshold (>10,000 cases)
+  2. System displays message: "Export too large. Please refine date range or filters."
+  3. Admin narrows export criteria (specific date range, case category, or patient)
+  4. Admin retries export
+  5. System generates CSV/PDF export within acceptable time (<30 seconds)
+- **Outcome**: Admin successfully exports case data for compliance audit
+
+---
+
+## Screen Specifications
+
+### Screen 1: Support Center Dashboard
+
+**Purpose**: Provides admin staff with overview of support case metrics, urgent cases, and quick access to case management functions
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Open Cases Count | number (readonly) | N/A | Total number of cases in "Open" status | Display only |
+| In Progress Count | number (readonly) | N/A | Total number of cases in "In Progress" status | Display only |
+| Urgent Cases Count | number (readonly) | N/A | Total number of cases with "Urgent" priority | Display only |
+| Unassigned Cases Count | number (readonly) | N/A | Total number of cases not yet assigned to admin | Display only |
+| Average Resolution Time | text (readonly) | N/A | Average time from Open to Closed status (in hours/days) | Display only |
+| Cases by Category Chart | visualization | N/A | Pie chart showing case distribution by category | Display only |
+| Recent Cases List | table | N/A | Last 10 created/updated cases with case ID, title, status, priority, assigned to | Display only |
+| Create New Case Button | button | N/A | Initiates case creation flow | Click action |
+| Search Cases Field | text input | No | Allows search by case ID, patient name, email, keyword | Min 3 chars to trigger search |
+
+**Business Rules**:
+
+- Dashboard metrics refresh automatically every 60 seconds
+- Urgent cases highlighted in red with alert icon
+- Unassigned cases highlighted in yellow with notification badge
+- Admin staff can only see cases assigned to them unless they have "View All Cases" permission
+- Admin managers and super admins see all cases system-wide
+- Clicking case ID in Recent Cases List navigates to case detail view
+
+**Notes**:
+
+- Use color-coded status badges (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
+- Display empty state message if no cases exist: "No support cases yet. Click 'Create New Case' to get started."
+- Consider implementing filters for case status, priority, date range, assigned admin
+
+---
+
+### Screen 2: Create/Edit Support Case Form
+
+**Purpose**: Allows admin staff to create new support cases or edit existing case details
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Case Title | text input | Yes | Brief summary of case (e.g., "Cannot reset password") | Max 200 chars, min 10 chars |
+| Category | dropdown select | Yes | Case type classification | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support |
+| Priority | dropdown select | Yes | Urgency level | Options: Low, Medium, High, Urgent |
+| Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field |
+| Provider Identifier | text input with autocomplete | No | Provider ID or clinic name (if case is provider-related) | Must match existing provider if provided; optional field |
+| Description | textarea | Yes | Full details of inquiry or issue | Min 20 chars, max 5000 chars, supports plain text |
+| Internal Notes | textarea | No | Admin-only notes not visible to patient/provider | Max 2000 chars per note entry |
+| Attachments | file upload | No | Supporting documents, screenshots, emails | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
+| Assigned To | dropdown select (admin users) | No | Admin staff member responsible for case | List of active admin users with "Support Staff" role |
+| Status | dropdown select | Yes | Current case lifecycle stage | Options: Open (default), In Progress, Resolved, Closed |
+| Tags | multi-select | No | Optional labels for categorization (e.g., "Bug", "Feature Request") | Max 5 tags per case |
+
+**Business Rules**:
+
+- Case Title automatically generated from Description if left blank (first 50 chars of description)
+- Patient Identifier field shows autocomplete suggestions as admin types (match by name, email, HPID)
+- If patient identifier provided, system displays patient name and HPID for confirmation
+- Attachments scanned for viruses before upload completes
+- Internal Notes section only visible to admin staff with appropriate permissions
+- Status defaults to "Open" for new cases
+- Priority defaults to "Medium" for new cases
+- Assigned To field optional on creation; can be assigned later
+- Case cannot be marked "Closed" until status is "Resolved" (validation rule)
+- System logs all field changes with timestamp and admin user for audit trail
+
+**Notes**:
+
+- Use rich text editor for Description field to support formatting (bold, lists, links)
+- Display character count for Title and Description fields
+- Show "Link to Patient Record" button if patient identifier matched
+- Show "Link to Provider Record" button if provider identifier matched
+- Provide "Save as Draft" option to allow admins to partially complete case and return later
+
+---
+
+### Screen 3: Support Case Detail View
+
+**Purpose**: Displays complete case information, timeline, and interaction history for a single support case
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Case ID | text (readonly) | N/A | Unique case identifier (e.g., CASE-2025-12345) | Display only |
+| Case Title | text (readonly, editable via edit mode) | Yes | Brief case summary | Max 200 chars |
+| Status | badge | Yes | Current case status with color coding | Visual indicator only |
+| Priority | badge | Yes | Urgency level with color coding | Visual indicator only |
+| Category | text (readonly) | Yes | Case type | Display only |
+| Created Date | datetime (readonly) | N/A | Case creation timestamp | Display only |
+| Last Updated | datetime (readonly) | N/A | Most recent modification timestamp | Display only |
+| Assigned To | text with avatar | No | Admin staff member handling case | Display name and profile photo |
+| Linked Patient | link | No | Patient name and HPID (if linked) | Clickable link to patient record in A-01 |
+| Linked Provider | link | No | Provider clinic name and ID (if linked) | Clickable link to provider record in A-02 |
+| Description | text block | Yes | Full case details | Display only (editable via edit mode) |
+| Case Timeline | vertical timeline component | N/A | Chronological list of all case events (status changes, notes, messages, attachments) | Readonly, scrollable |
+| Add Note Button | button | N/A | Allows admin to add internal note to case | Opens note entry modal |
+| Add Message Button | button | N/A | Allows admin to send message to patient/provider | Opens message composition modal |
+| Update Status Button | button | N/A | Changes case status (Open → In Progress → Resolved → Closed) | Opens status change modal |
+| Reassign Case Button | button | N/A | Transfers case to another admin | Opens reassignment modal |
+| Export Case Button | button | N/A | Downloads case data as PDF or CSV | Triggers export generation |
+| Close Case Button | button | N/A | Marks case as Closed (only enabled if status is Resolved) | Confirmation required |
+
+**Business Rules**:
+
+- Case Timeline displays all events in reverse chronological order (newest first)
+- Timeline events include: case creation, status changes, assignments, notes, messages, attachments, resolution summary
+- Each timeline event shows timestamp, admin user, and action description
+- Internal Notes marked with "Admin Only" badge and not visible in patient-facing exports
+- Messages to patient/provider logged in timeline with "Sent to [Patient/Provider]" indicator
+- Status transitions follow lifecycle: Open → In Progress → Resolved → Closed (cannot skip stages)
+- System prevents closing case unless status is "Resolved" first
+- Linked Patient/Provider names clickable to deep-link to patient/provider management modules
+- Export function generates PDF with case details, timeline, and all notes/messages (excluding internal notes)
+
+**Notes**:
+
+- Use expandable/collapsible timeline entries for long notes or messages
+- Display attachment thumbnails in timeline with download links
+- Highlight urgent cases with red border and alert icon
+- Show "Reopen Case" button if case is Closed (changes status back to Open)
+- Display warning if case has been open for >7 days without status update
+
+---
+
+### Screen 4: Support Case List (All Cases View)
+
+**Purpose**: Allows admin staff to browse, filter, and search all support cases with bulk actions
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Search Bar | text input | No | Search cases by case ID, patient name, email, keywords | Min 3 chars to trigger search |
+| Status Filter | multi-select dropdown | No | Filter by case status (Open, In Progress, Resolved, Closed) | Default: Open + In Progress |
+| Priority Filter | multi-select dropdown | No | Filter by priority (Low, Medium, High, Urgent) | Default: All priorities |
+| Category Filter | multi-select dropdown | No | Filter by case category | Default: All categories |
+| Date Range Filter | date picker | No | Filter by creation date range | Default: Last 30 days |
+| Assigned To Filter | dropdown select | No | Filter by assigned admin user | Options: All Users, My Cases Only, Unassigned, specific user |
+| Case List Table | data table | N/A | Displays cases matching filters with columns: Case ID, Title, Status, Priority, Category, Linked Patient/Provider, Assigned To, Created Date, Last Updated | Sortable columns, paginated |
+| Bulk Actions Checkbox | checkbox (per row) | No | Select multiple cases for bulk operations | Multi-select enabled |
+| Bulk Assign Button | button | N/A | Assign selected cases to admin user | Enabled only if cases selected |
+| Bulk Close Button | button | N/A | Close selected cases (only if all are Resolved status) | Enabled only if cases selected and all Resolved |
+| Export Filtered Cases Button | button | N/A | Export cases matching current filters as CSV | Generates CSV file |
+| Pagination Controls | component | N/A | Navigate through case list pages | 50 cases per page default |
+
+**Business Rules**:
+
+- Default view shows Open and In Progress cases from last 30 days
+- Admin staff with "View My Cases Only" permission see only cases assigned to them
+- Admin managers and super admins see all cases system-wide
+- Clicking case row navigates to Case Detail View (Screen 3)
+- Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
+- Priority badges color-coded (Low=gray, Medium=blue, High=orange, Urgent=red)
+- Urgent cases always sorted to top of list regardless of other sort order
+- Unassigned cases highlighted with yellow background
+- Cases with >7 days since last update marked with warning icon
+- Export limited to 1000 cases per export (performance constraint)
+
+**Notes**:
+
+- Use sticky table header for scrolling through long case lists
+- Display empty state message if no cases match filters: "No cases found. Try adjusting your filters."
+- Consider implementing saved filter presets (e.g., "My Urgent Cases", "Unassigned Cases")
+- Show total case count matching current filters at top of table
+
+---
+
+### Screen 5: Case Resolution & Closure Modal
+
+**Purpose**: Allows admin to document case resolution and close case with resolution summary
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Resolution Summary | textarea | Yes | Brief description of how issue was resolved | Min 20 chars, max 1000 chars |
+| Resolution Category | dropdown select | Yes | Type of resolution | Options: Issue Fixed, Information Provided, Account Intervention, Escalated to Provider, User Error, Cannot Reproduce, Duplicate Case, Other |
+| Root Cause | dropdown select | No | Underlying cause of issue (for analytics) | Options: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other |
+| Send Resolution Email | checkbox | Yes | Send email to patient/provider with resolution summary | Default: checked |
+| Auto-Close After | dropdown select | Yes | Days to wait before auto-closing case | Options: Immediately, 3 days, 7 days, 14 days (default: 7 days) |
+| Internal Resolution Notes | textarea | No | Admin-only notes about resolution (not sent to patient/provider) | Max 2000 chars |
+| Mark as Resolved Button | button | Yes | Changes case status to Resolved and logs resolution details | Saves and closes modal |
+| Cancel Button | button | Yes | Closes modal without saving | No changes made |
+
+**Business Rules**:
+
+- Resolution Summary included in email sent to patient/provider (if Send Resolution Email checked)
+- Internal Resolution Notes only visible to admin staff (not included in patient-facing communications)
+- System automatically closes case after specified auto-close period if patient doesn't respond
+- If patient responds before auto-close period expires, case reopened automatically
+- Resolution Category and Root Cause captured for analytics and trend identification
+- System logs resolution timestamp and admin user who marked case resolved
+- Case cannot be marked Resolved without entering Resolution Summary
+
+**Notes**:
+
+- Use plain language in Resolution Summary field guidance: "Explain to the patient/provider how their issue was resolved"
+- Preview resolution email content before sending
+- Display warning if case was open for >14 days: "This case took longer than average to resolve. Consider documenting learnings."
+
+---
+
+## Business Rules
+
+### General Module Rules
+
+- **Rule 1**: All support cases must have unique case IDs generated sequentially (format: CASE-YYYY-#####)
+- **Rule 2**: Case lifecycle follows strict progression: Open → In Progress → Resolved → Closed (cannot skip stages, except for case reopening)
+- **Rule 3**: Cases can be reopened after closure if patient/provider indicates issue not fully resolved
+- **Rule 4**: Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority
+- **Rule 5**: Unassigned cases automatically escalated to support manager if open for >24 hours
+- **Rule 6**: Cases with no activity for >14 days flagged for admin review and potential closure
+- **Rule 7**: Support cases distinct from aftercare communications (FR-011) and provider-patient messaging (FR-012)
+- **Rule 8**: Admin staff can link multiple cases to same patient/provider for trend analysis
+- **Rule 9**: Support cases support both patient and provider inquiries in single system
+
+### Data & Privacy Rules
+
+- **Privacy Rule 1**: Patient full names, contact details, and medical information visible only to assigned admin staff and managers with appropriate RBAC permissions
+- **Privacy Rule 2**: Support case data encrypted at rest (AES-256) and in transit (TLS 1.3)
+- **Privacy Rule 3**: Case timeline and all messages logged with immutable audit trail (cannot be deleted, only appended)
+- **Privacy Rule 4**: Internal Notes visible only to admin staff with "View Internal Notes" permission (not visible to patients/providers)
+- **Privacy Rule 5**: Patient/provider can request case data export for GDPR compliance via data subject access request
+- **Audit Rule**: All access to support cases logged with timestamp, admin user ID, IP address, and action performed
+- **HIPAA/GDPR**: Support cases may contain medical information; handle as PHI with healthcare-grade security
+- **Data Retention**: Support cases retained for minimum 7 years per healthcare data regulations (archive after closure, do not hard delete)
+
+### Admin Editability Rules
+
+**Editable by Admin (via Admin Platform UI)**:
+
+- Case category, priority, status, title, description
+- Case assignment (transfer to another admin user)
+- Internal notes and admin-only comments
+- Patient/provider linkage (add, modify, or remove linked records)
+- Case tags and labels
+- Resolution summary and resolution category
+- Auto-close period (3, 7, or 14 days after resolution)
+
+**Fixed in Codebase (Not Editable)**:
+
+- Case lifecycle stages (Open, In Progress, Resolved, Closed)
+- Case ID format and generation logic (CASE-YYYY-#####)
+- Audit trail structure and immutability
+- Encryption algorithms (AES-256 for data at rest, TLS 1.3 for data in transit)
+- Maximum attachment size (10MB per file)
+- Maximum case export limit (1000 cases per export)
+
+**Configurable with Restrictions (via FR-030: Notification Rules & Configuration)**:
+
+- Email notification templates for case status updates (content editable, trigger logic fixed)
+- Auto-escalation thresholds (configurable within 12-48 hour range for urgent cases)
+- Maximum case age before auto-close warning (configurable within 14-90 day range)
+
+### Notification Rules
+
+- **Notification Rule 1**: Patients receive email notifications when:
+  - Support case created (optional confirmation)
+  - Case status changes to "In Progress" (admin is working on it)
+  - Admin sends message/reply to patient
+  - Case marked "Resolved" with resolution summary
+  - Case closed
+- **Notification Rule 2**: Providers receive email notifications when:
+  - Support case created for their inquiry
+  - Admin sends message/reply to provider
+  - Case marked "Resolved" with resolution summary
+- **Notification Rule 3**: Admin staff receive email notifications when:
+  - Case assigned to them
+  - Case escalated to them
+  - Patient/provider responds to case (reopens closed case)
+  - Urgent case created and unassigned for >1 hour
+- **Notification Rule 4**: All notifications sent via S-03 Notification Service with retry logic for failed sends
+- **Notification Rule 5**: Email notifications include case ID, title, status, and direct link to admin case view (for admin recipients)
+
+---
+
+## Success Criteria
+
+### Patient Experience Metrics
+
+- **SC-001**: Patients receive confirmation that their support inquiry was received within 1 hour of contacting Hairline
+- **SC-002**: 80% of patient support cases resolved within 48 hours for urgent issues, 5 business days for non-urgent issues
+- **SC-003**: Patients receive at least one status update within 24 hours of case creation
+- **SC-004**: 90% of patients report satisfaction with support response time and resolution quality (future: post-resolution survey)
+
+### Provider Efficiency Metrics
+
+- **SC-005**: Providers receive response to operational questions within 24 hours for 90% of inquiries
+- **SC-006**: Provider support cases resolved within 48 hours for technical issues, 5 business days for operational questions
+
+### Admin Management Metrics
+
+- **SC-007**: Admins can create and assign new support case within 2 minutes
+- **SC-008**: Admins can view complete case history and timeline in single screen without needing to navigate multiple views
+- **SC-009**: Support managers can view real-time dashboard of open, urgent, and unassigned cases
+- **SC-010**: 100% of support cases linked to patient or provider records for traceability
+- **SC-011**: Admin staff can export case data for compliance audits within 30 seconds
+
+### System Performance Metrics
+
+- **SC-012**: Support case creation completes within 2 seconds for 95% of requests
+- **SC-013**: Case list view loads within 3 seconds with 1000+ cases in system
+- **SC-014**: Case detail view loads within 2 seconds including full timeline history
+- **SC-015**: Case search returns results within 1 second for keyword searches
+- **SC-016**: System supports 50 concurrent admin users managing support cases without performance degradation
+- **SC-017**: 99.9% uptime for Support Center module
+
+### Business Impact Metrics
+
+- **SC-018**: Support case system reduces average resolution time by 40% compared to email-only support
+- **SC-019**: Support case analytics identify top 5 recurring issues within first 30 days of launch
+- **SC-020**: Admin staff handle 50% more support inquiries per day with structured case management
+- **SC-021**: Patient support-related inquiries organized and trackable with zero lost or forgotten cases
+- **SC-022**: Audit trail completeness: 100% of support interactions logged with timestamp and admin attribution
+
+---
+
+## Dependencies
+
+### Internal Dependencies (Other FRs/Modules)
+
+- **FR-031 / Module A-10: Admin Access Control & Permissions**
+  - **Why needed**: Support staff roles and permissions (View Cases, Edit Cases, Reassign Cases, View Internal Notes, Export Cases) managed via RBAC system
+  - **Integration point**: Support Center enforces permission checks before allowing admin users to access or modify cases
+
+- **FR-016 / Module A-01: Patient Management & Oversight**
+  - **Why needed**: Support cases linked to patient records by HPID, email, or phone number
+  - **Integration point**: Deep-link from support case to patient detail view; patient detail view displays linked support cases
+
+- **FR-015 / Module A-02: Provider Management**
+  - **Why needed**: Provider support cases linked to provider records by provider ID or clinic name
+  - **Integration point**: Deep-link from support case to provider detail view; provider detail view displays linked support cases
+
+- **FR-020 / Module S-03: Notification Service**
+  - **Why needed**: Send email notifications to patients, providers, and admin staff for case updates, assignments, and resolutions
+  - **Integration point**: Support Center calls S-03 API to trigger notification emails with case details and links
+
+- **FR-026 / Module A-09: App Settings & Security**
+  - **Why needed**: Security settings (admin session timeout, audit logging) apply to Support Center module
+  - **Integration point**: Support Center enforces security policies configured in A-09
+
+### External Dependencies (APIs, Services)
+
+- **None for MVP**: Support Center operates entirely within Hairline platform with no external API dependencies
+- **Future Enhancement**: Integration with external ticketing systems (Zendesk, Freshdesk) for advanced support workflows
+
+### Data Dependencies
+
+- **Entity 1: Patient Records**
+  - **Why needed**: Cannot link support cases to patients without active patient accounts
+  - **Source**: Patient onboarding and authentication (FR-001)
+
+- **Entity 2: Provider Records**
+  - **Why needed**: Cannot link provider support cases without active provider accounts
+  - **Source**: Provider onboarding (FR-015)
+
+- **Entity 3: Admin User Accounts**
+  - **Why needed**: Cannot assign cases to admin staff without active admin user accounts with appropriate roles
+  - **Source**: Admin user management (FR-031)
+
+- **Entity 4: Notification Templates**
+  - **Why needed**: Email notifications require predefined templates for case status updates
+  - **Source**: Notification configuration (FR-030)
+
+---
+
+## Assumptions
+
+### User Behavior Assumptions
+
+- **Assumption 1**: Patients contact Hairline support via external channels (email, phone) rather than in-app submission (MVP assumption; in-app support future enhancement)
+- **Assumption 2**: Admin staff manually create support cases from incoming emails and phone calls rather than automated case creation (MVP assumption)
+- **Assumption 3**: Majority of support cases resolve within 48-72 hours with single admin response
+- **Assumption 4**: Patients check email regularly for case status updates (email is primary notification channel)
+- **Assumption 5**: Admin staff use standardized resolution categories for consistent case analytics
+
+### Technology Assumptions
+
+- **Assumption 1**: Admin staff access Support Center via modern web browsers (Chrome, Safari, Firefox, Edge - last 2 versions)
+- **Assumption 2**: Email delivery via S-03 Notification Service is reliable with >95% delivery rate
+- **Assumption 3**: System handles up to 500 support cases per day during peak periods
+- **Assumption 4**: Case attachments stored in cloud storage (S3 or equivalent) with CDN for fast retrieval
+- **Assumption 5**: Database supports full-text search for case keyword searches
+
+### Business Process Assumptions
+
+- **Assumption 1**: Hairline employs dedicated support staff with "Support Agent" role to handle cases
+- **Assumption 2**: Support staff available during business hours (8am-6pm UTC) for case assignment and resolution
+- **Assumption 3**: Urgent cases escalated to support manager if unresolved after 24 hours
+- **Assumption 4**: Resolved cases auto-close after 7 days if patient doesn't respond (configurable)
+- **Assumption 5**: Support case data retained for 7 years minimum for compliance and dispute resolution
+
+---
+
+## Implementation Notes
+
+### Technical Considerations
+
+- **Architecture**: Support Center requires real-time case status updates; consider using WebSocket or Server-Sent Events (SSE) for live dashboard updates to avoid polling
+- **Performance**: Case timeline with hundreds of events requires pagination or lazy loading to prevent slow page loads
+- **Search**: Implement full-text search index on case title, description, notes, and patient/provider names for fast keyword searches
+- **Storage**: Case attachments stored in cloud object storage (S3) with pre-signed URLs for secure, time-limited access
+- **Audit Trail**: Use append-only database table or event sourcing pattern for immutable case timeline history
+
+### Integration Points
+
+- **Integration 1: Patient Management Module (A-01)**
+  - **Data format**: Support case links to patient record via HPID (Hairline Patient ID)
+  - **Authentication**: Admin session JWT token with RBAC permissions
+  - **Error handling**: If patient record deleted, support case retains anonymized copy of patient name/email for audit trail
+
+- **Integration 2: Provider Management Module (A-02)**
+  - **Data format**: Support case links to provider record via provider ID or clinic name
+  - **Authentication**: Admin session JWT token with RBAC permissions
+  - **Error handling**: If provider record deactivated, support case retains provider name for historical reference
+
+- **Integration 3: Notification Service (S-03)**
+  - **Data format**: JSON payload with case ID, recipient email, notification type, case details
+  - **Authentication**: Internal service-to-service authentication (API key or mutual TLS)
+  - **Error handling**: If notification fails, log error and retry up to 3 times with exponential backoff; mark notification as failed in case timeline
+
+### Scalability Considerations
+
+- **Current scale**: Expected 100-200 support cases per day at launch
+- **Growth projection**: Plan for 1000 cases per day within 12 months as patient base grows
+- **Peak load**: Handle 50 concurrent case creations during marketing campaigns or system outages (10x normal)
+- **Data volume**: Expect 500KB average case size (text + attachments); 100GB total storage in year 1
+- **Scaling strategy**: Horizontal scaling of API servers; database read replicas for case search and reporting; CDN for attachment delivery
+
+### Security Considerations
+
+- **Authentication**: Admin staff must authenticate via FR-031 (Admin Access Control) with MFA enforced for admin accounts
+- **Authorization**: Role-Based Access Control (RBAC) enforces granular permissions:
+  - Support Agent: Create, view, edit, and resolve cases assigned to them
+  - Support Manager: View all cases, reassign cases, access case analytics
+  - Super Admin: Full access including case deletion (archive only) and audit log export
+- **Encryption**: All case data encrypted at rest (AES-256) and in transit (TLS 1.3)
+- **Audit trail**: Every case access, modification, and status change logged with timestamp, admin user ID, IP address, and action
+- **Threat mitigation**: Rate limiting on case creation API (max 60 cases/hour per admin user) to prevent abuse
+- **Compliance**: HIPAA-compliant handling of patient medical information in case descriptions and attachments; GDPR data export support for patient right to access
+
+---
+
+## User Scenarios & Testing
+
+### User Story 1 - Admin Creates Support Case from Patient Email (Priority: P1)
+
+Admin staff receives email from patient saying "I can't log into my account" and creates a support case to track resolution.
+
+**Why this priority**: Core support case intake workflow - if this doesn't work, support system is unusable
+
+**Independent Test**: Can be fully tested by admin creating case from email inquiry, assigning to support staff, and verifying case appears in dashboard
+
+**Acceptance Scenarios**:
+
+1. **Given** admin staff receives patient email inquiry, **When** admin logs into Support Center and clicks "Create New Case", **Then** case creation form displays with all required fields
+2. **Given** admin enters case title "Patient cannot login", category "Account Access", priority "High", and patient email, **When** admin clicks "Create Case", **Then** system creates case with unique case ID and status "Open"
+3. **Given** case is created, **When** admin assigns case to support team member, **Then** system sends email notification to assigned admin and logs assignment in case timeline
+4. **Given** case is assigned, **When** assigned admin opens case and changes status to "In Progress", **Then** system logs status change and sends email notification to patient that case is being investigated
+
+---
+
+### User Story 2 - Admin Resolves Support Case with Account Intervention (Priority: P1)
+
+Support staff investigates "cannot login" case, resets patient password, documents resolution, and closes case.
+
+**Why this priority**: Core case resolution workflow including intervention and closure - critical for completing support cycle
+
+**Independent Test**: Can be tested by admin investigating case, performing password reset via A-01 deep-link, documenting resolution, and verifying case closure
+
+**Acceptance Scenarios**:
+
+1. **Given** admin is reviewing "cannot login" case, **When** admin clicks "View Patient Record" link, **Then** system opens patient management module (A-01) with patient details pre-loaded
+2. **Given** admin is in patient management view, **When** admin performs password reset, **Then** system logs intervention in both patient audit trail and support case timeline
+3. **Given** patient issue is resolved, **When** admin returns to case and clicks "Mark as Resolved", **Then** system displays resolution modal prompting for resolution summary
+4. **Given** admin enters resolution summary "Password reset completed, sent new credentials to patient email", **When** admin clicks "Submit", **Then** system changes case status to "Resolved" and sends resolution email to patient
+5. **Given** case is marked Resolved, **When** 7 days pass without patient response, **Then** system auto-closes case and sets status to "Closed"
+
+---
+
+### User Story 3 - Admin Searches and Filters Cases (Priority: P1)
+
+Support manager searches for all urgent cases assigned to specific team member to ensure timely resolution.
+
+**Why this priority**: Essential for support management and oversight - managers must be able to monitor workload and prioritize urgent issues
+
+**Independent Test**: Can be tested by creating multiple test cases with different priorities, statuses, and assignments, then verifying search and filters return correct results
+
+**Acceptance Scenarios**:
+
+1. **Given** support manager is on Support Center dashboard, **When** manager navigates to "All Cases" view, **Then** system displays case list with default filters (Open + In Progress cases from last 30 days)
+2. **Given** manager is viewing case list, **When** manager selects "Urgent" priority filter and specific admin user from "Assigned To" filter, **Then** system displays only urgent cases assigned to that user
+3. **Given** filtered case list is displayed, **When** manager clicks case row, **Then** system navigates to case detail view with full timeline
+4. **Given** manager wants to export filtered cases, **When** manager clicks "Export Filtered Cases", **Then** system generates CSV file with all cases matching current filters
+
+---
+
+### User Story 4 - Admin Handles Provider Support Case (Priority: P2)
+
+Admin staff receives operational question from provider clinic about payment schedule and creates provider support case.
+
+**Why this priority**: Important for provider satisfaction but lower priority than patient-facing support in MVP
+
+**Independent Test**: Can be tested by creating case with "Provider Support" category, linking to provider record, and verifying resolution workflow
+
+**Acceptance Scenarios**:
+
+1. **Given** admin receives email from provider asking about payout schedule, **When** admin creates new case with category "Provider Support", **Then** system allows admin to link case to provider record by provider ID or clinic name
+2. **Given** case is linked to provider, **When** admin views case details, **Then** system displays "Link to Provider Record" button for deep-linking to provider management module (A-02)
+3. **Given** admin resolves provider inquiry, **When** admin marks case as Resolved with resolution summary, **Then** system sends resolution email to provider contact email
+4. **Given** provider support case is closed, **When** admin views provider record in A-02, **Then** closed case appears in provider's support case history
+
+---
+
+### User Story 5 - Patient Requests Case Reopening (Priority: P2)
+
+Patient responds to case closure email stating issue not fully resolved; admin reopens case for further investigation.
+
+**Why this priority**: Important for ensuring complete resolution but less frequent scenario than initial case creation/resolution
+
+**Independent Test**: Can be tested by closing a case, then admin manually reopening it to verify state transition
+
+**Acceptance Scenarios**:
+
+1. **Given** case is in "Closed" status, **When** patient emails support saying issue persists, **Then** admin locates closed case by case ID
+2. **Given** admin is viewing closed case, **When** admin clicks "Reopen Case" button, **Then** system prompts for reopening reason
+3. **Given** admin enters reopening reason "Patient reports issue persists after password reset", **When** admin confirms reopening, **Then** system changes case status from "Closed" to "Open" and logs reopening in case timeline
+4. **Given** case is reopened, **When** admin reassigns case to support staff, **Then** system sends assignment notification and allows admin to continue investigation
+
+---
+
+### User Story 6 - Admin Escalates Urgent Case (Priority: P2)
+
+Support agent encounters complex technical issue requiring senior staff; escalates case to technical team.
+
+**Why this priority**: Important for handling complex cases but less frequent than standard support workflows
+
+**Independent Test**: Can be tested by creating case, then escalating it to verify priority increase and notification
+
+**Acceptance Scenarios**:
+
+1. **Given** support agent is reviewing case involving system outage, **When** agent determines escalation needed, **Then** agent clicks "Escalate Case" button
+2. **Given** escalation modal is displayed, **When** agent selects "Technical Team" as escalation recipient and enters escalation reason "Database connection errors", **Then** system updates case priority to "Urgent"
+3. **Given** case is escalated, **When** system processes escalation, **Then** system sends email notification to technical team and logs escalation in case timeline
+4. **Given** technical team receives notification, **When** team member opens case, **Then** case displays escalation badge and full escalation context
+
+---
+
+### User Story 7 - Admin Exports Cases for Compliance Audit (Priority: P3)
+
+Compliance officer exports all support cases from specific date range for quarterly audit review.
+
+**Why this priority**: Important for compliance but infrequent operation (quarterly or as-needed)
+
+**Independent Test**: Can be tested by filtering cases by date range and verifying CSV/PDF export contains correct data
+
+**Acceptance Scenarios**:
+
+1. **Given** compliance officer is viewing All Cases list, **When** officer sets date range filter to Q3 2025, **Then** system displays all cases created in that date range
+2. **Given** filtered case list is displayed, **When** officer clicks "Export Filtered Cases" button, **Then** system generates CSV file with case ID, title, status, category, priority, created date, resolved date, assigned admin, and resolution summary
+3. **Given** export contains >1000 cases, **When** officer attempts export, **Then** system displays message "Export too large. Please refine date range." and prompts officer to narrow filters
+4. **Given** officer narrows filters to single month, **When** officer retries export, **Then** system successfully generates CSV within 30 seconds and initiates download
+
+---
+
+### Edge Cases
+
+- **What happens when admin attempts to link case to patient with duplicate email addresses?**
+  - System displays list of all patients with matching email and prompts admin to select correct patient by HPID
+  - Admin can choose to create case without patient link if ambiguous
+
+- **How does system handle case assignment when assigned admin is deactivated or leaves organization?**
+  - System automatically detects deactivated admin accounts and marks their assigned cases as "Unassigned"
+  - Support manager receives notification to reassign orphaned cases
+  - Case timeline logs admin account deactivation event
+
+- **What occurs if patient deletes their account while support case is open?**
+  - Support case remains in system with anonymized patient identifier for audit trail compliance
+  - Case marked with "Patient Account Deleted" badge
+  - Admin cannot deep-link to patient record but can still close case with resolution notes
+
+- **How to manage attachment upload when file contains malware or virus?**
+  - System scans all uploaded files using antivirus service before accepting
+  - If malware detected, system rejects upload and displays error: "File rejected due to security scan failure"
+  - Admin notified to request patient/provider send file via alternative secure method
+
+- **What happens when two admins simultaneously edit same case?**
+  - System uses optimistic locking with "last write wins" strategy
+  - If conflict detected, admin receives warning: "This case was modified by another admin. Please review recent changes before saving."
+  - Admin can review other admin's changes and decide whether to overwrite or discard their edits
+
+- **How does system handle case search with special characters or SQL injection attempts?**
+  - System sanitizes all search input to prevent SQL injection attacks
+  - Special characters escaped before executing search query
+  - Search limited to alphanumeric characters, spaces, and common punctuation
+
+- **What occurs if S-03 Notification Service is down and cannot send case notification emails?**
+  - System queues notification for retry with exponential backoff (retry at 1 min, 5 min, 15 min)
+  - Case timeline logs notification failure with timestamp
+  - Admin dashboard displays notification status indicator (sent, pending, failed)
+  - If notification fails after 3 retries, admin receives alert to manually contact patient/provider
+
+---
+
+## Functional Requirements Summary
+
+### Core Requirements
+
+- **REQ-034-001**: System MUST provide admin interface for creating support cases with title, category, priority, patient/provider linkage, description, and attachments
+- **REQ-034-002**: System MUST assign unique case IDs in format CASE-YYYY-##### (year and sequential number)
+- **REQ-034-003**: System MUST support case lifecycle progression: Open → In Progress → Resolved → Closed
+- **REQ-034-004**: System MUST allow admin staff to assign cases to specific admin users or teams
+- **REQ-034-005**: System MUST maintain immutable case timeline with all events (creation, status changes, assignments, notes, messages, attachments) logged with timestamp and admin user attribution
+- **REQ-034-006**: System MUST allow admins to link support cases to patient records by HPID, email, or phone number
+- **REQ-034-007**: System MUST allow admins to link support cases to provider records by provider ID or clinic name
+- **REQ-034-008**: System MUST provide deep-linking from support case to patient management module (A-01) for account interventions
+- **REQ-034-009**: System MUST provide deep-linking from support case to provider management module (A-02) for provider record access
+- **REQ-034-010**: System MUST allow admins to add internal notes to cases that are not visible to patients/providers
+
+### Data Requirements
+
+- **REQ-034-011**: System MUST support case categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support
+- **REQ-034-012**: System MUST support priority levels: Low, Medium, High, Urgent
+- **REQ-034-013**: System MUST store case description with minimum 20 characters and maximum 5000 characters
+- **REQ-034-014**: System MUST support file attachments up to 10MB per file, maximum 5 files per case
+- **REQ-034-015**: System MUST support attachment formats: JPG, PNG, PDF, DOC, DOCX
+- **REQ-034-016**: System MUST retain all case data for minimum 7 years for compliance (archive after closure, do not hard delete)
+- **REQ-034-017**: System MUST capture resolution details: resolution summary, resolution category, root cause (optional), and resolution timestamp
+
+### Security & Privacy Requirements
+
+- **REQ-034-018**: System MUST encrypt all case data at rest using AES-256 encryption
+- **REQ-034-019**: System MUST encrypt all case data in transit using TLS 1.3
+- **REQ-034-020**: System MUST enforce RBAC permissions for case access (Support Agent, Support Manager, Super Admin roles)
+- **REQ-034-021**: System MUST log all case access and modifications with timestamp, admin user ID, IP address, and action performed
+- **REQ-034-022**: System MUST scan uploaded attachments for viruses/malware before accepting
+- **REQ-034-023**: System MUST prevent case deletion (soft delete/archive only) to maintain immutable audit trail
+- **REQ-034-024**: System MUST mark Internal Notes as admin-only and exclude them from patient/provider-facing exports
+
+### Integration Requirements
+
+- **REQ-034-025**: System MUST integrate with S-03 Notification Service to send email notifications for case status updates, assignments, and resolutions
+- **REQ-034-026**: System MUST send email notification to patient when case status changes to "In Progress" or "Resolved"
+- **REQ-034-027**: System MUST send email notification to provider when case is created, updated, or resolved (for provider support cases)
+- **REQ-034-028**: System MUST send email notification to assigned admin when case is assigned to them or escalated
+- **REQ-034-029**: System MUST retry failed email notifications up to 3 times with exponential backoff
+- **REQ-034-030**: System MUST provide RESTful API for case creation, retrieval, update, and search operations
+
+### Dashboard & Reporting Requirements
+
+- **REQ-034-031**: System MUST provide Support Center dashboard displaying: open cases count, in progress count, urgent cases count, unassigned cases count, average resolution time
+- **REQ-034-032**: System MUST display case list with filters: status, priority, category, date range, assigned admin
+- **REQ-034-033**: System MUST support keyword search across case title, description, notes, and patient/provider names
+- **REQ-034-034**: System MUST allow admins to export filtered cases as CSV (limited to 1000 cases per export)
+- **REQ-034-035**: System MUST highlight urgent cases in dashboard and case lists with visual indicators (red badges, alert icons)
+- **REQ-034-036**: System MUST display warning for cases open >7 days without status update
+
+### Case Resolution & Closure Requirements
+
+- **REQ-034-037**: System MUST require resolution summary (min 20 chars, max 1000 chars) before case can be marked Resolved
+- **REQ-034-038**: System MUST send resolution email to patient/provider when case marked Resolved (if "Send Resolution Email" option enabled)
+- **REQ-034-039**: System MUST support auto-closure period: 3, 7, or 14 days after case marked Resolved (default 7 days)
+- **REQ-034-040**: System MUST automatically close case after auto-closure period expires if patient/provider doesn't respond
+- **REQ-034-041**: System MUST allow admins to reopen closed cases if patient/provider indicates issue not fully resolved
+- **REQ-034-042**: System MUST log reopening reason in case timeline when case is reopened
+
+### Performance & Scalability Requirements
+
+- **REQ-034-043**: System MUST complete case creation within 2 seconds for 95% of requests
+- **REQ-034-044**: System MUST load case detail view (including timeline) within 2 seconds
+- **REQ-034-045**: System MUST return case search results within 1 second for keyword searches
+- **REQ-034-046**: System MUST support 50 concurrent admin users managing cases without performance degradation
+- **REQ-034-047**: System MUST handle up to 500 case creations per day at launch, scalable to 1000+ cases per day
+
+---
+
+## Key Entities
+
+- **Entity 1 - Support Case**:
+  - **Key attributes**: Case ID (unique), case title, category, priority, status, created date, last updated date, assigned admin user ID, linked patient HPID (optional), linked provider ID (optional), description, resolution summary (when resolved), resolution category, auto-close period
+  - **Relationships**: One support case belongs to one patient (optional); one support case belongs to one provider (optional); one support case assigned to one admin user (optional); one support case has many timeline events; one support case has many attachments
+
+- **Entity 2 - Case Timeline Event**:
+  - **Key attributes**: Event ID, case ID, event type (case created, status changed, note added, message sent, attachment uploaded, case escalated, case reopened), event timestamp, admin user ID (who performed action), event description, internal note flag (true if admin-only note)
+  - **Relationships**: Many timeline events belong to one support case; one timeline event created by one admin user
+
+- **Entity 3 - Case Attachment**:
+  - **Key attributes**: Attachment ID, case ID, file name, file size, file type (MIME type), storage URL (S3 or CDN), uploaded timestamp, uploaded by admin user ID, virus scan status (pending, clean, infected)
+  - **Relationships**: Many attachments belong to one support case; one attachment uploaded by one admin user
+
+- **Entity 4 - Case Assignment**:
+  - **Key attributes**: Assignment ID, case ID, assigned to admin user ID, assigned by admin user ID, assignment timestamp, assignment reason (initial assignment, reassignment, escalation)
+  - **Relationships**: Many assignments belong to one support case (tracks reassignment history); one assignment references one admin user (assignee) and one admin user (assigner)
+
+- **Entity 5 - Case Resolution**:
+  - **Key attributes**: Resolution ID, case ID, resolution summary, resolution category (issue fixed, information provided, account intervention, etc.), root cause (optional), resolved timestamp, resolved by admin user ID, auto-close period (days), closure timestamp (when auto-closed or manually closed), closed by admin user ID (if manually closed)
+  - **Relationships**: One resolution belongs to one support case; one resolution created by one admin user
+
+---
+
+## Appendix: Change Log
+
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2025-12-30 | 1.0 | Initial PRD creation for FR-034 Patient Support Center & Ticketing | AI Assistant |
+
+---
+
+## Appendix: Approvals
+
+| Role | Name | Date | Signature/Approval |
+|------|------|------|--------------------|
+| Product Owner | [Name] | [Date] | Pending |
+| Technical Lead | [Name] | [Date] | Pending |
+| Stakeholder | [Name] | [Date] | Pending |
+
+---
+
+**Template Version**: 2.0.0 (Constitution-Compliant)
+**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)  
+**Based on**: FR-011 Aftercare & Recovery Management PRD
+**Last Updated**: 2025-12-30
