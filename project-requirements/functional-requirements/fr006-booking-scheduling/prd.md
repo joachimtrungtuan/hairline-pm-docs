@@ -595,7 +595,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - **Deposit Rate**: Admin MUST be able to configure deposit percentage (default range: 20-30% of total booking amount) via **FR-029: Payment System Configuration**. This is configurable per provider or globally. Changes apply to new bookings only (existing bookings retain original deposit rate).
 - Cancellation policy schedule (thresholds and refund percentages).
 - Payment failure hold duration (default: 48 hours) - how long to hold accepted quote and slot after payment failure.
-- Notification templates for booking confirmations/reminders; booking confirmation content.
+- Notification templates for booking confirmations/reminders; booking confirmation content (configured via **FR-030: Notification Rules & Configuration**).
 - Commission settings.
 
 **Confirmed Booking Data Integrity (Admin Override)**:
@@ -681,8 +681,8 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 - **FR-005 / Module P-02**: Quote Comparison & Acceptance; triggers booking entry point (appointment slot already confirmed upon quote acceptance).
 - **FR-007 & FR-007B / Modules P-03, S-02**: Payments and Installments; deposit capture, schedules, refunds.
 - **FR-020 / S-03**: Notifications; confirmations, reminders, and alerts.
+- **FR-030 / Module A-09**: Notification Rules & Configuration; booking confirmation/reminder templates and notification policy rules consumed by S-03.
 - **FR-010 / PR-03**: Post-confirmation treatment execution starts on arrival.
-- **FR-026 / Module A-09**: System Settings & Configuration; deposit rate configuration, payment failure hold duration configuration.
 - **FR-029 / Module A-09**: Payment System Configuration; deposit, split payment, and commission settings are managed here (deposit default 20-30% range; installment options and cutoff rules; commission default 15-25% range, per-provider or global settings).
 
 ### External Dependencies (APIs, Services)
@@ -743,7 +743,7 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 
 ### Security Considerations
 
-- MFA enforced for provider/admin tenants; RBAC everywhere.
+- MFA is a **planned mandatory control** for Admin and Provider tenants and MUST be treated as a future (non-MVP) requirement until the shared MFA stack is delivered (per Constitution / FR-026 / FR-031). Until then, enforce strong password policies, throttling, and re-authentication flows where appropriate; RBAC everywhere.
 - TLS 1.3 in transit; AES-256 at rest; no storage of card PANs; webhook signature verification.
 - Full audit trail on state changes and access; rate limiting and anti-abuse protections on booking/payment endpoints.
 

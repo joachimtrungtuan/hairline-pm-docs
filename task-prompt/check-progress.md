@@ -29,7 +29,7 @@ If **ANY** of these is missing:
 
 - **Row scope rule**: Each checklist row represents exactly one tenant context for a `(MODULE_CODE, FR_CODE)` pair. Do not mix tenants or modules.
 - **Section integrity rule**: When reading the FR PRD, process sections strictly one-by-one; do not combine sections.
-- **File rule**: Do **NOT** create any new files in this prompt. Only update the checklist file itself.
+- **File rule**: Update the checklist file, and also create a verification report file (and nothing else).
 - If the user wants task generation, point them to: `local-docs/task-prompt/create-implementation-tasks.md`.
 
 ## Outline
@@ -41,6 +41,7 @@ If **ANY** of these is missing:
 5. Reconcile the checklist subflow items (append/update/remove)
 6. Verify progress item-by-item in code (existence + correctness)
 7. Compute progress % and update the checklist row
+8. Create a verification report file (date + incremental suffix)
 
 ## Execution Flow
 
@@ -58,7 +59,8 @@ Create initial todos similar to:
 6. Reconcile checklist subflow items
 7. Verify each item in code (FE/BE)
 8. Compute progress % and update row
-9. Final consistency check and summary
+9. Create verification report file
+10. Final consistency check and summary
 
 ### Step 1: Parse Inputs and Load Required Files
 
@@ -191,13 +193,47 @@ After updating all item statuses in the row:
 - Compute progress % using Step 4 formula
 - Update the `Progress` column for that row
 
-### Step 10: Output Summary (No New Files)
+### Step 10: Create Verification Report File (With Incremental Suffix)
+
+**MUST** create a date-based folder and a verification report file without overwriting:
+
+1. Get current date: `CURRENT_DATE=$(date +%Y-%m-%d)`
+2. Create folder: `local-docs/task-creation/${CURRENT_DATE}/` (if missing)
+3. Determine next available 3-digit suffix `SEQ` by scanning existing files in the date folder:
+   - `verification-report-${CURRENT_DATE}-*.md`
+   - `implementation-tasks-${CURRENT_DATE}-*.md`
+   - If none exist, `SEQ=001`
+   - Otherwise, choose the highest suffix across both patterns and increment it by 1 (keep 3 digits)
+4. Create: `verification-report-${CURRENT_DATE}-${SEQ}.md`
+
+Recommended approach (one possible way):
+
+```bash
+mkdir -p "local-docs/task-creation/${CURRENT_DATE}"
+ls "local-docs/task-creation/${CURRENT_DATE}"/verification-report-"${CURRENT_DATE}"-*.md 2>/dev/null
+ls "local-docs/task-creation/${CURRENT_DATE}"/implementation-tasks-"${CURRENT_DATE}"-*.md 2>/dev/null
+```
+
+**Verification report content rules**:
+
+- Under 500 words
+- Include:
+  - **Header lines** (required):
+    - `**Checklist**: {CHECKLIST_FILE}`
+    - `**Module**: {MODULE_CODE}`
+    - `**FR**: {FR_CODE}`
+  - What items were appended/removed/rewritten
+  - Summary of status changes and the new progress %
+  - Key evidence anchors (short file paths / endpoints; no long logs)
+  - Any caveats (missing PRD, ambiguity, conflicting transcription signals)
+
+### Step 11: Output Summary (And Report Path)
 
 **MUST** output:
 
 - Which checklist row was updated (Module + FR)
-- What changed: items appended/removed/rewritten, status changes, new progress %
-- Any critical caveats (missing PRD, ambiguous requirement, conflicting transcription evidence)
+- The report path created (with date + `SEQ`)
+- A short summary: what changed and the new progress %
 
 ## Search Commands Reference
 
