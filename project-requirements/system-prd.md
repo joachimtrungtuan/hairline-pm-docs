@@ -673,8 +673,8 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Role Permissions**:
 
-- **Owner (Main Account Holder)**: Full access, billing, team management, and legal/contract responsibility; only role allowed to manage bank account details and ownership changes (via Admin Platform workflows).
-- **Manager (Clinic Manager / Operations)**: Broad operational access across inquiries, quotes, schedules, and day-to-day team management, but no ability to change ownership or bank account details.
+- **Owner (Main Account Holder)**: Full access, billing, team management, and legal/contract responsibility; only role allowed to manage bank account details.
+- **Manager (Clinic Manager / Operations)**: Broad operational access across inquiries, quotes, schedules, and day-to-day team management, but no ability to change bank account details or assign/change the primary Owner role.
 - **Clinical Staff**: Access to in-progress and aftercare sections, treatment execution and documentation, and clinical notes; limited or no access to billing configuration.
 - **Billing Staff**: Access to financial views (quotes, payouts, revenue metrics) and reconciliation screens; no access to treatment documentation or team structure changes.
 
@@ -1595,7 +1595,55 @@ Total Quote:                           £3,000
 - System MUST maintain an auditable case timeline (messages, notes, attachments) and support exports for disputes/compliance
 - System MUST support patient notifications on meaningful updates (status changes/replies) via S-03 when enabled
 
-**Note**: FR-034 is currently tracked at the system level only. A dedicated FR-034 PRD will be authored when implementation planning begins.
+**Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`.
+
+---
+
+### FR-035: Admin Profile & Settings Management
+
+**Priority**: P1 (MVP)  
+**Module(s)**: A-09: System Settings & Configuration
+
+**Goal**: Enable admin users to manage their own profile information, account settings, and personal preferences independently of team management and RBAC configuration.
+
+**Requirements**:
+
+**Profile Management**:
+
+- Admin users MUST be able to update their own profile information (first name, last name, profile picture)
+- Admin users MUST be able to view their assigned role and permissions (read-only)
+- Admin users MUST be able to update their contact information (email, phone number)
+- Profile picture uploads MUST support common image formats (JPEG, PNG) with size validation
+
+**Account Settings**:
+
+- Admin users MUST be able to change their own password with current password verification
+- Admin users MUST be able to configure timezone preferences for date/time display
+- Admin users MUST be able to configure language preferences (when i18n is implemented)
+- Password changes MUST require current password verification and meet security policy (FR-026)
+
+**Notification Preferences**:
+
+- Admin users MUST be able to configure personal notification preferences
+- Admin users MUST be able to toggle notification types (email, in-app) for different event categories
+- Notification preferences MUST be user-specific (not role-based)
+- System MUST respect admin notification preferences when sending notifications (integrates with FR-020)
+
+**Activity & Audit**:
+
+- Admin users MUST be able to view their own activity log (login history, actions performed)
+- Activity log MUST display: timestamp, action type, affected entities, IP address
+- Activity log MUST be read-only (no deletion or modification)
+- Activity log MUST be filterable by date range and action type
+
+**Integration Points**:
+
+- FR-031: Consumes role and permission data (read-only display)
+- FR-020: Notification preferences integration
+- FR-026: Password policy enforcement, timezone/language options
+- FR-021: Language preferences (when i18n is implemented)
+
+**Note**: This FR is planned for future implementation. Detailed requirements to be documented in dedicated FR-035 PRD when implementation begins. This mirrors the pattern of FR-001 (Patient Profile) and FR-032 (Provider Profile) to ensure consistency across all three platforms.
 
 ---
 

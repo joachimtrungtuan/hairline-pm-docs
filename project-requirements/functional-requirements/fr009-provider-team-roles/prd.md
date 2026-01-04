@@ -62,9 +62,9 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 The provider platform uses four clinic-side roles that directly reflect how real clinics operate, while keeping clear separation from Hairline's own Admin Platform roles:
 
 - **Owner (Main Account Holder)**: Single primary account per provider organization. Responsible for bank details and payouts, contract acceptance, and high-risk configuration. Mapped to the "provider admin / main account holder" described in the client transcription.
-- **Manager (Clinic Manager / Operations)**: Operational lead and front-of-staff representative. Can see and manage the full patient journey in the provider portal (inquiries, quotes, schedules, day-to-day operations), coordinate staff work, and manage most team settings, but cannot change bank details or ownership.
-- **Clinical Staff**: Medical staff who perform procedures and aftercare (surgeons, clinicians, nurses). Focused on in-progress and aftercare sections, treatment documentation, scans, and medical notes. Limited or no access to billing or sensitive configuration.
-- **Billing Staff**: Finance-oriented staff who work with quotes and payouts ("how much they're making"). Can view and reconcile financial information but cannot alter clinical records or manage team structure/ownership.
+- **Manager (Clinic Manager / Operations)**: Operational lead and front-of-staff representative. Can see and manage the full patient journey in the provider portal (inquiries, quotes, schedules, day-to-day operations), coordinate staff work, and manage most team settings, but cannot change bank details or assign/change the Owner role.
+- **Clinical Staff**: Medical staff who perform procedures and aftercare (surgeons, clinicians, nurses). Focused on in-progress and aftercare sections, treatment documentation, scans, and medical notes. **Default**: limited or no access to billing or sensitive configuration (final per-feature permissions are configured centrally in FR-031 and may deviate from this default).
+- **Billing Staff**: Finance-oriented staff who work with quotes and payouts ("how much they're making"). Can view and reconcile financial information but cannot alter clinical records or manage team structure or assign/change the Owner role.
 
 ### Communication Structure
 
@@ -140,8 +140,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 - **Steps**:
   1. System detects existing membership during invitation validation
   2. System displays blocking error: "This email already belongs to another provider team. Remove the member from their current provider or invite them with a different email."
-  3. Provider Owner may contact Hairline Admin to request ownership transfer (manual process in FR-031) if employment changes
-- **Outcome**: Cross-provider duplication prevented; membership transfers require admin intervention
+- **Outcome**: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here
 
 **B1: Invalid email address**:
 
@@ -199,7 +198,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 2. System displays list of team members with current roles
 3. Provider Owner/Admin clicks "Edit" button next to team member name (Owner rows show locked badge and no edit action)
 4. System presents role selection dropdown with current role pre-selected
-5. Provider Owner/Admin selects new role from dropdown (Owner role is read-only; demotion/promotion to Owner must be escalated to platform admins)
+5. Provider Owner/Admin selects new role from dropdown (Owner role is read-only and cannot be reassigned in this module)
 6. System displays permission comparison: "Current permissions" vs "New permissions"
 7. Provider Owner/Admin reviews changes and clicks "Update Role"
 8. System validates actor has permission to assign selected role
@@ -217,9 +216,9 @@ The provider platform uses four clinic-side roles that directly reflect how real
 - **Trigger**: Any provider user (Owner or Admin) attempts to modify the Owner's role from the provider platform
 - **Steps**:
   1. System detects target role is Owner (single primary account holder)
-  2. System displays error: "Ownership for this provider is managed by Hairline Admins. Please contact support to request changes."
+  2. System displays error: "The primary Owner role is fixed and cannot be changed."
   3. Edit dialog closes without making changes
-- **Outcome**: Ownership is never changed from the provider platform; all ownership transfers/demotions happen via Admin Platform (FR-031), preserving the single-owner invariant
+- **Outcome**: Owner role remains unchanged; no provider-facing workflow can reassign the primary Owner role
 
 **B5: Team member currently performing critical action**:
 
@@ -266,9 +265,9 @@ The provider platform uses four clinic-side roles that directly reflect how real
 - **Trigger**: Provider Owner attempts to remove themselves
 - **Steps**:
   1. System detects actor is removing themselves
-  2. System immediately blocks request with error: "Owners cannot remove their own accounts. Ask another Owner or Hairline Admin to perform this action."
+  2. System immediately blocks request with error: "Owners cannot remove their own accounts."
   3. Error is logged in audit trail for compliance
-- **Outcome**: Owner removal actions must be initiated by a different Owner or escalated to platform admins
+- **Outcome**: Self-removal is blocked
 
 **A7: Remove team member with no active work**:
 
@@ -312,13 +311,13 @@ The provider platform uses four clinic-side roles that directly reflect how real
 | Status | Display (badge) | N/A | Active, Invited, Suspended | Display only |
 | Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time |
 | Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only |
-| Actions | Button group | N/A | Edit, Remove, Transfer, View Activity | Hidden for Owner rows |
+| Actions | Button group | N/A | Edit, Remove, View Activity | Hidden for Owner rows |
 | Team Size Meter | Progress bar | N/A | Current members vs centrally approved limit | Turns amber at 90%, red at 100% |
 
 **Business Rules**:
 
 - Only Owners and Managers can access dashboard; Managers have read-only visibility into Owner rows.
-- Owner rows display lock badge with tooltip: "Ownership changes managed by Hairline Admins."
+- Owner rows display lock badge with tooltip: "Primary Owner role cannot be changed."
 - "Invited" status rows show "Resend Invitation" and "Cancel Invitation."
 - "Suspended" rows show "Reactivate."
 - Current logged-in user's row highlighted with "(You)."
@@ -352,8 +351,8 @@ The provider platform uses four clinic-side roles that directly reflect how real
 **Business Rules**:
 
 - Email uniqueness enforced per org; duplicates prompt "View member / Resend invitation" CTA.
-- Role dropdown includes inline permission summary; Owner option is always disabled in this screen and annotated: "Primary Owner can only be set or changed by Hairline Admins."
-- Form blocked when seat limit reached; CTA changes to "Request more seats" which routes to admin workflow.
+- Role dropdown includes inline permission summary; Owner option is always disabled in this screen and annotated: "Primary Owner cannot be set or changed from this screen."
+- Form blocked when seat limit reached; CTA changes to "Request more seats" which routes to the admin/support process defined in FR-015.
 - SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
 
 **Notes**:
@@ -381,7 +380,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Business Rules**:
 
-- Owner records show disabled form with callout: "Contact Hairline Admin to adjust ownership."
+- Owner records show disabled form with callout: "Primary Owner role cannot be changed."
 - Cannot change own role.
 - Permissions diff highlights removals (red) and additions (green).
 - Confirmation modal summarises risk (e.g., losing billing access).
@@ -409,7 +408,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Business Rules**:
 
-- Modal unavailable for Owners; CTA replaced with instructions to contact admin.
+- Modal unavailable for Owners; no provider-facing workflow can remove or suspend the primary Owner.
 - Reassignment required when outstanding work exists; otherwise option to archive.
 - Removal triggers notifications to removed member and provider owner, plus audit event.
 - Suspensions use same modal with different final state.
@@ -494,7 +493,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 **Business Rules**:
 
-- Owner rows show lock badge on role field with tooltip: "Ownership managed by Hairline Admins. Contact support to change."
+- Owner rows show lock badge on role field with tooltip: "Primary Owner role cannot be changed."
 - "Edit Role" action only available if actor has permission (Owners can edit all non-Owners; Admins cannot edit Owners).
 - "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4).
 - Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period.
@@ -621,7 +620,7 @@ The provider platform uses four clinic-side roles that directly reflect how real
 | Status Indicator | badge | N/A | Active / Invited / Suspended / Flagged | Real-time status; "Flagged" shown if compliance alert exists |
 | Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
 | Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
-| Admin Actions | button group | N/A | Force Suspend, Reset Password, Transfer Ownership (if Owner), View Sessions, Impersonate (Read-Only) | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
+| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate (Read-Only) | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
 
 **Tab 1: Profile & Overview**:
 
@@ -697,15 +696,12 @@ The provider platform uses four clinic-side roles that directly reflect how real
 | Membership Status | badge | N/A | Active / Pending / Suspended / Removed | Current status |
 | Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status |
 | Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason |
-| Transfer History | table | N/A | Provider membership transfers | If email was moved between providers via FR-031 |
-| Transfer to New Provider | button | N/A | Initiate ownership transfer workflow | Opens Screen 13 (Ownership Override Panel) |
 | Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event |
 
 **Business Rules**:
 
 - All admin actions (suspend, password reset, session logout, etc.) require strong re-authentication before execution; MFA-based re-authentication is **planned as a future improvement** and is not part of the initial FR-009 scope.
 - Every admin action generates high-priority audit log entry with justification field (required).
-- Owner records show additional "Ownership Transfer" action that launches Screen 13 workflow.
 - "Impersonate (Read-Only)" mode allows admin to view platform as team member would see it, but disables all write actions and displays persistent banner: "Viewing as [Name] - Read-Only Admin Mode."
 - Patient data access log obeys data retention policies: anonymized after 1 year, deleted after 2 years (unless part of active investigation).
 - Compliance flags automatically trigger notification to admin compliance team via FR-020.
@@ -723,52 +719,17 @@ The provider platform uses four clinic-side roles that directly reflect how real
 
 ---
 
-#### Screen 12: Team Size Policy Console
-
-**Purpose**: Centrally configure seat limits and review provider requests.
-
-**Components**:
-
-- Provider detail pane with current limit, utilization, historical changes.
-- Request queue (submitted from Screen 1) with approve/deny workflows.
-- Automation rules (e.g., auto-approve uplift up to 10 seats for verified providers).
-
-**Business Rules**:
-
-- Changes propagate immediately to provider dashboards via pub/sub.
-- Every adjustment recorded with rationale and admin actor.
-
----
-
-#### Screen 13: Ownership Override Panel
-
-**Purpose**: Allow platform admins to manage exceptional ownership cases.
-
-**Capabilities**:
-
-- Transfer ownership between accounts with dual confirmation.
-- Revoke ownership from the current Owner (e.g., compliance issue) while selecting a single successor Owner, preserving the one-owner-per-provider rule.
-- Notification hooks into FR-020 templates for affected parties.
-
-**Business Rules**:
-
-- Requires MFA re-auth for admin before finalizing.
-- Generates high-priority audit entries flagged for compliance review.
-
----
-
 ## Business Rules
 
 ### General Module Rules
 
 - **Rule 1**: Every provider organization must have exactly one Owner at all times (single primary account holder).
-- **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI; all ownership creation/transfer/removal flows route to the Admin Platform (FR-031) for manual intervention and audit.
-- **Rule 3**: Owner accounts can never perform management actions on their own ownership (no self-removal or self-demotion); ownership changes must be performed by a different authorized actor in the Admin Platform.
-- **Rule 4**: Team member accounts are scoped to a single provider organization—an email cannot belong to more than one provider team at a time. Transfers require platform admin intervention.
-- **Rule 5**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
-- **Rule 6**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
-- **Rule 7**: Maximum team size per provider organization defaults to 100 members and is centrally configured from the Admin Platform (FR-031). Providers submit limit-increase requests that must be approved by platform admins before additional invitations are allowed.
-- **Rule 8**: Detailed permission matrices and per-feature toggles are defined centrally in FR-031; FR-009 defines provider team roles and consumes those centrally managed permissions rather than allowing clinics to edit them directly in this module.
+- **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI.
+- **Rule 3**: Team member accounts are scoped to a single provider organization—an email cannot belong to more than one provider team at a time.
+- **Rule 4**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
+- **Rule 5**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
+- **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Providers can request limit increases through support per FR-015; invitations must be blocked when the limit is reached.
+- **Rule 7**: Detailed permission matrices and per-feature toggles are defined centrally in FR-031; FR-009 defines provider team roles and consumes those centrally managed permissions rather than allowing clinics to edit them directly in this module.
 
 ### Data & Privacy Rules
 
@@ -784,8 +745,6 @@ The provider platform uses four clinic-side roles that directly reflect how real
 **Editable by Admin (Hairline platform admins)**:
 
 - Maximum team size limit per provider (default 100, adjustable 1-500)
-- Ownership overrides (promote/demote Owner role) when compliance requires changes; actions logged and not exposed to providers
-- Force-transfer of ownership when original Owner leaves organization (performed via Admin Platform only)
 - Invitation expiry period (default 7 days, range 1-30 days)
 - Activity log retention period (default 2 years, minimum 1 year for compliance)
 - Force-suspend individual team member accounts for terms violations
@@ -1039,18 +998,17 @@ A coordinator leaves the clinic and the owner needs to remove their access to th
 
 ### User Story 4 - Enforce Single-Provider Membership (Priority: P2)
 
-A clinic owner attempts to invite a surgeon who is currently active in another provider organization. The system blocks the invitation, ensuring staff cannot belong to two providers simultaneously, and guides the owner to request an admin-managed transfer.
+A clinic owner attempts to invite a surgeon who is currently active in another provider organization. The system blocks the invitation, ensuring staff cannot belong to two providers simultaneously.
 
 **Why this priority**: Prevents compliance issues, billing confusion, and data leakage between providers by enforcing one-organization-per-member.
 
-**Independent Test**: Attempt to invite an email that already belongs to a different provider and verify the system blocks the action with the correct escalation path.
+**Independent Test**: Attempt to invite an email that already belongs to a different provider and verify the system blocks the action with clear remediation guidance.
 
 **Acceptance Scenarios**:
 
 1. **Given** a clinician (e.g., Dr. Smith) is an active Clinical Staff member of Provider A, **When** Provider B owner enters <doctor.smith@clinic.com> in the invite form, **Then** system detects the existing membership before sending the invitation.
-2. **Given** the conflict is detected, **When** the owner attempts to proceed, **Then** the form displays blocking error copy: "This email already belongs to another provider team. Contact Hairline Admin to request a transfer."
-3. **Given** owner clicks "Request Transfer" link, **When** request is submitted, **Then** FR-031 admin console receives a task to review and, upon approval, automatically removes the doctor from Provider A before allowing a new invitation.
-4. **Given** the transfer is approved and processed by admins, **When** Provider B re-sends the invitation, **Then** it succeeds because the email is no longer tied to another provider.
+2. **Given** the conflict is detected, **When** the owner attempts to proceed, **Then** the form displays blocking error copy: "This email already belongs to another provider team. Remove the member from their current provider team before inviting them here."
+3. **Given** the clinician is removed from Provider A, **When** Provider B re-sends the invitation, **Then** it succeeds because the email is no longer tied to another provider.
 
 ---
 
@@ -1074,18 +1032,17 @@ A clinic admin needs to review team activity for a specific period to understand
 
 ### User Story 6 - System Enforces "Single Owner" Rule (Priority: P1)
 
-Each clinic has exactly one primary Owner account. All other elevated users are Admins. The system must prevent creation of additional Owners from the provider UI and ensure that ownership can only be transferred via the Admin Platform (FR-031).
+Each clinic has exactly one primary Owner account. All other elevated users are Admins. The system must prevent creation of additional Owners from the provider UI.
 
 **Why this priority**: Critical business rule that protects organizational integrity—having a single clearly identified Owner simplifies billing, legal responsibility, and access control.
 
-**Independent Test**: Attempt to create or assign a second Owner via all provider-facing flows (invitation form, role edit dialog, admin console actions) and verify that every attempt is blocked with guidance to contact Hairline Admins; verify that system surfaces which account is the current Owner without allowing in-app changes.
+**Independent Test**: Attempt to create or assign a second Owner via all provider-facing flows (invitation form, role edit dialog) and verify that every attempt is blocked; verify that system surfaces which account is the current Owner without allowing in-app changes.
 
 **Acceptance Scenarios**:
 
-1. **Given** provider Owner opens the "Invite Team Member" form, **When** they open the Role dropdown, **Then** Owner is visible as a non-selectable option with tooltip "Primary Owner can only be set or changed by Hairline Admins."
-2. **Given** any provider user (Owner or Admin) opens the role edit dialog for the current Owner, **When** they attempt to change the role, **Then** the form is disabled and displays callout: "Ownership is managed by Hairline Admins. Please contact support to request changes."
-3. **Given** an Admin attempts to update a team member's role to Owner via any provider UI, **When** they submit the change, **Then** system blocks the request with error: "Cannot assign Owner role from provider portal. Contact Hairline Admins."
-4. **Given** ownership has been transferred via Admin Platform (FR-031), **When** the provider Owner next logs in, **Then** they see updated Owner designation in the team management screens and cannot modify it themselves.
+1. **Given** provider Owner opens the "Invite Team Member" form, **When** they open the Role dropdown, **Then** Owner is visible as a non-selectable option with tooltip "Primary Owner cannot be set or changed from this screen."
+2. **Given** any provider user (Owner or Admin) opens the role edit dialog for the current Owner, **When** they attempt to change the role, **Then** the form is disabled and displays callout: "Primary Owner role cannot be changed."
+3. **Given** an Admin attempts to update a team member's role to Owner via any provider UI, **When** they submit the change, **Then** system blocks the request with error: "Cannot assign the primary Owner role from the provider portal."
 
 ---
 
@@ -1139,7 +1096,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 - **REQ-009-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
 - **REQ-009-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
 - **REQ-009-007**: System MUST send email notifications for team management events (invitation, role change, removal)
-- **REQ-009-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked or escalated for admin-managed transfer
+- **REQ-009-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked
 
 ### Data Requirements
 

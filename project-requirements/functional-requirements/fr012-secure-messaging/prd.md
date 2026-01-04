@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Enable secure, auditable, real-time messaging between patients and providers across the Hairline platform to support quote clarification, procedure coordination, and patient care. Patients can communicate directly with providers throughout their journey from quote review through post-procedure phases. Admins monitor all conversations with keyword flagging and can intervene ONLY in emergency situations (serious policy violations, urgent disputes, patient safety emergencies). The module supports text and media messages, read receipts, conversation history, and real-time notifications, improving response times, patient reassurance, provider communication efficiency, and operational transparency while meeting medical data privacy obligations.
+Enable secure, auditable, real-time messaging and audio/video communication between patients and providers across the Hairline platform to support quote clarification, procedure coordination, and patient care. Patients can communicate directly with providers throughout their journey from quote review through post-procedure phases via text messaging, media sharing, and live audio/video calls. Admins monitor all conversations with keyword flagging and can intervene ONLY in emergency situations (serious policy violations, urgent disputes, patient safety emergencies). The module supports text and media messages, audio/video calls via Twilio, read receipts, conversation history, and real-time notifications, improving response times, patient reassurance, provider communication efficiency, and operational transparency while meeting medical data privacy obligations.
 
 ---
 
@@ -18,10 +18,10 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; notifications for new messages; view conversation history; send text and media.
-- **Provider Platform (PR-07)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; view conversation history; send text and media responses.
+- **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; audio/video calls for live consultations; notifications for new messages and calls; view conversation history; send text and media.
+- **Provider Platform (PR-07)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; audio/video call capability for consultations; view conversation history; send text and media responses.
 - **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request 3D scans or schedule reviews.
-- **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages.
+- **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages; Twilio integration for audio/video calls.
 
 ### Multi-Tenant Breakdown
 
@@ -31,20 +31,22 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 - See conversation previews with last message, unread counts, and timestamps; real-time updates.
 - Open individual conversations to view full chat history with provider.
 - Compose and send messages to providers (quote clarification, procedure questions, coordination).
+- Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio.
 - Attach media to messages: Images (JPG/PNG max 5MB), Video (MP4 max 10MB), PDF (max 10MB); max 5 attachments per message.
 - View thumbnails and playback inline for images/videos; download PDFs.
 - See read receipts and timestamps per message.
-- Receive real-time notifications for new provider messages; badge counts for unread in inbox and app navigation.
-- Chat available from quote received through post-procedure phases.
+- Receive real-time notifications for new provider messages and incoming calls; badge counts for unread in inbox and app navigation.
+- Chat and call features available from quote received through post-procedure phases.
 
 **Provider Platform (PR-07)**:
 
 - Access Messages popup/submenu from header navigation showing recent patient conversations with unread counts.
 - Quick view of most recent 10 conversations in popup; "View All" for full list.
 - Send and receive messages with patients for quote-related questions and procedure coordination.
+- Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio.
 - View conversation history per patient with timestamps and read receipts.
 - Attach media to responses: Images (JPG/PNG max 5MB) for before/after photos and facility images, Video (MP4 max 10MB) for procedure demonstrations, PDF (max 10MB) for treatment plans; max 5 attachments per message.
-- Receive notifications for new patient messages; unread badge on header messages icon.
+- Receive notifications for new patient messages and incoming calls; unread badge on header messages icon.
 - Conversations visible for patients who have received quotes from this provider.
 
 **Admin Platform (A-10)**:
@@ -61,10 +63,11 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 - Configure moderation rules and automatic keyword flags; maintain compliance audit trail.
 - Admin emergency messages clearly identified with "Hairline Admin" badge; logged with mandatory reason.
 
-**Shared Services (S-03, S-05)**:
+**Shared Services (S-03, S-05, Twilio)**:
 
 - S-03 Notification Service to deliver timely user alerts (push/email as configured).
 - S-05 Media Storage for secure storage and retrieval of attachments; virus/malware scanning pipeline.
+- Twilio for audio/video call infrastructure and real-time communication.
 
 ### Communication Structure
 
@@ -77,10 +80,10 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 - Admin monitoring with keyword flagging for compliance and policy enforcement.
 - **Emergency-only admin intervention** for critical situations (estimated <5% of conversations).
 - Conversation history accessible from quote received through post-procedure phases.
+- **Audio and video call functionality** using Twilio for real-time consultation and communication between patients and providers.
 
 **Out of Scope**:
 
-- Live video calls (can be scheduled/triggered but delivered by separate video consultation module).
 - SMS channel management (handled by S-03 Notification Service configuration; **SMS as a transport for secure messaging is not part of MVP and will only be available if/when S-03 adds SMS support in a later phase**).
 - Routine admin participation in conversations (admin intervention is emergency-only, not standard practice).
 - Patient ↔ Hairline Support general help (may be added in future release; currently handled outside messaging module).
@@ -209,7 +212,7 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 | Last message preview | text | Yes | Preview of last message (truncated) | Max 100 chars; shows "You: " prefix if patient sent |
 | Unread badge | indicator | N/A | Shows unread message count | Red badge with count; hidden if 0 |
 | Timestamp | text | Yes | Time of last message | Relative (e.g., "2h ago") or absolute (e.g., "Dec 19") |
-| Admin intervention indicator | badge | N/A | Shows if admin has intervened in conversation | Orange "Admin" badge; only visible if admin message exists |
+| Admin intervention indicator | badge | No | Shows if admin has intervened in conversation | Conditional: Visible ONLY if 'admin_intervened' is true. Orange "Admin" badge. |
 
 **Business Rules**:
 
@@ -244,6 +247,8 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 | Message text | text | Yes | Core message body | Max 2000 chars, no prohibited terms |
 | Attachment | image/video/pdf | No | Optional media to support the message | Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; Max 5 attachments per message |
 | Provider name | display | Yes | Shows provider name and clinic | Read-only; contextual to conversation |
+| Audio Call button | action | Yes | Initiates audio call via Twilio | Icon button in header; disabled if provider offline (optional) |
+| Video Call button | action | Yes | Initiates video call via Twilio | Icon button in header; disabled if provider offline (optional) |
 | Send button | action | Yes | Submits message | Disabled until text or attachment present |
 | Read status | indicator | N/A | Shows if message was read by provider | Auto-updated in real time |
 
@@ -349,6 +354,8 @@ Enable secure, auditable, real-time messaging between patients and providers acr
 | **RIGHT PANEL: Conversation Info & Tools** ||||||
 | Patient identifier | display | Yes | Patient name and ID (anonymized until payment per FR-003) | Read-only; contextual header | Right |
 | Patient avatar | image | No | Patient profile picture or placeholder | Displayed at top of right panel | Right |
+| Audio Call button | action | Yes | Initiates audio call via Twilio | Icon button in header/tools panel | Right |
+| Video Call button | action | Yes | Initiates video call via Twilio | Icon button in header/tools panel | Right |
 | Quote references | list | No | All quotes associated with this patient-provider pair | Clickable links to quotes; shows inquiry/quote IDs with service types (e.g., "Quote #123 - Hair Transplant"); helps provider maintain context across multiple treatments | Right |
 | Service types | list | Yes | Treatment categories for all quotes | Read-only; comma-separated if multiple | Right |
 | Conversation started | datetime | Yes | When conversation was created | Read-only | Right |
@@ -716,6 +723,11 @@ Not applicable to messaging scope; no payment flows in this module.
 
 ### External Dependencies (APIs, Services)
 
+- Twilio (for audio/video calls)
+  - Purpose: Enable real-time audio and video calls between patients and providers for consultations and communication.
+  - Integration: Use Twilio Video/Voice API for initiating, managing, and terminating call sessions.
+  - Failure handling: Display connection error message; allow retry; fallback to text messaging if call cannot be established.
+
 - Device push notification providers (for mobile alerts)
   - Purpose: Deliver device notifications to patients and providers.
   - Integration: Use platform-standard push delivery; fallback to in-app badges and email where applicable.
@@ -769,6 +781,8 @@ Not applicable to messaging scope; no payment flows in this module.
 ### Technical Considerations
 
 - Architecture: Real-time messaging delivery with persistence and audit logging.
+- Real-time Transport: WebSocket/Socket.io for text messaging to enable real-time bidirectional communication.
+- Audio/Video Calls: Twilio integration for real-time audio and video calls between patients and providers.
 - Technology: Media handling supports JPG/PNG images (max 5MB), MP4 videos (max 10MB), and PDF files (max 10MB); client-side validation before upload; background upload for larger files with progress indication.
 - Performance: Degrade gracefully on poor connectivity with retries and clear status; optimize video compression on mobile devices.
 - Storage: Medical communications retained per compliance with fast retrieval for care contexts; efficient media storage with thumbnail generation for images/videos.

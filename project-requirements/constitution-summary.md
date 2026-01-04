@@ -118,7 +118,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 ### Provider Platform Modules (7 core)
 
 - **PR-01**: Auth & Team Management (P1)
-- **PR-02**: Inquiry & Quote Management (P1) - Enhanced to include pre-scheduling
+- **PR-02**: Inquiry & Quote Management (P1) - Includes Appointment Management & Pre-scheduling
 - **PR-03**: Treatment Execution & Documentation (P1)
 - **PR-04**: Aftercare Participation (P2 - optional)
 - **PR-05**: Financial Management & Reporting (P1)
