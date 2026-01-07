@@ -1100,7 +1100,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.2: Tutorial Guides, Troubleshooting Tips, Policy Information
+#### Screen 5.2: Tutorial Guides, Troubleshooting Tips, Policy Information
 
 **Purpose**: Display step-by-step guides, troubleshooting articles, and policy documents in article layout
 
@@ -1137,7 +1137,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.3: Resource Library
+#### Screen 5.3: Resource Library
 
 **Purpose**: Display downloadable resources (templates, documents, PDFs) in file viewer layout
 
@@ -1172,7 +1172,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.4: Video Tutorials
+#### Screen 5.4: Video Tutorials
 
 **Purpose**: Display video tutorials with embedded video player
 
@@ -1208,7 +1208,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.5: Contact Support
+#### Screen 5.5: Contact Support
 
 **Purpose**: Submit support requests via contact form with submission tracking
 
@@ -1245,7 +1245,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.6: Feedback & Suggestions
+#### Screen 5.6: Feedback & Suggestions
 
 **Purpose**: Submit feedback and feature requests with submission tracking
 
@@ -1281,7 +1281,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 5.7: Service Status
+#### Screen 5.7: Service Status
 
 **Purpose**: Display platform service status and incident reports
 

@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Treatment Execution & Documentation module enables providers to document the entire hair transplant procedure lifecycle from patient arrival through treatment completion. This module serves as the critical transition point where patients move from "scheduled" bookings to active "in progress" treatments and eventually to "aftercare" status. The module captures comprehensive procedure details including surgeon information, techniques used, graft counts, treatment notes, before/during/after photos, and post-operative instructions that form the foundation for subsequent aftercare activities.
+The Treatment Execution & Documentation module enables providers to document the entire hair transplant procedure lifecycle from patient arrival through treatment completion. This module serves as the critical transition point where patients move from "Confirmed" bookings to active "In Progress" treatments and eventually to "Aftercare" status. The module captures comprehensive procedure details including surgeon information, techniques used, graft counts, treatment notes, before/during/after photos, and post-operative instructions that form the foundation for subsequent aftercare activities.
 
 This module operates exclusively within the Provider Platform (PR-03) tenant, with data outputs consumed by both the Patient Platform (treatment completion notifications, post-op instructions) and Admin Platform (oversight, billing triggers). The module bridges the pre-treatment phase (bookings, scheduling) with the post-treatment phase (aftercare, final payment processing), ensuring complete documentation for audit trail, quality assurance, and seamless transition to long-term aftercare.
 
@@ -312,7 +312,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 | Treatment Type | select | Yes (read-only) | Hair transplant technique (FUE, DHI, FUT) | Display only |
 | Estimated Grafts | number | Yes (read-only) | Graft count from quote | Display only |
 | Assigned Clinician | select | Yes (read-only) | Clinical Staff member selected during quote (treating clinician/surgeon) | Display only |
-| Booking Status | badge | Yes (read-only) | Current status: "Confirmed", "In Progress", "Completed" | Color-coded: blue (confirmed), orange (in progress), green (completed) |
+| Booking Status | badge | Yes (read-only) | Current status: "Confirmed", "In Progress", "Completed" | Color-coded: blue (Confirmed), orange (In Progress), green (Completed) |
 | Actions | button group | Yes | "View Details", "Mark as Arrived" (if today/past), "View Treatment Record" (if completed) | Buttons enabled/disabled based on status and date |
 
 **Business Rules**:
@@ -322,7 +322,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
   - Booking status = "Confirmed"
   - Procedure date ≤ today
   - Provider role = Owner or Clinical Staff (Managers and Billing Staff cannot mark arrival)
-- **Status Badges**: Color-coded for quick visual scanning (blue = confirmed, orange = in progress, green = completed)
+- **Status Badges**: Color-coded for quick visual scanning (blue = Confirmed, orange = In Progress, green = Completed)
 - **Sort Order**: Default sort by procedure time (earliest first); provider can re-sort by patient name or graft count
 
 **Notes**:
