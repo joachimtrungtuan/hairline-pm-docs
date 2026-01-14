@@ -191,7 +191,7 @@ This module provides the administrative infrastructure to:
 **Steps**:
 
 1. Admin navigates to Settings > General Settings > Location Pricing tab
-   - Currency dropdown is populated from FR-029's supported currency list (General Settings > Payment System Configuration > Currency Management)
+   - Currency dropdown is populated from FR-029's supported currency list (Settings > Billing Settings > Currency Management)
 2. Admin selects destination location (e.g., Turkey, Poland, UK)
 3. System displays current pricing configuration for selected location:
    - List of currencies with configured starting prices
@@ -256,7 +256,7 @@ This module provides the administrative infrastructure to:
 - **Steps**:
   1. Admin attempts to save price for unsupported currency
   2. System displays error: "[Currency] is not currently supported. Add currency to system first via Currency Management."
-  3. Admin navigates to General Settings > Payment System Configuration > Currency Management (FR-029) or cancels
+  3. Admin navigates to Settings > Billing Settings > Currency Management (FR-029) or cancels
 - **Outcome**: Price not saved for unsupported currency
 
 **B5: Admin Attempts to Save Pricing Without Change Reason**:
@@ -404,7 +404,7 @@ This module provides the administrative infrastructure to:
 - Provide CSV import/export for bulk pricing updates
 - Display exchange rate reference for admin guidance (from FR-029 currency service)
 - Include calculator tool: enter price in one currency, auto-suggest prices for other currencies based on exchange rates
-- Currency list is read-only from FR-029 Payment System Configuration; add/edit currencies via General Settings > Payment System Configuration > Currency Management
+- Currency list is read-only from FR-029 Payment System Configuration; add/edit currencies via Settings > Billing Settings > Currency Management
 - Currency dropdown on this screen is populated from FR-029's supported currency list; no inline currency creation here
 - Bulk Update modal (triggered by "Bulk Update Pricing") includes:
   - Method selector: percentage increase/decrease or fixed amount adjustment
@@ -817,6 +817,7 @@ This module provides the administrative infrastructure to:
 |------|---------|---------|--------|
 | 2025-11-13 | 1.0 | Initial PRD creation from FR-028 system-prd.md and Hairline-AdminPlatformPart2.txt transcription | Claude (Sonnet 4.5) |
 | 2025-12-16 | 1.1 | Verification updates: Constitution-compliant 10-year audit retention; resolved destination ordering with FR-003 (regional config + proximity fallback); removed overlapping grouping priority logic; required change reason for all config writes; updated status to Verified & Approved | Product Team |
+| 2026-01-14 | 1.2 | Documentation alignment: Updated Currency Management navigation reference to live under Billing Settings (FR-029) | AI |
 
 ---
 
@@ -833,4 +834,4 @@ This module provides the administrative infrastructure to:
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-12-16
+**Last Updated**: 2026-01-14

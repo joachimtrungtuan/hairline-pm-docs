@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), configure platform commission rates (global default and provider-specific), and define split payment (installment) plans with cutoff rules.
+The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, manage the platform’s enabled currency list (system-supported currencies), set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), configure platform commission rates (global default and provider-specific), and define split payment (installment) plans with cutoff rules.
 
 This configuration layer is critical because Hairline operates across multiple countries with different currencies, banking systems, and regulatory requirements. Admins need the flexibility to assign different Stripe accounts to different regions, protect the platform against currency fluctuations through configurable markup rates, and offer patients flexible payment options (2-9 installments) while ensuring full payment completion before procedure dates.
 
@@ -55,6 +55,7 @@ The module delivers value by:
 
 - Admins manage multiple Stripe accounts with API key configuration
 - Admins assign Stripe accounts to specific countries or regional groupings
+- Admins enable/disable which currencies are available across the system (central supported currency list) and set the default currency
 - Admins configure currency conversion rate sources (e.g., xe.com API integration)
 - Admins set currency conversion markup percentages (e.g., 5-10%) to protect against rate fluctuations
 - Admins configure deposit rate percentage (20-30%) globally or per provider
@@ -543,6 +544,37 @@ The module delivers value by:
 
 ---
 
+### Screen 6: Currency Management (Central Supported Currency List)
+
+**Purpose**: Allows admins to manage the *enabled* subset of currencies used throughout the platform (e.g., currency dropdowns for location pricing, Stripe account supported currencies, and currency conversion configuration). The master currency catalog (ISO 4217 code metadata such as symbol and minor units) is maintained by engineering; admins do not create arbitrary new currency codes.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Search | text | No | Filter currencies by code or name | Max 100 chars |
+| Currency Code | display-only | - | ISO 4217 code (e.g., USD, EUR, GBP) | From master catalog |
+| Currency Name | display-only | - | Human-readable currency name | From master catalog |
+| Symbol | display-only | - | Currency symbol (e.g., $, €, £) | From master catalog |
+| Minor Units | display-only | - | Decimal precision (e.g., 2 for USD/EUR/GBP, 0 for JPY/KRW) | From master catalog |
+| Enabled | toggle | Yes | Whether this currency is available for selection across the system | Must keep at least 1 enabled currency |
+| Default Currency | radio/select | Yes | Which enabled currency is the system default | Exactly 1 default; default must be enabled |
+
+**Business Rules**:
+
+- Currency codes are immutable and come from a system-maintained catalog; admins cannot add non-ISO or custom codes.
+- At least one currency must remain enabled at all times.
+- Exactly one enabled currency must be set as the system default.
+- If an admin attempts to disable a currency currently referenced by system configuration (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable.
+- Enabling/disabling currencies affects new configuration choices immediately; existing records retain their stored currency codes.
+
+**Notes**:
+
+- This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable).
+- Provide quick actions: “Enable common set” (e.g., USD/EUR/GBP) and “Set Default” for an enabled currency.
+
+---
+
 ## Business Rules
 
 ### General Module Rules
@@ -568,6 +600,7 @@ The module delivers value by:
 **Editable by Admin**:
 
 - Stripe account credentials, assigned countries, supported currencies, and active/inactive status
+- Central supported currency list (enable/disable currencies) and system default currency
 - Currency conversion rate source, API credentials, markup percentages, and rate protection thresholds
 - Deposit rate percentage (20-30% range) globally or per provider
 - Commission rate percentage (15-25% range) globally or per provider
@@ -584,6 +617,7 @@ The module delivers value by:
 - Encryption algorithms for Stripe secret keys (AES-256)
 - Cache TTL for configuration propagation (5 minutes hard-coded)
 - Payment audit logging requirements (always enabled, cannot be disabled)
+- Currency master catalog (ISO 4217 metadata: name/symbol/minor units) used to populate the Currency Management screen
 
 **Configurable with Restrictions**:
 
@@ -1021,6 +1055,7 @@ As a platform administrator managing international payments, I need to receive t
 | 2025-11-13 | 1.0 | Initial PRD creation for FR-029: Payment System Configuration | Claude (AI Assistant) |
 | 2025-12-16 | 1.1 | Major revisions: Added commission rate configuration (global + provider-specific) and aligned split payment rules with cross-FR constraints (monthly cadence, 30+ day cutoff). Added Constitution compliance requirements (webhook signature verification, FX and commission snapshot at booking, audit retention 10 years). Fixed module code placeholders and corrected currency conversion example. | AI |
 | 2025-12-16 | 1.2 | Status updated to Verified & Approved; All approvals completed | Product Team |
+| 2026-01-14 | 1.3 | Added Currency Management screen (central supported currency list) and aligned admin editability rules | AI |
 
 ---
 
@@ -1037,4 +1072,4 @@ As a platform administrator managing international payments, I need to receive t
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2025-12-16
+**Last Updated**: 2026-01-14
