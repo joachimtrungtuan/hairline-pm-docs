@@ -1,34 +1,43 @@
-# Product Requirements Document: Patient Support Center & Ticketing
+# Product Requirements Document: Support Center & Ticketing System
 
-**Module**: A-10: Communication Monitoring & Support | A-01: Patient Management & Oversight  
-**Feature Branch**: `fr034-support-center-ticketing`  
-**Created**: December 30, 2025  
-**Status**: Draft  
+**Module**: A-10: Communication Monitoring & Support | A-01: Patient Management & Oversight
+**Feature Branch**: `fr034-support-center-ticketing`
+**Created**: December 30, 2025
+**Status**: Draft
 **Source**: FR-034 from system-prd.md, Client transcription (Hairline-AdminPlatform-Part1.txt)
 
 ---
 
 ## Executive Summary
 
-The Patient Support Center & Ticketing module provides a formal support system for managing patient inquiries, technical issues, and general support requests outside of aftercare-specific communications. This module enables Hairline admin staff to create, track, and resolve support cases systematically, ensuring consistent service quality and maintaining comprehensive audit trails for compliance and dispute resolution.
+The Support Center & Ticketing System provides a unified formal support system for managing both patient and provider inquiries, technical issues, feedback submissions, and general support requests. This module enables Hairline admin staff to create, track, and resolve support cases systematically across all platform tenants, ensuring consistent service quality and maintaining comprehensive audit trails for compliance and dispute resolution.
 
-**Purpose**: This feature establishes a structured support case management system to handle patient questions and issues such as:
+**Purpose**: This feature establishes a structured support case management system to handle user questions and issues from THREE sources:
+
+1. **Patient Submissions** (via FR-035): Patients submit support requests, questions, and feedback through the patient mobile app
+2. **Provider Submissions** (via FR-032): Providers submit support requests and feedback/suggestions through the provider Help Centre
+3. **Manual Admin Entry**: Admin staff manually create cases for inquiries received via email, phone, or other external channels
+
+**Common support scenarios include**:
 
 - "I don't understand how this works"
 - "This feature is not working for me"
 - Payment or booking clarification questions
 - Account access issues
 - General platform navigation help
+- Feature requests and product feedback
+- Bug reports and technical issues
 
-**Problem Solved**: Without a formal support system, patient inquiries risk being lost, duplicated, or inconsistently resolved. This module ensures every support request is tracked, prioritized, assigned, and resolved with complete accountability and auditability.
+**Problem Solved**: Without a formal unified support system, patient and provider inquiries risk being lost, duplicated, or inconsistently resolved. This module ensures every support request from any source is tracked, prioritized, assigned, and resolved with complete accountability and auditability.
 
 **Business Value**:
 
-- **Improved Patient Satisfaction**: Faster, more consistent support response times
-- **Operational Efficiency**: Centralized support case tracking reduces staff workload and prevents duplicate efforts
+- **Improved User Satisfaction**: Faster, more consistent support response times for both patients and providers
+- **Operational Efficiency**: Centralized support case tracking across all tenants reduces staff workload and prevents duplicate efforts
+- **Unified Workflow**: Single consistent status workflow (Open → In Progress → Resolved → Closed) for all ticket types
+- **Feedback Management**: Optional Feedback Resolution tracking (Implemented, Planned, Declined, Under Review) for feature requests and suggestions
 - **Compliance & Audit Trail**: Immutable case history supports dispute resolution and regulatory compliance
-- **Provider Support**: Includes ticketing for provider platform issues and questions
-- **Data-Driven Improvements**: Case analytics identify recurring issues, informing product improvements
+- **Data-Driven Improvements**: Case analytics identify recurring issues across both patient and provider experiences, informing product improvements
 
 ---
 
@@ -36,35 +45,45 @@ The Patient Support Center & Ticketing module provides a formal support system f
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-06)**: NOT IN SCOPE for MVP - patients contact support via external channels (email, phone); future enhancement may include in-app support request submission
-- **Provider Platform (PR-07)**: NOT IN SCOPE for MVP - providers contact support via external channels; future enhancement may include in-app support ticketing
-- **Admin Platform (A-10, A-01)**: Core support case management interface for admin staff to intake, track, categorize, prioritize, assign, and resolve support cases for both patient and provider inquiries
+- **Patient Platform (P-XX)**: Patient-facing support ticket submission UI accessible from patient app Help Center (FR-035: Patient Help Center & Support Submission); patients can submit support requests and feedback directly from patient mobile app
+- **Provider Platform (PR-07)**: Provider-facing support ticket and feedback submission UI accessible from Help Centre (FR-032 Screen 5.5 and 5.6); providers can submit support requests and feedback directly from provider platform
+- **Admin Platform (A-10, A-01)**: Core support case management interface for admin staff to intake, track, categorize, prioritize, assign, and resolve support cases for both patient and provider inquiries from all sources (patient app, provider portal, manual admin entry)
 - **Shared Services (S-03)**: Notification Service used to send status updates and replies to patients/providers via email
 
 ### Multi-Tenant Breakdown
 
-**Patient Platform (P-06)**:
+**Patient Platform (P-XX)**:
 
-- OUT OF SCOPE for MVP - No patient-facing support ticket submission UI in mobile app
-- Future enhancement: In-app "Contact Support" button to submit support cases directly from patient mobile app
+- Patients can submit support requests and feedback via FR-035 (Patient Help Center & Support Submission) accessible from patient mobile app
+- Patients can view status of their submitted support requests and feedback submissions
+- Patients receive email notifications when admin responds to their submissions or updates status
+- Patient submissions automatically create support cases in FR-034 with unified status workflow
+- Submission types include: Technical issues, account questions, booking help, general inquiries, feedback, and feature requests
 
 **Provider Platform (PR-07)**:
 
-- OUT OF SCOPE for MVP - No provider-facing support ticket submission UI in web app
-- Future enhancement: In-app "Contact Support" section for providers to submit operational questions and technical issues
+- Providers can submit support requests via Contact Support form (FR-032 Screen 5.5) accessible from Help Centre
+- Providers can submit feedback and suggestions via Feedback & Suggestions form (FR-032 Screen 5.6) accessible from Help Centre
+- Providers can view status of their submitted support requests and feedback submissions
+- Providers receive email notifications when admin responds to their submissions or updates status
 
 **Admin Platform (A-10: Communication Monitoring & Support)**:
 
-- Admin staff create support cases manually (from incoming emails, phone calls, chat messages)
-- Admin staff categorize cases by type (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry)
+- Admin staff create support cases manually (from incoming emails, phone calls, chat messages) OR cases are automatically created from patient app submissions (FR-035) or provider portal submissions (FR-032)
+- Admin staff view and manage patient support requests submitted through patient app (FR-035)
+- Admin staff view and manage provider support requests submitted through Help Centre Contact Support form (FR-032 Screen 5.5)
+- Admin staff view and manage patient and provider feedback submissions (FR-035 and FR-032 Screen 5.6)
+- Admin staff categorize cases by type (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Feature Request, Bug Report, Patient Support)
 - Admin staff set case priority (Low, Medium, High, Urgent)
 - Admin staff assign cases to specific support team members or departments
-- Admin staff track case lifecycle: Open → In Progress → Resolved → Closed
-- Admin staff view comprehensive case timeline with all messages, notes, attachments, and status changes
-- Admin staff can link cases to specific patient records (by Hairline Patient ID, email, or phone number)
-- Admin staff can deep-link from case to patient management module (A-01) for account interventions
+- Admin staff track case lifecycle with **unified status workflow**: Open → In Progress → Resolved → Closed (consistent across all ticket types and sources)
+- Admin staff track **Feedback Resolution** for feedback/feature request tickets: Implemented, Planned, Declined, Under Review (optional field)
+- Admin staff view comprehensive case timeline with all messages, notes, attachments, status changes, and feedback resolution updates
+- Admin staff can identify **Ticket Source** (Patient App, Provider Portal, Manual Admin Entry) and **Submitter Type** (Patient, Provider, Admin)
+- Admin staff can link cases to specific patient records (by Hairline Patient ID, email, or phone number) or provider records
+- Admin staff can deep-link from case to patient management module (A-01) or provider management module (A-02) for account interventions
 - Admin staff export case data for compliance audits or dispute resolution
-- Admin staff view case analytics (open case count, average resolution time, case volume by category)
+- Admin staff view case analytics (open case count, average resolution time, case volume by category, ticket source breakdown, feedback resolution status)
 
 **Admin Platform (A-01: Patient Management & Oversight)**:
 
@@ -107,18 +126,32 @@ The Patient Support Center & Ticketing module provides a formal support system f
 
 ### Entry Points
 
+**Patient App Entry**:
+
+- Patients access Contact Support and Feedback submission forms from patient app Help Center (FR-035: Patient Help Center & Support Submission)
+- Patient submissions automatically create support cases in FR-034 system with unified status workflow
+- Patients can view status of their submitted tickets in patient app
+
+**Provider Platform Entry**:
+
+- Providers access Contact Support form from Help Centre (FR-032 Screen 5.5) to submit support requests
+- Providers access Feedback & Suggestions form from Help Centre (FR-032 Screen 5.6) to submit feedback
+- Provider submissions automatically create support cases in FR-034 system with unified status workflow
+
 **Admin Platform Entry**:
 
 - Admin staff access Support Center module from main admin navigation menu
-- Admin dashboard displays support case metrics (open cases, urgent cases, unassigned cases)
+- Admin dashboard displays support case metrics (open cases, urgent cases, unassigned cases, ticket source breakdown)
 - Admin receives email notification when new support case is assigned to them
 - Admin can create new support case manually from Support Center interface
 
 **System-Triggered Entry**:
 
-- Admin creates support case when patient contacts via email (manual case creation from email content)
-- Admin creates support case when patient contacts via phone (manual case entry after call)
-- Future: Automated case creation from patient app "Contact Support" submission
+- System automatically creates support case when patient submits Contact Support or Feedback request via patient app (FR-035)
+- System automatically creates support case when provider submits Contact Support request via Help Centre (FR-032 Screen 5.5)
+- System automatically creates support case when provider submits Feedback & Suggestions via Help Centre (FR-032 Screen 5.6)
+- Admin creates support case when patient or provider contacts via email (manual case creation from email content)
+- Admin creates support case when patient or provider contacts via phone (manual case entry after call)
 
 **Integration Entry**:
 
@@ -190,19 +223,80 @@ The Patient Support Center & Ticketing module provides a formal support system f
   5. System logs intervention in both support case timeline and patient account audit trail
 - **Outcome**: Patient account issue resolved with audit trail across both modules
 
-**A3: Case Requires Provider Account Intervention**:
+**A3: Provider Submits Contact Support Request via Help Centre**:
 
-- **Trigger**: Provider contacts support with operational question or technical issue
+- **Trigger**: Provider needs direct assistance and submits support request through Help Centre (FR-032 Screen 5.5)
 - **Steps**:
-  1. Admin creates support case with category "Provider Support"
-  2. Admin links case to provider record by provider ID or clinic name
-  3. Admin assigns case to provider support team
-  4. System sends confirmation email to provider contact email
-  5. Admin resolves provider issue and documents resolution
-  6. System sends resolution email to provider
-- **Outcome**: Provider inquiry resolved with tracking in Support Center
+  1. Provider navigates to Help Centre and selects "Contact Support" subscreen (FR-032 Screen 5.5)
+  2. System displays support request form (subject, category, message, priority, optional attachment)
+  3. Provider completes form with support request details and submits
+  4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
+  5. System links case to provider record (provider ID automatically linked from logged-in provider session)
+  6. System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support)
+  7. System sets case priority based on provider's selection (Low, Medium, High, Urgent)
+  8. System sets case status to "Open" and assigns to default provider support team
+  9. System sets Ticket Source to "Provider Portal" and Submitter Type to "Provider"
+  10. System displays confirmation to provider: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
+  11. System sends confirmation email to provider with case reference number (via S-03)
+  12. System sends notification to assigned admin team member
+  13. Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds
+  14. Provider can view case status and admin responses in their Contact Support subscreen (FR-032 Screen 5.5)
+- **Outcome**: Provider support request automatically creates support case, tracked and managed in FR-034 with unified status workflow
 
-**A4: Multiple Cases for Same Issue (Duplicate Detection)**:
+**A4: Provider Submits Feedback & Suggestions via Help Centre**:
+
+- **Trigger**: Provider wants to submit feedback or suggestion through Help Centre (FR-032 Screen 5.6)
+- **Steps**:
+  1. Provider navigates to Help Centre and selects "Feedback & Suggestions" subscreen (FR-032 Screen 5.6)
+  2. System displays feedback submission form (feedback type, title, description, priority)
+  3. Provider completes form with feedback details and submits
+  4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
+  5. System links case to provider record (provider ID automatically linked from logged-in provider session)
+  6. System sets case category based on feedback type (Feature Request, Bug Report, Suggestion, Other)
+  7. System sets case priority based on provider's suggested priority (Low, Medium, High, Urgent)
+  8. System sets case status to "Open" and assigns to product/feedback team
+  9. System sets Ticket Source to "Provider Portal" and Submitter Type to "Provider"
+  10. System displays confirmation to provider: "Thank you for your feedback! Case #[number]. We'll review your submission."
+  11. System sends confirmation email to provider with case reference number (via S-03)
+  12. System sends notification to assigned admin team member
+  13. Admin reviews feedback in Support Center, updates status (Open → In Progress → Resolved → Closed), sets Feedback Resolution (Implemented, Planned, Declined, Under Review), and optionally responds
+  14. Provider can view submission status and feedback resolution in their Feedback & Suggestions subscreen (FR-032 Screen 5.6)
+- **Outcome**: Provider feedback automatically creates support case, tracked and managed in FR-034 with unified status workflow and feedback resolution tracking
+
+**A5: Patient Submits Support Request or Feedback via Patient App**:
+
+- **Trigger**: Patient needs assistance or wants to submit feedback through patient app (FR-035: Patient Help Center & Support Submission)
+- **Steps**:
+  1. Patient navigates to Help Center in patient mobile app and selects "Contact Support" or "Submit Feedback" (FR-035)
+  2. System displays submission form (subject, category, message, priority, optional attachment)
+  3. Patient completes form with support request or feedback details and submits
+  4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
+  5. System links case to patient record (patient ID automatically linked from logged-in patient session)
+  6. System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback)
+  7. System sets case priority based on patient's selection (Low, Medium, High, Urgent)
+  8. System sets case status to "Open" and assigns to patient support team
+  9. System sets Ticket Source to "Patient App" and Submitter Type to "Patient"
+  10. System displays confirmation to patient: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
+  11. System sends confirmation email to patient with case reference number (via S-03)
+  12. System sends notification to assigned admin team member
+  13. Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds to patient
+  14. For feedback submissions, admin sets Feedback Resolution (Implemented, Planned, Declined, Under Review) as appropriate
+  15. Patient can view case status, feedback resolution, and admin responses in their Help Center (FR-035)
+- **Outcome**: Patient support request or feedback automatically creates support case, tracked and managed in FR-034 with unified status workflow
+
+**A6: Case Requires Provider Account Intervention**:
+
+- **Trigger**: Admin needs to resolve provider-related issue from support case
+- **Steps**:
+  1. Admin views provider support case in Support Center
+  2. Admin clicks "View Provider Record" link in support case
+  3. System deep-links to provider management module (A-02) with provider ID pre-filled
+  4. Admin performs provider account intervention if needed
+  5. Admin returns to support case and adds note documenting resolution
+  6. System logs intervention in both support case timeline and provider account audit trail
+- **Outcome**: Provider account issue resolved with audit trail across both modules
+
+**A6: Multiple Cases for Same Issue (Duplicate Detection)**:
 
 - **Trigger**: Admin identifies multiple patients reporting same issue (e.g., login outage)
 - **Steps**:
@@ -318,27 +412,37 @@ The Patient Support Center & Ticketing module provides a formal support system f
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Case Title | text input | Yes | Brief summary of case (e.g., "Cannot reset password") | Max 200 chars, min 10 chars |
-| Category | dropdown select | Yes | Case type classification | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support |
+| Category | dropdown select | Yes | Case type classification | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback |
 | Priority | dropdown select | Yes | Urgency level | Options: Low, Medium, High, Urgent |
-| Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field |
-| Provider Identifier | text input with autocomplete | No | Provider ID or clinic name (if case is provider-related) | Must match existing provider if provided; optional field |
+| Ticket Source | dropdown select (readonly if auto-created) | Yes | Origin of support case | Options: Patient App, Provider Portal, Manual Admin Entry; Auto-populated for app-submitted tickets, editable for manual entries |
+| Submitter Type | dropdown select (readonly if auto-created) | Yes | Type of user who submitted case | Options: Patient, Provider, Admin; Auto-populated for app-submitted tickets, editable for manual entries |
+| Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field; Required if Submitter Type = Patient |
+| Provider Identifier | text input with autocomplete | No | Provider ID or clinic name (if case is provider-related) | Must match existing provider if provided; optional field; Required if Submitter Type = Provider |
 | Description | textarea | Yes | Full details of inquiry or issue | Min 20 chars, max 5000 chars, supports plain text |
 | Internal Notes | textarea | No | Admin-only notes not visible to patient/provider | Max 2000 chars per note entry |
 | Attachments | file upload | No | Supporting documents, screenshots, emails | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
 | Assigned To | dropdown select (admin users) | No | Admin staff member responsible for case | List of active admin users with "Support Staff" role |
 | Status | dropdown select | Yes | Current case lifecycle stage | Options: Open (default), In Progress, Resolved, Closed |
+| Feedback Resolution | dropdown select | No | Resolution outcome for feedback/feature request tickets (optional) | Options: Implemented, Planned, Declined, Under Review; Only applicable for Category = Feature Request, Bug Report, or Feedback |
 | Tags | multi-select | No | Optional labels for categorization (e.g., "Bug", "Feature Request") | Max 5 tags per case |
 
 **Business Rules**:
 
 - Case Title automatically generated from Description if left blank (first 50 chars of description)
-- Patient Identifier field shows autocomplete suggestions as admin types (match by name, email, HPID)
+- Patient Identifier field shows autocomplete suggestions as admin types (match by name, email, HPID); Required if Submitter Type = Patient
+- Provider Identifier field shows autocomplete suggestions as admin types (match by name, clinic ID); Required if Submitter Type = Provider
 - If patient identifier provided, system displays patient name and HPID for confirmation
+- If provider identifier provided, system displays provider clinic name and ID for confirmation
+- Ticket Source automatically set based on submission origin: Patient App (FR-035), Provider Portal (FR-032), or Manual Admin Entry; readonly for auto-created tickets, editable for manual entries
+- Submitter Type automatically set based on submission origin (Patient, Provider, or Admin); readonly for auto-created tickets, editable for manual entries
 - Attachments scanned for viruses before upload completes
 - Internal Notes section only visible to admin staff with appropriate permissions
 - Status defaults to "Open" for new cases
+- Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening)
 - Priority defaults to "Medium" for new cases
 - Assigned To field optional on creation; can be assigned later
+- Feedback Resolution field only visible and applicable when Category = Feature Request, Bug Report, or Feedback
+- Feedback Resolution optional but recommended for feedback-type tickets; tracks outcome independently of case status
 - Case cannot be marked "Closed" until status is "Resolved" (validation rule)
 - System logs all field changes with timestamp and admin user for audit trail
 
@@ -362,16 +466,19 @@ The Patient Support Center & Ticketing module provides a formal support system f
 |------------|------|----------|-------------|------------------|
 | Case ID | text (readonly) | N/A | Unique case identifier (e.g., CASE-2025-12345) | Display only |
 | Case Title | text (readonly, editable via edit mode) | Yes | Brief case summary | Max 200 chars |
-| Status | badge | Yes | Current case status with color coding | Visual indicator only |
+| Status | badge | Yes | Current case status with color coding (Open, In Progress, Resolved, Closed) | Visual indicator only |
 | Priority | badge | Yes | Urgency level with color coding | Visual indicator only |
 | Category | text (readonly) | Yes | Case type | Display only |
+| Ticket Source | badge | Yes | Origin of support case | Options: Patient App, Provider Portal, Manual Admin Entry; Display only |
+| Submitter Type | badge | Yes | Type of user who submitted case | Options: Patient, Provider, Admin; Display only |
+| Feedback Resolution | badge | No | Resolution outcome for feedback tickets | Options: Implemented, Planned, Declined, Under Review; Only displayed for feedback/feature request tickets |
 | Created Date | datetime (readonly) | N/A | Case creation timestamp | Display only |
 | Last Updated | datetime (readonly) | N/A | Most recent modification timestamp | Display only |
 | Assigned To | text with avatar | No | Admin staff member handling case | Display name and profile photo |
 | Linked Patient | link | No | Patient name and HPID (if linked) | Clickable link to patient record in A-01 |
 | Linked Provider | link | No | Provider clinic name and ID (if linked) | Clickable link to provider record in A-02 |
 | Description | text block | Yes | Full case details | Display only (editable via edit mode) |
-| Case Timeline | vertical timeline component | N/A | Chronological list of all case events (status changes, notes, messages, attachments) | Readonly, scrollable |
+| Case Timeline | vertical timeline component | N/A | Chronological list of all case events (status changes, feedback resolution changes, notes, messages, attachments) | Readonly, scrollable |
 | Add Note Button | button | N/A | Allows admin to add internal note to case | Opens note entry modal |
 | Add Message Button | button | N/A | Allows admin to send message to patient/provider | Opens message composition modal |
 | Update Status Button | button | N/A | Changes case status (Open → In Progress → Resolved → Closed) | Opens status change modal |
@@ -454,6 +561,7 @@ The Patient Support Center & Ticketing module provides a formal support system f
 |------------|------|----------|-------------|------------------|
 | Resolution Summary | textarea | Yes | Brief description of how issue was resolved | Min 20 chars, max 1000 chars |
 | Resolution Category | dropdown select | Yes | Type of resolution | Options: Issue Fixed, Information Provided, Account Intervention, Escalated to Provider, User Error, Cannot Reproduce, Duplicate Case, Other |
+| Feedback Resolution | dropdown select | No | Resolution outcome for feedback/feature request tickets (optional) | Options: Implemented, Planned, Declined, Under Review; Only displayed and applicable for Category = Feature Request, Bug Report, or Feedback |
 | Root Cause | dropdown select | No | Underlying cause of issue (for analytics) | Options: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other |
 | Send Resolution Email | checkbox | Yes | Send email to patient/provider with resolution summary | Default: checked |
 | Auto-Close After | dropdown select | Yes | Days to wait before auto-closing case | Options: Immediately, 3 days, 7 days, 14 days (default: 7 days) |
@@ -464,17 +572,21 @@ The Patient Support Center & Ticketing module provides a formal support system f
 **Business Rules**:
 
 - Resolution Summary included in email sent to patient/provider (if Send Resolution Email checked)
-- Internal Resolution Notes only visible to admin staff (not included in patient-facing communications)
-- System automatically closes case after specified auto-close period if patient doesn't respond
-- If patient responds before auto-close period expires, case reopened automatically
+- Feedback Resolution field only visible when case Category = Feature Request, Bug Report, or Feedback
+- Feedback Resolution tracks outcome independently of case status (e.g., case can be Resolved with Feedback Resolution = Planned)
+- Feedback Resolution included in resolution email to submitter if populated
+- Internal Resolution Notes only visible to admin staff (not included in patient/provider-facing communications)
+- System automatically closes case after specified auto-close period if patient/provider doesn't respond
+- If patient/provider responds before auto-close period expires, case reopened automatically
 - Resolution Category and Root Cause captured for analytics and trend identification
-- System logs resolution timestamp and admin user who marked case resolved
+- System logs resolution timestamp, feedback resolution (if applicable), and admin user who marked case resolved
 - Case cannot be marked Resolved without entering Resolution Summary
 
 **Notes**:
 
 - Use plain language in Resolution Summary field guidance: "Explain to the patient/provider how their issue was resolved"
-- Preview resolution email content before sending
+- For feedback tickets, display guidance: "Select Feedback Resolution to communicate outcome to submitter (e.g., 'Implemented in version 2.5', 'Planned for Q2 2026', 'Declined due to technical constraints')"
+- Preview resolution email content before sending (including Feedback Resolution if applicable)
 - Display warning if case was open for >14 days: "This case took longer than average to resolve. Consider documenting learnings."
 
 ---
@@ -484,14 +596,17 @@ The Patient Support Center & Ticketing module provides a formal support system f
 ### General Module Rules
 
 - **Rule 1**: All support cases must have unique case IDs generated sequentially (format: CASE-YYYY-#####)
-- **Rule 2**: Case lifecycle follows strict progression: Open → In Progress → Resolved → Closed (cannot skip stages, except for case reopening)
+- **Rule 2**: **Unified Status Workflow**: Case lifecycle follows strict progression: Open → In Progress → Resolved → Closed (consistent across all ticket types and sources; cannot skip stages, except for case reopening)
 - **Rule 3**: Cases can be reopened after closure if patient/provider indicates issue not fully resolved
-- **Rule 4**: Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority
-- **Rule 5**: Unassigned cases automatically escalated to support manager if open for >24 hours
-- **Rule 6**: Cases with no activity for >14 days flagged for admin review and potential closure
-- **Rule 7**: Support cases distinct from aftercare communications (FR-011) and provider-patient messaging (FR-012)
-- **Rule 8**: Admin staff can link multiple cases to same patient/provider for trend analysis
-- **Rule 9**: Support cases support both patient and provider inquiries in single system
+- **Rule 4**: **Ticket Source Tracking**: All cases must have Ticket Source (Patient App, Provider Portal, Manual Admin Entry) to identify submission origin
+- **Rule 5**: **Submitter Type Tracking**: All cases must have Submitter Type (Patient, Provider, Admin) to identify who submitted the case
+- **Rule 6**: **Feedback Resolution Tracking**: Cases with Category = Feature Request, Bug Report, or Feedback can optionally track Feedback Resolution (Implemented, Planned, Declined, Under Review) independently of case status
+- **Rule 7**: Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority
+- **Rule 8**: Unassigned cases automatically escalated to support manager if open for >24 hours
+- **Rule 9**: Cases with no activity for >14 days flagged for admin review and potential closure
+- **Rule 10**: Support cases distinct from aftercare communications (FR-011) and provider-patient messaging (FR-012)
+- **Rule 11**: Admin staff can link multiple cases to same patient/provider for trend analysis
+- **Rule 12**: Support cases support patient submissions (FR-035), provider submissions (FR-032), and manual admin entries in single unified system
 
 ### Data & Privacy Rules
 
@@ -598,6 +713,18 @@ The Patient Support Center & Ticketing module provides a formal support system f
 
 ### Internal Dependencies (Other FRs/Modules)
 
+- **FR-035 / Module P-XX: Patient Help Center & Support Submission**
+  - **Why needed**: Patient-submitted support requests and feedback automatically create support cases in FR-034 system
+  - **Integration point**: Patient submissions via FR-035 create support cases with Ticket Source = "Patient App" and Submitter Type = "Patient"; patients view case status and admin responses via FR-035
+
+- **FR-032 / Module PR-06: Provider Dashboard Settings & Help Centre**
+  - **Why needed**: Provider-submitted support requests (Screen 5.5) and feedback (Screen 5.6) automatically create support cases in FR-034 system
+  - **Integration point**: Provider submissions via FR-032 create support cases with Ticket Source = "Provider Portal" and Submitter Type = "Provider"; providers view case status and admin responses via FR-032
+
+- **FR-033 / Module A-09: Help Centre Content Management**
+  - **Why needed**: Help Centre content managed by admins for both provider and patient audiences; referenced in FR-032 and FR-035 submission forms
+  - **Integration point**: Support Center does not directly integrate with FR-033; FR-033 provides content displayed in FR-032 and FR-035 Help Centres
+
 - **FR-031 / Module A-10: Admin Access Control & Permissions**
   - **Why needed**: Support staff roles and permissions (View Cases, Edit Cases, Reassign Cases, View Internal Notes, Export Cases) managed via RBAC system
   - **Integration point**: Support Center enforces permission checks before allowing admin users to access or modify cases
@@ -647,11 +774,12 @@ The Patient Support Center & Ticketing module provides a formal support system f
 
 ### User Behavior Assumptions
 
-- **Assumption 1**: Patients contact Hairline support via external channels (email, phone) rather than in-app submission (MVP assumption; in-app support future enhancement)
-- **Assumption 2**: Admin staff manually create support cases from incoming emails and phone calls rather than automated case creation (MVP assumption)
+- **Assumption 1**: Patients and providers will use in-app submission (FR-035 and FR-032) as primary method for contacting support; email/phone submissions become secondary channels
+- **Assumption 2**: Admin staff will manually create support cases from incoming emails and phone calls for users who contact via external channels
 - **Assumption 3**: Majority of support cases resolve within 48-72 hours with single admin response
-- **Assumption 4**: Patients check email regularly for case status updates (email is primary notification channel)
-- **Assumption 5**: Admin staff use standardized resolution categories for consistent case analytics
+- **Assumption 4**: Patients and providers check email regularly for case status updates (email is primary notification channel)
+- **Assumption 5**: Admin staff use standardized resolution categories and feedback resolution options for consistent case analytics
+- **Assumption 6**: Users will appreciate unified status workflow (Open → In Progress → Resolved → Closed) for consistency across all ticket types
 
 ### Technology Assumptions
 
@@ -885,26 +1013,41 @@ Compliance officer exports all support cases from specific date range for quarte
 
 ### Core Requirements
 
-- **REQ-034-001**: System MUST provide admin interface for creating support cases with title, category, priority, patient/provider linkage, description, and attachments
+- **REQ-034-001**: System MUST provide admin interface for creating support cases with title, category, priority, ticket source, submitter type, patient/provider linkage, description, feedback resolution (optional), and attachments
 - **REQ-034-002**: System MUST assign unique case IDs in format CASE-YYYY-##### (year and sequential number)
-- **REQ-034-003**: System MUST support case lifecycle progression: Open → In Progress → Resolved → Closed
-- **REQ-034-004**: System MUST allow admin staff to assign cases to specific admin users or teams
-- **REQ-034-005**: System MUST maintain immutable case timeline with all events (creation, status changes, assignments, notes, messages, attachments) logged with timestamp and admin user attribution
-- **REQ-034-006**: System MUST allow admins to link support cases to patient records by HPID, email, or phone number
-- **REQ-034-007**: System MUST allow admins to link support cases to provider records by provider ID or clinic name
-- **REQ-034-008**: System MUST provide deep-linking from support case to patient management module (A-01) for account interventions
-- **REQ-034-009**: System MUST provide deep-linking from support case to provider management module (A-02) for provider record access
-- **REQ-034-010**: System MUST allow admins to add internal notes to cases that are not visible to patients/providers
+- **REQ-034-003**: **Unified Status Workflow**: System MUST support case lifecycle progression: Open → In Progress → Resolved → Closed (consistent across all ticket types and sources)
+- **REQ-034-004**: System MUST track Ticket Source (Patient App, Provider Portal, Manual Admin Entry) for all support cases
+- **REQ-034-005**: System MUST track Submitter Type (Patient, Provider, Admin) for all support cases
+- **REQ-034-006**: System MUST support optional Feedback Resolution tracking (Implemented, Planned, Declined, Under Review) for feedback/feature request tickets independently of case status
+- **REQ-034-007**: System MUST allow admin staff to assign cases to specific admin users or teams
+- **REQ-034-008**: System MUST maintain immutable case timeline with all events (creation, status changes, feedback resolution changes, assignments, notes, messages, attachments) logged with timestamp and admin user attribution
+- **REQ-034-009**: System MUST allow admins to link support cases to patient records by HPID, email, or phone number
+- **REQ-034-010**: System MUST allow admins to link support cases to provider records by provider ID or clinic name
+- **REQ-034-011**: System MUST provide deep-linking from support case to patient management module (A-01) for account interventions
+- **REQ-034-012**: System MUST provide deep-linking from support case to provider management module (A-02) for provider record access
+- **REQ-034-013**: System MUST allow admins to add internal notes to cases that are not visible to patients/providers
+- **REQ-034-050**: System MUST automatically create support cases when patients submit Contact Support or Feedback requests via patient app (FR-035)
+- **REQ-034-051**: System MUST automatically create support cases when providers submit Contact Support requests via Help Centre (FR-032 Screen 5.5)
+- **REQ-034-052**: System MUST automatically create support cases when providers submit Feedback & Suggestions via Help Centre (FR-032 Screen 5.6)
+- **REQ-034-053**: System MUST automatically link patient-submitted cases to patient records using logged-in patient session and set Ticket Source = "Patient App", Submitter Type = "Patient"
+- **REQ-034-054**: System MUST automatically link provider-submitted cases to provider records using logged-in provider session and set Ticket Source = "Provider Portal", Submitter Type = "Provider"
+- **REQ-034-055**: System MUST allow patients to view status, feedback resolution, and admin responses for their submitted support cases in patient app (FR-035)
+- **REQ-034-056**: System MUST allow providers to view status, feedback resolution, and admin responses for their submitted support cases and feedback in Help Centre (FR-032 Screen 5.5 and 5.6)
+- **REQ-034-057**: System MUST send email notifications to patients when admin responds to their submissions or updates case status (via S-03)
+- **REQ-034-058**: System MUST send email notifications to providers when admin responds to their submissions or updates case status (via S-03)
 
 ### Data Requirements
 
-- **REQ-034-011**: System MUST support case categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support
-- **REQ-034-012**: System MUST support priority levels: Low, Medium, High, Urgent
-- **REQ-034-013**: System MUST store case description with minimum 20 characters and maximum 5000 characters
-- **REQ-034-014**: System MUST support file attachments up to 10MB per file, maximum 5 files per case
-- **REQ-034-015**: System MUST support attachment formats: JPG, PNG, PDF, DOC, DOCX
-- **REQ-034-016**: System MUST retain all case data for minimum 7 years for compliance (archive after closure, do not hard delete)
-- **REQ-034-017**: System MUST capture resolution details: resolution summary, resolution category, root cause (optional), and resolution timestamp
+- **REQ-034-014**: System MUST support case categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback
+- **REQ-034-015**: System MUST support priority levels: Low, Medium, High, Urgent
+- **REQ-034-016**: System MUST support Ticket Source options: Patient App, Provider Portal, Manual Admin Entry
+- **REQ-034-017**: System MUST support Submitter Type options: Patient, Provider, Admin
+- **REQ-034-018**: System MUST support Feedback Resolution options: Implemented, Planned, Declined, Under Review (optional field for feedback/feature request tickets)
+- **REQ-034-019**: System MUST store case description with minimum 20 characters and maximum 5000 characters
+- **REQ-034-020**: System MUST support file attachments up to 10MB per file, maximum 5 files per case
+- **REQ-034-021**: System MUST support attachment formats: JPG, PNG, PDF, DOC, DOCX
+- **REQ-034-022**: System MUST retain all case data for minimum 7 years for compliance (archive after closure, do not hard delete)
+- **REQ-034-023**: System MUST capture resolution details: resolution summary, resolution category, feedback resolution (optional), root cause (optional), and resolution timestamp
 
 ### Security & Privacy Requirements
 
@@ -956,8 +1099,8 @@ Compliance officer exports all support cases from specific date range for quarte
 ## Key Entities
 
 - **Entity 1 - Support Case**:
-  - **Key attributes**: Case ID (unique), case title, category, priority, status, created date, last updated date, assigned admin user ID, linked patient HPID (optional), linked provider ID (optional), description, resolution summary (when resolved), resolution category, auto-close period
-  - **Relationships**: One support case belongs to one patient (optional); one support case belongs to one provider (optional); one support case assigned to one admin user (optional); one support case has many timeline events; one support case has many attachments
+  - **Key attributes**: Case ID (unique), case title, category, priority, status, created date, last updated date, assigned admin user ID, linked patient HPID (optional), linked provider ID (optional), description, resolution summary (when resolved), resolution category, auto-close period, source (manual admin creation, provider Contact Support submission, provider Feedback submission)
+  - **Relationships**: One support case belongs to one patient (optional); one support case belongs to one provider (optional); one support case assigned to one admin user (optional); one support case has many timeline events; one support case has many attachments; provider-submitted cases automatically linked to provider record
 
 - **Entity 2 - Case Timeline Event**:
   - **Key attributes**: Event ID, case ID, event type (case created, status changed, note added, message sent, attachment uploaded, case escalated, case reopened), event timestamp, admin user ID (who performed action), event description, internal note flag (true if admin-only note)
@@ -982,6 +1125,8 @@ Compliance officer exports all support cases from specific date range for quarte
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-12-30 | 1.0 | Initial PRD creation for FR-034 Patient Support Center & Ticketing | AI Assistant |
+| 2026-01-11 | 1.1 | Added provider-facing support ticket and feedback submission functionality: Updated scope to include provider submissions via Help Centre (FR-032 Screen 5.5 and 5.6); Added workflows for provider Contact Support and Feedback submissions; Added functional requirements for automatic case creation from provider submissions; Updated Support Case entity to include source tracking; Provider submissions automatically create support cases in FR-034 system | AI Assistant |
+| 2026-01-16 | 2.0 | Major scope extension to unified multi-tenant support system: Renamed title to "Support Center & Ticketing System" to reflect unified system for both patients and providers; Added patient submission capability via FR-035 (Patient Help Center & Support Submission); Updated Executive Summary to document THREE submission sources (Patient App, Provider Portal, Manual Admin Entry); Updated Multi-Tenant Architecture to include patient platform submission (P-XX); Added workflow A5 for patient submissions via FR-035; Implemented **Unified Status Workflow** (Open → In Progress → Resolved → Closed) consistent across all ticket types and sources; Added **Ticket Source** tracking field (Patient App, Provider Portal, Manual Admin Entry); Added **Submitter Type** tracking field (Patient, Provider, Admin); Added **Feedback Resolution** tracking field (Implemented, Planned, Declined, Under Review) for feedback/feature request tickets independent of case status; Updated Screen 2 (Create/Edit Support Case Form) with new fields: Ticket Source, Submitter Type, Feedback Resolution, and expanded Category options; Updated Screen 3 (Support Case Detail View) to display new tracking fields; Updated Screen 5 (Case Resolution & Closure Modal) with Feedback Resolution field and business rules; Updated Business Rules to document unified workflow and new tracking requirements; Updated Dependencies to include FR-035 and FR-032 references; Updated Assumptions to reflect patient and provider in-app submissions as primary method; Updated Functional Requirements Summary with patient submission requirements and unified workflow specifications | AI Assistant |
 
 ---
 

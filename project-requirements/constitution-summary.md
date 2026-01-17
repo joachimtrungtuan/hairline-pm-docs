@@ -393,9 +393,22 @@ This structure scales cleanly as modules are added while maintaining system-leve
 - **Delivery**: Independent module deployment every 2-week sprint
 - **User Satisfaction**: < 3 second load times, < 3 clicks for critical flows
 
+## Planned Functional Requirements
+
+**FR-035: Patient Help Center & Support Submission** (P2 - Enhanced)
+
+- **Goal**: Enable patients to access help center content and submit support requests directly from patient mobile app
+- **Key Features**:
+  - Patient-specific help center content (FAQs, articles, resources, videos) managed by admins via FR-033
+  - Support ticket and feedback submission with unified status workflow (Open → In Progress → Resolved → Closed)
+  - Integration with FR-034 (Support Center & Ticketing) for unified ticket management
+  - Email notifications for ticket status updates and admin responses
+- **Status**: Planned for future implementation; noted in system-prd.md with full requirements
+- **Integration Points**: FR-033 (content), FR-034 (ticketing), S-03 (notifications)
+
 ---
 
-**Document Status**: ✅ Complete  
-**Constitution File**: `.specify/memory/constitution.md`  
-**Last Updated**: 2025-10-23  
+**Document Status**: ✅ Complete
+**Constitution File**: `.specify/memory/constitution.md`
+**Last Updated**: 2026-01-16 (Added FR-035 planned feature)
 **Next Review**: 2025-11-23 (monthly)

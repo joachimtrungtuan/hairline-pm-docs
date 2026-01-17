@@ -20,25 +20,29 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: NOT directly involved during treatment execution; receives completion notifications and post-op instructions after treatment finishes
-- **Provider Platform (PR-03)**: PRIMARY tenant - providers document all treatment activities in real-time
-- **Admin Platform (A-XX)**: Oversight only - admins can view treatment progress, access documentation, monitor completion rates
-- **Shared Services (S-05)**: Media Storage Service handles before/during/after photos and treatment documentation uploads
+- **Patient Platform (P-XX)**: Receives real-time day-based progress updates during treatment execution (current treatment day, activity status, and elapsed time based on pre-defined treatment itinerary); receives completion notifications and post-op instructions after treatment finishes; NOT involved in detailed clinical documentation
+- **Provider Platform (PR-03)**: PRIMARY tenant - providers document all treatment activities in real-time, marking current treatment day and activity completion status (synced to patient/admin platforms) plus detailed clinical observations (provider-only)
+- **Admin Platform (A-XX)**: Real-time oversight - admins monitor which day each active treatment is on, current activity status, and elapsed time across all providers; can view complete treatment documentation after completion; monitor completion rates; read-only observer with NO intervention capability
+- **Shared Services (S-05)**: Media Storage Service handles before/during/after photos and treatment documentation uploads; Real-time sync service (WebSocket/SSE) propagates day-based progress updates to patient and admin platforms
 
 ### Multi-Tenant Breakdown
 
 **Patient Platform (P-XX)**:
 
 - Receives real-time status updates (booking moved to "In Progress" when patient arrives)
+- **Views current treatment day progress in real-time** (e.g., "Day 1 of 4: Consultation & Scans" or "Day 2 of 4: Hair Transplant Procedure") based on pre-defined treatment itinerary from quote
+- **Displays elapsed time for current day's activities** (e.g., "3 hours elapsed") so patient can understand how the treatment day is progressing
 - Receives treatment completion notification with post-op instructions
-- Views treatment summary after completion (graft count, technique used, assigned medications)
-- Accesses before/after photos uploaded by provider
-- NOT involved in real-time treatment documentation
+- Views provider-authored treatment summary note after completion (high-level outcome, final graft count, technique used)
+- Accesses before/after photos uploaded by provider (after completion)
+- NOT involved in clinical documentation (no access to detailed medical notes, complications, or real-time clinical data during procedure)
 
 **Provider Platform (PR-03)**:
 
 - Mark patient as "arrived" (triggers "In Progress" status)
-- Document real-time treatment progress and observations
+- **Mark current treatment day** (e.g., "Day 1", "Day 2", etc.) based on pre-defined treatment itinerary from quote - automatically synced to patient app for transparency
+- **Update day-specific activity completion status** (e.g., "Consultation completed", "3D scan completed", "Procedure in progress") - visible to patient and admin
+- Document detailed clinical observations and real-time progress notes (provider-only, not visible to patient during procedure)
 - Capture procedure details: surgeon, technique, graft count, donor/recipient areas
 - Upload before/during/after photos with timestamps
 - Record treatment notes and observations during procedure
@@ -49,13 +53,15 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 **Admin Platform (A-XX)**:
 
-- View all active treatments (real-time "In Progress" list)
+- View all active treatments (real-time "In Progress" list with current day and activity status)
+- **Monitor real-time treatment progress** for all active procedures (can see which day each treatment is on and current activity status, e.g., "Day 2 of 4: Procedure in progress")
+- **View elapsed time for current day's activities** for active procedures (for oversight and quality monitoring)
 - Monitor treatment completion rates by provider
-- Access complete treatment documentation for quality assurance
+- Access complete treatment documentation for quality assurance (after completion)
 - Review before/after photos for provider verification
 - Audit treatment records for compliance
 - View final payment collection status
-- NO direct intervention in treatment documentation (provider-owned process)
+- NO direct intervention in treatment documentation (provider-owned process; admin is read-only observer)
 
 **Shared Services (S-05)**:
 
@@ -67,15 +73,18 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **In Scope**:
 
 - System-generated status notifications to patient (booking moved to "In Progress", treatment completed)
+- **Real-time treatment day progress updates to patient app** (current day number, day description, and activity completion status based on pre-defined treatment itinerary from quote - NOT detailed clinical data)
+- **Elapsed time display in patient app** for current day's activities duration (patient awareness of how the day is progressing)
 - Post-op instruction delivery to patient via email/in-app notification
 - Provider-to-patient medication prescription delivery
 - Admin notification of treatment completion for billing purposes
+- **Admin real-time visibility** into treatment progress across all active procedures (which day, what activities, elapsed time - for oversight and quality monitoring)
 
 **Out of Scope**:
 
 - Real-time chat between patient and provider during treatment (patients are physically present)
 - Video documentation of procedure (future enhancement)
-- Live streaming of treatment progress to patient's family (future enhancement)
+- Live streaming of detailed treatment progress to third parties (e.g., patient's family) (future enhancement)
 - SMS notifications to patient's emergency contact (handled by S-03: Notification Service configuration; **no SMS treatment alerts are sent in MVP and this capability is reserved for a future phase once S-03 SMS support is enabled**)
 
 ### Entry Points
@@ -138,14 +147,17 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
    - Provider confirms surgeon assignment (selected during quote creation, can be changed if needed)
 
 5. **Treatment Execution & Real-Time Updates**
-   - Provider begins hair transplant procedure
-   - Provider updates treatment progress at intervals:
+   - Provider begins treatment activities for current day (based on pre-defined treatment itinerary from quote)
+   - **Provider marks current treatment day** (e.g., "Day 1", "Day 2", "Day 3") - **synced to patient app and admin dashboard**
+   - **Provider updates activity completion status** for current day (e.g., "Consultation completed", "3D scan in progress", "Procedure started") - **synced to patient app and admin dashboard**
+   - System displays elapsed time for current day's activities - **visible to patient and admin**
+   - Provider updates detailed treatment progress (provider-only documentation):
      - Donor area harvesting progress
      - Graft extraction count (running total)
      - Recipient area implantation progress
      - Technique specifics (manual FUE, motorized FUE, DHI pen, etc.)
    - Provider captures "during" photos at key milestones (optional)
-   - Provider records observations and any complications or deviations from plan
+   - Provider records observations and any complications or deviations from plan (provider-only notes)
 
 6. **Treatment Completion Documentation**
    - Provider captures "after" photos of completed procedure (multiple angles)
@@ -381,8 +393,11 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Treatment Status | badge | Yes (read-only) | Current status: "In Progress" | Display only |
-| Procedure Start Time | time | Yes (read-only) | Timestamp when marked as arrived | Display only |
-| Elapsed Time | timer | Yes (read-only) | Live timer showing procedure duration | Updates every minute |
+| **Current Treatment Day** | **select** | **Yes** | **Which day of treatment itinerary patient is currently on (visible to patient app and admin)** | **Options populated from pre-defined treatment itinerary (e.g., "Day 1 of 4", "Day 2 of 4"); updates synced to patient app in real-time** |
+| **Day Description** | **text** | **Yes (read-only)** | **Description of current day's activities from treatment itinerary** | **Auto-populated from quote (e.g., "Consultation & 3D Scans", "Hair Transplant Procedure", "Post-Op Care & Instructions"); visible to patient/admin** |
+| **Activity Status** | **text** | **No** | **Current activity completion status for this day** | **Optional; provider can update (e.g., "Consultation completed, scans in progress"); synced to patient/admin** |
+| Day Start Time | time | Yes (read-only) | Timestamp when current day started | Display only; auto-set when provider marks day as started |
+| Elapsed Time | timer | Yes (read-only) | Live timer showing duration of current day's activities | Updates every minute |
 | Assigned Clinician | select | Yes | Primary Clinical Staff member performing procedure | Editable; dropdown of clinic staff with Clinical Staff role |
 | Additional Clinicians | multi-select | No | Other clinicians assisting (if applicable) | Optional; dropdown of clinic staff |
 | Donor Area(s) | multi-select | Yes | Body areas for graft extraction | Options: "Back of head (occipital)", "Sides of head (temporal)", "Beard area", "Chest", "Other" |
@@ -401,10 +416,14 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **Business Rules**:
 
 - **Auto-Save**: System auto-saves all field changes every 2 minutes to prevent data loss
+- **Treatment Day Sync**: When provider selects/updates "Current Treatment Day", change immediately synced to patient app and admin dashboard (real-time WebSocket or polling every 30 seconds)
+- **Activity Status Sync**: When provider updates "Activity Status", change immediately synced to patient app and admin dashboard for transparency
+- **Treatment Day Required**: Provider must select current treatment day when treatment documentation begins; default to "Day 1" on first access
+- **Day Description Auto-Population**: System automatically loads day description and planned activities from treatment itinerary (defined in quote, stored in booking)
 - **Photo Watermarking**: All uploaded photos automatically watermarked with anonymized patient ID and timestamp before storage
 - **Graft Count Validation**: "Grafts Implanted" cannot exceed "Grafts Harvested" (error message if attempted)
-- **Required Field Validation**: "Mark as Completed" button disabled until all required fields populated
-- **Elapsed Timer**: Live timer provides awareness of procedure duration; no enforcement of time limits
+- **Required Field Validation**: "Mark as Completed" button disabled until all required fields populated AND current day = last day of treatment itinerary
+- **Elapsed Timer**: Live timer tracks duration of current day's activities; no enforcement of time limits; elapsed time visible in patient app for day-based progress awareness
 - **Technique Multi-Select**: Provider can document hybrid techniques (e.g., "FUE + DHI") if multiple methods used in same procedure
 
 **Notes**:
@@ -527,6 +546,8 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 ### Patient Experience Metrics
 
 - **SC-001**: Patients receive treatment status updates in real-time (status change notifications delivered within 1 minute of provider action)
+- **SC-001A**: **Patients receive treatment day progress updates within 30 seconds of provider updating current day or activity status** (measured via timestamp comparison between provider update and patient app sync)
+- **SC-001B**: **95% of patients report day-based progress updates were helpful for understanding how their treatment day progressed** (measured via post-treatment survey)
 - **SC-002**: Patients receive post-op instructions within 5 minutes of treatment completion
 - **SC-003**: 95% of patients report receiving clear, understandable post-op instructions (measured via post-treatment survey)
 - **SC-004**: Patients can view their before/after photos in mobile app within 1 hour of treatment completion
@@ -541,6 +562,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 ### Admin Management Metrics
 
 - **SC-009**: Admins can view all active treatments (currently "In Progress") in real-time dashboard
+- **SC-009A**: **Admins can see current treatment day and activity status for all active treatments with accuracy of 100%** (no stale data; updates within 30 seconds of provider changes)
 - **SC-010**: 100% of completed treatments have full documentation (no missing required fields)
 - **SC-011**: Admins can audit any treatment record within 30 seconds (search by patient ID, provider, date)
 - **SC-012**: Zero incidents of missing treatment documentation in completed bookings
@@ -657,22 +679,28 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 ### Integration Points
 
-- **Integration 1: Provider Platform → Media Storage Service (S-05)**
+- **Integration 1: Provider Platform → Patient Platform & Admin Platform (Real-Time Day-Based Progress Sync)**
+  - **Data format**: JSON payload with treatment ID, current treatment day number, day description (from itinerary), activity status, day start timestamp, elapsed time for current day
+  - **Technology**: WebSocket connections or server-sent events (SSE) for real-time updates; fallback to 30-second polling if WebSocket unavailable
+  - **Authentication**: OAuth 2.0 bearer token with treatment record access validation
+  - **Error handling**: If real-time sync fails, queue update for retry; patient/admin see last known day/activity status with "last updated [time] ago" indicator
+
+- **Integration 2: Provider Platform → Media Storage Service (S-05)**
   - **Data format**: Multipart form upload with metadata (patient ID, treatment ID, photo type: "before"/"during"/"after", timestamp)
   - **Authentication**: OAuth 2.0 bearer token with provider identity
   - **Error handling**: If upload fails, photos queued locally; retry with exponential backoff; provider notified of pending uploads
 
-- **Integration 2: Provider Platform → Payment Processing Service (S-02)**
+- **Integration 3: Provider Platform → Payment Processing Service (S-02)**
   - **Data format**: JSON payload with booking ID, remaining balance amount, currency, patient payment method ID
   - **Authentication**: API key authentication (server-to-server)
   - **Error handling**: If payment fails, log error, flag booking as "Pending Final Payment", notify admin; do not block treatment completion
 
-- **Integration 3: Provider Platform → Notification Service (S-03)**
-  - **Data format**: JSON payload with notification type ("treatment_started", "treatment_completed"), recipient (patient ID), message content, delivery channels (email, push)
+- **Integration 4: Provider Platform → Notification Service (S-03)**
+  - **Data format**: JSON payload with notification type ("treatment_started", "treatment_completed", "treatment_day_updated", "activity_status_updated"), recipient (patient ID), message content, delivery channels (email, push, in-app)
   - **Authentication**: API key authentication (server-to-server)
   - **Error handling**: If notification fails, queue for retry; notifications are informational, not critical to treatment workflow
 
-- **Integration 4: Provider Platform → Patient Platform (P-05 Aftercare Activation)**
+- **Integration 5: Provider Platform → Patient Platform (P-05 Aftercare Activation)**
   - **Data format**: JSON payload with patient ID, aftercare template ID, custom instructions, treatment completion date, milestone schedule
   - **Authentication**: OAuth 2.0 bearer token with provider identity
   - **Error handling**: If aftercare activation fails, treatment still marked complete, but admin notified to manually activate aftercare plan
@@ -826,6 +854,8 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 - **REQ-010-005**: System MUST watermark all uploaded treatment photos with anonymized patient ID and timestamp before storing in media storage service
 - **REQ-010-006**: System MUST transition booking status from "In Progress" → "Aftercare" upon treatment completion, triggering aftercare plan activation and final payment collection
 - **REQ-010-007**: System MUST send real-time status notifications to patient mobile app when treatment starts ("In Progress") and when treatment completes ("Aftercare")
+- **REQ-010-007A**: System MUST sync day-based treatment progress (current treatment day number, day description from itinerary, and activity completion status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress
+- **REQ-010-007B**: System MUST display elapsed time for current day's activities in patient app and admin dashboard, updating every minute, to provide clear visibility into how the current treatment day is progressing
 - **REQ-010-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
 - **REQ-010-009**: System MUST activate patient's aftercare plan based on provider-selected template, generating milestones, scan schedules, and questionnaire cadence
 - **REQ-010-010**: System MUST enforce treatment documentation completion within 24 hours of marking patient as arrived; send reminder notifications at 12 and 24 hours if incomplete
@@ -858,8 +888,8 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 ## Key Entities
 
 - **Entity 1 - Treatment Record**
-  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, assigned surgeon ID, additional clinician IDs, procedure start time, procedure end time, total duration, donor areas, recipient areas, techniques used, estimated graft count (from quote), actual graft count, treatment notes, complications flag, status ("In Progress", "Completed"), created timestamp, completed timestamp
-  - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record has one assigned surgeon (primary); one treatment record can have multiple additional clinicians; one treatment record has multiple treatment photos
+  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, assigned surgeon ID, additional clinician IDs, **current treatment day** (e.g., "Day 1", "Day 2"), **day description** (from treatment itinerary), **activity status** (current activity completion status), **treatment itinerary reference** (foreign key to itinerary from quote), **day progress history** (timestamps of each day transition and activity updates), day start time, procedure start time, procedure end time, total duration, donor areas, recipient areas, techniques used, estimated graft count (from quote), actual graft count, treatment notes, complications flag, status ("In Progress", "Completed"), created timestamp, completed timestamp
+  - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record references one treatment itinerary (from quote); one treatment record has one assigned surgeon (primary); one treatment record can have multiple additional clinicians; one treatment record has multiple treatment photos; **one treatment record tracks day-based progress changes over time for patient/admin visibility**
 
 - **Entity 2 - Treatment Photo**
   - **Key attributes**: Treatment record ID (foreign key), photo type ("before", "during", "after"), file URL (encrypted storage path), original file name, file size, upload timestamp, watermark applied (boolean), uploaded by (provider user ID)
@@ -880,6 +910,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-010 Treatment Execution & Documentation | Claude (AI) |
+| 2026-01-14 | 1.1 | **Added real-time day-based treatment progress visibility**: (1) Patient app now displays current treatment day (e.g., "Day 2 of 4: Hair Transplant Procedure"), activity completion status, and elapsed time for current day's activities based on the pre-defined treatment itinerary; (2) Admin dashboard shows real-time day-based progress across all active treatments; (3) Provider platform includes "Current Treatment Day", "Day Description" (auto-populated from treatment itinerary), and "Activity Status" fields that sync to patient/admin platforms; (4) Added WebSocket/SSE integration for real-time day/activity updates; (5) Enhanced transparency while keeping detailed clinical data provider-only. **Progress tracking aligns with pre-defined day-by-day treatment itinerary from quote (FR-004) rather than arbitrary procedural stages.** Change driven by systematic review questioning whether treatment progress tracked by providers should be visible to patients/admins for transparency, with subsequent correction to use existing itinerary structure. | Claude (AI) |
 
 ---
 

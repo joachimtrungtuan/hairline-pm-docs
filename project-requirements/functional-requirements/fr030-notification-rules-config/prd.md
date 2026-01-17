@@ -106,7 +106,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 
 ### MVP: Admin-Configurable Event Types (Shown in UI)
 
-Below is the minimum, platform-wide set of events that MUST be configurable by admins in MVP.
+Below is the platform-wide set of events that MUST be configurable by admins in MVP. This table is the **source of truth** for MVP notification event coverage (FR-020 must align to this catalog).
 
 Notes:
 
@@ -119,6 +119,7 @@ Notes:
 | Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
+| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Provider, Patient (optional), Admin (optional) | Cancellation of inquiry prior to booking where applicable |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
@@ -131,11 +132,16 @@ Notes:
 | Booking/Schedule | Booking Cancelled | `booking.cancelled` | Patient, Provider, Admin (optional) | Include cancellation reason where appropriate |
 | Booking/Schedule | Appointment Reminder | `booking.appointment_reminder` | Patient, Provider | Scheduled reminders; policy-driven |
 | Treatment | Treatment Start / Day-1 Starting | `treatment.started` | Patient, Provider | “Treatment start notifications” |
+| Treatment | Treatment Cancelled | `treatment.cancelled` | Patient, Provider, Admin (optional) | Used when treatment is cancelled after scheduling/confirmation |
+| Treatment | Treatment Completed (Post‑Op Instructions) | `treatment.completed` | Patient, Provider, Admin (optional) | Completion confirmation; triggers post-op and aftercare next steps |
+| Treatment | Treatment Documentation Completed | `treatment.documentation_completed` | Provider | Sent when treatment documentation is successfully saved |
+| Treatment | Task In Progress Reminder | `treatment.task_in_progress_reminder` | Provider | Reminder for incomplete treatment tasks or documentation |
 | Payment | Payment Received / Receipt | `payment.received` | Patient, Provider, Admin (optional) | Critical |
 | Payment | Payment Failed | `payment.failed` | Patient, Admin (optional) | Critical |
 | Payment | Payment Due Reminder (Installment / Balance) | `payment.due_reminder` | Patient | “Installment reminder” (split-pay compatible) |
 | Billing/Payouts | Provider Payout Processed | `payout.provider_processed` | Provider, Admin (optional) | “They’ve been paid” notification to provider |
 | Billing/Payouts | Affiliate Payout Processed | `payout.affiliate_processed` | Affiliate, Admin (optional) | If affiliate program is enabled |
+| Billing/Payouts | Payout Failed | `payout.failed` | Admin, Provider (optional), Affiliate (optional) | Failure processing payout; recipients depend on payout type |
 | Messaging/Support | New Message Received | `message.received` | Patient, Provider, Admin (optional) | Real-time notification for new messages |
 | Messaging/Support | Support Ticket Updated / Reply Added | `support.ticket_updated` | Patient, Admin | Support center communications |
 | Aftercare | Aftercare Activated | `aftercare.activated` | Patient, Provider | Includes assigned provider/clinician info where applicable |
@@ -143,8 +149,13 @@ Notes:
 | Aftercare | Scan Due / Missed Scan Reminder | `aftercare.scan_due` / `aftercare.scan_missed` | Patient | “Missed scans MUST trigger reminder notifications” |
 | Aftercare | Questionnaire Due / Missed Questionnaire Reminder | `aftercare.questionnaire_due` / `aftercare.questionnaire_missed` | Patient | “Questionnaire due” + reminder if missed |
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
+| Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
+| Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
+| Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
+| System/Operations | System Escalation | `system.escalation` | Admin | Operational escalation events requiring admin action |
+| System/Operations | System Alert | `system.alert` | Admin | System health/monitoring alerts surfaced via notifications |
 
 ### Post‑MVP / Hidden Events (Not Shown in UI Until Enabled)
 

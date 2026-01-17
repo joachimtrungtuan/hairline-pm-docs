@@ -1230,6 +1230,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Support contact form auto-populates provider contact information (name, email, clinic name)
 - Form submission creates support ticket with unique ticket number
 - Support request confirmation displayed: "Support request submitted. Ticket #[number]. Our team will respond within 24 hours."
+- Form submissions automatically create support cases in FR-034 Support Center & Ticketing System with status 'Open'; case management, admin responses, and status updates are handled in FR-034
 - Submission tracking shows all user's support requests with status updates
 - Status updates: Open → In Progress → Resolved → Closed
 - Provider can view request details and add follow-up messages (if implemented)
@@ -1259,15 +1260,16 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars |
 | Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 2000 chars, min 20 chars |
 | Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low |
-| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Submitted, Under Review, Planned, Implemented, Declined), submitted date, admin response |
+| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined), submitted date, admin response |
 
 **Business Rules**:
 
 - Feedback form allows providers to submit feature requests, bug reports, and suggestions
 - Form submission creates feedback record with unique ID
 - Confirmation displayed: "Thank you for your feedback! We'll review your submission."
+- Form submissions automatically create feedback cases in FR-034 Support Center & Ticketing System with status 'Open'; case tracking, admin responses, and resolution status are handled in FR-034
 - Submission tracking shows all user's feedback submissions with status
-- Status updates: Submitted → Under Review → Planned/Implemented/Declined
+- Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined—tracked separately in FR-034)
 - Admin can respond to feedback (if implemented); response visible in tracking list
 - Feedback helps prioritize platform improvements
 
@@ -1276,7 +1278,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Form layout: similar to Contact Support form
 - Feedback type selector determines form fields (e.g., Bug Report may include "Steps to Reproduce")
 - Submission tracking: table/list view with status badges
-- Status badges: color-coded (Submitted: gray, Under Review: blue, Planned: yellow, Implemented: green, Declined: red)
+- Status badges: color-coded (Open: blue, In Progress: yellow, Resolved: green, Closed: gray)
+- Feedback resolution badges (when applicable): color-coded (Implemented: green, Planned: yellow, Declined: red, Under Review: blue)
 - Admin response visible in expanded feedback details view
 
 ---
@@ -1430,6 +1433,10 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - **FR-033 / A-09: Help Centre Content Management**: Help Centre content
   - **Why needed**: Help Centre displays admin-managed content (FAQs, guides, videos, resources)
   - **Integration point**: Help Centre reads content from admin-managed content database; content updates from admin propagate to provider Help Centre view
+
+- **FR-034 / A-10: Support Center & Ticketing**: Provider support request and feedback submission management
+  - **Why needed**: Provider submissions via Screen 5.5 (Contact Support) and Screen 5.6 (Feedback & Suggestions) automatically create support cases in FR-034 ticketing system
+  - **Integration point**: Form submissions create support cases with provider ID linked; providers view submission status and admin responses through FR-032 UI querying FR-034 data
 
 ### External Dependencies (APIs, Services)
 

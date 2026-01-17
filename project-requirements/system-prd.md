@@ -1595,13 +1595,47 @@ Total Quote:                           £3,000
 - System MUST maintain an auditable case timeline (messages, notes, attachments) and support exports for disputes/compliance
 - System MUST support patient notifications on meaningful updates (status changes/replies) via S-03 when enabled
 
-**Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`.
+**Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`. FR-034 has been extended to support patient submissions (via FR-035), provider submissions (via FR-032), and manual admin entries in a unified support ticketing system with consistent status workflow (Open → In Progress → Resolved → Closed).
 
 ---
 
-### FR-035: Admin Profile & Settings Management
+### FR-035: Patient Help Center & Support Submission
 
-**Priority**: P1 (MVP)  
+**Priority**: P2 (Enhanced)
+**Module(s)**: P-XX: Patient Help Center & Support | Integrates with FR-033 (Content Management) and FR-034 (Ticketing System)
+
+**Goal**: Enable patients to access help center content (FAQs, articles, resources, videos) and submit support requests and feedback directly from the patient mobile app.
+
+**Requirements**:
+
+**Patient Help Center Access**:
+
+- Patients MUST be able to access Help Center from patient mobile app navigation
+- System MUST display patient-specific Help Center content managed by admins in FR-033 (FAQs, Articles, Resources, Videos)
+- Patients MUST be able to browse Help Center content by category and search for specific topics
+- Content separation MUST be enforced: Patients see ONLY patient content, never provider content
+
+**Patient Support Submission**:
+
+- Patients MUST be able to submit support requests via "Contact Support" form with category, priority, description, and optional attachments
+- Patients MUST be able to submit feedback and feature requests via "Submit Feedback" form
+- System MUST automatically create support cases in FR-034 with Ticket Source = "Patient App" and Submitter Type = "Patient"
+- Patients MUST be able to view status of their submitted tickets with unified status workflow (Open → In Progress → Resolved → Closed)
+- Patients MUST receive email notifications (via S-03) when admin responds or updates ticket status
+- For feedback submissions, patients MUST be able to view Feedback Resolution status (Implemented, Planned, Declined, Under Review)
+
+**Integration Points**:
+
+- FR-033: Consumes patient-specific Help Center content (read-only)
+- FR-034: Creates support cases for patient submissions and displays ticket status/responses to patients
+
+**Note**: This FR is planned for future implementation to complete the multi-tenant support system architecture. Patient submissions will integrate with the unified FR-034 ticketing system. Detailed requirements to be documented in dedicated FR-035 PRD when implementation begins.
+
+---
+
+### FR-036: Admin Profile & Settings Management
+
+**Priority**: P1 (MVP)
 **Module(s)**: A-09: System Settings & Configuration
 
 **Goal**: Enable admin users to manage their own profile information, account settings, and personal preferences independently of team management and RBAC configuration.
