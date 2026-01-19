@@ -114,64 +114,18 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ## Business Workflows
 
-### Main Flow: Provider Accesses Help Centre Content
+### Provider Consumption (via FR-032)
 
-**Actors**: Provider (clinic staff), System
-**Trigger**: Provider clicks "Help Centre" menu item in provider platform
-**Outcome**: Provider views Help Centre page with organized content categories and can access help resources
+**Actors**: Provider (clinic staff), System (FR-032 provider dashboard), FR-033 Help Centre content service  
+**Trigger**: Provider clicks "Help Centre" menu item in provider platform (see FR-032 Business Workflows)  
+**Outcome**: Provider views provider-facing Help Centre screens backed by content managed in FR-033
 
-**Steps**:
+**Behaviour (high level)**:
 
-1. Provider navigates to "Help Centre" from provider platform navigation menu (Settings & Support > Help Centre)
-2. System loads Help Centre landing page with category navigation and search bar (matches FR-032 Screen 5)
-3. System shows category navigation menu linking to 5 subscreens: FAQs, Tutorial Guides/Troubleshooting Tips/Policies, Resource Library, Video Tutorials, Service Status
-4. Provider selects a category (e.g., "FAQs")
-5. System displays content in appropriate subscreen layout (e.g., FAQs in accordion layout - FR-032 Screen 5.1)
-6. Provider browses content using subscreen-specific interface (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status)
-7. Provider finds answer to their question or completes tutorial walkthrough
-8. System logs content access for analytics (view count, time spent)
-9. Provider returns to their workflow or explores additional Help Centre content
-
-### Alternative Flows
-
-**A1: Provider Checks Service Status**:
-
-- **Trigger**: Provider experiences platform issues and wants to check if it's a known system outage
-- **Steps**:
-  1. Provider navigates to Help Centre and selects "Service Status" subscreen (FR-032 Screen 5.7)
-  2. System displays status page interface with overall status indicator (All Systems Operational, Partial Outage, Major Outage)
-  3. System shows service components status list (each component: name, status, last updated)
-  4. System displays incident history timeline (recent incidents with status, timeline, affected services)
-  5. System shows maintenance schedule (upcoming scheduled maintenance windows)
-  6. Provider verifies if issue is platform-wide or localized to their account
-  7. Provider can subscribe to status update notifications (email alerts for incidents)
-  8. Provider proceeds accordingly (waits for resolution or contacts support)
-- **Outcome**: Provider informed of system status via status page interface and can plan accordingly
-
-**B1: Content Not Found or Outdated**:
-
-- **Trigger**: Provider cannot find needed information in Help Centre
-- **Steps**:
-  1. Provider searches/browses Help Centre but cannot find relevant content
-  2. Provider clicks "Was this helpful? No" feedback button
-  3. System prompts provider to describe what they were looking for
-  4. Provider submits "content not found" feedback with description
-  5. System logs feedback and notifies admin team
-  6. Admin team reviews feedback and prioritizes content creation/update
-- **Outcome**: Content gap identified and queued for admin action
-
-**B2: Uploaded File Fails to Load**:
-
-- **Trigger**: Provider attempts to download tutorial guide or view video but file fails to load
-- **Steps**:
-  1. Provider clicks on tutorial guide or video link
-  2. System attempts to fetch file from media storage (S-05)
-  3. File fetch fails (network error, file missing, permission issue)
-  4. System displays error message with retry option and "report issue" link
-  5. Provider clicks "report issue" link
-  6. System creates automated issue ticket with error details (file ID, provider ID, timestamp, error type)
-  7. Admin receives notification and investigates file storage issue
-- **Outcome**: File loading error reported and admin notified for resolution
+1. Provider navigates to "Help Centre" from provider platform navigation (per FR-032).
+2. FR-032 calls FR-033 provider Help Centre APIs to load published provider-audience content (FAQs, Articles, Resources, Videos, Service Status).
+3. System displays content in provider-facing layouts defined in FR-032 (Screens 5.x).
+4. Providers interact with content in read-only mode; any feedback or support submissions are handled by FR-032 + FR-034.
 
 ---
 
@@ -441,6 +395,44 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ---
 
+### Screen 2.2: Provider FAQ Topic Management
+
+**Purpose**: Manage FAQ topics used to group FAQ items for provider Help Centre (FR-032 Screen 5.1). Admin can create, edit, delete, and reorder topics, and see which FAQs belong to each topic.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Topic List | table/list | Yes | List of all FAQ topics | Each row: topic name, description (optional), number of FAQs, display order, actions (Edit, Delete) |
+| Topic Name | text | Yes | Name of topic section (e.g., "Quote Submission", "Payment Processing") | Max 100 chars, unique per audience (Provider/Patient) |
+| Topic Description | textarea | No | Optional description for internal/admin context | Max 250 chars |
+| Display Order | number | Yes | Order in which topic appears in FAQ accordion | Integer, required; supports drag-and-drop reordering |
+| Number of FAQs | display | No | Count of FAQs currently assigned to topic | Read-only, calculated |
+| Action Buttons | buttons | Yes | Add New Topic, Edit, Delete, Save Order, Cancel | N/A |
+
+**Business Rules**:
+
+- Screen opened from Screen 2 (FAQ Management) when admin clicks "Manage Topics".
+- Topic list shows all topics for the selected audience (Provider or Patient, depending on context) with current display order.
+- "Add New Topic" opens inline row or modal with fields: Topic Name, Topic Description, Display Order (auto-suggested as last).
+- "Edit" opens topic edit form (inline or modal) allowing admin to change name, description, and display order.
+- "Delete" prompts confirmation; topics with assigned FAQs cannot be hard-deleted:
+  - If topic has FAQs, system blocks deletion and prompts admin to reassign or remove FAQs first.
+  - Implementation may soft-delete topic only when no FAQs are assigned.
+- Topics support drag-and-drop reordering; moving rows updates Display Order values.
+- "Save Order" persists new topic ordering; provider Help Centre FAQ accordion (FR-032 Screen 5.1) reflects updated topic order.
+- "Cancel" discards unsaved changes to ordering or edits and returns admin to Screen 2 (FAQ Management).
+- Validation ensures Topic Name is required and unique within the audience; Display Order must be a positive integer.
+
+**Notes**:
+
+- Visual layout: list of topics with drag handle on each row for reordering.
+- Badge or column for "Number of FAQs" to help admins understand impact before deleting topics.
+- Optional search/filter for topic name when list is long.
+- Breadcrumb navigation: Settings > Help Centre Management > FAQs > Manage Topics.
+
+---
+
 ### Screen 3: Provider Article Management (for FR-032 Screen 5.2)
 
 **Purpose**: Manage all article content (Tutorial Guides, Troubleshooting Tips, Policy Information) that displays in article layout on provider platform (matches FR-032 Screen 5.2). Admin can view article list, add new articles, edit existing articles, delete articles, and organize by type.
@@ -638,10 +630,12 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Video List | table/list | Yes | List of all videos organized by category | Each row: title, category/tags, duration, view count, status, last updated, actions (Edit, Delete, Preview) |
+| Video List | table/list | Yes | List of all videos organized by category | Each row: title, source type (File/Embed), category/tags, duration, view count, status, last updated, actions (Edit, Delete, Preview) |
 | Video Title | text | Yes | Video tutorial title | Max 200 chars |
 | Video Description | textarea | No | Brief description of video content | Max 500 chars |
-| Video File | file upload | Yes | Video file to upload | Max 500MB, formats: MP4, MOV |
+| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party |
+| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required when Video Source Type = Upload File |
+| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid YouTube/Vimeo (or approved provider) URL |
 | Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended |
 | Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file |
 | Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars |
@@ -654,27 +648,28 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Business Rules**:
 
-- Video list displays all videos organized by category/tags
-- Video list filterable by category/tags, status, and searchable by title
-- "Add New Video" button opens video upload form (inline or modal)
-- "Edit" button on each video opens video editor pre-filled with existing metadata
+- Video list displays all videos organized by category/tags with clear indication of source type (Upload File vs Embed from Third-Party)
+- Video list filterable by category/tags, status, source type, and searchable by title
+- "Add New Video" button opens video creation form (inline or modal)
+- "Edit" button on each video opens video editor pre-filled with existing metadata and source configuration
 - "Delete" button on each video prompts confirmation before deletion (soft-delete)
-- "Preview" button shows exact video player interface as providers will see (FR-032 Screen 5.4)
-- Video upload interface optimized for video management (file picker with progress indicator, supports large files 500MB max)
-- Video processing: system processes uploaded video for streaming optimization (if applicable)
-- Thumbnail generation: auto-generate from video frame at 10% mark or use custom upload
+- "Preview" button shows exact video player interface as providers will see (FR-032 Screen 5.4), using either uploaded file or embedded player depending on source type
+- For "Upload File" videos, video upload interface is optimized for video management (file picker with progress indicator, supports large files 500MB max)
+- For "Upload File" videos, system processes uploaded video for streaming optimization (if applicable)
+- For "Embed from Third-Party" videos, system validates embed URL against allowed providers (e.g., YouTube, Vimeo) and stores only the URL/ID, not the video file
+- Thumbnail generation: for uploaded videos, auto-generate from video frame at 10% mark or use custom upload; for embedded videos, allow either custom thumbnail upload or retrieval of provider thumbnail (if supported)
 - Video transcript optional but recommended for accessibility
-- View count incremented when video plays for >30 seconds
+- View count incremented when video plays for >30 seconds, regardless of source type
 - Related videos can be manually assigned or auto-suggested based on tags/category
 
 **Notes**:
 
-- Video management interface: list view with action buttons for each video item
-- Video creation/editing: form with video upload, metadata fields, thumbnail upload/editor
-- Upload progress: shows upload percentage and estimated time remaining
-- Video processing: background job processes video after upload (transcoding, thumbnail generation)
-- Thumbnail editor: crop/select frame from video for thumbnail
-- Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4
+- Video management interface: list view with action buttons for each video item and a visible badge/chip for source type (File / Embed)
+- Video creation/editing: form starts with source type selector; when "Upload File" is selected, show file upload controls; when "Embed from Third-Party" is selected, show embed URL input and provider hints/examples
+- Upload progress and processing indicators only appear when source type is "Upload File"
+- Video processing: background job processes uploaded videos after file upload (transcoding, thumbnail generation)
+- Thumbnail editor: crop/select frame from uploaded video for thumbnail; embedded videos can optionally use provider thumbnail or custom upload
+- Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4, supporting both uploaded and embedded videos
 - Transcript editor: textarea with character counter, searchable text
 - Video analytics: view count, average watch time, completion rate
 - Bulk operations: change status for multiple videos, delete multiple videos
@@ -684,7 +679,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ### Screen 5.1: Provider Video Add/Edit Form
 
-**Purpose**: Upload new video tutorial or edit existing video metadata. Accessed from Screen 5 (Video Management) via "Add New Video" or "Edit" buttons.
+**Purpose**: Create a new video tutorial (via file upload or embedded third-party video) or edit existing video metadata. Accessed from Screen 5 (Video Management) via "Add New Video" or "Edit" buttons.
 
 **Data Fields**:
 
@@ -692,7 +687,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 |------------|------|----------|-------------|------------------|
 | Video Title | text | Yes | Video tutorial title | Max 200 chars, required |
 | Video Description | textarea | No | Brief description of video content | Max 500 chars |
-| Video File | file upload | Yes (for new) | Video file to upload | Max 500MB, formats: MP4, MOV, required for new videos |
+| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party; required |
+| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required for new videos when Video Source Type = Upload File |
+| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid URL for supported providers (e.g., YouTube, Vimeo) |
 | Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended |
 | Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file |
 | Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars |
@@ -706,20 +703,32 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add New Video" or "Edit" is clicked from Screen 5
-- If editing existing video, form is pre-filled with current video metadata (video file cannot be changed, only replaced)
-- If creating new video, form starts empty with video upload required
-- Video upload: file picker with progress indicator, supports large files (500MB max)
-- Upload progress: shows upload percentage and estimated time remaining
-- Video processing: background job processes video after upload (transcoding, thumbnail generation)
-- Thumbnail generation: auto-generate from video frame at 10% mark or use custom upload
-- Thumbnail editor: crop/select frame from video for thumbnail
-- Video duration auto-extracted from video file after upload
-- Video transcript optional but recommended for accessibility
-- "Replace Video" option available when editing (replaces video while keeping same video record)
-- "Preview" button shows video in video player interface exactly as providers will see (FR-032 Screen 5.4)
-- Form validation: title and video file are required before saving
-- On save, video is created/updated and admin returns to Screen 5 (Video Management) with updated list
-- On cancel, changes are discarded and admin returns to Screen 5
+- If editing existing video, form is pre-filled with current video metadata including current source type and either file reference or embed URL
+- Admin must choose a Video Source Type:
+  - When "Upload File" is selected:
+    - Video File becomes required for new videos.
+    - File upload uses file picker with progress indicator (500MB max, MP4/MOV).
+    - Video processing background job is triggered after successful upload (transcoding, thumbnail generation).
+    - Video Duration is auto-extracted from uploaded file.
+  - When "Embed from Third-Party" is selected:
+    - Video Embed URL becomes required.
+    - System validates URL format and that domain is in the allowed provider list (e.g., YouTube, Vimeo).
+    - No video file is uploaded; Video Duration may be fetched from provider API or left manual/optional (implementation detail).
+- For existing videos, a "Change Source Type" flow may be implemented as either:
+  - Simple change with required new file/URL and confirmation that old file/URL is replaced; or
+  - Restricted to avoid data loss (implementation decision to be finalized at design time).
+- Thumbnail generation:
+  - For uploaded videos, system auto-generates from frame at 10% mark, with option to override via custom thumbnail upload.
+  - For embedded videos, system may pull provider thumbnail (if supported) or allow only custom thumbnail upload.
+- Video transcript optional but recommended for accessibility, regardless of source type.
+- "Replace Video" option is available when editing "Upload File" videos (replaces file while keeping same video record).
+- "Preview" button shows video in video player interface exactly as providers will see (FR-032 Screen 5.4), using either uploaded file or embedded player.
+- Form validation:
+  - Title and Video Source Type always required.
+  - When source type is "Upload File": Video File required for new records.
+  - When source type is "Embed from Third-Party": Video Embed URL required and must pass validation.
+- On save, video is created/updated and admin returns to Screen 5 (Video Management) with updated list.
+- On cancel, changes are discarded and admin returns to Screen 5.
 
 **Notes**:
 
@@ -931,9 +940,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ---
 
-#### Patient Help Centre Content Management
+#### Patient Help Centre Content Management (Admin Platform)
 
-**Note**: Patient Help Centre content management screens (Screen 8 through Screen 13) mirror the provider content management screens (Screen 1 through Screen 7) in structure and functionality, with the following key differences:
+**Note**: The following Patient Help Centre content management screens (Screen 8 through Screen 13) are **admin-only screens on the Admin Platform**. They mirror the provider content management screens (Screen 1 through Screen 7) in structure and functionality, with the following key differences:
 
 - **Audience**: Content managed here is displayed to patients via FR-035 (Patient Help Center & Support Submission module) instead of providers
 - **Screen 8**: Patient Help Centre Management Dashboard (mirrors Screen 1)

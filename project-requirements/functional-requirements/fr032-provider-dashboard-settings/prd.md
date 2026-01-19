@@ -496,23 +496,21 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Actors**: Provider (any role), System
 **Trigger**: Provider navigates to "Help Centre" from settings menu or footer
-**Outcome**: Provider accesses help resources, FAQs, guides, and contact support
+**Outcome**: Provider accesses help resources, FAQs, guides, and contact support backed by admin-managed content (FR-033) and unified ticketing (FR-034)
 
 **Steps**:
 
 1. Provider clicks "Help Centre" from settings menu or footer link
 2. System loads Help Centre page with content categories (managed by admin via FR-033)
 3. System displays Help Centre categories:
-   - **FAQs** (expandable/collapsible sections organized by topic)
-   - **Tutorial Guides** (step-by-step guides with screenshots)
-   - **Contact Support** (support form submission)
-   - **Troubleshooting Tips** (common issues and solutions)
-   - **Resource Library** (downloadable documents, templates)
+   - **FAQs** (expandable/collapsible sections organized by topic; content from FR-033)
+   - **Tutorial Guides / Troubleshooting Tips / Policy Information** (article layout; content from FR-033)
+   - **Resource Library** (downloadable documents, templates; content from FR-033)
+   - **Video Tutorials** (video guides for key workflows; content from FR-033)
+   - **Service Status** (platform uptime and incident reports; status data managed in FR-033)
+   - **Contact Support** (support form submission; cases managed in FR-034)
+   - **Feedback & Suggestions** (submit feature requests; cases managed in FR-034)
    - **Community Forum** (provider discussions - future enhancement)
-   - **Feedback & Suggestions** (submit feature requests)
-   - **Service Status** (platform uptime and incident reports)
-   - **Policy Information** (terms of service, privacy policy)
-   - **Video Tutorials** (video guides for key workflows)
 4. Provider clicks on "FAQs" category
 5. System displays FAQ topics (e.g., "Quote Management", "Payment Settings", "Aftercare")
 6. Provider clicks on topic "Quote Management"
@@ -573,6 +571,21 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   5. System saves feedback for admin review
   6. System displays "Thank you for your feedback!"
 - **Outcome**: Provider feedback submitted to admin team
+- **Integration**: Feedback case is created and managed in FR-034 Support Center & Ticketing
+
+**A13: Provider Checks Service Status**:
+
+- **Trigger**: Provider experiences platform issues and wants to check if it's a known system outage
+- **Steps**:
+  1. Provider navigates to Help Centre and selects "Service Status" category
+  2. System calls Service Status endpoint backed by FR-033 and loads status page interface
+  3. System displays overall platform status indicator (All Systems Operational, Partial Outage, Major Outage)
+  4. System shows list of service components with current status and last updated time
+  5. System displays recent incident history timeline and upcoming maintenance schedule (if any)
+  6. Provider reviews status information to determine whether issue is platform-wide or local
+  7. Provider optionally subscribes to status update notifications (if enabled per FR-020/notifications)
+  8. Provider decides whether to wait, retry, or contact support (Contact Support flows above)
+- **Outcome**: Provider is informed of current platform status and can plan accordingly
 
 **B12: Help Centre Content Not Loading**:
 
@@ -585,6 +598,32 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   5. Provider refreshes page
   6. System successfully loads content
 - **Outcome**: Help Centre content loads after retry
+
+**B13: Provider Cannot Find Needed Content (Content Gap Feedback)**:
+
+- **Trigger**: Provider cannot find relevant help content in Help Centre
+- **Steps**:
+  1. Provider browses categories and/or uses search but does not find an answer
+  2. Provider clicks "Was this helpful? No" or similar feedback control on an article/FAQ
+  3. System prompts provider to briefly describe what they were looking for
+  4. Provider submits content-gap feedback form
+  5. System records feedback with reference to the viewed content item and provider account
+  6. System forwards feedback to admin/content team via FR-034 (e.g., as a low-priority ticket or feedback case)
+- **Outcome**: Content gap is captured for admins to review and action in FR-033 content management / FR-034 ticketing
+
+**B14: Uploaded File or Video Fails to Load**:
+
+- **Trigger**: Provider attempts to download a resource or play a video but the file fails to load
+- **Steps**:
+  1. Provider clicks on tutorial guide, resource file, or video link in the Help Centre
+  2. System attempts to fetch file from media storage (S-05) using metadata from FR-033
+  3. File fetch fails (e.g., network error, file missing, permission issue)
+  4. System displays a clear error message with retry option
+  5. System offers a "Report issue" or similar action
+  6. Provider clicks "Report issue"
+  7. System creates an issue/support case in FR-034 including file identifier, provider, and error details
+  8. System confirms to provider that the issue has been reported
+- **Outcome**: File loading problem is surfaced to admins/ops via FR-034 while provider receives clear feedback
 
 ---
 
