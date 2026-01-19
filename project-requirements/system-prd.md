@@ -1564,17 +1564,18 @@ Total Quote:                           £3,000
 
 ### FR-033: Help Centre Content Management
 
-**Priority**: P1 (MVP)  
-**Module(s)**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
+**Priority**: P1 (MVP)
+**Module(s)**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management | P-08: Help Center & Support Access
 
 **Requirements**:
 
-- Admins MUST be able to create, edit, and manage Help Centre content for provider platform
+- Admins MUST be able to create, edit, and manage Help Centre content for both provider and patient platforms
+- System MUST support separate Help Centre content repositories for provider and patient audiences
 - System MUST support Help Centre categories: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
 - Admins MUST be able to organize FAQ content by topics with expandable/collapsible sections
 - Admins MUST be able to upload tutorial guides, videos, and resource documents
 - System MUST support content versioning and audit trail for Help Centre updates
-- Providers view Help Centre content as read-only (content managed exclusively by admins)
+- Providers and patients view Help Centre content as read-only (content managed exclusively by admins)
 - System MUST support multi-language Help Centre content (future enhancement)
 
 **Note**: Detailed requirements to be documented in dedicated FR-033 PRD.

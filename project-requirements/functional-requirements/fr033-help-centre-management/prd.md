@@ -1,9 +1,9 @@
 # Product Requirements Document: Help Centre Content Management
 
-**Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
+**Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management | P-08: Help Center & Support Access
 **Feature Branch**: `fr033-help-centre-management`
 **Created**: 2025-11-17
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-033 from system-prd.md
 
 ---
@@ -27,14 +27,14 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-XX)**: Read-only access to Patient Help Centre content via FR-035 (Patient Help Center & Support Submission module) - patients view FAQs, guides, tutorials, and resources tailored for patient audience
+- **Patient Platform (P-08)**: Read-only access to Patient Help Centre content via FR-035 (Patient Help Center & Support Submission module) - patients view FAQs, guides, tutorials, and resources tailored for patient audience
 - **Provider Platform (PR-06)**: Read-only access to Provider Help Centre content via FR-032 (Provider Dashboard Settings module) - providers view FAQs, guides, tutorials, and resources tailored for provider audience
 - **Admin Platform (A-09)**: Full Help Centre content management capabilities for BOTH provider and patient audiences including content creation, editing, categorization, versioning, and publishing with clear audience separation
 - **Shared Services (S-XX)**: No dedicated shared services required (uses standard S-05 for media storage)
 
 ### Multi-Tenant Breakdown
 
-**Patient Platform (P-XX)**:
+**Patient Platform (P-08)**:
 
 - Patients access Help Centre content via FR-035 (Patient Help Center & Support Submission module)
 - Content managed by admins in FR-033 is displayed to patients in FR-035 as read-only resources
@@ -1081,7 +1081,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   - **Why needed**: Help Centre menu item appears in provider platform navigation, linked from FR-032 profile & settings module
   - **Integration point**: Help Centre navigation menu item added to provider platform sidebar, accessible from settings page; displays provider-specific Help Centre content
 
-- **FR-035 / Module P-XX**: Patient Help Centre accessed from patient app
+- **FR-035 / Module P-08**: Patient Help Centre accessed from patient app
   - **Why needed**: Patient Help Centre provides read-only access to patient-specific Help Centre content managed in FR-033
   - **Integration point**: Patient app fetches patient-specific Help Centre content via REST API; displays patient-facing FAQs, articles, resources, and videos (no Service Status)
 
@@ -1396,6 +1396,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | 2025-12-03 | 1.1 | Major updates to align with FR-032 changes: Reorganized screen specifications to match FR-032's 7 subscreen structure (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status); Added submission tracking management screens for Contact Support and Feedback with status workflows; Added Service Status management interface for components, incidents, and maintenance windows; Updated content creation/editing forms to match provider-facing layouts (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status); Updated preview functionality to match each subscreen layout; Updated workflows to reflect new subscreen structure; Added functional requirements for submission tracking and service status management | AI/Claude |
 | 2026-01-11 | 1.2 | Moved provider Contact Support and Feedback management to FR-034: Removed Contact Support and Feedback submission management from FR-033 (moved to FR-034 Support Center & Ticketing); Updated to 5 subscreen types (removed Contact Support and Feedback, kept FAQs, Articles, Resources, Videos, Service Status); Removed Screen 6 (Contact Support Management) and Screen 7 (Feedback Management); Removed workflows A1 and A2 for provider submissions; Removed related functional requirements and entities; Provider submissions now managed through FR-034 unified ticketing system | AI Assistant |
 | 2026-01-16 | 2.0 | Major scope extension to support both Provider and Patient audiences: Extended module to manage Help Centre content for TWO distinct audiences (Providers and Patients) with completely separated content repositories; Added Patient Help Centre Content Management section (Screens A-8 through A-13 mirroring provider screens A-1 through A-7, excluding Service Status); Updated Executive Summary, Multi-Tenant Architecture, and Module Scope to reflect dual-audience support; Reorganized Screen Specifications with tenant headers and proper screen numbering (A-1 through A-13); Updated Business Rules for multi-tenant support (General Module Rules, Data & Privacy Rules, Admin Editability Rules, Configurable with Restrictions); Added Patient Experience Metrics to Success Criteria; Updated Dependencies to include FR-035 (Patient Help Center & Support Submission); Updated Assumptions for both provider and patient users; Enhanced Implementation Notes with multi-tenant architecture details (separate API endpoints, database separation, audience-based caching); Updated Integration Points to specify provider and patient API endpoints; Updated Scalability, Security Considerations for both audiences; Completely revised Functional Requirements Summary to specify provider AND patient content requirements with audience separation and access control | AI Assistant |
+| 2026-01-19 | 2.1 | Verification and finalization: Moved provider-facing Help Centre access flows from FR-033 to FR-032 (provider UX flows belong in FR-032, not content management PRD); Added Screen 2.2 for FAQ Topic Management (create/edit topics, drag-and-drop reordering); Enhanced video management to support both file uploads and third-party embeds (YouTube, Vimeo) with conditional validation; Clarified that Patient Help Centre content management screens are admin-only (not patient app screens); Updated module references to include P-08 (Patient Help Center & Support Access); Updated status to Verified & Approved | AI Assistant |
 
 ---
 
@@ -1403,13 +1404,13 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | [Name] | 2026-01-19 | ✅ Approved |
+| Technical Lead | [Name] | 2026-01-19 | ✅ Approved |
+| Stakeholder | [Name] | 2026-01-19 | ✅ Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD Template
-**Last Updated**: 2026-01-11
+**Last Updated**: 2026-01-19

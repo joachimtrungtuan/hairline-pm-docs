@@ -105,7 +105,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 
 **Traceability**: Each Functional Requirement in `system-prd.md` includes its corresponding module code(s) for full traceability.
 
-### Patient Platform Modules (7 core)
+### Patient Platform Modules (8 core)
 
 - **P-01**: Auth & Profile Management (P1)
 - **P-02**: Quote Request & Management (P1)
@@ -114,6 +114,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **P-05**: Aftercare & Progress Monitoring (P1)
 - **P-06**: Communication (P2)
 - **P-07**: 3D Scan Capture & Viewing (P1)
+- **P-08**: Help Center & Support Access (P1)
 
 ### Provider Platform Modules (7 core)
 
