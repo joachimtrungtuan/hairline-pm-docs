@@ -18,6 +18,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Reduce support ticket volume by enabling users to find answers independently
 - Enable admins to centrally manage and update help content for TWO distinct audiences: Providers and Patients
 - Maintain separate content repositories for provider-facing and patient-facing content to prevent cross-contamination
+- Maintain a canonical Help Centre taxonomy (categories, ordering, visibility) aligned with `system-prd.md` and tenant UX (FR-032 / FR-035)
 - Support scalable content organization with multi-category structure for each audience
 - Maintain content consistency and quality through admin-controlled publishing workflow
 
@@ -46,7 +47,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - Providers access Help Centre content via FR-032 (Provider Dashboard Settings module)
 - Content managed by admins in FR-033 is displayed to providers in FR-032 as read-only resources
-- Provider Help Centre includes: FAQs (FR-032 Screen 5.1), Tutorial Guides/Tips/Policies (FR-032 Screen 5.2), Resource Library (FR-032 Screen 5.3), Video Tutorials (FR-032 Screen 5.4), Service Status (FR-032 Screen 5.7)
+- Provider Help Centre includes 10 categories aligned with `system-prd.md`/FR-032: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
 - Content updates from FR-033 propagate to FR-032 provider views within 1 minute
 - Search functionality across all provider Help Centre content
 
@@ -61,6 +62,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   - Upload and manage Resource Library files (for FR-032 Screen 5.3)
   - Upload and manage Video Tutorials (for FR-032 Screen 5.4)
   - Manage Service Status components, incidents, and maintenance windows (for FR-032 Screen 5.7)
+  - Configure category metadata for all 10 provider categories (visibility, ordering, labels, descriptions, routing)
 - **Patient Content Management**:
   - Manage FAQ content (for FR-035 patient FAQs)
   - Manage article content: Tutorial Guides, Troubleshooting Tips (for FR-035 patient articles)
@@ -90,10 +92,10 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Out of Scope**:
 
-- Provider Contact Support form submissions (handled by FR-034: Support Center & Ticketing - provider submissions via FR-032 Screen 5.5 automatically create support cases in FR-034)
-- Provider Feedback & Suggestions form submissions (handled by FR-034: Support Center & Ticketing - provider submissions via FR-032 Screen 5.6 automatically create support cases in FR-034)
+- Provider Contact Support form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034)
+- Provider Feedback & Suggestions form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034)
 - Real-time chat between providers and admin (handled by separate communication module A-10)
-- Provider-to-provider communication in community forum (future enhancement)
+- Provider-to-provider communication in community forum (future enhancement; FR-033 can only configure category presentation/routing)
 - Automated chatbot responses (future V2 enhancement)
 - Email digest subscriptions for content updates (future enhancement)
 
@@ -123,8 +125,8 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Behaviour (high level)**:
 
 1. Provider navigates to "Help Centre" from provider platform navigation (per FR-032).
-2. FR-032 calls FR-033 provider Help Centre APIs to load published provider-audience content (FAQs, Articles, Resources, Videos, Service Status).
-3. System displays content in provider-facing layouts defined in FR-032 (Screens 5.x).
+2. FR-032 calls FR-033 provider Help Centre APIs to load the provider category registry (10 categories) and published provider-audience content (FAQs, Articles, Resources, Videos, Service Status).
+3. System displays category navigation and content in provider-facing layouts defined in FR-032 (Screens 5.x), routing Contact Support/Feedback categories to their form flows (FR-034 integration).
 4. Providers interact with content in read-only mode; any feedback or support submissions are handled by FR-032 + FR-034.
 
 ---
@@ -138,24 +140,25 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Steps**:
 
 1. Admin navigates to Settings > Help Centre Management
-2. System displays Help Centre content management dashboard with content list organized by subscreen type
-3. Admin selects subscreen type to manage (FAQs, Articles, Resources, Videos, Service Status)
-4. Admin clicks "Create New Content" button for selected subscreen type
-5. System displays content creation form optimized for selected subscreen layout:
+2. System displays Help Centre management dashboard with category navigation aligned to the provider Help Centre taxonomy (10 categories)
+3. Admin selects Help Centre category to manage (e.g., FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials)
+4. Admin clicks the primary action for the selected category (Create Content / Manage / Configure)
+5. System displays the appropriate editor optimized for the selected category:
    - **FAQs**: FAQ editor with question/answer fields, topic assignment, accordion preview
    - **Articles**: Article editor with rich text, table of contents generation, article layout preview
    - **Resources**: File upload interface with metadata (name, description, category, file type), file viewer preview
    - **Videos**: Video upload interface with title, description, thumbnail, video player preview
    - **Service Status**: Status component/incident management interface
-6. Admin enters content details using subscreen-specific editor
-7. Admin uploads attachments if needed (images, PDFs, videos) - optimized for subscreen type
+   - **Contact Support / Feedback & Suggestions / Community Forum**: Category configuration (copy, routing, and availability; submissions and/or forum interactions handled outside FR-033)
+6. Admin enters details using the category-specific editor
+7. Admin uploads attachments if needed (images, PDFs, videos) - optimized for the content type
 8. Admin assigns tags for content organization and searchability
 9. Admin clicks "Preview" to see how content will appear to providers in the specific subscreen layout
 10. System renders preview matching provider-facing layout (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status)
 11. Admin reviews preview and clicks "Save as Draft" or "Publish"
 12. System saves content with status (Draft/Published) and timestamps
 13. System logs content creation in audit trail (admin name, timestamp, action)
-14. If published, system makes content immediately available in provider Help Centre subscreen
+14. If published, system makes content immediately available in the provider Help Centre category
 15. System displays success confirmation with link to view published content
 
 ### Alternative Flows
@@ -281,34 +284,65 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ### Screen 1: Provider Help Centre Management Dashboard
 
-**Purpose**: Landing page for provider-facing Help Centre content management with category navigation to access provider content management screens. Provides overview and quick access to manage provider FAQs, Articles, Resources, Videos, and Service Status (content displayed in FR-032 provider Help Centre).
+**Purpose**: Landing page for provider-facing Help Centre management with category navigation aligned to the 10-category provider taxonomy. Provides overview and quick access to manage content-backed categories (FAQs, Articles, Resources, Videos, Service Status) and configure non-content categories (Contact Support, Feedback & Suggestions, Community Forum).
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Category Navigation | navigation menu | Yes | Links to content management screens: FAQs (Screen 2), Articles (Screen 3), Resources (Screen 4), Videos (Screen 5), Service Status (Screen 6) | N/A |
+| Category Navigation | navigation menu | Yes | Links to category management for the 10 provider Help Centre categories: FAQ's (Screen 2), Tutorial Guides (Screen 3, filtered), Contact Support (Screen 1.1), Troubleshooting Tips (Screen 3, filtered), Resource Library (Screen 4), Community Forum (Screen 1.1), Feedback & Suggestions (Screen 1.1), Service Status (Screen 6), Policy Information (Screen 3, filtered), Video Tutorials (Screen 5) | N/A |
 | Quick Stats | display cards | No | Summary statistics: total content, published content, draft content, total views | Read-only, calculated |
 | Recent Activity | timeline | No | Recent content changes and updates | Read-only, sorted by date |
 
 **Business Rules**:
 
-- Dashboard provides category navigation matching FR-032 Screen 5 structure (FAQs, Articles, Resources, Videos, Service Status)
+- Dashboard provides category navigation matching the provider Help Centre taxonomy in `system-prd.md`/FR-032 (10 categories)
 - Clicking "FAQs" category navigates to Screen 2 (FAQ Management) where FAQ list is displayed
-- Clicking "Articles" category navigates to Screen 3 (Article Management) where article list is displayed
+- Clicking "Tutorial Guides" navigates to Screen 3 (Article Management) filtered to Article Type = Tutorial Guide
+- Clicking "Troubleshooting Tips" navigates to Screen 3 (Article Management) filtered to Article Type = Troubleshooting Tip
+- Clicking "Policy Information" navigates to Screen 3 (Article Management) filtered to Article Type = Policy Information
 - Clicking "Resources" category navigates to Screen 4 (Resource Management) where resource list is displayed
 - Clicking "Videos" category navigates to Screen 5 (Video Management) where video list is displayed
 - Clicking "Service Status" category navigates to Screen 6 (Service Status Management) where service status overview is displayed
+- Clicking "Contact Support", "Feedback & Suggestions", or "Community Forum" navigates to Screen 1.1 (Category Configuration) for those categories
 - Quick stats update in real-time showing aggregate metrics across all content types
-- Recent activity shows: content created/edited/published, service status updates
+- Recent activity shows: content created/edited/published, category configuration changes, service status updates
 
 **Notes**:
 
 - Dashboard serves as landing page and navigation hub for Help Centre management
-- Category navigation matches FR-032 Screen 5 category navigation structure
-- Each category tile/card links to corresponding management screen where content list is displayed
+- Category navigation matches the provider Help Centre taxonomy in `system-prd.md`/FR-032 (10 categories)
+- Each category tile/card links to the corresponding management screen or configuration screen
 - Visual indicators on category cards can show content count or status summary
 - Breadcrumb navigation: Settings > Help Centre Management
+
+---
+
+### Screen 1.1: Provider Help Centre Category Configuration
+
+**Purpose**: Configure the provider Help Centre category registry (labels, ordering, visibility, and routing) for categories that are not pure content lists (Contact Support, Feedback & Suggestions, Community Forum), and manage any category-level copy shown above downstream experiences.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Category List | table/list | Yes | Provider categories with ordering and visibility controls | Categories are predefined; cannot be deleted |
+| Display Order | number / drag-drop | Yes | Order categories appear in provider Help Centre navigation | Integer; drag-and-drop supported |
+| Visibility Toggle | toggle | Yes | Show/Hide category in provider Help Centre navigation | Cannot hide required MVP categories without admin confirmation |
+| Category Label | text | Yes | Display label per category | Max 50 chars |
+| Category Description | textarea | No | Short description shown on category tile/landing | Max 200 chars |
+| Routing Type | dropdown | Yes | How the category behaves in provider UX | Content List, Ticket Form, External Link, Coming Soon |
+| External URL | url | No | Used when Routing Type = External Link (e.g., Community Forum link-out) | Must be valid HTTPS URL |
+| Contact Support Intro Copy | rich text | No | Admin-managed copy shown above the Contact Support submission CTA/form | Sanitized HTML |
+| Feedback & Suggestions Intro Copy | rich text | No | Admin-managed copy shown above the Feedback submission CTA/form | Sanitized HTML |
+
+**Business Rules**:
+
+- Provider Help Centre categories are fixed to the 10-category taxonomy in `system-prd.md`; admins can reorder and toggle visibility but cannot add/remove categories.
+- For Contact Support and Feedback & Suggestions, Routing Type MUST be Ticket Form and MUST route to the FR-034-backed submission flows exposed in provider UX (FR-032 integration).
+- For Community Forum, Routing Type defaults to Coming Soon in MVP; if set to External Link, the External URL is required.
+- Changes to category registry propagate to provider Help Centre navigation within 1 minute.
+- All category configuration changes are versioned and recorded in audit trail (who/when/old value/new value).
 
 ---
 
@@ -976,7 +1010,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - **Rule 1**: Help Centre content managed for TWO distinct audiences: Providers and Patients; content repositories completely separated by audience type
 - **Rule 2**: Only admins can create, edit, or delete Help Centre content; providers and patients have read-only access to their respective content
-- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and assigned to exactly one of the predefined categories
+- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and assigned to exactly one of the predefined categories for that audience
 - **Rule 4**: Content can exist in three states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published)
 - **Rule 5**: All content changes logged in audit trail with admin identity, timestamp, audience type, and action type
 - **Rule 6**: Content deletion is soft-delete (archived) not permanent deletion to support recovery and audit compliance
@@ -1014,6 +1048,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Fixed in Codebase (Not Editable)**:
 
+- Provider Help Centre categories: 10 categories (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials)
 - Number of Help Centre content types: 5 types for providers (FAQs, Articles, Resources, Videos, Service Status); 4 types for patients (FAQs, Articles, Resources, Videos - no Service Status)
 - Audience types: Provider and Patient (fixed; cannot add new audience types)
 - Content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
@@ -1320,12 +1355,12 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 ### Core Requirements
 
 - **REQ-033-001**: System MUST provide Help Centre content management for TWO distinct audiences: Providers and Patients, with completely separated content repositories
-- **REQ-033-002**: System MUST support 5 Help Centre content types for providers (FAQs with accordion layout, Articles with article layout, Resources with file viewer, Videos with video player, Service Status with status page interface) matching FR-032 structure
+- **REQ-033-002**: System MUST support the 10-category provider Help Centre taxonomy (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials) aligned with FR-032, backed by underlying content types and integrations (Contact Support/Feedback routed to FR-034)
 - **REQ-033-003**: System MUST support 4 Help Centre content types for patients (FAQs, Articles, Resources, Videos - NO Service Status) displayed via FR-035 patient app
 - **REQ-033-004**: Admins MUST be able to create Help Centre content with audience selection (Provider or Patient), category assignment, content type, title, rich text body, file attachments, tags, and publish status
 - **REQ-033-005**: System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) applicable to both audiences
 - **REQ-033-006**: Admins MUST be able to organize FAQ content into collapsible topic sections with drag-and-drop reordering for both provider and patient FAQs separately
-- **REQ-033-007**: Providers MUST be able to access provider-specific Help Centre content in read-only mode via FR-032 with distinct layouts per subscreen type
+- **REQ-033-007**: Providers MUST be able to access provider-specific Help Centre categories in read-only mode via FR-032 with category-appropriate layouts (accordion FAQs, article views, file viewer, video player, status page)
 - **REQ-033-008**: Patients MUST be able to access patient-specific Help Centre content in read-only mode via FR-035 (Patient Help Center & Support Submission)
 - **REQ-033-009**: System MUST support rich text editing for content creation with formatting (bold, italic, lists, links, images, tables) for both audiences
 - **REQ-033-010**: System MUST support file uploads for Help Centre content (PDFs max 50MB, videos max 500MB, images max 10MB) for both audiences
