@@ -1,4 +1,4 @@
-# Product Requirements Document: Admin Patient Management
+# FR-016 - Admin Patient Management
 
 **Module**: A-01: Patient Management & Oversight
 **Feature Branch**: `fr016-admin-patient-mgmt`

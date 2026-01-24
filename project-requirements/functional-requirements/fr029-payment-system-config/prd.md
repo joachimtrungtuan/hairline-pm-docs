@@ -1,4 +1,4 @@
-# Product Requirements Document: Payment System Configuration
+# FR-029 - Payment System Configuration
 
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`

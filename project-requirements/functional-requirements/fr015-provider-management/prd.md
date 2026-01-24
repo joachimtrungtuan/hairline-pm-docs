@@ -1,4 +1,4 @@
-# Product Requirements Document: Provider Management (Admin-Initiated)
+# FR-015 - Provider Management (Admin-Initiated)
 
 **Module**: A-02: Provider Management & Onboarding
 **Feature Branch**: `fr015-provider-management`

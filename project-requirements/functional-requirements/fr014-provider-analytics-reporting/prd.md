@@ -1,4 +1,4 @@
-# Product Requirements Document: Provider Analytics & Reporting
+# FR-014 - Provider Analytics & Reporting
 
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`

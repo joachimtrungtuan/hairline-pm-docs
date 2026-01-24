@@ -1,4 +1,4 @@
-# Product Requirements Document: Provider Dashboard Settings & Profile Management
+# FR-032 - Provider Dashboard Settings & Profile Management
 
 **Module**: PR-06: Profile & Settings Management
 **Feature Branch**: `fr032-provider-dashboard-settings`

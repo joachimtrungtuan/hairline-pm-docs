@@ -1,4 +1,4 @@
-# Product Requirements Document: App Settings & Security Policies
+# FR-026 - App Settings & Security Policies
 
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr026-app-settings-security`

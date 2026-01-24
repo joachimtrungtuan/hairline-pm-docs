@@ -1,4 +1,4 @@
-# Product Requirements Document: Provider Team & Role Management
+# FR-009 - Provider Team & Role Management
 
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`

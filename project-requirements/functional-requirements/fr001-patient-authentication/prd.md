@@ -1,4 +1,4 @@
-# Patient Authentication & Profile Management Module - Product Requirements Document
+# FR-001 - Patient Authentication & Profile Management
 
 **Module**: P-01: Auth & Profile Management  
 **Feature Branch**: `fr001-patient-authentication`  

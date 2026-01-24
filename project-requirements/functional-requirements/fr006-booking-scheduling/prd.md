@@ -1,4 +1,4 @@
-# Product Requirements Document: Booking & Scheduling (FR-006)
+# FR-006 - Booking & Scheduling
 
 **Module**: P-03: Booking & Payment | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 **Feature Branch**: `fr006-booking-scheduling`

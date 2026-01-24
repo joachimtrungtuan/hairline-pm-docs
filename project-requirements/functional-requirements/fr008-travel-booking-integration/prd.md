@@ -1,4 +1,4 @@
-# Product Requirements Document: Travel Booking Integration
+# FR-008 - Travel Booking Integration
 
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway
 **Feature Branch**: `fr008-travel-booking-integration`

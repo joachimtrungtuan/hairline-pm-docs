@@ -1,4 +1,4 @@
-# Product Requirements Document: Messaging & Communication
+# FR-012 - Messaging & Communication
 
 **Module**: P-06: Communication | PR-07: Communication & Messaging | A-10: Communication Monitoring & Support  
 **Feature Branch**: `fr012-secure-messaging`  

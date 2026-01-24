@@ -1,4 +1,4 @@
-# Product Requirements Document: Treatment & Package Management
+# FR-024 - Treatment & Package Management
 
 **Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
 **Feature Branch**: `fr024-treatment-package-management`

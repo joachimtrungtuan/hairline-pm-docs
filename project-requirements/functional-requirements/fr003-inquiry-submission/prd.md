@@ -1,4 +1,4 @@
-# Inquiry Submission & Distribution Module - Product Requirements Document
+# FR-003 - Inquiry Submission & Distribution
 
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight  
 **Feature Branch**: `fr003-inquiry-submission`  

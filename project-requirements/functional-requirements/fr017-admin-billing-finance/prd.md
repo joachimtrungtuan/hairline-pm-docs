@@ -1,4 +1,4 @@
-# Product Requirements Document: Admin Billing & Financial Management
+# FR-017 - Admin Billing & Financial Management
 
 **Module**: A-05: Billing & Financial Reconciliation | PR-05: Financial Management & Reporting
 **Feature Branch**: `fr017-admin-billing-finance`

@@ -1,4 +1,4 @@
-# Product Requirements Document: Payment Processing (FR-007)
+# FR-007 - Payment Processing
 
 **Module**: P-03: Booking & Payment | PR-05: Financial Management & Reporting | A-01: Patient Management & Oversight | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service | S-03: Notification Service
 **Feature Branch**: `fr007-payment-processing`

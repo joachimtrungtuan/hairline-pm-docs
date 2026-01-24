@@ -1,4 +1,4 @@
-# Product Requirements Document: Legal Content Management
+# FR-027 - Legal Content Management
 
 **Module**: A-09: System Settings & Configuration  
 **Feature Branch**: `fr027-legal-content-management`  

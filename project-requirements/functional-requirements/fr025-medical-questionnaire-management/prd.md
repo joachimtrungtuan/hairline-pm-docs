@@ -1,4 +1,4 @@
-# Medical Questionnaire Management Module - Product Requirements Document
+# FR-025 - Medical Questionnaire Management
 
 **Module**: A-09: System Settings & Configuration  
 **Feature Branch**: `fr025-medical-questionnaire-management`  

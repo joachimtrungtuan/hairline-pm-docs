@@ -1,4 +1,4 @@
-# Medical History & 3D Scanning - Product Requirements Document (FR-002)
+# FR-002 - Medical History & 3D Scanning
 
 **Module**: P-07: 3D Scan Capture & Viewing (consumer) | S-01: 3D Media Processing Service | S-05: Media Storage Service | A-09: System Settings & Configuration (Questionnaire Templates Integration)  
 **Feature Branch**: `002-medical-history-spec`  

@@ -1,4 +1,4 @@
-# Aftercare & Recovery Management Module - Product Requirements Document
+# FR-011 - Aftercare & Recovery Management
 
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  

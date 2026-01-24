@@ -1,4 +1,4 @@
-# Product Requirements Document: Affiliate Management
+# FR-018 - Affiliate Management
 
 **Module**: A-07: Affiliate Program Management
 **Feature Branch**: `fr018-affiliate-management`

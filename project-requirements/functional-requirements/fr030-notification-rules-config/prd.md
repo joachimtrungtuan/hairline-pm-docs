@@ -1,4 +1,4 @@
-# Product Requirements Document: Notification Rules & Configuration
+# FR-030 - Notification Rules & Configuration
 
 **Module**: A-09: System Settings & Configuration | S-03: Notification Service
 **Feature Branch**: `fr030-notification-rules-config`

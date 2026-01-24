@@ -1,4 +1,4 @@
-# Product Requirements Document: Data Retention & Compliance
+# FR-023 - Data Retention & Compliance
 
 **Module**: A-09: System Settings & Configuration (Cross-Cutting Concern)  
 **Feature Branch**: `fr023-data-retention-compliance`  

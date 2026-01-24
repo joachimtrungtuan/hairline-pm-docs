@@ -1,4 +1,4 @@
-# Product Requirements Document: Treatment Execution & Documentation
+# FR-010 - Treatment Execution & Documentation
 
 **Module**: PR-03: Treatment Execution & Documentation
 **Feature Branch**: `fr010-treatment-execution`

@@ -1,4 +1,4 @@
-# Quote Comparison & Acceptance Module - Product Requirements Document
+# FR-005 - Quote Comparison & Acceptance
 
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight  
 **Feature Branch**: `fr005-quote-comparison-acceptance`  

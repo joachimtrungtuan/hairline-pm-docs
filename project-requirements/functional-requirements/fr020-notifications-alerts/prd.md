@@ -1,4 +1,4 @@
-# Product Requirements Document: Notifications & Alerts
+# FR-020 - Notifications & Alerts
 
 **Module**: S-03: Notification Service
 **Feature Branch**: `fr020-notifications-alerts`

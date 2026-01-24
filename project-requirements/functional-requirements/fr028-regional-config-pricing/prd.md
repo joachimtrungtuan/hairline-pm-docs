@@ -1,4 +1,4 @@
-# Product Requirements Document: Regional Configuration & Pricing
+# FR-028 - Regional Configuration & Pricing
 
 **Module**: A-09: System Settings & Configuration | P-02: Quote Request & Management | PR-02: Inquiry & Quote Management
 **Feature Branch**: `fr028-regional-config-pricing`

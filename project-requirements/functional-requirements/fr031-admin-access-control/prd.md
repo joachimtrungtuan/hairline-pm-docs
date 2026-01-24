@@ -1,4 +1,4 @@
-# Product Requirements Document: Admin Access Control & Permissions
+# FR-031 - Admin Access Control & Permissions
 
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`

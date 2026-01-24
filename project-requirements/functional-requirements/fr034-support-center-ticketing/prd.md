@@ -1,4 +1,4 @@
-# Product Requirements Document: Support Center & Ticketing System
+# FR-034 - Support Center & Ticketing System
 
 **Module**: A-10: Communication Monitoring & Support | A-01: Patient Management & Oversight
 **Feature Branch**: `fr034-support-center-ticketing`

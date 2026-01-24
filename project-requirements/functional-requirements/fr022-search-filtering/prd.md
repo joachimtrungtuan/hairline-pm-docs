@@ -1,4 +1,4 @@
-# Product Requirements Document: Search & Filtering
+# FR-022 - Search & Filtering
 
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | PR-03: Treatment Execution & Documentation | PR-04: Aftercare Participation | PR-05: Financial Management & Reporting | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding | A-03: Aftercare Team Management | A-05: Billing & Financial Reconciliation | A-06: Discount & Promotion Management | A-07: Affiliate Program Management | A-08: Analytics & Reporting | A-09: System Settings & Configuration | A-10: Communication Monitoring & Support
 **Feature Branch**: `fr022-search-filtering`

@@ -1,4 +1,4 @@
-# Product Requirements Document: Help Centre Content Management
+# FR-033 - Help Centre Content Management
 
 **Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management | P-08: Help Center & Support Access
 **Feature Branch**: `fr033-help-centre-management`

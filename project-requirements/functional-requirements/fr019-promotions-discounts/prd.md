@@ -1,4 +1,4 @@
-# Product Requirements Document: Promotions & Discount Management
+# FR-019 - Promotions & Discount Management
 
 **Module**: A-06: Discount & Promotion Management
 **Feature Branch**: `fr019-promotions-discounts`

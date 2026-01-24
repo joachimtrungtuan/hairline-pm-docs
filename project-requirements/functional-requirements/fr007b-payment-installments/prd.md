@@ -1,4 +1,4 @@
-# Product Requirements Document: Split Payment / Installment Plans (FR-007B)
+# FR-007B - Split Payment / Installment Plans
 
 **Module**: P-03: Booking & Payment | S-02: Payment Processing Service
 **Feature Branch**: `fr007b-payment-installments`
