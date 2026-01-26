@@ -1596,14 +1596,14 @@ Total Quote:                           £3,000
 - System MUST maintain an auditable case timeline (messages, notes, attachments) and support exports for disputes/compliance
 - System MUST support patient notifications on meaningful updates (status changes/replies) via S-03 when enabled
 
-**Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`. FR-034 has been extended to support patient submissions (via FR-035), provider submissions (via FR-032), and manual admin entries in a unified support ticketing system with consistent status workflow (Open → In Progress → Resolved → Closed).
+**Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`. FR-034 has been extended to support patient submissions (via FR-035), provider submissions (via FR-032 Screen 5.5/5.6), and manual admin entries in a unified support ticketing system with consistent status workflow (Open → In Progress → Resolved → Closed). The system supports full two-way threaded communication between patients/providers and admin staff within support cases, with message history tracked in Communication Thread and comprehensive Timeline.
 
 ---
 
 ### FR-035: Patient Help Center & Support Submission
 
 **Priority**: P2 (Enhanced)
-**Module(s)**: P-XX: Patient Help Center & Support | Integrates with FR-033 (Content Management) and FR-034 (Ticketing System)
+**Module(s)**: P-08: Help Center & Support Access | Integrates with FR-033 (Content Management) and FR-034 (Ticketing System)
 
 **Goal**: Enable patients to access help center content (FAQs, articles, resources, videos) and submit support requests and feedback directly from the patient mobile app.
 
@@ -1625,12 +1625,22 @@ Total Quote:                           £3,000
 - Patients MUST receive email notifications (via S-03) when admin responds or updates ticket status
 - For feedback submissions, patients MUST be able to view Feedback Resolution status (Implemented, Planned, Declined, Under Review)
 
+**Two-Way Communication with Admin**:
+
+- Patients MUST be able to view complete communication thread for their submitted cases, including all messages from admin and patient
+- Patients MUST be able to reply to admin messages within the case, enabling two-way threaded conversation
+- System MUST display full case timeline showing status changes, feedback resolution updates (if applicable), and message history
+- When patient replies to case, system MUST notify assigned admin (or all support staff if unassigned) via email notification
+- Patient replies MUST appear in admin's case detail view (FR-034 Screen 3) in Communication Thread and Timeline
+- Two-way communication MUST maintain full conversation context and history for each case
+
 **Integration Points**:
 
 - FR-033: Consumes patient-specific Help Center content (read-only)
-- FR-034: Creates support cases for patient submissions and displays ticket status/responses to patients
+- FR-034: Creates support cases for patient submissions, provides two-way communication capability via Communication Thread, and displays ticket status/responses/conversation thread to patients
+- Communication architecture: Patient messages ↔ FR-034 Communication Thread & Timeline ↔ Admin responses (synchronized via FR-034 case management system)
 
-**Note**: This FR is planned for future implementation to complete the multi-tenant support system architecture. Patient submissions will integrate with the unified FR-034 ticketing system. Detailed requirements to be documented in dedicated FR-035 PRD when implementation begins.
+**Note**: This FR is planned for future implementation to complete the multi-tenant support system architecture. Patient submissions will integrate with the unified FR-034 ticketing system with full two-way communication capability mirroring the provider support experience (FR-032 Screen 5.5/5.6). Detailed requirements to be documented in dedicated FR-035 PRD when implementation begins.
 
 ---
 

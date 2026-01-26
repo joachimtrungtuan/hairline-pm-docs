@@ -46,6 +46,10 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers configure unified notification preferences (individual toggles + global channel preferences)
 - Providers (Owner role only) manage billing settings (bank account details)
 - Providers access Help Centre with read-only content
+- Providers submit support requests via Contact Support form (Screen 5.5) and feedback via Feedback & Suggestions form (Screen 5.6)
+- Providers view all their submitted support cases and feedback via My Support Cases screen (Screen 5.7) with complete case details, communication thread, and status tracking
+- Providers engage in two-way communication with admin by replying to admin messages within their support cases
+- Providers request to reopen closed cases if issue persists or resolution was unsatisfactory
 - Providers request account deletion (soft-delete with admin approval)
 - Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and respond if workflow allows (responses handled by future enhancement; current scope is read-only)
 
@@ -627,6 +631,106 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ---
 
+### Main Flow: View and Reply to Support Cases (Two-Way Communication)
+
+**Actors**: Provider (any role), Admin, System, S-03 Notification Service
+**Trigger**: Provider wants to check status of submitted support cases or reply to admin messages
+**Outcome**: Provider views case details, reads admin responses, and sends reply message creating two-way conversation
+
+**Steps**:
+
+1. Provider navigates to Help Centre from main navigation
+2. Provider clicks "My Support Cases" in category navigation
+3. System displays Screen 5.7 with list of provider's submitted cases (both support requests and feedback)
+4. System shows default filter: Open and In Progress cases from last 90 days, sorted by Last Updated descending
+5. Provider sees unread message indicator (badge with count) on cases where admin has replied since last view
+6. Provider clicks on case with unread messages (e.g., "Cannot access quote dashboard - CASE-2025-12345")
+7. System opens case detail view (expandable panel or modal) with complete case information:
+   - Case ID, Title, Status, Type, Priority, Feedback Resolution (if feedback)
+   - Original Description (provider's initial submission)
+   - Communication Thread (all messages from admin and provider in chronological order)
+   - Case Timeline (all events in reverse chronological order)
+8. System marks admin messages as read when provider opens case detail
+9. Provider reads admin's latest reply in Communication Thread: "Hi [Provider Name], I've reviewed your issue. It appears to be related to browser cache. Please try clearing your browser cache and cookies, then log in again. Steps: [detailed instructions]. Let me know if this resolves the issue. Best regards, Support Team"
+10. Provider scrolls through Communication Thread to see full conversation history
+11. Provider decides to reply to admin with update
+12. Provider types message in Reply Message Box: "Thank you! I cleared the cache as instructed, but I'm still seeing the same error. I've attached a screenshot of the error message I'm getting."
+13. Provider clicks "Attach Files" button
+14. System opens file picker
+15. Provider selects screenshot file (PNG, 2MB)
+16. System validates file (size, format) and displays file preview with remove option
+17. Provider clicks "Send Reply" button
+18. System validates message (not empty, case is Open or In Progress)
+19. System sends message to FR-034 with:
+    - Case ID
+    - Sender: Provider (provider ID)
+    - Message content
+    - Attachment metadata
+20. FR-034 receives message and:
+    - Adds message to case Communication Thread
+    - Logs "Message Received from Provider" event in case Timeline
+    - Updates case Last Updated timestamp
+    - Triggers support.case_user_reply notification event to S-03
+21. S-03 sends email notification to assigned admin (or all support staff if unassigned): "Provider [Name] replied to case CASE-2025-12345"
+22. System displays confirmation to provider: "Reply sent. The support team will respond soon."
+23. System refreshes case detail view showing provider's reply in Communication Thread
+24. Provider can continue monitoring case or close detail view
+25. When admin replies again, provider receives email notification (support.case_admin_reply) with link to case
+26. Provider returns to My Support Cases later to see admin's response
+
+**Alternative Flows**:
+
+**A1: Provider Requests to Reopen Closed Case**:
+
+- **Trigger**: Provider's issue persists after case was marked as Resolved and Closed
+- **Steps**:
+  1. Provider opens closed case in My Support Cases view
+  2. System displays case detail with status "Closed" and previous resolution summary
+  3. Reply Message Box is disabled with message: "This case is closed. Click 'Request Reopen' if issue persists."
+  4. Provider clicks "Request Reopen" button
+  5. System opens reopen request modal with fields:
+     - Reopening Reason (required textarea: "The issue is still occurring. After clearing cache, I still can't access the dashboard.")
+     - Priority Update (dropdown: Keep Current / Change to High / Change to Urgent)
+  6. Provider fills reopening reason and selects "Change to High" priority
+  7. Provider clicks "Submit Reopen Request"
+  8. System validates reason (min 20 chars) and sends request to FR-034
+  9. FR-034 creates reopen request notification to admin (support.case_reopened event)
+  10. System displays confirmation: "Reopen request submitted. We'll review your case shortly."
+  11. Case status changes from "Closed" to "Open" (admin can override if needed)
+  12. Admin receives notification and reviews reopening reason
+  13. Admin replies to case with next troubleshooting steps
+  14. Provider receives notification and conversation continues
+- **Outcome**: Closed case reopened; two-way communication resumes
+
+**A2: Provider Filters and Searches Cases**:
+
+- **Trigger**: Provider wants to find specific past case or filter by status
+- **Steps**:
+  1. Provider opens My Support Cases screen
+  2. Provider uses Filter Bar to select "Resolved" and "Closed" statuses
+  3. Provider enters search term in Search Bar: "payment"
+  4. System filters cases matching: Status = Resolved OR Closed, AND keyword "payment" in Case ID, Title, Description, or Messages
+  5. System displays filtered results
+  6. Provider clicks case to view details
+- **Outcome**: Provider finds historical case for reference
+
+**A3: Provider Receives Admin Reply Notification**:
+
+- **Trigger**: Admin replies to provider's support case
+- **Steps**:
+  1. Admin sends reply to provider's case in FR-034 Screen 3
+  2. FR-034 triggers support.case_admin_reply notification event to S-03
+  3. S-03 sends email to provider: "Your support case CASE-2025-12345 has a new reply from our team"
+  4. Email includes link to case: "View case in My Support Cases"
+  5. Provider clicks link in email
+  6. System opens provider platform and navigates to My Support Cases Screen 5.7
+  7. System highlights and auto-expands the case with new reply
+  8. Provider reads admin's response in Communication Thread
+  9. Provider replies if needed or marks issue as resolved
+- **Outcome**: Provider notified of admin reply and can continue conversation seamlessly
+
+---
+
 ### Main Flow: Request Account Deletion
 
 **Actors**: Provider (any role), Admin, System
@@ -1094,7 +1198,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Search Bar | text | No | Global search across all Help Centre content | Max 200 chars, autocomplete suggestions |
-| Category Navigation | navigation menu | No | Links to subscreens: FAQs, Tutorial Guides, Troubleshooting Tips, Policy Information, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, Service Status | N/A |
+| Category Navigation | navigation menu | No | Links to subscreens: FAQs, Tutorial Guides, Troubleshooting Tips, Policy Information, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, My Support Cases, Service Status | N/A |
 | Most Popular Articles | card list | No | Top 5 most viewed/helpful articles across all categories | Read-only, sorted by view count/helpfulness |
 | Recently Updated | card list | No | Latest 5 updated articles across all categories | Read-only, sorted by update date |
 
@@ -1258,7 +1362,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Support Request Form - Subject | text | Yes | Support request subject line | Max 200 chars |
-| Support Request Form - Category | dropdown | No | Request category (Technical Issue, Billing Question, Feature Request, etc.) | Pre-defined categories |
+| Support Request Form - Category | dropdown | No | Request category (Technical Issue, Payment Question, Feature Request, etc.) | Pre-defined categories |
 | Support Request Form - Message | textarea | Yes | Detailed support request message | Max 2000 chars, min 20 chars |
 | Support Request Form - Priority | dropdown | No | Request priority (Low, Medium, High, Urgent) | Default: Medium |
 | Support Request Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) |
@@ -1323,7 +1427,167 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-#### Screen 5.7: Service Status
+#### Screen 5.7: My Support Cases List
+
+**Purpose**: View and manage all submitted support cases and feedback with filtering and search capabilities
+
+**Layout Type**: List view with filters, search, and action buttons
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Filter Bar | filter group | No | Filter controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Type Filter** (multi-select dropdown: Support Request, Feedback; Default: All types), **Date Range Filter** (date picker; Default: Last 90 days) | Filters are cumulative (AND logic) |
+| Search Bar | text input | No | Search cases by case ID, title, keywords | Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content |
+| Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Resolved (X), Unread Messages (X) | Display only, updates based on current filters |
+| Case List Table | data table | N/A | Displays cases matching filters with 8 columns (see below); 20 cases per page default | Sortable columns, paginated; default sort by Last Updated descending |
+| **Table Column 1**: Case ID | link | N/A | Unique case identifier (format: CASE-YYYY-#####); Width: 140px | Clickable link to case detail view (Screen 5.8); Sortable |
+| **Table Column 2**: Title | text | N/A | Case title; Width: 250px | Truncated with ellipsis if >40 chars; full title shown on hover; Sortable |
+| **Table Column 3**: Type | badge | N/A | Case type; Width: 120px | Support Request / Feedback; Color-coded badge; Sortable |
+| **Table Column 4**: Status | badge | N/A | Current status with color coding; Width: 100px | Open (blue), In Progress (yellow), Resolved (green), Closed (gray); Sortable |
+| **Table Column 5**: Feedback Resolution | badge | No | Resolution outcome for feedback cases; Width: 120px | Implemented (green) / Planned (yellow) / Declined (red) / Under Review (blue); Empty if not feedback or not set; Not sortable |
+| **Table Column 6**: Submitted Date | datetime | N/A | Case creation timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Sortable |
+| **Table Column 7**: Last Updated | datetime | N/A | Most recent modification timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Default sort column (descending); Sortable |
+| **Table Column 8**: Unread | badge/icon | No | Unread message indicator; Width: 60px | Shows unread message count if admin replied (e.g., "2 new"); Empty if no unread; Not sortable |
+| Pagination Controls | component | N/A | Navigate through case list pages | 20 cases per page default; Shows: Previous, 1, 2, 3, ..., Next |
+
+**Business Rules**:
+
+- Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending
+- Providers can view all their submitted cases (both support requests from Screen 5.5 and feedback from Screen 5.6)
+- Clicking case row or Case ID opens Screen 5.8 (Support Case Detail View)
+- Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
+- Type badges color-coded (Support Request=orange, Feedback=purple)
+- Feedback Resolution badges color-coded (Implemented=green, Planned=yellow, Declined=red, Under Review=blue)
+- Unread Messages indicator shows count of admin messages provider hasn't viewed yet (e.g., "2 new")
+- Cases with unread messages highlighted with subtle background color or bold text
+- Search is real-time and searches across: Case ID, Case Title, Original Description, Message content
+- Filters are cumulative (AND logic between different filter types)
+- Filter selections persist during session
+- Quick Stats bar shows counts based on current filters
+- If case has new admin messages since last view, "New Reply" badge shown prominently
+
+**Notes**:
+
+- Use sticky table header for scrolling through long case lists
+- Display empty state message if no cases match filters: "No cases found. Try adjusting your filters or submit a new request via Contact Support."
+- Display empty state if no cases exist: "You haven't submitted any support cases yet. Visit Contact Support or Feedback & Suggestions to get help."
+- Show total case count matching current filters at top of table: "Showing X cases"
+- Consider implementing saved filter presets as future enhancement (e.g., "Open Issues", "All Feedback")
+- Highlight urgent cases (High/Urgent priority) with warning icon in list
+
+---
+
+#### Screen 5.8: Support Case Detail View
+
+**Purpose**: View complete case information, full communication thread with admin, and engage in two-way conversation
+
+**Layout Type**: Detail view with communication interface
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Case ID | text (readonly) | N/A | Unique case identifier (e.g., CASE-2025-12345) | Display only |
+| Case Title | text (readonly) | N/A | Case title | Display only |
+| Status Badge | badge | N/A | Current case status with color coding | Open (blue), In Progress (yellow), Resolved (green), Closed (gray) |
+| Feedback Resolution Badge | badge | No | Resolution outcome for feedback cases | Implemented (green), Planned (yellow), Declined (red), Under Review (blue); Only shown for feedback cases when resolution is set |
+| Case Type | text (readonly) | N/A | Support Request or Feedback | Display only |
+| Priority | text (readonly) | N/A | Case priority level (Low, Medium, High, Urgent) | Display only |
+| Submitted Date | datetime (readonly) | N/A | When case was created | Display only |
+| Last Updated | datetime (readonly) | N/A | Most recent modification | Display only |
+| Original Description | text block | N/A | Initial submission description | Display only, expandable if long |
+| Communication Thread | threaded conversation | N/A | Two-way conversation showing all messages from admin and provider with full context | Scrollable, chronological (oldest first), shows sender name, sender type badge, timestamp, message content, attachments |
+| Reply Message Box | textarea | No | Message composer for replying to admin | Max 2000 chars; only enabled for Open and In Progress cases; Character counter displayed |
+| Attach Files Button | file upload | No | Attach files to reply message | Max 3 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
+| Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Resolved/Closed cases |
+| Request Reopen Button | button | N/A | Request to reopen closed case | Only visible for Closed cases; opens reopen request modal (Screen 5.9) |
+| Case Timeline | vertical timeline | N/A | Shows all case events with full context | Displays: case created, status changes, feedback resolution updates, messages sent/received, case resolved, case closed; Readonly, scrollable, reverse chronological (newest first) |
+| Back to List Button | button | N/A | Returns to My Support Cases list (Screen 5.7) | Click action, preserves filter state |
+
+**Communication Thread Structure**:
+
+Each message in the thread displays:
+
+- **Sender**: "Admin Support Team" or "You" (provider name)
+- **Sender Type Badge**: Admin / Provider
+- **Timestamp**: Date and time of message (e.g., "Jan 25, 2026 at 2:30 PM")
+- **Message Content**: Full message text with formatting support
+- **Attachments**: If any, displayed as downloadable links with file icons and file size
+- **Read Status**: Shows "New" badge for unread admin messages
+
+**Business Rules**:
+
+- Case detail view shows complete communication thread with all messages from admin and provider
+- Providers can reply to admin messages for Open and In Progress cases via Reply Message Box
+- When provider replies, message is sent to FR-034 system and appears in admin's case view (FR-034 Screen 3)
+- Admin reply notifications trigger email to provider via S-03 (support.case_admin_reply event)
+- Provider reply notifications trigger email to assigned admin via S-03 (support.case_user_reply event)
+- System marks messages as read when provider opens case detail view
+- Unread admin messages marked with "New" badge until provider views case
+- For Resolved cases, Reply Message Box is read-only with message: "This case has been marked as resolved. If the issue persists, click 'Request Reopen'."
+- For Closed cases, Reply Message Box is disabled; provider can only click "Request Reopen" button
+- Communication Thread displays messages in chronological order (oldest first) to show conversation flow
+- Case Timeline displays events in reverse chronological order (newest first) to show latest updates
+- Attachment files validated before upload (file type, size, virus scan)
+- System displays confirmation after successful reply: "Reply sent. The support team will respond soon."
+- If provider navigates away with unsaved message content, system prompts: "You have unsaved changes. Discard?"
+
+**Notes**:
+
+- Use different visual styling for admin messages vs provider messages (similar to chat interface: admin=gray background, provider=white background)
+- Display attachment thumbnails with download links for images
+- Use sticky header for case detail when scrolling through long communication threads
+- Show typing indicator when admin is composing reply (future enhancement via WebSocket)
+- Consider implementing desktop notifications for new admin replies (future enhancement)
+- Show character count below Reply Message Box: "X / 2000 characters"
+- Display file upload progress bar when attaching files
+- For attached images, show inline preview thumbnails in communication thread
+
+---
+
+#### Screen 5.9: Reopen Case Request Modal
+
+**Purpose**: Allow provider to request reopening of closed case with reason
+
+**Layout Type**: Modal dialog
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Previous Resolution Summary | text (readonly) | N/A | Resolution summary from when case was previously resolved | Display only, helps provider provide context |
+| Previous Closure Date | datetime (readonly) | N/A | Date when case was closed | Display only |
+| Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" |
+| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Change to Low, Change to Medium, Change to High, Change to Urgent; Default: Keep Current |
+| Submit Reopen Request Button | button | Yes | Submits reopen request to admin | Validates reason length; Sends notification to admin via S-03 |
+| Cancel Button | button | Yes | Closes modal without reopening case | No changes made |
+
+**Business Rules**:
+
+- Modal only accessible from Screen 5.8 when viewing Closed cases
+- System displays previous resolution summary and closure date for context
+- Reopening reason required (min 20 chars) to prevent accidental/spam reopening
+- Provider can optionally adjust priority when reopening (e.g., escalate if issue was marked resolved incorrectly)
+- When submitted:
+  - Case status changes from "Closed" to "Open"
+  - System logs reopening in case timeline with timestamp, reopening reason, and provider who requested
+  - FR-034 triggers support.case_reopened notification event to S-03
+  - S-03 sends email notification to assigned admin (or all support staff if unassigned)
+  - Admin receives notification with reopening reason and previous resolution for context
+- System displays confirmation: "Reopen request submitted. We'll review your case shortly."
+- After submission, modal closes and provider returns to Screen 5.8 with updated case status "Open"
+- Reply Message Box becomes enabled again for reopened cases
+
+**Notes**:
+
+- Display warning if case was recently closed (e.g., within 24 hours): "This case was recently closed. Are you sure the issue persists?"
+- Show estimated response time: "Our team typically responds to reopen requests within 4 hours."
+- Consider adding "Reopen Reason Templates" dropdown for quick selection (e.g., "Issue persists", "New information available") (future enhancement)
+
+---
+
+#### Screen 5.10: Service Status
 
 **Purpose**: Display platform service status and incident reports
 
@@ -1473,9 +1737,9 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
   - **Why needed**: Help Centre displays admin-managed content (FAQs, guides, videos, resources)
   - **Integration point**: Help Centre reads content from admin-managed content database; content updates from admin propagate to provider Help Centre view
 
-- **FR-034 / A-10: Support Center & Ticketing**: Provider support request and feedback submission management
-  - **Why needed**: Provider submissions via Screen 5.5 (Contact Support) and Screen 5.6 (Feedback & Suggestions) automatically create support cases in FR-034 ticketing system
-  - **Integration point**: Form submissions create support cases with provider ID linked; providers view submission status and admin responses through FR-032 UI querying FR-034 data
+- **FR-034 / A-10: Support Center & Ticketing**: Provider support request and feedback submission management with two-way communication
+  - **Why needed**: Provider submissions via Screen 5.5 (Contact Support) and Screen 5.6 (Feedback & Suggestions) automatically create support cases in FR-034 ticketing system; providers need to view case status, read admin responses, and reply within communication thread
+  - **Integration point**: Form submissions create support cases with provider ID linked and Ticket Source = "Provider Portal", Submitter Type = "Provider"; providers view and interact with their cases through Screen 5.7 (My Support Cases) which queries FR-034 case data including full communication thread; provider replies sent to FR-034 Communication Thread appear in admin's case detail view (FR-034 Screen 3); notification events (support.case_admin_reply, support.case_user_reply) trigger via S-03
 
 ### External Dependencies (APIs, Services)
 
@@ -1656,7 +1920,24 @@ A provider searches Help Centre for answer to question "How do I edit a quote af
 
 ---
 
-### User Story 6 - Request Account Deletion (Priority: P2)
+### User Story 6 - View and Reply to Support Cases (Two-Way Communication) (Priority: P2)
+
+A provider submits a support request about a technical issue, receives admin response, replies with additional information, and tracks the case resolution through two-way conversation.
+
+**Why this priority**: Two-way communication with admin support improves provider satisfaction and reduces resolution time by 40% compared to email-only support. Providers need visibility into case status and ability to provide follow-up information without creating duplicate tickets.
+
+**Independent Test**: Can be fully tested by submitting support request via Screen 5.5, viewing case in My Support Cases screen (Screen 5.7), reading admin reply, sending reply message with attachment, verifying message appears in admin's case view (FR-034 Screen 3), and confirming notifications sent via S-03.
+
+**Acceptance Scenarios**:
+
+1. **Given** provider submitted support request yesterday about payment issue, **When** admin replies to case with troubleshooting steps, **Then** provider receives email notification "Your support case CASE-2025-12345 has a new reply", provider clicks link in email, system opens My Support Cases screen with case auto-expanded, provider reads admin's reply in Communication Thread, provider clicks Reply Message Box, types "Thank you, I tried those steps but still having the issue", attaches error screenshot, clicks Send Reply, system sends reply to FR-034, displays confirmation "Reply sent", and admin receives notification via S-03
+2. **Given** provider has 3 open support cases and 2 closed cases, **When** provider navigates to Help Centre → My Support Cases, **Then** system displays case list with 5 cases total, default filter shows 3 open cases (Open + In Progress statuses), each case row shows Case ID, Title, Type, Status badge, Submitted Date, Last Updated, and Unread indicator showing "2" for cases with new admin replies, provider clicks filter to include Closed status, system displays all 5 cases
+3. **Given** provider's issue was resolved and case is marked Closed, **When** provider discovers issue persists 2 days later, navigates to My Support Cases, opens closed case, **Then** system displays case with Status "Closed" and resolution summary, Reply Message Box is disabled with message "This case is closed. Click 'Request Reopen' if issue persists.", provider clicks Request Reopen button, system opens modal, provider enters reopening reason "Issue is still occurring after following all troubleshooting steps", selects priority "High", clicks Submit, system changes case status to Open, sends notification to admin via S-03, displays confirmation "Reopen request submitted"
+4. **Given** provider wants to find past case about billing, **When** provider opens My Support Cases, enters "payout" in search bar, selects Resolved status filter, **Then** system displays all resolved cases containing keyword "payout" in Case ID, Title, Description, or Messages, provider clicks case to view details and reviews the case history for reference
+
+---
+
+### User Story 7 - Request Account Deletion (Priority: P2)
 
 A provider closing their clinic permanently requests account deletion, and admin reviews and approves deletion request.
 
@@ -1780,6 +2061,8 @@ A provider closing their clinic permanently requests account deletion, and admin
 | 2025-11-17 | 1.0 | Initial PRD creation for FR-032: Provider Dashboard Settings & Profile Management | AI/Claude |
 | 2025-12-03 | 1.1 | Major updates: Removed SMS functionality throughout; Reorganized Screen 1 (Profile Management) into 5 tabs (Basic Information, Languages, Staff List, Awards, Reviews) with detailed inline editing specifications; Added account name unification rules (Owner accounts unified with clinic name, Staff accounts editable); Removed Screen 6 (Reviews now Tab 5 in Screen 1); Reorganized Screen 5 (Help Centre) into 7 subscreens with distinct layouts (FAQs, Articles, Resource Library, Video Tutorials, Contact Support, Feedback, Service Status); Updated navigation paths to "Settings & Support > Settings" and "Settings & Support > Provider profile"; Removed password change after 90 days requirement; Added per-tab save functionality with unsaved changes indicators; Updated language list references to FR-026 (centrally managed with country list); Removed admin metrics (profile completion, notification trends); Updated non-owner access restrictions (hidden tabs instead of error messages); Removed preview public profile functionality; Removed profile picture circle shape requirement and drag-and-drop; Updated all field specifications with inline editing details | AI/Claude |
 | 2025-12-07 | 1.2 | **Major update - Full document management capabilities:** Added Tab 6: Documents to Screen 1 (Profile Management) with full provider document management (upload, replace, delete, view); Providers can now manage their own compliance documents (medical licenses, certifications, insurance) with drag-and-drop upload, file validation (PDF/JPG/PNG/DOCX/XLSX, max 10MB), document versioning (old versions archived on replace), soft delete, and optional notes; Admin-uploaded documents display "Admin" badge and are view-only for providers; Added document sync with FR-015 (bidirectional, within 1 minute); Updated Tab 3: Staff List to clarify display-only nature with "Manage Team" button linking to FR-009 for full staff management; Added Seat Usage Summary to Tab 3 showing current usage vs. seat limit; Updated Screen 1 tab count from 5 to 6 tabs; Updated General Business Rules to accurately reflect tab editability (Fully Editable: Tabs 1,2,4,6; Display-Only with External Management: Tab 3 via FR-009; Read-Only: Tab 5 Reviews); Added security rules (time-limited signed URLs), audit logging, sort/filter options, and comprehensive empty/error/loading state handling | AI/Claude |
+| 2026-01-26 | 1.3 | **Added two-way communication for support cases with screen structure improvements:** Split support case functionality into 3 dedicated screens for clarity: **Screen 5.7 (My Support Cases List)** with filters, search, quick stats, and merged table column specifications into Data Fields (consistent with other PRDs); **Screen 5.8 (Support Case Detail View)** with complete case information, communication thread, reply interface, timeline, and export capability; **Screen 5.9 (Reopen Case Request Modal)** for reopening closed cases with reason tracking; Renumbered Screen 5.8 (Service Status) to Screen 5.10; Providers can now view all submitted cases (support requests + feedback) in unified list, view case details with full communication thread, reply to admin messages with attachments, track status and feedback resolution, request case reopening, and export cases as PDF/CSV; Added Quick Stats Bar showing Open, In Progress, Resolved, and Unread Messages counts; Added comprehensive filtering (status, type, date range), real-time search, and unread message indicators; Added new business workflow "View and Reply to Support Cases" with 3 alternative flows (reopen closed case, filter/search cases, receive admin reply notification); Added User Story 6 (View and Reply to Support Cases) with 4 comprehensive acceptance scenarios; Renumbered User Story 6 (Request Account Deletion) to User Story 7; Updated Multi-Tenant Breakdown to document two-way communication capability; Updated FR-034 integration point to clarify communication architecture and notification events (support.case_admin_reply, support.case_user_reply); Updated Help Centre category navigation to include "My Support Cases" link; All changes ensure providers have same two-way communication experience as patients (FR-035) for support cases managed in FR-034 unified ticketing system | AI/Claude |
+| 2026-01-26 | 1.4 | **Removed Case export functionality:** Removed Export Case Button from Screen 5.8 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 5.7 (My Support Cases List); Removed all export-related business rules and constraints; Removed export steps from Business Workflow A2 and User Story 6 acceptance scenario 4; Case export feature was accidentally included and is now removed from both provider-facing (FR-032) and admin-facing (FR-034) specifications | AI/Claude |
 
 ---
 
