@@ -12,8 +12,8 @@
 
 | # | Flow | Module | Related FRs | Status |
 |---|------|--------|-------------|--------|
-| P01.1 | Delete Account | P-01: Auth & Profile Management | FR-001, FR-026, FR-023 | 🔴 Not Designed |
-| P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-026, FR-020 | 🔴 Not Designed |
+| P01.1 | Delete Account | P-01: Auth & Profile Management | FR-001, FR-026, FR-023 | 🟡 Specified |
+| P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-026, FR-020 | 🟡 Specified |
 | P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🔴 Not Designed |
 | P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | 🔴 Not Designed |
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🔴 Not Designed |
@@ -60,18 +60,57 @@ Each flow section below contains:
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient navigates to Settings → Account → "Delete Account"
-%% 2. System shows warning screen with consequences
-%% 3. Decision: "Active bookings or pending payments?" → Yes: block deletion, show reason / No: proceed
-%% 4. Patient selects deletion reason (required)
-%% 5. System requires identity verification (password or biometric)
-%% 6. Final confirmation modal ("This action cannot be undone")
-%% 7. Patient confirms → account scheduled for deletion
-%% 8. Grace period screen (e.g., "Account will be deleted in 30 days. Log in to cancel.")
-%% 9. Patient is logged out; after grace period → system permanently deletes per FR-023
-%% Reference FR-026 for settings structure, FR-023 for data retention/deletion rules
+flowchart TD
+    Start["Patient navigates to Profile → Delete Account"] --> Warning["Display Delete Account Warning Screen (P01.1-S1)"]
+    Warning --> CheckObligations{"Active treatment, aftercare,<br/>or payment in progress?"}
+
+    CheckObligations -->|Yes| BlockDeletion["Show blocking message:<br/>'Cannot delete during active care/payment'<br/>Suggest: Contact support or wait"]
+    BlockDeletion --> End1["Patient exits flow"]
+
+    CheckObligations -->|No| SelectReason["Patient selects deletion reason<br/>(required dropdown)"]
+    SelectReason --> OptionalFeedback["Patient optionally enters feedback text"]
+    OptionalFeedback --> ContinueButton["Patient taps 'Continue to Delete'"]
+
+    ContinueButton --> CheckReauth{"Re-auth required?<br/>(> 5 minutes since last auth)"}
+    CheckReauth -->|Yes| VerifyIdentity["Display Identity Verification Screen (P01.1-S2)"]
+    CheckReauth -->|No| FinalConfirm["Show final confirmation modal:<br/>'This action cannot be undone'"]
+
+    VerifyIdentity --> AuthMethod{"Select verification method"}
+    AuthMethod -->|Password| EnterPassword["Patient enters password"]
+    AuthMethod -->|Biometric| BiometricPrompt["System prompts Face ID / Touch ID"]
+
+    EnterPassword --> ValidateAuth{"Authentication<br/>successful?"}
+    BiometricPrompt --> ValidateAuth
+
+    ValidateAuth -->|No| FailCounter{"Failed attempts < 3?"}
+    FailCounter -->|Yes| ShowError["Show error message:<br/>'Invalid credentials. Try again.'"]
+    ShowError --> VerifyIdentity
+    FailCounter -->|No| Lockout["Temporary lockout (15 min)<br/>Show lockout message"]
+    Lockout --> End2["Patient exits flow"]
+
+    ValidateAuth -->|Yes| FinalConfirm
+
+    FinalConfirm --> PatientConfirms{"Patient confirms<br/>final deletion?"}
+    PatientConfirms -->|No - Cancel| End3["Patient exits flow"]
+    PatientConfirms -->|Yes| ScheduleDeletion["System schedules account for deletion<br/>(grace period: 30 days)"]
+
+    ScheduleDeletion --> CloseInquiries["System auto-closes any open inquiries"]
+    CloseInquiries --> SendConfirmation["System sends confirmation email<br/>with grace period details"]
+    SendConfirmation --> LogEvent["System logs deletion request<br/>in audit trail"]
+    LogEvent --> DisplayConfirmation["Display Deletion Scheduled Confirmation (P01.1-S3)"]
+
+    DisplayConfirmation --> LogOut["Patient taps 'Log Out Now'"]
+    LogOut --> SessionEnd["System revokes session tokens<br/>Patient redirected to Landing screen"]
+
+    SessionEnd --> GracePeriod["Grace period countdown begins<br/>(30 days)"]
+    GracePeriod --> GraceDecision{"Patient logs in<br/>during grace period?"}
+
+    GraceDecision -->|Yes| CancelDeletion["System cancels scheduled deletion<br/>Patient account remains active"]
+    CancelDeletion --> End4["Account deletion cancelled"]
+
+    GraceDecision -->|No - 30 days elapsed| ExecuteDeletion["System executes deletion per FR-023:<br/>- Non-protected data deleted/anonymized<br/>- Medical/financial records retained (7 years)<br/>- Access to retained records restricted"]
+    ExecuteDeletion --> AuditLog["System logs permanent deletion<br/>in audit trail"]
+    AuditLog --> End5["Account deletion completed"]
 ```
 
 #### Screen Specifications
@@ -80,95 +119,93 @@ Each flow section below contains:
 
 **Purpose**: Inform patient of consequences before proceeding with account deletion
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-026 and FR-023 PRDs for account deletion rules and data retention compliance.
-
-Create a table with these expected fields:
-- Warning icon/illustration
-- "Delete Your Account" header
-- Consequences list (what will be permanently deleted):
-  - Treatment history
-  - Messages and communications
-  - Reviews submitted
-  - Payment method data
-  - Saved preferences
-- What will NOT be deleted (legal/compliance data retained per policy)
-- Active obligations check (active bookings, pending payments → shown if applicable, blocks deletion)
-- Deletion reason selector (required)
-- Optional feedback text field
-- "Continue to Delete" destructive CTA
-- "Go Back" safe CTA
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Warning Icon | icon | Yes | Red warning triangle or alert icon | Display at top of screen |
+| Screen Title | text | Yes | "Delete Your Account" | Displayed prominently in red/destructive color |
+| Back Navigation | action | Yes | Back arrow to return to Profile | Top-left corner |
+| Blocking Message (Conditional) | group | Conditional | Displayed only if active treatment, aftercare, or payment in progress | Must block deletion with clear message: "Account deletion is unavailable during active care or payment processing. Please contact support or wait until completion." |
+| Contact Support Link (Conditional) | link | Conditional | Shown only if blocking message is displayed | Opens support ticket flow (FR-034) |
+| Consequences Header | text | Yes | "What will be permanently deleted:" | Bold, clear separator |
+| Consequences List | list | Yes | Bulleted list of deleted data categories | Must include: Treatment history (viewing access), Messages and communications, Reviews submitted, Payment method data, Saved preferences, Profile information |
+| Retained Data Header | text | Yes | "What will NOT be deleted (legal requirement):" | Bold, clear separator |
+| Retained Data Explanation | text | Yes | Explanation of legally retained records | Must state: "Medical records and financial transaction data will be retained for 7 years per healthcare compliance requirements. Access to these records will be restricted but not deleted." |
+| Deletion Reason Selector | select | Yes | Dropdown with predefined reasons | Options: "No longer need service", "Privacy concerns", "Found alternative", "Too expensive", "Poor experience", "Other" |
+| Other Reason Text (Conditional) | textarea | Conditional | Shown only if "Other" selected in reason dropdown | Max 500 characters, optional |
+| Optional Feedback | textarea | No | "Help us improve (optional)" | Max 500 characters |
+| Grace Period Notice | text | Yes | "Your account will be scheduled for deletion in 30 days. You can log in anytime within 30 days to cancel this request." | Displayed in info box with calendar icon |
+| Continue to Delete Button | button | Yes | Primary CTA in destructive style (red) | Disabled until deletion reason selected; tap proceeds to identity verification (P01.1-S2) or final confirmation if recently authenticated |
+| Go Back Button | button | Yes | Secondary CTA in default style | Returns to Profile screen, no changes saved |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Cannot delete if active bookings exist (must cancel/complete first)
-- Cannot delete if pending payments exist (must settle first)
-- Deletion reason is required before proceeding
-- Must clearly communicate grace period duration
-- Comply with GDPR / applicable data protection — some data retained per legal obligation (FR-023)
--->
+
+- Cannot delete if active treatment or aftercare case exists (FR-001 Screen 14 rule); blocking message shown with support contact option
+- Cannot delete if payment in progress; blocking message shown with guidance to wait
+- Open inquiries are auto-closed upon deletion scheduling (FR-001 Screen 14 rule)
+- Deletion reason is required — "Continue to Delete" button disabled until reason selected
+- Deletion reason options are application-defined for analytics purposes (not specified in PRDs); consider centralizing in FR-026 Settings similar to discovery questions for future maintainability
+- Optional feedback field is an application enhancement for product analytics
+- Grace period is 30 days (configurable per FR-023); clearly communicated on screen
+- Medical records and financial transactions retained for 7 years per FR-023 REQ-023-001, REQ-023-002
+- Non-protected personal data will be deleted or anonymized per FR-023 REQ-023-005
 
 ##### Screen P01.1-S2: Identity Verification Step
 
 **Purpose**: Verify patient identity before processing account deletion
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- "Verify Your Identity" header
-- Verification method options (password input OR biometric prompt)
-- Password field (if password method selected)
-- "Verify & Delete" CTA (destructive style)
-- "Cancel" action
-- Failed attempt counter / error message area
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Verify Your Identity" | Displayed prominently |
+| Back Navigation | action | Yes | Back arrow to return to warning screen (P01.1-S1) | Top-left corner |
+| Security Icon | icon | Yes | Lock or shield icon indicating security step | Display at top center |
+| Instruction Text | text | Yes | "For your security, please verify your identity before proceeding with account deletion." | Clear, concise explanation |
+| Verification Method Selector | chips | Yes | Options: "Password", "Email OTP", or "Biometric" (if device supports) | Default to biometric if available and enabled; allow patient to switch methods |
+| Password Field | text | Conditional | Masked password input field; shown if "Password" method selected | Must match current account password; show/hide toggle icon |
+| Email OTP Field | text | Conditional | 6-digit OTP input; shown if "Email OTP" method selected | System sends OTP to registered email; code expires in 15 minutes |
+| Resend OTP Link | link | Conditional | Shown only if "Email OTP" method selected | Rate-limited per FR-026 OTP configuration; cooldown applies |
+| Biometric Prompt Trigger | action | Conditional | Automatically triggered if "Biometric" method selected | System-native Face ID / Touch ID prompt overlay |
+| Error Message | text | Conditional | Displayed on authentication failure | Must show: "Invalid password. You have X attempts remaining." OR "Invalid OTP code. Please try again." OR "Biometric authentication failed. Please try again or use password/OTP." |
+| Failed Attempts Counter | text | Conditional | Shown after first failed attempt | Format: "Attempts remaining: X/3" |
+| Verify & Delete Button | button | Yes | Primary CTA in destructive style (red) | Disabled until password entered OR biometric triggered; tap validates credentials and proceeds to final confirmation |
+| Cancel Button | button | Yes | Secondary CTA in default style | Returns to Profile screen, cancels deletion flow |
+| Lockout Message | text | Conditional | Shown after 3 failed attempts | "Too many failed attempts. Your account is temporarily locked for security. Please try again in 15 minutes or contact support." |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Must authenticate successfully before deletion proceeds
-- Max 3 failed attempts → temporary lockout with cooldown
-- Biometric can be offered as alternative to password if device supports it
--->
+
+- Re-authentication required if last successful auth > 5 minutes ago (FR-001 Screen 14 rule: "password or 6-digit OTP")
+- Three verification methods available: Password, Email OTP (6-digit code), or Biometric (if device supports)
+- Maximum 3 failed attempts allowed before temporary lockout (per method; applies to password and OTP only)
+- Lockout duration: 15 minutes (specific to deletion re-auth; separate from FR-026 login throttling but aligned with default)
+- Email OTP follows FR-026 OTP configuration: 15-minute expiry, resend cooldown, rate limiting
+- Biometric authentication offered only if device supports Face ID / Touch ID AND patient has enabled it; no attempt limit for biometric (can fallback to password/OTP anytime)
+- Patient can switch between verification methods at any time
+- Successful authentication proceeds immediately to final confirmation modal
 
 ##### Screen P01.1-S3: Deletion Scheduled Confirmation
 
 **Purpose**: Confirm account is scheduled for deletion and communicate grace period
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Confirmation icon/illustration
-- "Account Deletion Scheduled" message
-- Grace period info ("Your account will be permanently deleted on [date]")
-- Recovery instructions ("Log back in within X days to recover your account")
-- "Log Out Now" CTA
-- Email confirmation note ("A confirmation email has been sent to [email]")
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Confirmation Icon | icon | Yes | Green checkmark or calendar icon with checkmark overlay | Display at top center to indicate successful scheduling |
+| Screen Title | text | Yes | "Account Deletion Scheduled" | Displayed prominently |
+| Scheduled Date Display | text | Yes | "Your account will be permanently deleted on [Date]" | Date calculated as today + 30 days; format: "March 7, 2026" |
+| Grace Period Explanation | text | Yes | "You have 30 days to change your mind. If you log in anytime before [date], your account deletion will be automatically cancelled and your account will remain active." | Clear, reassuring language emphasizing reversibility |
+| What Happens Next Section | group | Yes | Titled "What happens next:" with bulleted list | Must include: "Your open inquiries have been closed", "You will be logged out after leaving this screen", "Your account remains accessible if you log in within 30 days", "After 30 days, non-essential data will be deleted" |
+| Retained Data Reminder | text | Yes | "Medical records and financial transaction data will be retained for 7 years per legal requirements, but access will be restricted." | Reiterate compliance obligation from FR-023 |
+| Email Confirmation Notice | text | Yes | "A confirmation email has been sent to [patient email address]." | Display patient's registered email address; email includes deletion date and recovery instructions |
+| Recovery Instructions | text | Yes | "To cancel this deletion, simply log in to your account anytime within the next 30 days." | Emphasize simplicity of cancellation |
+| Log Out Now Button | button | Yes | Primary CTA | Revokes session tokens and redirects patient to Landing screen; patient must explicitly tap to log out |
+| Back to Profile Link | link | Yes | Secondary action (low emphasis) | Allows patient to stay logged in if they change their mind immediately; cancels logout but deletion remains scheduled |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Grace period duration (e.g., 30 days — verify with FR-023)
-- Logging in during grace period automatically cancels the scheduled deletion
-- Confirmation email sent immediately upon scheduling
-- Patient is logged out after viewing this screen
--->
+
+- Grace period is exactly 30 days from the moment deletion is scheduled (per FR-023)
+- System sends confirmation email immediately upon scheduling; email includes deletion date, recovery link, and support contact
+- Logging in anytime during the 30-day grace period automatically cancels the scheduled deletion (FR-001 Screen 14 rule)
+- Patient is logged out when tapping "Log Out Now" — session tokens revoked, redirected to Landing screen
+- If patient taps "Back to Profile", they remain logged in but deletion remains scheduled (can cancel later by contacting support or waiting for grace period to complete and re-registering)
+- After 30 days: non-protected data deleted/anonymized; medical/financial records retained for 7 years with restricted access (FR-023 REQ-023-005)
 
 ---
 
@@ -181,17 +218,51 @@ Include rules for:
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient taps Settings (from profile or tab bar)
-%% 2. Settings main screen with navigation sections:
-%%    a. Notification Settings → sub-screen (P01.2-S2)
-%%    b. Privacy & Security → sub-screen (P01.2-S3)
-%%    c. Help & Support → navigates to P-08 flow (P08.1)
-%%    d. About → sub-screen (P01.2-S4)
-%% 3. Each sub-screen has its own content and back navigation to settings main
-%% Keep it as a simple navigation tree — no complex decision logic
-%% Reference FR-026 for settings structure, FR-020 for notification preferences
+flowchart TD
+    Start["Patient navigates to Profile → Settings"] --> MainScreen["Display Settings Main Screen (P01.2-S1)"]
+
+    MainScreen --> Choice{"Patient selects navigation section"}
+
+    Choice -->|Notification Settings| NotifScreen["Display Notification Settings (P01.2-S2)"]
+    Choice -->|Privacy & Security| PrivacyScreen["Display Privacy & Security (P01.2-S3)"]
+    Choice -->|Help & Support| HelpFlow["Navigate to Flow P08.1<br/>(Help Center & Support Access)"]
+    Choice -->|About| AboutScreen["Display About Screen (P01.2-S4)"]
+
+    NotifScreen --> NotifActions{"Patient action"}
+    NotifActions -->|Toggle Email/Push| SavePrefs["Auto-save preference change<br/>(immediate, within 1 minute)"]
+    NotifActions -->|Back| MainScreen
+    SavePrefs --> NotifScreen
+
+    PrivacyScreen --> PrivacyActions{"Patient action"}
+    PrivacyActions -->|Change Password| PwdFlow["Change Password Flow:<br/>Enter old password → new password<br/>Revoke all refresh tokens on success"]
+    PrivacyActions -->|View Device Sessions| SessionsList["Display active sessions list"]
+    PrivacyActions -->|Revoke Session| RevokeConfirm["Confirm revoke → session terminated"]
+    PrivacyActions -->|Revoke All Sessions| ReauthRevoke["Re-auth required → revoke all except current"]
+    PrivacyActions -->|Download My Data| ExportRequest["Submit data export request<br/>(FR-023 GDPR flow)"]
+    PrivacyActions -->|Back| MainScreen
+
+    PwdFlow --> PwdSuccess{"Password change<br/>successful?"}
+    PwdSuccess -->|Yes| TokenRevoke["Revoke previous refresh tokens<br/>Current session remains active"]
+    PwdSuccess -->|No| PwdError["Show validation error<br/>Retry"]
+    TokenRevoke --> PrivacyScreen
+    PwdError --> PwdFlow
+
+    SessionsList --> PrivacyScreen
+    RevokeConfirm --> PrivacyScreen
+    ReauthRevoke --> PrivacyScreen
+    ExportRequest --> PrivacyScreen
+
+    AboutScreen --> AboutActions{"Patient action"}
+    AboutActions -->|Tap Terms/Privacy/Licenses| LegalViewer["Open legal content viewer<br/>(same pattern as Flow P02.4)"]
+    AboutActions -->|Rate the App| AppStore["Open app store listing<br/>(iOS App Store / Google Play)"]
+    AboutActions -->|Back| MainScreen
+
+    LegalViewer --> AboutScreen
+    AppStore --> AboutScreen
+
+    HelpFlow --> End1["Patient exits Settings flow"]
+
+    MainScreen --> Back["Patient taps Back"] --> End2["Return to Profile screen"]
 ```
 
 #### Screen Specifications
@@ -200,100 +271,82 @@ Include rules for:
 
 **Purpose**: Top-level settings navigation hub
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-026 PRD for settings structure.
-
-Create a table with these expected fields:
-- Screen title ("Settings")
-- User profile summary at top (name, email, avatar — tappable to navigate to profile)
-- Navigation sections (each as a tappable row with icon + label + chevron):
-  - Notification Settings → navigates to P01.2-S2
-  - Privacy & Security → navigates to P01.2-S3
-  - Help & Support → navigates to Flow P08.1 (P-08: Help Center & Support Access)
-  - About → navigates to P01.2-S4
-- App version display at bottom
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Settings" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
+| Profile Summary Card | group | Yes | User profile preview section at top | Tappable; navigates to Edit Profile (FR-001 Screen 15) |
+| Profile Avatar | image | Yes | Patient's profile photo or placeholder | Circular, displayed within profile summary |
+| Patient Name | text | Yes | Patient's full name (first + last) | Read-only, displayed within profile summary |
+| Patient Email | text | Yes | Patient's registered email address | Read-only, displayed within profile summary |
+| Navigation Section: Notifications | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to P01.2-S2 |
+| Navigation Section: Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to P01.2-S3 |
+| Navigation Section: Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Flow P08.1 (P-08: Help Center & Support Access) |
+| Navigation Section: About | link | Yes | Row with info icon + "About" label + chevron | Navigates to P01.2-S4 |
+| App Version | text | Yes | "Version X.Y.Z" displayed at bottom of screen | Auto-populated from build configuration; format: "Version 1.0.0" |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Navigation sections are static items — always visible
-- Profile summary reflects current user data in real-time
-- App version auto-populated from build configuration
--->
+
+- Navigation sections are static items — always visible in the same order
+- Profile summary reflects current user data in real-time; tapping it navigates to Edit Profile (FR-001 Screen 15)
+- App version is auto-populated from build metadata and cannot be edited
+- All navigation rows are tappable with visual feedback (highlight on tap)
 
 ##### Screen P01.2-S2: Notification Settings
 
-**Purpose**: Manage push, email, and SMS notification preferences
+**Purpose**: Manage push and email notification preferences
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-020 PRD for notification types and patient preference options.
-
-Create a table with these expected fields:
-- "Notification Settings" header
-- Push notifications master toggle (enable/disable all optional)
-- Per-category toggles:
-  - Quote notifications (new quote received, quote expiring)
-  - Booking notifications (confirmation, reminders)
-  - Payment notifications (payment due, payment confirmed)
-  - Treatment notifications (progress updates, aftercare reminders)
-  - Message notifications (new messages from provider)
-  - Promotional notifications (offers, news)
-- Email notification preferences (same categories or simplified)
-- SMS notification preferences (critical only: payment, booking)
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Notification Settings" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
+| Explanation Text | text | Yes | "Choose how you want to receive notifications from Hairline." | Displayed below title for context |
+| MVP Notice (Conditional) | text | Conditional | "Per-category preferences coming soon. For now, you can enable/disable all notifications by channel." | Shown only in MVP; removed in V2 when per-category toggles ship |
+| Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
+| Global Push Toggle | toggle | Yes | Master switch: "Push Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
+| Mandatory Notifications Note | text | Yes | "Security notifications (password reset, account changes) are always sent and cannot be disabled." | Displayed below toggles as info text |
+| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes. These keep you informed of important updates." | Read-only informational text; explains system-driven event notifications per FR-020 |
+| Save Status Indicator (Conditional) | text | Conditional | "Saved" or "Saving..." feedback | Shown briefly after toggle change; success message: "Preferences saved" |
+| Error Message (Conditional) | text | Conditional | Displayed if save fails | "Failed to save preferences. Please try again." with Retry button; on failure, UI reverts to last saved state |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Some notifications are mandatory and cannot be disabled (e.g., payment due, security alerts)
-- Master toggle off disables all optional notifications only
-- Changes auto-save (no explicit save button needed)
-- Default for new accounts: all notifications enabled
--->
+
+- **MVP scope**: Only global Email/Push toggles available; per-category preferences (Quote, Booking, Payment, Treatment, Message, Promotional) are V2 and not shown in this screen (FR-020, FR-001 Screen 16)
+- Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles
+- System event notifications (inquiry stage changes, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP
+- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute (FR-001 Screen 16)
+- Default for new accounts: both Email and Push toggles ON
+- If save fails, UI must revert to previous toggle state and show actionable error with Retry option (FR-001 Screen 16)
 
 ##### Screen P01.2-S3: Privacy & Security Settings
 
 **Purpose**: Manage privacy preferences and security options
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-026 PRD for security settings.
-
-Create a table with these expected fields:
-- "Privacy & Security" header
-- Change Password action (navigates to change password flow)
-- Biometric authentication toggle (Face ID / Touch ID)
-- Two-factor authentication toggle/setup
-- Active sessions list (optional — show logged-in devices)
-- Data sharing preferences
-- Download My Data action (GDPR right to data portability)
-- Delete Account link (→ navigates to Flow P01.1)
-- Login activity / recent logins
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Privacy & Security" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
+| Section Header: Security | text | Yes | "Security" section divider | Bold text separator |
+| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to inline change password form or modal |
+| Two-Factor Authentication (2FA) | link | Yes | Row with shield icon + "Two-Factor Authentication" label + "Coming Soon" badge | Disabled/grayed out in MVP; future enhancement (FR-001 Screen 16) |
+| Section Header: Active Sessions | text | Yes | "Active Sessions" section divider | Bold text separator |
+| Device Sessions List | list | Yes | List of active sessions showing device name, location, last active time | Tappable; each row shows "Revoke" action on long-press or swipe |
+| Revoke Session Action | action | Yes | Per-session revoke option (swipe or tap) | Requires confirmation; revokes targeted session within 1 minute |
+| Revoke All Sessions Button | button | Yes | "Revoke All Other Sessions" button below list | Requires re-auth if >5 minutes since last auth; revokes all except current session |
+| Section Header: Data & Privacy | text | Yes | "Data & Privacy" section divider | Bold text separator |
+| Download My Data | link | Yes | Row with download icon + "Download My Data" label + chevron | Triggers GDPR data export request (FR-023); user receives email when ready |
+| Delete Account | link | Yes | Row with trash icon + "Delete Account" label in red/destructive color | Navigates to Flow P01.1 (Delete Account flow) |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Password change requires current password verification
-- 2FA setup follows standard TOTP or SMS verification flow
-- "Download My Data" may take processing time — notify patient when ready
-- Delete Account links to Flow P01.1 (separate flow with its own screens)
--->
+
+- **Change Password**: Opens inline form or modal; requires old password + new password meeting policy (12+ chars, 1 upper, 1 lower, 1 digit, 1 special from FR-001); on success, all previous refresh tokens are revoked and current session remains active (FR-001 Screen 16)
+- **2FA**: Visible but disabled with "Coming Soon" badge; future enhancement dependent on shared MFA stack delivery (FR-026 REQ-026-017)
+- **Device Sessions**: Displays all active sessions with device/OS/browser, IP location (city-level), last active timestamp; patient can revoke individual sessions or all sessions except current
+- **Revoke Session**: Confirmation required ("Are you sure you want to revoke this session?"); session terminated within 1 minute
+- **Revoke All Sessions**: Requires re-auth if >5 minutes since last successful auth (password or OTP per FR-001 Screen 16); all sessions except current are terminated; user notified of success
+- **Download My Data**: Triggers background export per FR-023 DSR flow; user sees confirmation and receives secure link via email when export is ready (typically within 7 days per FR-023)
+- **Delete Account**: Navigates to Flow P01.1 (separate multi-screen flow with warnings, verification, grace period)
+- All server-write actions (password change, revoke sessions) use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values (FR-001 Screen 16)
 
 > **Help & Support** is specified under **P-08: Help Center & Support Access** → see [Flow P08.1](#flow-p081-help--support) below.
 > The Settings main screen links to it as a navigation item.
@@ -302,31 +355,29 @@ Include rules for:
 
 **Purpose**: Display app information and legal links
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- "About" header
-- App name and logo
-- App version number
-- Terms of Service link (→ legal content screen, reuses pattern from Flow P02.4)
-- Privacy Policy link (→ legal content screen)
-- Licenses / Open Source credits
-- Rate the App action (→ app store listing)
-- Social media links (optional)
-- Company information
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "About" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
+| App Logo | image | Yes | Hairline app logo | Centered, displayed prominently at top |
+| App Name | text | Yes | "Hairline" | Displayed below logo |
+| App Version | text | Yes | "Version X.Y.Z (Build NNN)" | Auto-populated from build configuration; format: "Version 1.0.0 (Build 123)" |
+| Section Header: Legal | text | Yes | "Legal" section divider | Bold text separator |
+| Terms of Service Link | link | Yes | Row with document icon + "Terms of Service" label + chevron | Opens legal content viewer (same pattern as Flow P02.4) |
+| Privacy Policy Link | link | Yes | Row with shield icon + "Privacy Policy" label + chevron | Opens legal content viewer (same pattern as Flow P02.4) |
+| Section Header: Feedback | text | Yes | "Feedback" section divider | Bold text separator |
+| Rate the App | link | Yes | Row with star icon + "Rate the App" label + chevron | Opens app store listing (iOS App Store on iOS, Google Play on Android) |
+| Section Header: More Info | text | Yes | "More Information" section divider | Bold text separator |
+| Open Source Licenses | link | Yes | Row with code icon + "Open Source Licenses" label + chevron | Opens scrollable list of third-party libraries and licenses |
+| Company Information | text | Yes | Company name, address, contact email | Read-only text block at bottom; format: "© 2026 Hairline. All rights reserved." |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Version number auto-populated from app build
-- Legal links open the same legal content viewer pattern used in Flow P02.4
-- "Rate the App" opens the respective app store (iOS App Store / Google Play)
--->
+
+- App version and build number are auto-populated from build metadata; cannot be edited
+- Legal content links (Terms of Service, Privacy Policy) open the same legal content viewer pattern used in Flow P02.4 with scrollable rich text, last updated date, and back navigation
+- "Rate the App" opens the platform-specific app store: iOS App Store on iOS devices, Google Play Store on Android devices
+- "Open Source Licenses" displays full list of third-party libraries with their respective licenses (typically auto-generated during build process)
+- Company information displays standard copyright notice and contact details
 
 ---
 
