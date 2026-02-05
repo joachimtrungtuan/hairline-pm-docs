@@ -1593,7 +1593,7 @@ Total Quote:                           £3,000
 - Staff MUST be able to create support cases, categorize them, set priority, and assign ownership
 - System MUST support a case lifecycle: Open → In Progress → Resolved → Closed, with immutable history
 - Support cases MUST be linkable to patient records (HPID/email/phone) and deep-link to A-01 for interventions
-- System MUST maintain an auditable case timeline (messages, notes, attachments) and support exports for disputes/compliance
+- System MUST maintain an auditable case timeline (messages, notes, attachments) for disputes/compliance
 - System MUST support patient notifications on meaningful updates (status changes/replies) via S-03 when enabled
 
 **Note**: Detailed requirements documented in dedicated FR-034 PRD at `functional-requirements/fr034-support-center-ticketing/prd.md`. FR-034 has been extended to support patient submissions (via FR-035), provider submissions (via FR-032 Screen 5.5/5.6), and manual admin entries in a unified support ticketing system with consistent status workflow (Open → In Progress → Resolved → Closed). The system supports full two-way threaded communication between patients/providers and admin staff within support cases, with message history tracked in Communication Thread and comprehensive Timeline.
