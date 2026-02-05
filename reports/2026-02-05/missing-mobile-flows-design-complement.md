@@ -14,8 +14,8 @@
 |---|------|--------|-------------|--------|
 | P01.1 | Delete Account | P-01: Auth & Profile Management | FR-001, FR-026, FR-023 | 🟡 Specified |
 | P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-026, FR-020 | 🟡 Specified |
-| P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🔴 Not Designed |
-| P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | 🔴 Not Designed |
+| P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🟡 Specified |
+| P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | ⏸️ On Hold |
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🔴 Not Designed |
 | P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🔴 Not Designed |
 | P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🔴 Not Designed |
@@ -54,8 +54,8 @@ Each flow section below contains:
 ### Flow P01.1: Delete Account
 
 **Related FRs**: FR-001 (Patient Authentication), FR-026 (App Settings & Security), FR-023 (Data Retention & Compliance)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr026-app-settings-security/prd.md`, `fr023-data-retention-compliance/prd.md`
-**Status**: 🔴 Not Designed
+**Source Reference**: `local-docs/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`, `fr023-data-retention-compliance/prd.md`
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
@@ -67,57 +67,42 @@ flowchart TD
     CheckObligations -->|Yes| BlockDeletion["Show blocking message:<br/>'Cannot delete during active care/payment'<br/>Suggest: Contact support or wait"]
     BlockDeletion --> End1["Patient exits flow"]
 
-    CheckObligations -->|No| SelectReason["Patient selects deletion reason<br/>(required dropdown)"]
-    SelectReason --> OptionalFeedback["Patient optionally enters feedback text"]
-    OptionalFeedback --> ContinueButton["Patient taps 'Continue to Delete'"]
+    CheckObligations -->|No| OptionalReason["Patient optionally selects deletion reason<br/>(optional)"]
+    OptionalReason --> RequestDeletion["Patient taps 'Request Deletion'"]
 
-    ContinueButton --> CheckReauth{"Re-auth required?<br/>(> 5 minutes since last auth)"}
+    RequestDeletion --> CheckReauth{"Re-auth required?<br/>(> 5 minutes since last auth)"}
     CheckReauth -->|Yes| VerifyIdentity["Display Identity Verification Screen (P01.1-S2)"]
-    CheckReauth -->|No| FinalConfirm["Show final confirmation modal:<br/>'This action cannot be undone'"]
+    CheckReauth -->|No| FinalConfirm["Show final confirmation modal:<br/>'Submit deletion request?'"]
 
     VerifyIdentity --> AuthMethod{"Select verification method"}
     AuthMethod -->|Password| EnterPassword["Patient enters password"]
-    AuthMethod -->|Biometric| BiometricPrompt["System prompts Face ID / Touch ID"]
+    AuthMethod -->|Email OTP| SendOTP["System sends 6-digit OTP<br/>to registered email"]
+    SendOTP --> EnterOTP["Patient enters 6-digit OTP"]
 
-    EnterPassword --> ValidateAuth{"Authentication<br/>successful?"}
-    BiometricPrompt --> ValidateAuth
+    EnterPassword --> ValidateAuth{"Verification<br/>successful?"}
+    EnterOTP --> ValidateAuth
 
-    ValidateAuth -->|No| FailCounter{"Failed attempts < 3?"}
-    FailCounter -->|Yes| ShowError["Show error message:<br/>'Invalid credentials. Try again.'"]
+    ValidateAuth -->|No| RetryGate{"Retry allowed<br/>per auth policy?"}
+    RetryGate -->|Yes| ShowError["Show error message and allow retry"]
     ShowError --> VerifyIdentity
-    FailCounter -->|No| Lockout["Temporary lockout (15 min)<br/>Show lockout message"]
-    Lockout --> End2["Patient exits flow"]
+    RetryGate -->|No| RateLimited["Show rate-limit/lockout message<br/>and prevent retry"]
+    RateLimited --> End2["Patient exits flow"]
 
     ValidateAuth -->|Yes| FinalConfirm
 
-    FinalConfirm --> PatientConfirms{"Patient confirms<br/>final deletion?"}
+    FinalConfirm --> PatientConfirms{"Patient confirms<br/>submission?"}
     PatientConfirms -->|No - Cancel| End3["Patient exits flow"]
-    PatientConfirms -->|Yes| ScheduleDeletion["System schedules account for deletion<br/>(grace period: 30 days)"]
-
-    ScheduleDeletion --> CloseInquiries["System auto-closes any open inquiries"]
-    CloseInquiries --> SendConfirmation["System sends confirmation email<br/>with grace period details"]
-    SendConfirmation --> LogEvent["System logs deletion request<br/>in audit trail"]
-    LogEvent --> DisplayConfirmation["Display Deletion Scheduled Confirmation (P01.1-S3)"]
-
-    DisplayConfirmation --> LogOut["Patient taps 'Log Out Now'"]
-    LogOut --> SessionEnd["System revokes session tokens<br/>Patient redirected to Landing screen"]
-
-    SessionEnd --> GracePeriod["Grace period countdown begins<br/>(30 days)"]
-    GracePeriod --> GraceDecision{"Patient logs in<br/>during grace period?"}
-
-    GraceDecision -->|Yes| CancelDeletion["System cancels scheduled deletion<br/>Patient account remains active"]
-    CancelDeletion --> End4["Account deletion cancelled"]
-
-    GraceDecision -->|No - 30 days elapsed| ExecuteDeletion["System executes deletion per FR-023:<br/>- Non-protected data deleted/anonymized<br/>- Medical/financial records retained (7 years)<br/>- Access to retained records restricted"]
-    ExecuteDeletion --> AuditLog["System logs permanent deletion<br/>in audit trail"]
-    AuditLog --> End5["Account deletion completed"]
+    PatientConfirms -->|Yes| CreateDSR["System creates Deletion Request (DSR)<br/>and queues for Admin review (FR-023)"]
+    CreateDSR --> CloseInquiries["System auto-closes any open inquiries (FR-001 Screen 14)"]
+    CloseInquiries --> NotifyPatient["System sends confirmation notification/email<br/>and future status updates (FR-023)"]
+    NotifyPatient --> DisplayConfirmation["Display Deletion Request Submitted Screen (P01.1-S3)"]
 ```
 
 #### Screen Specifications
 
 ##### Screen P01.1-S1: Delete Account Warning
 
-**Purpose**: Inform patient of consequences before proceeding with account deletion
+**Purpose**: Explain deletion request consequences before patient submits a deletion request (DSR)
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
@@ -126,86 +111,74 @@ flowchart TD
 | Back Navigation | action | Yes | Back arrow to return to Profile | Top-left corner |
 | Blocking Message (Conditional) | group | Conditional | Displayed only if active treatment, aftercare, or payment in progress | Must block deletion with clear message: "Account deletion is unavailable during active care or payment processing. Please contact support or wait until completion." |
 | Contact Support Link (Conditional) | link | Conditional | Shown only if blocking message is displayed | Opens support ticket flow (FR-034) |
-| Consequences Header | text | Yes | "What will be permanently deleted:" | Bold, clear separator |
-| Consequences List | list | Yes | Bulleted list of deleted data categories | Must include: Treatment history (viewing access), Messages and communications, Reviews submitted, Payment method data, Saved preferences, Profile information |
-| Retained Data Header | text | Yes | "What will NOT be deleted (legal requirement):" | Bold, clear separator |
-| Retained Data Explanation | text | Yes | Explanation of legally retained records | Must state: "Medical records and financial transaction data will be retained for 7 years per healthcare compliance requirements. Access to these records will be restricted but not deleted." |
-| Deletion Reason Selector | select | Yes | Dropdown with predefined reasons | Options: "No longer need service", "Privacy concerns", "Found alternative", "Too expensive", "Poor experience", "Other" |
-| Other Reason Text (Conditional) | textarea | Conditional | Shown only if "Other" selected in reason dropdown | Max 500 characters, optional |
-| Optional Feedback | textarea | No | "Help us improve (optional)" | Max 500 characters |
-| Grace Period Notice | text | Yes | "Your account will be scheduled for deletion in 30 days. You can log in anytime within 30 days to cancel this request." | Displayed in info box with calendar icon |
-| Continue to Delete Button | button | Yes | Primary CTA in destructive style (red) | Disabled until deletion reason selected; tap proceeds to identity verification (P01.1-S2) or final confirmation if recently authenticated |
+| Consequences Header | text | Yes | "What may be deleted or anonymized:" | Bold, clear separator |
+| Consequences List | list | Yes | Bulleted list of affected personal data categories | Must include: Profile and preferences, Messages/communications, Reviews content, Uploaded media (where not legally retained) |
+| Retained Data Header | text | Yes | "What will be retained (legal requirement):" | Bold, clear separator |
+| Retained Data Explanation | text | Yes | Explanation of legally retained records | Must state: "Medical and financial transaction records are retained for at least 7 years. Access is restricted and the legal basis will be documented in the deletion outcome." |
+| Processing Timeline Notice | text | Yes | Informational message about processing time | Must state: "Verified deletion requests are completed within 30 calendar days." (FR-023) |
+| Deletion Reason Selector (Optional) | select | No | Optional reason for requesting deletion | Optional; options are centrally managed (not hardcoded in this spec) |
+| Final Confirmation Modal (Conditional) | modal | Conditional | Confirmation before submitting deletion request | Shown after "Request Deletion" tap; includes Confirm/Cancel; no irreversible deletion occurs at this step |
+| Request Deletion Button | button | Yes | Primary CTA in destructive style (red) | Enabled unless blocked; tap triggers re-auth check and/or final confirmation modal |
 | Go Back Button | button | Yes | Secondary CTA in default style | Returns to Profile screen, no changes saved |
 
 **Business Rules**:
 
-- Cannot delete if active treatment or aftercare case exists (FR-001 Screen 14 rule); blocking message shown with support contact option
-- Cannot delete if payment in progress; blocking message shown with guidance to wait
-- Open inquiries are auto-closed upon deletion scheduling (FR-001 Screen 14 rule)
-- Deletion reason is required — "Continue to Delete" button disabled until reason selected
-- Deletion reason options are application-defined for analytics purposes (not specified in PRDs); consider centralizing in FR-026 Settings similar to discovery questions for future maintainability
-- Optional feedback field is an application enhancement for product analytics
-- Grace period is 30 days (configurable per FR-023); clearly communicated on screen
-- Medical records and financial transactions retained for 7 years per FR-023 REQ-023-001, REQ-023-002
-- Non-protected personal data will be deleted or anonymized per FR-023 REQ-023-005
+- Block deletion request when active treatment/aftercare or payment is in progress; provide support path (FR-001 Screen 14)
+- Deletion reason is optional and must not block submission (FR-001 `deleteAccountRequest { reason? }`)
+- Re-auth is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 14)
+- Submitting creates a Deletion Request (DSR) queued for Admin review; verified requests are completed within 30 calendar days with status updates (FR-023)
+- If patient has an active inquiry, deletion request is allowed and system auto-closes open inquiries (FR-001 Screen 14)
 
 ##### Screen P01.1-S2: Identity Verification Step
 
-**Purpose**: Verify patient identity before processing account deletion
+**Purpose**: Verify patient identity before submitting deletion request
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Verify Your Identity" | Displayed prominently |
 | Back Navigation | action | Yes | Back arrow to return to warning screen (P01.1-S1) | Top-left corner |
 | Security Icon | icon | Yes | Lock or shield icon indicating security step | Display at top center |
-| Instruction Text | text | Yes | "For your security, please verify your identity before proceeding with account deletion." | Clear, concise explanation |
-| Verification Method Selector | chips | Yes | Options: "Password", "Email OTP", or "Biometric" (if device supports) | Default to biometric if available and enabled; allow patient to switch methods |
+| Instruction Text | text | Yes | "For your security, please verify your identity before proceeding." | Clear, concise explanation |
+| Verification Method Selector | chips | Yes | Options: "Password" or "Email OTP" | Methods per FR-001 for sensitive re-auth; allow patient to switch methods |
 | Password Field | text | Conditional | Masked password input field; shown if "Password" method selected | Must match current account password; show/hide toggle icon |
 | Email OTP Field | text | Conditional | 6-digit OTP input; shown if "Email OTP" method selected | System sends OTP to registered email; code expires in 15 minutes |
-| Resend OTP Link | link | Conditional | Shown only if "Email OTP" method selected | Rate-limited per FR-026 OTP configuration; cooldown applies |
-| Biometric Prompt Trigger | action | Conditional | Automatically triggered if "Biometric" method selected | System-native Face ID / Touch ID prompt overlay |
-| Error Message | text | Conditional | Displayed on authentication failure | Must show: "Invalid password. You have X attempts remaining." OR "Invalid OTP code. Please try again." OR "Biometric authentication failed. Please try again or use password/OTP." |
-| Failed Attempts Counter | text | Conditional | Shown after first failed attempt | Format: "Attempts remaining: X/3" |
-| Verify & Delete Button | button | Yes | Primary CTA in destructive style (red) | Disabled until password entered OR biometric triggered; tap validates credentials and proceeds to final confirmation |
+| Resend OTP Link | link | Conditional | Shown only if "Email OTP" method selected | Rate-limited; cooldown applies |
+| Error Message | text | Conditional | Displayed on verification failure | Must be actionable: "Invalid password/OTP. Please try again." |
+| Verify Button | button | Yes | Primary CTA in destructive style (red) | Disabled until password entered OR 6-digit OTP entered; validates and returns to final confirmation modal |
 | Cancel Button | button | Yes | Secondary CTA in default style | Returns to Profile screen, cancels deletion flow |
-| Lockout Message | text | Conditional | Shown after 3 failed attempts | "Too many failed attempts. Your account is temporarily locked for security. Please try again in 15 minutes or contact support." |
 
 **Business Rules**:
 
-- Re-authentication required if last successful auth > 5 minutes ago (FR-001 Screen 14 rule: "password or 6-digit OTP")
-- Three verification methods available: Password, Email OTP (6-digit code), or Biometric (if device supports)
-- Maximum 3 failed attempts allowed before temporary lockout (per method; applies to password and OTP only)
-- Lockout duration: 15 minutes (specific to deletion re-auth; separate from FR-026 login throttling but aligned with default)
-- Email OTP follows FR-026 OTP configuration: 15-minute expiry, resend cooldown, rate limiting
-- Biometric authentication offered only if device supports Face ID / Touch ID AND patient has enabled it; no attempt limit for biometric (can fallback to password/OTP anytime)
-- Patient can switch between verification methods at any time
-- Successful authentication proceeds immediately to final confirmation modal
+- Re-authentication is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 14)
+- Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited (FR-001 OTP rules)
+- Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (FR-001 + FR-026 settings infrastructure)
+- Successful verification returns the patient to the final confirmation modal to submit the deletion request (FR-023)
+- Patient can cancel at any time to exit without submitting a deletion request
 
-##### Screen P01.1-S3: Deletion Scheduled Confirmation
+##### Screen P01.1-S3: Deletion Request Submitted Confirmation
 
-**Purpose**: Confirm account is scheduled for deletion and communicate grace period
+**Purpose**: Confirm deletion request (DSR) has been submitted and explain next steps
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| Confirmation Icon | icon | Yes | Green checkmark or calendar icon with checkmark overlay | Display at top center to indicate successful scheduling |
-| Screen Title | text | Yes | "Account Deletion Scheduled" | Displayed prominently |
-| Scheduled Date Display | text | Yes | "Your account will be permanently deleted on [Date]" | Date calculated as today + 30 days; format: "March 7, 2026" |
-| Grace Period Explanation | text | Yes | "You have 30 days to change your mind. If you log in anytime before [date], your account deletion will be automatically cancelled and your account will remain active." | Clear, reassuring language emphasizing reversibility |
-| What Happens Next Section | group | Yes | Titled "What happens next:" with bulleted list | Must include: "Your open inquiries have been closed", "You will be logged out after leaving this screen", "Your account remains accessible if you log in within 30 days", "After 30 days, non-essential data will be deleted" |
-| Retained Data Reminder | text | Yes | "Medical records and financial transaction data will be retained for 7 years per legal requirements, but access will be restricted." | Reiterate compliance obligation from FR-023 |
-| Email Confirmation Notice | text | Yes | "A confirmation email has been sent to [patient email address]." | Display patient's registered email address; email includes deletion date and recovery instructions |
-| Recovery Instructions | text | Yes | "To cancel this deletion, simply log in to your account anytime within the next 30 days." | Emphasize simplicity of cancellation |
-| Log Out Now Button | button | Yes | Primary CTA | Revokes session tokens and redirects patient to Landing screen; patient must explicitly tap to log out |
-| Back to Profile Link | link | Yes | Secondary action (low emphasis) | Allows patient to stay logged in if they change their mind immediately; cancels logout but deletion remains scheduled |
+| Confirmation Icon | icon | Yes | Green checkmark or shield icon | Display at top center to indicate successful submission |
+| Screen Title | text | Yes | "Deletion Request Submitted" | Displayed prominently |
+| Request Status | badge | Yes | Current request status | Default: "Pending Admin Review" |
+| Request Reference | text | Yes | Unique request reference ID | Read-only; used for support follow-up |
+| Submitted Timestamp | datetime | Yes | Date/time request was submitted | Uses server time |
+| Processing Timeline Notice | text | Yes | SLA expectation | Must state: "We complete verified deletion requests within 30 calendar days." (FR-023) |
+| What Happens Next Section | group | Yes | Next steps list | Must include: "Your request will be reviewed", "You may be asked for additional verification", "You will receive status updates and the final outcome", "Open inquiries have been closed (if applicable)" |
+| Retained Data Reminder | text | Yes | Reminder of legal retention | Must state medical/financial records retained ≥ 7 years with restricted access (FR-023) |
+| Email Confirmation Notice | text | Yes | "A confirmation email has been sent to [patient email address]." | Show registered email |
+| Back to Profile Button | button | Yes | Primary CTA | Returns to Profile screen |
 
 **Business Rules**:
 
-- Grace period is exactly 30 days from the moment deletion is scheduled (per FR-023)
-- System sends confirmation email immediately upon scheduling; email includes deletion date, recovery link, and support contact
-- Logging in anytime during the 30-day grace period automatically cancels the scheduled deletion (FR-001 Screen 14 rule)
-- Patient is logged out when tapping "Log Out Now" — session tokens revoked, redirected to Landing screen
-- If patient taps "Back to Profile", they remain logged in but deletion remains scheduled (can cancel later by contacting support or waiting for grace period to complete and re-registering)
-- After 30 days: non-protected data deleted/anonymized; medical/financial records retained for 7 years with restricted access (FR-023 REQ-023-005)
+- Deletion request is queued for Admin review and processed after verification (FR-023)
+- Verified deletion requests are completed within 30 calendar days; SLA may pause if additional verification is required (FR-023 Alternative Flow A1)
+- If patient has an active inquiry, the system auto-closes open inquiries on request submission (FR-001 Screen 14)
+- Outcome notification must document actions taken and legal basis for any retained records (FR-023)
+- Non-protected personal data is deleted/anonymized; protected medical/financial records are retained (≥ 7 years) with restricted access (FR-023 REQ-023-005)
 
 ---
 
@@ -213,7 +186,7 @@ flowchart TD
 
 **Related FRs**: FR-026 (App Settings & Security), FR-020 (Notifications & Alerts)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr026-app-settings-security/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
@@ -340,7 +313,7 @@ flowchart TD
 **Business Rules**:
 
 - **Change Password**: Opens inline form or modal; requires old password + new password meeting policy (12+ chars, 1 upper, 1 lower, 1 digit, 1 special from FR-001); on success, all previous refresh tokens are revoked and current session remains active (FR-001 Screen 16)
-- **2FA**: Visible but disabled with "Coming Soon" badge; future enhancement dependent on shared MFA stack delivery (FR-026 REQ-026-017)
+- **2FA**: Visible but disabled with "Coming Soon" badge (future enhancement; referenced in FR-001 Screen 16)
 - **Device Sessions**: Displays all active sessions with device/OS/browser, IP location (city-level), last active timestamp; patient can revoke individual sessions or all sessions except current
 - **Revoke Session**: Confirmation required ("Are you sure you want to revoke this session?"); session terminated within 1 minute
 - **Revoke All Sessions**: Requires re-auth if >5 minutes since last successful auth (password or OTP per FR-001 Screen 16); all sessions except current are terminated; user notified of success
@@ -387,95 +360,69 @@ flowchart TD
 
 **Related FRs**: FR-005 (Quote Comparison & Acceptance)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient opens inquiry with multiple received quotes
-%% 2. Patient selects 2+ quotes to compare via checkboxes
-%% 3. Decision: "Quotes selected >= 2?" → No: disable compare button / Yes: enable
-%% 4. Patient taps "Compare Selected"
-%% 5. System displays side-by-side comparison view
-%% 6. Patient can toggle comparison fields (price, timeline, inclusions, provider rating)
-%% 7. Decision: "Accept from comparison?"
-%%    → Yes: leads to FR-005 acceptance flow
-%%    → No: dismiss comparison, return to quote list
-%% Reference FR-005 PRD "Main Flow: Patient Accepts a Quote" and screen definitions
+flowchart TD
+    Start["Patient opens Inquiry Dashboard<br/>(FR-005 Screen 1 / Enhanced from FR-003 Screen 8)"] --> Dashboard["Display Inquiry Dashboard with quote list (P02.1-S1)"]
+
+    Dashboard --> SelectQuotes{"Patient selects quotes to compare<br/>(max 3)"}
+    SelectQuotes -->|0-1 selected| HideCompare["Comparison View hidden"]
+    SelectQuotes -->|2-3 selected| ShowCompare["Render Comparison View panel<br/>(within P02.1-S1)"]
+    SelectQuotes -->|Attempts 4th selection| Block4th["Prevent selection and show message:<br/>'Maximum 3 quotes for comparison'"]
+
+    HideCompare --> Dashboard
+    Block4th --> Dashboard
+
+    ShowCompare --> CompareActions{"Patient action"}
+    CompareActions -->|Review comparison| Dashboard
+    CompareActions -->|Tap 'Accept' on a quote| AcceptFlow["Navigate to FR-005 acceptance flow:<br/>Quote Detail (Screen 2) → Confirmation Modal (Screen 3)"]
+    CompareActions -->|Change selection| Dashboard
+
+    AcceptFlow --> End1["Acceptance flow continues<br/>(FR-005 Screen 2 & 3)"]
 ```
 
 #### Screen Specifications
 
-##### Screen P02.1-S1: Quote Selection for Comparison
+##### Screen P02.1-S1: Inquiry Dashboard with Quote Comparison (Enhanced)
 
-**Purpose**: Allow patient to select multiple quotes from their inquiry to enter comparison mode
+**Purpose**: Patient views inquiry status, compares received quotes, and may accept one quote (FR-005 Screen 1)
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-005 PRD, specifically the quote listing screens.
-This screen appears within the inquiry detail context (see FR-003 Screen 8).
-Patient sees all received quotes and can check 2–4 to compare.
-
-Create a table with these expected fields:
-- Quote cards list (each showing: provider name, total price, treatment summary, validity/expiry date, provider rating)
-- Selection checkbox per quote card
-- "Compare Selected (N)" button (enabled when 2+ selected, max 4)
-- Selected count indicator
-- Filter/sort options (by price, rating, date received)
-- Navigation back to inquiry detail
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Context | text | Yes | Enhanced Inquiry Dashboard | Extends FR-003 Screen 8 with FR-005 comparison & acceptance |
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/...) | Valid lifecycle value |
+| Timeline | list | Yes | Chronological status changes | Timestamps present |
+| Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
+| Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
+| Sort & Filter | group | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined (FR-005) |
+| Compare Selection (Per Quote) | checkbox | No | Select quotes to compare side-by-side | Max 3 selected; disabled for expired/withdrawn quotes |
+| Comparison View Panel (Conditional) | group | Conditional | Side-by-side comparison panel for selected quotes | Renders only when ≥2 quotes are selected |
+| Comparison Differentiators (Conditional) | table | Conditional | Comparison rows across selected quotes | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot (FR-005) |
+| Treatment (Per Quote) | text | Yes | Treatment name | Read-only |
+| Inclusions (Per Quote) | chips | No | Package/customizations | Read-only |
+| Included Services (Per Quote) | list | No | Included services list | Read-only; derived from quote inclusions |
+| Per-date Pricing (Per Quote) | table | Yes | Price for each offered date | All dates priced |
+| Appointment Slot (Pre-Scheduled) (Per Quote) | datetime | Yes | Pre-scheduled appointment date/time | Read-only; sourced from FR-004 |
+| Price per Graft (Per Quote) | number | Yes | Derived unit price (total ÷ graft count) | Calculated |
+| Provider Reviews (Per Quote) | text | No | Review rating and count | Read-only; sourced from FR-013 |
+| Provider Credentials Summary (Per Quote) | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
+| Estimated Travel Costs (Per Quote) | number | No | Estimated travel costs to destination | Provider input (FR-004) or FR-008 integration |
+| Expiry (Per Quote) | datetime | Yes | Quote expiry timestamp / countdown display | Derived from quote expiresAt |
+| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
+| Actions (Per Quote) | buttons | Yes | View Details, Accept, Ask Question | State-aware enabling; Accept disabled if expired/withdrawn/already accepted (FR-005) |
+| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
+| Next Actions | buttons | Yes | Available user actions for the inquiry | Based on stage/permissions |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Minimum 2, maximum 4 quotes selectable for comparison
-- Only valid (non-expired, non-withdrawn) quotes can be selected for comparison
-- Quotes must belong to the same inquiry
-- Default sort: most recently received first
--->
 
-##### Screen P02.1-S2: Side-by-Side Comparison View
-
-**Purpose**: Display selected quotes in a structured comparison layout
-
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-005 PRD for quote detail fields and comparison criteria.
-This is a dedicated comparison screen showing quotes as columns with comparison attribute rows.
-
-Create a table with these expected fields:
-- Column headers: one per selected quote (provider name & avatar)
-- Comparison rows (one row per attribute):
-  - Total price & currency
-  - Treatment package breakdown
-  - Estimated timeline / duration
-  - Inclusions list (what's covered)
-  - Exclusions list (what's not covered)
-  - Provider rating & review count
-  - Quote validity / expiry date
-- "Accept This Quote" CTA per column
-- "Back to Quotes" navigation
-- Horizontal scroll / swipeable columns for mobile layout
-
-Format:
-| Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
-
-**Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Comparison rows should visually highlight best values (e.g., lowest price in green, highest rating highlighted)
-- "Accept" from comparison follows the same acceptance flow as FR-005
-- If a quote expires while patient is on comparison screen, show expired indicator and disable its acceptance
-- Mobile layout: swipeable columns or horizontal scroll with sticky first-column labels
--->
+- Quotes are displayed within the Inquiry Dashboard context; comparison is a conditional panel (not a separate screen) (FR-005 Screen 1)
+- Patient can compare up to 3 quotes; comparison view renders only when ≥ 2 quotes are selected (FR-005)
+- Expired/withdrawn quotes are visually disabled and cannot be selected or accepted (FR-005)
+- Patient can sort/filter quotes and view details; acceptance continues via FR-005 Screen 2 & 3 (FR-005)
+- Exactly one quote can be accepted per inquiry; competing quotes are auto-cancelled as part of the FR-005 acceptance workflow (FR-005)
 
 ---
 
@@ -483,25 +430,36 @@ Include rules for:
 
 **Related FRs**: FR-003 (Inquiry Submission), FR-005 (Quote Comparison & Acceptance)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr003-inquiry-submission/prd.md`, `fr005-quote-comparison-acceptance/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: ⏸️ On Hold
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient opens inquiry detail (any inquiry in stages: Inquiry, Quoted, Accepted — before Confirmed)
-%% 2. Patient taps "Cancel Inquiry" option (in action menu or bottom action area)
-%% 3. System checks current stage:
-%%    Decision: "Stage is Confirmed, Booked, In Progress, or Completed?"
-%%    → Yes: show error "Cannot cancel at this stage"
-%%    → No (Inquiry/Quoted/Accepted): proceed
-%% 4. Show confirmation modal with cancellation reason
-%% 5. Patient selects reason and confirms
-%% 6. System updates inquiry status to "Cancelled"
-%% 7. System notifies relevant providers (if quotes were received)
-%% 8. Show cancellation success screen
-%% Reference FR-003 for inquiry stages, FR-005 for quote lifecycle impact
+flowchart TD
+    Start["Patient opens Inquiry Dashboard (FR-003 Screen 8)"] --> ViewDetail["Patient taps inquiry to view detail"]
+    ViewDetail --> CancelOption["Patient taps 'Cancel Inquiry' in action menu"]
+    CancelOption --> CheckStage{"Current inquiry stage?"}
+
+    CheckStage -->|Confirmed, Booked,<br/>In Progress, Completed| BlockCancellation["Display error message:<br/>'Cannot cancel inquiry at this stage'<br/>Suggest: Contact support"]
+    BlockCancellation --> End1["Patient exits flow"]
+
+    CheckStage -->|Inquiry, Quoted,<br/>Accepted| ShowModal["Display Cancel Inquiry Confirmation Modal (P02.2-S1)"]
+    ShowModal --> ReasonRequired{"Cancellation reason selected?"}
+
+    ReasonRequired -->|No| ShowModal
+    ReasonRequired -->|Yes| ConfirmButton["Patient taps 'Confirm Cancellation'"]
+
+    ConfirmButton --> ProcessCancellation["System updates inquiry status to 'Cancelled'"]
+    ProcessCancellation --> CheckQuotes{"Associated quotes exist?"}
+
+    CheckQuotes -->|Yes| CancelQuotes["System auto-cancels all related quotes<br/>(status: 'Cancelled - Inquiry Cancelled')"]
+    CancelQuotes --> NotifyProviders["System notifies all affected providers"]
+    NotifyProviders --> LogEvent
+
+    CheckQuotes -->|No| LogEvent["System logs cancellation event with reason"]
+    LogEvent --> NotifyPatient["System sends confirmation notification"]
+    NotifyPatient --> ShowSuccess["Display Cancellation Success Screen (P02.2-S2)"]
+    ShowSuccess --> End2["Patient returns to My Inquiries or starts new inquiry"]
 ```
 
 #### Screen Specifications
@@ -510,61 +468,54 @@ Include rules for:
 
 **Purpose**: Confirm patient's intent to cancel and capture cancellation reason
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-003 PRD for inquiry lifecycle stages and FR-005 for quote impact.
-This is a modal/bottom sheet overlaying the inquiry detail screen.
-
-Create a table with these expected fields:
-- Warning icon
-- Warning message explaining consequences of cancellation
-- Current inquiry stage display
-- Cancellation reason selector (predefined options + "Other" with free text)
-- Optional additional notes text field
-- Impact summary (e.g., "X quotes will be cancelled", "Providers will be notified")
-- "Confirm Cancellation" destructive CTA
-- "Go Back" dismiss CTA
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
+| Modal Title | text | Yes | "Cancel Inquiry?" | Displayed prominently in red/destructive color |
+| Warning Message | text | Yes | Explanation of consequences | "Canceling this inquiry is irreversible. All quotes you've received will be cancelled and providers will be notified." |
+| Current Stage Badge | badge | Yes | Shows inquiry current stage | Enum: "Inquiry", "Quoted", "Accepted"; read-only |
+| Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; format: HPID + YY + MM + 4-digit sequence |
+| Impact Summary | text | Yes | Summary of cancellation impact | Conditional text based on stage: "X active quotes will be cancelled" OR "No quotes received yet" |
+| Cancellation Reason Label | text | Yes | "Why are you cancelling?" | Required field indicator shown |
+| Cancellation Reason Selector | select | Yes | Dropdown or radio list of predefined reasons | Must select one option from list |
+| Cancellation Reason Options | list | Yes | Predefined cancellation reasons | Options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" |
+| Additional Notes (Conditional) | text | Conditional | Free text field; shown when "Other" selected | Required if "Other" selected; max 500 characters; placeholder: "Please explain..." |
+| Optional Feedback Field | text | No | General feedback text area | Optional for all reasons; max 1000 characters; placeholder: "Any additional feedback? (Optional)" |
+| Provider Notification Note | text | Yes | Informational message | "Affected providers will be notified of this cancellation within 5 minutes" |
+| Confirm Cancellation Button | button | Yes | Destructive primary CTA | Red/destructive style; label: "Confirm Cancellation"; disabled until reason selected |
+| Go Back Button | button | Yes | Secondary CTA to dismiss modal | Default/neutral style; label: "Go Back"; closes modal without action |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Cancellation allowed only in stages: Inquiry, Quoted, Accepted (before Confirmed)
-- If quotes exist, all associated quotes are auto-cancelled upon inquiry cancellation
-- Cancellation reason is required before confirming
-- Cancellation is irreversible — UI must make this clear
-- All associated providers receive notification of the cancellation
--->
+
+- ⏸️ On hold: patient-initiated inquiry cancellation is not defined in FR-003/FR-005; do not proceed to design until requirements are updated/approved
+- If resumed, allowable stages and impacts on quotes/reservations must be explicitly defined in the PRD before finalizing UI copy and state transitions
+- If resumed, cancellation reason options must be centrally defined and audited; avoid hardcoding option lists without PRD backing
+- All state changes, audit logging, and notifications must align with the confirmed inquiry lifecycle and privacy constraints once approved
 
 ##### Screen P02.2-S2: Cancellation Success Confirmation
 
 **Purpose**: Confirm the inquiry has been successfully cancelled
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Success/completion icon or illustration
-- "Inquiry Cancelled" confirmation message
-- Cancelled inquiry reference number
-- Summary of what was cancelled (inquiry + number of quotes affected)
-- "Back to My Inquiries" primary CTA
-- "Start New Inquiry" secondary CTA
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Success Icon | icon | Yes | Checkmark or completion illustration | Green color; displayed at top center |
+| Confirmation Title | text | Yes | "Inquiry Cancelled" | Displayed prominently below icon |
+| Confirmation Message | text | Yes | Brief success message | "Your inquiry has been successfully cancelled." |
+| Cancelled Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; format: HPID + YY + MM + 4-digit sequence; label: "Reference:" |
+| Cancellation Timestamp | datetime | Yes | Date and time of cancellation | Format: "Cancelled on [Month DD, YYYY] at [HH:MM AM/PM]" |
+| Impact Summary | text | Yes | Summary of what was cancelled | Conditional based on inquiry stage:<br/>- "Your inquiry was cancelled."<br/>- "Your inquiry and X active quote(s) were cancelled."<br/>- "Your inquiry, accepted quote, and reservation were cancelled." |
+| Provider Notification Status | text | Yes | Confirmation of provider notification | "All affected providers have been notified of this cancellation." |
+| Next Steps Section Label | text | Yes | Section header | "What would you like to do next?" |
+| Back to My Inquiries Button | button | Yes | Primary CTA | Default style; label: "Back to My Inquiries"; navigates to Inquiry Dashboard (FR-003 Screen 8) |
+| Start New Inquiry Button | button | Yes | Secondary CTA | Outlined/secondary style; label: "Start New Inquiry"; navigates to Inquiry Creation flow (FR-003 Screen 1) |
+| Contact Support Link | link | No | Optional support contact link | Text link; label: "Need help? Contact support"; navigates to Help & Support (Flow P08.1) |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Cancelled inquiry remains visible in inquiry list with "Cancelled" badge
-- Patient cannot reopen a cancelled inquiry — must create a new one
--->
+
+- ⏸️ On hold: this success screen is not PRD-backed; do not proceed to design until requirements are updated/approved
+- If resumed, cancellation timestamp must reflect server time and the impact summary must match the confirmed lifecycle rules for inquiry/quotes/reservations
+- Primary next steps should return patient to Inquiry Dashboard (FR-003 Screen 8) or allow starting a new inquiry (FR-003 Screen 1); support link is optional
+- Cancelled inquiries (if supported) must be read-only and not re-openable; patient starts a new inquiry to proceed
 
 ---
 

@@ -538,7 +538,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 **Business Rules**:
 
 - All items navigable; back navigation available
-- Delete account performs soft-delete request handled by Admin workflow
+- Delete account submits a data deletion request (DSR) queued for Admin review per FR-023
 - Sensitive actions (delete account) require re-auth within the last 5 minutes (password or 6-digit OTP)
 - If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support
 - If there is an active payment in progress, delete account is blocked until payment flow completes
@@ -628,7 +628,7 @@ Data/Validation & Audit
 - GET/PUT notificationPreferences { email, push }
 - POST changePassword { oldPassword, newPassword }
 - GET activeSessions[], POST revokeSession(sessionId), POST revokeAllSessions
-- POST deleteAccountRequest { reason? } (soft-delete request)
+- POST deleteAccountRequest { reason? } (deletion request / DSR; queued for Admin review per FR-023)
 - POST dataExportRequest
 - Read-only lists: previousTreatments[], reviews[]
 
@@ -637,6 +637,35 @@ Help & Support
 
 About
 9. Given user opens About, Then app version, Terms & Conditions, Privacy Policy, and Open-source licenses are shown with working links.
+
+#### Screen 17: Delete Account (Deletion Request / DSR)
+
+**Purpose**: Allow patient to submit a data deletion request (right to erasure) with clear expectations and legal retention disclosures
+
+**Data Fields**:
+
+- Back navigation
+- Warning icon + "Delete your account" header
+- Blocking message (if active treatment/aftercare or payment in progress) with "Contact support" link
+- Consequences section: what may be deleted/anonymized (PII, preferences, messages, reviews, uploaded media where not legally retained)
+- Retained data section: what will be retained and why (medical + financial records retained ≥ 7 years; restricted access)
+- Processing timeline notice: verified deletion requests completed within 30 calendar days (SLA)
+- Optional "Reason for deletion" selector (does not block submission)
+- Primary CTA: "Request deletion"
+- Final confirmation modal: "Submit deletion request?" (Confirm / Cancel)
+- Sensitive action re-auth prompt (conditional): password or 6-digit email OTP when last auth > 5 minutes
+- Submission confirmation state: "Deletion request submitted" with request reference and next steps (status updates, possible additional verification)
+
+**Business Rules**:
+
+- Delete account is a request flow (DSR) queued for Admin review and fulfillment per FR-023; no immediate hard-delete occurs in-app
+- If active treatment/aftercare exists, deletion request is blocked with guidance to contact support (patient safety)
+- If payment is in progress, deletion request is blocked until payment completes
+- If an active inquiry exists, deletion request is allowed and system auto-closes open inquiries
+- Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via password or 6-digit email OTP
+- Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`)
+- Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy)
+- On submission: system creates deletion request record, sends confirmation, and later sends status updates and outcome (including legal basis for any retained records)
 
 ## Business Rules
 

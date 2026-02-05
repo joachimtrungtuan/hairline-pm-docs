@@ -535,7 +535,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Admin Action List | table | Yes (display only) | Chronological log of actions | Sortable, filterable |
 | Action Date | datetime | Yes (display only) | When action occurred | Read-only |
 | Admin Name | text | Yes (display only) | Which admin performed action | Read-only |
-| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Admin Note |
+| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note |
 | Action Description | text | Yes (display only) | Summary of what changed | Read-only |
 | Justification | text | Yes (display only) | Admin reason for action | Read-only, expandable |
 | Impact | badge | No (display only) | Severity of action | Low, Medium, High |
@@ -562,6 +562,45 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - All entries currently originate from the single Super Admin role (no role hierarchy in MVP)
 
 ---
+
+### Screen 8: Patient Deletion Requests List (GDPR)
+
+**Purpose**: Provide a simple queue of patients who requested account/data deletion, so admins can review the request reason and optionally contact the patient before approving
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Screen Title | text | Yes (display only) | "Deletion Requests" | Located under **User management → Patients** |
+| Search | text | No | Search by patient name, email, or HPID | Debounced; case-insensitive |
+| Filters | group | No | Filter controls | Default filter: Status = Pending Admin Review |
+| Deletion Requests Table | table | Yes (display only) | List of patients with deletion requests | Sorted by oldest pending first (SLA risk) |
+| Table Column: Patient ID | text | Yes (display only) | Patient HPID identifier | Copy to clipboard |
+| Table Column: Patient Name | text | Yes (display only) | Patient full name | Click opens patient detail overview in a new tab |
+| Table Column: Patient Email | text | Yes (display only) | Primary email | Read-only |
+| Table Column: Submitted At | datetime | Yes (display only) | When request was submitted | Server time |
+| Table Column: Reason (Optional) | text | No (display only) | Patient-provided reason (if any) | Truncated to 1 line; expand in modal |
+| Table Column: SLA Due By | datetime | Yes (display only) | Latest completion target | Submitted At + 30 calendar days (FR-023) |
+| Table Column: Actions | buttons | Yes (display only) | Primary action: Review | Opens review/approve modal |
+| Empty State | group | Conditional (display only) | No deletion requests to show | Message: "No pending deletion requests" |
+| Review / Approve Modal | modal | Conditional | Modal shown when admin clicks Review | Displays request reason and approve/deny actions |
+| Modal: Patient Summary | group | Yes (display only) | Patient name, HPID, email | Read-only |
+| Modal: Request Details | group | Yes (display only) | Submitted at, SLA due by, reason (if provided) | Read-only |
+| Modal: Contact Options | buttons | Yes (display only) | Quick actions: Call patient / Email patient | Opens system dialer/email client (or internal contact tools) |
+| Modal: Admin Notes | text | No | Optional notes about verification/contact | Stored in audit trail if approving/denying |
+| Modal: Approve Button | action | Conditional | Approves deletion request | Requires enhanced confirmation + justification |
+| Modal: Deny Button | action | Conditional | Denies deletion request | Requires justification |
+| Modal: Close Button | action | Yes | Close modal | No changes |
+| Audit Trail Link | link | Yes (display only) | Link to audit log entries for this request | Opens Screen 7 filtered to this request ID |
+
+**Business Rules**:
+
+- This screen is a queue for deletion requests initiated by patients and must align with the deletion request lifecycle defined in FR-023
+- Admin may contact the patient (call/email) for additional confirmation before approving; no separate verification workflow is introduced in this UI
+- System validates active obligations at the time of approval; if obligations exist, approval is blocked and the admin sees an actionable message (request remains pending)
+- Approve triggers anonymization + archival workflow; protected medical/financial records are retained for legal minimums with restricted access (no hard-delete)
+- Deny records a reason and notifies the patient; the request remains auditable
+- Approve/Deny actions require justification and are written to the audit trail with request ID metadata
 
 ## Business Rules
 
@@ -894,10 +933,10 @@ Patient exercises "right to be forgotten" under GDPR and submits data deletion r
 
 **Acceptance Scenarios**:
 
-1. **Given** admin receives GDPR deletion request ticket, **When** admin locates patient account, **Then** system displays warning: "GDPR deletion request - verify patient identity and check for active obligations"
-2. **Given** admin verifies patient identity (via email verification or support interaction), **When** admin checks active bookings, **Then** system displays if patient has active bookings, upcoming procedures, or outstanding payments
-3. **Given** patient has no active obligations, **When** admin clicks "Initiate Data Deletion" button, **Then** system displays confirmation: "This will permanently anonymize patient data (name, email, phone, address) while retaining compliance records per healthcare regulations"
-4. **Given** admin confirms deletion, **When** system processes request, **Then** system removes PII, archives medical records (7-year retention), archives transaction history (7-year retention), generates deletion certificate, logs action in audit trail, and sends confirmation email to patient
+1. **Given** a patient submits an account deletion request, **When** admin opens **User management → Patients → Deletion Requests**, **Then** the request appears in the pending queue with submitted date, optional reason, and SLA due date
+2. **Given** admin clicks "Review" on a request, **When** the modal opens, **Then** admin can view the patient’s optional reason and has quick actions to call/email the patient before approval
+3. **Given** the patient has no active obligations, **When** admin clicks "Approve" and confirms with justification, **Then** the system initiates anonymization + archival workflow while retaining compliance records per healthcare regulations and logs the action in the audit trail
+4. **Given** the request cannot be approved due to active obligations at the time of approval, **When** admin clicks "Approve", **Then** the system blocks approval and shows an actionable message; the request remains pending
 
 ---
 
