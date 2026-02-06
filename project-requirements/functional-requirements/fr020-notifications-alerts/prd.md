@@ -38,13 +38,14 @@ In Scope:
 | Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
-| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Provider, Patient (optional), Admin (optional) | Cancellation of inquiry prior to booking where applicable |
+| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Provider, Patient (optional), Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
 | Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
 | Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
+| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Sent to each provider whose quote is auto-cancelled due to patient inquiry cancellation (FR-003 Workflow 5). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". |
 | Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
 | Booking/Schedule | Booking Rescheduled | `booking.rescheduled` | Patient, Provider | Critical if schedule changes |
@@ -393,6 +394,7 @@ Acceptance Scenarios:
 | 2025-12-05 | 1.2     | Removed duplicate screen specs (patient settings, provider settings, admin policy) now referenced to their owning FRs (FR-001, PR-06, FR-030/FR-026) | AI     |
 | 2025-12-05 | 1.3     | Renumbered screens, consolidated screen notes, and referenced exact FRs (FR-001, FR-032/PR-06, FR-030, FR-026) | AI     |
 | 2026-01-16 | 1.4     | Aligned FR-020 notification event types to match FR-030 MVP event catalog; designated FR-030 as source of truth for event coverage | AI     |
+| 2026-02-05 | 1.5     | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes to reflect patient-initiated cancellation; added new `quote.cancelled_inquiry` event for quote cascade notifications; added content guideline that cancellation reason is patient-private | AI     |
 
 ---
 

@@ -543,6 +543,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 - If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support
 - If there is an active payment in progress, delete account is blocked until payment flow completes
 - If there is an active inquiry, delete account is allowed and system auto-closes open inquiries
+- **Note**: Account deletion auto-close of inquiries is distinct from patient-initiated inquiry cancellation (FR-003 Workflow 5). Auto-close sets inquiry status to "Closed (Account Deleted)"; explicit cancellation sets status to "Cancelled" with patient-provided reason.
 
 **Acceptance Scenarios**:
 
@@ -594,7 +595,7 @@ The Patient Authentication & Profile Management module enables patients to secur
   - Changes are saved immediately; effective within 1 minute
   - Marketing notifications are OFF by default unless explicit consent is stored (applies when V2 categories ship)
   - Failure to save MUST rollback UI to previous values and show actionable error
-  - System event triggers (read-only in Settings): user is informed that notifications are sent automatically on stage changes (Inquiry → Quote → Accepted/Confirmed, Payment events, Aftercare reminders)
+  - System event triggers (read-only in Settings): user is informed that notifications are sent automatically on stage changes (Inquiry → Quote → Accepted/Confirmed, Payment events, Aftercare reminders, Inquiry Cancelled)
 - Privacy & Security:
   - Change password requires old password and new password meeting policy; on success, existing refresh tokens are revoked
   - 2FA (future): visible as disabled with “coming soon” note
@@ -1028,6 +1029,7 @@ A patient successfully updates their profile information and manages account set
 |------|---------|---------|--------|
 | 2025-10-28 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template compliance: Added User Scenarios & Testing, Functional Requirements Summary, Key Entities, restructured Assumptions, added Appendices | Product & Engineering |
+| 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Clarified distinction between account deletion auto-close and explicit inquiry cancellation (Screen 14); added "Inquiry Cancelled" to system event triggers in Settings (Screen 16) | AI     |
 
 ## Appendix: Approvals
 

@@ -148,6 +148,12 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
   - Admin can review and provide guidance to providers
   - **Note**: Medical alerts are for provider awareness, not patient rejection
 
+- **A4**: Patient cancels inquiry (see Workflow 5)
+  - Patient initiates cancellation from Inquiry Dashboard (Screen 8) in stages: Inquiry, Quoted, or Accepted
+  - System validates eligibility, captures cancellation reason, and processes cancellation
+  - All associated quotes auto-cancelled; providers notified; inquiry becomes read-only
+  - Patient can immediately create a new inquiry (no cooldown; one-active-inquiry rule still applies)
+
 ### Workflow 2: Inquiry Distribution (System Flow)
 
 **Actors**: System, Providers, Admin
@@ -263,6 +269,54 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
   - Admin identifies problematic inquiries
   - Admin contacts patient or provider directly
   - Admin resolves issues and updates inquiry status
+
+### Workflow 5: Patient-Initiated Inquiry Cancellation
+
+**Actors**: Patient, System, Providers (notified), Admin (observer)
+
+**Trigger**: Patient taps "Cancel Inquiry" on the Inquiry Dashboard (Screen 8) for an inquiry in stage Inquiry, Quoted, or Accepted
+
+**Outcome**: Inquiry transitions to "Cancelled"; all associated quotes auto-cancelled; providers notified; inquiry becomes read-only in patient dashboard
+
+**Main Flow**:
+
+1. **Initiate Cancellation**
+   - Patient opens Inquiry Dashboard (Screen 8) and taps "Cancel Inquiry" from the Next Actions area
+   - System validates inquiry is in an eligible stage (Inquiry, Quoted, or Accepted)
+   - If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message: "Cannot cancel inquiry at this stage. Please contact support."
+
+2. **Capture Cancellation Reason**
+   - System displays cancellation confirmation modal with warning about irreversibility
+   - Patient selects a cancellation reason from predefined options (required)
+   - Patient may optionally provide additional feedback text
+
+3. **Process Cancellation**
+   - System updates inquiry status to "Cancelled" with timestamp and reason
+   - System auto-cancels all associated quotes with status "Cancelled (Inquiry Cancelled)" regardless of their current state (draft, sent, expired)
+   - If inquiry was in Accepted stage with an active 48-hour appointment slot hold (per FR-005/FR-006), system releases the hold immediately and returns the slot to the provider's availability
+
+4. **Notify Stakeholders**
+   - System sends cancellation confirmation notification to patient (Email + Push per preferences)
+   - System sends `inquiry.cancelled` notification to all affected providers (Email + Push)
+   - System sends `quote.cancelled_inquiry` notification per affected quote (provider-facing)
+   - Provider cancellation notifications do NOT reveal the patient's cancellation reason (patient-private data for analytics)
+   - System logs cancellation event in immutable audit trail
+
+5. **Post-Cancellation State**
+   - Inquiry appears in patient's Inquiry Dashboard with "Cancelled" badge (read-only)
+   - Patient can view cancelled inquiry details for reference but cannot modify or reopen
+   - Patient can immediately create a new inquiry (no cooldown; one-active-inquiry-at-a-time rule applies — the cancelled inquiry is no longer "active")
+
+**Alternative Flows**:
+
+- **E1**: Patient cancels inquiry with no quotes received (Inquiry stage)
+  - No quote cascade needed; only inquiry status updated
+  - No provider notifications for quote cancellation (only `inquiry.cancelled` to distributed providers)
+
+- **E2**: Patient cancels inquiry during Accepted stage
+  - Accepted quote auto-cancelled; 48-hour appointment slot hold released immediately
+  - Provider notified of both inquiry cancellation and slot release
+  - Booking/payment flow becomes inaccessible for this inquiry
 
 ## Screen Specifications
 
@@ -495,24 +549,29 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/...) | Valid lifecycle value |
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" |
 | Timeline | timeline | Yes | Chronological status changes | Timestamps present |
 | Responses Count | number | Yes | Number of provider responses | Non-negative integer |
 | Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
 | Quotes Received | list | No | Provider quotes (from FR-004) | Read-only links |
 | Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
 | Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
+| Cancel Inquiry | action | Conditional | "Cancel Inquiry" button; visible only in Inquiry, Quoted, or Accepted stages | Hidden when stage is Confirmed, In Progress, Aftercare, Completed, or Cancelled; triggers Workflow 5 cancellation flow |
 
 **Notes**:
 
 - Dashboard shows: full inquiry summary, provider responses, deadlines, and context-aware next actions
+- "Cancel Inquiry" action appears in Next Actions area only for eligible stages (Inquiry, Quoted, Accepted)
+- If inquiry is in "Cancelled" stage, dashboard is read-only with "Cancelled" badge; no actions available except viewing details
 
 **Business Rules**:
 
 - Patient can only have one active inquiry at a time
 - Patient can modify inquiry if still in "Inquiry" stage
+- Patient can cancel inquiry if in Inquiry, Quoted, or Accepted stage (see Workflow 5)
 - Patient receives notifications for status changes
 - Inquiry data persists for 7 years minimum
+- Cancelled inquiries are not counted as "active" — patient can create a new inquiry immediately after cancellation
 
 ### Provider Platform Screens
 
@@ -734,6 +793,19 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - Admin has full access to all inquiry data
    - All data access logged for audit trail
 
+4. **Cancellation Rules**
+   - Patient can cancel their own inquiry in stages: Inquiry, Quoted, or Accepted (before Confirmed)
+   - Cancellation is blocked for inquiries in Confirmed, In Progress, Aftercare, or Completed stages — patient must contact support
+   - Cancellation is immediate and irreversible; no grace period, no admin approval required
+   - Cancellation reason is required (predefined options; see Workflow 5)
+   - All associated quotes are auto-cancelled with status "Cancelled (Inquiry Cancelled)" regardless of quote state
+   - If inquiry is in Accepted stage with an active 48-hour appointment slot hold (FR-005/FR-006), the hold is released immediately
+   - All affected providers receive notification of cancellation; cancellation reason is NOT shared with providers (patient-private analytics data)
+   - Cancelled inquiry remains visible in patient dashboard with "Cancelled" badge (read-only)
+   - No cooldown period after cancellation — patient can immediately create a new inquiry (one-active-inquiry rule: cancelled inquiry is no longer "active")
+   - Admin has oversight visibility of patient-initiated cancellations but cannot block or reverse them
+   - Cancellation event is logged in immutable audit trail with: patient ID, inquiry ID, timestamp, reason, optional feedback
+
 ### Medical Data Rules
 
 1. **Medical Alert System**
@@ -758,6 +830,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - 3D scans retained for 2 years after inquiry completion
    - Medical questionnaire responses retained for 7 years
    - All data encrypted at rest and in transit
+   - Cancelled inquiries are subject to the same retention policy as completed inquiries; cancellation does not accelerate data deletion timelines
 
 2. **Data Access**
    - Patient direct identifiers (name, phone number, email) anonymized until payment confirmation
@@ -896,13 +969,20 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - **REQ-003-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
 - **REQ-003-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
 
+### Cancellation Requirements
+
+- **REQ-003-012**: System MUST allow patients to cancel their own inquiry in Inquiry, Quoted, or Accepted stages with a required cancellation reason; cancellation is immediate and irreversible.
+- **REQ-003-013**: System MUST auto-cancel all associated quotes when an inquiry is cancelled by the patient, with distinct cancellation status "Cancelled (Inquiry Cancelled)" and provider notifications via FR-020.
+- **REQ-003-014**: System MUST release any active appointment slot hold (FR-005/FR-006 48-hour hold) immediately when an Accepted-stage inquiry is cancelled by the patient.
+
 ### Marking Unclear Requirements
 
-- **REQ-003-012**: Provider capacity management is referenced but handled by a separate FR (TBD); integration expectations remain.
+- **REQ-003-015**: Provider capacity management is referenced but handled by a separate FR (TBD); integration expectations remain.
 
 ## Key Entities
 
-- **Inquiry**: patientId, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt
+- **Inquiry**: patientId, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
+  - Status enum: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, **Cancelled**
   - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
 - **ProviderInquiry**: inquiryId, providerId, distributionAt, viewedAt, status
   - Relationships: belongsTo Inquiry; belongsTo Provider
@@ -1042,11 +1122,27 @@ Acceptance Scenarios:
 2. Given 3D scan and media, When provider views, Then performance and policy constraints are respected
 3. Given pre-quote stage, When provider attempts to modify patient data, Then system blocks and logs read-only access
 
+### User Story 4 - Patient Cancels Inquiry (Priority: P2)
+
+Why: Gives patients autonomy to cancel inquiries they no longer wish to pursue, reducing provider effort on abandoned inquiries.
+
+Independent Test: Patient cancels inquiry at each eligible stage; verify status update, quote cascade, provider notifications, and dashboard state.
+
+Acceptance Scenarios:
+
+1. Given inquiry in "Inquiry" stage (no quotes), When patient cancels with reason, Then inquiry status becomes Cancelled; no quote cascade; distributed providers notified
+2. Given inquiry in "Quoted" stage with 3 active quotes, When patient cancels, Then inquiry and all 3 quotes are cancelled; all 3 providers notified
+3. Given inquiry in "Accepted" stage with 48h slot hold active, When patient cancels, Then inquiry cancelled; accepted quote cancelled; appointment slot hold released immediately; provider notified of cancellation and slot release
+4. Given inquiry in "Confirmed" stage, When patient taps Cancel Inquiry, Then system blocks with message "Cannot cancel at this stage. Please contact support."
+5. Given patient cancels inquiry, When patient returns to Inquiry Dashboard, Then cancelled inquiry visible with "Cancelled" badge (read-only); patient can create new inquiry immediately
+
 ### Edge Cases
 
 - Patient uploads invalid media exceeding limits: validation blocks with actionable guidance
 - Overlapping date ranges: server-side validation rejects with correction prompts
-- Missing questionnaire details for “Yes” answers: system requires completion before submission
+- Missing questionnaire details for "Yes" answers: system requires completion before submission
+- Patient cancels inquiry while provider is drafting a quote: provider's draft is locked with "Inquiry Cancelled" banner upon next save/refresh
+- Patient cancels inquiry during simultaneous provider quote submission: system processes cancellation first (inquiry status is source of truth); incoming quote submission rejected with "Inquiry no longer active" error
 
 ---
 
@@ -1063,6 +1159,7 @@ Acceptance Scenarios:
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, field tables, FR summary, entities, appendices | Product & Engineering |
 | 2025-12-01 | 1.2 | Aligned with client scope by removing unsourced budget requirement from System PRD, defining explicit inquiry payload composition, and clarifying anonymization to keep IDs visible while masking name/phone/email until payment confirmation | Product & Engineering |
 | 2025-12-16 | 1.3 | Aligned destination selection ordering with FR-028 (regional configuration when available, proximity fallback) | Product & Engineering |
+| 2026-02-05 | 1.4 | Added Workflow 5 (Patient-Initiated Inquiry Cancellation), Alternative Flow A4, Screen 8 Cancel Inquiry action + Cancelled stage, Cancellation Rules in Business Rules, REQ-003-013/014/015, updated Key Entities with Cancelled status and cancellation fields, added User Story 4 and edge cases. Cross-FR impact: FR-004, FR-005, FR-006, FR-020, FR-030, FR-001, FR-016, FR-023. See cancel-inquiry-fr-impact-report.md | Product & Engineering |
 
 ## Appendix: Approvals
 

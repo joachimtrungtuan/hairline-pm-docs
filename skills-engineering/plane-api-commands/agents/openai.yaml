@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plane API Commands"
+  short_description: "Run Plane API list and issue creation workflows"
+  default_prompt: "Run Plane API operations for listing or creating work items."

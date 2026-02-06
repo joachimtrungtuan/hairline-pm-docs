@@ -92,7 +92,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 **Actors**: System, Provider, Patient, Admin (observer)
 
-**Trigger**: Time-based expiry reached; patient accepts a quote; or provider initiates withdrawal/archive
+**Trigger**: Time-based expiry reached; patient accepts a quote; provider initiates withdrawal/archive; or patient cancels parent inquiry (FR-003 Workflow 5)
 
 **Outcome**: Quote transitions to correct status; notifications sent; audit recorded
 
@@ -100,6 +100,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 - Upon expiry, system updates quote to "expired" status; quote can no longer be accepted
 - Provider may withdraw or archive quotes pre-acceptance
 - Patient acceptance auto-moves quote to "accepted"/"booked" status
+- **Patient cancels parent inquiry**: All quotes for that inquiry transition to "Cancelled (Inquiry Cancelled)" regardless of current state (draft, sent, expired). This is a system-initiated cascade, not a provider or patient action on the quote itself. Providers are notified via `quote.cancelled_inquiry` event (FR-020).
 - All state transitions are logged and result in notifications as appropriate
 
 ### Workflow 4: Quote Deletion (Soft Delete)
@@ -145,6 +146,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 - Patient declines all quotes (system expires all open quotes automatically)
 - Another provider's quote is accepted → System marks all other quotes for the same inquiry as "cancelled (other accepted)" and notifies their providers.
 - While a provider is drafting a quote, if another quote is accepted → drafting provider is notified immediately; drafting quote is locked with banner referencing the accepted quote and case status updates.
+- Patient cancels parent inquiry (FR-003 Workflow 5) → ALL quotes for that inquiry are auto-cancelled with status "Cancelled (Inquiry Cancelled)"; each affected provider notified via `quote.cancelled_inquiry` event; drafting providers see locked quote with "Inquiry Cancelled" banner upon next save/refresh. Cancellation reason is patient-private and NOT shared with providers.
 
 ## Screen Specifications
 
@@ -399,9 +401,14 @@ Notes:
 
 - **REQ-004-012**: Refund/penalty policy depth for provider withdrawal may move to a dedicated FR if expanded.
 
+### Cancellation Cascade Requirements
+
+- **REQ-004-013**: System MUST auto-cancel ALL quotes for an inquiry when that inquiry is cancelled by the patient (FR-003 Workflow 5), with distinct status "Cancelled (Inquiry Cancelled)" and provider notifications via `quote.cancelled_inquiry` event (FR-020).
+
 ## Key Entities
 
 - **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], appointmentSlotAt, appointmentTimeZone, clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
+  - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**
   - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
 - **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
   - Relationships: belongsTo Quote
@@ -550,6 +557,7 @@ Acceptance Scenarios:
 |------|---------|---------|--------|
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, comms structure, screen tables, FR summary, entities | Product & Engineering |
+| 2026-02-05 | 1.2 | Added inquiry cancellation cascade: new trigger in Workflow 3, "Cancelled (Inquiry Cancelled)" quote status, alternative flow for patient inquiry cancellation, REQ-004-013, updated Key Entities status enum. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 | 2025-11-04 | 1.2 | Template compliance: added Actors/Trigger/Outcome to workflows; normalized Dependencies; restructured Assumptions; formalized Implementation Notes; added User Scenarios & Testing | Product & Engineering |
 
 ## Appendix: Approvals

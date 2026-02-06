@@ -113,9 +113,15 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 **A3: Provider Withdraws Before Acceptance Completes**:
 
-- Trigger: Provider withdraws quote just before patient confirms acceptance.  
-- Steps: System re-validates eligibility at confirmation; if withdrawn, acceptance is blocked with explanation.  
+- Trigger: Provider withdraws quote just before patient confirms acceptance.
+- Steps: System re-validates eligibility at confirmation; if withdrawn, acceptance is blocked with explanation.
 - Outcome: Patient returns to inquiry dashboard to select another quote.
+
+**A4: Patient Cancels Inquiry During Quote Review**:
+
+- Trigger: Patient cancels the parent inquiry (FR-003 Workflow 5) while quotes are available for review or one is already accepted.
+- Steps: System cancels inquiry; all quotes auto-cancelled with status "Cancelled (Inquiry Cancelled)"; all Accept/Compare actions disabled; dashboard shows "Cancelled" badge. If in Accepted stage with 48-hour appointment slot hold active, hold is released immediately (see FR-006).
+- Outcome: Inquiry dashboard becomes read-only. Patient can create a new inquiry immediately.
 
 ---
 
@@ -133,7 +139,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/...) | Valid lifecycle value |
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" per FR-003 |
 | Timeline | timeline | Yes | Chronological status changes | Timestamps present |
 | Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
 | Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
@@ -157,11 +163,12 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 **Business Rules**:
 
-- Quotes are displayed within the inquiry dashboard context (not a separate screen).  
-- Expired/withdrawn quotes are visually disabled.  
+- Quotes are displayed within the inquiry dashboard context (not a separate screen).
+- Expired/withdrawn quotes are visually disabled.
 - Exactly one acceptance permitted per inquiry.
 - Patient can sort/filter quotes and compare up to 3 quotes side-by-side (criteria must include at least: total price, price per graft, graft count, review rating, soonest appointment slot).
 - Patient can view quote details and accept directly from the dashboard.
+- If inquiry stage is "Cancelled", all Accept buttons and Compare checkboxes are disabled; dashboard is read-only with "Cancelled" badge; quote data remains visible for reference (see FR-003 Workflow 5, Alternative Flow A4 above).
 
 #### Screen 2: Quote Detail with Accept Action (Extension of FR-004 Screen 4)
 
@@ -281,6 +288,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - On acceptance, the system MUST ensure the quote exchange rate is locked at the time of acceptance per FR-004 / System PRD pricing rules.  
 - Pricing and discounts shown are those defined in FR-004; acceptance does not modify financial terms.
 - Post-Acceptance Hold: After acceptance, the system reserves the pre-selected appointment slot for 48 hours to allow the patient to complete the initial payment (deposit or first installment) in FR-006. If payment is not completed within 48 hours, the reservation is released and the slot may be reallocated by the provider.
+- Inquiry Cancellation During Hold: If the patient cancels the inquiry (FR-003 Workflow 5) while the 48-hour appointment slot hold is active, the hold is released immediately and the slot is returned to the provider's availability. The accepted quote transitions to "Cancelled (Inquiry Cancelled)". See FR-006 for booking-side guard rules.
 
 ---
 
@@ -464,6 +472,7 @@ Patient attempts to accept a quote that has expired.
 | 2025-11-03 | 1.0 | Initial PRD creation for FR-005 | Product & Engineering |
 | 2025-11-04 | 1.1 | PRD reviewed and verified | Product Owner |
 | 2025-11-04 | 1.2 | Template compliance: moved Multi-Tenant Architecture to Module Scope; added MTA bullets; renamed Entry Points; restructured Assumptions into subsections | Product & Engineering |
+| 2026-02-05 | 1.3 | Added Alternative Flow A4 (inquiry cancelled during quote review), "Cancelled" to Screen 1 stage badge, read-only blocking rule for cancelled inquiries, appointment slot hold release on inquiry cancellation in Payment & Billing Rules. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 
 ---
 

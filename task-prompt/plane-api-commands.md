@@ -112,7 +112,7 @@ import subprocess
 file_path = "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/task-creation/YYYY-MM-DD/implementation-tasks-YYYY-MM-DD-XXX.md"
 
 # API Configuration (from .env and samasu-system-variables.md)
-PLANE_API_KEY = "REDACTED_KEY"
+PLANE_API_KEY = os.environ.get("PLANE_API_KEY", "")  # Load from .env — NEVER hardcode
 WORKSPACE_SLUG = "samasu-digital"
 BASE_URL = "https://api.plane.so/api/v1"
 PROJECT_ID = "ff2d96b2-0ab2-438b-b879-fbdaa078dbd6"

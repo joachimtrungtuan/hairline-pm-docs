@@ -164,7 +164,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 - **REQ-023-001**: System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.
 - **REQ-023-002**: System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability.
+- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) are subject to the same retention rules as completed inquiries — they are soft-deleted/archived, never hard-deleted before the retention period expires.
 - **REQ-023-004**: System MUST provide GDPR-compliant data export in a machine-readable, portable format (with media referenced via secure links) including account/profile, bookings, messages, and media references; raw audit logs are excluded by default and provided only upon explicit request subject to review.
 - **REQ-023-005**: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected medical/financial records are retained without anonymization but with strict access restrictions and documented legal basis.
 - **REQ-023-006**: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
@@ -243,6 +243,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 |------------|---------|---------------------------------------------------|--------------|
 | 2025-11-12 | 1.0     | Initial PRD creation                              | AI Assistant |
 | 2025-11-12 | 1.1     | Added Success Criteria and clarified dependencies | AI Assistant |
+| 2026-02-05 | 1.2     | Cancel Inquiry flow (FR-003 Workflow 5): Clarified that cancelled inquiries are subject to the same retention rules as completed inquiries (REQ-023-003) | AI     |
 
 ---
 

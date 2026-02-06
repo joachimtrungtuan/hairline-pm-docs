@@ -286,7 +286,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Search Input | text | No | Search by name, email, patient code, phone | Min 2 characters |
-| Status Filter | multi-select | No | Filter by journey status | Options: Inquiry, Quoted, Scheduled, In-Progress, Aftercare, Completed, Suspended |
+| Status Filter | multi-select | No | Filter by journey status | Options: Inquiry, Quoted, Accepted, Scheduled, In-Progress, Aftercare, Completed, Cancelled, Suspended |
 | Date Range Filter | date-range | No | Filter by registration date or last activity | Start date ≤ End date |
 | Location Filter | select | No | Filter by patient country | Country list from admin settings |
 | Provider Filter | select | No | Filter by assigned provider | Active providers only |
@@ -306,7 +306,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Requested Date | Upcoming/most recent requested treatment window |
 | Med Alerts | Badge: Critical / Standard / None, matches patient medical questionnaire severity |
 | Payment | Latest payment status badge (Paid, Pending, Deposit Due, Refund, etc.) |
-| Stage | Current journey stage badge (Inquiry, Quoted, Scheduled, In Progress, Aftercare, Complete, Cancelled) |
+| Stage | Current journey stage badge (Inquiry, Quoted, Accepted, Scheduled, In Progress, Aftercare, Complete, Cancelled). "Cancelled" indicates patient-initiated inquiry cancellation (FR-003 Workflow 5) — admin has oversight only, no reversal. |
 | Last Active | Relative timestamp of last platform action |
 | Action | Overflow menu with shortcuts: open case, view detail, quick actions |
 
@@ -535,7 +535,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Admin Action List | table | Yes (display only) | Chronological log of actions | Sortable, filterable |
 | Action Date | datetime | Yes (display only) | When action occurred | Read-only |
 | Admin Name | text | Yes (display only) | Which admin performed action | Read-only |
-| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note |
+| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason) |
 | Action Description | text | Yes (display only) | Summary of what changed | Read-only |
 | Justification | text | Yes (display only) | Admin reason for action | Read-only, expandable |
 | Impact | badge | No (display only) | Severity of action | Low, Medium, High |
@@ -1050,6 +1050,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 | 2025-11-11 | 1.0 | Initial PRD creation for FR-016 Admin Patient Management | AI Assistant |
 | 2025-11-21 | 1.1 | Updated status to ✅ Verified & Approved and aligned admin role/medical access rules | AI Assistant |
 | 2025-12-29 | 1.2 | Removed formal Support Ticket system scope from FR-016 and referenced dedicated FR-034 (Support Center & Ticketing) | AI Assistant |
+| 2026-02-05 | 1.3 | Cancel Inquiry flow (FR-003 Workflow 5): Added "Cancelled" and "Accepted" to Stage filter and badge values (Screen 1); added "Patient Inquiry Cancellation" as system-generated audit event type (Screen 7) | AI     |
 
 ---
 

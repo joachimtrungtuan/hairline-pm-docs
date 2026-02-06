@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Implementation Tasks"
+  short_description: "Generate implementation task docs from FR gaps"
+  default_prompt: "Create implementation tasks from FR verification gaps."

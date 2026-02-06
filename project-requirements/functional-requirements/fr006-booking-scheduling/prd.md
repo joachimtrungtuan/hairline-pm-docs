@@ -77,6 +77,11 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 **Trigger**: Patient accepts a quote (FR-005) - appointment slot already pre-scheduled and confirmed by provider during quote creation
 **Outcome**: Booking confirmed; deposit paid; provider calendar blocked; confirmations sent
 
+**Pre-Booking Validation**: Before entering the booking/payment flow, system MUST verify:
+
+- The parent inquiry is NOT in "Cancelled" status (FR-003 Workflow 5). If cancelled, system blocks entry with message: "This inquiry has been cancelled. Booking is no longer available."
+- The accepted quote is still in "Accepted" status (not expired, withdrawn, or cancelled).
+
 **Steps**:
 
 1. Patient opens Accepted Quote detail view (from FR-005) and reviews quote details including pre-scheduled appointment slot (already confirmed - no selection needed).
@@ -113,6 +118,18 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
   4. If payment still fails after 48 hours, system releases the slot and moves quote status back to "Quote" (available for acceptance again, but slot may no longer be available if provider has reallocated it).
   5. System notifies both patient and provider of payment failure and slot release.
 - **Outcome**: Booking not confirmed; quote remains valid but slot availability is not guaranteed after release; patient may retry if slot still available; provider notified of slot release.
+
+**B3: Patient Cancels Inquiry During 48-Hour Slot Hold**:
+
+- **Trigger**: Patient cancels the parent inquiry (FR-003 Workflow 5) while the 48-hour appointment slot hold is active (post-acceptance, pre-payment).
+- **Steps**:
+  1. System validates cancellation eligibility per FR-003 Workflow 5 (inquiry is in Accepted stage — cancellation allowed).
+  2. System immediately releases the 48-hour appointment slot hold; slot returned to provider's availability.
+  3. Accepted quote transitions to "Cancelled (Inquiry Cancelled)"; inquiry transitions to "Cancelled".
+  4. System notifies provider of both inquiry cancellation and slot release (slot is now available for reallocation).
+  5. System notifies patient of successful cancellation with confirmation.
+  6. Booking/payment flow becomes inaccessible for this inquiry.
+- **Outcome**: Slot released immediately; no booking created; no payment collected; provider notified and can reallocate slot; patient can create a new inquiry.
 
 **B2: Cancellation**:
 
@@ -878,6 +895,7 @@ None.
 | 2025-11-04 | 1.2 | Enhanced booking detail screens: Added comprehensive data from all previous stages (FR-003 inquiry, FR-004 quote, FR-005 acceptance) to provider and admin booking detail screens; Clarified deposit rate management is handled in FR-029: Payment System Configuration | AI |
 | 2025-11-12 | 1.3 | Status updated to Verified & Approved; All approvals completed | Product Team |
 | 2025-12-16 | 1.4 | Documentation alignment: Clarified installment option eligibility and payment option wording to reference FR-029 as the configuration source for deposit/split payment/commission settings (no functional change). | AI |
+| 2026-02-05 | 1.5 | Added pre-booking validation guard (inquiry not cancelled), Alternative Flow B3 (patient cancels inquiry during 48h slot hold with immediate release). See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 
 ---
 

@@ -440,7 +440,7 @@ flowchart TD
     ViewDetail --> CancelOption["Patient taps 'Cancel Inquiry' in action menu"]
     CancelOption --> CheckStage{"Current inquiry stage?"}
 
-    CheckStage -->|Confirmed, Booked,<br/>In Progress, Completed| BlockCancellation["Display error message:<br/>'Cannot cancel inquiry at this stage'<br/>Suggest: Contact support"]
+    CheckStage -->|Confirmed, In Progress,<br/>Aftercare, Completed| BlockCancellation["Display error message:<br/>'Cannot cancel inquiry at this stage'<br/>Suggest: Contact support"]
     BlockCancellation --> End1["Patient exits flow"]
 
     CheckStage -->|Inquiry, Quoted,<br/>Accepted| ShowModal["Display Cancel Inquiry Confirmation Modal (P02.2-S1)"]

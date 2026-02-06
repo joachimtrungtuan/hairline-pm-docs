@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check Progress"
+  short_description: "Update one checklist row via FR progress verification"
+  default_prompt: "Check and update progress for one module and FR pair."
