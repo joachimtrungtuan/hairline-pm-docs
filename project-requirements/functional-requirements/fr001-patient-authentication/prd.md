@@ -584,7 +584,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Notification
 - Privacy and security
 - Help and support
-- About
+- Terms & Conditions
 
 **Business Rules**:
 
@@ -597,12 +597,13 @@ The Patient Authentication & Profile Management module enables patients to secur
   - Failure to save MUST rollback UI to previous values and show actionable error
   - System event triggers (read-only in Settings): user is informed that notifications are sent automatically on stage changes (Inquiry → Quote → Accepted/Confirmed, Payment events, Aftercare reminders, Inquiry Cancelled)
 - Privacy & Security:
-  - Change password requires old password and new password meeting policy; on success, existing refresh tokens are revoked
-  - 2FA (future): visible as disabled with “coming soon” note
-  - Device sessions listing with the ability to revoke a single session or all sessions (requires re-auth)
-  - Download my data (GDPR) triggers background export and emails secure link when ready
+  - Opens a small menu with two items: Change Password, Privacy Policy
+  - Change Password is a dedicated screen/flow (see Screen 18) and requires current password and new password meeting policy; on success, existing refresh tokens are revoked and current session remains active
+  - "Forgot your password?" is available within Change Password and routes to Password Reset (Screens 10–12)
+  - Privacy Policy is displayed as read-only legal content sourced and versioned per FR-027
   - All server-write actions use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values
-  - Session-sensitive actions (password change, revoke sessions) require re-auth if > 5 minutes since last re-auth
+- Terms & Conditions:
+  - Displayed as read-only legal content sourced and versioned per FR-027
 
 **Acceptance Scenarios**:
 
@@ -613,31 +614,26 @@ Notifications
 3. Given inquiry stage changes (e.g., Quote received), When Email or Push is ON, Then the user receives a stage update notification according to FR-020.
 
 Privacy & Security
-4. Given user submits oldPassword and a new password that meets policy, When request succeeds, Then all previous refresh tokens are revoked and user remains logged in with current session.
-5. Given user opens Device sessions, When revoking a session (not current), Then that session is terminated within 1 minute.
-6. Given user selects Revoke all sessions, When re-auth succeeds, Then all sessions are terminated except the current one and user is notified.
-7. Given user requests Download my data, When request is accepted, Then user sees confirmation and later receives an email with a time-limited secure link.
+4. Given user selects Change Password and submits currentPassword and a new password that meets policy, When request succeeds, Then prior refresh tokens are revoked and user remains logged in with current session.
+5. Given user cannot remember current password, When they tap "Forgot your password?" on the Change Password screen, Then the app routes to Password Reset Initiation (Screen 10).
+6. Given user opens Privacy Policy, Then the latest published policy content is shown with working back navigation (FR-027).
+7. Given user opens Terms & Conditions, Then the latest published terms content is shown with working back navigation (FR-027).
 
 Data/Validation & Audit
 10. Given user changes notification preferences, Then a preference-change audit entry is recorded with who/when/before/after.
 11. Given user changes password, Then a security audit entry is recorded and password policy is enforced.
-12. Given user revokes sessions, Then audit captures the action and targeted session IDs (masked where appropriate).
+12. Given user initiates a password reset (forgot password), Then audit captures the reset request event (without storing OTP codes).
 
 **Minimal API/State (Reference)**:
 
 - GET/PUT user profile (firstName, lastName, phone, countryCode, country)
 - GET/PUT notificationPreferences { email, push }
 - POST changePassword { oldPassword, newPassword }
-- GET activeSessions[], POST revokeSession(sessionId), POST revokeAllSessions
 - POST deleteAccountRequest { reason? } (deletion request / DSR; queued for Admin review per FR-023)
-- POST dataExportRequest
 - Read-only lists: previousTreatments[], reviews[]
 
 Help & Support
 8. Given user opens Help and support → Report a problem, When submitting feedback, Then device/os/app version and timestamp are attached; submissions are throttled to prevent spam.
-
-About
-9. Given user opens About, Then app version, Terms & Conditions, Privacy Policy, and Open-source licenses are shown with working links.
 
 #### Screen 17: Delete Account (Deletion Request / DSR)
 
@@ -667,6 +663,28 @@ About
 - Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`)
 - Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy)
 - On submission: system creates deletion request record, sends confirmation, and later sends status updates and outcome (including legal basis for any retained records)
+
+#### Screen 18: Change Password
+
+**Purpose**: Allow an authenticated patient to change their password (with an in-flow link to password reset if they forgot the current password)
+
+**Data Fields**:
+
+- Back navigation
+- "Change Password" header
+- Current password input (masked)
+- "Forgot your password?" link (routes to Screen 10)
+- New password input (masked)
+- Confirm new password input (masked)
+- Password policy helper text
+- Primary CTA: "Save"
+
+**Business Rules**:
+
+- Current password is required for in-session password change; user must use Password Reset if they cannot provide current password (Screens 10–12)
+- New password must meet password rules and cannot reuse last 5 passwords
+- Do not hardcode attempt counts in UI copy; throttling/lockout follows configured authentication security policy
+- On success: prior refresh tokens are revoked and current session remains active
 
 ## Business Rules
 
@@ -1030,6 +1048,7 @@ A patient successfully updates their profile information and manages account set
 | 2025-10-28 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template compliance: Added User Scenarios & Testing, Functional Requirements Summary, Key Entities, restructured Assumptions, added Appendices | Product & Engineering |
 | 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Clarified distinction between account deletion auto-close and explicit inquiry cancellation (Screen 14); added "Inquiry Cancelled" to system event triggers in Settings (Screen 16) | AI     |
+| 2026-02-06 | 1.3 | Settings (Screen 16): Added Terms & Conditions entry; refactored Privacy & Security into a 2-item menu (Change Password, Privacy Policy); removed device sessions and data export from patient settings. Added Change Password (Screen 18) with "Forgot your password?" link to Password Reset (Screens 10–12). Added Delete Account DSR request screen (Screen 17) and clarified DSR submission behavior. | AI     |
 
 ## Appendix: Approvals
 

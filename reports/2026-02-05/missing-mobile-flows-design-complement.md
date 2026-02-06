@@ -13,7 +13,8 @@
 | # | Flow | Module | Related FRs | Status |
 |---|------|--------|-------------|--------|
 | P01.1 | Delete Account | P-01: Auth & Profile Management | FR-001, FR-026, FR-023 | 🟡 Specified |
-| P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-026, FR-020 | 🟡 Specified |
+| P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-001, FR-020, FR-027 | 🟡 Specified |
+| P01.3 | Change Password | P-01: Auth & Profile Management | FR-001 | 🟡 Specified |
 | P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🟡 Specified |
 | P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | ⏸️ On Hold |
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🔴 Not Designed |
@@ -151,7 +152,7 @@ flowchart TD
 
 - Re-authentication is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 14)
 - Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited (FR-001 OTP rules)
-- Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (FR-001 + FR-026 settings infrastructure)
+- Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (FR-001)
 - Successful verification returns the patient to the final confirmation modal to submit the deletion request (FR-023)
 - Patient can cancel at any time to exit without submitting a deletion request
 
@@ -184,8 +185,8 @@ flowchart TD
 
 ### Flow P01.2: Settings Screen
 
-**Related FRs**: FR-026 (App Settings & Security), FR-020 (Notifications & Alerts)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr026-app-settings-security/prd.md`
+**Related FRs**: FR-001 (Patient Authentication), FR-020 (Notifications & Alerts), FR-027 (Legal Content Management)
+**Source Reference**: `local-docs/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`, `fr020-notifications-alerts/prd.md`, `fr027-legal-content-management/prd.md`
 **Status**: 🟡 Specified
 
 #### Flow Diagram
@@ -197,41 +198,25 @@ flowchart TD
     MainScreen --> Choice{"Patient selects navigation section"}
 
     Choice -->|Notification Settings| NotifScreen["Display Notification Settings (P01.2-S2)"]
-    Choice -->|Privacy & Security| PrivacyScreen["Display Privacy & Security (P01.2-S3)"]
+    Choice -->|Privacy & Security| PrivacyMenu["Display Privacy & Security Menu (P01.2-S3)"]
+    Choice -->|Terms & Conditions| TermsScreen["Display Terms & Conditions (P01.2-S5)"]
     Choice -->|Help & Support| HelpFlow["Navigate to Flow P08.1<br/>(Help Center & Support Access)"]
-    Choice -->|About| AboutScreen["Display About Screen (P01.2-S4)"]
 
     NotifScreen --> NotifActions{"Patient action"}
     NotifActions -->|Toggle Email/Push| SavePrefs["Auto-save preference change<br/>(immediate, within 1 minute)"]
     NotifActions -->|Back| MainScreen
     SavePrefs --> NotifScreen
 
-    PrivacyScreen --> PrivacyActions{"Patient action"}
-    PrivacyActions -->|Change Password| PwdFlow["Change Password Flow:<br/>Enter old password → new password<br/>Revoke all refresh tokens on success"]
-    PrivacyActions -->|View Device Sessions| SessionsList["Display active sessions list"]
-    PrivacyActions -->|Revoke Session| RevokeConfirm["Confirm revoke → session terminated"]
-    PrivacyActions -->|Revoke All Sessions| ReauthRevoke["Re-auth required → revoke all except current"]
-    PrivacyActions -->|Download My Data| ExportRequest["Submit data export request<br/>(FR-023 GDPR flow)"]
-    PrivacyActions -->|Back| MainScreen
+    PrivacyMenu --> PrivacyChoice{"Patient selects item"}
+    PrivacyChoice -->|Change Password| ChangePwdFlow["Navigate to Flow P01.3<br/>(Change Password)"]
+    PrivacyChoice -->|View Privacy Policy| PrivacyPolicy["Display Privacy Policy (P01.2-S4)"]
+    PrivacyChoice -->|Back| MainScreen
 
-    PwdFlow --> PwdSuccess{"Password change<br/>successful?"}
-    PwdSuccess -->|Yes| TokenRevoke["Revoke previous refresh tokens<br/>Current session remains active"]
-    PwdSuccess -->|No| PwdError["Show validation error<br/>Retry"]
-    TokenRevoke --> PrivacyScreen
-    PwdError --> PwdFlow
+    PrivacyPolicy --> PrivacyPolicyActions{"Patient action"}
+    PrivacyPolicyActions -->|Back| PrivacyMenu
 
-    SessionsList --> PrivacyScreen
-    RevokeConfirm --> PrivacyScreen
-    ReauthRevoke --> PrivacyScreen
-    ExportRequest --> PrivacyScreen
-
-    AboutScreen --> AboutActions{"Patient action"}
-    AboutActions -->|Tap Terms/Privacy/Licenses| LegalViewer["Open legal content viewer<br/>(same pattern as Flow P02.4)"]
-    AboutActions -->|Rate the App| AppStore["Open app store listing<br/>(iOS App Store / Google Play)"]
-    AboutActions -->|Back| MainScreen
-
-    LegalViewer --> AboutScreen
-    AppStore --> AboutScreen
+    TermsScreen --> TermsActions{"Patient action"}
+    TermsActions -->|Back| MainScreen
 
     HelpFlow --> End1["Patient exits Settings flow"]
 
@@ -248,22 +233,21 @@ flowchart TD
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Settings" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
-| Profile Summary Card | group | Yes | User profile preview section at top | Tappable; navigates to Edit Profile (FR-001 Screen 15) |
-| Profile Avatar | image | Yes | Patient's profile photo or placeholder | Circular, displayed within profile summary |
-| Patient Name | text | Yes | Patient's full name (first + last) | Read-only, displayed within profile summary |
-| Patient Email | text | Yes | Patient's registered email address | Read-only, displayed within profile summary |
 | Navigation Section: Notifications | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to P01.2-S2 |
 | Navigation Section: Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to P01.2-S3 |
+| Navigation Section: Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to P01.2-S5 |
 | Navigation Section: Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Flow P08.1 (P-08: Help Center & Support Access) |
-| Navigation Section: About | link | Yes | Row with info icon + "About" label + chevron | Navigates to P01.2-S4 |
-| App Version | text | Yes | "Version X.Y.Z" displayed at bottom of screen | Auto-populated from build configuration; format: "Version 1.0.0" |
 
 **Business Rules**:
 
-- Navigation sections are static items — always visible in the same order
-- Profile summary reflects current user data in real-time; tapping it navigates to Edit Profile (FR-001 Screen 15)
-- App version is auto-populated from build metadata and cannot be edited
-- All navigation rows are tappable with visual feedback (highlight on tap)
+- Navigation sections are static items — always visible in the same order (FR-001 Screen 16)
+- Tapping a navigation row must open the corresponding settings screen/flow and preserve back navigation to P01.2-S1
+- Terms & Conditions must open read-only legal content sourced and versioned per FR-027
+- Help & Support always routes to Flow P08.1 (separate module P-08)
+- Settings items are patient-app only; no provider/admin controls appear here
+
+> **Help & Support** is specified under **P-08: Help Center & Support Access** → see [Flow P08.1](#flow-p081-help--support) below.
+> The Settings main screen links to it as a navigation item.
 
 ##### Screen P01.2-S2: Notification Settings
 
@@ -287,70 +271,144 @@ flowchart TD
 - **MVP scope**: Only global Email/Push toggles available; per-category preferences (Quote, Booking, Payment, Treatment, Message, Promotional) are V2 and not shown in this screen (FR-020, FR-001 Screen 16)
 - Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles
 - System event notifications (inquiry stage changes, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP
-- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute (FR-001 Screen 16)
-- Default for new accounts: both Email and Push toggles ON
+- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON (FR-001 Screen 16)
 - If save fails, UI must revert to previous toggle state and show actionable error with Retry option (FR-001 Screen 16)
 
-##### Screen P01.2-S3: Privacy & Security Settings
+##### Screen P01.2-S3: Privacy & Security Menu
 
-**Purpose**: Manage privacy preferences and security options
+**Purpose**: Provide access to security and privacy items
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Privacy & Security" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
-| Section Header: Security | text | Yes | "Security" section divider | Bold text separator |
-| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to inline change password form or modal |
-| Two-Factor Authentication (2FA) | link | Yes | Row with shield icon + "Two-Factor Authentication" label + "Coming Soon" badge | Disabled/grayed out in MVP; future enhancement (FR-001 Screen 16) |
-| Section Header: Active Sessions | text | Yes | "Active Sessions" section divider | Bold text separator |
-| Device Sessions List | list | Yes | List of active sessions showing device name, location, last active time | Tappable; each row shows "Revoke" action on long-press or swipe |
-| Revoke Session Action | action | Yes | Per-session revoke option (swipe or tap) | Requires confirmation; revokes targeted session within 1 minute |
-| Revoke All Sessions Button | button | Yes | "Revoke All Other Sessions" button below list | Requires re-auth if >5 minutes since last auth; revokes all except current session |
-| Section Header: Data & Privacy | text | Yes | "Data & Privacy" section divider | Bold text separator |
-| Download My Data | link | Yes | Row with download icon + "Download My Data" label + chevron | Triggers GDPR data export request (FR-023); user receives email when ready |
-| Delete Account | link | Yes | Row with trash icon + "Delete Account" label in red/destructive color | Navigates to Flow P01.1 (Delete Account flow) |
+| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to Flow P01.3 (Change Password) |
+| Privacy Policy | link | Yes | Row with shield/document icon + "Privacy Policy" label + chevron | Navigates to P01.2-S4 |
 
 **Business Rules**:
 
-- **Change Password**: Opens inline form or modal; requires old password + new password meeting policy (12+ chars, 1 upper, 1 lower, 1 digit, 1 special from FR-001); on success, all previous refresh tokens are revoked and current session remains active (FR-001 Screen 16)
-- **2FA**: Visible but disabled with "Coming Soon" badge (future enhancement; referenced in FR-001 Screen 16)
-- **Device Sessions**: Displays all active sessions with device/OS/browser, IP location (city-level), last active timestamp; patient can revoke individual sessions or all sessions except current
-- **Revoke Session**: Confirmation required ("Are you sure you want to revoke this session?"); session terminated within 1 minute
-- **Revoke All Sessions**: Requires re-auth if >5 minutes since last successful auth (password or OTP per FR-001 Screen 16); all sessions except current are terminated; user notified of success
-- **Download My Data**: Triggers background export per FR-023 DSR flow; user sees confirmation and receives secure link via email when export is ready (typically within 7 days per FR-023)
-- **Delete Account**: Navigates to Flow P01.1 (separate multi-screen flow with warnings, verification, grace period)
-- All server-write actions (password change, revoke sessions) use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values (FR-001 Screen 16)
+- Change Password must always route to Flow P01.3; this menu does not embed inline password-edit controls
+- Privacy Policy is read-only static content sourced from the Legal Content system (FR-027)
+- If legal content cannot be loaded, show a retry state and allow returning to P01.2-S1 without blocking the user
+- This menu contains only patient-facing items (no admin/provider configuration)
 
-> **Help & Support** is specified under **P-08: Help Center & Support Access** → see [Flow P08.1](#flow-p081-help--support) below.
-> The Settings main screen links to it as a navigation item.
+##### Screen P01.2-S4: Privacy Policy
 
-##### Screen P01.2-S4: About Screen
-
-**Purpose**: Display app information and legal links
+**Purpose**: Display Privacy Policy content (static/read-only)
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| Screen Title | text | Yes | "About" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
-| App Logo | image | Yes | Hairline app logo | Centered, displayed prominently at top |
-| App Name | text | Yes | "Hairline" | Displayed below logo |
-| App Version | text | Yes | "Version X.Y.Z (Build NNN)" | Auto-populated from build configuration; format: "Version 1.0.0 (Build 123)" |
-| Section Header: Legal | text | Yes | "Legal" section divider | Bold text separator |
-| Terms of Service Link | link | Yes | Row with document icon + "Terms of Service" label + chevron | Opens legal content viewer (same pattern as Flow P02.4) |
-| Privacy Policy Link | link | Yes | Row with shield icon + "Privacy Policy" label + chevron | Opens legal content viewer (same pattern as Flow P02.4) |
-| Section Header: Feedback | text | Yes | "Feedback" section divider | Bold text separator |
-| Rate the App | link | Yes | Row with star icon + "Rate the App" label + chevron | Opens app store listing (iOS App Store on iOS, Google Play on Android) |
-| Section Header: More Info | text | Yes | "More Information" section divider | Bold text separator |
-| Open Source Licenses | link | Yes | Row with code icon + "Open Source Licenses" label + chevron | Opens scrollable list of third-party libraries and licenses |
-| Company Information | text | Yes | Company name, address, contact email | Read-only text block at bottom; format: "© 2026 Hairline. All rights reserved." |
+| Screen Title | text | Yes | "Privacy Policy" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (P01.2-S3) | Top-left corner |
+| Policy Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
+| Last Updated | datetime | Conditional | Last updated timestamp for the policy | Shown if available (FR-027) |
+| Policy Content | text | Yes | Scrollable rich-text policy body | Must be readable and selectable; supports long content |
 
 **Business Rules**:
 
-- App version and build number are auto-populated from build metadata; cannot be edited
-- Legal content links (Terms of Service, Privacy Policy) open the same legal content viewer pattern used in Flow P02.4 with scrollable rich text, last updated date, and back navigation
-- "Rate the App" opens the platform-specific app store: iOS App Store on iOS devices, Google Play Store on Android devices
-- "Open Source Licenses" displays full list of third-party libraries with their respective licenses (typically auto-generated during build process)
-- Company information displays standard copyright notice and contact details
+- Policy content is read-only and must match the latest published Privacy Policy for the patient app (FR-027)
+- If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading
+- If content fails to load, show a non-blocking error state with Retry and Back
+- Analytics/audit (if implemented) must not capture the policy text itself; only view events and version identifiers (privacy-by-design)
+
+##### Screen P01.2-S5: Terms & Conditions
+
+**Purpose**: Display Terms & Conditions content (static/read-only)
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Terms & Conditions" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
+| Document Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
+| Last Updated | datetime | Conditional | Last updated timestamp for the document | Shown if available (FR-027) |
+| Document Content | text | Yes | Scrollable rich-text terms body | Must be readable and selectable; supports long content |
+
+**Business Rules**:
+
+- Terms content is read-only and must match the latest published Terms & Conditions for the patient app (FR-027)
+- If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading
+- If content fails to load, show a non-blocking error state with Retry and Back
+- Analytics/audit (if implemented) must not capture the document text itself; only view events and version identifiers (privacy-by-design)
+
+---
+
+### Flow P01.3: Change Password
+
+**Related FRs**: FR-001 (Patient Authentication)
+**Source Reference**: `local-docs/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`
+**Status**: 🟡 Specified
+
+#### Flow Diagram
+
+```mermaid
+flowchart TD
+    Start["Patient selects 'Change Password'<br/>(P01.2-S3 Privacy & Security menu)"] --> Form["Display Change Password Form (P01.3-S1)"]
+
+    Form --> EnterFields["Patient enters current password<br/>+ new password + confirm new password"]
+    EnterFields --> Action{"Patient action"}
+    Action -->|Tap 'Forgot your password?'| ForgotFlow["Navigate to Password Reset flow<br/>(FR-001 Screen 10)"]
+    Action -->|Submit| ClientValidate{"New password meets policy<br/>and confirm matches?"}
+    Action -->|Back| BackToMenu["Return to Privacy & Security menu (P01.2-S3)"]
+
+    ClientValidate -->|No| PolicyError["Show field-level error<br/>(policy/mismatch)"]
+    PolicyError --> Form
+
+    ClientValidate -->|Yes| SubmitReq["Submit change password request"]
+    SubmitReq --> ServerResult{"Server response"}
+    ServerResult -->|Invalid current password| CredError["Show field-level error<br/>(do not disclose which field failed)"]
+    CredError --> Form
+    ServerResult -->|Throttled/locked| Locked["Show blocked message:<br/>'Try again later'"]
+    Locked --> BackToMenu
+
+    ServerResult -->|Success| RevokeTokens["Revoke prior refresh tokens<br/>(keep current session active)"]
+    RevokeTokens --> Success["Display Success Confirmation (P01.3-S2)"]
+    Success --> BackToMenu
+
+    ForgotFlow --> EndForgot["Return to auth recovery flow outcome"]
+```
+
+#### Screen Specifications
+
+##### Screen P01.3-S1: Change Password Form
+
+**Purpose**: Let an authenticated patient change their password (with an escape hatch to password reset)
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Change Password" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (P01.2-S3) | Top-left corner |
+| Current Password | text | Yes | Masked password input | Required unless user chooses "Forgot your password?" |
+| Forgot Your Password Link | link | Yes | "Forgot your password?" link shown under Current Password | Navigates to FR-001 Screen 10 (Password Reset Initiation) |
+| New Password | text | Yes | Masked password input | Must meet password policy (FR-001) |
+| Confirm New Password | text | Yes | Masked password input | Must match New Password exactly |
+| Password Policy Helper | text | Yes | Short reminder of password requirements | Must not list attempt limits; reference policy only |
+| Save Button | button | Yes | Primary CTA: "Save" | Disabled until required fields are present |
+| Error Message (Conditional) | text | Conditional | Inline field-level errors | Must not reveal whether current password or account exists |
+
+**Business Rules**:
+
+- Current password is required for an in-session password change; if user cannot provide it they must use the password reset flow (FR-001 Screens 10–12)
+- New password must meet password policy and cannot reuse the last 5 passwords (FR-001 Password Rules)
+- Validation errors must be shown inline without revealing sensitive details (avoid “current password incorrect” style disclosures)
+- Retry/lockout behavior follows configured authentication throttling policy; UI must not hardcode attempt counts (FR-001)
+- On successful change, prior refresh tokens are revoked and the current session remains active (FR-001 Screen 16)
+
+##### Screen P01.3-S2: Password Changed Confirmation
+
+**Purpose**: Confirm password change and return user back to settings
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Confirmation Icon | icon | Yes | Success check icon | Displayed prominently |
+| Screen Title | text | Yes | "Password Updated" | Displayed prominently |
+| Message Text | text | Yes | Short confirmation copy | Must not include attempt limits or sensitive details |
+| Done Button | button | Yes | "Done" | Returns to Privacy & Security menu (P01.2-S3) |
+
+**Business Rules**:
+
+- Confirmation must be shown only after the server confirms the change
+- If token revocation fails after password change succeeds, the user still sees success but the app must retry revocation in background and log a security event
+- Returning to Settings must preserve navigation state (back stack returns to P01.2-S3)
 
 ---
 

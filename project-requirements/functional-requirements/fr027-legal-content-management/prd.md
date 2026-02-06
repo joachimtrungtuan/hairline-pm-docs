@@ -65,7 +65,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 ### Entry Points
 
 - Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent) → Draft/Preview/Publish
-- Patient: First‑run or on change → Acceptance prompt; Profile → Legal → View documents
+- Patient: First‑run or on change → Acceptance prompt; Settings → Terms & Conditions; Settings → Privacy & Security → Privacy Policy
 - Provider: First‑run or on change → Acceptance prompt; Settings → Legal → View documents
 
 ---
@@ -402,6 +402,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 |------------|---------|------------------------|--------------|
 | 2025-11-12 | 1.0     | Initial PRD creation   | AI Assistant |
 | 2025-12-11 | 1.1     | Marked Verified & Approved; added locale clarifications and screen specs | AI Assistant |
+| 2026-02-06 | 1.2     | Updated Patient Platform entry points to match patient Settings IA (FR-001): Settings → Terms & Conditions and Settings → Privacy & Security → Privacy Policy. | AI Assistant |
 
 ---
 
@@ -418,4 +419,4 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-027 Legal Content Management  
-**Last Updated**: 2025-12-11
+**Last Updated**: 2026-02-06
