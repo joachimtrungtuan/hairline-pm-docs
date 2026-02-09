@@ -71,8 +71,9 @@ The Quote Submission & Management module empowers providers to receive distribut
 **Outcome**: Valid quote is created and delivered to the patient; audit entry recorded
 
 - Provider receives inquiry and opens details
+- System verifies parent inquiry status is not Cancelled before allowing quote creation. If inquiry is cancelled, system blocks with error: "Inquiry no longer active — this inquiry was cancelled by the patient."
 - Provider fills required quote fields (treatment, pricing, scheduling, packages)
-- Provider submits quote (system validates required/optional fields)
+- Provider submits quote (system validates required/optional fields; re-validates inquiry is still active at submission time)
 - System delivers quote to patient and logs audit entry
 
 ### Workflow 2: Quote Editing
@@ -112,6 +113,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 **Outcome**: Quote becomes Archived with rationale; remains visible in audit/archive; only admin can restore
 
 - Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record)
+- Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled) cannot be soft-deleted by provider — these are already terminal
 - System sets status = Archived with rationale
 - Soft-deletes are fully auditable and revertible only by admin
 
@@ -212,6 +214,8 @@ Notes:
 **Notes**:
 
 - Unified list (no tabs) to reflect global case statuses
+- Quotes with status "Cancelled (Inquiry Cancelled)" are displayed with greyed-out row styling and an "Inquiry Cancelled" badge; all action buttons disabled
+- Quotes with status "cancelled (other accepted)" are similarly greyed-out with "Another Quote Accepted" badge
 
 #### Screen 3: Quote Details Screen
 
@@ -247,6 +251,8 @@ Notes:
 
 - UI may use a tabbed interface defaulting to Patient tab, then Inquiry, then Quote, then Audit
 - Patient-first ordering ensures natural continuation from inquiry to quote data
+- If quote is in "Cancelled (Inquiry Cancelled)" status, display a prominent "Inquiry Cancelled" banner at the top of the detail view; all edit/delete actions disabled; quote data remains read-only for reference
+- If provider was actively drafting when inquiry was cancelled, the banner appears on next save/refresh with message: "This inquiry was cancelled by the patient. Your draft can no longer be submitted."
 
 ### Patient Platform (Read-only for this module)
 
@@ -262,7 +268,7 @@ Notes:
 | Treatment | text | Yes | Selected treatment | Read-only |
 | Price Breakdown | table | Yes | Per-date pricing | Currency rules |
 | Add-ons | list | No | Customizations/add-ons | Read-only |
-| Status | badge | Yes | Pending/Accepted/Expired | Enum validation |
+| Status | badge | Yes | Pending/Accepted/Expired/Cancelled (Inquiry Cancelled)/Cancelled (Other Accepted)/Withdrawn | Enum validation; visual treatment per state (e.g., greyed-out for cancelled/expired) |
 | Expiration Timer | timer | Yes | Countdown to expiry | From admin window |
 | Provider Info | group | Yes | Allowed provider details | Privacy rules |
 | Actions | actions | Yes | Accept/Decline | State & confirmation rules |
@@ -293,7 +299,7 @@ Notes:
 | Quoted Date | column | Yes | Quote created date | Relative formatting rules |
 | Provider | column | Yes | Provider/clinic | Filterable |
 | Actions | column | Yes | Restore/Archive/View Detail | State-aware |
-| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider | Valid enums/ranges |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider. Status filter includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled | Valid enums/ranges |
 | Inquiry Grouping | control | Yes | Default: grouped by inquiry | Toggle grouping |
 | Multi-Quote Cue | badge/icon | No | Visual cue for multiple quotes in inquiry | Shows count or indicator |
 | Audit Trail | modal | Yes | Per-quote audit (who/what/when/prev value) | Immutable |
@@ -363,6 +369,7 @@ Notes:
 - GDPR/data compliance: all quote objects are archived for ≥7 years
 - Patient information remains censored at this stage until payment confirmation; only anonymized identifiers and allowed fields are visible to providers.
 - Providers must select from patient-requested date ranges and may choose a subset; each selected date must have a specific price.
+- System MUST verify parent inquiry is not in Cancelled status before accepting quote creation or submission. If inquiry is cancelled mid-draft (race condition), system rejects submission with error "Inquiry no longer active" and locks the draft with "Inquiry Cancelled" banner. See FR-003 Workflow 5 edge case.
 
 ## Success Criteria
 
@@ -484,6 +491,9 @@ Notes:
 - Admin must audit archived/soft-deleted quote: accessible in "Archived" tab, audit trail modal enabled
 - Provider attempts deletion post-acceptance: disallowed; only admin can archive with rationale
 - Recovery from expired state: only admin can restore expired/archived quotes if justified (GDPR-compliant log)
+- Provider opens quote creation for an inquiry that was just cancelled: system blocks with "Inquiry no longer active" error; no draft created
+- Provider is mid-draft when inquiry is cancelled (race condition): on next save/refresh, system locks draft with "Inquiry Cancelled" banner; submission blocked; draft retained for provider reference but cannot be submitted
+- Provider attempts to edit a quote in "Cancelled (Inquiry Cancelled)" status: system blocks with "This quote was cancelled because the patient cancelled their inquiry" message; all edit actions disabled
 
 ## Glossary
 
@@ -531,6 +541,22 @@ Acceptance Scenarios:
 1. Given a sent quote, When expiry time is reached, Then status becomes Expired and provider/patient are notified
 2. Given patient accepts a quote, When acceptance is recorded, Then other quotes are cancelled and stakeholders notified
 
+### User Story 4 - Provider Experience During Inquiry Cancellation (Priority: P2)
+
+Why: Providers must see clear, immediate feedback when a patient cancels an inquiry, preventing wasted effort on quotes that can no longer be submitted.
+
+Independent Test: Patient cancels inquiry with active quotes; verify provider sees correct status, banners, locked actions, and notifications from FR-004's perspective.
+
+Acceptance Scenarios:
+
+1. Given provider has a sent quote for an active inquiry, When patient cancels the inquiry, Then quote status becomes "Cancelled (Inquiry Cancelled)" in provider quote list (Screen 2) with greyed-out styling and "Inquiry Cancelled" badge
+2. Given provider opens the cancelled quote detail (Screen 3), When viewing, Then a prominent "Inquiry Cancelled" banner is displayed at top; all Edit/Delete actions are disabled; quote data remains read-only
+3. Given provider is drafting a quote when patient cancels the inquiry, When provider attempts to save or submit, Then system locks draft with banner: "This inquiry was cancelled by the patient. Your draft can no longer be submitted."
+4. Given provider opens quote creation for a newly cancelled inquiry, When system loads, Then system blocks creation with error: "Inquiry no longer active" and returns provider to quote list
+5. Given provider receives `quote.cancelled_inquiry` notification (FR-020), When provider taps notification, Then system navigates to the cancelled quote detail view with banner
+
+---
+
 ### Edge Cases (User Scenarios)
 
 - Provider starts draft then abandons: auto-archive after 7 days
@@ -542,23 +568,15 @@ Acceptance Scenarios:
 - system-prd.md: FR-004, Notification/Retention/Audit policies
 - Transcriptions: /transcriptions/Hairline-ProviderPlatformPart1.txt lines 200-350 (quote construction flows), /transcriptions/HairlineApp-Part2.txt (patient quote acceptance sequence)
 
-## Verification Checklist
-
-- [ ] All PRD sections filled, in required order and detail
-- [ ] Fields and statuses match design and high-level docs
-- [ ] State transitions, audit, and retention policy enforced
-- [ ] Consistent with UI diagrams, data schema, and nomenclature
-- [ ] No unresolved [NEEDS CLARIFICATION]
-- [ ] Aligned with GDPR/data/retention and platform notification/audit rules
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, comms structure, screen tables, FR summary, entities | Product & Engineering |
-| 2026-02-05 | 1.2 | Added inquiry cancellation cascade: new trigger in Workflow 3, "Cancelled (Inquiry Cancelled)" quote status, alternative flow for patient inquiry cancellation, REQ-004-013, updated Key Entities status enum. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 | 2025-11-04 | 1.2 | Template compliance: added Actors/Trigger/Outcome to workflows; normalized Dependencies; restructured Assumptions; formalized Implementation Notes; added User Scenarios & Testing | Product & Engineering |
+| 2026-02-05 | 1.3 | Added inquiry cancellation cascade: new trigger in Workflow 3, "Cancelled (Inquiry Cancelled)" quote status, alternative flow for patient inquiry cancellation, REQ-004-013, updated Key Entities status enum. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
+| 2026-02-08 | 1.4 | Cancellation integrity fixes: Added inquiry-active guard to Workflow 1 and business rules (concurrent submission rejection). Fixed changelog version collision and chronological order. Updated Screen 4 Status badge to include all patient-visible states. Added terminal-state exclusion to Workflow 4. Added "Inquiry Cancelled" banner specs to Screen 2 and Screen 3. Added cancellation statuses to Admin Screen 5 filters. Added User Story 4 (provider experience during cancellation) and cancellation edge cases. | AI |
 
 ## Appendix: Approvals
 

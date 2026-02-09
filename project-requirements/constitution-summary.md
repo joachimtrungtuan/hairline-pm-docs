@@ -160,6 +160,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 ### Authentication & Authorization
 
 - bcrypt password hashing (cost factor 12)
+- Password history enforcement (cannot reuse last 5 passwords)
 - MFA for Admin and Provider platforms
 - JWT tokens with 15-minute expiration
 - Role-Based Access Control (RBAC)

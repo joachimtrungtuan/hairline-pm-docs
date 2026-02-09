@@ -121,6 +121,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 - Patient submits multiple DSRs concurrently → System merges or queues with clear status; SLA applies per consolidated request.
 - Patient requests deletion while active booking exists → System pauses deletion until booking resolves; communicates timeline.
 - Jurisdiction conflict (e.g., EU vs non-EU residency) → Default to stricter retention; flag for Admin review.
+- Patient requests data deletion after cancelling their inquiry → Cancelled inquiry is a terminal state with no active obligation; deletion request should proceed normally. Cancelled inquiry records, cascaded cancelled quotes, and associated audit entries are retained per REQ-023-003 retention rules (7-year minimum for medical/financial data) even after PII anonymization — the anonymization applies to profile data, not to the retained medical/financial records themselves.
 
 ---
 
@@ -130,7 +131,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 - **REQ-023-001**: System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.
 - **REQ-023-002**: System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) are subject to the same retention rules as completed inquiries — they are soft-deleted/archived, never hard-deleted before the retention period expires.
+- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status "Cancelled (Inquiry Cancelled)" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires. This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.
 - **REQ-023-004**: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected medical/financial records are retained without anonymization but with strict access restrictions and documented legal basis.
 - **REQ-023-005**: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
 - **REQ-023-006**: System MUST maintain audit logs for all read and write access to protected records, including actor, timestamp, object, action, outcome.
@@ -205,6 +206,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 | 2025-11-12 | 1.1     | Added Success Criteria and clarified dependencies | AI Assistant |
 | 2026-02-05 | 1.2     | Cancel Inquiry flow (FR-003 Workflow 5): Clarified that cancelled inquiries are subject to the same retention rules as completed inquiries (REQ-023-003) | AI     |
 | 2026-02-06 | 1.3     | Removed patient data export request requirements from Patient Platform scope; updated workflows, user stories, and requirements to focus on deletion DSR only; aligned entry points with updated patient Settings (FR-001). | AI     |
+| 2026-02-09 | 1.4     | Cancellation cascade retention: Extended REQ-023-003 to explicitly cover all cascade records (auto-cancelled quotes, superseded AcceptanceEvents, audit entries) under same retention rules. Added edge case for DSR after inquiry cancellation (cancelled = terminal, no active obligation, deletion proceeds normally). | AI     |
 
 ---
 
@@ -221,4 +223,4 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-023 Data Retention & Compliance  
-**Last Updated**: 2026-02-06
+**Last Updated**: 2026-02-09

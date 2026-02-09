@@ -99,6 +99,9 @@ For each missing or incomplete component, create a task.
 - Include Figma only when provided by user
 - Add System PRD or transcription links only when they materially clarify that specific task
 - GitHub base: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/`
+- **Path mapping**: The GitHub repo root corresponds to the contents **inside** `local-docs/`. When converting a local path to a GitHub URL, **strip the `local-docs/` prefix** before appending to the base.
+  - Correct: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`
+  - Incorrect: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/local-docs/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`
 
 ## Final Output Requirements
 

@@ -38,14 +38,14 @@ In Scope:
 | Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
-| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Provider, Patient (optional), Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". |
+| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Patient, Provider, Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives cancellation confirmation (mandatory — aligns with FR-003 Workflow 5 step 4 and Screen 8b). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
 | Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
 | Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
-| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Sent to each provider whose quote is auto-cancelled due to patient inquiry cancellation (FR-003 Workflow 5). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". |
+| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Sent to each provider whose quote is auto-cancelled due to patient inquiry cancellation (FR-003 Workflow 5). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push** (subject to provider notification preference toggles in FR-032). |
 | Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
 | Booking/Schedule | Booking Rescheduled | `booking.rescheduled` | Patient, Provider | Critical if schedule changes |
@@ -163,7 +163,7 @@ Business Rules:
 - Notifications sorted by most recent first (newest at top).
 - Unread notifications highlighted with visual indicator.
 - Clicking notification marks as read and navigates to related content (if applicable).
-- Filter options: All, Unread, By Type (Quote, Booking, Payment, Aftercare, etc.).
+- Filter options: All, Unread, By Type (Inquiry, Quote, Booking, Payment, Treatment, Aftercare, Account, Messaging).
 - Search functionality: search by notification content.
 
 ---
@@ -356,6 +356,19 @@ Acceptance Scenarios:
 1. Given many identical events in a short window, when throttling applies, then only coalesced notifications are sent.
 2. Given throttling suppressed some events, when admin reviews logs, then suppression entries are visible.
 
+### User Story 4 – Cancellation notification delivery (P1)
+
+Why: Inquiry cancellation triggers mandatory notifications to patient (confirmation) and affected providers (cascade). Privacy rules must be enforced — provider must not see patient's cancellation reason.
+
+Independent Test: Patient cancels inquiry with 2 active quotes; verify patient receives confirmation via email + push; both providers receive `quote.cancelled_inquiry` via email + push with privacy-compliant content; admin receives optional `inquiry.cancelled` if enabled.
+
+Acceptance Scenarios:
+
+1. Given patient cancels inquiry with 2 active quotes, when cancellation completes, then patient receives `inquiry.cancelled` notification via both email and push within 5 minutes confirming cancellation with reason visible.
+2. Given patient cancels inquiry, when providers receive `quote.cancelled_inquiry` notification, then notification says "Inquiry cancelled by patient" without revealing the patient's cancellation reason.
+3. Given provider has disabled quote notifications in FR-032 preferences, when inquiry is cancelled, then `quote.cancelled_inquiry` notification is suppressed for that provider and suppression is logged in audit.
+4. Given patient has disabled push notifications (email only), when inquiry is cancelled, then patient receives `inquiry.cancelled` via email only; push is suppressed per preference.
+
 ---
 
 ## Functional Requirements Summary
@@ -395,6 +408,8 @@ Acceptance Scenarios:
 | 2025-12-05 | 1.3     | Renumbered screens, consolidated screen notes, and referenced exact FRs (FR-001, FR-032/PR-06, FR-030, FR-026) | AI     |
 | 2026-01-16 | 1.4     | Aligned FR-020 notification event types to match FR-030 MVP event catalog; designated FR-030 as source of truth for event coverage | AI     |
 | 2026-02-05 | 1.5     | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes to reflect patient-initiated cancellation; added new `quote.cancelled_inquiry` event for quote cascade notifications; added content guideline that cancellation reason is patient-private | AI     |
+| 2026-02-09 | 1.6     | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (aligns with FR-003 Workflow 5 mandatory confirmation). Added MVP default channel notes (Email + Push) to both cancellation events. Expanded Screen 1 filter types to enumerate all categories explicitly. Added User Story 4 (cancellation notification delivery with privacy scenarios). Fixed Last Updated date. | AI     |
+| 2026-02-10 | 1.7     | FR-003 verification fixes: Updated stale "Screen 11a" reference to "Screen 8b" in `inquiry.cancelled` event notes (FR-003 v1.6 renumbering). Aligned cancellation notification SLA from "within 2 seconds" to "within 5 minutes" to match FR-003 Workflow 5 step 4. | AI     |
 
 ---
 
@@ -410,4 +425,4 @@ Acceptance Scenarios:
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-01-16
+**Last Updated**: 2026-02-10

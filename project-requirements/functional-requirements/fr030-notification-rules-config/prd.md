@@ -119,14 +119,14 @@ Notes:
 | Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient, Provider | Optional; can be disabled if not needed |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
-| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Provider, Patient (optional), Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". |
+| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Patient, Provider, Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 11a). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Available template variables differ by recipient: Patient receives `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`; Provider receives `inquiry.id`, `inquiry.cancelled_at` only (reason excluded per privacy rule). |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
 | Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
 | Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
-| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). Provider receipt is mandatory — admin cannot disable this event. Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". |
+| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push** (subject to provider notification preference toggles in FR-032). Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. |
 | Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
 | Booking/Schedule | Booking Rescheduled | `booking.rescheduled` | Patient, Provider | Critical if schedule changes |
@@ -320,7 +320,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Event Category | select (dropdown) | No | Filter rules by category (All, Booking, Payment, Aftercare, Travel, Provider, Admin) | Predefined categories only |
+| Event Category | select (dropdown) | No | Filter rules by category (All, Account/Auth, Inquiry, Quote, Booking/Schedule, Treatment, Payment, Billing/Payouts, Messaging/Support, Aftercare, Reviews, Promotions/Discounts, Provider/Compliance, System/Operations) | Predefined categories matching event catalog |
 | Rule Status | select (dropdown) | No | Filter by status (All, Active, Paused, Draft) | Predefined statuses only |
 | Search Rules | text | No | Search by event name, template name, or recipient type | Max 100 characters |
 | Rules List | table | Yes | Displays all rules matching filters | Sortable by event name, status, last modified; **each row is a “Rule Row” described by the fields below** |
@@ -489,12 +489,13 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Encryption algorithms for notification content (AES-256 at rest, TLS 1.3 in transit)
 - Delivery channel integrations (SMTP provider, push notification service, SMS gateway API)
 
-**Non-Disableable by Default (Security-Critical)**:
+**Non-Disableable by Default (Security-Critical and Mandatory)**:
 
 - **Account/Auth notifications (OTP verification, password reset)** are security-critical and MUST be **non-disableable by default** in the admin UI (toggle locked; no pause).
-- If the product explicitly allows a break-glass disable path, it MUST:
+- **Quote Cancelled — Inquiry Cancelled (`quote.cancelled_inquiry`)** is a mandatory provider notification. Provider MUST be notified when their quote is auto-cancelled due to inquiry cancellation. Admin cannot disable this event because the provider needs to know the slot is released and the quote is no longer active. Toggle is locked for this event.
+- If the product explicitly allows a break-glass disable path for any non-disableable event, it MUST:
   - Require Super Admin permission (FR-031) + re-authentication
-  - Show an imminent critical warning explaining impact (users cannot sign up/reset passwords)
+  - Show an imminent critical warning explaining impact (users cannot sign up/reset passwords; providers not informed of cancellation)
   - Require multiple confirmation steps (e.g., typed event name + final confirm)
   - Require an audit reason and log it as a security event
 
@@ -882,6 +883,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2025-11-13 | 1.0 | Initial PRD creation for FR-030: Notification Rules & Configuration | AI Agent (Claude) |
 | 2025-12-22 | 1.1 | Verified per template; aligned retention to no hard-delete (FR-023); clarified provider pre-confirmation masking; locked security-critical auth events; cleaned tenant placeholder labels | AI Assistant |
 | 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes; added `quote.cancelled_inquiry` event with mandatory provider receipt (admin cannot disable); cancellation reason is patient-private | AI     |
+| 2026-02-09 | 1.3 | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (source-of-truth alignment with FR-003 Workflow 5). Formalized `quote.cancelled_inquiry` in Non-Disableable by Default section. Added template variable guidance per recipient with privacy-aware field exclusions. Expanded Screen 1 Event Category filter to enumerate all 14 categories from event catalog. Fixed Last Updated date. | AI     |
 
 ---
 
@@ -898,4 +900,4 @@ Admin needs to monitor notification delivery performance to identify and resolve
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-12-22
+**Last Updated**: 2026-02-09

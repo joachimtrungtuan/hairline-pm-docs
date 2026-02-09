@@ -170,10 +170,24 @@ Enable patients to convert accepted quotes into confirmed procedure bookings by 
 | Cancellation Policy Ack | checkbox | Yes | User acknowledges policy | Must be checked before payment |
 | Terms & Conditions Ack | checkbox | Yes | User acknowledges T&C | Must be checked before payment |
 
+**Blocked State (Inquiry Cancelled)**:
+
+If pre-booking validation fails (parent inquiry cancelled per FR-003 Workflow 5), this screen displays a read-only blocked state instead of the payment form:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Blocked Banner | banner | Yes | "This inquiry has been cancelled. Booking is no longer available." | Full-width, prominent styling |
+| Quote Summary | group | Yes | Treatment, packages, pricing (from FR-004/FR-005) | Read-only; greyed out |
+| Cancellation Timestamp | datetime | Yes | When the inquiry was cancelled | Read-only; from inquiry |
+| Back to Dashboard | button | Yes | Returns patient to Inquiry Dashboard (FR-003 Screen 8) | Always enabled |
+
+All payment fields and actions are hidden. Patient can only view the blocked state and navigate back.
+
 **Business Rules**:
 
 - All quote details from FR-004/FR-005 are displayed read-only (treatment, packages, pricing, appointment slot).
 - Appointment slot is already confirmed (no selection needed) - displayed prominently.
+- If parent inquiry is in "Cancelled" status, screen enters blocked state (see above) — payment form is hidden, blocked banner is displayed.
 - Deposit amount calculated using admin-configured percentage (default 20-30% range).
 - Disable Pay button until all required acknowledgments (cancellation policy, T&C) are checked.
 - Show clear breakdown: total amount, deposit amount, remaining balance, currency.
@@ -835,6 +849,8 @@ Late cancellation applies refund schedule; provider cancellation triggers full r
 - Provider emergency closure: admin-approved cancellation, full refund, suggest alternatives.
 - Payment failure after quote acceptance: hold slot for configurable duration (default 48 hours); allow retry; release slot if payment not completed.
 - Two patients accept quotes with same slot simultaneously: first to complete payment wins; second booking attempt fails with clear error message.
+- Patient submits payment while inquiry is being cancelled concurrently: system MUST perform atomic pre-booking validation at payment submission time (not just at screen entry). If inquiry transitions to "Cancelled" between screen load and payment submission, payment MUST be rejected with message "This inquiry has been cancelled" and no charge processed. Payment gateway must not be called if inquiry is cancelled.
+- Patient is on Screen 1 when inquiry cancellation notification arrives: system SHOULD use real-time push (WebSocket/SSE) to transition Screen 1 to blocked state without requiring page refresh.
 
 ---
 
@@ -867,6 +883,7 @@ Late cancellation applies refund schedule; provider cancellation triggers full r
 
 - **REQ-006-012**: Admin MUST be able to configure deposit percentage (default: 20-30% range) via **FR-029: Payment System Configuration** (Module A-09: System Settings & Configuration).
 - **REQ-006-013**: Admin MUST be able to configure payment failure hold duration (default: 48 hours) via A-09: System Settings & Configuration.
+- **REQ-006-014**: System MUST verify the parent inquiry is not in "Cancelled" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) with clear messaging.
 
 ### Marking Unclear Requirements
 
@@ -878,10 +895,12 @@ None.
 
 - **Entity 1 - Booking**: Represents a confirmed or pending booking derived from an accepted quote.
   - **Key attributes**: booking reference, quote ID, provider ID, patient ID, slot, status, payment state, refund state.
+  - **Status values**: `Accepted` (quote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Completed` (procedure finished) | `Cancelled` (booking cancelled per cancellation policy, B2 flow).
   - **Relationships**: One booking links to one accepted quote; one provider calendar entry; one patient.
 
-- **Entity 2 - Calendar Slot**: Represents a provider’s pre-scheduled appointment time.
+- **Entity 2 - Calendar Slot**: Represents a provider's pre-scheduled appointment time.
   - **Key attributes**: provider ID, start/end, capacity, hold/blocked flags, expiration.
+  - **Release triggers**: (1) Payment failure hold expiry (48h default), (2) Patient-initiated inquiry cancellation during hold period (FR-003 Workflow 5, immediate release per B3 flow), (3) Booking cancellation per B2 flow.
   - **Relationships**: One slot can be held or blocked by at most one booking.
 
 ---
@@ -896,6 +915,7 @@ None.
 | 2025-11-12 | 1.3 | Status updated to Verified & Approved; All approvals completed | Product Team |
 | 2025-12-16 | 1.4 | Documentation alignment: Clarified installment option eligibility and payment option wording to reference FR-029 as the configuration source for deposit/split payment/commission settings (no functional change). | AI |
 | 2026-02-05 | 1.5 | Added pre-booking validation guard (inquiry not cancelled), Alternative Flow B3 (patient cancels inquiry during 48h slot hold with immediate release). See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
+| 2026-02-09 | 1.6 | Integrity fixes: Added Screen 1 blocked state spec (cancelled inquiry UI), REQ-006-014 (pre-booking cancellation guard requirement), concurrent payment+cancellation race edge cases, explicit Booking status enum, Calendar Slot release triggers, fixed Last Updated date. | AI |
 
 ---
 
@@ -912,4 +932,4 @@ None.
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-12-16
+**Last Updated**: 2026-02-09

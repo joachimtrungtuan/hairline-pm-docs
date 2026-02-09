@@ -121,11 +121,14 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
      - Standard alerts (yellow/amber - moderate concerns)  
      - No alerts (green - no medical concerns)
 
-7. **Inquiry Review & Submission**
-   - Patient reviews complete inquiry summary
-   - Patient confirms all information accuracy
-   - Patient selects preferred providers (max 5 providers)
+7. **Provider Selection**
+   - Patient selects preferred providers (max 5 providers) on Screen 7a
    - System suggests providers based on positive reviews and admin curation
+   - Patient can search/filter providers by country, rating, and specialty
+
+8. **Inquiry Review & Submission**
+   - Patient reviews complete inquiry summary (including selected providers)
+   - Patient confirms all information accuracy
    - Patient submits inquiry to system
    - System generates unique inquiry ID (HPID format)
 
@@ -286,8 +289,8 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message: "Cannot cancel inquiry at this stage. Please contact support."
 
 2. **Capture Cancellation Reason**
-   - System displays cancellation confirmation modal with warning about irreversibility
-   - Patient selects a cancellation reason from predefined options (required)
+   - System displays cancellation confirmation modal (Screen 8a) with warning about irreversibility
+   - Patient selects a cancellation reason from predefined options (required). Default options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" (requires explanation). Reason options are admin-configurable via FR-026 Screen 5a; this list serves as the initial set.
    - Patient may optionally provide additional feedback text
 
 3. **Process Cancellation**
@@ -296,13 +299,14 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - If inquiry was in Accepted stage with an active 48-hour appointment slot hold (per FR-005/FR-006), system releases the hold immediately and returns the slot to the provider's availability
 
 4. **Notify Stakeholders**
-   - System sends cancellation confirmation notification to patient (Email + Push per preferences)
-   - System sends `inquiry.cancelled` notification to all affected providers (Email + Push)
-   - System sends `quote.cancelled_inquiry` notification per affected quote (provider-facing)
+   - System sends cancellation confirmation notification to patient (Email + Push per preferences) within 5 minutes of cancellation
+   - System sends `inquiry.cancelled` notification to all affected providers (Email + Push) within 5 minutes per system PRD notification SLA
+   - System sends `quote.cancelled_inquiry` notification per affected quote (provider-facing) within 5 minutes
    - Provider cancellation notifications do NOT reveal the patient's cancellation reason (patient-private data for analytics)
    - System logs cancellation event in immutable audit trail
 
 5. **Post-Cancellation State**
+   - System displays Cancellation Success screen (Screen 8b) with impact summary and next-step actions
    - Inquiry appears in patient's Inquiry Dashboard with "Cancelled" badge (read-only)
    - Patient can view cancelled inquiry details for reference but cannot modify or reopen
    - Patient can immediately create a new inquiry (no cooldown; one-active-inquiry-at-a-time rule applies — the cancelled inquiry is no longer "active")
@@ -541,6 +545,40 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Terms and conditions must be accepted
 - Submission generates unique inquiry ID
 
+#### Screen 7a: Provider Selection
+
+**Purpose**: Patient selects preferred providers to receive the inquiry
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Suggested Providers | list | Yes | System-suggested providers based on reviews and admin curation | Non-empty; ordered by rating/curation score |
+| Provider Card | group | Yes | Provider summary: name, country, rating, review count, specialty, starting price | Read-only per card |
+| Selected Providers | multiselect | Yes | Patient's chosen providers | Min 1, max 5 |
+| Search | control | No | Search by provider name or keyword | Debounced; case-insensitive |
+| Filters | control | No | Filter by country (from selected destinations), rating range, specialty | Valid enums/ranges |
+
+**Notes**:
+
+- Provider Suggestions:
+  - Ordered by positive reviews and admin curation score
+  - Filtered to providers in patient's selected destination countries
+  - Each card shows: provider name, country, star rating, review count, specialty tags, starting price in patient's currency
+- Selection Controls:
+  - Tap to select/deselect provider card
+  - Visual indicator (checkmark/highlight) on selected providers
+  - Counter shows "X of 5 selected"
+  - "Continue" button enabled when at least 1 provider selected
+
+**Business Rules**:
+
+- Maximum 5 providers selectable
+- Only providers in patient's selected destination countries are shown
+- Provider suggestions based on positive reviews and admin curation (system PRD)
+- Patient must select at least 1 provider to proceed
+- Selected providers are included in the inquiry for distribution; system may also distribute to additional matching providers per distribution rules
+
 #### Screen 8: Inquiry Dashboard (Post-Submission)
 
 **Purpose**: Patient views submitted inquiry status and details
@@ -572,6 +610,76 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Patient receives notifications for status changes
 - Inquiry data persists for 7 years minimum
 - Cancelled inquiries are not counted as "active" — patient can create a new inquiry immediately after cancellation
+
+#### Screen 8a: Cancel Inquiry Confirmation Modal
+
+**Purpose**: Confirm patient's intent to cancel and capture cancellation reason (Workflow 5 step 2)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
+| Modal Title | text | Yes | "Cancel Inquiry?" | Displayed prominently in red/destructive color |
+| Warning Message | text | Yes | Explanation of consequences: "Canceling this inquiry is irreversible. All quotes you've received will be cancelled and providers will be notified." | Read-only informational text |
+| Current Stage Badge | badge | Yes | Shows inquiry current stage | Enum: "Inquiry", "Quoted", "Accepted"; read-only |
+| Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; format: HPID + YY + MM + 4-digit sequence |
+| Impact Summary | text | Yes | Summary of cancellation impact based on current stage | Conditional: "X active quotes will be cancelled" OR "No quotes received yet"; derived from associated quote count |
+| Cancellation Reason Selector | select | Yes | Dropdown or radio list of predefined reasons | Must select one option; default options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" (admin-configurable via FR-026 Screen 5a) |
+| Additional Notes | text | Conditional | Free text field; shown when "Other" selected | Required if "Other" selected; max 500 characters |
+| Optional Feedback | text | No | General feedback text area | Max 1000 characters; placeholder: "Any additional feedback? (Optional)" |
+| Provider Notification Note | text | Yes | Informational message: "Affected providers will be notified of this cancellation within 5 minutes" | Read-only |
+| Confirm Cancellation Button | button | Yes | Destructive primary CTA | Red/destructive style; label: "Confirm Cancellation"; disabled until reason selected |
+| Go Back Button | button | Yes | Secondary CTA to dismiss modal | Default/neutral style; label: "Go Back"; closes modal without action |
+
+**Business Rules**:
+
+- Modal is triggered from the "Cancel Inquiry" action on Screen 8 (Inquiry Dashboard)
+- Modal is only reachable when inquiry stage is Inquiry, Quoted, or Accepted (Workflow 5 step 1 validates this)
+- Cancellation reason is required before the Confirm button becomes active
+- Cancellation reason is patient-private data (not shared with providers; stored for analytics and audit)
+- On "Confirm Cancellation", system processes Workflow 5 steps 3–5; modal is dismissed and Screen 8b is shown
+- On "Go Back", modal is dismissed with no state change
+
+**Acceptance Scenarios**:
+
+1. **Given** inquiry in eligible stage, **When** patient opens modal, **Then** Current Stage Badge and Impact Summary reflect actual inquiry state and quote count
+2. **Given** patient has not selected a reason, **When** patient taps Confirm Cancellation, **Then** button remains disabled
+3. **Given** patient selects "Other", **When** Additional Notes is empty, **Then** Confirm Cancellation remains disabled until notes entered
+4. **Given** patient taps Go Back, **When** modal dismisses, **Then** no inquiry state is changed
+
+#### Screen 8b: Cancellation Success Confirmation
+
+**Purpose**: Confirm the inquiry has been successfully cancelled and provide next-step navigation (Workflow 5 step 5)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Success Icon | icon | Yes | Checkmark or completion illustration | Green color; displayed at top center |
+| Confirmation Title | text | Yes | "Inquiry Cancelled" | Displayed prominently below icon |
+| Confirmation Message | text | Yes | "Your inquiry has been successfully cancelled." | Read-only |
+| Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; label: "Reference:" |
+| Cancellation Timestamp | datetime | Yes | Server-side cancellation timestamp | Format: "Cancelled on [Month DD, YYYY] at [HH:MM AM/PM]"; reflects server time, not client |
+| Impact Summary | text | Yes | Summary of what was cancelled | Conditional based on stage: "Your inquiry was cancelled." / "Your inquiry and X active quote(s) were cancelled." / "Your inquiry, accepted quote, and reservation were cancelled." |
+| Provider Notification Status | text | Yes | "All affected providers have been notified of this cancellation." | Read-only |
+| Back to My Inquiries Button | button | Yes | Primary CTA | Default style; label: "Back to My Inquiries"; navigates to Inquiry Dashboard (Screen 8) |
+| Start New Inquiry Button | button | Yes | Secondary CTA | Outlined/secondary style; label: "Start New Inquiry"; navigates to Inquiry Creation flow (Screen 1) |
+| Contact Support Link | link | No | Optional support contact link | Text link; label: "Need help? Contact support"; navigates to Help & Support |
+
+**Business Rules**:
+
+- This screen is shown only after Workflow 5 completes successfully (steps 3–4 finished)
+- Cancellation Timestamp reflects server-side time (not client clock) for audit consistency
+- Impact Summary must match the actual cascade results (number of quotes cancelled, whether slot hold was released)
+- Cancelled inquiry is now read-only; "Back to My Inquiries" returns to Screen 8 where it shows "Cancelled" badge
+- "Start New Inquiry" navigates to Screen 1; patient can create immediately (one-active-inquiry rule: cancelled inquiry is no longer "active")
+
+**Acceptance Scenarios**:
+
+1. **Given** cancellation completed for Inquiry-stage inquiry with 0 quotes, **When** Screen 8b displays, **Then** Impact Summary shows "Your inquiry was cancelled." with no quote mention
+2. **Given** cancellation completed for Quoted-stage inquiry with 3 quotes, **When** Screen 8b displays, **Then** Impact Summary shows "Your inquiry and 3 active quote(s) were cancelled."
+3. **Given** cancellation completed for Accepted-stage inquiry, **When** Screen 8b displays, **Then** Impact Summary shows reservation cancellation language and slot release confirmation
 
 ### Provider Platform Screens
 
@@ -682,7 +790,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ### Admin Platform Screens
 
-#### Screen 12: Hairline Overview Dashboard
+#### Screen 11: Hairline Overview Dashboard
 
 **Purpose**: Admin monitors all inquiries across all stages
 
@@ -714,7 +822,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 - Bulk actions available
 - Real-time status updates
 
-#### Screen 13: Inquiry Detailed Management (Admin)
+#### Screen 12: Inquiry Detailed Management (Admin)
 
 **Purpose**: Admin manages individual inquiry with full control
 
@@ -781,7 +889,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 2. **Distribution Rules**
    - System distributes inquiry to providers in selected countries OR explicitly selected by patient
-   - Providers must respond within 48 hours (configurable)
+   - Providers must respond within 72 hours (configurable)
    - Provider capacity limits affect distribution where capacity data is available; until the dedicated Provider Capacity Management FR is delivered, capacity checks are advisory and MUST NOT block inquiry distribution
    - Admin can manually assign inquiries
    - Patient can select maximum 5 preferred providers
@@ -1142,7 +1250,7 @@ Acceptance Scenarios:
 - Overlapping date ranges: server-side validation rejects with correction prompts
 - Missing questionnaire details for "Yes" answers: system requires completion before submission
 - Patient cancels inquiry while provider is drafting a quote: provider's draft is locked with "Inquiry Cancelled" banner upon next save/refresh
-- Patient cancels inquiry during simultaneous provider quote submission: system processes cancellation first (inquiry status is source of truth); incoming quote submission rejected with "Inquiry no longer active" error
+- Patient cancels inquiry during simultaneous provider quote submission: system processes cancellation first (inquiry status is source of truth); incoming quote submission rejected with "Inquiry no longer active" error. **Cross-FR note**: FR-004 must implement corresponding rejection handling for this edge case.
 
 ---
 
@@ -1160,6 +1268,9 @@ Acceptance Scenarios:
 | 2025-12-01 | 1.2 | Aligned with client scope by removing unsourced budget requirement from System PRD, defining explicit inquiry payload composition, and clarifying anonymization to keep IDs visible while masking name/phone/email until payment confirmation | Product & Engineering |
 | 2025-12-16 | 1.3 | Aligned destination selection ordering with FR-028 (regional configuration when available, proximity fallback) | Product & Engineering |
 | 2026-02-05 | 1.4 | Added Workflow 5 (Patient-Initiated Inquiry Cancellation), Alternative Flow A4, Screen 8 Cancel Inquiry action + Cancelled stage, Cancellation Rules in Business Rules, REQ-003-013/014/015, updated Key Entities with Cancelled status and cancellation fields, added User Story 4 and edge cases. Cross-FR impact: FR-004, FR-005, FR-006, FR-020, FR-030, FR-001, FR-016, FR-023. See cancel-inquiry-fr-impact-report.md | Product & Engineering |
+| 2026-02-08 | 1.5 | Integrity fixes: Added Screen 11 (Cancel Inquiry Confirmation Modal) and Screen 11a (Cancellation Success Confirmation) with formal 5-column field tables and acceptance scenarios. Enumerated default cancellation reason options (admin-configurable via FR-026 Screen 5a). Added 5-minute notification timing SLA to Workflow 5 step 4. Added cross-FR note for FR-004 concurrent cancellation handling. Aligned design complement P02.2 status and status string. Updated system PRD cancellation scope to "before Confirmed stage". | AI |
+| 2026-02-10 | 1.6 | Moved Cancel Inquiry screens from Provider Platform section to Patient Platform section (they are patient-facing). Renumbered Screen 11 → Screen 8a (Cancel Inquiry Confirmation Modal) and Screen 11a → Screen 8b (Cancellation Success Confirmation). Updated all internal cross-references. | AI |
+| 2026-02-10 | 1.7 | Verification fixes: Added Screen 7a (Provider Selection) with full field table and business rules — resolves orphaned provider selection from Workflow 1. Updated Workflow 1 to separate provider selection (step 7) from review/submission (step 8). Aligned provider response time from 48h to 72h to match system PRD. | AI |
 
 ## Appendix: Approvals
 

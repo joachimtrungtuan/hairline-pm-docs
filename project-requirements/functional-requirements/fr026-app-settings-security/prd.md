@@ -30,7 +30,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, and discovery question options
+- **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, and inquiry cancellation reason options
 - **Provider Platform (PR-06)**: Indirectly consumes centrally managed lists for profile settings
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
 - **Shared Services (S-03)**: Notification Service consumes OTP email templates for delivery
@@ -90,7 +90,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Admin-Initiated**:
 
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
-- Admin navigates to Settings → App Data to manage country lists or discovery questions
+- Admin navigates to Settings → App Data to manage country lists, discovery questions, or inquiry cancellation reasons
 - Admin navigates to Settings → Notifications to edit OTP email templates
 
 **System-Triggered**:
@@ -189,6 +189,22 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 - **Outcome**: Patients see updated discovery question options during registration
 
+**A4: Admin Edits Inquiry Cancellation Reasons**:
+
+- **Trigger**: Product team identifies need to add, reorder, or deactivate cancellation reason options for the patient inquiry cancellation flow (FR-003 Workflow 5)
+- **Steps**:
+  1. Admin navigates to Settings → App Data → Inquiry Cancellation Reasons
+  2. System displays current active reasons: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other"
+  3. Admin clicks "Add Reason" and enters: "Provider communication issues"
+  4. Admin toggles "Requires Explanation" to Yes (patient must provide free text when selecting this reason)
+  5. Admin uses drag-and-drop to reorder reasons (priority ranking)
+  6. Admin clicks "Save"
+  7. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Adding new cancellation tracking category from patient feedback" and confirms.
+  8. System versions cancellation reasons list (v1.0 → v1.1)
+  9. Within 1 minute, Patient app cancellation modal (FR-003 Screen 11) displays updated reason options
+
+- **Outcome**: Patients see updated cancellation reason options when cancelling an inquiry
+
 **B1: Admin Attempts Invalid Configuration**:
 
 - **Trigger**: Admin enters out-of-range value for authentication throttling
@@ -253,6 +269,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - App Data
   - Countries & Calling Codes (name, ISO code, calling code, flag, order, active)
   - Discovery Questions (answer options, order, active)
+  - Inquiry Cancellation Reasons (reason label, order, requires_explanation, active)
 - Notifications
   - OTP Email Templates
     - Verification Email
@@ -428,6 +445,39 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ---
 
+### Screen 5a: Inquiry Cancellation Reasons Manager
+
+**Purpose**: Centralized management of predefined cancellation reason options displayed to patients during inquiry cancellation (FR-003 Screen 11)
+
+**Data Fields**:
+
+| Field Name            | Type     | Required | Description                                           | Validation Rules                    |
+| --------------------- | -------- | -------- | ----------------------------------------------------- | ----------------------------------- |
+| Reason Label          | text     | Yes      | Display text for the cancellation reason               | Max 100 chars, unique               |
+| Requires Explanation  | checkbox | Yes      | Whether patient must provide free text when selecting  | Default: false; "Other" always true |
+| Display Order         | number   | No       | Sort priority (lower = displayed first)                | Integer, default: 999               |
+| Active                | checkbox | Yes      | Whether reason is visible in cancellation modal        | Default: true                       |
+
+**Business Rules**:
+
+- Reason labels must be unique (case-insensitive)
+- At least 2 active reasons must exist at all times
+- The "Other" reason is FIXED (cannot be deactivated or deleted) and always requires explanation
+- Deactivating a reason does NOT delete historical data — previously captured cancellation reasons retain their original label in audit logs
+- Changes propagate to Patient app within 1 minute
+- Drag-and-drop reordering updates Display Order field
+- When "Requires Explanation" is true for a reason, FR-003 Screen 11 must show a mandatory free text field (max 500 chars) when that reason is selected
+
+**Notes**:
+
+- Provide drag-and-drop reordering UI (same pattern as Discovery Questions)
+- Display usage analytics: how many patients selected each reason, with date range filter
+- Warn before deactivating a frequently selected reason
+- On save, a modal prompts for the mandatory change reason (10-500 chars)
+- Consumer: FR-003 Screen 11 (Cancel Inquiry Confirmation Modal) reads this list to populate the cancellation reason selector
+
+---
+
 ### Screen 6: OTP Email Template Editor
 
 **Purpose**: Edit email templates for OTP verification and password reset emails
@@ -524,6 +574,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - OTP configuration: expiry time (range: 5-30 minutes), resend cooldown (range: 30-300 seconds), max resend attempts (range: 3-10)
 - Country list: add, edit, deactivate countries and calling codes
 - Discovery questions: add, edit, deactivate answer options
+- Inquiry cancellation reasons: add, edit, reorder, deactivate reason options (FR-003 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
 **Fixed in Codebase (Not Editable)**:
@@ -538,6 +589,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 - Admin can deactivate countries but cannot delete (soft delete, archived)
 - Admin can deactivate discovery options but must maintain at least 2 active options
+- Admin can deactivate cancellation reasons but must maintain at least 2 active reasons; "Other" reason cannot be deactivated
 - Admin can edit email templates but must include required variables ({code} for OTP templates)
 
 ---
@@ -588,6 +640,10 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **FR-001 / Module P-01: Auth & Profile Management**
   - **Why needed**: P-01 consumes authentication throttling, OTP configuration, country lists, discovery questions
   - **Integration point**: P-01 polls Settings API every 60 seconds to retrieve latest configurations; applies to login flows, OTP verification, profile forms
+
+- **FR-003 / Module P-02: Inquiry Submission & Distribution**
+  - **Why needed**: P-02 consumes inquiry cancellation reason options for the patient cancellation modal (Screen 11)
+  - **Integration point**: P-02 polls Settings API to retrieve active cancellation reasons; applies to inquiry cancellation flow (Workflow 5)
 
 - **FR-009 / Module PR-01: Auth & Team Management**
   - **Why needed**: PR-01 consumes authentication throttling and OTP configuration for provider login and email verification
@@ -740,6 +796,14 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - Initial Option 1: "Search Engine" (Order: 1)
   - Initial Option 2: "Social Media" (Order: 2)
   - Initial Option 3: "Friend Recommendation" (Order: 3)
+- **Inquiry Cancellation Reasons**:
+  - Initial Option 1: "Changed my mind" (Order: 1, Requires Explanation: No)
+  - Initial Option 2: "Found a better option elsewhere" (Order: 2, Requires Explanation: No)
+  - Initial Option 3: "Medical concerns" (Order: 3, Requires Explanation: No)
+  - Initial Option 4: "Financial reasons" (Order: 4, Requires Explanation: No)
+  - Initial Option 5: "Travel restrictions" (Order: 5, Requires Explanation: No)
+  - Initial Option 6: "Timeline doesn't work" (Order: 6, Requires Explanation: No)
+  - Initial Option 7: "Other" (Order: 7, Requires Explanation: Yes, FIXED — cannot be deactivated)
 - **Countries**:
   - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
 - **Templates**:
@@ -823,7 +887,25 @@ Marketing team identifies new traffic source (medical tourism forums); admin nee
 
 ---
 
-### User Story 5 - View Version History for Audit Compliance (Priority: P2)
+### User Story 5 - Manage Inquiry Cancellation Reasons (Priority: P2)
+
+Product team receives patient feedback suggesting a new cancellation reason category; admin adds it to the centralized list.
+
+**Why this priority**: Enables data-driven understanding of why patients cancel inquiries; must be adjustable without code deployment.
+
+**Independent Test**: Can be fully tested by: (1) Admin adds new reason via UI, (2) Submit reason modal, (3) Wait 1 minute, (4) Patient initiates inquiry cancellation on app, (5) Verify new reason appears in cancellation modal.
+
+**Acceptance Scenarios**:
+
+1. **Given** admin is logged in and has "Settings Manager" role, **When** admin navigates to Settings → App Data → Inquiry Cancellation Reasons, **Then** system displays current list of active reasons with usage counts
+2. **Given** admin clicks "Add Reason", **When** admin enters "Provider communication issues" with Requires Explanation = Yes, **Then** system validates label uniqueness
+3. **Given** admin added new reason and reordered via drag-and-drop, **When** admin clicks Save and submits reason modal with "Adding cancellation tracking category from patient feedback", **Then** system versions reason list, creates audit log
+4. **Given** admin saved new reason 30 seconds ago, **When** patient taps Cancel Inquiry on Patient app, **Then** "Provider communication issues" appears in reason selector with mandatory explanation field
+5. **Given** admin deactivates "Travel restrictions" reason, **When** patient who previously cancelled with that reason is viewed in analytics, **Then** historical data retains "Travel restrictions" label
+
+---
+
+### User Story 6 - View Version History for Audit Compliance (Priority: P2)
 
 Compliance officer requests complete audit trail of all authentication policy changes for quarterly audit report.
 
@@ -847,6 +929,8 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - What occurs if **Settings API is unreachable during Patient app polling**? Patient app logs error, continues using cached settings for up to 1 minute, retries poll every 60 seconds.
 - How to manage **sensitive value (API key) visibility in version history**? System masks sensitive values in version history UI (display as "[REDACTED]"); admins with "View Sensitive Settings" permission can click "Show" to unmask.
 - How does system handle **settings propagation during Patient app deployment**? Settings API remains available during deployments; Patient app retrieves settings after restart; no data loss.
+- What happens when **admin attempts to deactivate the "Other" cancellation reason**? System prevents deactivation and displays error: "'Other' is a fixed reason and cannot be deactivated."
+- What happens when **admin deactivates a cancellation reason while a patient is mid-cancellation flow**? Patient app uses cached reason list (up to 1 minute stale); if patient submits with a now-deactivated reason, system still accepts the submission (reason was valid at flow start). Next cancellation flow loads updated list.
 - What occurs if **admin deletes country that active patients have selected in profile**? System prevents hard delete (soft delete only); patients who selected deleted country retain selection; country hidden from new users.
 
 ---
@@ -870,6 +954,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - **REQ-026-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
 - **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, display order, active status
 - **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
+- **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 11.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -913,7 +998,11 @@ Compliance officer requests complete audit trail of all authentication policy ch
   - **Key attributes**: option_id, option_text, display_order, active, usage_count, created_at, updated_at
   - **Relationships**: Referenced by Patient registration data
 
-- **Entity 6 - Email Template**: OTP email template configuration
+- **Entity 6 - Inquiry Cancellation Reason**: Centrally managed cancellation reason option for patient inquiry cancellation (FR-003)
+  - **Key attributes**: reason_id, reason_label, requires_explanation (boolean), display_order, active, usage_count, created_at, updated_at
+  - **Relationships**: Referenced by FR-003 Inquiry entity (cancellationReason field stores selected reason_label at time of cancellation)
+
+- **Entity 7 - Email Template**: OTP email template configuration
   - **Key attributes**: template_id, template_name, subject_line, html_body, plain_text_body, version_number, required_variables (JSON), created_at, updated_at
   - **Relationships**: One Template has many Versions; Consumed by Notification Service (S-03)
 
@@ -925,6 +1014,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
 | ---------- | ------- | --------------------------------------- | ------------ |
 | 2025-11-04 | 1.0     | Initial PRD creation                    | AI Assistant |
 | 2025-12-11 | 1.1     | Verified status, approvals, footer update | AI Assistant |
+| 2026-02-08 | 1.2     | Added "Inquiry Cancellation Reasons" as new App Data list (Screen 5a) with field table, workflow A4, seeding data (7 initial reasons), Entity 6, REQ-026-012a, User Story 5, edge cases, dependency on FR-003. Consumer: FR-003 Screen 11 cancellation modal. | AI |
 
 ---
 

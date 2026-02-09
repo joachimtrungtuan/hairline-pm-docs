@@ -94,3 +94,6 @@ Data fields should be described as business data (e.g., "Patient must provide: f
 - Include Figma link only if provided by user — omit `<li>` entirely when no Figma link available
 - Add System PRD or transcription links only when they materially clarify that specific task
 - GitHub base: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/`
+- **Path mapping**: The GitHub repo root corresponds to the contents **inside** `local-docs/`. When converting a local path to a GitHub URL, **strip the `local-docs/` prefix** before appending to the base.
+  - Correct: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`
+  - Incorrect: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/local-docs/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`

@@ -375,6 +375,7 @@ The Hairline Platform consists of four distinct applications serving different u
 **Data Security**:
 
 - Passwords MUST be hashed using bcrypt (cost factor 12+)
+- Password changes MUST NOT reuse any of the last 5 passwords (password history enforcement)
 - Personal data MUST be encrypted at rest
 - System MUST maintain audit log of profile changes
 
@@ -431,7 +432,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - System MUST limit inquiry distribution to maximum 10 providers
 - Providers MUST receive inquiry notification within 5 minutes
 - System MUST track inquiry expiration (72 hours for quote submission)
-- System MUST allow patients to close/cancel inquiry before receiving quotes
+- System MUST allow patients to close/cancel inquiry before Confirmed stage (i.e., in Inquiry, Quoted, or Accepted stages per FR-003 Workflow 5)
 - System MUST support secondary service options: Monitor Hair Loss, Aftercare services
 - System MUST generate unique inquiry IDs in HPID format (HPID + YY + MM + 4-digit sequence)
 

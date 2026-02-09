@@ -318,7 +318,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Patient list updates in real-time when new patients register (WebSocket push)
 - Patient codes always displayed alongside names for unique identification
 - Row layout mirrors inquiry list so admins immediately recognize patient intent/context
-- Status badges color-coded: Inquiry (blue), Scheduled (green), In-Progress (orange), Completed (gray)
+- Status badges color-coded: Inquiry (blue), Quoted (purple), Accepted (teal), Scheduled (green), In-Progress (orange), Aftercare (light green), Completed (gray), Cancelled (red), Suspended (dark red)
 - Flagged patients show red alert icon with hover tooltip explaining flag reason
 - Clicking row navigates to patient detail view
 
@@ -351,6 +351,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Current Status | badge | Yes (display only) | Journey stage | Read-only, color-coded |
 | Assigned Provider | link | No (display only) | Provider name (if applicable) | Click to navigate to provider profile |
 | Account Status | badge | Yes (display only) | Active, Suspended, Deactivated | Read-only, color-coded |
+| Cancellation Reason | text | Conditional (display only) | Patient-selected cancellation reason (from FR-026 Screen 5a options) | Read-only; only shown when Current Status = Cancelled |
+| Cancellation Timestamp | datetime | Conditional (display only) | When the inquiry was cancelled by the patient | Read-only; only shown when Current Status = Cancelled |
 | Flags/Alerts | list | No (display only) | Active warnings or concerns | Clickable to view details |
 
 **Business Rules**:
@@ -363,6 +365,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Status badges use consistent color scheme across all admin views
 - Flags/alerts section shows maximum 3 most critical items; click "View All" to see complete list
 - "Last Activity" timestamp updates in real-time if patient is currently active
+- When Current Status is "Cancelled", Cancellation Reason and Cancellation Timestamp are displayed below the status badge. Admin has oversight only — no reversal action is available (per FR-003 Workflow 5 design decision). Cancellation reason sourced from FR-026 Screen 5a managed options; reason is patient-private but visible to admin for oversight.
 
 **Notes**:
 
@@ -382,7 +385,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Milestone List | component | Yes (display only) | Chronological list of major journey milestones | Read-only, descending |
-| Milestone Name | badge | Yes (display only) | Inquiry Submitted, Quote Approved, Booking Confirmed, Travel Complete, Procedure Complete, Aftercare Checkpoint, etc. | Color-coded |
+| Milestone Name | badge | Yes (display only) | Inquiry Submitted, Quote Approved, Inquiry Cancelled, Booking Confirmed, Travel Complete, Procedure Complete, Aftercare Checkpoint, etc. | Color-coded; "Inquiry Cancelled" uses red/warning style |
 | Milestone Date | datetime | Yes (display only) | Timestamp milestone achieved | Read-only |
 | Summary | text | Yes (display only) | Key datapoints (provider, location, payment amount) | 1-2 lines max |
 | Case Detail Link | button | Yes | Opens inquiry/case detail focused on the stage | Opens in new tab; deep link required |
@@ -394,6 +397,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Each milestone card includes "Open Case Detail" which navigates to the canonical screen where full actions occur
 - Active/in-progress milestone anchored at top with live status indicator
 - Failed milestones (e.g., payment failed) show warning icon and link to relevant payment record
+- "Inquiry Cancelled" milestone displays as a terminal card with: cancellation reason (from FR-026 Screen 5a), cancellation timestamp, and "Cancelled by Patient" indicator. The "Open Case Detail" link navigates to the inquiry detail page showing the read-only cancelled state. If quotes were auto-cancelled as cascade, the milestone summary notes the count (e.g., "3 quotes cancelled")
 - Admin notes are optional but, when provided, log to audit trail referencing the milestone
 - Export generates concise milestone report (no duplicate case data)
 
@@ -957,6 +961,23 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 
 ---
 
+### User Story 8 - Admin Reviews Patient with Cancelled Inquiry (Priority: P3)
+
+Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the cancelled state for oversight, verify cascade completed correctly (quotes auto-cancelled, providers notified), and confirm no further action is required.
+
+**Why this priority**: Cancellation oversight is passive — admin has no reversal capability. Important for audit completeness but lower priority than active interventions.
+
+**Independent Test**: Create patient with inquiry in Quoted stage with 2 quotes, patient cancels inquiry, verify admin sees correct status, cancellation reason/timestamp, milestone card, auto-cancelled quotes, and audit trail entry.
+
+**Acceptance Scenarios**:
+
+1. **Given** admin searches for a patient who cancelled their inquiry, **When** admin views patient list (Screen 1), **Then** Stage column shows "Cancelled" badge (red) with note "Cancelled by patient"
+2. **Given** admin opens patient detail Overview tab (Screen 2), **When** Current Status shows "Cancelled", **Then** Cancellation Reason and Cancellation Timestamp fields are visible below the status badge; no reversal action is available
+3. **Given** admin views Treatment Journey tab (Screen 3), **When** milestones load, **Then** "Inquiry Cancelled" appears as terminal milestone card with reason, timestamp, and count of auto-cancelled quotes (e.g., "2 quotes cancelled")
+4. **Given** admin views Admin Actions tab (Screen 7), **When** filtering by action type, **Then** system-generated "Patient Inquiry Cancellation" audit entry is visible with patient who/when/reason details
+
+---
+
 ### Edge Cases
 
 - **Edge Case 1**: How does system handle concurrent admin modifications (two admins modifying same patient booking simultaneously)?
@@ -1028,7 +1049,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 ## Key Entities
 
 - **Entity 1 - Patient Account**
-  - **Key attributes**: patient_id (unique code), name, email, phone, date_of_birth, location (country, city), registration_date, last_activity, account_status (active, suspended, deactivated), journey_status (inquiry, quoted, scheduled, in-progress, aftercare, completed), flags/alerts
+  - **Key attributes**: patient_id (unique code), name, email, phone, date_of_birth, location (country, city), registration_date, last_activity, account_status (active, suspended, deactivated), journey_status (inquiry, quoted, accepted, scheduled, in-progress, aftercare, completed, cancelled), cancellation_reason (conditional, from FR-026 Screen 5a), cancelled_at (conditional), flags/alerts
   - **Relationships**: One patient has many inquiries; one patient has many bookings; one patient has many payments; one patient has many communications (with providers, support, aftercare)
 
 - **Entity 2 - Admin Action Log (Audit Trail)**
@@ -1051,6 +1072,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 | 2025-11-21 | 1.1 | Updated status to ✅ Verified & Approved and aligned admin role/medical access rules | AI Assistant |
 | 2025-12-29 | 1.2 | Removed formal Support Ticket system scope from FR-016 and referenced dedicated FR-034 (Support Center & Ticketing) | AI Assistant |
 | 2026-02-05 | 1.3 | Cancel Inquiry flow (FR-003 Workflow 5): Added "Cancelled" and "Accepted" to Stage filter and badge values (Screen 1); added "Patient Inquiry Cancellation" as system-generated audit event type (Screen 7) | AI     |
+| 2026-02-09 | 1.4 | Cancellation integrity fixes: Added cancellation reason/timestamp fields to Screen 2 (Overview) with oversight-only rules. Added "Inquiry Cancelled" milestone to Screen 3 (Treatment Journey) with cascade summary. Updated Entity 1 journey_status enum to include accepted/cancelled with cancellation fields. Completed status badge color coding for all journey stages. Added User Story 8 (admin reviews cancelled inquiry). Fixed Last Updated date. | AI |
 
 ---
 
@@ -1067,4 +1089,4 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2025-11-11
+**Last Updated**: 2026-02-09

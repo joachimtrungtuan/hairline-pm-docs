@@ -16,7 +16,7 @@
 | P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-001, FR-020, FR-027 | 🟡 Specified |
 | P01.3 | Change Password | P-01: Auth & Profile Management | FR-001 | 🟡 Specified |
 | P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🟡 Specified |
-| P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | ⏸️ On Hold |
+| P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | 🟡 Specified |
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🔴 Not Designed |
 | P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🔴 Not Designed |
 | P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🔴 Not Designed |
@@ -262,7 +262,7 @@ flowchart TD
 | Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
 | Global Push Toggle | toggle | Yes | Master switch: "Push Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
 | Mandatory Notifications Note | text | Yes | "Security notifications (password reset, account changes) are always sent and cannot be disabled." | Displayed below toggles as info text |
-| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes. These keep you informed of important updates." | Read-only informational text; explains system-driven event notifications per FR-020 |
+| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; explicitly lists system-driven event notifications per FR-001 Screen 16 and FR-020 |
 | Save Status Indicator (Conditional) | text | Conditional | "Saved" or "Saving..." feedback | Shown briefly after toggle change; success message: "Preferences saved" |
 | Error Message (Conditional) | text | Conditional | Displayed if save fails | "Failed to save preferences. Please try again." with Retry button; on failure, UI reverts to last saved state |
 
@@ -488,7 +488,7 @@ flowchart TD
 
 **Related FRs**: FR-003 (Inquiry Submission), FR-005 (Quote Comparison & Acceptance)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr003-inquiry-submission/prd.md`, `fr005-quote-comparison-acceptance/prd.md`
-**Status**: ⏸️ On Hold
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
@@ -510,7 +510,7 @@ flowchart TD
     ConfirmButton --> ProcessCancellation["System updates inquiry status to 'Cancelled'"]
     ProcessCancellation --> CheckQuotes{"Associated quotes exist?"}
 
-    CheckQuotes -->|Yes| CancelQuotes["System auto-cancels all related quotes<br/>(status: 'Cancelled - Inquiry Cancelled')"]
+    CheckQuotes -->|Yes| CancelQuotes["System auto-cancels all related quotes<br/>(status: 'Cancelled (Inquiry Cancelled)')"]
     CancelQuotes --> NotifyProviders["System notifies all affected providers"]
     NotifyProviders --> LogEvent
 
@@ -545,10 +545,10 @@ flowchart TD
 
 **Business Rules**:
 
-- ⏸️ On hold: patient-initiated inquiry cancellation is not defined in FR-003/FR-005; do not proceed to design until requirements are updated/approved
-- If resumed, allowable stages and impacts on quotes/reservations must be explicitly defined in the PRD before finalizing UI copy and state transitions
-- If resumed, cancellation reason options must be centrally defined and audited; avoid hardcoding option lists without PRD backing
-- All state changes, audit logging, and notifications must align with the confirmed inquiry lifecycle and privacy constraints once approved
+- Source of truth: FR-003 Workflow 5 and Screen 11 define the canonical cancellation flow, eligible stages (Inquiry, Quoted, Accepted), and cancellation rules. This screen extends FR-003 Screen 11 with design-level detail.
+- Allowable stages and impacts on quotes/reservations are defined in FR-003 Workflow 5 steps 1–3 and Cancellation Rules (Business Rules §4)
+- Cancellation reason options are admin-configurable via FR-026 Screen 5a; initial set defined in FR-003 Screen 11
+- All state changes, audit logging, and notifications align with FR-003 Workflow 5 steps 3–4 and the confirmed inquiry lifecycle and privacy constraints
 
 ##### Screen P02.2-S2: Cancellation Success Confirmation
 
@@ -570,10 +570,10 @@ flowchart TD
 
 **Business Rules**:
 
-- ⏸️ On hold: this success screen is not PRD-backed; do not proceed to design until requirements are updated/approved
-- If resumed, cancellation timestamp must reflect server time and the impact summary must match the confirmed lifecycle rules for inquiry/quotes/reservations
-- Primary next steps should return patient to Inquiry Dashboard (FR-003 Screen 8) or allow starting a new inquiry (FR-003 Screen 1); support link is optional
-- Cancelled inquiries (if supported) must be read-only and not re-openable; patient starts a new inquiry to proceed
+- Source of truth: FR-003 Screen 11a defines the canonical success confirmation spec. This screen extends FR-003 Screen 11a with design-level detail.
+- Cancellation timestamp must reflect server time (not client) per FR-003 Screen 11a business rules; impact summary must match the actual cascade results from Workflow 5 steps 3–4
+- Primary next steps return patient to Inquiry Dashboard (FR-003 Screen 8) or allow starting a new inquiry (FR-003 Screen 1); support link is optional
+- Cancelled inquiries are read-only and not re-openable per FR-003 Cancellation Rules §4; patient starts a new inquiry to proceed
 
 ---
 

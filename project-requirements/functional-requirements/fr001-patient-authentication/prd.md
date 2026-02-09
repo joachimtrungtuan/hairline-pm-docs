@@ -174,11 +174,11 @@ The Patient Authentication & Profile Management module enables patients to secur
 - **B1**: Invalid credentials
   - System displays "Invalid email or password" error
   - Patient can retry or use "Forgot your password?" link
-  - System tracks failed attempts (max 5 before lockout)
+  - System tracks failed attempts (configurable max attempts before lockout, default: 5; per Admin Settings A-09 / FR-026)
 
 - **B2**: Account locked due to failed attempts
   - System displays account lockout message
-  - Patient must wait 15 minutes or contact support
+  - Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026) or contact support
   - System logs security event
 
 ### Workflow 3: Password Reset (Recovery Flow)
@@ -216,7 +216,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 - **C1**: Reset code expires or is invalid
   - System displays error message
   - Patient can request new reset code
-  - System maintains 1-hour reset window
+  - System maintains configurable OTP validity window (default: 15 minutes, configurable via Admin Settings A-09)
 
 - **C2**: Patient doesn't receive email
   - Patient can tap "Resend code" option
@@ -342,6 +342,10 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Create account button disabled until all fields valid
 - Real-time password strength validation
 
+**Notes**:
+
+- The client transcription mentioned "email, confirmation of email" during signup. This PRD omits a separate "Confirm email" re-entry field because email correctness is verified via 6-digit OTP in the next step (Screen 5), which provides stronger validation than a re-entry field.
+
 #### Screen 5: Email Verification Screen
 
 **Purpose**: Verify patient's email address with OTP
@@ -416,8 +420,9 @@ The Patient Authentication & Profile Management module enables patients to secur
 **Business Rules**:
 
 - Options centrally managed in Admin Settings (A-09)
-- Selection optional but recommended
+- Selection required before proceeding (per client transcription: discovery question is part of the mandatory registration flow)
 - Data used for marketing analytics
+- Continue button disabled until an option is selected
 - Continue button proceeds to main app
 
 #### Screen 9: Login Screen
@@ -459,7 +464,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 - Email address required
 - Reset code sent to registered email
-- 1-hour reset window
+- OTP validity window: 15 minutes (configurable via Admin Settings A-09)
 - Rate limiting prevents abuse
 
 #### Screen 11: Reset Code Entry Screen
@@ -478,7 +483,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 **Business Rules**:
 
 - 6-digit numeric code required
-- Code expires after 1 hour
+- Code expires after 15 minutes (configurable via Admin Settings A-09)
 - Resend option available
 - Invalid code shows error message
 
@@ -532,8 +537,13 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Large circular avatar placeholder
 - Patient full name
 - Patient email
-- Buttons: "Profile edit", "Settings"
-- Menu list: Payment method, Previous treatment (Completed only), Reviews, Delete account, Logout
+- **Action Buttons** (top section): "Profile edit", "Settings"
+- **Menu Items** (scrollable list):
+  - Payment method
+  - Previous treatment (Completed only)
+  - Reviews
+  - Delete account (navigates to Screen 17; destructive action)
+  - Logout
 
 **Business Rules**:
 
@@ -575,54 +585,27 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Validation applied per field; back navigation available
 - Email change triggers re-verification via 6-digit OTP
 
-#### Screen 16: Settings
+#### Screen 16: Settings Main Screen
 
-**Purpose**: Provide access to app settings related to the patient account
+**Purpose**: Top-level settings navigation hub
 
 **Data Fields**:
 
-- Notification
-- Privacy and security
-- Help and support
-- Terms & Conditions
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Settings" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Profile screen (Screen 14) | Top-left corner |
+| Notification Settings | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to Screen 16a |
+| Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to Screen 16b |
+| Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to Screen 16d |
+| Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Help & Support flow (FR-033/FR-034) |
 
 **Business Rules**:
 
-- Settings content defined elsewhere; back navigation available
-- Notification Preferences:
-  - Global toggles (MVP): Email, Push
-  - Per-category toggles are deferred to V2 (Inquiry, Quote, Booking, Payment, Aftercare, Marketing)
-  - Changes are saved immediately; effective within 1 minute
-  - Marketing notifications are OFF by default unless explicit consent is stored (applies when V2 categories ship)
-  - Failure to save MUST rollback UI to previous values and show actionable error
-  - System event triggers (read-only in Settings): user is informed that notifications are sent automatically on stage changes (Inquiry → Quote → Accepted/Confirmed, Payment events, Aftercare reminders, Inquiry Cancelled)
-- Privacy & Security:
-  - Opens a small menu with two items: Change Password, Privacy Policy
-  - Change Password is a dedicated screen/flow (see Screen 18) and requires current password and new password meeting policy; on success, existing refresh tokens are revoked and current session remains active
-  - "Forgot your password?" is available within Change Password and routes to Password Reset (Screens 10–12)
-  - Privacy Policy is displayed as read-only legal content sourced and versioned per FR-027
-  - All server-write actions use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values
-- Terms & Conditions:
-  - Displayed as read-only legal content sourced and versioned per FR-027
-
-**Acceptance Scenarios**:
-
-Notifications
-
-1. Given user toggles Push OFF, When saved (immediate), Then push notifications stop within 1 minute.
-2. Given a save error occurs, When toggling a global control (Email/Push), Then UI reverts to prior state and displays error message with retry option.
-3. Given inquiry stage changes (e.g., Quote received), When Email or Push is ON, Then the user receives a stage update notification according to FR-020.
-
-Privacy & Security
-4. Given user selects Change Password and submits currentPassword and a new password that meets policy, When request succeeds, Then prior refresh tokens are revoked and user remains logged in with current session.
-5. Given user cannot remember current password, When they tap "Forgot your password?" on the Change Password screen, Then the app routes to Password Reset Initiation (Screen 10).
-6. Given user opens Privacy Policy, Then the latest published policy content is shown with working back navigation (FR-027).
-7. Given user opens Terms & Conditions, Then the latest published terms content is shown with working back navigation (FR-027).
-
-Data/Validation & Audit
-10. Given user changes notification preferences, Then a preference-change audit entry is recorded with who/when/before/after.
-11. Given user changes password, Then a security audit entry is recorded and password policy is enforced.
-12. Given user initiates a password reset (forgot password), Then audit captures the reset request event (without storing OTP codes).
+- Navigation sections are static items — always visible in the same order
+- Tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 16
+- Help & Support routes to the Help Center & Support Access module (FR-033/FR-034)
+- Settings items are patient-app only; no provider/admin controls appear here
 
 **Minimal API/State (Reference)**:
 
@@ -632,8 +615,129 @@ Data/Validation & Audit
 - POST deleteAccountRequest { reason? } (deletion request / DSR; queued for Admin review per FR-023)
 - Read-only lists: previousTreatments[], reviews[]
 
-Help & Support
-8. Given user opens Help and support → Report a problem, When submitting feedback, Then device/os/app version and timestamp are attached; submissions are throttled to prevent spam.
+#### Screen 16a: Notification Settings
+
+**Purpose**: Manage push and email notification preferences
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Notification Settings" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
+| Explanation Text | text | Yes | "Choose how you want to receive notifications from Hairline." | Displayed below title for context |
+| MVP Notice (Conditional) | text | Conditional | "Per-category preferences coming soon. For now, you can enable/disable all notifications by channel." | Shown only in MVP; removed in V2 when per-category toggles ship |
+| Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default for new accounts: ON |
+| Global Push Toggle | toggle | Yes | Master switch: "Push Notifications" with ON/OFF state | Auto-saves immediately on toggle; default for new accounts: ON |
+| Mandatory Notifications Note | text | Yes | "Security notifications (password reset, account changes) are always sent and cannot be disabled." | Displayed below toggles as info text |
+| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; per FR-020 |
+| Save Status Indicator (Conditional) | text | Conditional | "Saved" or "Saving..." feedback | Shown briefly after toggle change; success message: "Preferences saved" |
+| Error Message (Conditional) | text | Conditional | Displayed if save fails | "Failed to save preferences. Please try again." with Retry button; on failure, UI reverts to last saved state |
+
+**Business Rules**:
+
+- **MVP scope**: Only global Email/Push toggles available; per-category preferences (Inquiry, Quote, Booking, Payment, Aftercare, Marketing) are deferred to V2
+- Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles
+- System event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP
+- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON
+- Marketing notifications are OFF by default unless explicit consent is stored (applies when V2 categories ship)
+- If save fails, UI MUST revert to previous toggle state and show actionable error with Retry option
+
+**Acceptance Scenarios**:
+
+1. Given user toggles Push OFF, When saved (immediate), Then push notifications stop within 1 minute.
+2. Given a save error occurs, When toggling a global control (Email/Push), Then UI reverts to prior state and displays error message with retry option.
+3. Given inquiry stage changes (e.g., Quote received), When Email or Push is ON, Then the user receives a stage update notification according to FR-020.
+4. Given user changes notification preferences, Then a preference-change audit entry is recorded with who/when/before/after.
+
+#### Screen 16b: Privacy & Security Menu
+
+**Purpose**: Provide access to security and privacy items
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Privacy & Security" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
+| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to Screen 18 (Change Password flow) |
+| Privacy Policy | link | Yes | Row with shield/document icon + "Privacy Policy" label + chevron | Navigates to Screen 16c |
+
+**Business Rules**:
+
+- Change Password always routes to Screen 18; this menu does not embed inline password-edit controls
+- Privacy Policy is read-only static content sourced from the Legal Content system (FR-027)
+- If legal content cannot be loaded, show a retry state and allow returning to Screen 16 without blocking the user
+- This menu contains only patient-facing items (no admin/provider configuration)
+- All server-write actions use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values
+
+**Acceptance Scenarios**:
+
+1. Given user selects Change Password and submits currentPassword and a new password that meets policy, When request succeeds, Then prior refresh tokens are revoked and user remains logged in with current session.
+2. Given user cannot remember current password, When they tap "Forgot your password?" on the Change Password screen, Then the app routes to Password Reset Initiation (Screen 10).
+
+#### Screen 16c: Privacy Policy
+
+**Purpose**: Display Privacy Policy content (static/read-only)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Privacy Policy" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 16b) | Top-left corner |
+| Policy Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
+| Last Updated | datetime | Conditional | Last updated timestamp for the policy | Shown if available (FR-027) |
+| Policy Content | text | Yes | Scrollable rich-text policy body | Must be readable and selectable; supports long content |
+| Loading State (Conditional) | text | Conditional | Loading indicator while content fetches | Shown during content load |
+| Error State (Conditional) | text | Conditional | Non-blocking error with Retry and Back options | "Unable to load content. Please try again." with Retry button |
+
+**Business Rules**:
+
+- Policy content is read-only and must match the latest published Privacy Policy for the patient app (FR-027)
+- If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading
+- If content fails to load, show a non-blocking error state with Retry and Back navigation
+- Analytics/audit (if implemented) must not capture the policy text itself; only view events and version identifiers (privacy-by-design)
+
+**Acceptance Scenarios**:
+
+1. Given user opens Privacy Policy, Then the latest published policy content is shown with version label, last updated date (if available), and working back navigation (FR-027).
+
+#### Screen 16d: Terms & Conditions
+
+**Purpose**: Display Terms & Conditions content (static/read-only)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Terms & Conditions" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
+| Document Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
+| Last Updated | datetime | Conditional | Last updated timestamp for the document | Shown if available (FR-027) |
+| Document Content | text | Yes | Scrollable rich-text terms body | Must be readable and selectable; supports long content |
+| Loading State (Conditional) | text | Conditional | Loading indicator while content fetches | Shown during content load |
+| Error State (Conditional) | text | Conditional | Non-blocking error with Retry and Back options | "Unable to load content. Please try again." with Retry button |
+
+**Business Rules**:
+
+- Terms content is read-only and must match the latest published Terms & Conditions for the patient app (FR-027)
+- If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading
+- If content fails to load, show a non-blocking error state with Retry and Back navigation
+- Analytics/audit (if implemented) must not capture the document text itself; only view events and version identifiers (privacy-by-design)
+
+**Acceptance Scenarios**:
+
+1. Given user opens Terms & Conditions, Then the latest published terms content is shown with version label, last updated date (if available), and working back navigation (FR-027).
+
+**Help & Support Acceptance Scenario**:
+
+1. Given user opens Help and support → Report a problem, When submitting feedback, Then device/os/app version and timestamp are attached; submissions are throttled to prevent spam.
+
+**Data/Validation & Audit Acceptance Scenarios**:
+
+1. Given user changes password, Then a security audit entry is recorded and password policy is enforced.
+2. Given user initiates a password reset (forgot password), Then audit captures the reset request event (without storing OTP codes).
 
 #### Screen 17: Delete Account (Deletion Request / DSR)
 
@@ -650,7 +754,7 @@ Help & Support
 - Optional "Reason for deletion" selector (does not block submission)
 - Primary CTA: "Request deletion"
 - Final confirmation modal: "Submit deletion request?" (Confirm / Cancel)
-- Sensitive action re-auth prompt (conditional): password or 6-digit email OTP when last auth > 5 minutes
+- **Identity re-verification step (conditional)**: When last auth > 5 minutes, system navigates to Screen 19 (Identity Re-verification) before showing the final confirmation modal. On successful verification, patient returns to the confirmation modal.
 - Submission confirmation state: "Deletion request submitted" with request reference and next steps (status updates, possible additional verification)
 
 **Business Rules**:
@@ -659,7 +763,7 @@ Help & Support
 - If active treatment/aftercare exists, deletion request is blocked with guidance to contact support (patient safety)
 - If payment is in progress, deletion request is blocked until payment completes
 - If an active inquiry exists, deletion request is allowed and system auto-closes open inquiries
-- Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via password or 6-digit email OTP
+- Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 19 (Identity Re-verification) using password or 6-digit email OTP
 - Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`)
 - Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy)
 - On submission: system creates deletion request record, sends confirmation, and later sends status updates and outcome (including legal basis for any retained records)
@@ -670,21 +774,75 @@ Help & Support
 
 **Data Fields**:
 
-- Back navigation
-- "Change Password" header
-- Current password input (masked)
-- "Forgot your password?" link (routes to Screen 10)
-- New password input (masked)
-- Confirm new password input (masked)
-- Password policy helper text
-- Primary CTA: "Save"
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Change Password" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 16b) | Top-left corner |
+| Current Password | text | Yes | Masked password input | Required; show/hide toggle icon |
+| Forgot Your Password Link | link | Yes | "Forgot your password?" link shown under Current Password | Navigates to Password Reset Initiation (Screen 10) |
+| New Password | text | Yes | Masked password input | Must meet password policy (12+ chars, mixed case, digit, special char) |
+| Confirm New Password | text | Yes | Masked password input | Must match New Password exactly |
+| Password Policy Helper | text | Yes | Short reminder of password requirements | Must not list attempt limits; reference policy only |
+| Save Button | button | Yes | Primary CTA: "Save" | Disabled until all required fields are present |
+| Error Message (Conditional) | text | Conditional | Inline field-level errors for validation or server failures | Must not reveal whether current password is correct — use generic "Unable to change password. Please check your entries and try again." |
+| Throttle/Lockout Message (Conditional) | text | Conditional | Displayed when authentication throttling or lockout is triggered | "Too many attempts. Please try again later." with back navigation to Screen 16b |
 
 **Business Rules**:
 
 - Current password is required for in-session password change; user must use Password Reset if they cannot provide current password (Screens 10–12)
 - New password must meet password rules and cannot reuse last 5 passwords
 - Do not hardcode attempt counts in UI copy; throttling/lockout follows configured authentication security policy
-- On success: prior refresh tokens are revoked and current session remains active
+- Validation errors shown inline without revealing sensitive details (avoid "current password incorrect" style disclosures)
+- On success: prior refresh tokens are revoked and current session remains active; system displays Screen 18a (success confirmation)
+- If throttled/locked, show blocked message and navigate back to Screen 16b
+
+#### Screen 18a: Password Changed Confirmation
+
+**Purpose**: Confirm password change succeeded and return user back to settings
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Confirmation Icon | icon | Yes | Green success checkmark icon | Displayed prominently at top center |
+| Screen Title | text | Yes | "Password Updated" | Displayed prominently |
+| Message Text | text | Yes | Short confirmation copy (e.g., "Your password has been successfully changed.") | Must not include attempt limits or sensitive details |
+| Done Button | button | Yes | Primary CTA: "Done" | Returns to Privacy & Security menu (Screen 16b) |
+
+**Business Rules**:
+
+- Confirmation screen is shown only after the server confirms the password change
+- If token revocation fails after password change succeeds, the user still sees success but the app MUST retry revocation in background and log a security event
+- Returning to Settings must preserve navigation state (back stack returns to Screen 16b)
+
+#### Screen 19: Identity Re-verification (Shared Component)
+
+**Purpose**: Verify patient identity before performing sensitive actions (used by Screen 17 Delete Account and any future sensitive action requiring re-auth)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Verify Your Identity" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to the calling screen | Top-left corner; cancels the sensitive action flow |
+| Security Icon | icon | Yes | Lock or shield icon indicating security step | Displayed at top center |
+| Instruction Text | text | Yes | "For your security, please verify your identity before proceeding." | Clear, concise explanation |
+| Verification Method Selector | chips | Yes | Options: "Password" or "Email OTP" | Patient can switch methods; methods per FR-001 auth policy |
+| Password Field (Conditional) | text | Conditional | Masked password input; shown if "Password" method selected | Must match current account password; show/hide toggle icon |
+| Email OTP Field (Conditional) | text | Conditional | 6-digit OTP input; shown if "Email OTP" method selected | System sends OTP to registered email; code expires in 15 minutes |
+| Resend OTP Link (Conditional) | link | Conditional | Shown only if "Email OTP" method selected | Rate-limited; cooldown applies per OTP rules |
+| Error Message (Conditional) | text | Conditional | Displayed on verification failure | Actionable: "Invalid password/code. Please try again." |
+| Verify Button | button | Yes | Primary CTA: "Verify" | Disabled until password entered OR 6-digit OTP entered; on success, returns to calling screen's next step |
+| Cancel Button | button | Yes | Secondary CTA: "Cancel" | Returns to the calling screen; cancels the sensitive action |
+
+**Business Rules**:
+
+- Re-verification is required when last successful auth > 5 minutes (configurable threshold)
+- Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited
+- Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy)
+- Successful verification returns the patient to the calling screen's next step (e.g., final confirmation modal for Delete Account)
+- Patient can cancel at any time to exit without completing the sensitive action
+- This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Delete Account Screen 17; extensible to future sensitive actions)
 
 ## Business Rules
 
@@ -931,7 +1089,7 @@ An existing patient successfully logs into their account using email and passwor
 
 1. **Given** patient has an existing account, **When** patient enters correct email and password, **Then** system authenticates and creates session
 2. **Given** patient enters incorrect credentials, **When** patient attempts login, **Then** system displays error message and tracks failed attempt
-3. **Given** patient has 5 failed login attempts, **When** patient attempts login again, **Then** system locks account and displays lockout message
+3. **Given** patient exceeds configured max failed login attempts (default: 5; per Admin Settings A-09 / FR-026), **When** patient attempts login again, **Then** system locks account and displays lockout message
 4. **Given** patient successfully logs in, **When** session is created, **Then** system logs authentication event and redirects to dashboard
 
 ---
@@ -995,7 +1153,7 @@ A patient successfully updates their profile information and manages account set
 - **REQ-001-004**: System MUST support password reset via email OTP verification
 - **REQ-001-005**: System MUST allow patients to view and edit their profile information
 - **REQ-001-006**: System MUST enforce password strength requirements (12+ chars, mixed case, numbers, special chars)
-- **REQ-001-007**: System MUST track and lock accounts after 5 failed login attempts
+- **REQ-001-007**: System MUST track and lock accounts after configurable max failed login attempts (default: 5; per Admin Settings A-09 / FR-026)
 - **REQ-001-008**: System MUST log all authentication events for audit trail
 
 ### Data Requirements
@@ -1049,6 +1207,8 @@ A patient successfully updates their profile information and manages account set
 | 2025-11-04 | 1.1 | Template compliance: Added User Scenarios & Testing, Functional Requirements Summary, Key Entities, restructured Assumptions, added Appendices | Product & Engineering |
 | 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Clarified distinction between account deletion auto-close and explicit inquiry cancellation (Screen 14); added "Inquiry Cancelled" to system event triggers in Settings (Screen 16) | AI     |
 | 2026-02-06 | 1.3 | Settings (Screen 16): Added Terms & Conditions entry; refactored Privacy & Security into a 2-item menu (Change Password, Privacy Policy); removed device sessions and data export from patient settings. Added Change Password (Screen 18) with "Forgot your password?" link to Password Reset (Screens 10–12). Added Delete Account DSR request screen (Screen 17) and clarified DSR submission behavior. | AI     |
+| 2026-02-06 | 1.4 | Integrity fixes aligned with design complement (P01.2/P01.3). Expanded Screen 16 into sub-screens (16, 16a–16d) with formal 5-column field tables. Added Screen 18a (Password Changed Confirmation) with token-revocation resilience rule. Added Screen 19 (Identity Re-verification shared component) for sensitive actions requiring re-auth. Added error/throttle/lockout states to Screen 18. Added version metadata and error/loading states to legal content screens (16c, 16d). Added audit privacy constraint for legal content views. Clarified Screen 14 navigation structure (action buttons vs menu items). Updated Screen 17 to reference Screen 19 for identity re-verification. | AI     |
+| 2026-02-10 | 1.5 | Verification fixes: (1) Unified password reset OTP expiry from 1 hour to 15 min configurable, aligning with FR-026 system-level OTP policy. (2) Replaced hardcoded lockout values (5 attempts, 15-min lockout) with configurable references per FR-026. (3) Added design decision note on Screen 4 explaining OTP verification replaces confirm-email field per client transcription. (4) Made discovery question required on Screen 8 per client transcription. Password reuse rule (last 5) also added to system-prd.md and constitution. | AI     |
 
 ## Appendix: Approvals
 

@@ -223,8 +223,8 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Outcome | badge | Yes | Accepted/Expired/Cancelled (other accepted) | Enum validation |
-| Reason | text | No | If auto-cancelled (other accepted) | Read-only |
+| Outcome | badge | Yes | Accepted/Expired/Cancelled (other accepted)/Cancelled (Inquiry Cancelled) | Enum validation; visual treatment per state |
+| Reason | text | No | If auto-cancelled: "Other quote accepted" or "Inquiry cancelled by patient" | Read-only |
 | Audit Link | link | Yes | View version/audit history | Read-only |
 
 ### Admin Platform
@@ -237,7 +237,8 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Global Acceptance Table | table | Yes | All accept events with filters | Admin-only |
+| Global Acceptance Table | table | Yes | All accept events with filters (including superseded-by-cancellation events) | Admin-only; status filter includes: active, superseded_by_cancellation |
+| Cancellation Indicator | badge | No | Shows if acceptance was superseded by inquiry cancellation | "Superseded — Inquiry Cancelled" badge; links to FR-003 cancellation audit trail |
 | Conflicts | badge | No | Flagged races or errors | Investigated by admin |
 | Actions | actions | Yes | Soft delete/restore with reason | Audit enforced |
 
@@ -413,12 +414,28 @@ Patient attempts to accept a quote that has expired.
 1. Given an expired quote, when patient views FR-004 quote detail screen or taps Accept, then system shows "Expired" badge and disables Accept button.  
 2. Given multiple quotes with one expired, when patient views the inquiry dashboard, then expired quote is visually distinguished and other quotes remain available for acceptance.
 
+### User Story 3 - Inquiry Cancellation During Quote Review (Priority: P2)
+
+Patient cancels the inquiry while quotes are available for review or after accepting a quote.
+
+**Independent Test**: Patient cancels inquiry at various points in the quote review/acceptance lifecycle; verify all quotes cancelled, UI locked, providers notified, and admin oversight updated.
+
+**Acceptance Scenarios**:
+
+1. Given patient has 3 quotes in Quoted stage, When patient cancels inquiry from dashboard, Then all 3 quotes transition to "Cancelled (Inquiry Cancelled)"; Accept/Compare actions disabled; dashboard shows "Cancelled" badge (read-only)
+2. Given patient cancels inquiry after accepting a quote with active 48-hour slot hold, When cancellation processes, Then accepted quote becomes "Cancelled (Inquiry Cancelled)"; AcceptanceEvent marked as superseded; slot hold released immediately per Payment & Billing Rules
+3. Given provider views their quote outcome after patient cancels inquiry, When opening Screen 4, Then Outcome badge shows "Cancelled (Inquiry Cancelled)" with reason "Inquiry cancelled by patient"
+4. Given admin views acceptance oversight after patient cancels inquiry post-acceptance, When filtering, Then superseded acceptance event is visible with "Superseded — Inquiry Cancelled" badge and linked to cancellation audit trail
+
 ### Edge Cases
 
 - Network loss during acceptance: system retries safely; no duplicate accept states.  
 - Simultaneous accept attempts across devices: first valid acceptance wins; others see informative message.  
 - Provider withdraws during confirmation: acceptance blocked with explanation; return to inquiry dashboard.  
 - Admin restores mistakenly cancelled quote (with reason): does not override prior acceptance; remains read-only history.
+- Patient accepts quote then immediately cancels inquiry (rapid sequence): system processes cancellation; AcceptanceEvent superseded; accepted quote becomes "Cancelled (Inquiry Cancelled)"; slot hold released; booking handoff aborted.
+- Patient attempts to accept a quote while inquiry cancellation is being processed (race condition): system checks inquiry status at acceptance confirmation; if cancelled, blocks acceptance with message "This inquiry has been cancelled."
+- Patient cancels inquiry while on the acceptance confirmation modal (Screen 3): modal dismissed; inquiry dashboard refreshes to show "Cancelled" badge; all actions disabled.
 
 ---
 
@@ -457,10 +474,11 @@ Patient attempts to accept a quote that has expired.
 
 ## Key Entities
 
-- **AcceptanceEvent**: inquiryId, acceptedQuoteId, actorId (patient), timestamp, metadata (handoff)  
-  - metadata includes pre-scheduled appointment slot (datetime + timezone) and handoff payload identifiers  
+- **AcceptanceEvent**: inquiryId, acceptedQuoteId, actorId (patient), timestamp, metadata (handoff), supersededByCancellation (boolean, default false)
+  - metadata includes pre-scheduled appointment slot (datetime + timezone) and handoff payload identifiers
+  - If patient cancels the inquiry after acceptance (FR-003 Workflow 5), the AcceptanceEvent is NOT deleted; instead `supersededByCancellation` is set to true and linked Quote transitions to "Cancelled (Inquiry Cancelled)". The event remains in the audit trail for compliance.
   - Relationships: belongsTo Inquiry; belongsTo Quote  
-- **Quote** (from FR-004): id, providerId, status (Accepted/Expired/Cancelled - other accepted), expiresAt  
+- **Quote** (from FR-004): id, providerId, status (Accepted/Expired/Cancelled - other accepted/Cancelled - Inquiry Cancelled), expiresAt  
 - **AuditEntry**: entityType, entityId, action, actorId, reason, before, after, timestamp
 
 ---
@@ -473,6 +491,7 @@ Patient attempts to accept a quote that has expired.
 | 2025-11-04 | 1.1 | PRD reviewed and verified | Product Owner |
 | 2025-11-04 | 1.2 | Template compliance: moved Multi-Tenant Architecture to Module Scope; added MTA bullets; renamed Entry Points; restructured Assumptions into subsections | Product & Engineering |
 | 2026-02-05 | 1.3 | Added Alternative Flow A4 (inquiry cancelled during quote review), "Cancelled" to Screen 1 stage badge, read-only blocking rule for cancelled inquiries, appointment slot hold release on inquiry cancellation in Payment & Billing Rules. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
+| 2026-02-08 | 1.4 | Cancellation integrity fixes: Added "Cancelled (Inquiry Cancelled)" to Screen 4 (Provider Outcome) badge and Key Entities Quote status. Added supersededByCancellation field to AcceptanceEvent entity. Added cancellation visibility to Admin Screen 5. Added User Story 3 (inquiry cancellation during quote review) with 4 acceptance scenarios. Added 3 cancellation race-condition edge cases. | AI |
 
 ---
 
