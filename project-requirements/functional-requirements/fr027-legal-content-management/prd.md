@@ -10,7 +10,9 @@
 
 ## Executive Summary
 
-Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms) with versioning, preview, publishing, acceptance tracking, and audit trail. Admins can draft and preview content, publish new versions, and require users (patients and providers) to accept the latest terms where applicable. The system records which user accepted which version and when, while preserving full version history and logging all changes. This improves compliance, transparency, and reduces risk from untracked changes.
+Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms, Cancellation Policy) with versioning, preview, publishing, acceptance tracking, and audit trail. Admins can draft and preview content, publish new versions, and require users (patients and providers) to accept the latest terms where applicable. The system records which user accepted which version and when, while preserving full version history and logging all changes. This improves compliance, transparency, and reduces risk from untracked changes.
+
+> **Note on Cancellation Policy**: Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No`. It is surfaced to patients in the quote acceptance context (FR-005) for transparency.
 
 ---
 
@@ -27,7 +29,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Patient Platform (P-01)**:
 
-- View latest Terms & Conditions, Privacy Policy, and relevant Consent forms
+- View latest Terms & Conditions, Privacy Policy, Cancellation Policy, and relevant Consent forms
 - Accept latest versions when prompted; acceptance recorded with timestamp and version ID
 - View prior acceptances (history) for personal reference
 
@@ -64,7 +66,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 ### Entry Points
 
-- Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent) → Draft/Preview/Publish
+- Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent, Cancellation Policy) → Draft/Preview/Publish
 - Patient: First‑run or on change → Acceptance prompt; Settings → Terms & Conditions; Settings → Privacy & Security → Privacy Policy
 - Provider: First‑run or on change → Acceptance prompt; Settings → Legal → View documents
 
@@ -130,7 +132,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | T&C, Privacy, Consent | Must be one of supported types |
+| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Must be one of supported types |
 | Locale | select | Yes | Display locale for translation; global content only | Must be supported locale |
 | Version | text | Yes | Version identifier | Must be unique per document type |
 | Status | badge | Yes | Draft / Current / Archived | Only one Current per type |
@@ -219,7 +221,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | Filter by T&C, Privacy, Consent | Must be supported type |
+| Document Type | select | Yes | Filter by T&C, Privacy, Consent, Cancellation Policy | Must be supported type |
 | Version | select | Yes | Target version for coverage view | Must exist |
 | Published/Eff. Dates | text | Yes | Publication and activation timestamps | Read-only |
 | Material Change | badge | Yes | Indicates gating requirement | Read-only |
@@ -317,7 +319,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Core Requirements
 
-- **REQ-027-001**: Admins MUST be able to create, edit, preview, and publish legal documents (T&C, Privacy, Consent)
+- **REQ-027-001**: Admins MUST be able to create, edit, preview, and publish legal documents (T&C, Privacy, Consent, Cancellation Policy)
 - **REQ-027-002**: System MUST maintain version history with timestamps and change tracking; previous versions are preserved for reference
 - **REQ-027-003**: Admins MUST be able to schedule an effective date for publication; publication applies globally (no regional variants)
 - **REQ-027-004**: System MUST require acceptance for material changes as configured, prompting users appropriately
@@ -353,8 +355,9 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ## Key Entities
 
-- Legal Document: type (T&C, Privacy, Consent), locale, version, status, effective date, content, change summary  
-  Relationships: has many versions; current version per locale
+- Legal Document: type (T&C, Privacy, Consent, Cancellation Policy), locale, version, status, effective date, content, change summary  
+  Relationships: has many versions; current version per locale  
+  Note: Cancellation Policy type has `Requires Acceptance` = No (read-only informational document)
 
 - Acceptance Record: user reference, document type, version, locale, timestamp, channel  
   Relationships: belongs to user and document type/version
@@ -403,6 +406,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 | 2025-11-12 | 1.0     | Initial PRD creation   | AI Assistant |
 | 2025-12-11 | 1.1     | Marked Verified & Approved; added locale clarifications and screen specs | AI Assistant |
 | 2026-02-06 | 1.2     | Updated Patient Platform entry points to match patient Settings IA (FR-001): Settings → Terms & Conditions and Settings → Privacy & Security → Privacy Policy. | AI Assistant |
+| 2026-02-11 | 1.3     | Added "Cancellation Policy" as a 4th supported document type. Cancellation Policy is a read-only informational document (Requires Acceptance = No) surfaced to patients in the quote acceptance context (FR-005). Updated description, Screen 1/2/4/5 Document Type enums, REQ-027-001, Key Entities, and Patient Platform scope. | AI |
 
 ---
 

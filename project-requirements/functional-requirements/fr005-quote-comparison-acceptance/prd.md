@@ -103,7 +103,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 - Trigger: Countdown reaches zero while patient is viewing details.  
 - Steps: System disables Accept button; shows “Expired” badge and guidance to choose another quote.  
-- Outcome: Patient can pick another available quote or await new quotes.
+- Outcome: Patient can pick another available (non-expired) quote for the same inquiry if one exists. If all quotes have expired, the patient may cancel the inquiry and submit a new one, or contact support.
 
 **A2: Simultaneous Acceptance Attempt**:
 
@@ -137,15 +137,21 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 
 **Data Fields**:
 
+**Inquiry-Level Fields** (always visible; one instance per screen):
+
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" per FR-003 |
 | Timeline | timeline | Yes | Chronological status changes | Timestamps present |
 | Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
-| Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
-| Sort & Filter | controls | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined |
-| Compare Selection | checkbox | No | Select quotes to compare side-by-side (max 3) | Max 3 selected |
-| Comparison View | panel | No | Side-by-side comparison of selected quotes | Renders only when ≥2 selected |
+| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
+| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
+| Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
+
+**Per-Quote Card Fields** (repeated for each quote in the list):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
 | Treatment | text | Yes | Treatment name from catalog | Read-only; per quote |
 | Inclusions | chips | No | Package/customizations | Read-only; per quote |
 | Included Services | checklist | No | Included services checklist | Derived from quote inclusions; per quote |
@@ -155,18 +161,25 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 |
 | Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
 | Estimated Travel Costs | currency | No | Estimated travel costs to destination | Manually input by Provider (FR-004) or via FR-008 integration |
-| Expiry Timer | timer | Yes | Countdown until quote expiry | Derived from FR-004 settings; per quote |
-| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
-| Actions | buttons | Yes | View Details, Accept, Ask Question | State-aware enabling; per quote; Ask Question routes to Hairline Support via FR-012 |
-| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
-| Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
+| Expiry Timer | timer | Yes | Countdown until quote expiry; shows static "Expired on [date]" when expired | Derived from FR-004 settings; per quote |
+| Actions | buttons | Yes | View Details, Accept, Contact Support | State-aware enabling; per quote; Contact Support opens secure messaging thread with Hairline Support via FR-012 |
+
+**Quote List & Comparison Panel Fields** (list controls always visible; comparison panel renders only when ≥2 quotes selected):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
+| Sort & Filter | controls | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined |
+| Compare Selection | checkbox | No | Select quotes to compare side-by-side (max 3) | Max 3 selected; disabled for expired/withdrawn quotes |
+| Comparison View | panel | No | Side-by-side comparison of selected quotes | Renders only when ≥2 selected |
+| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist, estimated travel costs (REQ-005-014) |
 
 **Business Rules**:
 
 - Quotes are displayed within the inquiry dashboard context (not a separate screen).
 - Expired/withdrawn quotes are visually disabled.
 - Exactly one acceptance permitted per inquiry.
-- Patient can sort/filter quotes and compare up to 3 quotes side-by-side (criteria must include at least: total price, price per graft, graft count, review rating, soonest appointment slot).
+- Patient can sort/filter quotes and compare up to 3 quotes side-by-side; comparison differentiators are defined in the Quote List & Comparison Panel Fields table above (see also REQ-005-014).
 - Patient can view quote details and accept directly from the dashboard.
 - If inquiry stage is "Cancelled", all Accept buttons and Compare checkboxes are disabled; dashboard is read-only with "Cancelled" badge; quote data remains visible for reference (see FR-003 Workflow 5, Alternative Flow A4 above).
 
@@ -492,6 +505,7 @@ Patient cancels the inquiry while quotes are available for review or after accep
 | 2025-11-04 | 1.2 | Template compliance: moved Multi-Tenant Architecture to Module Scope; added MTA bullets; renamed Entry Points; restructured Assumptions into subsections | Product & Engineering |
 | 2026-02-05 | 1.3 | Added Alternative Flow A4 (inquiry cancelled during quote review), "Cancelled" to Screen 1 stage badge, read-only blocking rule for cancelled inquiries, appointment slot hold release on inquiry cancellation in Payment & Billing Rules. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 | 2026-02-08 | 1.4 | Cancellation integrity fixes: Added "Cancelled (Inquiry Cancelled)" to Screen 4 (Provider Outcome) badge and Key Entities Quote status. Added supersededByCancellation field to AcceptanceEvent entity. Added cancellation visibility to Admin Screen 5. Added User Story 3 (inquiry cancellation during quote review) with 4 acceptance scenarios. Added 3 cancellation race-condition edge cases. | AI |
+| 2026-02-11 | 1.5 | Clarified Alternative Flow A1 outcome: removed ambiguous "await new quotes" phrasing; explicitly stated patient options are to pick another non-expired quote, cancel inquiry and start new, or contact support. No re-quoting mechanism exists for the same inquiry. Restructured Screen 1 Data Fields into 3 grouped sub-tables (Inquiry-Level Fields, Per-Quote Card Fields, Quote List & Comparison Panel Fields) with explicit Comparison Differentiators field per REQ-005-014. Updated comparison criteria business rule to reference the new table structure. Added "Expired on [date]" display to Expiry Timer for expired state. Added "disabled for expired/withdrawn quotes" to Compare Selection. Renamed "Ask Question" button to "Contact Support" with routing to Hairline Support via FR-012 secure messaging. | AI |
 
 ---
 

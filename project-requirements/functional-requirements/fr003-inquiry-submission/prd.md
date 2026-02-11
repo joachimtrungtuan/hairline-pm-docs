@@ -277,14 +277,15 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 **Actors**: Patient, System, Providers (notified), Admin (observer)
 
-**Trigger**: Patient taps "Cancel Inquiry" on the Inquiry Dashboard (Screen 8) for an inquiry in stage Inquiry, Quoted, or Accepted
+**Trigger**: Patient opens the Inquiry Dashboard (Screen 8), taps into an inquiry detail view, and selects "Cancel Inquiry" from the action menu, for an inquiry in stage Inquiry, Quoted, or Accepted
 
 **Outcome**: Inquiry transitions to "Cancelled"; all associated quotes auto-cancelled; providers notified; inquiry becomes read-only in patient dashboard
 
 **Main Flow**:
 
 1. **Initiate Cancellation**
-   - Patient opens Inquiry Dashboard (Screen 8) and taps "Cancel Inquiry" from the Next Actions area
+   - Patient opens Inquiry Dashboard (Screen 8) and taps into the inquiry to view its detail
+   - Patient selects "Cancel Inquiry" from the inquiry detail action menu
    - System validates inquiry is in an eligible stage (Inquiry, Quoted, or Accepted)
    - If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message: "Cannot cancel inquiry at this stage. Please contact support."
 
@@ -1271,6 +1272,7 @@ Acceptance Scenarios:
 | 2026-02-08 | 1.5 | Integrity fixes: Added Screen 11 (Cancel Inquiry Confirmation Modal) and Screen 11a (Cancellation Success Confirmation) with formal 5-column field tables and acceptance scenarios. Enumerated default cancellation reason options (admin-configurable via FR-026 Screen 5a). Added 5-minute notification timing SLA to Workflow 5 step 4. Added cross-FR note for FR-004 concurrent cancellation handling. Aligned design complement P02.2 status and status string. Updated system PRD cancellation scope to "before Confirmed stage". | AI |
 | 2026-02-10 | 1.6 | Moved Cancel Inquiry screens from Provider Platform section to Patient Platform section (they are patient-facing). Renumbered Screen 11 → Screen 8a (Cancel Inquiry Confirmation Modal) and Screen 11a → Screen 8b (Cancellation Success Confirmation). Updated all internal cross-references. | AI |
 | 2026-02-10 | 1.7 | Verification fixes: Added Screen 7a (Provider Selection) with full field table and business rules — resolves orphaned provider selection from Workflow 1. Updated Workflow 1 to separate provider selection (step 7) from review/submission (step 8). Aligned provider response time from 48h to 72h to match system PRD. | AI |
+| 2026-02-11 | 1.8 | Workflow 5 (Patient-Initiated Inquiry Cancellation): Updated trigger and Step 1 to include intermediary inquiry detail view before Cancel Inquiry action, aligning with P02.2 design complement flow. Patient now navigates: Dashboard → Inquiry Detail → Cancel Inquiry (action menu) instead of Dashboard → Cancel Inquiry (direct). | AI |
 
 ## Appendix: Approvals
 

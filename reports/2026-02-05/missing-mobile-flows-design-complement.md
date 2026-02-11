@@ -17,8 +17,8 @@
 | P01.3 | Change Password | P-01: Auth & Profile Management | FR-001 | 🟡 Specified |
 | P02.1 | Compare Offers Side-by-Side | P-02: Quote Request & Management | FR-005 | 🟡 Specified |
 | P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | 🟡 Specified |
-| P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🔴 Not Designed |
-| P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🔴 Not Designed |
+| P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🟡 Specified |
+| P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🟡 Specified |
 | P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🔴 Not Designed |
 | P04.1 | Input Passport Details | P-04: Travel & Logistics | FR-008 | 🔴 Not Designed |
 | P04.2 | Input Hotel & Flight Details | P-04: Travel & Logistics | FR-008 | 🔴 Not Designed |
@@ -426,7 +426,8 @@ flowchart TD
 flowchart TD
     Start["Patient opens Inquiry Dashboard<br/>(FR-005 Screen 1 / Enhanced from FR-003 Screen 8)"] --> Dashboard["Display Inquiry Dashboard with quote list (P02.1-S1)"]
 
-    Dashboard --> SelectQuotes{"Patient selects quotes to compare<br/>(max 3)"}
+    Dashboard --> FilterQuotes["Expired/withdrawn quotes are<br/>visually disabled and excluded<br/>from comparison selection (FR-005)"]
+    FilterQuotes --> SelectQuotes{"Patient selects from<br/>eligible quotes to compare<br/>(max 3)"}
     SelectQuotes -->|0-1 selected| HideCompare["Comparison View hidden"]
     SelectQuotes -->|2-3 selected| ShowCompare["Render Comparison View panel<br/>(within P02.1-S1)"]
     SelectQuotes -->|Attempts 4th selection| Block4th["Prevent selection and show message:<br/>'Maximum 3 quotes for comparison'"]
@@ -437,6 +438,7 @@ flowchart TD
     ShowCompare --> CompareActions{"Patient action"}
     CompareActions -->|Review comparison| Dashboard
     CompareActions -->|Tap 'Accept' on a quote| AcceptFlow["Navigate to FR-005 acceptance flow:<br/>Quote Detail (Screen 2) → Confirmation Modal (Screen 3)"]
+    CompareActions -->|Tap 'Contact Support'| SupportThread["Opens secure messaging thread<br/>with Hairline Support (FR-012)"]
     CompareActions -->|Change selection| Dashboard
 
     AcceptFlow --> End1["Acceptance flow continues<br/>(FR-005 Screen 2 & 3)"]
@@ -448,31 +450,43 @@ flowchart TD
 
 **Purpose**: Patient views inquiry status, compares received quotes, and may accept one quote (FR-005 Screen 1)
 
+**Inquiry-Level Fields** (always visible; one instance per screen):
+
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Context | text | Yes | Enhanced Inquiry Dashboard | Extends FR-003 Screen 8 with FR-005 comparison & acceptance |
-| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/...) | Valid lifecycle value |
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value |
 | Timeline | list | Yes | Chronological status changes | Timestamps present |
 | Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
+| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
+| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
+| Next Actions | buttons | Yes | Available user actions for the inquiry | Based on stage/permissions |
+
+**Per-Quote Card Fields** (repeated for each quote in the list):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Treatment | text | Yes | Treatment name | Read-only |
+| Inclusions | chips | No | Package/customizations | Read-only |
+| Included Services | list | No | Included services list | Read-only; derived from quote inclusions |
+| Per-date Pricing | table | Yes | Price for each offered date | All dates priced |
+| Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time | Read-only; sourced from FR-004 |
+| Price per Graft | number | Yes | Derived unit price (total ÷ graft count) | Calculated |
+| Provider Reviews | text | No | Review rating and count | Read-only; sourced from FR-013 |
+| Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
+| Estimated Travel Costs | number | No | Estimated travel costs to destination | Provider input (FR-004) or FR-008 integration |
+| Expiry Timer | timer | Yes | Countdown until quote expiry; shows static "Expired on [date]" when expired | Derived from quote expiresAt |
+| Actions | buttons | Yes | View Details, Accept, Contact Support | State-aware enabling; Accept disabled if expired/withdrawn/already accepted; Contact Support opens secure messaging thread with Hairline Support via FR-012 (FR-005) |
+
+**Quote List & Comparison Panel Fields** (list controls always visible; comparison panel renders only when ≥2 quotes selected):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
 | Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
 | Sort & Filter | group | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined (FR-005) |
 | Compare Selection (Per Quote) | checkbox | No | Select quotes to compare side-by-side | Max 3 selected; disabled for expired/withdrawn quotes |
-| Comparison View Panel (Conditional) | group | Conditional | Side-by-side comparison panel for selected quotes | Renders only when ≥2 quotes are selected |
-| Comparison Differentiators (Conditional) | table | Conditional | Comparison rows across selected quotes | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot (FR-005) |
-| Treatment (Per Quote) | text | Yes | Treatment name | Read-only |
-| Inclusions (Per Quote) | chips | No | Package/customizations | Read-only |
-| Included Services (Per Quote) | list | No | Included services list | Read-only; derived from quote inclusions |
-| Per-date Pricing (Per Quote) | table | Yes | Price for each offered date | All dates priced |
-| Appointment Slot (Pre-Scheduled) (Per Quote) | datetime | Yes | Pre-scheduled appointment date/time | Read-only; sourced from FR-004 |
-| Price per Graft (Per Quote) | number | Yes | Derived unit price (total ÷ graft count) | Calculated |
-| Provider Reviews (Per Quote) | text | No | Review rating and count | Read-only; sourced from FR-013 |
-| Provider Credentials Summary (Per Quote) | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
-| Estimated Travel Costs (Per Quote) | number | No | Estimated travel costs to destination | Provider input (FR-004) or FR-008 integration |
-| Expiry (Per Quote) | datetime | Yes | Quote expiry timestamp / countdown display | Derived from quote expiresAt |
-| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
-| Actions (Per Quote) | buttons | Yes | View Details, Accept, Ask Question | State-aware enabling; Accept disabled if expired/withdrawn/already accepted (FR-005) |
-| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
-| Next Actions | buttons | Yes | Available user actions for the inquiry | Based on stage/permissions |
+| Comparison View Panel | group | Conditional | Side-by-side comparison panel for selected quotes | Renders only when ≥2 quotes are selected |
+| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist, estimated travel costs (FR-005 REQ-005-014) |
 
 **Business Rules**:
 
@@ -481,6 +495,7 @@ flowchart TD
 - Expired/withdrawn quotes are visually disabled and cannot be selected or accepted (FR-005)
 - Patient can sort/filter quotes and view details; acceptance continues via FR-005 Screen 2 & 3 (FR-005)
 - Exactly one quote can be accepted per inquiry; competing quotes are auto-cancelled as part of the FR-005 acceptance workflow (FR-005)
+- If inquiry stage is "Cancelled", all Accept buttons and Compare checkboxes are disabled; dashboard is read-only with "Cancelled" badge; quote data remains visible for reference (FR-005 Screen 1)
 
 ---
 
@@ -508,10 +523,13 @@ flowchart TD
     ReasonRequired -->|Yes| ConfirmButton["Patient taps 'Confirm Cancellation'"]
 
     ConfirmButton --> ProcessCancellation["System updates inquiry status to 'Cancelled'"]
-    ProcessCancellation --> CheckQuotes{"Associated quotes exist?"}
+    ProcessCancellation --> CheckSlotHold{"Inquiry was in Accepted stage<br/>with active 48h slot hold?"}
+    CheckSlotHold -->|Yes| ReleaseHold["System releases appointment slot hold<br/>immediately; slot returned to<br/>provider availability (FR-005/FR-006)"]
+    ReleaseHold --> CheckQuotes
+    CheckSlotHold -->|No| CheckQuotes{"Associated quotes exist?"}
 
     CheckQuotes -->|Yes| CancelQuotes["System auto-cancels all related quotes<br/>(status: 'Cancelled (Inquiry Cancelled)')"]
-    CancelQuotes --> NotifyProviders["System notifies all affected providers"]
+    CancelQuotes --> NotifyProviders["System notifies all affected providers<br/>(within 5 minutes; reason NOT shared)"]
     NotifyProviders --> LogEvent
 
     CheckQuotes -->|No| LogEvent["System logs cancellation event with reason"]
@@ -545,10 +563,11 @@ flowchart TD
 
 **Business Rules**:
 
-- Source of truth: FR-003 Workflow 5 and Screen 11 define the canonical cancellation flow, eligible stages (Inquiry, Quoted, Accepted), and cancellation rules. This screen extends FR-003 Screen 11 with design-level detail.
+- Source of truth: FR-003 Workflow 5 and Screen 8a define the canonical cancellation flow, eligible stages (Inquiry, Quoted, Accepted), and cancellation rules. This screen extends FR-003 Screen 8a with design-level detail.
 - Allowable stages and impacts on quotes/reservations are defined in FR-003 Workflow 5 steps 1–3 and Cancellation Rules (Business Rules §4)
-- Cancellation reason options are admin-configurable via FR-026 Screen 5a; initial set defined in FR-003 Screen 11
+- Cancellation reason options are admin-configurable via FR-026 Screen 5a; initial set defined in FR-003 Screen 8a
 - All state changes, audit logging, and notifications align with FR-003 Workflow 5 steps 3–4 and the confirmed inquiry lifecycle and privacy constraints
+- **Privacy constraint**: The patient's cancellation reason is patient-private data collected for internal analytics and audit. It is NOT shared with providers in any notification or dashboard view (FR-003 Workflow 5 Step 4)
 
 ##### Screen P02.2-S2: Cancellation Success Confirmation
 
@@ -570,10 +589,11 @@ flowchart TD
 
 **Business Rules**:
 
-- Source of truth: FR-003 Screen 11a defines the canonical success confirmation spec. This screen extends FR-003 Screen 11a with design-level detail.
-- Cancellation timestamp must reflect server time (not client) per FR-003 Screen 11a business rules; impact summary must match the actual cascade results from Workflow 5 steps 3–4
+- Source of truth: FR-003 Screen 8b defines the canonical success confirmation spec. This screen extends FR-003 Screen 8b with design-level detail.
+- Cancellation timestamp must reflect server time (not client) per FR-003 Screen 8b business rules; impact summary must match the actual cascade results from Workflow 5 steps 3–4
 - Primary next steps return patient to Inquiry Dashboard (FR-003 Screen 8) or allow starting a new inquiry (FR-003 Screen 1); support link is optional
 - Cancelled inquiries are read-only and not re-openable per FR-003 Cancellation Rules §4; patient starts a new inquiry to proceed
+- Provider notifications confirm cancellation occurrence only; the patient's cancellation reason and feedback are not disclosed to providers (FR-003 Workflow 5 Step 4)
 
 ---
 
@@ -581,84 +601,81 @@ flowchart TD
 
 **Related FRs**: FR-004 (Quote Submission), FR-005 (Quote Comparison & Acceptance)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. System detects quote past expiry date (background check or on screen load)
-%% 2. Quote status updated to "Expired"
-%% 3. Patient opens inquiry detail → sees expired badge on quote(s)
-%% 4. Patient taps expired quote → detail view with "Expired" overlay
-%% 5. Decision: "All quotes for this inquiry expired?"
-%%    → Yes: show "All Quotes Expired" state with option to request re-quotes or cancel inquiry
-%%    → No: show remaining valid quotes normally, expired ones grayed out
-%% 6. If patient requests re-quote → system sends request to provider(s)
-%% Reference FR-005 for quote expiry rules, FR-004 for provider-side quote lifecycle
+flowchart TD
+    Start["System detects quote past expiresAt<br/>(background job or on screen load)"] --> UpdateStatus["System updates quote status<br/>to 'Expired'"]
+    UpdateStatus --> NotifyPatient["System sends expiry notification<br/>to patient (FR-020)"]
+    NotifyPatient --> PatientOpens["Patient opens Inquiry Dashboard<br/>(FR-003 Screen 8 / FR-005 Screen 1)"]
+
+    PatientOpens --> CheckQuotes{"Any non-expired quotes<br/>remain for this inquiry?"}
+
+    CheckQuotes -->|"Yes - some valid quotes remain"| MixedState["Show valid quotes normally;<br/>expired quotes grayed out<br/>with 'Expired' badge (P02.3-S1)"]
+    MixedState --> PatientAction1{"Patient action"}
+    PatientAction1 -->|Tap valid quote| AcceptFlow["Continue to FR-005<br/>quote detail / acceptance flow"]
+    PatientAction1 -->|Tap expired quote| ExpiredDetail["Show expired quote detail<br/>with 'Expired' overlay (P02.3-S1)"]
+    ExpiredDetail --> ExpiredActions{"Patient action"}
+    ExpiredActions -->|Back| PatientOpens
+    ExpiredActions -->|Contact Support| SupportFlow["Navigate to Help & Support<br/>(Flow P08.1)"]
+
+    CheckQuotes -->|"No - all quotes expired"| AllExpired["Display All Quotes Expired State<br/>(P02.3-S2)"]
+    AllExpired --> AllExpiredAction{"Patient action"}
+    AllExpiredAction -->|Cancel Inquiry| CancelFlow["Navigate to Cancel Inquiry<br/>(Flow P02.2)"]
+    AllExpiredAction -->|Contact Support| SupportFlow2["Navigate to Help & Support<br/>(Flow P08.1)"]
 ```
 
 #### Screen Specifications
 
 ##### Screen P02.3-S1: Expired Quote Indicator (State Variation within Inquiry Detail)
 
-**Purpose**: Visual treatment for expired quotes in the quote list
+**Purpose**: Visual treatment for expired quotes in the quote list and detail view
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-005 PRD for quote states and expiry behavior.
-This is NOT a standalone screen — it is a state variation of the quote card within the inquiry detail quote list.
-
-Create a table describing the visual modifications applied to an expired quote card:
-- Expired badge/label overlay on the quote card
-- Grayed-out styling for the entire expired quote card
-- Expiry date display ("Expired on [date]")
-- "Request New Quote" action button (if provider allows re-quoting)
-- Disabled "Accept" button with tooltip or explanation text
-- Original quote summary remains visible but visually de-emphasized
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Expired Badge | badge | Yes | "Expired" label overlaid on the quote card | Red/muted badge; always visible on expired quote cards |
+| Card Overlay Styling | group | Yes | Grayed-out / reduced-opacity treatment for the entire quote card | Opacity ~50%; text color muted; visually distinct from active quotes |
+| Expiry Date Display | datetime | Yes | "Expired on [date]" shown below or replacing the countdown timer | Replaces the active Expiry Timer field (FR-005 Screen 1); format: "Expired on [Month DD, YYYY at HH:MM]" |
+| Original Quote Summary | group | Yes | Treatment name, price, graft count, provider, appointment slot — all visible but de-emphasized | Read-only; same data as active quote card but with muted visual treatment |
+| Price per Graft | number | Yes | Derived unit price, shown for reference | Read-only; muted styling |
+| Provider Info | text | Yes | Provider name and credentials summary | Read-only; muted styling |
+| Disabled Accept Button | button | Yes | "Accept" button in disabled/grayed-out state | Permanently disabled; non-tappable; shows tooltip on tap: "This quote has expired and can no longer be accepted" |
+| Disabled Compare Checkbox | checkbox | Yes | Selection checkbox for comparison, disabled | Cannot be selected; excluded from comparison panel (FR-005) |
+| View Details Action | action | Yes | "View Details" link/button remains tappable | Opens quote detail in read-only mode with expired overlay |
+| Contact Support Link | link | No | "Need help? Contact support" | Navigates to Flow P08.1; shown below disabled Accept button |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Expired quotes cannot be accepted under any circumstance
-- Expired quotes remain visible for reference but are visually de-emphasized
-- If all quotes for an inquiry are expired, show the "All Expired" state (Screen P02.3-S2)
-- Provider may or may not allow re-quoting — check FR-004 for re-quote rules
-- Expiry is determined by the quote's validity_end_date field
--->
+
+- Expired quotes cannot be accepted under any circumstance; the Accept button is permanently disabled and shows an explanatory tooltip on tap (FR-005 REQ-005-004)
+- Expired quotes remain visible in the quote list for reference but are visually de-emphasized with grayed-out styling (FR-005 Alternative Flow A1)
+- The countdown timer is replaced by a static "Expired on [date]" display derived from the quote's `expiresAt` field (FR-004)
+- Expired quotes cannot be selected for side-by-side comparison (FR-005 Screen 1, Compare Selection)
+- If all quotes for an inquiry are expired, the quote list area transitions to the "All Quotes Expired" state (Screen P02.3-S2)
 
 ##### Screen P02.3-S2: All Quotes Expired State
 
 **Purpose**: Action state displayed when all received quotes for an inquiry have expired
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Illustration/icon for the expired state
-- Message explaining that all quotes have expired
-- "Request New Quotes" primary CTA (re-notify providers to submit new quotes)
-- "Cancel Inquiry" secondary action
-- "Contact Support" tertiary link
-- Inquiry summary (service type, date originally submitted)
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Expired State Icon | icon | Yes | Clock or hourglass illustration indicating all quotes have expired | Displayed at top center; muted/neutral color |
+| State Title | text | Yes | "All Quotes Have Expired" | Displayed prominently below icon |
+| Explanation Message | text | Yes | "The quotes you received for this inquiry have all expired. You can cancel this inquiry and submit a new one, or contact support for assistance." | Clear, actionable copy |
+| Inquiry Summary | group | Yes | Read-only summary of the original inquiry | Must include: treatment type, submission date, number of expired quotes |
+| Expired Quotes Count | text | Yes | "X quote(s) expired" | Derived from expired quotes for this inquiry |
+| Last Expiry Date | datetime | Yes | Date of the most recently expired quote | Format: "Last quote expired on [Month DD, YYYY]" |
+| Cancel Inquiry Button | button | Yes | Primary CTA: "Cancel Inquiry" | Default/primary style; navigates to Flow P02.2 (Cancel Inquiry) |
+| Contact Support Link | link | Yes | "Need help? Contact support" | Text link; navigates to Flow P08.1 |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- "Request New Quotes" re-opens the inquiry for provider quoting
-- System auto-notifies previously quoted providers about the re-quote opportunity
-- Patient may also choose to cancel the inquiry entirely from this state
--->
+
+- When all quotes for an inquiry have expired, the patient's primary options are to cancel the inquiry (and optionally start a new one) or contact support for assistance; there is no mechanism to re-open the same inquiry for new quotes (re-quoting is not a defined inquiry lifecycle transition)
+- Previously expired quotes remain visible below the All Expired state as a collapsed reference section (grayed out, read-only) for the patient's reference
+- Patient may cancel the inquiry entirely from this state via the Cancel Inquiry flow (Flow P02.2, FR-003 Workflow 5); cancellation eligibility follows standard stage rules (Inquiry, Quoted, or Accepted stages only — per FR-003 Cancellation Rules §4)
+- The default quote expiry window is 48 hours (admin-controlled via FR-004 REQ-004-002)
+- The "All Quotes Expired" state can only occur when the inquiry is in a stage where quotes are active (Quoted or Inquiry); it cannot occur in Confirmed or later stages because those require an accepted (non-expired) quote
 
 ---
 
@@ -666,115 +683,53 @@ Include rules for:
 
 **Related FRs**: FR-005 (Quote Comparison & Acceptance), FR-027 (Legal Content Management)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr027-legal-content-management/prd.md`, `fr005-quote-comparison-acceptance/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient views quote/offer detail screen
-%% 2. Patient taps one of the legal links: "Cancellation Policy" | "Privacy Commitment" | "Terms of Service"
-%% 3. System navigates to the corresponding legal document screen (P02.4-S1/S2/S3)
-%% 4. Patient reads the document (scrollable full content)
-%% 5. Patient taps "Back" to return to quote detail
-%% Note: These are read-only viewing screens — no acceptance action is required here.
-%% The actual acceptance/agreement happens during the quote acceptance flow (FR-005).
-%% Reference FR-027 for legal content management and versioning rules.
+flowchart TD
+    Start["Patient views Quote Detail screen<br/>(FR-005 Screen 2 / FR-004 Screen 4)"] --> LegalLinks["Patient sees legal document links<br/>below Terms Acknowledgment checkbox"]
+
+    LegalLinks --> TapLink{"Patient taps a legal link"}
+
+    TapLink -->|"Cancellation Policy"| DocViewer["Display Legal Document Viewer<br/>(P02.4-S1)<br/>with selected document type"]
+    TapLink -->|"Privacy Commitment"| DocViewer
+    TapLink -->|"Terms of Service"| DocViewer
+
+    DocViewer --> ReadDoc["Patient reads scrollable content<br/>(read-only, no acceptance action)"]
+    ReadDoc --> Back["Patient taps Back"]
+    Back --> ReturnToQuote["Return to Quote Detail screen<br/>(FR-005 Screen 2)"]
+
+    ReturnToQuote --> ContinueAcceptance["Patient continues with<br/>Terms Acknowledgment and acceptance<br/>(FR-005 Screen 2 & 3)"]
 ```
+
+> **Note**: These screens are **read-only document viewers**. No acceptance checkbox or action is required here. The actual terms acknowledgment occurs on the Quote Detail screen (FR-005 Screen 2) via the Terms Acknowledgment checkbox before the Accept button is enabled.
 
 #### Screen Specifications
 
-##### Screen P02.4-S1: Cancellation Policy Screen
+##### Screen P02.4-S1: Legal Document Viewer (Shared Screen)
 
-**Purpose**: Display the cancellation policy applicable to the quote/treatment
+**Purpose**: Reusable full-screen viewer for static legal documents accessed from the Quote Detail screen. Renders one of three document types depending on the link tapped: **Cancellation Policy**, **Privacy Commitment**, or **Terms of Service**.
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-027 PRD for legal content structure and display requirements.
-This is a full-screen document viewer accessed from the quote detail screen.
-
-Create a table with these expected fields:
-- Screen title ("Cancellation Policy")
-- Back/close navigation
-- Policy content body (rich text / markdown rendered, scrollable)
-- Last updated date
-- Applicable provider name (if provider-specific policy)
-- Applicable treatment type (if treatment-specific)
-- Scroll progress indicator
-- Optional "Download PDF" action
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | Dynamic based on document type: "Cancellation Policy", "Privacy Commitment", or "Terms of Service" | Displayed at top of screen; must match the tapped link |
+| Back Navigation | action | Yes | Back arrow to return to Quote Detail (FR-005 Screen 2) | Top-left corner |
+| Document Version | badge | Conditional | Version label of the legal document | Shown if version metadata is available (FR-027) |
+| Last Updated | datetime | Conditional | Last updated timestamp for the document | Shown if available; format: "Last updated [Month DD, YYYY]" (FR-027) |
+| Document Content | text | Yes | Scrollable rich-text document body | Must be readable and selectable; supports headings, numbered sections, lists, and long content; rendered from Markdown or rich text |
+| Table of Contents | list | Conditional | Section navigation links for long documents | Shown if document exceeds a threshold length; tapping a section title scrolls to that section |
+| Scroll Progress Indicator | group | No | Visual indicator of reading progress | Shown for long documents; progress bar or page position indicator |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Content is fetched from backend, managed by admin via FR-027
-- May include provider-specific cancellation terms alongside platform-wide terms
-- Content must be the version applicable at the time the quote was created (versioned content)
-- Read-only — no acceptance checkbox on this screen
--->
 
-##### Screen P02.4-S2: Privacy Commitment Screen
-
-**Purpose**: Display the privacy commitment and data handling practices
-
-<!-- PLACEHOLDER — Agent Instructions:
-Similar structure to Screen P02.4-S1.
-
-Create a table with these expected fields:
-- Screen title ("Privacy Commitment")
-- Back/close navigation
-- Privacy content body (rich text, scrollable)
-- Last updated date
-- Key sections: data collected, how it's used, who it's shared with, patient rights
-- Scroll progress indicator
-
-Format:
-| Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
-
-**Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Must comply with applicable data protection regulations
-- Content managed centrally via FR-027
-- Should highlight medical data handling practices specifically (medical tourism context)
--->
-
-##### Screen P02.4-S3: Terms of Service Screen
-
-**Purpose**: Display the platform terms of service
-
-<!-- PLACEHOLDER — Agent Instructions:
-Similar structure to Screen P02.4-S1.
-
-Create a table with these expected fields:
-- Screen title ("Terms of Service")
-- Back/close navigation
-- ToS content body (rich text, scrollable)
-- Last updated date
-- Table of contents / section navigation (for long documents)
-- Scroll progress indicator
-
-Format:
-| Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
-
-**Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Content managed via FR-027
-- Version shown should match what patient will agree to (or current version if pre-acceptance)
-- Must include effective date of the terms
--->
+- Content is read-only; no acceptance checkbox or action is required on this screen — the actual acknowledgment occurs on the Quote Detail screen via the Terms Acknowledgment checkbox (FR-005 Screen 2)
+- **Display name → FR-027 document type mapping**: "Cancellation Policy" → `cancellation_policy`, "Privacy Commitment" → `privacy_policy`, "Terms of Service" → `terms_and_conditions`. These are patient-facing display names chosen for the quote acceptance context; the canonical FR-027 type identifiers are used in the backend and admin UI
+- All three document types are platform-wide static content, managed centrally by admin via FR-027; there are no provider-specific, treatment-specific, or patient-specific variants
+- Content version shown must be the **current published version** at the time the patient views it; this is the version the patient will agree to when they accept the quote (FR-027 REQ-027-004)
+- If a localized version is unavailable, default to English (en-US) per FR-027 CL-3
+- If content fails to load, show a non-blocking error state with Retry and Back options; do not prevent the patient from returning to the Quote Detail screen
 
 ---
 
