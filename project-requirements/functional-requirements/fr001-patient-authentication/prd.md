@@ -17,6 +17,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 - **Patient Platform (P-01)**: Auth & Profile Management
 - **Provider Platform**: Anonymized patient data access (read-only)
 - **Admin Platform (A-01)**: Patient Management & Oversight
+- **Shared Services (S-XX)**: Email OTP delivery, session management, audit logging, notification integration
 
 ### Multi-Tenant Breakdown
 
@@ -90,61 +91,70 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 **Main Flow**:
 
-1. **App Launch & Service Selection**
-   - Patient opens Hairline mobile app
-   - Patient sees splash screen with Hairline branding
-   - Patient navigates to landing screen with "Get Started" option
-   - Patient taps "Get Started" to begin registration
+```mermaid
+flowchart TD
+   subgraph W1S1["1. App Launch & Service Selection"]
+     direction TB
+     W1S1_1["Patient opens Hairline mobile app"] --> W1S1_2["Patient sees splash screen with Hairline branding"] --> W1S1_3["Patient navigates to landing screen with &quot;Get Started&quot; option"] --> W1S1_4["Patient taps &quot;Get Started&quot; to begin registration"]
+   end
 
-2. **Name Collection**
-   - System displays "First, tell us your name" screen
-   - Patient enters first name and last name
-   - Patient taps "Continue" button
-   - System validates name fields (required, minimum 2 characters)
+   subgraph W1S2["2. Name Collection"]
+     direction TB
+     W1S2_1["System displays &quot;First, tell us your name&quot; screen"] --> W1S2_2["Patient enters first name and last name"] --> W1S2_3["Patient taps &quot;Continue&quot; button"] --> W1S2_4["System validates name fields (required, minimum 2 characters)"]
+   end
 
-3. **Account Creation**
-   - System displays "Let's create an account with your email" screen
-   - Patient enters email address
-   - Patient creates password (12+ characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?":{}|<>)
-   - Patient confirms password
-   - Patient taps "Create account" button
-   - System validates email format and password strength
+   subgraph W1S3["3. Account Creation"]
+     direction TB
+     W1S3_1["System displays &quot;Let's create an account with your email&quot; screen"] --> W1S3_2["Patient enters email address"] --> W1S3_3["Patient creates password (12+ characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?&quot;:{}|&lt;&gt;)"] --> W1S3_4["Patient confirms password"] --> W1S3_5["Patient taps &quot;Create account&quot; button"] --> W1S3_6["System validates email format and password strength"]
+   end
 
-4. **Email Verification (OTP)**
-   - System displays "Enter verification code" screen
-   - System sends a 6-digit OTP code to the patient's email
-   - Patient enters the 6-digit OTP in the app
-   - System validates the OTP and confirms email verification (codes expire after 15 minutes; resend available with rate limiting)
+   subgraph W1S4["4. Email Verification (OTP)"]
+     direction TB
+     W1S4_1["System displays &quot;Enter verification code&quot; screen"] --> W1S4_2["System sends a 6-digit OTP code to the patient's email"] --> W1S4_3["Patient enters the 6-digit OTP in the app"] --> W1S4_4["System validates the OTP and confirms email verification (codes expire after 15 minutes; resend available with rate limiting)"]
+   end
 
-5. **Profile Completion**
-   - System displays "Create your profile" screen
-   - Patient selects gender (Male, Female, Other, Prefer not to say)
-   - Patient selects date of birth using calendar picker
-   - Patient enters phone number with country code selection
-   - Patient selects country of residence
-   - Patient taps "Create account" to complete registration
+   subgraph W1S5["5. Profile Completion"]
+     direction TB
+     W1S5_1["System displays &quot;Create your profile&quot; screen"] --> W1S5_2["Patient selects gender (Male, Female, Other, Prefer not to say)"] --> W1S5_3["Patient selects date of birth using calendar picker"] --> W1S5_4["Patient enters phone number with country code selection"] --> W1S5_5["Patient selects country of residence"] --> W1S5_6["Patient taps &quot;Create account&quot; to complete registration"]
+   end
 
-6. **Discovery Question**
-   - System displays "How did you find out about us?" screen
-   - Patient selects from centrally-managed options configured in Admin Settings (A-09)
-   - Patient taps "Continue" to proceed to main app
+   subgraph W1S6["6. Discovery Question"]
+     direction TB
+     W1S6_1["System displays &quot;How did you find out about us?&quot; screen"] --> W1S6_2["Patient selects from centrally-managed options configured in Admin Settings (A-09)"] --> W1S6_3["Patient taps &quot;Continue&quot; to proceed to main app"]
+   end
+
+  W1S1_4 --> W1S2_1
+  W1S2_4 --> W1S3_1
+  W1S3_6 --> W1S4_1
+  W1S4_4 --> W1S5_1
+  W1S5_6 --> W1S6_1
+```
 
 **Alternative Flows**:
 
-- **A1**: Patient abandons registration mid-process
-  - System saves draft data for 7 days
-  - Patient can resume from last completed step
-  - Draft expires after 7 days of inactivity
+#### A1: Patient abandons registration mid-process
 
-- **A2**: Email verification fails or expires
-  - System allows "Resend code" option (with rate limiting)
-  - Patient can request a new 6-digit OTP via email
-  - OTP validity window: 15 minutes (configurable via Admin Settings A-09)
+```mermaid
+flowchart TD
+  W1A1_1["System saves draft data for 7 days"] --> W1A1_2["Patient can resume from last completed step"]
+  W1A1_2 --> W1A1_3["Draft expires after 7 days of inactivity"]
+```
 
-- **A3**: Invalid email format or weak password
-  - System displays specific error messages
-  - Patient must correct errors before proceeding
-  - Password strength indicator guides patient
+#### A2: Email verification fails or expires
+
+```mermaid
+flowchart TD
+  W1A2_1["System allows &quot;Resend code&quot; option (with rate limiting)"] --> W1A2_2["Patient can request a new 6-digit OTP via email"]
+  W1A2_2 --> W1A2_3["OTP validity window: 15 minutes (configurable via Admin Settings A-09)"]
+```
+
+#### A3: Invalid email format or weak password
+
+```mermaid
+flowchart TD
+  W1A3_1["System displays specific error messages"] --> W1A3_2["Patient must correct errors before proceeding"]
+  W1A3_2 --> W1A3_3["Password strength indicator guides patient"]
+```
 
 ### Workflow 2: Patient Login (Primary Flow)
 
@@ -152,34 +162,44 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 **Main Flow**:
 
-1. **Login Screen Access**
-   - Patient opens Hairline mobile app
-   - Patient taps "Already have an account? Get Started" on landing screen
-   - System displays login screen with email and password fields
+```mermaid
+flowchart TD
+  subgraph W2S1["1. Login Screen Access"]
+    direction TB
+    W2S1_1["Patient opens Hairline mobile app"] --> W2S1_2["Patient taps &quot;Already have an account? Get Started&quot; on landing screen"] --> W2S1_3["System displays login screen with email and password fields"]
+  end
 
-2. **Credential Entry**
-   - Patient enters email address
-   - Patient enters password
-   - Patient taps "Login" button
-   - System validates credentials against stored data
+  subgraph W2S2["2. Credential Entry"]
+    direction TB
+    W2S2_1["Patient enters email address"] --> W2S2_2["Patient enters password"] --> W2S2_3["Patient taps &quot;Login&quot; button"] --> W2S2_4["System validates credentials against stored data"]
+  end
 
-3. **Authentication Success**
-   - System validates email and password combination
-   - System creates authenticated session
-   - System redirects patient to main app dashboard
-   - System logs successful login for audit trail
+  subgraph W2S3["3. Authentication Success"]
+    direction TB
+    W2S3_1["System validates email and password combination"] --> W2S3_2["System creates authenticated session"] --> W2S3_3["System redirects patient to main app dashboard"] --> W2S3_4["System logs successful login for audit trail"]
+  end
+
+  W2S1_3 --> W2S2_1
+  W2S2_4 --> W2S3_1
+```
 
 **Alternative Flows**:
 
-- **B1**: Invalid credentials
-  - System displays "Invalid email or password" error
-  - Patient can retry or use "Forgot your password?" link
-  - System tracks failed attempts (configurable max attempts before lockout, default: 5; per Admin Settings A-09 / FR-026)
+#### B1: Invalid credentials
 
-- **B2**: Account locked due to failed attempts
-  - System displays account lockout message
-  - Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026) or contact support
-  - System logs security event
+```mermaid
+flowchart TD
+  W2B1_1["System displays &quot;Invalid email or password&quot; error"] --> W2B1_2["Patient can retry or use &quot;Forgot your password?&quot; link"]
+  W2B1_2 --> W2B1_3["System tracks failed attempts (configurable max attempts before lockout, default: 5; per Admin Settings A-09 / FR-026)"]
+```
+
+#### B2: Account locked due to failed attempts
+
+```mermaid
+flowchart TD
+  W2B2_1["System displays account lockout message"] --> W2B2_2["Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026) or contact support"]
+  W2B2_2 --> W2B2_3["System logs security event"]
+```
 
 ### Workflow 3: Password Reset (Recovery Flow)
 
@@ -187,46 +207,58 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 **Main Flow**:
 
-1. **Password Reset Initiation**
-   - Patient taps "Forgot your password?" on login screen
-   - System displays "Forgot password?" screen
-   - Patient enters email address
-   - Patient taps "Send code" button
+```mermaid
+flowchart TD
+  subgraph W3S1["1. Password Reset Initiation"]
+    direction TB
+    W3S1_1["Patient taps &quot;Forgot your password?&quot; on login screen"] --> W3S1_2["System displays &quot;Forgot password?&quot; screen"] --> W3S1_3["Patient enters email address"] --> W3S1_4["Patient taps &quot;Send code&quot; button"]
+  end
 
-2. **Reset Code Delivery**
-   - System sends a 6-digit password reset OTP to the patient's email
-   - System displays "Enter reset code" screen
-   - Patient enters the 6-digit reset code in the app
+  subgraph W3S2["2. Reset Code Delivery"]
+    direction TB
+    W3S2_1["System sends a 6-digit password reset OTP to the patient's email"] --> W3S2_2["System displays &quot;Enter reset code&quot; screen"] --> W3S2_3["Patient enters the 6-digit reset code in the app"]
+  end
 
-3. **New Password Creation**
-   - System validates reset code
-   - System displays "Reset password" screen
-   - Patient enters new password
-   - Patient confirms new password
-   - Patient taps "Save and login" button
+  subgraph W3S3["3. New Password Creation"]
+    direction TB
+    W3S3_1["System validates reset code"] --> W3S3_2["System displays &quot;Reset password&quot; screen"] --> W3S3_3["Patient enters new password"] --> W3S3_4["Patient confirms new password"] --> W3S3_5["Patient taps &quot;Save and login&quot; button"]
+  end
 
-4. **Password Update Completion**
-   - System validates new password strength
-   - System updates password in secure storage
-   - System creates new authenticated session
-   - System redirects patient to main app
+  subgraph W3S4["4. Password Update Completion"]
+    direction TB
+    W3S4_1["System validates new password strength"] --> W3S4_2["System updates password in secure storage"] --> W3S4_3["System creates new authenticated session"] --> W3S4_4["System redirects patient to main app"]
+  end
+
+  W3S1_4 --> W3S2_1
+  W3S2_3 --> W3S3_1
+  W3S3_5 --> W3S4_1
+```
 
 **Alternative Flows**:
 
-- **C1**: Reset code expires or is invalid
-  - System displays error message
-  - Patient can request new reset code
-  - System maintains configurable OTP validity window (default: 15 minutes, configurable via Admin Settings A-09)
+#### C1: Reset code expires or is invalid
 
-- **C2**: Patient doesn't receive email
-  - Patient can tap "Resend code" option
-  - System sends new reset code
-  - System logs email delivery attempts
+```mermaid
+flowchart TD
+  W3C1_1["System displays error message"] --> W3C1_2["Patient can request new reset code"]
+  W3C1_2 --> W3C1_3["System maintains configurable OTP validity window (default: 15 minutes, configurable via Admin Settings A-09)"]
+```
 
-- **C3**: Email address not registered
-  - System displays "If this email exists, a reset code has been sent" message (privacy-preserving)
-  - No indication given whether the email is registered
-  - System still enforces rate limiting on requests
+#### C2: Patient doesn't receive email
+
+```mermaid
+flowchart TD
+  W3C2_1["Patient can tap &quot;Resend code&quot; option"] --> W3C2_2["System sends new reset code"]
+  W3C2_2 --> W3C2_3["System logs email delivery attempts"]
+```
+
+#### C3: Email address not registered
+
+```mermaid
+flowchart TD
+  W3C3_1["System displays &quot;If this email exists, a reset code has been sent&quot; message (privacy-preserving)"] --> W3C3_2["No indication given whether the email is registered"]
+  W3C3_2 --> W3C3_3["System still enforces rate limiting on requests"]
+```
 
 ### Workflow 4: Profile Management (Ongoing Flow)
 
@@ -234,31 +266,39 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 **Main Flow**:
 
-1. **Profile Access**
-   - Patient navigates to profile section in app
-   - System displays current profile information
-   - Patient can view and edit profile details
+```mermaid
+flowchart TD
+  subgraph W4S1["1. Profile Access"]
+    direction TB
+    W4S1_1["Patient navigates to profile section in app"] --> W4S1_2["System displays current profile information"] --> W4S1_3["Patient can view and edit profile details"]
+  end
 
-2. **Profile Updates**
-   - Patient selects field to edit
-   - System displays edit form with current values
-   - Patient makes changes
-   - Patient saves updates
-   - System validates changes and updates profile
+  subgraph W4S2["2. Profile Updates"]
+    direction TB
+    W4S2_1["Patient selects field to edit"] --> W4S2_2["System displays edit form with current values"] --> W4S2_3["Patient makes changes"] --> W4S2_4["Patient saves updates"] --> W4S2_5["System validates changes and updates profile"]
+  end
 
-3. **Profile Image Management**
-   - Patient can upload profile photo
-   - System validates image format and size
-   - System stores image securely
-   - System updates profile with new image
+  subgraph W4S3["3. Profile Image Management"]
+    direction TB
+    W4S3_1["Patient can upload profile photo"] --> W4S3_2["System validates image format and size"] --> W4S3_3["System stores image securely"] --> W4S3_4["System updates profile with new image"]
+  end
+
+  W4S1_3 --> W4S2_1
+  W4S2_5 --> W4S3_1
+```
 
 **Alternative Flows**:
 
-- **D1**: Admin profile modification
-  - Admin can edit patient profiles through admin platform
-  - System logs all admin changes with reason
-  - Patient receives notification of changes
-  - Patient can review and accept/reject changes
+#### D1: Admin profile modification
+
+```mermaid
+flowchart TD
+  W4D1_1["Admin can edit patient profiles through admin platform"] --> W4D1_2["System logs all admin changes with reason"]
+  W4D1_2 --> W4D1_3["Patient receives notification of changes"]
+  W4D1_3 --> W4D1_4["Patient can review and accept/reject changes"]
+```
+
+---
 
 ## Screen Specifications
 

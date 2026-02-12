@@ -19,9 +19,9 @@
 | P02.2 | Cancel Inquiry | P-02: Quote Request & Management | FR-003, FR-005 | 🟡 Specified |
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🟡 Specified |
 | P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🟡 Specified |
-| P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🔴 Not Designed |
-| P04.1 | Input Passport Details | P-04: Travel & Logistics | FR-008 | 🔴 Not Designed |
-| P04.2 | Input Hotel & Flight Details | P-04: Travel & Logistics | FR-008 | 🔴 Not Designed |
+| P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🟡 Specified |
+| P04.1 | Input Passport Details | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
+| P04.2 | Input Hotel & Flight Details | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
 | P05.1 | Day-to-Day Treatment Progress | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.2 | Previous Treatments List | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.3 | Submitted Reviews List | P-05: Aftercare & Progress Monitoring | FR-013 | 🔴 Not Designed |
@@ -739,88 +739,160 @@ flowchart TD
 
 **Related FRs**: FR-007 (Payment Processing), FR-007b (Payment Installments)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr007-payment-processing/prd.md`, `fr007b-payment-installments/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient navigates to Settings/Profile → Payment Methods
-%% 2. System displays list of saved payment methods
-%% 3. Decision branches from the list:
-%%    a. "Add New" → payment method input form → validate → save → return to list
-%%    b. "Edit" on existing → edit form (pre-filled) → validate → save → return to list
-%%    c. "Remove" on existing → confirmation modal → remove → return to list
-%%    d. "Set as Default" on existing → update default indicator → visual confirmation
-%% 4. Each payment method card shows: type icon, masked number, expiry, default badge
-%% Reference FR-007 for payment method types and validation rules
+flowchart TD
+    Start["Patient navigates to Profile → Payment Methods"] --> LoadList["System loads saved payment methods<br/>(tokenized references only)"]
+    LoadList --> CheckEmpty{"Any saved<br/>payment methods?"}
+
+    CheckEmpty -->|No| EmptyState["Display empty state (P03.1-S1):<br/>'No payment methods saved yet'<br/>with 'Add Payment Method' CTA"]
+    CheckEmpty -->|Yes| ShowList["Display Payment Methods List (P03.1-S1)"]
+
+    EmptyState --> TapAdd1["Patient taps 'Add Payment Method'"]
+    TapAdd1 --> ShowAddForm
+
+    ShowList --> ListAction{"Patient action"}
+    ListAction -->|"Add Payment Method"| ShowAddForm["Display Add Payment Method Form (P03.1-S2)"]
+    ListAction -->|"Set as Default"| SetDefault["System updates default indicator<br/>to selected method; shows confirmation"]
+    SetDefault --> ShowList
+    ListAction -->|"Edit" on a method| ShowEditForm["Display Edit Payment Method Form<br/>(P03.1-S2, pre-filled with editable fields)"]
+    ListAction -->|"Remove" on a method| CheckRemovable{"Only saved method AND<br/>active payment obligations<br/>(pending booking payments<br/>or installments)?"}
+    ListAction -->|Back| ExitFlow["Return to Profile screen"]
+
+    CheckRemovable -->|Yes| BlockRemove["Show inline message:<br/>'Cannot remove your only payment method<br/>while you have pending payments.<br/>Add another method first.'"]
+    BlockRemove --> ShowList
+    CheckRemovable -->|No| ConfirmModal["Display Remove Confirmation Modal (P03.1-S3)"]
+
+    ConfirmModal --> RemoveChoice{"Patient confirms<br/>removal?"}
+    RemoveChoice -->|"Go Back"| ShowList
+    RemoveChoice -->|"Remove"| ProcessRemove["System revokes token with<br/>payment gateway and deletes<br/>stored method reference"]
+    ProcessRemove --> CheckWasDefault{"Was this the<br/>default method?"}
+    CheckWasDefault -->|"Yes & other methods exist"| AutoReassign["System auto-assigns default<br/>to most recently added<br/>remaining method"]
+    AutoReassign --> ShowList
+    CheckWasDefault -->|No| ShowList
+
+    ShowAddForm --> SelectType{"Patient selects<br/>payment method type"}
+    SelectType -->|Card| CardFields["Patient enters card details<br/>via payment gateway secure form<br/>(PCI-compliant hosted fields)"]
+    SelectType -->|Digital Wallet| WalletAuth["System redirects to wallet provider<br/>for authorization (e.g., Apple Pay, Google Pay)"]
+
+    CardFields --> GatewayValidate{"Payment gateway<br/>validates card?"}
+    GatewayValidate -->|No| CardError["Show field-level error<br/>(invalid card / declined / expired)"]
+    CardError --> CardFields
+    GatewayValidate -->|Yes| Tokenize["Payment gateway tokenizes card;<br/>system stores token + masked details<br/>(brand, last 4, expiry)"]
+
+    WalletAuth --> WalletResult{"Wallet authorization<br/>successful?"}
+    WalletResult -->|No| WalletError["Show authorization failed message;<br/>allow retry or alternative method"]
+    WalletError --> ShowAddForm
+    WalletResult -->|Yes| TokenizeWallet["System stores wallet token<br/>+ display identifier"]
+
+    Tokenize --> CheckFirst{"Is this the patient's<br/>first payment method?"}
+    TokenizeWallet --> CheckFirst
+    CheckFirst -->|Yes| AutoDefault["Auto-set as default"]
+    CheckFirst -->|No| RespectToggle["Apply patient's 'Set as default'<br/>toggle preference"]
+    AutoDefault --> SaveSuccess["Show success confirmation<br/>and return to Payment Methods List"]
+    RespectToggle --> SaveSuccess
+    SaveSuccess --> ShowList
+
+    ShowEditForm --> EditFields["Patient updates editable fields<br/>(billing address, nickname);<br/>card number/expiry change requires<br/>new card entry via gateway"]
+    EditFields --> EditAction{"Patient action"}
+    EditAction -->|Cancel| ShowList
+    EditAction -->|Save| ValidateEdit{"Validation<br/>passes?"}
+    ValidateEdit -->|No| EditError["Show field-level errors"]
+    EditError --> EditFields
+    ValidateEdit -->|Yes| UpdateMethod["System updates payment method<br/>metadata; refreshes list"]
+    UpdateMethod --> ShowList
 ```
 
 #### Screen Specifications
 
 ##### Screen P03.1-S1: Payment Methods List
 
-**Purpose**: Display all saved payment methods with management actions
+**Purpose**: Display all saved payment methods with management actions; accessed from patient Profile area
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-007 PRD for supported payment types and storage rules.
-Accessed from the patient's settings/profile area.
-
-Create a table with these expected fields:
-- Screen title ("Payment Methods")
-- Payment method cards list (each showing: type icon, card brand, masked last 4 digits, expiry date, default badge)
-- Per-card actions: Set as Default, Edit, Remove
-- "Add Payment Method" button
-- Empty state (no methods saved — prompt to add first method)
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Payment Methods" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
+| Payment Method Cards | list | Yes | List of saved payment methods; each card displays: payment type icon (Visa/MC/Amex/wallet), card brand or wallet name, masked last 4 digits (e.g., "•••• 4242"), expiry date (MM/YY), and default badge if applicable | Must list all saved methods; ordered: default first, then by most recently added |
+| Default Badge (Per Card) | badge | Conditional | "Default" label shown on the default payment method card | Exactly one method marked as default at any time (if methods exist) |
+| Per-Card Action: Set as Default | action | Conditional | "Set as Default" option on non-default cards | Not shown on the card already marked as default; tap updates default indicator immediately |
+| Per-Card Action: Edit | action | Yes | "Edit" option on each card | Opens P03.1-S2 in edit mode with pre-filled editable fields |
+| Per-Card Action: Remove | action | Yes | "Remove" option on each card | Opens confirmation modal (P03.1-S3); blocked if this is the only method and active payment obligations exist |
+| Add Payment Method Button | button | Yes | Primary CTA: "+ Add Payment Method" | Always visible at bottom of list or as floating action; navigates to P03.1-S2 in add mode |
+| Empty State Illustration | group | Conditional | Illustration + "No payment methods saved yet" message + "Add your first payment method to get started" subtext | Shown only when no payment methods exist |
+| Empty State CTA | button | Conditional | "Add Payment Method" button within empty state | Same action as Add Payment Method Button; prominent styling |
+| Active Obligations Notice (Conditional) | text | Conditional | "You have pending payments — at least one payment method is required." | Shown only when patient has active bookings with pending deposit, final payment, or installments |
+| Error State (Conditional) | text | Conditional | "Unable to load payment methods. Please try again." with Retry button | Shown if API call fails; allows retry without leaving screen |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- At least one payment method required if patient has active bookings with pending payments
-- Default method is used for installment auto-charges (FR-007b)
-- Cannot remove the only saved method if active payment obligations exist
-- Card details are tokenized — only masked info is displayed
--->
+
+- At least one saved payment method is required if the patient has active bookings with pending payments (deposit, final payment, or installment charges); the system must prevent the patient from removing their last method in this case (FR-007, FR-007b)
+- The default payment method is used for installment auto-charges (FR-007b); patients should be informed of this when changing the default
+- All card details are tokenized via the payment gateway — the platform stores only the token reference, card brand, last 4 digits, and expiry date; full card numbers are never stored or displayed (FR-007 REQ-007-008, PCI-DSS)
+- Digital wallets (e.g., Apple Pay, Google Pay) display the wallet brand and a masked account identifier instead of card details
+- If the default method is removed and other methods exist, the system auto-reassigns the default to the most recently added remaining method and shows a brief notification to the patient
 
 ##### Screen P03.1-S2: Add/Edit Payment Method
 
-**Purpose**: Form to add a new or edit an existing payment method
+**Purpose**: Secure form to add a new payment method or update editable fields of an existing one
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Screen title ("Add Payment Method" or "Edit Payment Method")
-- Card number input (with live formatting as user types)
-- Cardholder name
-- Expiry date (MM/YY)
-- CVV/CVC
-- Billing address fields (if required by payment gateway)
-- "Set as default" toggle
-- "Save" primary CTA
-- "Cancel" secondary action
-- Secure transaction badge / encryption indicator
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | Dynamic: "Add Payment Method" (add mode) or "Edit Payment Method" (edit mode) | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Payment Methods List (P03.1-S1) | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| Payment Type Selector | chips | Yes (add mode) | Options: "Credit/Debit Card", "Digital Wallet" | Shown only in add mode; card is selected by default; in edit mode, type is fixed and shown as read-only label |
+| Secure Form Notice | text | Yes | "Your payment details are secured and encrypted" with lock icon | Displayed above card input fields; builds trust |
+| Card Number Input | text | Yes (card type) | Card number field with live formatting (spaces every 4 digits) and card brand icon auto-detection (Visa/MC/Amex) | Rendered via payment gateway hosted/secure field (PCI-compliant); Luhn algorithm validation; 13–19 digits depending on brand; in edit mode, shown as masked read-only "•••• 4242" with "Replace card" link to re-enter |
+| Cardholder Name | text | Yes (card type) | Full name as printed on card | Required; alphabetic characters, spaces, hyphens, and apostrophes allowed; max 100 characters |
+| Expiry Date | text | Yes (card type) | Card expiry in MM/YY format | Must be a current or future month/year; auto-formats with "/" separator as user types |
+| CVV/CVC | text | Yes (card type) | Security code on card | 3 digits (Visa/Mastercard/Discover) or 4 digits (Amex); rendered via payment gateway hosted field; never stored |
+| Billing Address (Conditional) | group | Conditional | Address line 1, Address line 2 (optional), City, State/Region, Postal code, Country selector | Required if payment gateway mandates billing address for the patient's region; country defaults to patient profile country |
+| Digital Wallet Authorization | group | Conditional (wallet type) | Wallet provider authorization button (e.g., "Set up Apple Pay", "Link Google Pay") | Shown only when Digital Wallet type is selected; tapping initiates OAuth/native wallet authorization flow with the wallet provider |
+| Wallet Authorization Status | text | Conditional (wallet type) | Success or failure message from wallet authorization | Shown after wallet authorization attempt; "Successfully linked [Wallet Name]" or "Authorization failed — please try again" |
+| Method Nickname (Optional) | text | No | Custom label for this payment method (e.g., "Personal Visa", "Business Card") | Max 50 characters; defaults to "[Brand] ending in [last 4]" if not provided |
+| Set as Default Toggle | toggle | No | "Set as my default payment method" | Default: ON if this is the patient's first method (auto-set); OFF otherwise; toggle state saved on form submission |
+| Save Button | button | Yes | Primary CTA: "Save Payment Method" (add mode) or "Save Changes" (edit mode) | Disabled until all required fields are valid; for card type, triggers payment gateway tokenization before saving |
+| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to P03.1-S1 without saving; prompts confirmation if fields have been modified |
+| Secure Transaction Badge | group | Yes | PCI compliance / encryption indicator (e.g., lock icon + "Secured by [Payment Processor]") | Displayed at bottom of form; non-interactive |
+| Field-Level Error Messages (Conditional) | text | Conditional | Inline validation errors displayed below each invalid field | Must be specific and actionable: "Card number is invalid", "Card has expired", "CVV must be [3/4] digits" |
+| Gateway Error Message (Conditional) | text | Conditional | Error returned by payment gateway after tokenization attempt | Must be user-friendly: "Your card was declined. Please check your details or try a different card."; do not expose raw gateway error codes |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Card number must pass Luhn algorithm validation
-- Expiry date must be a future date
-- CVV is 3 digits (Visa/MC) or 4 digits (Amex)
-- If this is the first method added, auto-set as default
-- PCI compliance: card data is sent directly to payment gateway for tokenization, never stored on app servers
--->
+
+- **PCI compliance**: Card number and CVV fields are rendered by the payment gateway's secure hosted fields (e.g., Stripe Elements); card data is sent directly to the payment gateway for tokenization and is never transmitted to or stored on app servers (FR-007 REQ-007-008)
+- Card number must pass Luhn algorithm validation; card brand is auto-detected from the first digits (BIN range) and the brand icon updates in real-time as the patient types
+- Expiry date must be a current or future month/year; expired cards are rejected at the form level before gateway submission
+- CVV is 3 digits for Visa/Mastercard/Discover or 4 digits for Amex; this field is used only for initial validation and is never stored after tokenization
+- If this is the patient's first payment method, the "Set as default" toggle is forced ON and cannot be turned off (at least one default must exist) (FR-007b)
+- In edit mode, the card number is displayed as a masked read-only field ("•••• 4242"); changing the card number requires the patient to tap "Replace card" which clears and re-renders the gateway secure fields for a new card entry — this creates a new token and replaces the old one
+- Digital wallet linking follows the native wallet provider's authorization flow; the app does not collect or display wallet credentials directly
+- All form fields must preserve entered data if a submission attempt fails, allowing the patient to correct errors and retry without re-entering everything (FR-007 Screen 1 Notes)
+
+##### Screen P03.1-S3: Remove Payment Method Confirmation Modal
+
+**Purpose**: Confirm patient's intent to remove a saved payment method
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
+| Modal Title | text | Yes | "Remove Payment Method?" | Displayed prominently in red/destructive color |
+| Method Summary | group | Yes | Shows the method being removed: payment type icon, card brand or wallet name, masked last 4 digits, and expiry date | Read-only; matches the card being removed for clear identification |
+| Warning Message | text | Yes | Consequence explanation | Dynamic text based on context: If method is used for active installments: "This payment method is currently used for scheduled installment payments. Removing it will require you to update the payment method for those payments." Otherwise: "This payment method will be permanently removed from your account." |
+| Default Reassignment Notice (Conditional) | text | Conditional | "Your default payment method will be reassigned to [next method description]." | Shown only if the method being removed is the current default and other methods exist |
+| Active Installments Warning (Conditional) | text | Conditional | "You have active installment plans using this card. Please update the payment method for those bookings after removal." | Shown only if the method is linked to active installment schedules (FR-007b) |
+| Remove Button | button | Yes | Destructive primary CTA: "Remove" | Red/destructive style; triggers removal and token revocation |
+| Go Back Button | button | Yes | Secondary CTA: "Go Back" | Default/neutral style; dismisses modal without action |
+
+**Business Rules**:
+
+- Removal is blocked entirely (modal does not open) if this is the patient's only payment method and active payment obligations exist (pending deposit, final payment, or installment charges); the block message is shown inline on P03.1-S1 instead
+- If the removed method was the default, the system automatically reassigns the default to the most recently added remaining method and briefly notifies the patient
+- If the removed method is linked to active installment plans (FR-007b), the patient is warned and must update the payment method for those bookings separately — installment auto-charges will fail if no valid method is on file
+- On confirmation, the system revokes the payment token with the payment gateway and deletes the stored method reference (token, masked details); this action is irreversible
+- The modal must clearly identify which method is being removed (brand + last 4 digits) to prevent accidental deletion of the wrong method
 
 ---
 
@@ -830,66 +902,124 @@ Include rules for:
 
 **Related FRs**: FR-008 (Travel Booking Integration)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Booking confirmed → travel managed by provider (provider handles flight & hotel)
-%% 2. Patient receives notification/prompt to submit passport details
-%% 3. Patient navigates to booking detail → Travel section → "Submit Passport Details"
-%% 4. Patient fills in passport form (personal details + passport fields)
-%% 5. Patient uploads passport scan/photo
-%% 6. System validates input (basic field validation)
-%% 7. System saves and notifies provider that passport details are submitted
-%% 8. Decision: "Details locked by provider for booking?"
-%%    → Yes: show read-only view with "Contact provider to modify" message
-%%    → No: details remain editable
-%% Reference FR-008 for travel booking integration rules
+flowchart TD
+    Start["Booking confirmed → Travel managed<br/>by provider (provider handles flight & hotel)"] --> Notify["System sends notification/prompt:<br/>'Submit your passport details<br/>for travel booking'"]
+    Notify --> Navigate["Patient navigates to<br/>Booking Detail → Travel section"]
+    Navigate --> CheckExisting{"Passport details<br/>already submitted?"}
+
+    CheckExisting -->|No| ShowForm["Display Passport Details Form (P04.1-S1)<br/>in editable mode"]
+    CheckExisting -->|Yes| CheckLocked{"Details locked<br/>by provider?"}
+
+    CheckLocked -->|No| ShowFormPrefilled["Display Passport Details Form (P04.1-S1)<br/>pre-filled with saved data; editable"]
+    CheckLocked -->|Yes| ShowReadOnly["Display Passport Details (P04.1-S2)<br/>in read-only locked view"]
+    ShowReadOnly --> LockedActions{"Patient action"}
+    LockedActions -->|"Contact Provider"| ContactProvider["Open secure messaging thread<br/>with provider (FR-012)"]
+    LockedActions -->|Back| ExitFlow["Return to Booking Detail"]
+    ContactProvider --> ExitFlow
+
+    ShowForm --> FillForm["Patient fills in passport fields:<br/>full name, passport number, nationality,<br/>dates, gender, special requirements"]
+    ShowFormPrefilled --> FillForm
+
+    FillForm --> UploadPhoto["Patient uploads passport<br/>photo/scan (front page)"]
+    UploadPhoto --> PatientAction{"Patient action"}
+    PatientAction -->|"Save as Draft"| SaveDraft["System saves form as draft<br/>(incomplete fields allowed)"]
+    SaveDraft --> DraftConfirm["Show 'Draft Saved' confirmation;<br/>return to Booking Detail"]
+    DraftConfirm --> ExitFlow
+
+    PatientAction -->|"Submit"| ClientValidate{"All required fields valid<br/>and passport photo uploaded?"}
+    ClientValidate -->|No| ShowErrors["Show field-level validation errors"]
+    ShowErrors --> FillForm
+
+    ClientValidate -->|Yes| CheckExpiry{"Passport expiry ≥ 6 months<br/>from scheduled travel date?"}
+    CheckExpiry -->|No| ExpiryWarning["Show warning:<br/>'Your passport expires within 6 months<br/>of your travel date. Most countries<br/>require at least 6 months validity.<br/>Please verify or renew your passport.'"]
+    ExpiryWarning --> ConfirmAnyway{"Patient acknowledges<br/>warning and proceeds?"}
+    ConfirmAnyway -->|No| FillForm
+    ConfirmAnyway -->|Yes| SubmitDetails
+
+    CheckExpiry -->|Yes| SubmitDetails["System saves passport details<br/>and marks as 'Submitted'"]
+    SubmitDetails --> NotifyProvider["System notifies provider:<br/>'Patient passport details submitted'"]
+    NotifyProvider --> ShowSuccess["Display success confirmation (P04.1-S1):<br/>'Passport details submitted successfully.<br/>You will be notified if any changes<br/>are needed.'"]
+    ShowSuccess --> ExitFlow
+
+    PatientAction -->|Back / Cancel| CheckUnsaved{"Unsaved changes?"}
+    CheckUnsaved -->|Yes| DiscardPrompt["Prompt: 'Discard unsaved changes?'"]
+    DiscardPrompt -->|Discard| ExitFlow
+    DiscardPrompt -->|Stay| FillForm
+    CheckUnsaved -->|No| ExitFlow
 ```
 
 #### Screen Specifications
 
 ##### Screen P04.1-S1: Passport Details Form
 
-**Purpose**: Collect patient's passport information for provider-managed travel booking
+**Purpose**: Collect patient's passport information for provider-managed travel booking; accessed from Booking Detail → Travel section
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-008 PRD for travel integration and required passenger details.
-Accessed from the booking detail under the Travel section.
-
-Create a table with these expected fields:
-- Full name (as printed on passport)
-- Passport number
-- Issuing country
-- Nationality
-- Date of birth
-- Gender
-- Passport issue date
-- Passport expiry date
-- Passport photo/scan upload (front page image)
-- Special requirements (e.g., wheelchair assistance, dietary needs)
-- "Submit" primary CTA
-- "Save as Draft" secondary action
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Passport Details" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Booking Detail → Travel section | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, travel destination (clinic city/country) | Provides context so patient knows which booking these details are for |
+| Submission Status Badge | badge | Yes | Current status of passport submission | Values: "Not Submitted", "Draft", "Submitted", "Locked by Provider"; color-coded |
+| Section: Personal Information | group | Yes | Section header: "Personal Information" | Separator/header for personal fields |
+| Full Name (as on passport) | text | Yes | Full legal name exactly as printed on passport | Required; max 200 characters; alphabetic characters, spaces, hyphens, and apostrophes allowed |
+| Date of Birth | datetime | Yes | Patient's date of birth | Required; date picker; must be in the past; patient must be at least 18 years old |
+| Gender | select | Yes | Gender as shown on passport | Options: "Male", "Female", "Other / X" (per ICAO passport standards) |
+| Nationality | select | Yes | Patient's nationality / citizenship | Required; searchable country list (ISO 3166-1); defaults to patient profile country if available |
+| Section: Passport Information | group | Yes | Section header: "Passport Information" | Separator/header for passport fields |
+| Passport Number | text | Yes | Passport document number | Required; alphanumeric; 5–20 characters (varies by country); no special characters |
+| Issuing Country | select | Yes | Country that issued the passport | Required; searchable country list (ISO 3166-1) |
+| Passport Issue Date | datetime | Yes | Date the passport was issued | Required; date picker; must be in the past |
+| Passport Expiry Date | datetime | Yes | Date the passport expires | Required; date picker; must be a future date; system warns if < 6 months from scheduled travel date |
+| Passport Expiry Warning (Conditional) | text | Conditional | Warning about passport validity | Shown if expiry date is less than 6 months from scheduled travel date: "Most countries require at least 6 months passport validity. Please verify your passport is valid for travel." |
+| Section: Passport Document | group | Yes | Section header: "Passport Photo / Scan" | Separator/header for upload |
+| Passport Photo/Scan Upload | image | Yes | Upload of passport front page (photo or scan) | Accepted formats: JPG, PNG, PDF; max file size: 10 MB; camera capture or gallery selection; must show full passport front page including photo, name, and number |
+| Upload Preview | image | Conditional | Thumbnail preview of uploaded document with option to replace | Shown after successful upload; includes "Replace" and "Remove" actions |
+| Upload Guidelines | text | Yes | Instructions for acceptable passport photo/scan | "Please upload a clear photo or scan of your passport's photo page. Ensure the full page is visible, including your photo, name, and passport number." |
+| Section: Special Requirements (Optional) | group | No | Section header: "Special Requirements" | Separator/header for optional fields |
+| Special Requirements | text | No | Free text for special travel needs (e.g., wheelchair assistance, dietary needs, medical equipment) | Optional; max 500 characters; placeholder: "Any special travel requirements? (e.g., wheelchair assistance, dietary needs)" |
+| Submit Button | button | Yes | Primary CTA: "Submit Passport Details" | Disabled until all required fields are valid and passport photo is uploaded; triggers server-side save and provider notification |
+| Save as Draft Button | action | Yes | Secondary action: "Save as Draft" | Saves current form state without requiring all fields; allows partial completion |
+| Success Confirmation (Conditional) | group | Conditional | Success state after submission | "Passport details submitted successfully. Your provider has been notified. You will receive an update if any changes are needed." with "Back to Booking" CTA |
+| Error State (Conditional) | text | Conditional | Displayed if save/submit fails | "Unable to save passport details. Please check your connection and try again." with Retry button |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Passport expiry must be at least 6 months from the scheduled travel date
-- Name must match passport document exactly
-- Photo upload: accepted formats (JPG, PNG, PDF), max file size limit
-- Details remain editable until provider locks them for flight booking
-- Locked state shows read-only view with "Contact provider to modify" message
-- Data is encrypted at rest (medical tourism context — sensitive PII)
--->
+
+- Passport expiry must be at least 6 months from the scheduled travel date; if it is not, the system shows a non-blocking warning but allows the patient to proceed after acknowledgment — the provider is ultimately responsible for verifying travel document validity (FR-008)
+- Full name must match the passport document exactly; discrepancies may cause travel booking failures, so the form should emphasize this requirement visually
+- Passport photo/scan accepts JPG, PNG, and PDF formats with a maximum file size of 10 MB; the upload supports both camera capture (for mobile convenience) and gallery selection
+- Details remain editable by the patient until the provider locks them for flight booking; once locked, the form transitions to read-only state (Screen P04.1-S2) and the patient must contact the provider to request modifications
+- "Save as Draft" allows the patient to partially complete the form and return later without losing progress; drafts do not trigger provider notification
+- All passport data is classified as sensitive PII and must be encrypted at rest and in transit; access is restricted to the patient, the assigned provider (for travel booking), and authorized admin staff (FR-008 Data & Privacy Rules)
+
+##### Screen P04.1-S2: Passport Details (Locked / Read-Only View)
+
+**Purpose**: Display submitted passport details in read-only mode after the provider has locked them for travel booking
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Passport Details" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Booking Detail → Travel section | Top-left corner |
+| Locked Status Banner | group | Yes | Prominent banner: "Your passport details have been locked by your provider for travel booking. Contact your provider to request changes." | Displayed at top below title; warning/info color (amber/yellow) |
+| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date | Same as P04.1-S1 |
+| Locked Badge | badge | Yes | "Locked by Provider" status | Displayed next to title; distinct from "Submitted" |
+| Locked Timestamp | datetime | Yes | Date/time provider locked the details | Format: "Locked on [Month DD, YYYY at HH:MM]" |
+| All Form Fields (Read-Only) | group | Yes | All fields from P04.1-S1 displayed in read-only mode: full name, date of birth, gender, nationality, passport number, issuing country, issue date, expiry date, passport photo thumbnail, special requirements | All fields non-editable; no input styling; data displayed as text labels |
+| Passport Photo Thumbnail | image | Yes | Thumbnail of uploaded passport photo/scan | Tappable to view full-size image; read-only |
+| Contact Provider Button | button | Yes | "Contact Provider to Request Changes" | Primary CTA; opens secure messaging thread with the assigned provider (FR-012) |
+| Back to Booking Button | action | Yes | "Back to Booking" | Returns to Booking Detail |
+
+**Business Rules**:
+
+- The locked state is triggered when the provider marks the passport details as "confirmed for booking" on their side; this prevents the patient from making changes that could invalidate travel reservations
+- The patient can only request changes through the provider via secure messaging (FR-012); the provider can unlock the details if modifications are needed
+- If the provider unlocks the details (e.g., for corrections), the form returns to editable state (P04.1-S1) with a notification to the patient: "Your provider has unlocked your passport details for editing."
+- The locked view must display all submitted data clearly for the patient's reference, including the passport photo thumbnail
+- Locked timestamp provides an audit trail for when the details were finalized for travel booking
 
 ---
 
@@ -897,94 +1027,156 @@ Include rules for:
 
 **Related FRs**: FR-008 (Travel Booking Integration)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Booking confirmed → patient handles own travel (self-managed)
-%% 2. Patient receives prompt to submit travel details for provider coordination
-%% 3. Patient navigates to booking detail → Travel section → "Add Travel Details"
-%% 4. Two sub-sections: Flight Details + Hotel/Accommodation Details
-%% 5. Patient fills in flight details (airline, flight number, dates, times)
-%% 6. Patient fills in hotel details (name, address, check-in/out dates)
-%% 7. System saves → details visible to provider for logistics coordination
-%% 8. Patient can edit/update details until treatment start date
-%% Reference FR-008 for self-managed travel fields and provider visibility
+flowchart TD
+    Start["Booking confirmed → Patient handles<br/>own travel (self-managed)"] --> Prompt["System sends prompt:<br/>'Share your travel details<br/>so your provider can coordinate<br/>logistics (e.g., airport pickup)'"]
+    Prompt --> Navigate["Patient navigates to<br/>Booking Detail → Travel section"]
+    Navigate --> TravelHub["Display Travel Details Hub<br/>with two sub-sections"]
+
+    TravelHub --> HubAction{"Patient selects section"}
+    HubAction -->|"Flight Details"| CheckFlightExists{"Flight details<br/>already saved?"}
+    HubAction -->|"Hotel / Accommodation"| CheckHotelExists{"Hotel details<br/>already saved?"}
+    HubAction -->|Back| ExitFlow["Return to Booking Detail"]
+
+    CheckFlightExists -->|No| ShowFlightForm["Display Flight Details Form (P04.2-S1)<br/>empty"]
+    CheckFlightExists -->|Yes| ShowFlightPrefilled["Display Flight Details Form (P04.2-S1)<br/>pre-filled; editable"]
+    ShowFlightForm --> FillFlight["Patient enters outbound flight details<br/>(airline, flight number, airports, dates/times)"]
+    ShowFlightPrefilled --> FillFlight
+    FillFlight --> OptionalReturn{"Patient adds<br/>return flight?"}
+    OptionalReturn -->|Yes| FillReturn["Patient enters return flight details"]
+    OptionalReturn -->|"Not yet / Skip"| FlightSave
+    FillReturn --> OptionalConnecting{"Multi-leg journey?"}
+    OptionalConnecting -->|Yes| AddLeg["Patient taps 'Add Connecting Flight'<br/>and enters connecting flight details"]
+    OptionalConnecting -->|No| FlightSave
+    AddLeg --> FlightSave
+
+    FlightSave --> FlightAction{"Patient action"}
+    FlightAction -->|"Save"| ValidateFlight{"Dates valid?<br/>(arrival ≤ treatment start;<br/>return ≥ treatment end)"}
+    ValidateFlight -->|No| FlightDateWarning["Show non-blocking warning:<br/>'Your arrival/return dates may not<br/>align with your treatment schedule.<br/>Please verify.'"]
+    FlightDateWarning --> ConfirmFlightSave{"Save anyway?"}
+    ConfirmFlightSave -->|Yes| SaveFlight
+    ConfirmFlightSave -->|No| FillFlight
+    ValidateFlight -->|Yes| SaveFlight["System saves flight details;<br/>notifies provider of update"]
+    FlightAction -->|Cancel| TravelHub
+
+    SaveFlight --> FlightSuccess["Show 'Flight details saved'<br/>confirmation"]
+    FlightSuccess --> TravelHub
+
+    CheckHotelExists -->|No| ShowHotelForm["Display Hotel Details Form (P04.2-S2)<br/>empty"]
+    CheckHotelExists -->|Yes| ShowHotelPrefilled["Display Hotel Details Form (P04.2-S2)<br/>pre-filled; editable"]
+    ShowHotelForm --> FillHotel["Patient enters hotel name, address,<br/>check-in/out dates, booking reference"]
+    ShowHotelPrefilled --> FillHotel
+
+    FillHotel --> HotelAction{"Patient action"}
+    HotelAction -->|"Save"| ValidateHotel{"Dates valid?<br/>(check-in ≤ treatment start;<br/>check-out ≥ treatment end)"}
+    ValidateHotel -->|No| HotelDateWarning["Show non-blocking warning:<br/>'Your stay dates may not cover<br/>your full treatment + recovery period.<br/>Please verify.'"]
+    HotelDateWarning --> ConfirmHotelSave{"Save anyway?"}
+    ConfirmHotelSave -->|Yes| SaveHotel
+    ConfirmHotelSave -->|No| FillHotel
+    ValidateHotel -->|Yes| SaveHotel["System saves hotel details;<br/>notifies provider of update"]
+    HotelAction -->|Cancel| TravelHub
+
+    SaveHotel --> HotelSuccess["Show 'Hotel details saved'<br/>confirmation"]
+    HotelSuccess --> TravelHub
 ```
+
+> **Note**: Both flight and hotel details feed into the patient's unified itinerary (FR-008 REQ-008-005) and are visible to the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, proximity check). The patient can edit/update details at any time until the treatment start date.
 
 #### Screen Specifications
 
 ##### Screen P04.2-S1: Flight Details Input
 
-**Purpose**: Collect patient's self-booked flight information
+**Purpose**: Collect patient's self-booked flight information for provider coordination; accessed from Booking Detail → Travel section → "Flight Details"
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-008 PRD for self-managed travel flow.
-
-Create a table with these expected fields:
-- Outbound flight section:
-  - Airline name
-  - Flight number
-  - Departure airport/city
-  - Arrival airport/city
-  - Departure date & time
-  - Arrival date & time
-- Return flight section (same fields as outbound)
-- Booking reference number
-- "Add Connecting Flight" option (for multi-leg journeys)
-- Upload booking confirmation document (optional)
-- "Save" CTA
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Flight Details" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Travel section in Booking Detail | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, destination city | Provides context for which booking these details relate to |
+| Last Updated Indicator | datetime | Conditional | "Last updated [date]" | Shown if flight details were previously saved; helps patient track currency of information |
+| Section: Outbound Flight | group | Yes | Section header: "Outbound Flight" | Separator/header with airplane departure icon |
+| Airline Name (Outbound) | text | Yes | Name of the airline | Required; free text with autocomplete suggestions from common airline list; max 100 characters |
+| Flight Number (Outbound) | text | Yes | Flight number (e.g., "BA 2456") | Required; alphanumeric; max 10 characters; format: airline code + number |
+| Departure Airport/City (Outbound) | text | Yes | Departure airport or city name | Required; free text with IATA airport code autocomplete; displays both city and airport name |
+| Arrival Airport/City (Outbound) | text | Yes | Arrival airport or city name | Required; free text with IATA airport code autocomplete; should match or be near the clinic city |
+| Departure Date & Time (Outbound) | datetime | Yes | Date and time of departure | Required; date-time picker; cannot be in the past |
+| Arrival Date & Time (Outbound) | datetime | Yes | Date and time of arrival at destination | Required; date-time picker; must be after departure; system warns if arrival is after treatment start date |
+| Section: Return Flight | group | No | Section header: "Return Flight" with "Add Return Flight" button if not yet entered | Collapsible section; initially collapsed if no return details saved |
+| Add Return Flight Toggle | action | Conditional | "Add Return Flight" button/link to expand return flight section | Shown only if return section is collapsed and not yet filled |
+| Airline Name (Return) | text | Conditional | Name of the return airline | Required if return section is expanded; same rules as outbound |
+| Flight Number (Return) | text | Conditional | Return flight number | Required if return section is expanded; same rules as outbound |
+| Departure Airport/City (Return) | text | Conditional | Departure airport for return (clinic city) | Required if expanded; defaults to outbound arrival airport |
+| Arrival Airport/City (Return) | text | Conditional | Arrival airport for return (home city) | Required if expanded; defaults to outbound departure airport |
+| Departure Date & Time (Return) | datetime | Conditional | Date and time of return departure | Required if expanded; must be after outbound arrival; system warns if before estimated treatment end date |
+| Arrival Date & Time (Return) | datetime | Conditional | Date and time of return arrival | Required if expanded; must be after return departure |
+| Section: Connecting Flights (Optional) | group | No | Section header: "Connecting Flights" | Shown only if patient taps "Add Connecting Flight" |
+| Add Connecting Flight Button | action | No | "+ Add Connecting Flight" | Appends a new connecting flight entry (same fields: airline, flight number, departure/arrival airports, departure/arrival times); max 3 connecting flights per direction |
+| Connecting Flight Entries | list | Conditional | Repeatable group of connecting flight fields per leg | Each entry includes: airline, flight number, departure airport, arrival airport, departure time, arrival time; "Remove" action per entry |
+| Booking Reference Number | text | No | Airline booking/confirmation reference code | Optional; alphanumeric; max 20 characters; helps provider and patient for support inquiries |
+| Upload Booking Confirmation | image | No | Upload of booking confirmation document (screenshot, PDF, or email confirmation) | Optional; accepted formats: JPG, PNG, PDF; max file size: 10 MB |
+| Upload Preview (Conditional) | image | Conditional | Thumbnail preview of uploaded document with Replace/Remove actions | Shown after successful upload |
+| Date Alignment Warning (Conditional) | text | Conditional | Non-blocking warning about date misalignment with treatment schedule | Shown if outbound arrival is after treatment start date OR return departure is before estimated treatment end date; "Your travel dates may not align with your treatment schedule. Please verify with your provider." |
+| Save Button | button | Yes | Primary CTA: "Save Flight Details" | Disabled until all required outbound fields are valid |
+| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to Travel section without saving; prompts if unsaved changes |
+| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination (e.g., airport pickup)." | Displayed below Save button; informational |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Arrival date must be before or on treatment start date (with reasonable buffer)
-- Return date must be after estimated treatment end date
-- Flight details are shared with provider for airport pickup coordination (if applicable)
-- Patient can update details anytime before the treatment start date
--->
+
+- Outbound arrival date should be on or before the treatment start date to allow reasonable travel buffer; if it is not, the system shows a non-blocking warning but allows saving — the patient is responsible for verifying alignment with their provider
+- Return departure date should be on or after the estimated treatment end date (accounting for recovery); a non-blocking warning is shown if the dates appear misaligned
+- Flight details are shared with the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, transfer arrangements); provider cannot edit the patient's self-managed travel details (FR-008)
+- Patient can update flight details at any time until the treatment start date; after the treatment start date, details become read-only
+- Connecting flights support multi-leg journeys (max 3 connecting flights per direction) for patients with layovers
+- All saved flight details contribute to the patient's unified itinerary (FR-008 REQ-008-005); updates replace previous entries and mark old ones as superseded
 
 ##### Screen P04.2-S2: Hotel/Accommodation Details Input
 
-**Purpose**: Collect patient's self-booked accommodation information
+**Purpose**: Collect patient's self-booked accommodation information for provider coordination; accessed from Booking Detail → Travel section → "Hotel / Accommodation"
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Hotel/accommodation name
-- Address (street, city, postal code, country)
-- Check-in date
-- Check-out date
-- Booking reference number
-- Contact phone number of hotel
-- Room type (optional)
-- Upload booking confirmation document (optional)
-- Map preview of location (auto-generated from address, optional)
-- Distance from clinic indicator (if clinic address is known)
-- "Save" CTA
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "Hotel / Accommodation" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Travel section in Booking Detail | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, clinic city | Provides context for which booking these details relate to |
+| Last Updated Indicator | datetime | Conditional | "Last updated [date]" | Shown if hotel details were previously saved |
+| Section: Accommodation Details | group | Yes | Section header: "Accommodation Details" | Separator/header with hotel icon |
+| Hotel/Accommodation Name | text | Yes | Name of the hotel, Airbnb, or other accommodation | Required; free text; max 200 characters |
+| Address Line 1 | text | Yes | Street address | Required; max 200 characters |
+| Address Line 2 | text | No | Additional address info (apt/suite/floor) | Optional; max 100 characters |
+| City | text | Yes | City name | Required; should match or be near the clinic city; max 100 characters |
+| State/Region | text | No | State, region, or province | Optional; max 100 characters |
+| Postal Code | text | No | Postal/ZIP code | Optional; format varies by country |
+| Country | select | Yes | Country of the accommodation | Required; searchable country list (ISO 3166-1); defaults to clinic country |
+| Map Preview (Conditional) | group | Conditional | Map thumbnail auto-generated from the entered address | Shown after address fields are populated; non-interactive preview showing location pin; tappable to open in external maps app |
+| Distance from Clinic (Conditional) | text | Conditional | "Approximately [X km / X miles] from [Clinic Name]" | Shown if both accommodation address and clinic address are known; auto-calculated; helps patient assess proximity |
+| Section: Stay Dates | group | Yes | Section header: "Stay Dates" | Separator/header |
+| Check-in Date | datetime | Yes | Date of check-in | Required; date picker; should be on or before treatment start date; system warns if after treatment start |
+| Check-out Date | datetime | Yes | Date of check-out | Required; date picker; must be after check-in date; system warns if before estimated treatment end date + recovery buffer |
+| Date Alignment Warning (Conditional) | text | Conditional | Non-blocking warning about stay dates vs. treatment schedule | Shown if check-in is after treatment start OR check-out is before estimated treatment end + recovery period; "Your stay dates may not cover your full treatment and recovery period. Please verify with your provider." |
+| Section: Booking Information | group | No | Section header: "Booking Information" | Separator/header |
+| Booking Reference Number | text | No | Hotel booking/confirmation reference | Optional; alphanumeric; max 30 characters |
+| Hotel Contact Phone | text | No | Hotel reception phone number | Optional; international phone format with country code selector |
+| Room Type | text | No | Type of room booked (e.g., "Standard Double", "Suite") | Optional; free text; max 50 characters |
+| Upload Booking Confirmation | image | No | Upload of booking confirmation document | Optional; accepted formats: JPG, PNG, PDF; max file size: 10 MB |
+| Upload Preview (Conditional) | image | Conditional | Thumbnail preview of uploaded document with Replace/Remove actions | Shown after successful upload |
+| Special Notes | text | No | Free text for any additional accommodation notes | Optional; max 500 characters; placeholder: "Any notes about your accommodation? (e.g., early check-in arranged, specific room requests)" |
+| Save Button | button | Yes | Primary CTA: "Save Hotel Details" | Disabled until all required fields are valid |
+| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to Travel section without saving; prompts if unsaved changes |
+| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination." | Displayed below Save button; informational |
+| Error State (Conditional) | text | Conditional | Displayed if save fails | "Unable to save hotel details. Please check your connection and try again." with Retry button |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Check-in date must be on or before treatment start date
-- Check-out date must be after estimated treatment end date (accounting for recovery period)
-- Details are shared with provider for logistics coordination
-- Patient can update details anytime before check-in date
--->
+
+- Check-in date should be on or before the treatment start date to ensure the patient is settled before the procedure; a non-blocking warning is shown if check-in is after treatment start, but saving is allowed since the patient may have alternative arrangements
+- Check-out date should be after the estimated treatment end date plus a reasonable recovery buffer (provider-specific; typically 2–5 days post-procedure for hair transplant recovery); a non-blocking warning is shown if the stay appears too short
+- Hotel details are shared with the assigned provider in read-only mode for logistics coordination (proximity verification, potential transport arrangements); provider cannot edit the patient's self-managed accommodation details (FR-008)
+- Patient can update hotel details at any time until the check-in date; after check-in, details become read-only
+- Distance from clinic is auto-calculated when both the accommodation address and the clinic address are available; this helps the patient and provider assess logistics feasibility
+- All saved hotel details contribute to the patient's unified itinerary (FR-008 REQ-008-005); updates replace previous entries and mark old ones as superseded
 
 ---
 

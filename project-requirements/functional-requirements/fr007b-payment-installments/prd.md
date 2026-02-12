@@ -75,7 +75,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 ### Entry Points
 
-- Patient selects installment plan during booking checkout after accepting a quote
+- Patient has accepted a quote (FR-005) and reaches the **Payment Options** step in the booking & payment flow (FR-006/FR-007), then selects **"Pay in Installments"**, which hands off to FR-007B Screen 1
 - Patient views installment schedule from booking details screen
 - Admin accesses installment management from billing/financial management module
 - Provider views installment status from booking overview screen
@@ -87,12 +87,13 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 ### Main Flow: Patient Selects Installment Plan and Completes Payments
 
 **Actors**: Patient, System (Payment Processing Service), Admin
-**Trigger**: Patient proceeds to checkout after accepting a quote
+**Upstream Context**: Quote has been accepted (FR-005) and booking details (procedure date, total cost) are available via FR-006; FR-007 has presented a **Payment Options** step where the patient chose **"Pay in Installments"** instead of **"Pay in Full"**.
+**Trigger**: Patient confirms the choice to **"Pay in Installments"** on the Payment Options step and proceeds to the Installment Plan selection screen (Screen 1 in this FR)
 **Outcome**: Booking confirmed with installment plan; scheduled installments charged automatically; booking fully paid by the configured cutoff date (minimum 30 days before procedure, configured via FR-029)
 
 **Steps**:
 
-1. Patient reviews booking summary with total procedure cost
+1. Patient reviews booking summary with total procedure cost and sees that **"Pay in Installments"** is selected as the payment option
 2. System calculates feasible installment options based on time until procedure date and the configured cutoff days (minimum 30 days before procedure, configured via FR-029) with monthly installments
 3. System displays installment options (e.g., "Pay in 2-5 installments" if procedure is in 6 months)
 4. Patient selects desired installment plan (e.g., 4 monthly installments)
@@ -119,14 +120,14 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - **Outcome**: Booking completed with shorter payment timeline; same 30-day buffer maintained
 - **Outcome**: Booking completed with shorter payment timeline; same cutoff window maintained
 
-**A2: Patient Opts for Full Payment Instead of Installments**:
+**A2: Patient Opts for Full Payment Instead of Installments (Handled by FR-007)**:
 
-- **Trigger**: Patient prefers to pay entire amount upfront
-- **Steps**:
-  1. Patient selects "Pay in Full" option at checkout
+- **Trigger**: On the Payment Options step (FR-007), patient selects **"Pay in Full"** instead of **"Pay in Installments"**
+- **Steps** (owned by FR-007, summarized here for branching clarity):
+  1. System routes patient to the standard full-payment checkout flow defined in FR-007
   2. System processes full payment immediately
   3. System marks booking as "Fully Paid"
-- **Outcome**: Booking confirmed without installment plan; same as existing FR-007 payment flow
+- **Outcome**: Booking confirmed without installment plan; **FR-007B is not invoked** in this path
 
 **A3: Patient Updates Payment Method Mid-Plan**:
 
@@ -166,20 +167,22 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **B3: Procedure Date Changes After Installment Plan Established**:
 
-- **Trigger**: Patient or provider reschedules procedure date
+- **Trigger**: Admin manually reschedules a confirmed booking due to emergency or exceptional circumstances (per FR-016 Admin Patient Management; patient self-service rescheduling remains deferred to V2 per FR-006 and system PRD)
 - **Steps**:
   1. Rescheduling request triggers installment plan recalculation
   2. System checks if new procedure date allows completion of remaining installments (30-day buffer)
   3. **If sufficient time**: System adjusts installment schedule dates to align with new procedure date
   4. **If insufficient time**: System notifies patient that remaining balance must be paid immediately or installment plan canceled
-  5. Patient chooses to pay remaining balance or cancel booking
+  5. Admin, in coordination with patient, either collects remaining balance immediately or cancels booking per cancellation policy
 - **Outcome**: Installment plan adjusted to new schedule or remaining balance paid immediately; booking date updated
 
 ---
 
 ## Screen Specifications
 
-### Screen 1: Patient Checkout - Installment Plan Selection
+### Patient Platform Screens
+
+#### Screen 1: Patient Checkout - Installment Plan Selection
 
 **Purpose**: Allow patient to select installment plan option at booking checkout
 
@@ -214,7 +217,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 ---
 
-### Screen 2: Patient Booking Details - Installment Schedule View
+#### Screen 2: Patient Booking Details - Installment Schedule View
 
 **Purpose**: Allow patient to view installment payment schedule and history
 
@@ -247,7 +250,91 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 ---
 
-### Screen 3: Admin Installment Plan Management Dashboard
+### Provider Platform Screens
+
+#### Screen 3: Provider Installment Plans Overview
+
+**Purpose**: Allow provider to see all their bookings that use installment plans, with high-level status and risk indicators
+
+**Data Fields**:
+
+| Field Name               | Type   | Required | Description                                           | Validation Rules                          |
+|--------------------------|--------|----------|-------------------------------------------------------|-------------------------------------------|
+| Booking ID               | text   | Yes      | Unique booking identifier                             | Clickable link to booking detail          |
+| Patient Name             | text   | Yes      | Patient full name (revealed post-payment)            | Display only                              |
+| Procedure Date           | date   | Yes      | Scheduled procedure date                              | Format: DD-MM-YYYY                        |
+| Total Amount             | number | Yes      | Total procedure cost                                  | Matches booking total                     |
+| Installments Paid        | number | Yes      | Number of completed installments                      | 0 to total installments                   |
+| Total Installments       | number | Yes      | Total installments in plan                            | 2–9                                       |
+| Completion Percentage    | number | Yes      | Percentage of total amount collected                  | 0–100% (auto-calculated)                  |
+| Next Payment Date        | date   | No       | Date of next scheduled installment (if any)           | Only if installments remaining > 0        |
+| Next Payment Amount      | number | No       | Amount of next installment (if any)                   | Only if installments remaining > 0        |
+| Plan Status              | badge  | Yes      | "Active", "Completed", "Overdue", "Defaulted"         | Color-coded                               |
+| Overdue Days             | number | No       | Days since first missed/failed installment            | Only for "Overdue"/"Defaulted" plans      |
+
+**Business Rules**:
+
+- List includes only bookings for the **current provider** that have an active or completed installment plan (no one-time payments).
+- Providers see **status and progress only**; they cannot change payment schedules or retry charges (admin-only actions).
+- Overdue and defaulted plans are visually emphasized (e.g., warning badges, sort to top).
+- Clicking a row opens the shared **Booking Installment Plan Detail** screen for that booking.
+
+**Notes**:
+
+- Table should support filtering by plan status (Active, Completed, Overdue, Defaulted) and procedure date range.
+- Default sort: nearest upcoming procedure date, then highest risk (Overdue/Defaulted) at top.
+
+---
+
+#### Screen 4: Provider Booking Installment Plan Detail
+
+**Purpose**: Provide the provider with a detailed, read-only view of a single booking’s installment plan, schedule, and payment history
+
+**Data Fields**:
+
+| Field Name                | Type   | Required | Description                                          | Validation Rules                          |
+|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|
+| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only                              |
+| Patient Name              | text   | Yes      | Patient full name (revealed post-payment)           | Display only                              |
+| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
+| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
+| Total Amount              | number | Yes      | Total procedure cost                                 | Matches booking total                     |
+| Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
+| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
+| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
+| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated)                  |
+| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule          |
+| Plan Status               | badge  | Yes      | "Active", "Completed", "Overdue", "Defaulted"        | Color-coded                               |
+| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only                              |
+| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | See sub-table below                       |
+
+**Installment Schedule Sub-Table**:
+
+| Field Name        | Type   | Required | Description                               | Validation Rules                |
+|-------------------|--------|----------|-------------------------------------------|---------------------------------|
+| Installment #     | number | Yes      | Sequence number (1..N)                    | 1–9                             |
+| Due Date          | date   | Yes      | Scheduled charge date                     | Format: DD-MM-YYYY              |
+| Amount            | number | Yes      | Installment amount                        | Must sum to Total Amount        |
+| Status            | badge  | Yes      | "Scheduled", "Paid", "Failed", "Retrying" | Color-coded                     |
+| Paid Date         | date   | No       | Actual payment date (if paid)             | Present only for Paid           |
+| Failure Reason    | text   | No       | Processor error message (if failed)       | Read-only                       |
+
+**Business Rules**:
+
+- View is **read-only**; providers can see schedule and history but **cannot** modify plan or trigger payments.
+- If plan is "Overdue" or "Defaulted", show instruction banner: "Please contact Hairline support; payment follow-up is handled by admin team."
+- All dates and amounts are consistent with underlying payment records; discrepancies must be treated as data errors and surfaced via internal alerts (out of scope for UI behavior here).
+
+**Notes**:
+
+- This screen is accessible from Provider Installment Plans Overview (provider tenant).
+- Layout should reuse components from the patient’s installment schedule view where possible, with additional provider-specific context.
+
+---
+
+### Admin Platform Screens
+
+#### Screen 5: Admin Installment Plan Management Dashboard
 
 **Purpose**: Allow admin to monitor and manage all installment plans across platform
 
@@ -276,6 +363,53 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Use dashboard widgets for key metrics
 - Provide drill-down into individual installment plan details
 - Export capabilities for financial reporting and reconciliation
+
+---
+
+#### Screen 6: Admin Booking Installment Plan Detail
+
+**Purpose**: Provide admin with a detailed, actionable view of a single booking’s installment plan, schedule, and payment history, including controls for resolving payment issues
+
+**Data Fields**:
+
+| Field Name                | Type   | Required | Description                                          | Validation Rules                          |
+|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|
+| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only                              |
+| Patient Name              | text   | Yes      | Patient full name                                    | Display only                              |
+| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
+| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
+| Total Amount              | number | Yes      | Total procedure cost                                 | Matches booking total                     |
+| Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
+| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
+| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
+| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated)                  |
+| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule          |
+| Plan Status               | badge  | Yes      | "Active", "Completed", "Overdue", "Defaulted"        | Color-coded                               |
+| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only                              |
+| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | Same structure as provider detail screen  |
+| Admin Action Panel        | group  | Yes      | Section with admin-only controls and justification   | See Business Rules                        |
+
+**Business Rules**:
+
+- Admin can perform the following actions (subject to internal policy and audit logging):
+  - **Retry Charge** on a failed installment (invokes payment processor via S-02).
+  - **Mark as Resolved** when an external/manual payment issue has been handled.
+  - **Cancel Plan & Apply Cancellation Policy**, which:
+    - Stops future installments.
+    - Calculates refunds per cancellation policy.
+    - Updates booking status per Business Workflows.
+- All admin actions MUST:
+  - Require a justification text input (minimum 20 characters).
+  - Be logged with timestamp, admin ID, action type, and justification.
+- Certain actions are only available based on plan status:
+  - "Retry Charge" available only for "Failed" or "Overdue" installments.
+  - "Cancel Plan & Apply Cancellation Policy" available for "Active" or "Overdue" plans; disabled for "Completed" plans.
+- Admin cannot directly edit financial amounts; changes must be made via refunds/adjustments defined in payment rules.
+
+**Notes**:
+
+- This screen is accessible from the Admin Installment Plan Management Dashboard when an admin clicks into a specific plan.
+- Layout should reuse the same base visual structure as the provider detail screen, with the additional Admin Action Panel.
 
 ---
 
@@ -338,6 +472,30 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Platform commission calculated on total procedure cost (commission rate configured in FR-029 and snapshotted at booking), deducted from provider payout after final installment completes
 - Provider payout delayed until all installments completed and booking reaches "Fully Paid" status
 - Rescheduling procedure date may require installment plan adjustment or immediate payment of remaining balance
+
+### Admin Action & Audit Rules
+
+Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail), all admin actions that modify installment plan state MUST be audited:
+
+**Admin Actions Requiring Justification & Audit Logging**:
+
+- **Retry Charge**: Manually triggering a payment retry on a failed installment (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, retry attempt number)
+- **Mark as Resolved**: Marking a failed installment as resolved when external/manual payment has been handled (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, resolution method)
+- **Cancel Plan & Apply Cancellation Policy**: Canceling an active installment plan and applying refund policy (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment plan ID, booking ID, refund amount, cancellation reason)
+
+**Audit Trail Requirements**:
+
+- All admin actions documented in Screen 6 (Admin Booking Installment Plan Detail) MUST be logged to the immutable audit trail system (S-06: Audit Log Service)
+- Audit logs MUST be retained for 10 years per constitution requirements
+- Audit logs MUST include: timestamp (UTC), admin user ID, admin name, action type, affected entity IDs (installment plan ID, booking ID, patient ID), justification text, before/after state (if applicable), IP address
+- Failed admin action attempts (e.g., insufficient permissions, validation errors) MUST also be logged
+- Audit logs MUST be tamper-proof and queryable for compliance reporting
+
+**Access Control**:
+
+- Only authorized admin roles (Billing Admin, Financial Manager, Super Admin) can execute installment management actions
+- Role-based access control (RBAC) enforced per FR-031 (Admin Access Control & Permissions)
+- All installment data access (read and write) is subject to RBAC validation
 
 ---
 
@@ -468,6 +626,18 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Payment method tokenization required for recurring charges (do not store card details)
 - Timezone handling critical for installment due dates (use UTC internally, display in patient timezone)
 - Financial calculations must round correctly (avoid floating point errors)
+
+### Performance Targets
+
+Per Hairline Platform Constitution (Principle VIII: Performance & Scalability):
+
+- **API response times**: p95 < 500ms, p99 < 1000ms (excluding external payment processor calls)
+- **Installment calculation**: < 200ms for determining available options and calculating schedule
+- **Schedule retrieval**: < 300ms for loading patient installment history and upcoming payments
+- **Admin dashboard queries**: < 500ms for installment plan list and filtering operations
+- **Payment processing**: Acknowledge charge initiation within 100ms; actual charge completion time depends on payment processor (typically 2-5 seconds)
+- **Reminder job execution**: 95% of reminders sent within 1 hour of scheduled time (3 days before due date)
+- **Retry job scheduling**: Failed payment retries scheduled within 5 minutes of failure detection
 
 ### Integration Points
 
@@ -673,6 +843,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 |------------|---------|-------------------------|--------|
 | 2025-11-10 | 1.0     | Initial PRD creation    | AI     |
 | 2025-12-16 | 1.1     | Documentation alignment: Moved customer-facing installment configuration ownership to FR-029 (cutoff days, enabled installment counts, eligibility thresholds) and removed conflicting admin-configurable ranges/formulas; retained monthly schedule execution and retry/reminder behavior here. | AI |
+| 2026-02-12 | 1.2     | Constitution alignment enhancements: Added explicit performance targets (p95 < 500ms API response times, job execution timing) to Implementation Notes; added Admin Action & Audit Rules subsection documenting audit logging requirements for admin actions (retry charge, mark as resolved, cancel plan) per Constitution Principle VI. | AI |
 
 ---
 
@@ -689,4 +860,4 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007B from system-prd.md (Split Payment / Installment Plans)
-**Last Updated**: 2025-12-16
+**Last Updated**: 2026-02-12
