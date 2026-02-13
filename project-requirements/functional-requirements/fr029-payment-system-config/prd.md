@@ -127,26 +127,27 @@ The module delivers value by:
 ### Main Flow: Configure Currency Conversion Rules
 
 **Actors**: Admin, System, Currency API (e.g., xe.com)
-**Trigger**: Admin navigates to "Payment Configuration > Currency Conversion" to set conversion rate sources and markup
-**Outcome**: Currency conversion rules configured with markup percentages to protect against unfavorable rates
+**Trigger**: Admin navigates to "Payment Configuration > Currency Conversion" to set up rate sources, global defaults, and currency pairs
+**Outcome**: Currency conversion rules configured per pair with markup percentages to protect against unfavorable rates
 
 **Steps**:
 
 1. Admin clicks "Currency Conversion" tab on Payment Configuration page
-2. System displays current conversion rate configuration and list of supported currency pairs
-3. Admin selects conversion rate source API (e.g., xe.com, fixer.io, or manual entry)
-4. Admin enters API credentials for selected conversion rate source
-5. System validates API connection by fetching current rates for configured currency pairs
-6. Admin configures markup percentage per currency pair (e.g., 5% markup for USD to EUR)
-7. Admin sets rate protection thresholds (e.g., alert if rate changes more than 3% in 24 hours)
-8. Admin configures sync frequency for automated rate updates (e.g., every 6 hours)
-9. Admin enables or disables automatic rate application (if disabled, admins manually approve rate changes)
-10. Admin clicks "Save Configuration"
-11. System stores conversion rate rules and markup percentages
-12. System immediately syncs current rates from API and applies markup
-13. System schedules next sync job based on configured frequency
-14. System sends email notification to admin confirming currency conversion configuration
-15. System logs configuration change to audit trail
+2. System displays Screen 2A: global settings section, rate sources section, and currency pair list
+3. Admin configures global defaults (Global Default Markup %, Global Default Sync Frequency, Rate Protection Threshold) and clicks "Save Global Settings"
+4. Admin adds a rate source by clicking "Add Source": enters source name, selects provider type (xe.com, fixer.io), enters API key
+5. System runs a test connection to validate the source API credentials; source is saved only if the test succeeds
+6. Admin clicks "Add Pair" to navigate to Screen 2B
+7. Admin selects the target currency (base is always USD) and chooses Rate Mode:
+   - **Auto-fetch**: Admin selects a source from the configured sources, then clicks "Test Connection & Fetch Rate". System fetches the initial rate and displays it. Save is disabled until this test succeeds.
+   - **Manual**: Admin enters the base rate directly in the Manual Base Rate field.
+8. Admin optionally sets per-pair Markup % and Sync Frequency overrides (blank = inherit global defaults)
+9. Admin reviews the Effective Rate preview (Base Rate × (1 + Markup %)) and clicks "Save"
+10. System stores the pair configuration. For auto-fetch pairs, system schedules the first sync based on save timestamp + configured interval.
+11. Admin repeats steps 6-10 for each additional currency pair
+12. System propagates configuration to Payment Processing Service (S-02) with cache TTL of 5 minutes
+13. System sends email notification to admin confirming currency conversion configuration
+14. System logs all configuration changes to audit trail with admin ID, timestamp, and change details
 
 ### Main Flow: Configure Deposit Rate Rules
 
@@ -244,18 +245,33 @@ The module delivers value by:
   8. System displays confirmation with list of affected providers
 - **Outcome**: Selected providers have custom deposit rate, overriding global default
 
-**A3: Enable Automatic Currency Conversion Rate Updates**:
+**A3: Switch Existing Pair from Manual to Auto-Fetch**:
 
-- **Trigger**: Admin wants to enable fully automated rate updates without manual approval
+- **Trigger**: Admin wants to switch a manually-managed currency pair to auto-fetch from an API source
 - **Steps**:
-  1. Admin configures conversion rate source API and markup percentages
-  2. Admin enables "Automatic Rate Application" toggle
-  3. System displays warning: "Rates will update automatically based on sync frequency. Rate protection alerts will still notify you of large fluctuations."
-  4. Admin confirms automatic updates
-  5. System schedules automated sync jobs per configured frequency (e.g., every 6 hours)
-  6. System fetches rates from API, applies markup, and updates cached rates automatically
-  7. System sends email digest to admin showing rate changes from last sync
-- **Outcome**: Currency conversion rates update automatically without manual admin intervention
+  1. Admin opens an existing manual-mode pair from the pair list (Screen 2A) for editing (Screen 2B)
+  2. Admin changes Rate Mode from "Manual" to "Auto-fetch"
+  3. System shows the Source dropdown (populated from configured sources in Screen 2A Section 2)
+  4. Admin selects a source and clicks "Test Connection & Fetch Rate"
+  5. System fetches the current rate from the selected source for this pair
+  6. If test succeeds: fetched rate replaces the manual rate; system displays the new base rate and effective rate preview
+  7. If test fails: system displays error with details; admin must resolve before saving (e.g., try different source, fix source credentials)
+  8. Admin optionally sets per-pair Sync Frequency override (or leaves blank to inherit global default)
+  9. Admin clicks "Save"
+  10. System stores updated pair configuration, schedules recurring sync from save timestamp, and logs change to audit trail
+- **Outcome**: Currency pair now auto-fetches rates on schedule; manual rate is replaced by API-fetched rate
+
+**A3b: Switch Existing Pair from Auto-Fetch to Manual**:
+
+- **Trigger**: Admin wants to manually control a pair's rate instead of relying on API source
+- **Steps**:
+  1. Admin opens an existing auto-fetch pair for editing (Screen 2B)
+  2. Admin changes Rate Mode from "Auto-fetch" to "Manual"
+  3. System pre-fills the Manual Base Rate field with the last successfully fetched rate (so admin doesn't start from zero)
+  4. Source and Sync Frequency fields are hidden
+  5. Admin adjusts the manual rate if needed and clicks "Save"
+  6. System removes the sync schedule for this pair, stores updated configuration, and logs change to audit trail
+- **Outcome**: Currency pair is now manually managed; rate only changes when admin edits it
 
 **A4: Configure Different Installment Options for Different Booking Amounts**:
 
@@ -284,18 +300,20 @@ The module delivers value by:
   8. System re-attempts validation
 - **Outcome**: Admin corrects credentials and successfully adds Stripe account, or admin contacts support for assistance
 
-**B2: Currency Conversion API Connection Failure**:
+**B2: Currency Conversion API Connection Failure (Per-Pair)**:
 
-- **Trigger**: Currency conversion rate sync job fails due to API downtime or network issue
+- **Trigger**: Scheduled sync for an auto-fetch currency pair fails due to API source downtime or network issue
 - **Steps**:
-  1. System scheduled sync job attempts to fetch current rates from conversion API (e.g., xe.com)
-  2. API returns error (503 Service Unavailable) or connection timeout
-  3. System logs sync failure with error details
-  4. System continues using last successfully fetched rates (cached rates with timestamp)
-  5. System sends alert notification to admin: "Currency conversion sync failed. Using cached rates from [timestamp]."
-  6. System retries sync after exponential backoff (e.g., retry in 15 minutes, then 30 minutes, then 1 hour)
-  7. Admin investigates API status or switches to alternative rate source if prolonged outage
-- **Outcome**: System gracefully handles API failure by using cached rates and alerting admin
+  1. System scheduled sync job attempts to fetch the current rate for a specific pair (e.g., USD/EUR) from its assigned source (e.g., xe.com)
+  2. Source API returns error (503 Service Unavailable) or connection timeout
+  3. System logs sync failure with pair, source, and error details
+  4. System continues using the pair's last successfully fetched rate (cached rate with timestamp)
+  5. System updates the pair's status indicator to red/error on the pair list (Screen 2A)
+  6. System sends alert notification to admin: "Sync failed for USD/EUR (source: xe.com). Using cached rate from [timestamp]."
+  7. System retries sync after exponential backoff (e.g., retry in 15 minutes, then 30 minutes, then 1 hour)
+  8. If source remains down, the source's status indicator on Screen 2A Section 2 also turns red, making it visible that multiple pairs may be affected
+  9. Admin investigates source status, fixes credentials, or switches affected pairs to a different source or manual mode
+- **Outcome**: System gracefully handles per-pair API failure by using cached rates, showing visual status cues, and alerting admin
 
 **B3: Deposit Rate Outside Allowed Range**:
 
@@ -324,19 +342,21 @@ The module delivers value by:
   7. System stores configuration but logs warning to admin activity log
 - **Outcome**: Admin is informed of potential issue and can adjust cutoff date or accept restrictive configuration
 
-**B5: Currency Fluctuation Exceeds Rate Protection Threshold**:
+**B5: Currency Fluctuation Exceeds Rate Protection Threshold (Per-Pair)**:
 
-- **Trigger**: Scheduled sync detects currency rate change exceeding configured alert threshold (e.g., 3% in 24 hours)
+- **Trigger**: Scheduled sync for an auto-fetch pair detects a rate change exceeding the global Rate Protection Threshold (e.g., 3% in 24 hours)
 - **Steps**:
-  1. System fetches current rates from conversion API during scheduled sync
-  2. System compares new rates to previously cached rates
-  3. System detects EUR to USD rate increased by 4.5% in last 24 hours (exceeds 3% threshold)
-  4. System sends urgent alert notification to admin: "Currency alert: EUR to USD rate increased 4.5% in 24 hours. Review conversion markup."
-  5. Admin reviews alert and checks current rate and markup percentage
-  6. Admin decides to increase markup from 5% to 7% to protect against unfavorable rate
-  7. Admin updates markup percentage in currency conversion configuration
-  8. System applies new markup and logs admin action to audit trail
-- **Outcome**: Admin is alerted to significant rate fluctuation and can adjust markup to protect revenue
+  1. System fetches the current rate for USD/EUR from its assigned source during the pair's scheduled sync
+  2. System compares the new rate to the pair's previously cached rate
+  3. System detects the USD/EUR rate changed by 4.5% in the last 24 hours (exceeds the 3% global threshold)
+  4. System updates the pair's status indicator to yellow/warning on the pair list (Screen 2A)
+  5. System sends urgent alert notification to admin: "Currency alert: USD/EUR rate changed 4.5% in 24 hours (threshold: 3%). Review markup for this pair."
+  6. Admin sees the yellow warning badge on the pair list, clicks into the pair (Screen 2B) to review
+  7. Admin reviews the current base rate, markup %, and effective rate
+  8. Admin decides to increase the per-pair markup from 5% to 7% to protect against the unfavorable rate
+  9. Admin saves the updated markup; system recalculates the effective rate and logs the change to audit trail
+  10. The pair's status badge returns to green after the next sync shows the rate change is within threshold
+- **Outcome**: Admin is alerted per-pair to significant rate fluctuations via both visual cues on the list and email notification, and can adjust the specific pair's markup to protect revenue
 
 **B6: No Stripe Account Available for Patient Location**:
 
@@ -398,42 +418,145 @@ The module delivers value by:
 
 ---
 
-### Screen 2: Currency Conversion Configuration
+### Screen 2A: Currency Conversion — Pair List & Global Settings
 
-**Purpose**: Allows admins to configure currency conversion rate sources, markup percentages, and rate protection thresholds
+**Purpose**: Central dashboard for managing all currency conversion pairs, rate sources, and global defaults. This screen has two sections: Global Settings and Currency Pair List.
+
+#### Section 1: Global Settings
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Global Default Markup % | number | Yes | Default markup percentage applied to any currency pair that does not have a per-pair override | Range: 0-20%, decimal precision: 0.01% |
+| Global Default Sync Frequency | select | Yes | Default sync interval for auto-fetched pairs that do not have a per-pair override | Options: 1h, 3h, 6h, 12h, 24h |
+| Rate Protection Threshold | number | Yes | Alert if any pair's rate changes more than this percentage within 24 hours | Range: 1-50%, decimal precision: 0.1% |
+
+**Business Rules (Global Settings)**:
+
+- Global Default Markup % is used as fallback when a currency pair does not specify its own markup percentage
+- Global Default Sync Frequency is used as fallback when an auto-fetched pair does not specify its own sync interval
+- Rate Protection Threshold applies to all auto-fetched pairs; system monitors each pair independently and flags those exceeding the threshold
+- Rate protection alerts do not automatically stop payments; they surface visual cues and send admin notifications
+- Any currency pair not configured in this module results in the system collecting payment in USD (no conversion attempted)
+
+#### Section 2: Rate Sources
+
+**Purpose**: Manage the list of external API providers used to auto-fetch exchange rates. Each source bundles its provider type with API credentials.
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Source Name | text | Yes | Admin-friendly label for this source (e.g., "xe.com — Production") | Max 100 chars, must be unique |
+| Provider Type | select | Yes | API provider | Options: xe.com, fixer.io (extensible) |
+| API Key | text | Yes | API key / credentials for this provider | Non-empty; masked after save (show last 4 chars) |
+| Status | display-only | N/A | Connection health indicator | Auto-populated: green (healthy), yellow (degraded), red (down/error) |
+| Last Tested | display-only | N/A | Timestamp of last successful connection test | Auto-populated by system |
+
+**Actions**:
+
+- **Add Source**: Opens inline form / modal to create a new source. Requires all fields above. System runs a test connection upon save; source is only persisted if the test succeeds.
+- **Edit Source**: Admin can update source name, API key. System re-runs test connection on save.
+- **Delete Source**: Admin can delete a source only if no currency pairs reference it. If pairs reference the source, system displays warning listing affected pairs and requires admin to reassign or switch those pairs to manual before deletion.
+- **Test Connection**: Available per source at any time. Calls the provider API, updates Status and Last Tested.
+
+**Business Rules (Rate Sources)**:
+
+- API credentials are encrypted at rest (AES-256) and never logged in plain text (mask all but last 4 characters)
+- A source cannot be saved without passing a test connection first
+- Deleting a source that is referenced by existing pairs is blocked; admin must reassign or convert affected pairs to manual mode first. This is the graceful deletion pattern.
+- System periodically checks source health during scheduled syncs and updates the Status indicator. If a source becomes unhealthy, all pairs using that source display a visual warning badge (yellow/red) on the pair list.
+
+#### Section 3: Currency Pair List
+
+**Purpose**: Table listing all configured currency pairs with their current mode, rate, source, markup, and status.
+
+| Column | Description |
+|--------|-------------|
+| Pair | Always displayed as USD/{Target} (e.g., USD/EUR, USD/GBP). All pairs use USD as base. |
+| Mode | "Auto" or "Manual" — indicates how the base rate is determined |
+| Source | Name of the rate source (if auto-fetched); "—" if manual |
+| Base Rate | The raw exchange rate (fetched from API or manually entered) |
+| Markup % | Per-pair markup percentage; shows "(global)" suffix if using the global default |
+| Effective Rate | Calculated: Base Rate × (1 + Markup %). This is the rate applied to patient-facing prices. |
+| Sync Frequency | Per-pair sync interval; shows "(global)" suffix if using the global default (auto-fetch pairs only) |
+| Last Updated | Timestamp of last rate update (auto-sync or manual save) |
+| Status | Visual indicator: green checkmark (healthy), yellow warning (rate protection threshold breached or source degraded), red error (source down / fetch failed) |
+
+**Actions on List**:
+
+- **Add Pair**: Navigates to Screen 2B (Add/Edit Currency Pair) to create a new pair
+- **Edit Pair**: Click row or edit icon to navigate to Screen 2B pre-populated with pair data
+- **Delete Pair**: Remove a currency pair. System warns: "Deleting this pair means payments involving {Target} currency will fall back to USD. Continue?" Requires confirmation.
+- **Sync Now (per pair)**: For auto-fetched pairs, triggers an immediate rate fetch outside the scheduled sync
+
+**Business Rules (Pair List)**:
+
+- All pairs MUST use USD as the base currency. Admin selects only the target currency when adding a pair.
+- Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 1B)
+- If a pair is deleted or not configured for a target currency, the system collects payment in USD for transactions involving that currency (no conversion attempted). A note on this screen states: "Currency pairs not listed here will default to USD for payment collection."
+- Each pair independently tracks its own status. A source failure affects only pairs using that source; manual pairs are unaffected.
+- Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when rate protection threshold was breached in last 7 days or source is degraded; red when last fetch failed or source is down.
+
+**Notes**:
+
+- Display a prominent info banner: "Any currency not configured here will default to USD for payment. Configure all currencies your patients may use."
+- Provide sorting/filtering on the pair list: by pair name, mode, status, last updated
+- Display total pair count and counts by mode (e.g., "12 pairs: 9 auto, 3 manual")
+- Show alert badge count in the tab/section header if any pair has yellow/red status
+
+---
+
+### Screen 2B: Add / Edit Currency Pair
+
+**Purpose**: Form to create a new currency pair or edit an existing one. Controls the pair's rate mode (auto-fetch or manual), source assignment, markup, and sync frequency.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Conversion Rate Source | select | Yes | API provider for currency rates (e.g., xe.com, fixer.io, manual entry) | Must select one option |
-| API Credentials | text | Conditional | API key for selected rate source provider | Required if source is API-based (not manual) |
-| Currency Pair | multi-select | Yes | Currency pairs to configure (USD as primary/base; e.g., USD/EUR, USD/GBP). Non-USD cross-pairs (e.g., EUR/GBP) require explicit entry; otherwise conversion uses USD pivot. | Must select at least one pair |
-| Markup Percentage | number | Yes | Percentage to add on top of fetched rate (e.g., 5%) | Range: 0-20%, decimal precision: 0.01% |
-| Rate Protection Threshold | number | Yes | Alert if rate changes more than this percentage in 24 hours | Range: 1-50%, decimal precision: 0.1% |
-| Sync Frequency | select | Yes | How often to fetch updated rates (e.g., every 6 hours, every 12 hours, daily) | Must select one option |
-| Automatic Rate Application | toggle | Yes | Enable or disable automatic rate updates without manual approval | Boolean (enabled = auto-update) |
-| Last Sync Timestamp | display-only | N/A | Shows when rates were last successfully fetched | Auto-populated by system |
-| Current Rate | display-only | N/A | Current conversion rate with markup applied | Auto-populated by system |
+| Base Currency | display-only | N/A | Always "USD" — not editable | Fixed: USD |
+| Target Currency | select | Yes | The target currency for this pair (e.g., EUR, GBP, TRY) | Must be an enabled currency from Currency Management (Screen 1B); cannot duplicate an existing pair |
+| Rate Mode | radio | Yes | How the base rate is determined | Options: "Auto-fetch from source" or "Manual input" |
+| Source | select | Conditional | Which rate source to use for auto-fetching | Required if Rate Mode = Auto-fetch. Populated from sources configured in Screen 2A Section 2. |
+| Manual Base Rate | number | Conditional | The admin-entered base exchange rate (how many units of target currency per 1 USD) | Required if Rate Mode = Manual. Must be > 0, decimal precision: 6 digits. |
+| Markup % | number | No | Per-pair markup percentage override. If left blank, the global default markup % from Screen 2A is used. | Range: 0-20%, decimal precision: 0.01%. Leave blank to inherit global default. |
+| Sync Frequency | select | No | Per-pair sync frequency override. If left blank, the global default sync frequency from Screen 2A is used. Only applicable for auto-fetch mode. | Options: 1h, 3h, 6h, 12h, 24h. Leave blank to inherit global default. Ignored if Rate Mode = Manual. |
+| Effective Rate | display-only | N/A | Calculated preview: Base Rate × (1 + Markup %) | Auto-calculated in real-time as admin edits Base Rate or Markup % |
 
-**Business Rules**:
+**Actions**:
 
-- API credentials must be validated before enabling automatic rate application (test connection)
-- Markup percentage protects against bank/payment processor conversion rate differences (typical range: 3-10%)
-- Rate protection threshold alerts admin to significant fluctuations but doesn't automatically stop payments
-- If automatic rate application is disabled, admin must manually approve rate updates after each sync
-- Manual entry mode allows admin to set fixed conversion rates (no API sync), useful for stable currency pairs
-- System uses last successfully fetched rates if API sync fails (displays "using cached rates" warning)
-- Currency pairs must match currencies supported by configured Stripe accounts
-- USD is the pivot/base currency for display and storage. Cross-currency conversions (e.g., EUR→GBP) use USD as pivot unless an explicit pair is configured. Manual entry and display should show rates relative to USD to reduce confusion.
+- **Test Connection & Fetch Rate** (auto-fetch mode only): Calls the selected source API for this specific pair. If successful, populates the Base Rate field with the fetched value and shows success confirmation with the fetched rate and effective rate preview. This action is **mandatory before saving** a new auto-fetch pair.
+- **Save**: Validates all fields, persists the pair configuration, and returns to Screen 2A. For auto-fetch pairs, the first scheduled sync is calculated from the save timestamp (e.g., if saved at 12:36 with 6h interval, next sync at 18:36).
+- **Cancel**: Discards changes and returns to Screen 2A.
+
+**Business Rules (Add/Edit Pair)**:
+
+- All pairs use USD as the base currency (non-negotiable, enforced by UI)
+- Target currency dropdown is populated from enabled currencies in the Currency Management screen (Screen 1B); cannot create a pair for a disabled currency
+- Cannot create a duplicate pair (one pair per target currency; USD/EUR can only exist once)
+- **Auto-fetch mode**:
+  - Admin must select a source from the configured sources in Screen 2A Section 2
+  - Admin **must run "Test Connection & Fetch Rate" before saving** to verify the source can provide a rate for this pair. Save button is disabled until test succeeds.
+  - After the initial save, the system schedules recurring syncs. The schedule is calculated from the time the pair is saved: if saved at 12:36 with a 6-hour interval, the next sync runs at 18:36, then 00:36, etc.
+  - If a scheduled fetch fails, the system keeps the last successfully fetched rate, marks the pair status as red/error on the list, and sends an alert notification to the admin
+  - If the source assigned to this pair is later deleted, the pair gracefully switches to manual mode with the last fetched rate pre-filled as the manual base rate. Admin is notified of this change.
+- **Manual mode**:
+  - Admin enters the base rate directly in the Manual Base Rate field
+  - No sync schedule is created; rate only changes when admin manually edits and saves
+  - Source field is hidden / not applicable
+  - Sync Frequency field is hidden / not applicable
+- **Switching modes on an existing pair**:
+  - Auto → Manual: System pre-fills Manual Base Rate with the last fetched rate so admin doesn't start from zero. Sync schedule is removed.
+  - Manual → Auto: System requires admin to select a source and run "Test Connection & Fetch Rate" before saving. The fetched rate replaces the manual rate.
+- **Markup % inheritance**: If Markup % is left blank, the pair uses the Global Default Markup % from Screen 2A. If specified, the per-pair value overrides the global default. The Effective Rate preview always shows the actual markup being applied (whether inherited or overridden).
+- **Sync Frequency inheritance**: If Sync Frequency is left blank (auto-fetch mode), the pair uses the Global Default Sync Frequency. If specified, the per-pair value overrides. Display "(using global default: Xh)" hint text when blank.
+- The Effective Rate preview updates in real-time as admin changes Base Rate or Markup %, giving immediate visibility into the patient-facing rate.
 
 **Notes**:
 
-- Display historical rate chart showing rate changes over last 30 days for each currency pair
-- Show alert badges for currency pairs that have triggered rate protection threshold in last 7 days
-- Provide "Sync Now" button to immediately fetch latest rates outside scheduled sync
-- Display API provider status indicator (green = healthy, yellow = degraded, red = down)
-- Show estimated conversion rate impact: "5% markup on 1.08 USD/EUR = 1.134 effective rate"
+- Show inline help text: "Base Rate = how many {Target} per 1 USD. Example: 0.92 means 1 USD = 0.92 EUR."
+- For auto-fetch pairs, show the source's current status indicator (green/yellow/red) next to the source dropdown
+- Show estimated conversion rate impact: "5% markup on 0.92 USD/EUR = 0.966 effective rate"
+- Display last sync timestamp and next scheduled sync time (for auto-fetch pairs) below the form
+- When editing an existing pair, show a "Rate History" link/section displaying rate changes over the last 30 days (chart + table)
 
 ---
 
@@ -601,12 +724,14 @@ The module delivers value by:
 
 - Stripe account credentials, assigned countries, supported currencies, and active/inactive status
 - Central supported currency list (enable/disable currencies) and system default currency
-- Currency conversion rate source, API credentials, markup percentages, and rate protection thresholds
+- Rate sources (add/edit/delete with provider type and API credentials)
+- Currency pairs (add/edit/delete; per-pair rate mode, source assignment, manual base rate, markup % override, sync frequency override)
+- Global currency conversion defaults (global markup %, global sync frequency, rate protection threshold)
 - Deposit rate percentage (20-30% range) globally or per provider
 - Commission rate percentage (15-25% range) globally or per provider
 - Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
 - Installment schedule rules (first installment amount, late payment grace period)
-- Rate protection alert thresholds and sync frequency for currency conversion
+- Rate protection alert threshold (global) for currency conversion monitoring
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -621,10 +746,10 @@ The module delivers value by:
 
 **Configurable with Restrictions**:
 
-- Markup percentage for currency conversion (range: 0-20%, requires validation)
-- Rate protection thresholds (range: 1-50%, requires validation)
+- Global and per-pair markup percentage for currency conversion (range: 0-20%, requires validation)
+- Global and per-pair sync frequency for auto-fetch currency pairs (options: 1h, 3h, 6h, 12h, 24h)
+- Rate protection threshold (range: 1-50%, requires validation); alerts always active for auto-fetch pairs
 - Minimum booking amount for split payments (range: $100-$10,000, requires validation)
-- Admin can enable/disable automatic rate application, but rate protection alerts always active
 
 ### Payment & Billing Rules
 
@@ -700,7 +825,7 @@ The module delivers value by:
 
 - **FR-007 / Module S-02**: Payment Processing
   - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
-  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency rates, deposit rates, commission rates, and split payment rules
+  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency pair effective rates, deposit rates, commission rates, and split payment rules
 
 - **FR-007B / Module S-02**: Split Payment / Installment Plans
   - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules
@@ -792,7 +917,7 @@ The module delivers value by:
 ### Integration Points
 
 - **Integration 1**: Admin web app sends payment configuration updates to Payment Configuration API via REST
-  - **Data format**: JSON payload with configuration type (Stripe account, currency rates, deposit rates, split payment rules)
+  - **Data format**: JSON payload with configuration type (Stripe account, rate sources, currency pairs, deposit rates, split payment rules)
   - **Authentication**: OAuth 2.0 bearer tokens with elevated admin permissions
   - **Error handling**: Validation errors returned with 400 Bad Request, server errors trigger retry with exponential backoff
 
@@ -801,10 +926,10 @@ The module delivers value by:
   - **Authentication**: Internal service authentication using API keys or mutual TLS
   - **Error handling**: If Configuration API unavailable, use last cached configuration and alert admin, retry with exponential backoff
 
-- **Integration 3**: Currency conversion rate sync job fetches rates from external API (xe.com, fixer.io)
+- **Integration 3**: Per-pair currency conversion rate sync jobs fetch rates from the pair's assigned source (xe.com, fixer.io)
   - **Data format**: HTTP GET requests returning JSON with currency pair rates
-  - **Authentication**: API key authentication for rate provider service
-  - **Error handling**: If API unavailable, use cached rates and alert admin, retry sync with exponential backoff (15 min, 30 min, 1 hour)
+  - **Authentication**: API key authentication per rate source (credentials stored in Rate Source entity)
+  - **Error handling**: If source API unavailable, keep pair's last cached rate, mark pair status as error, mark source status as down, alert admin. Retry sync with exponential backoff (15 min, 30 min, 1 hour).
 
 - **Integration 4**: Admin email notification service sends alerts for configuration changes and rate protection events
   - **Data format**: SMTP or transactional email API with HTML email templates
@@ -822,7 +947,7 @@ The module delivers value by:
 ### Security Considerations
 
 - **Authentication**: Elevated admin permissions required to access payment configuration (role-based access control)
-- **Authorization**: Only admins with "PaymentConfigAdmin" role can modify Stripe accounts, currency rates, deposit rates, split payment rules
+- **Authorization**: Only admins with "PaymentConfigAdmin" role can modify Stripe accounts, rate sources, currency pairs, deposit rates, split payment rules
 - **Encryption**: Stripe secret keys and webhook secrets encrypted at rest using AES-256, decrypted only in memory during API calls
 - **Audit trail**: All payment configuration changes logged with admin ID, timestamp, IP address, before/after state
 - **Threat mitigation**: Rate limiting on Payment Configuration API (max 100 requests/minute per admin user) to prevent abuse
@@ -857,22 +982,24 @@ As a platform administrator launching Hairline in the United States, I need to c
 
 ---
 
-### User Story 2 - Configure Currency Conversion with Automatic Rate Updates (Priority: P2)
+### User Story 2 - Configure Currency Conversion Sources and Pairs (Priority: P2)
 
-As a platform administrator managing international payments, I need to configure currency conversion rates with automatic syncing and markup percentages so that patients see accurate prices in their local currency and the platform is protected against unfavorable conversion rates.
+As a platform administrator managing international payments, I need to configure rate sources, set global defaults, and add currency pairs (auto-fetch or manual) with markup percentages so that patients see accurate prices in their local currency and the platform is protected against unfavorable conversion rates.
 
 **Why this priority**: Currency conversion is critical for international operations but can be configured after basic Stripe accounts. This enables multi-currency payment processing with revenue protection.
 
-**Independent Test**: Can be fully tested by configuring xe.com API as rate source with 5% markup, enabling automatic updates, then verifying rates sync every 6 hours and markup is applied to patient-facing prices.
+**Independent Test**: Can be fully tested by: (1) adding xe.com as a rate source with valid API key, (2) setting global defaults (5% markup, 6h sync, 3% rate protection), (3) adding USD/EUR pair in auto-fetch mode linked to xe.com source, (4) adding USD/TRY pair in manual mode with a manually entered rate, then verifying auto-fetch pair syncs on schedule and manual pair uses the entered rate, both with correct markup applied to patient-facing prices.
 
 **Acceptance Scenarios**:
 
-1. **Given** I am an admin, **When** I navigate to Payment Configuration > Currency Conversion, **Then** I see configuration form for rate source, markup percentages, and sync frequency
-2. **Given** I select xe.com as rate source and enter API credentials, **When** I click "Test Connection", **Then** system fetches current rates for configured currency pairs and displays success message
-3. **Given** I configure 5% markup for USD/EUR currency pair, **When** I click "Save Configuration", **Then** system stores markup percentage and applies it to all USD/EUR conversions
-4. **Given** I enable automatic rate application with 6-hour sync frequency, **When** next sync job runs, **Then** system fetches latest rates, applies markup, and updates cached rates without admin intervention
-5. **Given** EUR/USD rate increases by 4% in 24 hours (exceeds 3% threshold), **When** sync detects rate change, **Then** system sends rate protection alert to admin email: "Currency alert: EUR/USD increased 4%"
-6. **Given** currency conversion is configured, **When** UK patient views US provider's $2,000 procedure, **Then** patient sees "£1,785 GBP" (using current rate 0.85 + 5% markup = 0.8925)
+1. **Given** I am an admin, **When** I navigate to Payment Configuration > Currency Conversion, **Then** I see Screen 2A with global settings section, rate sources section, and currency pair list
+2. **Given** I click "Add Source", enter "xe.com — Production" as name, select xe.com as provider, and enter API key, **When** system runs test connection, **Then** system validates credentials and saves the source with green status indicator
+3. **Given** I set Global Default Markup to 5%, Global Default Sync Frequency to 6h, and Rate Protection Threshold to 3%, **When** I click "Save Global Settings", **Then** system stores global defaults
+4. **Given** I click "Add Pair" and select EUR as target currency, choose "Auto-fetch" mode, and select the xe.com source, **When** I click "Test Connection & Fetch Rate", **Then** system fetches the current USD/EUR rate and displays it in the Base Rate field with effective rate preview
+5. **Given** I leave Markup % blank (inheriting global 5%), **When** I click "Save", **Then** system stores the pair with "(global)" markup indicator, schedules first sync from save timestamp, and pair appears on the list with green status
+6. **Given** I click "Add Pair" and select TRY as target currency, choose "Manual" mode, **When** I enter 34.50 as the base rate, **Then** system shows effective rate preview as 36.225 (34.50 × 1.05) and I can save the pair
+7. **Given** USD/EUR auto-fetch pair has 6h sync frequency, **When** the scheduled sync runs, **Then** system fetches the latest rate from xe.com, applies 5% markup, and updates the pair's effective rate on the list
+8. **Given** currency pairs are configured, **When** UK patient views US provider's $2,000 procedure, **Then** patient sees price in GBP using the USD/GBP pair's effective rate (or USD if no GBP pair is configured)
 
 ---
 
@@ -919,19 +1046,19 @@ As a platform administrator managing diverse provider needs, I need to configure
 
 ### User Story 5 - Monitor and Respond to Currency Rate Protection Alerts (Priority: P3)
 
-As a platform administrator managing international payments, I need to receive timely alerts when currency rates fluctuate significantly (exceeding configured threshold) so that I can adjust markup percentages to protect the platform against unfavorable conversion rates and revenue loss.
+As a platform administrator managing international payments, I need to receive timely alerts when auto-fetch currency pairs fluctuate significantly (exceeding the global rate protection threshold) so that I can adjust per-pair markup percentages to protect the platform against unfavorable conversion rates and revenue loss.
 
 **Why this priority**: Rate protection adds proactive monitoring but is not essential for launch. Admins can manually monitor rates initially, and this can be added as operational maturity improves.
 
-**Independent Test**: Can be fully tested by configuring 3% rate protection threshold, simulating 4% rate change in test environment, then verifying admin receives alert email within 15 minutes and can adjust markup percentage in response.
+**Independent Test**: Can be fully tested by configuring 3% global rate protection threshold, adding USD/EUR auto-fetch pair, simulating 4% rate change in test environment, then verifying: (a) the pair's status turns yellow/warning on the pair list, (b) admin receives alert email within 15 minutes, and (c) admin can adjust the pair's markup percentage in response.
 
 **Acceptance Scenarios**:
 
-1. **Given** I have configured currency conversion with 3% rate protection threshold, **When** scheduled sync detects EUR/USD rate increased 4% in 24 hours, **Then** system sends urgent alert email to admin: "Currency alert: EUR/USD increased 4% in 24 hours. Review conversion markup."
-2. **Given** I receive rate protection alert, **When** I navigate to Payment Configuration > Currency Conversion, **Then** I see visual alert indicator on EUR/USD currency pair with details: "Rate change: +4% (24h)"
-3. **Given** I review alert and decide to increase markup, **When** I update EUR/USD markup from 5% to 7% and click "Save Configuration", **Then** system applies new markup to all future transactions and logs admin action to audit trail
-4. **Given** markup is updated, **When** next patient views price in EUR, **Then** price reflects new 7% markup instead of previous 5% markup
-5. **Given** rate protection alert was triggered, **When** I view currency conversion history chart, **Then** chart shows rate spike and timestamp when alert was sent
+1. **Given** I have configured global rate protection threshold at 3% and USD/EUR is an auto-fetch pair, **When** scheduled sync detects USD/EUR rate increased 4% in 24 hours, **Then** system marks the USD/EUR pair status as yellow/warning on the pair list (Screen 2A) and sends urgent alert email to admin: "Currency alert: USD/EUR rate changed 4% in 24 hours (threshold: 3%). Review markup for this pair."
+2. **Given** I receive rate protection alert, **When** I navigate to Payment Configuration > Currency Conversion (Screen 2A), **Then** I see yellow warning badge on USD/EUR pair row with tooltip: "Rate change: +4% (24h)"
+3. **Given** I click on the USD/EUR pair to edit (Screen 2B) and decide to increase markup, **When** I update USD/EUR per-pair markup from blank (global 5%) to 7% and click "Save", **Then** system applies new 7% markup to this pair, recalculates effective rate, and logs admin action to audit trail
+4. **Given** markup is updated for USD/EUR, **When** next patient views price in EUR, **Then** price reflects new 7% per-pair markup instead of previous 5% global default
+5. **Given** rate protection alert was triggered, **When** I view the pair's "Rate History" section in Screen 2B, **Then** chart shows rate spike and timestamp when alert was sent
 
 ---
 
@@ -939,7 +1066,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - What happens when admin attempts to delete Stripe account that processed transactions in last 90 days? **System prevents deletion and displays error: "Cannot delete Stripe account with recent transactions. Archive instead."** System archives account, marking as inactive but retaining configuration for audit purposes.
 
-- How does system handle currency conversion API being completely unavailable for 24+ hours? **System continues using last successfully cached rates and displays prominent warning banner to admin: "Using cached rates from [timestamp]. Currency API unavailable."** System sends daily email digest to admin summarizing API outage. When API recovers, system immediately syncs latest rates and notifies admin.
+- How does system handle a rate source being completely unavailable for 24+ hours? **For each auto-fetch pair using the affected source: system continues using the pair's last successfully cached rate, marks the pair's status as red/error on the pair list (Screen 2A), and marks the source's status as red in the Sources section.** System sends daily email digest to admin summarizing the source outage and listing all affected pairs. When the source recovers, the next scheduled sync for each affected pair fetches the latest rate and restores green status. Admin can also switch affected pairs to a different source or manual mode at any time during the outage.
 
 - What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log.
 
@@ -947,7 +1074,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately.
 
-- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day (e.g., 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when initial 3% threshold crossed. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "EUR/USD increased 6% in 6 hours."** Admin receives summary of all rate changes in daily digest email.
+- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "USD/EUR increased 6% in 6 hours."** The pair's yellow/warning status persists on Screen 2A until the admin reviews and acknowledges. Admin receives summary of all rate changes across all pairs in daily digest email.
 
 - What occurs if admin configures two different Stripe accounts for overlapping countries (e.g., Account A for US/Canada/Mexico, Account B for US/UK)? **System detects country overlap (US) during configuration and displays warning: "US is already assigned to Account A. Override assignment?"** Admin selects: "Override" (US moves to Account B, no longer uses Account A) or "Cancel" (keep current assignment). System logs conflict resolution to audit trail. If admin overrides, system uses most recently configured account for overlapping country (Account B for US in this example).
 
@@ -964,13 +1091,16 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
 - **REQ-029-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
 - **REQ-029-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
-- **REQ-029-006**: System MUST allow admins to configure currency conversion rate sources (xe.com, fixer.io, or manual entry)
-- **REQ-029-007**: System MUST allow admins to set currency conversion markup percentages (0-20% range) per currency pair
-- **REQ-029-008**: System MUST fetch currency conversion rates automatically on scheduled intervals (configurable sync frequency: 6h, 12h, 24h)
-- **REQ-029-009**: System MUST apply admin-configured markup percentage to fetched currency rates before displaying prices to patients
-- **REQ-029-010**: System MUST allow admins to configure rate protection thresholds (1-50% range) and send alerts when thresholds exceeded
-- **REQ-029-011**: System MUST allow admins to enable or disable automatic rate application (if disabled, admin must manually approve rate updates)
-- **REQ-029-012**: System MUST gracefully handle currency conversion API failures by using last cached rates and alerting admin
+- **REQ-029-006**: System MUST allow admins to manage rate sources (add, edit, delete) where each source bundles a provider type (xe.com, fixer.io) with its API credentials. Source creation requires a successful test connection before saving. Source deletion is blocked if currency pairs reference it; admin must reassign or convert affected pairs first.
+- **REQ-029-006b**: System MUST allow admins to create and manage currency pairs (CRUD), where each pair has USD as the mandatory base currency and a configurable rate mode: auto-fetch (from a configured source) or manual input (admin-entered base rate).
+- **REQ-029-007**: System MUST allow admins to set a global default markup percentage (0-20% range) and optionally override it per currency pair (0-20% range). If a pair has no per-pair markup, the global default applies.
+- **REQ-029-007b**: System MUST allow admins to set a global default sync frequency (1h, 3h, 6h, 12h, 24h) and optionally override it per auto-fetch currency pair. If an auto-fetch pair has no per-pair sync frequency, the global default applies. Each pair's sync schedule is calculated from the time it was saved (e.g., saved at 12:36 with 6h interval → next sync at 18:36).
+- **REQ-029-008**: System MUST fetch currency conversion rates automatically for each auto-fetch pair on its configured sync schedule (per-pair or inherited global frequency). Manual-mode pairs are not synced.
+- **REQ-029-009**: System MUST calculate and display the effective rate for each pair as: Base Rate × (1 + Markup %). This effective rate is applied to patient-facing prices.
+- **REQ-029-010**: System MUST allow admins to configure a global rate protection threshold (1-50% range). System monitors each auto-fetch pair independently and marks the pair's status as yellow/warning and sends an alert notification when the pair's rate changes more than the threshold within 24 hours.
+- **REQ-029-011**: System MUST require a successful "Test Connection & Fetch Rate" action before saving any new auto-fetch currency pair. The Save button is disabled until this test succeeds.
+- **REQ-029-011b**: For any currency not configured as a pair, the system MUST fall back to collecting payment in USD (no conversion attempted). The admin dashboard MUST display a note informing admins of this fallback behavior.
+- **REQ-029-012**: System MUST gracefully handle per-pair rate source failures by keeping the last successfully fetched rate, marking the pair's status as red/error on the pair list, and alerting admin. If a source is deleted, all pairs referencing it MUST gracefully switch to manual mode with the last fetched rate pre-filled.
 - **REQ-029-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
 - **REQ-029-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
 - **REQ-029-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate)
@@ -988,7 +1118,7 @@ As a platform administrator managing international payments, I need to receive t
 
 ### Data Requirements
 
-- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, currency rates, deposit rates, commission rates, split payment rules) with full audit history
+- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, rate sources, currency pairs, global conversion settings, deposit rates, commission rates, split payment rules) with full audit history
 - **REQ-029-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
 - **REQ-029-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
 - **REQ-029-027**: System MUST retain payment configuration audit history for minimum 10 years for financial compliance
@@ -1004,8 +1134,8 @@ As a platform administrator managing international payments, I need to receive t
 
 ### Integration Requirements
 
-- **REQ-029-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency rates, deposit rates, installment rules)
-- **REQ-029-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests
+- **REQ-029-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency pair effective rates, deposit rates, installment rules)
+- **REQ-029-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests, using credentials stored per rate source
 - **REQ-029-035**: System MUST send email notifications to admins for payment configuration changes and rate protection alerts
 - **REQ-029-036**: System MUST propagate payment configuration changes to Payment Processing Service within 5 minutes maximum (cache TTL)
 
@@ -1026,9 +1156,17 @@ As a platform administrator managing international payments, I need to receive t
   - **Key attributes**: account_id, account_name, publishable_key, secret_key_encrypted, webhook_secret_encrypted, mode (test/live), assigned_countries[], supported_currencies[], default_currency, status (active/inactive), created_date, last_tested_date
   - **Relationships**: One Stripe account assigned to many countries; one country can map to one Stripe account (most recent assignment prioritized)
 
-- **Entity 2 - Currency Conversion Configuration**:
-  - **Key attributes**: config_id, rate_source (xe.com/fixer.io/manual), api_credentials_encrypted, currency_pair, markup_percentage, rate_protection_threshold, sync_frequency, automatic_rate_application (enabled/disabled), last_sync_timestamp, current_rate_with_markup
-  - **Relationships**: One currency conversion configuration per currency pair; many transactions reference currency conversion rates
+- **Entity 2a - Currency Conversion Global Settings**:
+  - **Key attributes**: config_id, global_default_markup_percentage, global_default_sync_frequency, rate_protection_threshold, created_by_admin_id, updated_date
+  - **Relationships**: One global settings record; provides defaults inherited by currency pairs that do not specify per-pair overrides
+
+- **Entity 2b - Rate Source**:
+  - **Key attributes**: source_id, source_name, provider_type (xe.com/fixer.io), api_key_encrypted, status (healthy/degraded/down), last_tested_timestamp, created_by_admin_id, created_date
+  - **Relationships**: One source serves many currency pairs (auto-fetch mode); deleting a source requires reassigning or converting all referencing pairs first
+
+- **Entity 2c - Currency Pair Configuration**:
+  - **Key attributes**: pair_id, base_currency (always USD), target_currency, rate_mode (auto/manual), source_id (nullable; required if auto), manual_base_rate (nullable; required if manual), markup_percentage_override (nullable; if null, inherits global default), sync_frequency_override (nullable; if null, inherits global default; ignored if manual), current_base_rate, current_effective_rate, last_updated_timestamp, next_sync_timestamp (nullable; auto-fetch only), status (healthy/warning/error), created_by_admin_id, created_date
+  - **Relationships**: One pair per target currency (unique constraint on target_currency); many transactions reference the pair's effective rate at booking time; one pair references one source (if auto-fetch)
 
 - **Entity 3 - Deposit Rate Configuration**:
   - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), deposit_percentage, effective_date, created_by_admin_id, created_date
@@ -1056,6 +1194,7 @@ As a platform administrator managing international payments, I need to receive t
 | 2025-12-16 | 1.1 | Major revisions: Added commission rate configuration (global + provider-specific) and aligned split payment rules with cross-FR constraints (monthly cadence, 30+ day cutoff). Added Constitution compliance requirements (webhook signature verification, FX and commission snapshot at booking, audit retention 10 years). Fixed module code placeholders and corrected currency conversion example. | AI |
 | 2025-12-16 | 1.2 | Status updated to Verified & Approved; All approvals completed | Product Team |
 | 2026-01-14 | 1.3 | Added Currency Management screen (central supported currency list) and aligned admin editability rules | AI |
+| 2026-02-10 | 1.4 | **Major redesign of Currency Conversion Configuration (Screen 2).** Replaced flat form with two-screen model: Screen 2A (pair list + global settings + rate sources) and Screen 2B (add/edit pair). Key changes: (1) Rate sources are now first-class entities bundling provider type with API credentials; (2) Each currency pair independently chooses auto-fetch or manual mode; (3) Markup % and sync frequency support global defaults with per-pair overrides; (4) Sync schedule per pair is calculated from pair save timestamp; (5) USD fallback for unconfigured currencies; (6) Graceful source deletion (pairs switch to manual with last rate pre-filled); (7) Visual status indicators per pair and per source. Updated Main Flow, Alternative Flows (A3/A3b), Boundary Flows (B2/B5), Edge Cases, User Stories 2 & 5, REQ-029-006 through REQ-029-012, Key Entities (2a/2b/2c), Admin Editability Rules, Integration Points, and Security references. | AI |
 
 ---
 
@@ -1072,4 +1211,4 @@ As a platform administrator managing international payments, I need to receive t
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-01-14
+**Last Updated**: 2026-02-10

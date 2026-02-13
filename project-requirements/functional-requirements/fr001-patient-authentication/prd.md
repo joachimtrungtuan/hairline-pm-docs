@@ -136,7 +136,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  W1A1_1["System saves draft data for 7 days"] --> W1A1_2["Patient can resume from last completed step"]
+  W1A1_1["App saves a local draft (step progress, non-sensitive fields) for 7 days; passwords are never stored"] --> W1A1_2["Patient can resume on the same device from last completed step (may need to re-enter password)"]
   W1A1_2 --> W1A1_3["Draft expires after 7 days of inactivity"]
 ```
 
@@ -350,15 +350,17 @@ flowchart TD
 - "First name" text input field
 - "Last name" text input field
 - "Continue" button (green)
-- Terms of Service and Privacy Policy footer text
+- Terms & Conditions link (opens latest published Terms; FR-027)
+- Privacy Policy link (opens latest published Privacy Policy; FR-027)
+- Terms acceptance checkbox: "I agree to the Terms & Conditions" (required)
 
 **Business Rules**:
 
 - Both name fields are required
 - Minimum 2 characters per field
 - Maximum 50 characters per field
-- Continue button disabled until both fields filled
-- Terms acceptance required to proceed
+- Continue button disabled until both name fields are valid and Terms acceptance is checked
+- On first acceptance, the app MUST record Terms acceptance via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel)
 
 #### Screen 4: Account Creation Screen
 
@@ -592,8 +594,8 @@ flowchart TD
 - Sensitive actions (delete account) require re-auth within the last 5 minutes (password or 6-digit OTP)
 - If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support
 - If there is an active payment in progress, delete account is blocked until payment flow completes
-- If there is an active inquiry, delete account is allowed and system auto-closes open inquiries
-- **Note**: Account deletion auto-close of inquiries is distinct from patient-initiated inquiry cancellation (FR-003 Workflow 5). Auto-close sets inquiry status to "Closed (Account Deleted)"; explicit cancellation sets status to "Cancelled" with patient-provided reason.
+- If there is an active inquiry, delete account is allowed and the system cancels the inquiry using FR-003 cancellation mechanics (status = "Cancelled"; cancellation reason = "Account Deleted (System)"; reason is not shared with providers)
+- **Note**: System-triggered inquiry cancellation due to account deletion request is distinct from patient-initiated inquiry cancellation (FR-003 Workflow 5). Both end in status "Cancelled", but the cancellation reason provenance differs (system-generated vs patient-provided).
 
 **Acceptance Scenarios**:
 
@@ -1026,6 +1028,9 @@ flowchart TD
 - **FR-003**: Inquiry Submission & Distribution (requires completed profile)
 - **FR-020**: Notifications & Alerts (email verification, password reset)
 - **FR-025**: Medical Questionnaire Management (profile integration)
+- **FR-026**: App Settings & Security Policies (OTP + throttling config; centrally managed lists)
+- **FR-027**: Legal Content Management (Terms/Privacy content + acceptance tracking)
+- **FR-023**: Data Retention & Compliance (DSR deletion request handling)
 - **Future FR**: Multi-Factor Authentication (security enhancement)
 
 ### External Dependencies

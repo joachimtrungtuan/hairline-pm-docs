@@ -78,50 +78,95 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 ### Workflow 1: Intake Processing (Engine Flow)
 
-Actors: FR-003 (caller), Engine
-Trigger: FR-003 submits questionnaire responses and media metadata to the engine
-Outcome: Engine returns normalized intake payload, derived alerts, and stored media URI(s)
+**Actors**: FR-003 (caller), Engine  
+**Trigger**: FR-003 submits questionnaire responses and media metadata to the engine  
+**Outcome**: Engine returns normalized intake payload, derived alerts, and stored media URI(s)
 
-Main Flow:
+**Flow Diagram**:
 
-1. FR-003 submits questionnaire responses (with templateVersion) and head video metadata.
-2. Engine validates completeness against FR-025 template and media constraints.
-3. Engine computes severity alerts/risk tags based on configured rules.
-4. Engine watermarks head video with anonymized patient identifier and persists to storage.
-5. Engine returns normalized intake payload, alert tags, and media URIs to FR-003.
+```mermaid
+flowchart TD
+  S1["1. FR-003 submits questionnaire responses (with templateVersion) and head video metadata"] --> S2["2. Engine validates completeness against FR-025 template and media constraints"]
+  S2 --> S3["3. Engine computes severity alerts/risk tags based on configured rules"]
+  S3 --> S4["4. Engine watermarks head video with anonymized patient identifier and persists to storage"]
+  S4 --> S5["5. Engine returns normalized intake payload, alert tags, and media URIs to FR-003"]
+```
 
-Alternative Flows:
+### Alternative Flows
 
-- A1: Media validation fails → Engine returns structured error codes and guidance for re-upload.
-- A2: Template version mismatch → Engine records used version and returns policy-compliant response (or requests resubmission per FR-025 rules).
+**A1: Media validation fails**:
+
+- **Trigger**: Media does not meet quality, duration, or size constraints
+- **Outcome**: Engine returns structured error codes and guidance for re-upload
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  A1S1["1. Engine detects validation failure (duration/size/quality)"] --> A1S2["2. Engine returns structured error codes with remediation guidance"]
+  A1S2 --> A1S3["3. No artifacts persisted; caller (FR-003) receives error and can retry"]
+```
+
+**A2: Template version mismatch**:
+
+- **Trigger**: Submitted templateVersion differs from currently published version
+- **Outcome**: Engine records used version and returns policy-compliant response (or requests resubmission per FR-025 rules)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  A2S1["1. Engine detects templateVersion mismatch"] --> A2S2["2. Engine records templateVersionUsed in audit log"]
+  A2S2 --> A2S3["3. Engine returns policy-compliant response or requests resubmission per FR-025 rules"]
+```
+
+---
 
 ### Workflow 2: Distribution Consumption (Read Flow)
 
-Actors: FR-003 (distributor), Providers (consumers)
-Trigger: FR-003 requests engine-normalized payload and media URIs for distribution
-Outcome: Providers receive read-only normalized payload and media links via FR-003
+**Actors**: FR-003 (distributor), Providers (consumers)  
+**Trigger**: FR-003 requests engine-normalized payload and media URIs for distribution  
+**Outcome**: Providers receive read-only normalized payload and media links via FR-003
 
-Main Flow:
+**Flow Diagram**:
 
-1. FR-003 retrieves engine-normalized payload and media URIs.
-2. FR-003 distributes to providers; providers consume read-only.
-3. Provider actions (review, revision request) handled by FR-003/FR-004; engine remains passive.
+```mermaid
+flowchart TD
+  S1["1. FR-003 retrieves engine-normalized payload and media URIs"] --> S2["2. FR-003 distributes to providers"]
+  S2 --> S3["3. Providers consume read-only normalized payload and media"]
+  S3 --> S4["4. Provider actions (review, revision request) handled by FR-003/FR-004; engine remains passive"]
+```
+
+---
 
 ### Workflow 3: Admin Template Management (Management)
 
-Actors: Admin, System
-Trigger: Admin publishes or deprecates questionnaire templates/rules in FR-025
-Outcome: Engine consumes the published version and applies to new submissions
+**Actors**: Admin, System  
+**Trigger**: Admin publishes or deprecates questionnaire templates/rules in FR-025  
+**Outcome**: Engine consumes the published version and applies to new submissions
 
-Main Flow:
+**Flow Diagram**:
 
-1. Admin opens Medical Questionnaire Templates in settings.
-2. Admin creates/edits templates: sections, fields, required/optional, help text, and risk-tag rules.
-3. Admin publishes a template version; System versions templates and applies to new inquiries only.
+```mermaid
+flowchart TD
+  S1["1. Admin opens Medical Questionnaire Templates in settings"] --> S2["2. Admin creates/edits templates: sections, fields, required/optional, help text, and risk-tag rules"]
+  S2 --> S3["3. Admin publishes a template version"]
+  S3 --> S4["4. System versions templates and applies to new inquiries only"]
+```
 
-Alternative Flows:
+### Alternative Flows
 
-- C1: Admin deprecates a template → System keeps prior versions for existing inquiries; new inquiries use the latest published version.
+**C1: Admin deprecates a template**:
+
+- **Trigger**: Admin deprecates an existing template version
+- **Outcome**: System keeps prior versions for existing inquiries; new inquiries use the latest published version
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  C1S1["1. Admin deprecates a template version"] --> C1S2["2. System marks template as deprecated but preserves for existing inquiries"]
+  C1S2 --> C1S3["3. New inquiries automatically use the latest published version"]
+```
+
+---
 
 ## Screen Specifications (Minimal - Integration Contracts)
 
@@ -348,14 +393,14 @@ Acceptance Scenarios:
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
-|------|---------|---------|--------|
+| --- | --- | --- | --- |
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template alignment: workflows metadata, assumptions, implementation notes, user scenarios, FR summary, key entities, external deps, status blocks | Product & Engineering |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
+| --- | --- | --- | --- |
 | Product Owner | [Name] | [Date] | [Status] |
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |

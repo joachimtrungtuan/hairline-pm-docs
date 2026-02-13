@@ -68,260 +68,369 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ### Workflow 1: Patient Inquiry Creation (Primary Flow)
 
-**Actors**: Patient, System, Medical Questionnaire Engine, 3D Scan Service
-
-**Trigger**: Patient starts a new inquiry in the mobile app and proceeds through the creation steps
-
+**Actors**: Patient, System, Medical Questionnaire Engine, 3D Scan Service  
+**Trigger**: Patient starts a new inquiry in the mobile app and proceeds through the creation steps  
 **Outcome**: A complete inquiry is created with destinations, media, scan reference, date ranges, and medical questionnaire; inquiry ID generated
 
-**Main Flow**:
+**Flow Diagram**:
 
-1. **Service Selection**
-   - Patient opens mobile app and selects "Get a Hair Transplant"
-   - Patient chooses treatment type (Hair, Beard, Both)
-   - System validates patient eligibility
+```mermaid
+flowchart TD
+  subgraph W1S1["1. Service Selection"]
+    direction TB
+    W1S1_1["Patient opens mobile app and selects &quot;Get a Hair Transplant&quot;"] --> W1S1_2["Patient chooses treatment type (Hair, Beard, Both)"] --> W1S1_3["System validates patient eligibility"]
+  end
 
-2. **Destination Selection**
-   - Patient selects preferred countries/locations (max 10 countries)
-   - System displays starting prices for each location
-   - Patient can select multiple destinations
-   - System suggests nearest countries to patient's location first
+  subgraph W1S2["2. Destination Selection"]
+    direction TB
+    W1S2_1["Patient selects preferred countries/locations (max 10 countries)"] --> W1S2_2["System displays starting prices for each location"] --> W1S2_3["Patient can select multiple destinations"] --> W1S2_4["System suggests nearest countries to patient's location first"]
+  end
 
-3. **Detailed Information Collection**
-   - Patient provides detailed hair concerns:
-     - Nature of concern (text field)
-     - Duration of concern (dropdown enum)
-     - Previous treatments (text field)
-     - Symptom severity (1-10 slider)
-     - Lifestyle factors (optional text)
-     - Additional notes (optional text)
-   - Patient uploads visual evidence (max 5 photos/videos)
-     - Photos: JPG/PNG ≤ 2MB each
-     - Videos: MP4 ≤ 30s, ≤ 20MB each
+  subgraph W1S3["3. Detailed Information Collection"]
+    direction TB
+    W1S3_1["Patient provides detailed hair concerns: nature, duration, previous treatments, severity (1-10), lifestyle factors, additional notes"] --> W1S3_2["Patient uploads visual evidence (max 5 photos/videos: JPG/PNG ≤ 2MB each, MP4 ≤ 30s ≤ 20MB each)"]
+  end
 
-4. **3D Head Scan Capture**
-   - Patient receives scan instructions
-   - Patient captures 3D head scan using mobile camera
-   - System validates scan quality
-   - Scan data stored for provider review
+  subgraph W1S4["4. 3D Head Scan Capture"]
+    direction TB
+    W1S4_1["Patient receives scan instructions"] --> W1S4_2["Patient captures 3D head scan using mobile camera"] --> W1S4_3["System validates scan quality"] --> W1S4_4["Scan data stored for provider review"]
+  end
 
-5. **Treatment Date Selection**
-   - Patient selects preferred treatment dates (max 10 date ranges)
-   - Date ranges can be up to 2 years in the future
-   - Patient can select multiple non-overlapping ranges
-   - System validates date availability
+  subgraph W1S5["5. Treatment Date Selection"]
+    direction TB
+    W1S5_1["Patient selects preferred treatment dates (max 10 date ranges, up to 2 years in future)"] --> W1S5_2["Patient can select multiple non-overlapping ranges"] --> W1S5_3["System validates date availability"]
+  end
 
-6. **Medical Questionnaire Completion**
-   - Patient completes comprehensive medical questionnaire
-   - Questions cover: allergies, medications, chronic diseases, previous surgeries, etc.
-   - Each question requires Yes/No answer
-   - Detailed explanation required for "Yes" answers
-   - System applies 3-tier medical alert system:
-     - Critical alerts (red - high risk conditions)
-     - Standard alerts (yellow/amber - moderate concerns)  
-     - No alerts (green - no medical concerns)
+  subgraph W1S6["6. Medical Questionnaire Completion"]
+    direction TB
+    W1S6_1["Patient completes comprehensive medical questionnaire (allergies, medications, chronic diseases, previous surgeries, etc.)"] --> W1S6_2["Each question requires Yes/No answer; detailed explanation required for Yes answers"] --> W1S6_3["System applies 3-tier medical alert system: Critical (red), Standard (amber), None (green)"]
+  end
 
-7. **Provider Selection**
-   - Patient selects preferred providers (max 5 providers) on Screen 7a
-   - System suggests providers based on positive reviews and admin curation
-   - Patient can search/filter providers by country, rating, and specialty
+  subgraph W1S7["7. Provider Selection"]
+    direction TB
+    W1S7_1["Patient selects preferred providers (max 5) on Screen 7a"] --> W1S7_2["System suggests providers based on positive reviews and admin curation"] --> W1S7_3["Patient can search/filter providers by country, rating, and specialty"]
+  end
 
-8. **Inquiry Review & Submission**
-   - Patient reviews complete inquiry summary (including selected providers)
-   - Patient confirms all information accuracy
-   - Patient submits inquiry to system
-   - System generates unique inquiry ID (HPID format)
+  subgraph W1S8["8. Inquiry Review &amp; Submission"]
+    direction TB
+    W1S8_1["Patient reviews complete inquiry summary (including selected providers)"] --> W1S8_2["Patient confirms all information accuracy"] --> W1S8_3["Patient submits inquiry to system"] --> W1S8_4["System generates unique inquiry ID (HPID format)"]
+  end
 
-**Alternative Flows**:
+  W1S1_3 --> W1S2_1
+  W1S2_4 --> W1S3_1
+  W1S3_2 --> W1S4_1
+  W1S4_4 --> W1S5_1
+  W1S5_3 --> W1S6_1
+  W1S6_3 --> W1S7_1
+  W1S7_3 --> W1S8_1
+```
 
-- **A1**: Patient abandons inquiry mid-process
-  - System saves draft automatically
-  - Patient can resume from last completed step
-  - Draft expires after 7 days of inactivity
+### Alternative Flows
 
-- **A2**: Patient has existing incomplete inquiry
-  - System shows "continue with your request" option
-  - Patient can resume from last completed step
-  - Patient can modify existing inquiry if still in "Inquiry" stage
-  - System displays inquiry status as "incomplete" or "pending"
+**A1: Patient abandons inquiry mid-process**:
 
-- **A3**: Medical questionnaire reveals critical conditions
-  - System flags inquiry with critical medical alerts (red indicators)
-  - Providers are alerted to high-risk conditions
-  - Admin can review and provide guidance to providers
-  - **Note**: Medical alerts are for provider awareness, not patient rejection
+- **Trigger**: Patient leaves the inquiry creation flow before submission
+- **Outcome**: Draft saved; patient can resume within 7 days
+- **Flow Diagram**:
 
-- **A4**: Patient cancels inquiry (see Workflow 5)
-  - Patient initiates cancellation from Inquiry Dashboard (Screen 8) in stages: Inquiry, Quoted, or Accepted
-  - System validates eligibility, captures cancellation reason, and processes cancellation
-  - All associated quotes auto-cancelled; providers notified; inquiry becomes read-only
-  - Patient can immediately create a new inquiry (no cooldown; one-active-inquiry rule still applies)
+```mermaid
+flowchart TD
+  A1S1["1. System saves draft automatically"] --> A1S2["2. Patient can resume from last completed step"]
+  A1S2 --> A1S3["3. Draft expires after 7 days of inactivity"]
+```
+
+**A2: Patient has existing incomplete inquiry**:
+
+- **Trigger**: Patient returns to the app with an existing incomplete inquiry
+- **Outcome**: Patient resumes or modifies existing inquiry
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  A2S1["1. System shows &quot;continue with your request&quot; option"] --> A2S2["2. Patient can resume from last completed step"]
+  A2S2 --> A2S3["3. Patient can modify existing inquiry if still in &quot;Inquiry&quot; stage"]
+  A2S3 --> A2S4["4. System displays inquiry status as &quot;incomplete&quot; or &quot;pending&quot;"]
+```
+
+**A3: Medical questionnaire reveals critical conditions**:
+
+- **Trigger**: Patient answers indicate high-risk medical conditions
+- **Outcome**: Inquiry flagged with critical alerts for provider awareness (not patient rejection)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  A3S1["1. System flags inquiry with critical medical alerts (red indicators)"] --> A3S2["2. Providers are alerted to high-risk conditions"]
+  A3S2 --> A3S3["3. Admin can review and provide guidance to providers"]
+  A3S3 --> A3S4["4. Note: Medical alerts are for provider awareness, not patient rejection"]
+```
+
+**A4: Patient cancels inquiry (see Workflow 5)**:
+
+- **Trigger**: Patient initiates cancellation from Inquiry Dashboard (Screen 8) in stages: Inquiry, Quoted, or Accepted
+- **Outcome**: Inquiry cancelled; quotes auto-cancelled; providers notified; inquiry becomes read-only
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  A4S1["1. Patient initiates cancellation from Inquiry Dashboard (Screen 8)"] --> A4S2["2. System validates eligibility, captures cancellation reason, and processes cancellation"]
+  A4S2 --> A4S3["3. All associated quotes auto-cancelled; providers notified; inquiry becomes read-only"]
+  A4S3 --> A4S4["4. Patient can immediately create a new inquiry (no cooldown; one-active-inquiry rule still applies)"]
+```
+
+---
 
 ### Workflow 2: Inquiry Distribution (System Flow)
 
-**Actors**: System, Providers, Admin
-
-**Trigger**: System detects a newly submitted inquiry meeting completeness requirements
-
+**Actors**: System, Providers, Admin  
+**Trigger**: System detects a newly submitted inquiry meeting completeness requirements  
 **Outcome**: Inquiry is distributed to matching providers; provider dashboards updated and notifications sent
 
-**Main Flow**:
+**Flow Diagram**:
 
-1. **Inquiry Processing**
-   - System receives completed patient inquiry
-   - System validates all required data completeness
-   - System generates inquiry ID and timestamps
+```mermaid
+flowchart TD
+  subgraph W2S1["1. Inquiry Processing"]
+    direction TB
+    W2S1_1["System receives completed patient inquiry"] --> W2S1_2["System validates all required data completeness"] --> W2S1_3["System generates inquiry ID and timestamps"]
+  end
 
-2. **Provider Matching**
-   - System identifies providers in patient-selected countries
-   - System includes providers explicitly selected by patient
-   - System creates provider-specific inquiry views
-   - **Note**: Provider capacity management will be handled in a separate FR
+  subgraph W2S2["2. Provider Matching"]
+    direction TB
+    W2S2_1["System identifies providers in patient-selected countries"] --> W2S2_2["System includes providers explicitly selected by patient"] --> W2S2_3["System creates provider-specific inquiry views"]
+  end
 
-3. **Inquiry Distribution**
-   - System distributes inquiry to all matching providers
-   - Providers receive notification of new inquiry
-   - Inquiry appears in provider dashboard
-   - System tracks distribution timestamps
+  subgraph W2S3["3. Inquiry Distribution"]
+    direction TB
+    W2S3_1["System distributes inquiry to all matching providers"] --> W2S3_2["Providers receive notification of new inquiry"] --> W2S3_3["Inquiry appears in provider dashboard"] --> W2S3_4["System tracks distribution timestamps"]
+  end
 
-4. **Provider Access Control**
-   - Providers see anonymized patient information until payment confirmation
-   - Patient names partially masked (e.g., "John D*****")
-   - Contact details hidden until payment confirmation
-   - Medical alerts prominently displayed
+  subgraph W2S4["4. Provider Access Control"]
+    direction TB
+    W2S4_1["Providers see anonymized patient information until payment confirmation"] --> W2S4_2["Patient names partially masked (e.g., &quot;John D*****&quot;)"] --> W2S4_3["Contact details hidden until payment confirmation"] --> W2S4_4["Medical alerts prominently displayed"]
+  end
 
-**Alternative Flows**:
+  W2S1_3 --> W2S2_1
+  W2S2_3 --> W2S3_1
+  W2S3_4 --> W2S4_1
+```
 
-- **B1**: No providers available in selected countries
-  - System notifies admin of unmatched inquiry
-  - Admin can manually assign providers
-  - Patient notified of potential delay
+### Alternative Flows
 
-- **B2**: Provider capacity exceeded
-  - **Note**: Provider capacity management will be handled in a separate FR
+**B1: No providers available in selected countries**:
+
+- **Trigger**: No active providers found in patient's selected countries
+- **Outcome**: Admin manually assigns providers; patient notified of potential delay
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  B1S1["1. System notifies admin of unmatched inquiry"] --> B1S2["2. Admin can manually assign providers"]
+  B1S2 --> B1S3["3. Patient notified of potential delay"]
+```
+
+**B2: Provider capacity exceeded**:
+
+- **Trigger**: Provider's inquiry capacity is reached
+- **Outcome**: Deferred to separate FR for provider capacity management
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  B2S1["1. Note: Provider capacity management will be handled in a separate FR"]
+```
+
+---
 
 ### Workflow 3: Provider Inquiry Management (Provider Flow)
 
-**Actors**: Provider, System, Admin
-
-**Trigger**: Provider receives a distributed inquiry or opens an assigned inquiry from the dashboard
-
+**Actors**: Provider, System, Admin  
+**Trigger**: Provider receives a distributed inquiry or opens an assigned inquiry from the dashboard  
 **Outcome**: Provider reviews anonymized details and manages status prior to quote creation
 
-**Main Flow**:
+**Flow Diagram**:
 
-1. **Inquiry Review**
-   - Provider accesses inquiry list in dashboard
-   - Provider views inquiry details with medical alerts
-   - Provider reviews patient 3D scan and medical questionnaire
-   - Provider assesses treatment feasibility
+```mermaid
+flowchart TD
+  subgraph W3S1["1. Inquiry Review"]
+    direction TB
+    W3S1_1["Provider accesses inquiry list in dashboard"] --> W3S1_2["Provider views inquiry details with medical alerts"] --> W3S1_3["Provider reviews patient 3D scan and medical questionnaire"] --> W3S1_4["Provider assesses treatment feasibility"]
+  end
 
-2. **Inquiry Status Management**
-   - Provider can review inquiry details
-   - System tracks provider response time
-   - **Note**: Quote creation process handled in FR-004
+  subgraph W3S2["2. Inquiry Status Management"]
+    direction TB
+    W3S2_1["Provider can review inquiry details"] --> W3S2_2["System tracks provider response time"] --> W3S2_3["Note: Quote creation process handled in FR-004"]
+  end
 
-**Alternative Flows**:
+  W3S1_4 --> W3S2_1
+```
 
-- **C1**: Provider cannot accommodate patient dates
-  - Provider can decline inquiry with reason
-  - System logs provider response
-  - Provider cannot suggest alternative dates (handled in FR-004)
+### Alternative Flows
 
-- **C2**: Provider needs additional information
-  - Provider can request clarification through admin
-  - Admin facilitates communication
-  - Inquiry remains in "Inquiry" stage until resolved
+**C1: Provider cannot accommodate patient dates**:
+
+- **Trigger**: Provider's schedule does not align with patient's requested date ranges
+- **Outcome**: Provider declines inquiry with reason; cannot suggest alternative dates (handled in FR-004)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  C1S1["1. Provider can decline inquiry with reason"] --> C1S2["2. System logs provider response"]
+  C1S2 --> C1S3["3. Provider cannot suggest alternative dates (handled in FR-004)"]
+```
+
+**C2: Provider needs additional information**:
+
+- **Trigger**: Provider cannot make assessment based on submitted inquiry data
+- **Outcome**: Clarification requested through admin; inquiry stays in current stage
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  C2S1["1. Provider can request clarification through admin"] --> C2S2["2. Admin facilitates communication"]
+  C2S2 --> C2S3["3. Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
+```
+
+---
 
 ### Workflow 4: Admin Inquiry Management (Admin Flow)
 
-**Actors**: Admin, System, Providers, Patients
-
-**Trigger**: Admin opens an inquiry for oversight or intervention, or a policy/action requires admin processing
-
+**Actors**: Admin, System, Providers, Patients  
+**Trigger**: Admin opens an inquiry for oversight or intervention, or a policy/action requires admin processing  
 **Outcome**: Admin edits/overrides/reassigns/archives with full audit; re-notifications triggered as needed
 
-**Main Flow**:
+**Flow Diagram**:
 
-1. **Inquiry Oversight**
-   - Admin views all inquiries across all stages
-   - Admin monitors inquiry distribution and response rates
-   - Admin tracks provider performance metrics
-   - Admin identifies system-wide issues
+```mermaid
+flowchart TD
+  subgraph W4S1["1. Inquiry Oversight"]
+    direction TB
+    W4S1_1["Admin views all inquiries across all stages"] --> W4S1_2["Admin monitors inquiry distribution and response rates"] --> W4S1_3["Admin tracks provider performance metrics"] --> W4S1_4["Admin identifies system-wide issues"]
+  end
 
-2. **Inquiry Management**
-   - Admin can edit inquiry details (with caution warnings)
-   - Admin can reassign inquiries to different providers
-   - Admin can override quote expiration periods
-   - Admin can escalate urgent cases
+  subgraph W4S2["2. Inquiry Management"]
+    direction TB
+    W4S2_1["Admin can edit inquiry details (with caution warnings)"] --> W4S2_2["Admin can reassign inquiries to different providers"] --> W4S2_3["Admin can override quote expiration periods"] --> W4S2_4["Admin can escalate urgent cases"]
+  end
 
-3. **System Configuration**
-   - Admin manages medical questionnaire content
-   - Admin configures country/location lists
-   - Admin sets inquiry expiration rules
-   - Admin manages provider availability settings
+  subgraph W4S3["3. System Configuration"]
+    direction TB
+    W4S3_1["Admin manages medical questionnaire content"] --> W4S3_2["Admin configures country/location lists"] --> W4S3_3["Admin sets inquiry expiration rules"] --> W4S3_4["Admin manages provider availability settings"]
+  end
 
-**Alternative Flows**:
+  W4S1_4 --> W4S2_1
+  W4S2_4 --> W4S3_1
+```
 
-- **D1**: Admin needs to delete inquiry
-  - Admin performs soft delete (archival)
-  - System logs deletion with reason
-  - Patient notified of inquiry cancellation
+### Alternative Flows
 
-- **D2**: Inquiry requires manual intervention
-  - Admin identifies problematic inquiries
-  - Admin contacts patient or provider directly
-  - Admin resolves issues and updates inquiry status
+**D1: Admin needs to delete inquiry**:
+
+- **Trigger**: Inquiry needs to be removed from active system
+- **Outcome**: Soft delete (archival) with audit trail; patient notified
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  D1S1["1. Admin performs soft delete (archival)"] --> D1S2["2. System logs deletion with reason"]
+  D1S2 --> D1S3["3. Patient notified of inquiry cancellation"]
+```
+
+**D2: Inquiry requires manual intervention**:
+
+- **Trigger**: System or user-reported issue with an inquiry
+- **Outcome**: Admin resolves issue and updates inquiry status
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  D2S1["1. Admin identifies problematic inquiries"] --> D2S2["2. Admin contacts patient or provider directly"]
+  D2S2 --> D2S3["3. Admin resolves issues and updates inquiry status"]
+```
+
+---
 
 ### Workflow 5: Patient-Initiated Inquiry Cancellation
 
-**Actors**: Patient, System, Providers (notified), Admin (observer)
-
-**Trigger**: Patient opens the Inquiry Dashboard (Screen 8), taps into an inquiry detail view, and selects "Cancel Inquiry" from the action menu, for an inquiry in stage Inquiry, Quoted, or Accepted
-
+**Actors**: Patient, System, Providers (notified), Admin (observer)  
+**Trigger**: Patient opens the Inquiry Dashboard (Screen 8), taps into an inquiry detail view, and selects "Cancel Inquiry" from the action menu, for an inquiry in stage Inquiry, Quoted, or Accepted  
 **Outcome**: Inquiry transitions to "Cancelled"; all associated quotes auto-cancelled; providers notified; inquiry becomes read-only in patient dashboard
 
-**Main Flow**:
+**Flow Diagram**:
 
-1. **Initiate Cancellation**
-   - Patient opens Inquiry Dashboard (Screen 8) and taps into the inquiry to view its detail
-   - Patient selects "Cancel Inquiry" from the inquiry detail action menu
-   - System validates inquiry is in an eligible stage (Inquiry, Quoted, or Accepted)
-   - If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message: "Cannot cancel inquiry at this stage. Please contact support."
+```mermaid
+flowchart TD
+  subgraph W5S1["1. Initiate Cancellation"]
+    direction TB
+    W5S1_1["Patient opens Inquiry Dashboard (Screen 8) and taps into the inquiry to view its detail"] --> W5S1_2["Patient selects &quot;Cancel Inquiry&quot; from the inquiry detail action menu"]
+    W5S1_2 --> W5S1_3["System validates inquiry is in an eligible stage (Inquiry, Quoted, or Accepted)"]
+    W5S1_3 --> W5S1_4["If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message"]
+  end
 
-2. **Capture Cancellation Reason**
-   - System displays cancellation confirmation modal (Screen 8a) with warning about irreversibility
-   - Patient selects a cancellation reason from predefined options (required). Default options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" (requires explanation). Reason options are admin-configurable via FR-026 Screen 5a; this list serves as the initial set.
-   - Patient may optionally provide additional feedback text
+  subgraph W5S2["2. Capture Cancellation Reason"]
+    direction TB
+    W5S2_1["System displays cancellation confirmation modal (Screen 8a) with warning about irreversibility"] --> W5S2_2["Patient selects a cancellation reason from predefined options (required; admin-configurable via FR-026 Screen 5a)"]
+    W5S2_2 --> W5S2_3["Patient may optionally provide additional feedback text"]
+  end
 
-3. **Process Cancellation**
-   - System updates inquiry status to "Cancelled" with timestamp and reason
-   - System auto-cancels all associated quotes with status "Cancelled (Inquiry Cancelled)" regardless of their current state (draft, sent, expired)
-   - If inquiry was in Accepted stage with an active 48-hour appointment slot hold (per FR-005/FR-006), system releases the hold immediately and returns the slot to the provider's availability
+  subgraph W5S3["3. Process Cancellation"]
+    direction TB
+    W5S3_1["System updates inquiry status to &quot;Cancelled&quot; with timestamp and reason"] --> W5S3_2["System auto-cancels all associated quotes with status &quot;Cancelled (Inquiry Cancelled)&quot; regardless of their current state"]
+    W5S3_2 --> W5S3_3["If inquiry was in Accepted stage with active 48-hour appointment slot hold (per FR-005/FR-006), system releases the hold immediately"]
+  end
 
-4. **Notify Stakeholders**
-   - System sends cancellation confirmation notification to patient (Email + Push per preferences) within 5 minutes of cancellation
-   - System sends `inquiry.cancelled` notification to all affected providers (Email + Push) within 5 minutes per system PRD notification SLA
-   - System sends `quote.cancelled_inquiry` notification per affected quote (provider-facing) within 5 minutes
-   - Provider cancellation notifications do NOT reveal the patient's cancellation reason (patient-private data for analytics)
-   - System logs cancellation event in immutable audit trail
+  subgraph W5S4["4. Notify Stakeholders"]
+    direction TB
+    W5S4_1["System sends cancellation confirmation notification to patient (Email + Push per preferences) within 5 minutes"] --> W5S4_2["System sends inquiry.cancelled notification to all affected providers (Email + Push) within 5 minutes"]
+    W5S4_2 --> W5S4_3["System sends quote.cancelled_inquiry notification per affected quote (provider-facing) within 5 minutes"]
+    W5S4_3 --> W5S4_4["Provider cancellation notifications do NOT reveal the patient's cancellation reason (patient-private data for analytics)"]
+    W5S4_4 --> W5S4_5["System logs cancellation event in immutable audit trail"]
+  end
 
-5. **Post-Cancellation State**
-   - System displays Cancellation Success screen (Screen 8b) with impact summary and next-step actions
-   - Inquiry appears in patient's Inquiry Dashboard with "Cancelled" badge (read-only)
-   - Patient can view cancelled inquiry details for reference but cannot modify or reopen
-   - Patient can immediately create a new inquiry (no cooldown; one-active-inquiry-at-a-time rule applies — the cancelled inquiry is no longer "active")
+  subgraph W5S5["5. Post-Cancellation State"]
+    direction TB
+    W5S5_1["System displays Cancellation Success screen (Screen 8b) with impact summary and next-step actions"] --> W5S5_2["Inquiry appears in patient's Inquiry Dashboard with &quot;Cancelled&quot; badge (read-only)"]
+    W5S5_2 --> W5S5_3["Patient can view cancelled inquiry details for reference but cannot modify or reopen"]
+    W5S5_3 --> W5S5_4["Patient can immediately create a new inquiry (no cooldown; one-active-inquiry-at-a-time rule applies)"]
+  end
 
-**Alternative Flows**:
+  W5S1_3 --> W5S2_1
+  W5S2_3 --> W5S3_1
+  W5S3_3 --> W5S4_1
+  W5S4_5 --> W5S5_1
+```
 
-- **E1**: Patient cancels inquiry with no quotes received (Inquiry stage)
-  - No quote cascade needed; only inquiry status updated
-  - No provider notifications for quote cancellation (only `inquiry.cancelled` to distributed providers)
+### Alternative Flows
 
-- **E2**: Patient cancels inquiry during Accepted stage
-  - Accepted quote auto-cancelled; 48-hour appointment slot hold released immediately
-  - Provider notified of both inquiry cancellation and slot release
-  - Booking/payment flow becomes inaccessible for this inquiry
+**E1: Patient cancels inquiry with no quotes received (Inquiry stage)**:
+
+- **Trigger**: Patient cancels an inquiry that has not yet received any quotes
+- **Outcome**: Only inquiry status updated; no quote cascade needed
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  E1S1["1. No quote cascade needed; only inquiry status updated"] --> E1S2["2. No provider notifications for quote cancellation (only inquiry.cancelled to distributed providers)"]
+```
+
+**E2: Patient cancels inquiry during Accepted stage**:
+
+- **Trigger**: Patient cancels an inquiry with an accepted quote and active appointment slot hold
+- **Outcome**: Quote auto-cancelled; slot hold released; provider notified; booking/payment inaccessible
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  E2S1["1. Accepted quote auto-cancelled; 48-hour appointment slot hold released immediately"] --> E2S2["2. Provider notified of both inquiry cancellation and slot release"]
+  E2S2 --> E2S3["3. Booking/payment flow becomes inaccessible for this inquiry"]
+```
+
+**E3: System cancels inquiry due to account deletion request (DSR)**:
+
+- **Trigger**: Patient submits an account deletion request (DSR) in FR-001 (Delete Account flow)
+- **Outcome**: Inquiry transitions to "Cancelled" without prompting for a patient-entered cancellation reason; system stores a system-generated cancellation reason for audit ("Account Deleted (System)"); all associated quotes auto-cancelled; providers notified; inquiry becomes read-only
+- **Notes**:
+  - Provider-facing cancellation notifications MUST NOT reveal the cancellation reason (treat as patient-private/system-private data), consistent with Workflow 5 stakeholder notification rules.
 
 ## Screen Specifications
 
@@ -334,7 +443,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Service Option | select (single) | Yes | Primary service selection | Must select one |
 | Treatment Type | checkbox (multi) | Yes | Hair/Beard/Both | At least one selected |
 
@@ -363,7 +472,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Countries | multiselect | Yes | Up to 10 preferred countries | Max 10; ordered by FR-028 regional configuration when available, otherwise proximity |
 | Price Display | derived | No | Starting price per country | Fallback currency support |
 
@@ -392,7 +501,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Nature of concern | text | Yes | Patient description | Max length; not empty |
 | Duration | select | Yes | Duration enum | Must select one |
 | Previous treatments | text | Yes | Prior treatments | Max length |
@@ -424,7 +533,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Head Video | capture | Yes | Guided head video of patient’s head | Must meet duration/quality constraints from FR-002 |
 | Quality Indicators | derived | Yes | Real-time quality feedback | Retake if below threshold |
 
@@ -453,7 +562,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Date Ranges | date range (multi) | Yes | Up to 10 ranges | Max 10; non-overlapping; ≤ 2 years out |
 
 **Notes**:
@@ -481,7 +590,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Question | enum | Yes | Medical question item | Must answer Yes/No |
 | Answer | boolean | Yes | Yes/No | Required |
 | Details | text | Cond. | Required if Answer = Yes | Non-empty when required |
@@ -530,7 +639,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Section Summary | group | Yes | Read-only summary of prior steps | Must reflect latest data |
 | Terms Acceptance | checkbox | Yes | Accept T&C before submission | Required to submit |
 
@@ -553,7 +662,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Suggested Providers | list | Yes | System-suggested providers based on reviews and admin curation | Non-empty; ordered by rating/curation score |
 | Provider Card | group | Yes | Provider summary: name, country, rating, review count, specialty, starting price | Read-only per card |
 | Selected Providers | multiselect | Yes | Patient's chosen providers | Min 1, max 5 |
@@ -587,7 +696,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" |
 | Timeline | timeline | Yes | Chronological status changes | Timestamps present |
 | Responses Count | number | Yes | Number of provider responses | Non-negative integer |
@@ -619,7 +728,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
 | Modal Title | text | Yes | "Cancel Inquiry?" | Displayed prominently in red/destructive color |
 | Warning Message | text | Yes | Explanation of consequences: "Canceling this inquiry is irreversible. All quotes you've received will be cancelled and providers will be notified." | Read-only informational text |
@@ -656,7 +765,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Success Icon | icon | Yes | Checkmark or completion illustration | Green color; displayed at top center |
 | Confirmation Title | text | Yes | "Inquiry Cancelled" | Displayed prominently below icon |
 | Confirmation Message | text | Yes | "Your inquiry has been successfully cancelled." | Read-only |
@@ -691,7 +800,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Patient ID | column | Yes | HPID + YY + MM + 4-digit sequence | Sortable; searchable |
 | Patient Name | column | Yes | Partially masked name | Mask until payment confirmation |
 | Age | column | No | Patient age | Number; sortable |
@@ -728,7 +837,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Inquiry ID | text | Yes | Unique ID and current stage | Read-only |
 | Timestamps | group | Yes | Created/updated/activity times | ISO 8601 |
 | Patient (masked) | group | Yes | Partially masked identity | Reveal post-payment confirmation |
@@ -798,7 +907,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Patient ID | column | Yes | HPID + YY + MM + 4-digit sequence | Sortable; searchable |
 | Full Patient Name | column | Yes | Unmasked name | Admin only |
 | Age | column | No | Patient age | Number; sortable |
@@ -830,7 +939,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
+| --- | --- | --- | --- | --- |
 | Full Inquiry | group | Yes | All patient and inquiry data | Admin-only visibility |
 | Admin Actions | actions | Yes | Edit, reassign, override, soft delete | Reason required; audited |
 | Override Controls | form | No | Expiry/distribution overrides | Confirmation + reason required |
@@ -907,6 +1016,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
    - Cancellation is blocked for inquiries in Confirmed, In Progress, Aftercare, or Completed stages — patient must contact support
    - Cancellation is immediate and irreversible; no grace period, no admin approval required
    - Cancellation reason is required (predefined options; see Workflow 5)
+   - System MAY cancel an eligible inquiry as a consequence of a patient account deletion request (FR-001). In that case, the system MUST set a system-generated cancellation reason for audit (e.g., "Account Deleted (System)") and MUST NOT prompt the patient for a cancellation reason.
    - All associated quotes are auto-cancelled with status "Cancelled (Inquiry Cancelled)" regardless of quote state
    - If inquiry is in Accepted stage with an active 48-hour appointment slot hold (FR-005/FR-006), the hold is released immediately
    - All affected providers receive notification of cancellation; cancellation reason is NOT shared with providers (patient-private analytics data)
@@ -1263,7 +1373,7 @@ Acceptance Scenarios:
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
-|------|---------|---------|--------|
+| --- | --- | --- | --- |
 | 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-03 | 1.1 | Template normalization; added tenant breakdown, field tables, FR summary, entities, appendices | Product & Engineering |
 | 2025-12-01 | 1.2 | Aligned with client scope by removing unsourced budget requirement from System PRD, defining explicit inquiry payload composition, and clarifying anonymization to keep IDs visible while masking name/phone/email until payment confirmation | Product & Engineering |
@@ -1277,7 +1387,7 @@ Acceptance Scenarios:
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
+| --- | --- | --- | --- |
 | Product Owner | [Name] | [Date] | [Status] |
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |
