@@ -30,7 +30,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 - Complete a payment (deposit or full) to confirm booking
 - Complete final payment before or on procedure date
-- Choose supported payment method (card, bank transfer, digital wallet)
+- Choose supported payment method (card or bank transfer)
 - Choose/display currency; see clear totals, fees, and remaining balance
 - View receipts/invoices and payment history
 - Receive confirmations and reminders for upcoming or overdue payments
@@ -160,7 +160,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 | Total Amount | number | Yes | Total procedure price | Positive amount; matches booking |
 | Deposit Amount | number | Yes | Deposit to confirm booking | Admin-configurable percentage (default 20-30% range, configured via FR-029); within allowed range |
 | Currency | select | Yes | Selected currency | Supported list; defaults by locale |
-| Payment Method | select | Yes | Card, bank transfer, or digital wallet | Must be in supported methods |
+| Payment Method | select | Yes | Card or bank transfer | Must be in supported methods |
 | Billing Details | text | Yes | Name, address, contact | Required for invoicing |
 
 **Business Rules**:
@@ -187,7 +187,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 |------------|------|----------|-------------|------------------|
 | Remaining Balance | number | Yes | Amount due | Positive; equals total minus deposit |
 | Currency | select | Yes | Selected currency | Supported list; defaults from booking |
-| Payment Method | select | Yes | Card, bank transfer, or digital wallet | Supported methods |
+| Payment Method | select | Yes | Card or bank transfer | Supported methods |
 | Billing Details | text | Yes | For invoice | Required if changed since deposit |
 
 **Business Rules**:
@@ -737,7 +737,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ### Payment & Billing Rules
 
-- Payment methods include cards, bank transfers, and mainstream digital wallets supported by the processor
+- Payment methods include cards and bank transfers
 - Deposit payment is collected at booking confirmation (admin-configurable percentage, default 20-30% range, configured via FR-029); final payment before or on procedure day
 - Refunds follow FR-006 cancellation policy: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund (unless medical emergency with documentation)
 - Invoices and receipts are issued for every successful payment and refund
@@ -833,7 +833,7 @@ Enable patients to pay securely for procedures (deposit at booking and final pay
 
 ### User Behavior Assumptions
 
-- Patients prefer cards and mainstream wallets for speed; bank transfers used in select markets
+- Patients prefer cards for speed; bank transfers used in select markets
 - Most patients expect deposit confirmation and receipt immediately after payment
 - Patients will pay final balance in-app before arrival when reminded
 
@@ -942,7 +942,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 ### Core Requirements
 
 - **REQ-007-001**: System MUST allow patients to pay deposit to confirm bookings and final amount by due date
-- **REQ-007-002**: System MUST support card, bank transfer, and digital wallet methods for payments
+- **REQ-007-002**: System MUST support card and bank transfer methods for payments
 - **REQ-007-003**: System MUST support multiple currencies (at minimum USD, EUR, GBP, TRY) and display accurate totals
 - **REQ-007-004**: System MUST generate and deliver receipts/invoices for successful payments and refunds
 - **REQ-007-005**: System MUST mark bookings confirmed on deposit, fully paid after final payment, and update related statuses

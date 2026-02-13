@@ -774,22 +774,14 @@ flowchart TD
     AutoReassign --> ShowList
     CheckWasDefault -->|No| ShowList
 
-    ShowAddForm --> SelectType{"Patient selects<br/>payment method type"}
-    SelectType -->|Card| CardFields["Patient enters card details<br/>via payment gateway secure form<br/>(PCI-compliant hosted fields)"]
-    SelectType -->|Digital Wallet| WalletAuth["System redirects to wallet provider<br/>for authorization (e.g., Apple Pay, Google Pay)"]
+    ShowAddForm --> CardFields["Patient enters card details<br/>via payment gateway secure form<br/>(PCI-compliant hosted fields)"]
 
     CardFields --> GatewayValidate{"Payment gateway<br/>validates card?"}
     GatewayValidate -->|No| CardError["Show field-level error<br/>(invalid card / declined / expired)"]
     CardError --> CardFields
     GatewayValidate -->|Yes| Tokenize["Payment gateway tokenizes card;<br/>system stores token + masked details<br/>(brand, last 4, expiry)"]
 
-    WalletAuth --> WalletResult{"Wallet authorization<br/>successful?"}
-    WalletResult -->|No| WalletError["Show authorization failed message;<br/>allow retry or alternative method"]
-    WalletError --> ShowAddForm
-    WalletResult -->|Yes| TokenizeWallet["System stores wallet token<br/>+ display identifier"]
-
     Tokenize --> CheckFirst{"Is this the patient's<br/>first payment method?"}
-    TokenizeWallet --> CheckFirst
     CheckFirst -->|Yes| AutoDefault["Auto-set as default"]
     CheckFirst -->|No| RespectToggle["Apply patient's 'Set as default'<br/>toggle preference"]
     AutoDefault --> SaveSuccess["Show success confirmation<br/>and return to Payment Methods List"]
@@ -812,11 +804,17 @@ flowchart TD
 
 **Purpose**: Display all saved payment methods with management actions; accessed from patient Profile area
 
+**Related FR Screens:**
+
+- **FR-007 Screen 1** (Patient Checkout - Deposit): Uses saved payment methods from this list in payment method selection dropdown
+- **FR-007 Screen 2** (Patient Final Payment): Reuses billing details structure from this screen's Add/Edit form
+- **FR-007B Screen 2** (Patient Booking Details - Installment Schedule View): Links to this screen via "Update Payment Method" action for updating installment payment methods
+
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Payment Methods" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
-| Payment Method Cards | list | Yes | List of saved payment methods; each card displays: payment type icon (Visa/MC/Amex/wallet), card brand or wallet name, masked last 4 digits (e.g., "•••• 4242"), expiry date (MM/YY), and default badge if applicable | Must list all saved methods; ordered: default first, then by most recently added |
+| Payment Method Cards | list | Yes | List of saved payment methods; each card displays: payment type icon (Visa/MC/Amex), card brand, masked last 4 digits (e.g., "•••• 4242"), expiry date (MM/YY), and default badge if applicable | Must list all saved methods; ordered: default first, then by most recently added |
 | Default Badge (Per Card) | badge | Conditional | "Default" label shown on the default payment method card | Exactly one method marked as default at any time (if methods exist) |
 | Per-Card Action: Set as Default | action | Conditional | "Set as Default" option on non-default cards | Not shown on the card already marked as default; tap updates default indicator immediately |
 | Per-Card Action: Edit | action | Yes | "Edit" option on each card | Opens P03.1-S2 in edit mode with pre-filled editable fields |
@@ -829,10 +827,13 @@ flowchart TD
 
 **Business Rules**:
 
+**Glossary:**
+
+- **Active Payment Obligations**: Any of: (1) Pending deposit (booking Accepted, deposit unpaid), (2) Pending final payment (booking Confirmed, final payment not paid), (3) Active installment plan (1+ installments remaining), (4) Failed/overdue installments in retry cycle.
+
 - At least one saved payment method is required if the patient has active bookings with pending payments (deposit, final payment, or installment charges); the system must prevent the patient from removing their last method in this case (FR-007, FR-007b)
 - The default payment method is used for installment auto-charges (FR-007b); patients should be informed of this when changing the default
 - All card details are tokenized via the payment gateway — the platform stores only the token reference, card brand, last 4 digits, and expiry date; full card numbers are never stored or displayed (FR-007 REQ-007-008, PCI-DSS)
-- Digital wallets (e.g., Apple Pay, Google Pay) display the wallet brand and a masked account identifier instead of card details
 - If the default method is removed and other methods exist, the system auto-reassigns the default to the most recently added remaining method and shows a brief notification to the patient
 
 ##### Screen P03.1-S2: Add/Edit Payment Method
@@ -843,15 +844,12 @@ flowchart TD
 |---|---|---|---|---|
 | Screen Title | text | Yes | Dynamic: "Add Payment Method" (add mode) or "Edit Payment Method" (edit mode) | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Payment Methods List (P03.1-S1) | Top-left corner; prompts discard confirmation if unsaved changes exist |
-| Payment Type Selector | chips | Yes (add mode) | Options: "Credit/Debit Card", "Digital Wallet" | Shown only in add mode; card is selected by default; in edit mode, type is fixed and shown as read-only label |
 | Secure Form Notice | text | Yes | "Your payment details are secured and encrypted" with lock icon | Displayed above card input fields; builds trust |
 | Card Number Input | text | Yes (card type) | Card number field with live formatting (spaces every 4 digits) and card brand icon auto-detection (Visa/MC/Amex) | Rendered via payment gateway hosted/secure field (PCI-compliant); Luhn algorithm validation; 13–19 digits depending on brand; in edit mode, shown as masked read-only "•••• 4242" with "Replace card" link to re-enter |
 | Cardholder Name | text | Yes (card type) | Full name as printed on card | Required; alphabetic characters, spaces, hyphens, and apostrophes allowed; max 100 characters |
 | Expiry Date | text | Yes (card type) | Card expiry in MM/YY format | Must be a current or future month/year; auto-formats with "/" separator as user types |
 | CVV/CVC | text | Yes (card type) | Security code on card | 3 digits (Visa/Mastercard/Discover) or 4 digits (Amex); rendered via payment gateway hosted field; never stored |
 | Billing Address (Conditional) | group | Conditional | Address line 1, Address line 2 (optional), City, State/Region, Postal code, Country selector | Required if payment gateway mandates billing address for the patient's region; country defaults to patient profile country |
-| Digital Wallet Authorization | group | Conditional (wallet type) | Wallet provider authorization button (e.g., "Set up Apple Pay", "Link Google Pay") | Shown only when Digital Wallet type is selected; tapping initiates OAuth/native wallet authorization flow with the wallet provider |
-| Wallet Authorization Status | text | Conditional (wallet type) | Success or failure message from wallet authorization | Shown after wallet authorization attempt; "Successfully linked [Wallet Name]" or "Authorization failed — please try again" |
 | Method Nickname (Optional) | text | No | Custom label for this payment method (e.g., "Personal Visa", "Business Card") | Max 50 characters; defaults to "[Brand] ending in [last 4]" if not provided |
 | Set as Default Toggle | toggle | No | "Set as my default payment method" | Default: ON if this is the patient's first method (auto-set); OFF otherwise; toggle state saved on form submission |
 | Save Button | button | Yes | Primary CTA: "Save Payment Method" (add mode) or "Save Changes" (edit mode) | Disabled until all required fields are valid; for card type, triggers payment gateway tokenization before saving |
@@ -862,13 +860,13 @@ flowchart TD
 
 **Business Rules**:
 
+- **Edit mode field restrictions**: In edit mode, only metadata fields are editable (billing address, method nickname, default toggle); payment credentials (card number, CVV, expiry date) cannot be edited — they can only be replaced by deleting the entire payment method token and creating a new one via the "Replace card" flow
 - **PCI compliance**: Card number and CVV fields are rendered by the payment gateway's secure hosted fields (e.g., Stripe Elements); card data is sent directly to the payment gateway for tokenization and is never transmitted to or stored on app servers (FR-007 REQ-007-008)
 - Card number must pass Luhn algorithm validation; card brand is auto-detected from the first digits (BIN range) and the brand icon updates in real-time as the patient types
 - Expiry date must be a current or future month/year; expired cards are rejected at the form level before gateway submission
 - CVV is 3 digits for Visa/Mastercard/Discover or 4 digits for Amex; this field is used only for initial validation and is never stored after tokenization
 - If this is the patient's first payment method, the "Set as default" toggle is forced ON and cannot be turned off (at least one default must exist) (FR-007b)
 - In edit mode, the card number is displayed as a masked read-only field ("•••• 4242"); changing the card number requires the patient to tap "Replace card" which clears and re-renders the gateway secure fields for a new card entry — this creates a new token and replaces the old one
-- Digital wallet linking follows the native wallet provider's authorization flow; the app does not collect or display wallet credentials directly
 - All form fields must preserve entered data if a submission attempt fails, allowing the patient to correct errors and retry without re-entering everything (FR-007 Screen 1 Notes)
 
 ##### Screen P03.1-S3: Remove Payment Method Confirmation Modal
@@ -879,7 +877,7 @@ flowchart TD
 |---|---|---|---|---|
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
 | Modal Title | text | Yes | "Remove Payment Method?" | Displayed prominently in red/destructive color |
-| Method Summary | group | Yes | Shows the method being removed: payment type icon, card brand or wallet name, masked last 4 digits, and expiry date | Read-only; matches the card being removed for clear identification |
+| Method Summary | group | Yes | Shows the method being removed: payment type icon, card brand, masked last 4 digits, and expiry date | Read-only; matches the card being removed for clear identification |
 | Warning Message | text | Yes | Consequence explanation | Dynamic text based on context: If method is used for active installments: "This payment method is currently used for scheduled installment payments. Removing it will require you to update the payment method for those payments." Otherwise: "This payment method will be permanently removed from your account." |
 | Default Reassignment Notice (Conditional) | text | Conditional | "Your default payment method will be reassigned to [next method description]." | Shown only if the method being removed is the current default and other methods exist |
 | Active Installments Warning (Conditional) | text | Conditional | "You have active installment plans using this card. Please update the payment method for those bookings after removal." | Shown only if the method is linked to active installment schedules (FR-007b) |

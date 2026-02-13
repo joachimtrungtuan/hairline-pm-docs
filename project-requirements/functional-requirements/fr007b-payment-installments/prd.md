@@ -3,7 +3,7 @@
 **Module**: P-03: Booking & Payment | S-02: Payment Processing Service
 **Feature Branch**: `fr007b-payment-installments`
 **Created**: 2025-11-10
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-007B from local-docs/project-requirements/system-prd.md (Split Payment / Installment Plans) + Constitution (.specify/memory/constitution.md)
 
 ---
@@ -232,6 +232,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 | Next Payment Amount   | number | Conditional | Amount of next installment         | Only if installments remaining > 0          |
 | Payment History       | list   | Yes      | Past installment payments with dates and statuses | Read-only history                 |
 | Payment Method        | text   | Yes      | Last 4 digits of card on file         | Masked for security                         |
+| Update Payment Method Button | button | Yes | "Update Payment Method" action button | Navigates to P03.1 Payment Methods Management screen; allows patient to update the default payment method used for remaining installment charges |
 
 **Business Rules**:
 

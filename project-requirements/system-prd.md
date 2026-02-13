@@ -567,7 +567,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 **Requirements**:
 
 - System MUST integrate with Stripe for payment processing
-- System MUST support credit/debit cards, bank transfers, digital wallets
+- System MUST support credit/debit cards and bank transfers
 - System MUST process payments in multiple currencies (USD, EUR, GBP, TRY, etc.)
 - Deposit payment MUST be processed at booking confirmation
 - Final payment MUST be processed on procedure day or before

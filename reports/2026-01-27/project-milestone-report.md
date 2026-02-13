@@ -29,6 +29,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 ### Critical Achievements This Period
 
 ✅ **Patient Journey Foundation (54.6% complete):**
+
 - **Authentication & Profile** (100%) - Complete registration, login, profile management with OTP verification
 - **Inquiry Submission** (80%) - Patients can submit transplant inquiries with country selection, dates, medical questionnaire
 - **Quote Review** (85%) - View and compare provider quotes, see reviews/ratings/credentials
@@ -49,6 +50,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 6. **Travel & Logistics (P-04)** - Missing basic location/instructions, passport upload
 
 ⚠️ **Technical Debt:**
+
 - Frontend validation missing for 10-country/date limits (backend enforced but poor UX)
 - Draft saving has UX issues
 - Quote comparison only supports price comparison (not full side-by-side)
@@ -62,7 +64,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 ## High-Level Status Dashboard
 
 | **Metric** | **Value** | **Status** | **Notes** |
-|------------|-----------|------------|-----------|
+| ---------- | --------- | ---------- | --------- |
 | **Mobile App: Total Modules** | 12 | - | Core patient journey (excludes 3 out-of-scope paths) |
 | **Mobile App: Modules Completed** | 3 | 🟢 | 25% complete (P-01, P-03a, P-08) |
 | **Mobile App: Modules In Progress** | 6 | 🟡 | 50% of total (P-02a/b, P-03b, P-05, P-06, P-07) |
@@ -86,7 +88,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 ## Module Progress Details
 
 | **Module / Component** | **Status** | **Completion %** | **What Users Can Do** | **What Users Cannot Yet Do** | **Category** | **Notes** |
-|------------------------|------------|------------------|------------------------|-------------------------------|--------------|-----------|
+| ---------------------- | ---------- | ---------------- | ---------------------- | ----------------------------- | ------------ | -------- |
 | **P-01: Auth & Profile Management** | 🟢 | 100% | • Register with email/password<br>• Verify email via 6-digit OTP<br>• Log in to account<br>• Reset password via OTP<br>• Update profile (name, phone, birthday, location)<br>• Upload/change profile picture<br>• Select "how did you find us" option<br>• Log out | • Change email address (email is primary account identifier - immutable by design) | ⚠️ Critical | P1-MVP: Complete |
 | **P-02a: Quote Request & Inquiry Submission** | 🟡 | 80% | • Select destination countries/cities<br>• View starting prices by destination<br>• Select multiple preferred treatment dates (BE-enforced max 10 limit)<br>• Choose transplant type (hair/beard/both)<br>• Describe hair concerns and goals<br>• Complete medical questionnaire<br>• Capture 3D head scan (**Current: Image-based delivery**)<br>• Select preferred providers (max 5, optional)<br>• Review inquiry summary before submit<br>• Submit inquiry (distributed to max 10 providers)<br>• Save inquiry as draft (UX issues present) | • **Frontend enforcement** of max 10 countries/cities limit<br>• **Frontend validation** for max 10 date ranges limit<br>• Full 3D model head scan (currently images only)<br>• Smooth out UX issues in draft saving workflow | ⚠️ Critical | P1-MVP: Initial patient journey |
 | **P-02b: Quote Review & Comparison** | 🟡 | 85% | • View received quotes (with 72-hour window)<br>• Compare quotes side-by-side (price comparison only)<br>• See price per graft calculation<br>• View provider reviews and ratings<br>• Review provider credentials and certifications<br>• View included services and package details<br>• Ask questions to providers via messaging | • Full side-by-side comparison (all quote elements, not just price)<br>• Cancel/close inquiry | ⚠️ Critical | P1-MVP: Currently only price comparison available |
@@ -125,7 +127,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 **Overall Progress: 54.6%** (Based on weighted completion across all modules)
 
 | **Status** | **Count** | **Modules** | **Notes** |
-|------------|-----------|-------------|-----------|
+| ---------- | --------- | ----------- | --------- |
 | 🟢 Complete | 3 | P-01, P-03a, P-08 | Auth/Profile, Booking Confirmation, Reviews fully done |
 | 🟡 In Progress | 6 | P-02a (80%), P-02b (85%), P-03b (40%), P-05 (60%), P-06 (50%), P-07 (30%) | Core patient journey partially implemented |
 | 🔴 Not Started | 3 | P-04, P-09, P-10 | Travel, Treatment Tracking, Help Center pending |
@@ -136,7 +138,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 **⚠️ Critical Modules (MVP Blockers):**
 
 | **Module** | **Status** | **Remaining Work** | **Priority** |
-|------------|------------|-------------------|--------------|
+| ---------- | ---------- | ----------------- | ----------- |
 | P-02a: Inquiry Submission | 🟡 80% | Frontend validation (10 country/date limits), UX polish for drafts | **HIGH** - Completes patient inquiry flow |
 | P-02b: Quote Review | 🟡 85% | Full side-by-side comparison (beyond price), Cancel inquiry | **HIGH** - Decision-making capability |
 | P-03b: Payment | 🟡 40% | Deposit option, installment plans (2-9 months), receipts, reminders | **CRITICAL** - Revenue model incomplete |
@@ -146,6 +148,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 | P-10: Help Center | 🔴 0% | FAQs, support tickets, compliance docs (T&C, Privacy Policy) | **CRITICAL** - Legal compliance requirement |
 
 **📋 Standard Priority:**
+
 - P-04: Travel & Logistics (0%) - Basic location/instructions needed for P1
 - P-06: Communication (50%) - Image uploads, real-time notifications
 
@@ -154,6 +157,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 *Note: These are preliminary estimates based on feature complexity. Detailed task breakdown required for accuracy.*
 
 **Critical Path Items:**
+
 - **P-03b (Payment - Installments):** ~8-10 person-days (Stripe integration, payment schedules, reminders)
 - **P-05 (Aftercare - Polish & QA):** ~5-7 person-days (Educational content integration, specialist chat, thorough QA)
 - **P-07 (3D Model Generation):** ~12-15 person-days (3D reconstruction algorithm, rendering, optimization)
@@ -162,13 +166,13 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 - **P-02a/P-02b (Polish & Validation):** ~4-6 person-days (Frontend validation, full comparison UI, cancel flow)
 
 **Standard Items:**
+
 - **P-04 (Travel - Basic):** ~3-4 person-days (Location display, passport upload UI)
 - **P-06 (Communication - Complete):** ~4-5 person-days (Image uploads, push notifications, aftercare team chat)
 
 **Total Estimated Effort: ~47-62 person-days** (approximately 2-3 months with 1-2 developers)
 
 ### Known Issues Requiring Attention
-
 
 ---
 
@@ -179,7 +183,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 ## Module Progress Details
 
 | **Module / Component** | **Status** | **Completion %** | **What Users Can Do** | **What Users Cannot Yet Do** | **Category** | **Notes** |
-|------------------------|------------|------------------|------------------------|-------------------------------|--------------|-----------|
+| ---------------------- | ---------- | ---------------- | ---------------------- | ----------------------------- | ------------ | -------- |
 | **PR-01: Auth & Team Management** | 🔴 | 0% | • None yet | • Provider login/logout<br>• Invite team members via email<br>• Assign roles: Owner, Manager, Clinical Staff, Billing Staff<br>• Set role-based permissions<br>• View team member activity log<br>• Remove or suspend team members<br>• Manage own profile (password, contact details) | ⚠️ Critical | P1-MVP: Foundation for multi-user access |
 | **PR-02a: Inquiry Management & Review** | 🔴 | 0% | • None yet | • View new patient inquiries with notifications<br>• Review patient demographics (age, anonymized name until payment)<br>• View 3D head scans<br>• See requested treatment dates and locations<br>• Review medical questionnaire with **color-coded alerts** (🔴 Critical / 🟡 Standard / 🟢 None)<br>• Acknowledge critical medical conditions<br>• Filter and sort inquiries by status/date | ⚠️ Critical | P1-MVP: Inquiry assessment |
 | **PR-02b: Quote Creation & Submission** | 🔴 | 0% | • None yet | • Create quotes: select treatment (from admin list), add packages, customize graft count<br>• Set quote pricing with discounts<br>• **Pre-schedule appointment time slots** (enables auto-booking)<br>• Select assigned clinician<br>• Upload credentials and before/after photos<br>• Submit quote within 72-hour deadline<br>• View quote expiration status (48-hour default)<br>• View accepted quotes (auto-scheduled appointments)<br>• Manage confirmed bookings<br>• Send pre-op instructions | ⚠️ Critical | P1-MVP: Quote delivery & booking |
@@ -205,9 +209,9 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 
 [To be determined after status review]
 
-| **Item** | **Description** | **Effort** | **Cost** | **Client Decision** |
-|----------|-----------------|------------|----------|---------------------|
-| [TBD] | [TBD] | [XX days] | $[X,XXX] | [Required / Optional / Nice-to-have] |
+| **Item** | **Description** | **Effort**  | **Cost**  | **Client Decision**                  |
+| -------- | --------------- | ----------- | --------- | ------------------------------------ |
+| [TBD]    | [TBD]           | [XX days]   | $[X,XXX]  | [Required / Optional / Nice-to-have] |
 
 ---
 
@@ -218,7 +222,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 ## Module Progress Details
 
 | **Module / Component** | **Status** | **Completion %** | **What Users Can Do** | **What Users Cannot Yet Do** | **Category** | **Notes** |
-|------------------------|------------|------------------|------------------------|-------------------------------|--------------|-----------|
+| ---------------------- | ---------- | ---------------- | ---------------------- | ----------------------------- | ------------ | -------- |
 | **A-01: Patient Management & Oversight** | 🔴 | 0% | • None yet | • View all patients across all statuses (pending, inquiry, quoted, booked, in-progress, aftercare, completed)<br>• Filter patients by status, location, provider, date range<br>• **View unmasked patient details** (full name, contact info for compliance/support)<br>• Edit patient information if needed<br>• View patient inquiry history<br>• View all patient quotes received<br>• Monitor quote acceptance/rejection<br>• **Manually intervene for rebooking** (provider cancellations, emergencies)<br>• Contact other providers on patient's behalf<br>• Archive patient records (no hard deletes - 7-year retention compliance)<br>• Export patient data for reporting | ⚠️ Critical | P1-MVP: Platform oversight & compliance |
 | **A-02: Provider Management & Onboarding** | 🔴 | 0% | • None yet | • Onboard new providers to platform<br>• Verify medical licenses and insurance<br>• View comprehensive provider details<br>• Edit provider information<br>• Add/update certifications and awards<br>• Upload provider documents (licenses, insurance, credentials)<br>• **Manually add reviews** (with authenticated proof from other platforms)<br>• Manage provider status (active/inactive)<br>• Archive providers (no hard deletes - compliance)<br>• Assign providers to regions/countries<br>• Set provider eligibility for inquiry distribution | ⚠️ Critical | P1-MVP: Network building & quality control |
 | **A-03: Aftercare Team Management** | 🔴 | 0% | • None yet | • Create aftercare specialist user accounts<br>• Assign aftercare specialists to patients<br>• Monitor patient aftercare progress across platform<br>• View recovery scans and questionnaire responses<br>• **Flag urgent cases** (high pain, bleeding, complications)<br>• Chat with patients<br>• Chat with providers about patient progress<br>• Schedule/request video consultations<br>• Request new 3D scans from patients<br>• Track milestone completion rates<br>• Monitor aftercare specialist workload and performance | ⚠️ Critical | P1-MVP: Post-procedure support coordination |
@@ -263,7 +267,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 [To be filled after status review]
 
 | **Risk** | **Impact** | **Probability** | **Mitigation Plan** | **Owner** | **Status** |
-|----------|------------|-----------------|---------------------|-----------|------------|
+| -------- | ---------- | --------------- | ------------------- | --------- | ---------- |
 | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
 
 ## Active Issues
@@ -271,7 +275,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 [To be filled after status review]
 
 | **Issue** | **Affected Tenant(s)** | **Severity** | **Description** | **Resolution Plan** | **ETA** |
-|-----------|------------------------|--------------|-----------------|---------------------|------------|
+| --------- | ---------------------- | ------------ | --------------- | ------------------- | ---------- |
 | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
 
 ## Key Dependencies
@@ -284,7 +288,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 - External stakeholder coordination
 
 | **Dependency** | **Impact** | **Status** | **Required By** | **Notes** |
-|----------------|------------|------------|-----------------|-----------|
+| -------------- | ---------- | ---------- | --------------- | --------- |
 | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
 
 ---
@@ -295,7 +299,7 @@ The report focuses on tracking **user capabilities**: what patients, providers, 
 **Target Production Release:** [TBD]
 
 | **Phase** | **Duration** | **Key Deliverables** | **Completion Date** | **Status** |
-|-----------|--------------|----------------------|---------------------|------------|
+| --------- | ------------ | -------------------- | ------------------- | --------- |
 | **MVP Completion** | [TBD] | [TBD] | [TBD] | 🟢 / 🟡 / 🔴 |
 | **Testing & QA** | [TBD] | UAT, Performance Testing, Security Audit, Bug Fixes | [TBD] | 🟢 / 🟡 / 🔴 |
 | **Production Launch** | [TBD] | Soft Launch → Full Launch → Post-Launch Support | [TBD] | 🟢 / 🟡 / 🔴 |
