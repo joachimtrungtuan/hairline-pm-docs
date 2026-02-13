@@ -205,7 +205,7 @@ The module delivers value by:
 3. Admin enables or disables specific installment options (checkboxes for 2, 3, 4, 5, 6, 7, 8, 9 installments)
 4. Admin configures cutoff date rule (e.g., "Full payment must be completed 30 days before procedure date")
 5. Admin sets minimum booking amount eligible for split payments (e.g., minimum $500 booking for installments)
-6. Admin configures installment schedule rules (e.g., equal installments, first installment = deposit, etc.)
+6. Admin configures late payment grace period (0-14 days) before booking cancellation (i.e., how many days after a missed installment due date the system waits before canceling the booking for non-payment)
 7. Admin reviews preview showing example installment schedules for different booking amounts and dates
 8. Admin clicks "Save Split Payment Configuration"
 9. System validates cutoff date is reasonable (e.g., minimum 30 days, maximum 90 days)
@@ -365,8 +365,8 @@ The module delivers value by:
   1. Patient selects country during booking flow (e.g., patient in South Africa)
   2. Payment Processing Service queries payment configuration for patient's country
   3. System finds no Stripe account assigned to South Africa
-  4. System checks for fallback Stripe account with "Global/Default" region mapping
-  5. If fallback exists: System uses fallback Stripe account and logs warning to admin
+  4. System checks for a Stripe account marked as "Global Fallback"
+  5. If Global Fallback exists: System uses that Stripe account and logs warning to admin
   6. If no fallback: System displays error to patient: "Payment processing not available for your location. Please contact support."
   7. System sends alert to admin: "Payment attempted from unsupported country: South Africa. Configure Stripe account for this region."
 - **Outcome**: Patient uses fallback account (if configured) or is unable to complete booking, and admin is alerted to expand regional coverage
@@ -388,7 +388,8 @@ The module delivers value by:
 | Secret Key | password | Yes | Stripe secret API key (starts with sk_) | Must start with "sk_test_" or "sk_live_", max 200 chars |
 | Webhook Secret | password | Yes | Stripe webhook signing secret | Min 32 chars, max 200 chars |
 | Account Mode | select | Yes | Test Mode or Live Mode | Must select one option |
-| Assigned Countries | multi-select | Yes | Countries **or** regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Must select at least one; each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |
+| Global Fallback | toggle | No | If enabled, this Stripe account is used when no country/regional grouping mapping exists for the patient | At most 1 Stripe account can be marked as Global Fallback. If enabled: Assigned Countries must be empty and Account Status must be Active. |
+| Assigned Countries | multi-select | Conditional | Countries **or** regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Required unless Global Fallback is enabled. Each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |
 | Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency |
 | Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies |
 | Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) |
@@ -398,6 +399,7 @@ The module delivers value by:
 - Stripe API credentials must be validated before account can be activated (test connection to Stripe API)
 - One account per country/regional grouping (from FR-028); reassignments require explicit override
 - Country-level assignment supersedes group-level assignment for any country already in that group (most-specific mapping wins)
+- At most one Stripe account can be marked as Global Fallback; Global Fallback cannot have explicit country/regional grouping assignments
 - Cannot delete Stripe account if it has processed transactions in last 90 days (archive instead)
 - Admin can test Stripe connection at any time by clicking "Test Connection" button
 - Webhook secret is required for payment event verification and cannot be left blank
@@ -490,7 +492,7 @@ The module delivers value by:
 **Business Rules (Pair List)**:
 
 - All pairs MUST use USD as the base currency. Admin selects only the target currency when adding a pair.
-- Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 1B)
+- Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 6)
 - If a pair is deleted or not configured for a target currency, the system collects payment in USD for transactions involving that currency (no conversion attempted). A note on this screen states: "Currency pairs not listed here will default to USD for payment collection."
 - Each pair independently tracks its own status. A source failure affects only pairs using that source; manual pairs are unaffected.
 - Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when rate protection threshold was breached in last 7 days or source is degraded; red when last fetch failed or source is down.
@@ -513,7 +515,7 @@ The module delivers value by:
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Base Currency | display-only | N/A | Always "USD" — not editable | Fixed: USD |
-| Target Currency | select | Yes | The target currency for this pair (e.g., EUR, GBP, TRY) | Must be an enabled currency from Currency Management (Screen 1B); cannot duplicate an existing pair |
+| Target Currency | select | Yes | The target currency for this pair (e.g., EUR, GBP, TRY) | Must be an enabled currency from Currency Management (Screen 6); cannot duplicate an existing pair |
 | Rate Mode | radio | Yes | How the base rate is determined | Options: "Auto-fetch from source" or "Manual input" |
 | Source | select | Conditional | Which rate source to use for auto-fetching | Required if Rate Mode = Auto-fetch. Populated from sources configured in Screen 2A Section 2. |
 | Manual Base Rate | number | Conditional | The admin-entered base exchange rate (how many units of target currency per 1 USD) | Required if Rate Mode = Manual. Must be > 0, decimal precision: 6 digits. |
@@ -530,7 +532,7 @@ The module delivers value by:
 **Business Rules (Add/Edit Pair)**:
 
 - All pairs use USD as the base currency (non-negotiable, enforced by UI)
-- Target currency dropdown is populated from enabled currencies in the Currency Management screen (Screen 1B); cannot create a pair for a disabled currency
+- Target currency dropdown is populated from enabled currencies in the Currency Management screen (Screen 6); cannot create a pair for a disabled currency
 - Cannot create a duplicate pair (one pair per target currency; USD/EUR can only exist once)
 - **Auto-fetch mode**:
   - Admin must select a source from the configured sources in Screen 2A Section 2
@@ -608,7 +610,6 @@ The module delivers value by:
 | Available Installments | checkbox-group | Yes | Select which installment options to offer (2, 3, 4, 5, 6, 7, 8, 9) | Must select at least one if feature enabled |
 | Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 30-90 days, integer only |
 | Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only |
-| First Installment Amount | select | Yes | First installment equals deposit or equal split | Must select: "Deposit Amount" or "Equal Split" |
 | Installment Frequency | display-only | N/A | Payment schedule frequency | Fixed: Monthly (30-day intervals) |
 | Late Payment Grace Period | number | Yes | Days after missed payment before booking cancellation | Range: 0-14 days, integer only |
 
@@ -617,7 +618,7 @@ The module delivers value by:
 - Cutoff days ensures patients complete full payment before procedure date (default: 30 days)
 - System automatically calculates available installment options based on booking date and procedure date
 - If time between booking and procedure is insufficient for selected installments given cutoff, system offers fewer installments
-- First installment defaults to deposit amount, remaining balance split equally across remaining installments
+- Installment amount calculation is always equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - Minimum booking amount prevents installments for low-value bookings (reduces administrative overhead)
 - Late payment grace period allows patients short extension before booking cancellation (0 = no grace period)
 - Split payment configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
@@ -627,9 +628,8 @@ The module delivers value by:
 **Notes**:
 
 - Display preview calculator: "For $3,000 booking with 5 installments, 30-day cutoff, booking 210 days before procedure:"
-  - First installment (deposit 25%): $750 due at booking
-  - Remaining 4 installments: $562.50 each, due monthly (every ~30 days)
-  - Final payment due: 30 days before procedure date
+  - 5 installments: $600.00 each, due monthly (every ~30 days)
+  - Final installment due: 30 days before procedure date
 - Show example scenarios for different booking amounts and installment options
 - Provide "Preview Installment Schedule" button that generates detailed payment schedule
 - Display warning if cutoff days is very aggressive (e.g., >60 days): "This may limit installment availability"
@@ -730,7 +730,7 @@ The module delivers value by:
 - Deposit rate percentage (20-30% range) globally or per provider
 - Commission rate percentage (15-25% range) globally or per provider
 - Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
-- Installment schedule rules (first installment amount, late payment grace period)
+- Late payment grace period for split payments (0-14 days)
 - Rate protection alert threshold (global) for currency conversion monitoring
 
 **Fixed in Codebase (Not Editable)**:
@@ -754,15 +754,14 @@ The module delivers value by:
 ### Payment & Billing Rules
 
 - **Payment Rule 1**: Payment Processing Service routes transactions to appropriate Stripe account based on patient's country location
-- **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses fallback "Global/Default" account (if configured) or blocks payment
+- **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses the Stripe account marked as Global Fallback (if configured) or blocks payment
 - **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
 - **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to 2 decimal places)
 - **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
 - **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
-- **Billing Rule 1**: First installment defaults to deposit amount unless admin configures equal split across all installments
-- **Billing Rule 2**: Remaining balance after deposit split equally across remaining installments (rounded to 2 decimal places, last installment absorbs rounding difference)
+- **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
-- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at time of booking confirmation and stored per booking/transaction; subsequent displays and installment/final payments use the locked rate (no rate fluctuation after booking)
+- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at time of quote acceptance and stored per quote/booking/transaction; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after quote acceptance)
 - **Commission Rule**: Commission rate MUST be determined (global or provider-specific) at booking confirmation and stored per booking/transaction for payout and reconciliation consistency
 - **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
 
@@ -883,7 +882,7 @@ The module delivers value by:
 - **Assumption 1**: Admins have Stripe account credentials available when configuring payment accounts (publishable key, secret key, webhook secret)
 - **Assumption 2**: Admins understand currency conversion markup concept and can determine appropriate markup percentages for their business (typically 3-10%)
 - **Assumption 3**: Admins will monitor rate protection alerts and respond within 24 hours to adjust markup if needed
-- **Assumption 4**: Admins will configure at least one "Global/Default" Stripe account as fallback for countries without specific account assignment
+- **Assumption 4**: Admins will configure at most one Stripe account as Global Fallback for countries without specific account assignment
 - **Assumption 5**: Admins will test Stripe account connections after initial configuration to verify credentials are correct
 
 ### Technology Assumptions
@@ -1017,10 +1016,9 @@ As a platform administrator aiming to increase booking conversion rates, I need 
 2. **Given** I enable 2, 3, 4, 5, 6 installment options, **When** I set cutoff days to 30 and minimum booking amount to $500, **Then** system stores split payment rules
 3. **Given** split payment is configured with 30-day cutoff, **When** patient books $2,000 procedure 210 days in advance, **Then** patient sees all enabled installment options (2-6 installments)
 4. **Given** same configuration, **When** patient books $2,000 procedure 90 days in advance, **Then** patient sees only feasible installment options (e.g., 2-3 installments)
-5. **Given** patient selects 3 installments for $2,000 booking with 25% deposit rate, **When** patient completes booking, **Then** system calculates payment schedule:
-   - First installment: $500 (25% deposit) due at booking
-   - Remaining 2 installments: $750 each, due monthly (every ~30 days) with final payment completed by the 30-day cutoff
-   - Final payment due: 30 days before procedure date
+5. **Given** patient selects 3 installments for $2,000 booking, **When** patient completes booking, **Then** system calculates payment schedule:
+   - 3 installments: $666.67 each (rounded; last installment absorbs rounding difference), due monthly (every ~30 days)
+   - Final installment due: 30 days before procedure date
 6. **Given** patient has active installment plan, **When** patient misses second installment payment deadline, **Then** system sends reminder notification during grace period, then cancels booking if not paid within grace period
 
 ---
@@ -1070,7 +1068,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log.
 
-- How to manage patient attempting payment from country with no assigned Stripe account and no global fallback configured? **System checks patient country, finds no Stripe account assigned, checks for global/default fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
+- How to manage patient attempting payment from country with no assigned Stripe account and no Global Fallback configured? **System checks patient country, finds no Stripe account assigned, checks for Global Fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
 
 - What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately.
 
@@ -1078,7 +1076,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - What occurs if admin configures two different Stripe accounts for overlapping countries (e.g., Account A for US/Canada/Mexico, Account B for US/UK)? **System detects country overlap (US) during configuration and displays warning: "US is already assigned to Account A. Override assignment?"** Admin selects: "Override" (US moves to Account B, no longer uses Account A) or "Cancel" (keep current assignment). System logs conflict resolution to audit trail. If admin overrides, system uses most recently configured account for overlapping country (Account B for US in this example).
 
-- How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? **During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: "Stripe authentication failed for account [name]."** System sends urgent alert to admin: "Stripe account [name] failed authentication. Verify API keys are active and have required permissions."** System temporarily routes payments to fallback global account (if configured) and displays error banner to admin.
+- How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? **During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: "Stripe authentication failed for account [name]."** System sends urgent alert to admin: "Stripe account [name] failed authentication. Verify API keys are active and have required permissions."** System temporarily routes payments to Global Fallback (if configured) and displays error banner to admin.
 
 ---
 
@@ -1090,6 +1088,7 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-002**: System MUST allow admins to assign Stripe accounts to specific countries or regional groupings (multi-select assignment)
 - **REQ-029-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
 - **REQ-029-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
+- **REQ-029-004b**: System MUST support an optional Stripe account marked as Global Fallback used only when no country/regional grouping mapping exists (at most 1 Global Fallback account)
 - **REQ-029-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
 - **REQ-029-006**: System MUST allow admins to manage rate sources (add, edit, delete) where each source bundles a provider type (xe.com, fixer.io) with its API credentials. Source creation requires a successful test connection before saving. Source deletion is blocked if currency pairs reference it; admin must reassign or convert affected pairs first.
 - **REQ-029-006b**: System MUST allow admins to create and manage currency pairs (CRUD), where each pair has USD as the mandatory base currency and a configurable rate mode: auto-fetch (from a configured source) or manual input (admin-entered base rate).
@@ -1110,10 +1109,10 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-019**: System MUST allow admins to configure cutoff days (30-90 day range) requiring full payment completion before procedure date
 - **REQ-029-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
 - **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
-- **REQ-029-022**: System MUST generate installment payment schedules with first installment equal to deposit amount and remaining balance split equally
+- **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
 - **REQ-029-043**: System MUST allow admins to configure platform commission rates (global default and provider-specific overrides; allowed range 15-25%) applied to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
-- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at booking confirmation and store them per booking/transaction (no rate fluctuation after booking)
+- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at quote acceptance and store them per quote/booking/transaction (no rate fluctuation after quote acceptance)
 - **REQ-029-045**: System MUST snapshot commission rate at booking confirmation and store it per booking/transaction for payout and reconciliation consistency
 
 ### Data Requirements
@@ -1153,8 +1152,8 @@ As a platform administrator managing international payments, I need to receive t
 ## Key Entities
 
 - **Entity 1 - Stripe Account Configuration**:
-  - **Key attributes**: account_id, account_name, publishable_key, secret_key_encrypted, webhook_secret_encrypted, mode (test/live), assigned_countries[], supported_currencies[], default_currency, status (active/inactive), created_date, last_tested_date
-  - **Relationships**: One Stripe account assigned to many countries; one country can map to one Stripe account (most recent assignment prioritized)
+  - **Key attributes**: account_id, account_name, publishable_key, secret_key_encrypted, webhook_secret_encrypted, mode (test/live), is_global_fallback (boolean), assigned_countries[], supported_currencies[], default_currency, status (active/inactive), created_date, last_tested_date
+  - **Relationships**: One Stripe account assigned to many countries; one country can map to one Stripe account. If no mapping exists for a patient country, the system uses the Stripe account marked as Global Fallback (if configured).
 
 - **Entity 2a - Currency Conversion Global Settings**:
   - **Key attributes**: config_id, global_default_markup_percentage, global_default_sync_frequency, rate_protection_threshold, created_by_admin_id, updated_date
@@ -1166,14 +1165,14 @@ As a platform administrator managing international payments, I need to receive t
 
 - **Entity 2c - Currency Pair Configuration**:
   - **Key attributes**: pair_id, base_currency (always USD), target_currency, rate_mode (auto/manual), source_id (nullable; required if auto), manual_base_rate (nullable; required if manual), markup_percentage_override (nullable; if null, inherits global default), sync_frequency_override (nullable; if null, inherits global default; ignored if manual), current_base_rate, current_effective_rate, last_updated_timestamp, next_sync_timestamp (nullable; auto-fetch only), status (healthy/warning/error), created_by_admin_id, created_date
-  - **Relationships**: One pair per target currency (unique constraint on target_currency); many transactions reference the pair's effective rate at booking time; one pair references one source (if auto-fetch)
+  - **Relationships**: One pair per target currency (unique constraint on target_currency); many quotes/bookings/transactions reference the pair's effective rate snapshot captured at quote acceptance; one pair references one source (if auto-fetch)
 
 - **Entity 3 - Deposit Rate Configuration**:
   - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), deposit_percentage, effective_date, created_by_admin_id, created_date
   - **Relationships**: One global deposit rate; many provider-specific deposit rate overrides (one per provider); many bookings reference deposit rate configuration
 
 - **Entity 4 - Split Payment Configuration**:
-  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, first_installment_type (deposit/equal_split), late_payment_grace_period_days, effective_date, created_by_admin_id
+  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, late_payment_grace_period_days, effective_date, created_by_admin_id
   - **Relationships**: One split payment configuration (global); many bookings reference split payment rules; many installment schedules generated based on configuration
 
 - **Entity 5 - Payment Configuration Audit Log**:
