@@ -1,6 +1,6 @@
 # FR-008 - Travel & Logistics Coordination
 
-**Module**: P-04: Travel & Logistics | PR-04: Provider Travel Coordination | A-04: Travel Management
+**Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
 **Last Updated**: 2026-02-13
@@ -41,6 +41,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 - Commission tracking on platform-facilitated bookings (depends on API booking being live)
 - Airport transport booking (informational only in MVP via hotel form's Transportation Details field)
 - Travel price preview during inquiry date selection (requires live flight API — future)
+- OCR / auto-extraction of flight or hotel booking data from patient screenshots (client expectation noted; deferred to future phase — all travel details entered manually in MVP)
 
 ---
 
@@ -77,6 +78,8 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 
 ### Shared Services
 
+> **S-04 (Travel API Gateway)**: In MVP, S-04 provides travel record storage and event dispatch only — no external API integration. Live flight/hotel API connections are deferred to the future phase.
+
 - Listen for inquiry **Confirmed** status transitions and automatically dispatch travel submission requests: passport request to patient for Path A (provider-booked travel); flight and hotel submission request to patient for Path B (patient self-booked)
 - Store and serve all travel records (passport, flight, hotel) against appointments; records are immutable after submission — admin corrections create a new locked version with a mandatory audit log entry
 - Send notifications (email + in-app) for all travel record events: automated requests on Confirmed, submissions received, provider updates
@@ -89,7 +92,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 ### Main Flow 1: Provider-Included Travel
 
 **Actors**: System (automated), Patient, Provider, Admin
-**Trigger**: Inquiry/appointment status transitions to **Confirmed** (payment completed, appointment locked). The system automatically fires the passport request — no manual action from provider or admin required.
+**Trigger**: Inquiry/appointment status transitions to **Confirmed** (deposit paid, booking status = Confirmed per FR-006, appointment locked). The system automatically fires the passport request — no manual action from provider or admin required.
 **Outcome**: Provider has all patient travel details needed to complete external bookings; patient's itinerary is updated with confirmed flight and hotel records.
 
 **Flow Diagram**:
@@ -139,7 +142,7 @@ flowchart TD
 ### Main Flow 2: Patient Self-Booked Travel
 
 **Actors**: System (automated), Patient, Provider, Admin
-**Trigger**: Inquiry/appointment status transitions to **Confirmed** (payment completed). System automatically prompts the patient to submit all travel details — no manual trigger required.
+**Trigger**: Inquiry/appointment status transitions to **Confirmed** (deposit paid, booking status = Confirmed per FR-006). System automatically prompts the patient to submit all travel details — no manual trigger required.
 **Outcome**: Provider has visibility of the patient's confirmed travel details for coordination; unified itinerary is available to both parties.
 
 **Flow Diagram**:
@@ -809,7 +812,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 - Passport data (especially `passport_number` and `passport_image`) is PII and must be encrypted at rest and in transit.
 - Access to passport data is restricted to: the patient (own record), the assigned provider, and admin.
-- Booking confirmation data (flight/hotel) retained for 2 years.
+- Booking confirmation data (flight/hotel) retained for 7 years (aligned with medical data retention per constitution). All audit log entries for travel record mutations retained for 10 years per constitution Section VI.
 - All access and modification events logged with timestamp, user ID, and IP.
 
 ---
@@ -993,7 +996,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Package Travel Inclusion
 
-- **REQ-008-018**: The provider MUST be able to mark a package as Path A (all travel included: flight, hotel, airport transfer) or Path B (patient self-books all travel); this selection MUST be reflected in the package breakdown and determines the travel path for the patient post-confirmation.
+- **REQ-008-018**: The provider MUST be able to mark a package as Path A (all travel included: flight, hotel, airport transfer) or Path B (patient self-books all travel); this selection MUST be reflected in the package breakdown and determines the travel path for the patient post-confirmation. **Note**: The UI for this selection lives in FR-004 (Quote Submission) or FR-024 (Treatment Package Management). FR-008 consumes the `travel_path` value from the accepted package.
 - **REQ-008-019**: When a package is Path A (provider-included travel), the system MUST surface a travel status tracker on the provider's confirmed appointment view covering: passport status, outbound flight status, return flight status, and hotel status.
 
 ### Notifications

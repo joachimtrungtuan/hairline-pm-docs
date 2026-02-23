@@ -160,7 +160,6 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Price per Graft | number | Yes | Derived unit price (total ÷ graft count) | Calculated; per quote |
 | Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 |
 | Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
-| Estimated Travel Costs | currency | No | Estimated travel costs to destination | Manually input by Provider (FR-004) or via FR-008 integration |
 | Expiry Timer | timer | Yes | Countdown until quote expiry; shows static "Expired on [date]" when expired | Derived from FR-004 settings; per quote |
 | Actions | buttons | Yes | View Details, Accept, Contact Support | State-aware enabling; per quote; Contact Support opens secure messaging thread with Hairline Support via FR-012 |
 
@@ -172,7 +171,7 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 | Sort & Filter | controls | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined |
 | Compare Selection | checkbox | No | Select quotes to compare side-by-side (max 3) | Max 3 selected; disabled for expired/withdrawn quotes |
 | Comparison View | panel | No | Side-by-side comparison of selected quotes | Renders only when ≥2 selected |
-| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist, estimated travel costs (REQ-005-014) |
+| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist (REQ-005-014) |
 
 **Business Rules**:
 
@@ -347,7 +346,6 @@ The Quote Comparison & Acceptance module enables patients to review all provider
 - **FR-012 / P-06, A-10**: Messaging & communication (Patient ↔ Hairline Support quote questions).  
 - **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
 - **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary).  
-- **FR-008 / P-03 (or A-09)**: Travel cost data/estimation inputs for "Estimated Travel Costs" field (or manual input from FR-004).  
 - **Upcoming FR / P-03, A-05**: Booking & Payment (payment intent, invoice, PII reveal post-payment).  
 - **A-09**: System settings (legal copy, terms acknowledgment text).
 
@@ -478,7 +476,7 @@ Patient cancels the inquiry while quotes are available for review or after accep
 - **REQ-005-011**: System MUST emit booking handoff payload to the Booking & Payment module.
 - **REQ-005-012**: System MUST allow patients to filter and sort quotes by defined comparison criteria.  
 - **REQ-005-013**: System MUST support side-by-side comparison view of up to 3 quotes.  
-- **REQ-005-014**: System MUST display comparison differentiators: price per graft, review rating/count, provider credentials summary, included services checklist, and estimated travel costs.
+- **REQ-005-014**: System MUST display comparison differentiators: price per graft, review rating/count, provider credentials summary, and included services checklist. (Estimated travel costs deferred — no source available in MVP; requires live travel API from FR-008 future phase.)
 - **REQ-005-015**: Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Hairline Support).  
 - **REQ-005-016**: System MUST notify Hairline support of patient quote questions within 5 minutes.  
 - **REQ-005-017**: System MUST lock quote exchange rate at time of patient acceptance (per FR-004 pricing rules).

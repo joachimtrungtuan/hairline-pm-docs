@@ -34,19 +34,19 @@ If no FR is provided, ask before proceeding.
 
 ## Progress Tracking (Mandatory)
 
-**Before starting work**, create a checklist of all workflow steps below. Mark each step in-progress when starting and completed when done. This prevents step-skipping and keeps the workflow auditable.
+**Before starting work**, use the platform's task/todo tracking tools (task lists, todo items, progress trackers) to create a checklist of all workflow steps below. Mark each step in-progress when starting and completed when done. This prevents step-skipping and keeps the workflow auditable.
 
 ## Workflow (Single FR)
 
 ### 1. Parse FR and initialize tracking
 
-Extract FR number, normalize to `FR-###`, create step checklist covering: parse, structure scan, reference loading, per-section analysis, dependency checks, draft report, post-verification, final output.
+Extract FR number, normalize to `FR-###`. Create a step checklist covering: parse, structure scan, reference loading, **[PLACEHOLDER — PRD sections added in Step 2]**, dependency checks, draft report, post-verification, final output. Do not add per-section items yet — they are added after Step 2 replaces the placeholder.
 
 ### 2. Inspect PRD structure
 
 1. Locate `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`
 2. Extract H2 headers only (with line numbers)
-3. Add one tracking item per section
+3. **MANDATORY**: Add one tracking item per H2 section found — replacing the placeholder from Step 1. Every section must appear as its own item (e.g., "Analyze PRD: Overview", "Analyze PRD: Workflows", "Analyze PRD: Screen Specifications"). Do not proceed to Step 3 until all PRD sections are in the checklist.
 
 ### 3. Load minimal references
 
@@ -290,6 +290,16 @@ Before final output, confirm:
 - [ ] Report within word limit
 - [ ] No unsupported claims
 - [ ] Cross-FR consistency checked (multi-FR mode)
+
+## Error Handling
+
+If verification cannot be completed:
+
+- Document missing files/sections in report
+- Note incomplete dependencies
+- Mark uncertain areas with [UNVERIFIED] tag
+- Provide partial analysis with caveats
+- List additional info needed
 
 ## Deployment
 

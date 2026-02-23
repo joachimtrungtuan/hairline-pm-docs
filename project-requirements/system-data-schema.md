@@ -1719,6 +1719,155 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 ---
 
+### 32. Hotels (Travel Records — Provider Entry, Path A)
+
+**Table**: `hotels`
+**Description**: Hotel booking details entered by provider (Path A) or patient (Path B) for a confirmed appointment. One record per appointment in MVP. Immutable after submission; admin corrections create a new versioned record.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique hotel record identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (appointment anchor) |
+| hotel_name | VARCHAR(255) | NOT NULL | Full name of the hotel/lodging |
+| hotel_address | TEXT | NOT NULL | Full address |
+| check_in_date | DATE | NOT NULL | Arrival date |
+| check_in_time | TIME | NOT NULL | Expected check-in time |
+| check_out_date | DATE | NOT NULL | Departure date (must be after check_in_date) |
+| check_out_time | TIME | NOT NULL | Expected check-out time |
+| reservation_number | VARCHAR(100) | NOT NULL | Booking/reservation reference |
+| room_type | VARCHAR(255) | NOT NULL | Room category (Single, Double, Suite, etc.) |
+| amenities | TEXT | NULLABLE | Gym, breakfast, parking, etc. |
+| transportation | TEXT | NULLABLE | Airport pickup and transfer notes (canonical transport field in MVP) |
+| special_request | TEXT | NULLABLE | Accessibility needs, preferences |
+| contact_number | VARCHAR(50) | NULLABLE | Hotel contact phone |
+| contact_email | VARCHAR(255) | NULLABLE | Hotel contact email |
+| submitted_by | VARCHAR(50) | NOT NULL | Submitter role: `patient` or `provider` |
+| submitted_by_id | UUID | NOT NULL | User ID of the submitter |
+| submitted_at | TIMESTAMP | NOT NULL | Submission timestamp |
+| version | INTEGER | DEFAULT 1 | Version number; incremented on admin correction |
+| superseded_by | UUID | FOREIGN KEY, NULLABLE | References hotels.id of the corrected version |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `submitted_by_id`, `version`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+- `belongsTo` → `Itinerary`
+
+**Business Rules**:
+
+- Locked immediately after submission. No edits by patient or provider post-submission.
+- Admin corrections write a new version (version + 1) and set `superseded_by` on the old record.
+- One active hotel record per appointment in MVP.
+
+---
+
+### 33. Flights (Travel Records — Flight Legs)
+
+**Table**: `flights`
+**Description**: Flight leg details submitted by patient (Path B) or entered by provider (Path A). Up to 2 records per appointment (outbound + return). Immutable after submission.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique flight record identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (appointment anchor) |
+| leg_type | ENUM | NOT NULL | `outbound` or `return` |
+| airline_name | VARCHAR(255) | NOT NULL | Name of the airline |
+| flight_number | VARCHAR(20) | NOT NULL | Flight number |
+| departure_airport | VARCHAR(255) | NOT NULL | IATA code + airport name |
+| arrival_airport | VARCHAR(255) | NOT NULL | IATA code + airport name |
+| departure_date | DATE | NOT NULL | Scheduled departure date |
+| departure_time | TIME | NOT NULL | Scheduled departure time (HH:MM) |
+| arrival_date | DATE | NOT NULL | Scheduled arrival date (must be ≥ departure_date) |
+| arrival_time | TIME | NOT NULL | Scheduled arrival time (HH:MM) |
+| ticket_confirmation_number | VARCHAR(100) | NOT NULL | Booking reference from airline |
+| ticket_class | ENUM | NOT NULL | `Economy`, `Business`, or `First` |
+| baggage_allowance | TEXT | NULLABLE | Checked + carry-on allowance details |
+| special_request | TEXT | NULLABLE | Seat preference, meal preference, etc. |
+| submitted_by | VARCHAR(50) | NOT NULL | Submitter role: `patient` or `provider` |
+| submitted_by_id | UUID | NOT NULL | User ID of the submitter |
+| submitted_at | TIMESTAMP | NOT NULL | Submission timestamp |
+| version | INTEGER | DEFAULT 1 | Version number; incremented on admin correction |
+| superseded_by | UUID | FOREIGN KEY, NULLABLE | References flights.id of the corrected version |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `leg_type`, `submitted_by_id`
+- UNIQUE: `quote_id`, `leg_type`, `version` (one active record per leg per appointment)
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+- `belongsTo` → `Itinerary`
+
+**Business Rules**:
+
+- Maximum 2 active flight records per appointment (one per leg_type).
+- `total_price` is excluded; cost captured at package/quote level (FR-004/FR-007).
+- Locked immediately after submission.
+
+---
+
+### 34. Passport Details
+
+**Table**: `passport_details`
+**Description**: Patient passport data captured for Path A appointments (provider-booked travel). Encrypted at rest. Immutable after submission. Not captured in Path B.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique passport record identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
+| passport_name | VARCHAR(100) | NOT NULL | Full name as on passport |
+| passport_number | VARCHAR(20) | NOT NULL, ENCRYPTED | Machine-readable passport number (AES-256 at rest) |
+| passport_dob | DATE | NOT NULL | Date of birth as on passport |
+| gender | VARCHAR(20) | NOT NULL | `Male`, `Female`, or `Other` |
+| location | VARCHAR(255) | NOT NULL | Country of nationality |
+| place_of_birth | VARCHAR(255) | NOT NULL | City/country of birth |
+| passport_issue | DATE | NOT NULL | Passport issue date |
+| passport_expiry | DATE | NOT NULL | Passport expiry date (must be future date at submission) |
+| passport_image | VARCHAR(500) | NOT NULL | Secure storage reference path for passport photo |
+| status | ENUM | DEFAULT 'pending' | `pending`, `complete`, `incomplete` |
+| submitted_by_id | UUID | NOT NULL | Patient user ID |
+| submitted_at | TIMESTAMP | NULLABLE | Submission timestamp (null until submitted) |
+| version | INTEGER | DEFAULT 1 | Version number; incremented on admin correction |
+| superseded_by | UUID | FOREIGN KEY, NULLABLE | References passport_details.id of corrected version |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `patient_id`, `status`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+- `belongsTo` → `Patient`
+
+**Business Rules**:
+
+- `passport_number` and `passport_image` encrypted at rest (AES-256). Access restricted to submitting patient, assigned provider, and admin.
+- Displayed masked (`A1234****`) to patient; shown in full to assigned provider and admin only.
+- Locked immediately after submission. Admin corrections create a new versioned record.
+- Retained for 7 years (medical data retention per constitution). Audit log entries retained for 10 years.
+
+---
+
 ## Appendix
 
 ### Complete Table List

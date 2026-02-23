@@ -474,7 +474,6 @@ flowchart TD
 | Price per Graft | number | Yes | Derived unit price (total ÷ graft count) | Calculated |
 | Provider Reviews | text | No | Review rating and count | Read-only; sourced from FR-013 |
 | Provider Credentials Summary | text | Yes | Licenses/certifications summary | Read-only; sourced from FR-015 |
-| Estimated Travel Costs | number | No | Estimated travel costs to destination | Provider input (FR-004) or FR-008 integration |
 | Expiry Timer | timer | Yes | Countdown until quote expiry; shows static "Expired on [date]" when expired | Derived from quote expiresAt |
 | Actions | buttons | Yes | View Details, Accept, Contact Support | State-aware enabling; Accept disabled if expired/withdrawn/already accepted; Contact Support opens secure messaging thread with Hairline Support via FR-012 (FR-005) |
 
@@ -486,7 +485,7 @@ flowchart TD
 | Sort & Filter | group | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined (FR-005) |
 | Compare Selection (Per Quote) | checkbox | No | Select quotes to compare side-by-side | Max 3 selected; disabled for expired/withdrawn quotes |
 | Comparison View Panel | group | Conditional | Side-by-side comparison panel for selected quotes | Renders only when ≥2 quotes are selected |
-| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist, estimated travel costs (FR-005 REQ-005-014) |
+| Comparison Differentiators | table | Conditional | Comparison rows across selected quotes; draws data from Per-Quote Card Fields above | Must include at least: total price, price per graft, graft count, review rating/count, soonest appointment slot, provider credentials summary, included services checklist (FR-005 REQ-005-014) |
 
 **Business Rules**:
 
@@ -990,34 +989,33 @@ flowchart TD
 - Passport expiry must be at least 6 months from the scheduled travel date; if it is not, the system shows a non-blocking warning but allows the patient to proceed after acknowledgment — the provider is ultimately responsible for verifying travel document validity (FR-008)
 - Full name must match the passport document exactly; discrepancies may cause travel booking failures, so the form should emphasize this requirement visually
 - Passport photo/scan accepts JPG, PNG, and PDF formats with a maximum file size of 10 MB; the upload supports both camera capture (for mobile convenience) and gallery selection
-- Details remain editable by the patient until the provider locks them for flight booking; once locked, the form transitions to read-only state (Screen P04.1-S2) and the patient must contact the provider to request modifications
+- Once submitted, passport details are **locked immediately** and cannot be edited by the patient or provider; the form transitions to read-only state (Screen P04.1-S2). Any correction must be requested through admin only (FR-008 REQ-008-017)
 - "Save as Draft" allows the patient to partially complete the form and return later without losing progress; drafts do not trigger provider notification
 - All passport data is classified as sensitive PII and must be encrypted at rest and in transit; access is restricted to the patient, the assigned provider (for travel booking), and authorized admin staff (FR-008 Data & Privacy Rules)
 
-##### Screen P04.1-S2: Passport Details (Locked / Read-Only View)
+##### Screen P04.1-S2: Passport Details (Submitted / Read-Only View)
 
-**Purpose**: Display submitted passport details in read-only mode after the provider has locked them for travel booking
+**Purpose**: Display submitted passport details in read-only mode after the patient has submitted them. Records are locked immediately on submission — neither patient nor provider can edit. Any correction requires admin intervention.
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Passport Details" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Booking Detail → Travel section | Top-left corner |
-| Locked Status Banner | group | Yes | Prominent banner: "Your passport details have been locked by your provider for travel booking. Contact your provider to request changes." | Displayed at top below title; warning/info color (amber/yellow) |
+| Submitted Status Banner | group | Yes | Prominent banner: "Your passport details have been submitted and are now locked. To request a correction, please contact support." | Displayed at top below title; info color |
 | Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date | Same as P04.1-S1 |
-| Locked Badge | badge | Yes | "Locked by Provider" status | Displayed next to title; distinct from "Submitted" |
-| Locked Timestamp | datetime | Yes | Date/time provider locked the details | Format: "Locked on [Month DD, YYYY at HH:MM]" |
-| All Form Fields (Read-Only) | group | Yes | All fields from P04.1-S1 displayed in read-only mode: full name, date of birth, gender, nationality, passport number, issuing country, issue date, expiry date, passport photo thumbnail, special requirements | All fields non-editable; no input styling; data displayed as text labels |
+| Submitted Badge | badge | Yes | "Submitted" status | Displayed next to title |
+| Submission Timestamp | datetime | Yes | Date/time the patient submitted the record | Format: "Submitted on [Month DD, YYYY at HH:MM]" |
+| All Form Fields (Read-Only) | group | Yes | All fields from P04.1-S1 displayed in read-only mode: full name, date of birth, gender, nationality, passport number (masked), issue date, expiry date, passport photo thumbnail | All fields non-editable; data displayed as text labels |
 | Passport Photo Thumbnail | image | Yes | Thumbnail of uploaded passport photo/scan | Tappable to view full-size image; read-only |
-| Contact Provider Button | button | Yes | "Contact Provider to Request Changes" | Primary CTA; opens secure messaging thread with the assigned provider (FR-012) |
+| Contact Support Button | button | Yes | "Contact Support to Request a Correction" | Opens support channel; corrections applied by admin only with audit log (FR-008 REQ-008-017) |
 | Back to Booking Button | action | Yes | "Back to Booking" | Returns to Booking Detail |
 
 **Business Rules**:
 
-- The locked state is triggered when the provider marks the passport details as "confirmed for booking" on their side; this prevents the patient from making changes that could invalidate travel reservations
-- The patient can only request changes through the provider via secure messaging (FR-012); the provider can unlock the details if modifications are needed
-- If the provider unlocks the details (e.g., for corrections), the form returns to editable state (P04.1-S1) with a notification to the patient: "Your provider has unlocked your passport details for editing."
-- The locked view must display all submitted data clearly for the patient's reference, including the passport photo thumbnail
-- Locked timestamp provides an audit trail for when the details were finalized for travel booking
+- The read-only state is triggered immediately when the patient submits passport details; it is not provider-controlled (FR-008 REQ-008-017)
+- Neither the patient nor the provider can edit a submitted passport record; only admin can apply corrections, which create a new locked version with a mandatory audit log entry
+- The submitted view displays all form fields for the patient's reference; passport number is shown masked (e.g. `A1234****`)
+- Submission timestamp provides an audit trail of when details were provided
 
 ---
 
@@ -1082,7 +1080,7 @@ flowchart TD
     HotelSuccess --> TravelHub
 ```
 
-> **Note**: Both flight and hotel details feed into the patient's unified itinerary (FR-008 REQ-008-005) and are visible to the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, proximity check). The patient can edit/update details at any time until the treatment start date.
+> **Note**: Both flight and hotel details feed into the patient's unified itinerary (FR-008 REQ-008-014) and are visible to the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, proximity check). Records are locked immediately after submission; corrections require admin intervention (FR-008 REQ-008-017).
 
 #### Screen Specifications
 
@@ -1127,9 +1125,9 @@ flowchart TD
 - Outbound arrival date should be on or before the treatment start date to allow reasonable travel buffer; if it is not, the system shows a non-blocking warning but allows saving — the patient is responsible for verifying alignment with their provider
 - Return departure date should be on or after the estimated treatment end date (accounting for recovery); a non-blocking warning is shown if the dates appear misaligned
 - Flight details are shared with the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, transfer arrangements); provider cannot edit the patient's self-managed travel details (FR-008)
-- Patient can update flight details at any time until the treatment start date; after the treatment start date, details become read-only
+- Flight records are **locked immediately after submission**; the patient cannot edit them post-submission. Any correction must be requested through admin only (FR-008 REQ-008-017)
 - Connecting flights support multi-leg journeys (max 3 connecting flights per direction) for patients with layovers
-- All saved flight details contribute to the patient's unified itinerary (FR-008 REQ-008-005); updates replace previous entries and mark old ones as superseded
+- All saved flight details contribute to the patient's unified itinerary (FR-008 REQ-008-014)
 
 ##### Screen P04.2-S2: Hotel/Accommodation Details Input
 
@@ -1172,9 +1170,9 @@ flowchart TD
 - Check-in date should be on or before the treatment start date to ensure the patient is settled before the procedure; a non-blocking warning is shown if check-in is after treatment start, but saving is allowed since the patient may have alternative arrangements
 - Check-out date should be after the estimated treatment end date plus a reasonable recovery buffer (provider-specific; typically 2–5 days post-procedure for hair transplant recovery); a non-blocking warning is shown if the stay appears too short
 - Hotel details are shared with the assigned provider in read-only mode for logistics coordination (proximity verification, potential transport arrangements); provider cannot edit the patient's self-managed accommodation details (FR-008)
-- Patient can update hotel details at any time until the check-in date; after check-in, details become read-only
+- Hotel records are **locked immediately after submission**; the patient cannot edit them post-submission. Any correction must be requested through admin only (FR-008 REQ-008-017)
 - Distance from clinic is auto-calculated when both the accommodation address and the clinic address are available; this helps the patient and provider assess logistics feasibility
-- All saved hotel details contribute to the patient's unified itinerary (FR-008 REQ-008-005); updates replace previous entries and mark old ones as superseded
+- All saved hotel details contribute to the patient's unified itinerary (FR-008 REQ-008-014)
 
 ---
 

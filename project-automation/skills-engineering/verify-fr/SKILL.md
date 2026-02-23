@@ -39,13 +39,13 @@ If no FR is provided, ask before proceeding.
 
 ### 1. Parse FR and initialize tracking
 
-Extract FR number, normalize to `FR-###`, create step checklist covering: parse, structure scan, reference loading, per-section analysis, dependency checks, draft report, post-verification, final output.
+Extract FR number, normalize to `FR-###`. Use the platform's task/todo tracking tool to create a step checklist covering: parse, structure scan, reference loading, **[PLACEHOLDER — PRD sections added in Step 2]**, dependency checks, draft report, post-verification, final output. Do not add per-section items yet — they are added after Step 2 replaces the placeholder.
 
 ### 2. Inspect PRD structure
 
 1. Locate `local-docs/project-requirements/functional-requirements/fr###-*/prd.md`
 2. Extract H2 headers only (with line numbers)
-3. Add one tracking item per section
+3. **MANDATORY**: Use the platform's task/todo tracking tool to add one tracking item per H2 section found — replacing the placeholder from Step 1. Every section must appear as its own item (e.g., "Analyze PRD: Overview", "Analyze PRD: Workflows", "Analyze PRD: Screen Specifications"). Do not proceed to Step 3 until all PRD sections are in the todo list.
 
 ### 3. Load minimal references
 
@@ -274,6 +274,16 @@ rg -A 20 "Business Rules|Validation|Constraints|Rules" fr###-*/prd.md
 rg -i "field|column|attribute|parameter|data type" fr###-*/prd.md
 rg -A 10 "Data Model|API Schema|Database|Table" fr###-*/prd.md
 ```
+
+## Error Handling
+
+If verification cannot be completed:
+
+- Document missing files/sections in report
+- Note incomplete dependencies
+- Mark uncertain areas with [UNVERIFIED] tag
+- Provide partial analysis with caveats
+- List additional info needed
 
 ## Quality Checklist
 

@@ -292,28 +292,29 @@ Aggregate all issues found across sections:
 3. **Prioritize**: Order by impact
 4. **Generate Solutions**: 3+ options per issue with pros/cons/effort
 
-**Report Structure** (under 300 words):
+**Report Structure** (under 300 words for single-FR, under 500 words for multi-FR):
 
 ```markdown
-# FR-### Verification Report
+# FR Verification Report
 
-**FR Title**: [Title]
-**Priority**: [P1/P2/P3]
-**Modules**: [P-##, PR-##, A-##]
-**Status**: [Verified with Issues / Clean]
+**FR(s)**: FR-### [, FR-###, ...]
+**Priority**: P#
+**Modules**: P-##, PR-##, A-##
+**Status**: Verified with Issues / Clean
 
 ---
 
 ## CRITICAL ISSUES
 
 ### Issue #1: [Title]
+**FR**: FR-### (or Cross-FR)
 **Description**: [1-2 sentences]
 **Impact**: [What breaks/risks]
 
 **Solutions**:
-1. **[Option A]**: [Description] | Pros: [X] | Cons: [Y] | Effort: [Low/Med/High]
-2. **[Option B]**: [Description] | Pros: [X] | Cons: [Y] | Effort: [Low/Med/High]
-3. **[Option C]**: [Description] | Pros: [X] | Cons: [Y] | Effort: [Low/Med/High]
+1. **[Option A]**: [Description] | Pros: [X] | Cons: [Y] | Effort: Low/Med/High
+2. **[Option B]**: [Description] | Pros: [X] | Cons: [Y] | Effort: Low/Med/High
+3. **[Option C]**: [Description] | Pros: [X] | Cons: [Y] | Effort: Low/Med/High
 
 ---
 
@@ -329,10 +330,11 @@ Aggregate all issues found across sections:
 
 ## SUMMARY
 
-**Total Issues**: [X Critical, Y Medium, Z Minor]
-**Constitution Compliance**: [Pass/Fail - specifics]
-**Client Alignment**: [%]
-**Dependencies**: [Status]
+**Total Issues**: X Critical, Y Medium, Z Minor
+**Constitution Compliance**: Pass/Fail
+**Client Alignment**: assessment
+**Dependencies**: Status
+**Cross-FR Consistency**: assessment (multi-FR mode only)
 
 **Recommendation**: [Next action]
 ```
@@ -380,7 +382,7 @@ Present verified report with:
 - All issues confirmed by post-verification grep
 - 3+ solution options per issue
 - Clear references to source documents
-- Under 300 words total
+- Under 300 words (single FR) or 500 words (multi-FR)
 
 **Mark Step 8 as completed**.
 
