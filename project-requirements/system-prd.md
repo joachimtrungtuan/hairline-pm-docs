@@ -62,7 +62,7 @@ The Hairline Platform consists of four distinct applications serving different u
 
 - **Simplified Discovery**: Compare multiple clinics and quotes in one place
 - **Price Transparency**: Clear, itemized pricing with no hidden fees
-- **Travel Convenience**: Book flights and hotels directly through the platform
+- **Travel Convenience (Phase 2)**: Book flights and hotels directly through the platform (MVP focuses on travel detail capture + coordination)
 - **Quality Assurance**: All providers vetted and verified by Hairline
 - **Comprehensive Support**: Dedicated aftercare team for post-procedure guidance
 - **3D Scanning**: Advanced assessment tools for accurate treatment planning
@@ -79,7 +79,7 @@ The Hairline Platform consists of four distinct applications serving different u
 #### For Hairline (Business)
 
 - **Commission Revenue**: Percentage-based commission on each procedure
-- **Travel Revenue**: Commissions from flight/hotel bookings
+- **Travel Revenue (Phase 2)**: Commissions from flight/hotel bookings (once in-app booking is live)
 - **Subscription Revenue**: Provider subscription tiers (future)
 - **Affiliate Partnerships**: Influencer-driven marketing channel
 - **Data Assets**: Market intelligence on pricing, demand, and trends
@@ -225,10 +225,9 @@ The Hairline Platform consists of four distinct applications serving different u
    - Receives final booking confirmation
 
 6. **Travel Planning**
-   - Books flights through integrated travel API
-   - Selects hotel from provider-recommended options
-   - Confirms airport transport arrangements
-   - Downloads travel itinerary and clinic instructions
+   - If provider included travel: submits passport details so provider can book externally
+   - If patient self-books: submits confirmed flight + hotel details for coordination
+   - Reviews unified itinerary and clinic instructions (Phase 2: in-app flight/hotel booking via APIs)
 
 7. **Pre-Procedure**
    - Receives pre-op instructions and medication list
@@ -531,7 +530,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Review rating and count
 - Provider credentials summary
 - Included services checklist
-- Estimated travel costs
+- **Future (Phase 2)**: Estimated travel costs (requires flight API integration; not MVP)
 
 ---
 
@@ -633,27 +632,24 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Requirements**:
 
-- System MUST integrate with flight booking API (e.g., Amadeus, Skyscanner)
-- System MUST integrate with hotel booking API (e.g., Booking.com, Expedia)
-- Patients MUST be able to search and book flights directly in app
-- Patients MUST be able to select hotels from provider-recommended list
-- System MUST show real-time pricing and availability
-- System MUST send booking confirmations for flights and hotels
-- System MUST support airport transport booking (future: Uber/Bolt API)
-- System MUST aggregate all travel details into unified itinerary
+- In MVP, the system MUST NOT support in-app flight or hotel booking; all bookings occur externally (patient self-booked or provider-booked) and the platform is used for travel detail capture + coordination (see FR-008 PRD).
+- System MUST support two travel paths per confirmed appointment:
+  - **Path A (Provider-included travel)**: provider books externally for the travel services included in the accepted package (any mix of flight, hotel, transport). System requests passport details from patient. Patient does not submit flight/hotel records in Path A.
+  - **Path B (Patient self-booked travel)**: patient books externally. System requests flight/hotel details from patient. Provider does not enter travel records in Path B. No passport request is sent.
+- System MUST trigger the appropriate travel request automatically when an inquiry transitions to **Confirmed** status (post-payment confirmation); no manual trigger required.
+- System MUST store passport, flight, and hotel travel records against `quote_id` (booking context) and assemble a unified itinerary view for patient, provider, and admin.
+- Travel records MUST be locked after submission; patients/providers cannot edit submitted records; admin corrections MUST be versioned and auditable with mandatory reason notes.
+- System MUST send email + in-app notifications for travel record requests, submissions, provider-entered records, and admin corrections.
 
-**Flight Cost Preview** (P1 - Required for Inquiry):
+**Phase 2 (Post-MVP): In-App Travel Booking + Cost Preview**
 
-- During inquiry date selection, system MUST display estimated flight costs
-- System MUST fetch average/cheapest flight prices for selected date ranges
-- Flight preview helps patients choose optimal travel dates based on cost
-- Display format: "Est. flights: £220 - £450" (cheapest - average)
+- System SHOULD integrate with a flight booking API (e.g., Amadeus, Skyscanner) to enable in-app flight search/booking and travel cost preview.
+- System SHOULD integrate with a hotel booking API (e.g., Booking.com, Expedia) to enable in-app hotel selection/booking.
+- During inquiry date selection, system SHOULD display estimated flight costs once flight API integration is live.
 
-**Travel Commission**:
+**Phase 2 (Post-MVP): Travel Commission**
 
-- Platform earns commission on flight bookings (3-5%)
-- Platform earns commission on hotel bookings (10-15%)
-- Commission MUST be tracked separately from procedure commission
+- Platform MAY earn commission on flight/hotel bookings once in-app booking is live; this commission MUST be tracked separately from procedure commission.
 
 ---
 
@@ -1942,7 +1938,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 1. Patients have access to smartphones with camera (for 3D scanning)
 2. Providers have stable internet connection for real-time quote submission
 3. Payment processing can be handled via third-party service (Stripe)
-4. Travel APIs are available and cost-effective for flight/hotel integration
+4. Phase 2 travel APIs are available and cost-effective for flight/hotel integration
 5. Aftercare can be delivered remotely without in-person clinical visits in most cases
 6. Providers are willing to share commission with platform (15-25%)
 7. English and Turkish languages cover majority of target market (initially)
@@ -1953,8 +1949,8 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 2. **AWS/GCP Cloud Infrastructure**: For hosting, storage, and scalability
 3. **Twilio/SendGrid**: For SMS and email notifications
 4. **Firebase/OneSignal**: For push notifications
-5. **Flight API** (Amadeus/Skyscanner): For travel booking integration
-6. **Hotel API** (Booking.com/Expedia): For hotel booking integration
+5. **Flight API** (Amadeus/Skyscanner): For Phase 2 travel booking integration
+6. **Hotel API** (Booking.com/Expedia): For Phase 2 hotel booking integration
 7. **3D Scanning SDK**: For mobile-based head scanning (ARKit/ARCore)
 8. **Currency Exchange API**: For real-time exchange rates
 9. **Translation API**: For multi-language support (Google Translate API)

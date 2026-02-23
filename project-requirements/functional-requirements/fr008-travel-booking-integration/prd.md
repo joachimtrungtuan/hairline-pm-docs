@@ -3,8 +3,8 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-02-13
-**Status**: Draft
+**Last Updated**: 2026-02-23
+**Status**: ✅ Verified & Approved
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview)
 
 ---
@@ -60,7 +60,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 
 ### Provider Platform (PR-04)
 
-- Mark travel services (flight / hotel / airport transport) as included in a package — drives which path applies when the inquiry is confirmed
+- Mark which travel services are included in a package when travel is provider-included (flight / hotel / airport transport). These inclusions determine which records the provider must enter after confirmation.
 - View travel status indicators per confirmed patient updated automatically when the inquiry reaches **Confirmed** status (e.g. "Awaiting passport details", "Passport submitted")
 - View submitted passport details per confirmed patient (passport number shown in full for booking purposes)
 - Enter confirmed flight details (outbound + return legs) and hotel details on behalf of the patient after completing the external booking — provider-booked path
@@ -81,7 +81,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 > **S-04 (Travel API Gateway)**: In MVP, S-04 provides travel record storage and event dispatch only — no external API integration. Live flight/hotel API connections are deferred to the future phase.
 
 - Listen for inquiry **Confirmed** status transitions and automatically dispatch travel submission requests: passport request to patient for Path A (provider-booked travel); flight and hotel submission request to patient for Path B (patient self-booked)
-- Store and serve all travel records (passport, flight, hotel) against appointments; records are immutable after submission — admin corrections create a new locked version with a mandatory audit log entry
+- Store and serve all travel records (passport, flight, hotel) against `quote_id` (booking context); records are immutable after submission — admin corrections create a new locked version with a mandatory audit log entry
 - Send notifications (email + in-app) for all travel record events: automated requests on Confirmed, submissions received, provider updates
 - Enforce access control: passport PII restricted to the submitting patient, assigned provider, and admin
 
@@ -421,17 +421,18 @@ flowchart TD
 | Patient Name / ID | Text | Confirmed patient identifier |
 | Appointment Date | Date | Procedure date |
 | Passport Status | Badge | Awaiting / Submitted / Incomplete |
-| Outbound Flight Status | Badge | Not submitted / Submitted by patient / Entered by provider |
-| Return Flight Status | Badge | Not submitted / Submitted by patient / Entered by provider |
-| Hotel Status | Badge | Not submitted / Submitted by patient / Entered by provider |
-| Actions | Buttons | View Passport · Enter Flight (if not yet submitted) · Enter Hotel (if not yet submitted) |
+| Outbound Flight Status | Badge | Not included / Awaiting / Submitted |
+| Return Flight Status | Badge | Not included / Awaiting / Submitted |
+| Hotel Status | Badge | Not included / Awaiting / Submitted |
+| Actions | Buttons | View Passport · Enter/Update Travel (Path A) · View Travel (Path B) |
 
 **Business Rules**:
 
-- Status indicators update in real-time when the patient submits records.
+- Status indicators update in real-time when travel records are submitted (by patient in Path B, by provider in Path A) and when admin applies corrections.
 - Provider can only view and act on patients assigned to their clinic; no cross-clinic access.
-- If patient has submitted a record (Path B), the corresponding action button shows "View" (read-only) rather than "Enter."
-- Provider can flag a patient-submitted record as requiring review; admin resolves the dispute.
+- For **Path A** appointments, provider can enter travel records only for the travel services included in the accepted package. If a service is not included, status shows "Not included" and no entry action is shown.
+- For **Path B** appointments, provider can view patient-submitted travel records in read-only mode and cannot enter/modify travel records.
+- Provider can flag a patient-submitted record (Path B) as requiring review; admin resolves the dispute.
 
 ---
 
@@ -486,7 +487,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Enabled only when the package includes provider-booked flights (Path A) and the patient has not already submitted the record themselves.
+- Enabled only for **Path A** appointments where flights are included in the accepted package. Patient flight submission is not available in Path A.
 - The form header must display the leg type label clearly: "Outbound Flight" or "Return Flight."
 - After entering the outbound leg, the system prompts the provider to also enter the return leg.
 - Both legs are independent; either may be entered separately if the return booking is not yet finalised.
@@ -621,9 +622,9 @@ Same fields as Outbound. Displayed as a separate sub-section. If no return recor
 | Appointment Date | Date | Procedure date |
 | Travel Path | Badge | Provider-included (Path A) / Patient self-booked (Path B) |
 | Passport Status | Badge | Awaiting / Submitted / Incomplete |
-| Outbound Flight Status | Badge | Not submitted / Submitted / Entered by provider |
-| Return Flight Status | Badge | Not submitted / Submitted / Entered by provider |
-| Hotel Status | Badge | Not submitted / Submitted / Entered by provider |
+| Outbound Flight Status | Badge | Not included / Awaiting / Submitted |
+| Return Flight Status | Badge | Not included / Awaiting / Submitted |
+| Hotel Status | Badge | Not included / Awaiting / Submitted |
 | Actions | Buttons | View detail · Re-notify patient · Admin correction (via Screen 12) |
 
 **Business Rules**:
@@ -767,13 +768,19 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 ### Travel Path Determination
 
-- The travel path is binary and determined by the package offer accepted by the patient: either **Path A** (provider covers all travel — flight, hotel, and transport) or **Path B** (patient self-books all travel independently).
-- There is no mixed path. A package either includes all travel or none.
-- Transport (airport pickup) is always provider-arranged in Path A; it is not tracked as a separate patient-submitted record in either path.
+- The travel path is binary and determined by the accepted package offer:
+  - **Path A (provider-included travel)**: provider books included travel services externally; the platform captures passport details (from patient) and confirmed travel details (from provider).
+  - **Path B (patient self-booked travel)**: patient books externally; the platform captures confirmed travel details (from patient). No passport request is sent.
+- In **Path A**, the accepted package MAY include any mix of travel services (flight, hotel, transport). Services not included are treated as "Not included" for that appointment and are not collected in MVP.
+- **No submitter mixing**:
+  - In **Path A**, flight/hotel details are entered by the provider only (patient does not submit flight/hotel records).
+  - In **Path B**, flight/hotel details are submitted by the patient only (provider does not enter travel records).
+  - Admin can correct records in both paths (versioned + audited).
+- Transport (airport pickup) is always provider-arranged when included; it is not tracked as a separate record in MVP (captured via notes where applicable).
 
 ### Passport Rules
 
-- Passport submission is **required** whenever the provider is booking any travel on the patient's behalf (Path A).
+- Passport submission is **required** for all **Path A** appointments (provider-included travel).
 - Passport submission is **not required and not requested** when the patient self-books travel (Path B). The patient manages their own passport for their independent bookings.
 - Passport number is always masked in the patient's display view; stored encrypted at rest; shown in full to the assigned provider and admin only.
 - Once submitted, the passport record is **locked** and cannot be edited by the patient or provider. Admin correction only, with a mandatory audit log entry.
@@ -852,7 +859,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 - **FR-001 / P-01**: Patient authentication — only verified, logged-in patients may submit passport and travel records.
 - **FR-005 / Package Offers**: Package offer defines which travel services are provider-included vs. patient self-booked; travel path is derived from the accepted package.
-- **FR-006 / P-03**: Booking & Scheduling — appointment ID is the anchor for all travel records; procedure dates determine flight date constraints.
+- **FR-006 / P-03**: Booking & Scheduling — `quote_id` is the anchor for all travel records; procedure dates determine flight date constraints.
 - **FR-007 / P-05**: Payment — passport submission and travel info prompts are triggered after payment confirmation.
 - **S-03 / Notification Service**: Sends email + in-app notifications for all travel record events.
 
@@ -956,7 +963,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Architecture Notes
 
-- All travel records are keyed on `quote_id` / appointment ID.
+- All travel records are keyed on `quote_id` (booking context). Appointment identifiers can be derived from the booking context as needed.
 - Travel records are immutable after submission. Admin corrections write a new locked version and mark the previous as superseded; both versions are retained in the audit log. Patient and provider have no write access to submitted records.
 - Passport image stored in secure object storage (separate from other files) as a reference document for manual provider verification only. No OCR or automatic data extraction is performed. Separate access policy from other travel record data.
 
@@ -996,7 +1003,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Package Travel Inclusion
 
-- **REQ-008-018**: The provider MUST be able to mark a package as Path A (all travel included: flight, hotel, airport transfer) or Path B (patient self-books all travel); this selection MUST be reflected in the package breakdown and determines the travel path for the patient post-confirmation. **Note**: The UI for this selection lives in FR-004 (Quote Submission) or FR-024 (Treatment Package Management). FR-008 consumes the `travel_path` value from the accepted package.
+- **REQ-008-018**: The provider MUST be able to mark a package's travel path as either Path A (provider-included travel) or Path B (patient self-books travel). For Path A packages, the provider MUST also be able to indicate which travel services are included (any mix of flight, hotel, airport transport). This selection MUST be reflected in the package breakdown and determines the travel workflow post-confirmation. **Note**: The UI for this selection lives in FR-004 (Quote Submission) or FR-024 (Treatment Package Management). FR-008 consumes `travel_path` and the package travel inclusions from the accepted package.
 - **REQ-008-019**: When a package is Path A (provider-included travel), the system MUST surface a travel status tracker on the provider's confirmed appointment view covering: passport status, outbound flight status, return flight status, and hotel status.
 
 ### Notifications
@@ -1039,13 +1046,13 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Itinerary
 
-**Key attributes**: `id`, `appointment_id`, `passport_status` (null for Path B), `outbound_flight_id`, `return_flight_id`, `hotel_id`, `package_travel_inclusions` (array), `last_updated_at`
+**Key attributes**: `id`, `quote_id`, `passport_status` (null for Path B), `outbound_flight_id`, `return_flight_id`, `hotel_id`, `package_travel_inclusions` (array), `last_updated_at`
 **Relationships**: One per appointment; composed of PassportRecord, FlightRecord(s), HotelRecord; visible to patient, provider, admin.
 
 ### PackageTravelInclusion
 
-**Key attributes**: `package_id`, `travel_path` (enum: `provider_included` | `patient_self_booked`)
-**Relationships**: Part of the package offer; drives which travel path (A or B) applies post-confirmation. There is no partial/mixed option — travel is either fully provider-included or fully patient self-booked.
+**Key attributes**: `package_id`, `travel_path` (enum: `provider_included` | `patient_self_booked`), `included_services` (array: `flight`, `hotel`, `transport`)
+**Relationships**: Part of the accepted package offer; drives which travel path (A or B) applies post-confirmation. For Path A, included services define which travel records the provider is responsible for entering.
 
 ---
 
@@ -1056,6 +1063,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 | 2025-11-10 | 1.0 | Initial PRD creation | AI |
 | 2025-11-10 | 1.1 | Added clarifications and success criteria | AI |
 | 2026-02-13 | 2.0 | Full rewrite: removed in-app booking from MVP scope; added two-path model (provider-included vs patient self-booked); added passport capture; added round-trip flight model; added transport guidance; resolved UI/API discrepancies (Total Price removed, baggage_allowance normalised, leg_type added); updated all screens, flows, requirements, entities | AI |
+| 2026-02-23 | 2.1 | Verified & approved; aligned System PRD/Constitution to Phase 2 flight/hotel APIs; updated Path A to allow any mix of included services with provider-only entry (no submitter mixing); standardized travel record keying on `quote_id` | AI |
 
 ---
 
@@ -1069,6 +1077,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ---
 
-**Template Version**: 2.1.0 (MVP-scoped rewrite)
-**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-02-13
+**Template Version**: 2.0.0 (Constitution-Compliant)
+**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
+**Based on**: FR-011 Aftercare & Recovery Management PRD
+**Last Updated**: 2026-02-23

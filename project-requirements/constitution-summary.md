@@ -144,7 +144,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **S-01**: 3D Scan Processing Service (P1)
 - **S-02**: Payment Processing Service (Stripe integration) (P1)
 - **S-03**: Notification Service (email, SMS, push notifications) (P1)
-- **S-04**: Travel API Gateway (flights, hotels) (P2)
+- **S-04**: Travel API Gateway (MVP travel record storage + itinerary coordination; Phase 2 flight/hotel API integrations) (P2)
 - **S-05**: Media Storage Service (images, 3D scans, documents) (P1)
 - **S-06**: Audit Log Service (centralized, immutable audit trail) (P1)
 
@@ -257,13 +257,13 @@ The constitution addresses several gaps not explicitly detailed in the original 
 
 ### Phase 1: MVP (P1 modules)
 
-- Patient: Auth, Quote Request, Booking/Payment, Treatment Progress
+- Patient: Auth, Quote Request, Booking/Payment (includes travel detail capture + itinerary coordination), Treatment Progress
 - Provider: Auth, Inquiry, Quote Submission, Appointments, Treatment Execution, Financial
 - Admin: Patient Management, Provider Management, Financial Management, Settings, Communication Monitoring
 
 ### Phase 2: Enhanced Features (P2 modules)
 
-- Travel & Logistics
+- Travel & Logistics (Phase 2: in-app flight/hotel booking via APIs; transport tracking)
 - Aftercare Management (all tenants)
 - Discounts & Promotions
 - Affiliate Program
@@ -271,7 +271,7 @@ The constitution addresses several gaps not explicitly detailed in the original 
 
 ### Phase 3: Future Expansion (P3 modules)
 
-- Travel Management (full API integration)
+- Travel Management (admin configuration surfaces for travel APIs)
 - Advanced monitoring features
 - Outcome tracking and analytics
 
