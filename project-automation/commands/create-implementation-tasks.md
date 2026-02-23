@@ -170,4 +170,4 @@ Include a summary at end of file:
 
 ## Deployment
 
-Copy this file to `.cursor/rules/create-implementation-tasks.mdc` for Cursor to detect it.
+Copy this file to `.cursor/rules/create-implementation-tasks.md` for Cursor to detect it.

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Create Plane.so issues from implementation task markdown files.
+Update existing Plane.so issues with cleaned HTML descriptions.
 
 Usage:
-    python3 create-plane-issues.py --file <path-to-tasks.md>
+    python3 update-plane-issues.py --file <path-to-tasks.md> --start-issue <HAIRL-XXX>
 
 Credentials are loaded from .env in the current working directory.
 NEVER hardcode API keys in this script or its output.
@@ -62,23 +62,51 @@ def parse_tasks(content: str) -> list:
     return tasks
 
 
-def create_issue(task: dict, config: dict) -> dict:
-    """Create one Plane issue via API."""
+def get_issue_id(issue_identifier: str, config: dict) -> str:
+    """Get the internal UUID for an issue from its identifier (e.g., HAIRL-892)."""
+    url = (
+        f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
+        f"/projects/{config['PROJECT_ID']}/issues/?fields=id,sequence_id"
+    )
+    cmd = [
+        "curl", "-s", "-X", "GET", url,
+        "-H", f"X-API-Key: {config['PLANE_API_KEY']}",
+        "-H", "Content-Type: application/json",
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode == 0:
+        try:
+            resp = json.loads(result.stdout)
+            # Extract the sequence number from identifier (e.g., "HAIRL-892" -> 892)
+            seq_num = int(issue_identifier.split("-")[1])
+            # Find the issue with matching sequence_id
+            for issue in resp.get("results", []):
+                if issue.get("sequence_id") == seq_num:
+                    return issue.get("id")
+        except (json.JSONDecodeError, ValueError, IndexError):
+            pass
+    return None
+
+
+def update_issue(issue_identifier: str, task: dict, config: dict) -> dict:
+    """Update one Plane issue via API."""
+    # Get the internal UUID for the issue
+    issue_id = get_issue_id(issue_identifier, config)
+    if not issue_id:
+        return {
+            "status": "error",
+            "error": f"Could not find issue {issue_identifier}"
+        }
+    
     payload = {
-        "name": task["name"],
         "description_html": task["description"],
-        "project": config["PROJECT_ID"],
-        "assignees": [config["ASSIGNEE_ID"]],
-        "state": config["STAGE_ID"],
-        "priority": config.get("PRIORITY", "medium"),
-        "issue_type": config["ISSUE_TYPE_ID"],
     }
     url = (
         f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/issues/"
+        f"/projects/{config['PROJECT_ID']}/issues/{issue_id}/"
     )
     cmd = [
-        "curl", "-s", "-X", "POST", url,
+        "curl", "-s", "-X", "PATCH", url,
         "-H", f"X-API-Key: {config['PLANE_API_KEY']}",
         "-H", "Content-Type: application/json",
         "-d", json.dumps(payload),
@@ -88,7 +116,11 @@ def create_issue(task: dict, config: dict) -> dict:
         try:
             resp = json.loads(result.stdout)
             if "id" in resp:
-                return {"status": "success", "id": resp["id"]}
+                return {
+                    "status": "success",
+                    "identifier": issue_identifier,
+                    "id": resp["id"]
+                }
             return {"status": "error", "response": result.stdout}
         except json.JSONDecodeError:
             return {"status": "error", "response": result.stdout}
@@ -97,10 +129,21 @@ def create_issue(task: dict, config: dict) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Create Plane issues from markdown task files."
+        description="Update existing Plane issues with cleaned HTML descriptions."
     )
     parser.add_argument(
         "--file", required=True, help="Path to implementation tasks markdown file"
+    )
+    parser.add_argument(
+        "--start-issue",
+        required=True,
+        help="Starting issue identifier (e.g., HAIRL-880)"
+    )
+    parser.add_argument(
+        "--skip",
+        type=int,
+        default=0,
+        help="Number of tasks to skip from the beginning of the file (default: 0)"
     )
     parser.add_argument(
         "--env", default=".env", help="Path to .env file (default: .env in cwd)"
@@ -123,20 +166,11 @@ def main():
         "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-digital"),
         "BASE_URL": env_vars.get("BASE_URL", "https://api.plane.so/api/v1"),
         "PROJECT_ID": env_vars.get("PROJECT_ID", ""),
-        "ASSIGNEE_ID": env_vars.get("ASSIGNEE_ID", ""),
-        "STAGE_ID": env_vars.get("STAGE_ID", ""),
-        "PRIORITY": env_vars.get("PRIORITY", "medium"),
-        "ISSUE_TYPE_ID": env_vars.get("ISSUE_TYPE_ID", ""),
     }
 
     # Validate required config
-    missing = [
-        k for k in ["PROJECT_ID", "ASSIGNEE_ID", "STAGE_ID", "ISSUE_TYPE_ID"]
-        if not config[k]
-    ]
-    if missing:
-        print(f"ERROR: Missing required config in .env: {', '.join(missing)}")
-        print("Reference: local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md")
+    if not config["PROJECT_ID"]:
+        print("ERROR: Missing PROJECT_ID in .env")
         sys.exit(1)
 
     # Read and parse tasks
@@ -146,41 +180,63 @@ def main():
         sys.exit(1)
 
     content = task_file.read_text()
-    tasks = parse_tasks(content)
-    print(f"Found {len(tasks)} tasks to create\n")
+    all_tasks = parse_tasks(content)
+    
+    # Skip tasks if requested
+    if args.skip > 0:
+        if args.skip >= len(all_tasks):
+            print(f"ERROR: Cannot skip {args.skip} tasks, only {len(all_tasks)} tasks found")
+            sys.exit(1)
+        tasks = all_tasks[args.skip:]
+        print(f"Found {len(all_tasks)} tasks, skipping first {args.skip}, updating {len(tasks)} tasks\n")
+    else:
+        tasks = all_tasks
+        print(f"Found {len(tasks)} tasks to update\n")
 
     if not tasks:
-        print("No tasks found. Verify the file uses TASK_NAME_START/END "
-              "and TASK_DESCRIPTION_START/END markers.")
+        print("No tasks to update after skipping.")
         sys.exit(0)
 
-    # Create issues
+    # Parse starting issue number
+    try:
+        project_prefix = args.start_issue.split("-")[0]
+        start_num = int(args.start_issue.split("-")[1])
+    except (IndexError, ValueError):
+        print(f"ERROR: Invalid issue identifier format: {args.start_issue}")
+        print("Expected format: HAIRL-XXX")
+        sys.exit(1)
+
+    # Update issues
     results = []
-    for i, task in enumerate(tasks, 1):
-        print(f"Task {i}: {task['name']}")
-        result = create_issue(task, config)
+    for i, task in enumerate(tasks):
+        issue_identifier = f"{project_prefix}-{start_num + i}"
+        print(f"Updating {issue_identifier}: {task['name']}")
+        result = update_issue(issue_identifier, task, config)
         result["name"] = task["name"]
+        result["identifier"] = issue_identifier
         results.append(result)
+        
         if result["status"] == "success":
-            print(f"  Created — ID: {result['id']}\n")
+            print(f"  ✓ Updated successfully\n")
         else:
             detail = result.get("response", result.get("error", "Unknown"))
-            print(f"  FAILED — {detail}\n")
+            print(f"  ✗ FAILED — {detail}\n")
 
     # Summary
     success = [r for r in results if r["status"] == "success"]
     failed = [r for r in results if r["status"] != "success"]
     print(f"\n{'=' * 60}")
-    print(f"Summary: {len(success)} of {len(tasks)} tasks created successfully")
+    print(f"Summary: {len(success)} of {len(tasks)} tasks updated successfully")
     if failed:
         print(f"Failed: {len(failed)}")
+        for r in failed:
+            print(f"  - {r.get('identifier', 'Unknown')}: {r['name'][:50]}")
     print(f"{'=' * 60}")
 
     if success:
-        print("\nTask ID Mapping:")
+        print("\nUpdated Issues:")
         for r in success:
-            print(f"  {r['name'][:70]}")
-            print(f"    ID: {r['id']}")
+            print(f"  {r['identifier']}: {r['name'][:70]}")
 
 
 if __name__ == "__main__":

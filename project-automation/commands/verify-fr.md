@@ -293,4 +293,4 @@ Before final output, confirm:
 
 ## Deployment
 
-Copy this file to `.cursor/rules/verify-fr.mdc` for Cursor to detect it.
+Copy this file to `.cursor/rules/verify-fr.md` for Cursor to detect it.

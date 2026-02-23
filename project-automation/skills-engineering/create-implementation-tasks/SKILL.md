@@ -1,13 +1,13 @@
 ---
 name: create-implementation-tasks
-description: Generate date-stamped implementation task documents from FR verification gaps, checklist subflows, or FR PRD coverage. Use when asked to create Plane-ready implementation tasks for a specific FR scope with optional module scoping. Output to local-docs/task-creation/YYYY-MM-DD.
+description: Generate date-stamped implementation task documents from FR verification gaps, checklist subflows, or FR PRD coverage. Use when asked to create Plane-ready implementation tasks for a specific FR scope with optional module scoping. Output to local-docs/project-automation/task-creation/YYYY-MM-DD.
 ---
 
 # Create Implementation Tasks
 
 ## Purpose
 
-Create business-focused implementation tasks for a requested FR scope. Produce one markdown file in `local-docs/task-creation/YYYY-MM-DD/` with Plane-compatible HTML descriptions. Task content describes WHAT the system should do and WHY — never HOW to implement it technically.
+Create business-focused implementation tasks for a requested FR scope. Produce one markdown file in `local-docs/project-automation/task-creation/YYYY-MM-DD/` with Plane-compatible HTML descriptions. Task content describes WHAT the system should do and WHY — never HOW to implement it technically.
 
 ## Required Inputs
 
@@ -21,7 +21,7 @@ If user requests module-FR tasking but omits `MODULE_CODE`, stop and ask for con
 
 ## Scope and Guardrails
 
-- Write only task artifacts under `local-docs/task-creation/YYYY-MM-DD/`
+- Write only task artifacts under `local-docs/project-automation/task-creation/YYYY-MM-DD/`
 - Do not edit product code
 - Do not modify checklist files unless explicitly asked
 - If `MODULE_CODE` exists, scope strictly to `(MODULE_CODE, FR_CODE)`
@@ -47,7 +47,7 @@ Each task description must be under 300 words.
 ### 1. Resolve date and report priority
 
 1. Get `CURRENT_DATE` via `date +%Y-%m-%d`
-2. Check `local-docs/task-creation/${CURRENT_DATE}/verification-report-${CURRENT_DATE}-*.md`
+2. Check `local-docs/project-automation/task-creation/${CURRENT_DATE}/verification-report-${CURRENT_DATE}-*.md`
 3. Select matching report by scope:
    - With `MODULE_CODE`: require both module and FR match
    - Without `MODULE_CODE`: require FR match
@@ -63,7 +63,7 @@ Use first available:
 
 ### 3. Create output file with incremental suffix
 
-1. Ensure `local-docs/task-creation/${CURRENT_DATE}/` exists
+1. Ensure `local-docs/project-automation/task-creation/${CURRENT_DATE}/` exists
 2. Scan both filename patterns:
    - `implementation-tasks-${CURRENT_DATE}-*.md`
    - `verification-report-${CURRENT_DATE}-*.md`

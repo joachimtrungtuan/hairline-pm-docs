@@ -8,12 +8,12 @@ description: Execute bash commands to interact with Plane.so API for listing use
 $ARGUMENTS
 ```
 
-**CRITICAL**: User specifies operation in prompt. If not provided, ask: "Please specify operation: list-users, list-projects, list-modules, list-tags, list-work-item-types, list-stages, or create-work-item"
+**CRITICAL**: User specifies operation in prompt. If not provided, ask: "Please specify operation: list-users, list-projects, list-modules, list-tags, list-work-item-types, list-stages, create-work-item, or update-work-item"
 
 ## Prerequisites
 
-1. **`.env` file**: `local-docs/task-creation/plane-api/.env` (copy from `.env.example` if missing)
-2. **System Variables**: `local-docs/plane-config/samasu-system-variables.md` - **MUST** reference for alternative IDs when defaults not applicable
+1. **`.env` file**: `local-docs/project-automation/task-creation/plane-api/.env` (copy from `.env.example` if missing)
+2. **System Variables**: `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md` - **MUST** reference for alternative IDs when defaults not applicable
 3. **Tools required**:
    - `python3` (Python 3.x) - **REQUIRED** for reliable JSON handling
    - `curl` - for API calls
@@ -101,7 +101,7 @@ file_path = "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md"
 Run this Python script from the `plane-api` directory:
 
 ```bash
-cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/task-creation/plane-api" && python3 << 'PYTHON_SCRIPT'
+cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/project-automation/task-creation/plane-api" && python3 << 'PYTHON_SCRIPT'
 import json
 import re
 import subprocess
@@ -109,7 +109,7 @@ import subprocess
 # =============================================================================
 # CONFIGURATION - Update these values as needed
 # =============================================================================
-file_path = "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/task-creation/YYYY-MM-DD/implementation-tasks-YYYY-MM-DD-XXX.md"
+file_path = "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/project-automation/task-creation/YYYY-MM-DD/implementation-tasks-YYYY-MM-DD-XXX.md"
 
 # API Configuration (from .env and samasu-system-variables.md)
 PLANE_API_KEY = os.environ.get("PLANE_API_KEY", "")  # Load from .env — NEVER hardcode
@@ -244,7 +244,7 @@ Use the Shell tool to run the Python script:
 
 ```python
 Shell(
-    command='cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/task-creation/plane-api" && python3 << \'PYTHON_SCRIPT\'\n... (full script here) ...\nPYTHON_SCRIPT',
+    command='cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/project-automation/task-creation/plane-api" && python3 << \'PYTHON_SCRIPT\'\n... (full script here) ...\nPYTHON_SCRIPT',
     description="Create Plane issues for all tasks",
     block_until_ms=600000  # 10 minutes for large task lists
 )
@@ -265,7 +265,7 @@ For simple operations or when Python is unavailable:
 
 ```bash
 # Navigate to plane-api directory
-cd "local-docs/task-creation/plane-api"
+cd "local-docs/project-automation/task-creation/plane-api"
 
 # Verify .env file exists
 [ ! -f ".env" ] && { echo "ERROR: .env file not found."; exit 1; }
@@ -375,9 +375,9 @@ Body:
 
 ## References
 
-- **System Variables**: `local-docs/plane-config/samasu-system-variables.md` - All indexed system IDs
+- **System Variables**: `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md` - All indexed system IDs
 - **API Docs**: https://developers.plane.so/api-reference/introduction
-- **Task Files**: `local-docs/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
+- **Task Files**: `local-docs/project-automation/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
 
 ---
 

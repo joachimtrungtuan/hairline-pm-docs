@@ -175,4 +175,4 @@ rg -n "keyword" local-docs/project-requirements/transcriptions
 
 ## Deployment
 
-Copy this file to `.cursor/rules/check-progress.mdc` for Cursor to detect it.
+Copy this file to `.cursor/rules/check-progress.md` for Cursor to detect it.

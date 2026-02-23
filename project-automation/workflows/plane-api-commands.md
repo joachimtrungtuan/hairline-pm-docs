@@ -68,185 +68,73 @@ api_key = env_vars.get("PLANE_API_KEY", "")
 
 3. For **list operations**: run curl against `https://api.plane.so/api/v1/workspaces/samasu-digital/...` with API key header. Display formatted results.
 
-4. For **create-work-item**: ask user for implementation task file path. Before executing, write the following script **exactly** to `local-docs/project-automation/skills-engineering/plane-api-commands/scripts/create-plane-issues.py`. Do not modify — recreate verbatim for consistent results.
+4. For **create-work-item** or **update-work-item**: 
 
-```python
-#!/usr/bin/env python3
-"""
-Create Plane.so issues from implementation task markdown files.
+Ask user:
+- Which operation (create new or update existing)?
+- Implementation task file path
+- If updating: starting issue identifier (e.g., HAIRL-877)
+- If needed: number of tasks to skip from beginning of file
 
-Usage:
-    python3 create-plane-issues.py --file <path-to-tasks.md>
+The scripts at `local-docs/project-automation/skills-engineering/plane-api-commands/scripts/` are maintained and include HTML cleaning. Use them directly — do not recreate unless explicitly needed.
 
-Credentials are loaded from .env in the current working directory.
-NEVER hardcode API keys in this script or its output.
-"""
-
-import argparse
-import json
-import re
-import subprocess
-import sys
-from pathlib import Path
-
-
-def load_env(env_path: Path) -> dict:
-    """Load variables from a .env file."""
-    env_vars = {}
-    if not env_path.exists():
-        print(f"ERROR: .env file not found at {env_path}")
-        print("Create it with PLANE_API_KEY and configuration values.")
-        sys.exit(1)
-    with open(env_path) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, value = line.split("=", 1)
-                env_vars[key.strip()] = value.strip().strip('"').strip("'")
-    return env_vars
-
-
-def parse_tasks(content: str) -> list:
-    """Extract tasks from markdown using TASK_NAME/DESCRIPTION markers."""
-    tasks = []
-    pattern = (
-        r"## TASK_NAME_START\n(.*?)\n## TASK_NAME_END"
-        r"[\s\S]*?"
-        r"## TASK_DESCRIPTION_START\n([\s\S]*?)\n## TASK_DESCRIPTION_END"
-    )
-    for match in re.finditer(pattern, content):
-        name = match.group(1).strip()
-        desc = match.group(2).strip()
-        tasks.append({"name": name, "description": desc})
-    return tasks
-
-
-def create_issue(task: dict, config: dict) -> dict:
-    """Create one Plane issue via API."""
-    payload = {
-        "name": task["name"],
-        "description_html": task["description"],
-        "project": config["PROJECT_ID"],
-        "assignees": [config["ASSIGNEE_ID"]],
-        "state": config["STAGE_ID"],
-        "priority": config.get("PRIORITY", "medium"),
-        "issue_type": config["ISSUE_TYPE_ID"],
-    }
-    url = (
-        f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/issues/"
-    )
-    cmd = [
-        "curl", "-s", "-X", "POST", url,
-        "-H", f"X-API-Key: {config['PLANE_API_KEY']}",
-        "-H", "Content-Type: application/json",
-        "-d", json.dumps(payload),
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode == 0:
-        try:
-            resp = json.loads(result.stdout)
-            if "id" in resp:
-                return {"status": "success", "id": resp["id"]}
-            return {"status": "error", "response": result.stdout}
-        except json.JSONDecodeError:
-            return {"status": "error", "response": result.stdout}
-    return {"status": "error", "error": result.stderr}
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Create Plane issues from markdown task files."
-    )
-    parser.add_argument(
-        "--file", required=True, help="Path to implementation tasks markdown file"
-    )
-    parser.add_argument(
-        "--env", default=".env", help="Path to .env file (default: .env in cwd)"
-    )
-    args = parser.parse_args()
-
-    env_path = Path(args.env)
-    env_vars = load_env(env_path)
-
-    api_key = env_vars.get("PLANE_API_KEY", "")
-    if not api_key:
-        print("ERROR: PLANE_API_KEY not found in .env file.")
-        print("Add it to your .env: PLANE_API_KEY=plane_api_...")
-        sys.exit(1)
-
-    config = {
-        "PLANE_API_KEY": api_key,
-        "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-digital"),
-        "BASE_URL": env_vars.get("BASE_URL", "https://api.plane.so/api/v1"),
-        "PROJECT_ID": env_vars.get("PROJECT_ID", ""),
-        "ASSIGNEE_ID": env_vars.get("ASSIGNEE_ID", ""),
-        "STAGE_ID": env_vars.get("STAGE_ID", ""),
-        "PRIORITY": env_vars.get("PRIORITY", "medium"),
-        "ISSUE_TYPE_ID": env_vars.get("ISSUE_TYPE_ID", ""),
-    }
-
-    missing = [
-        k for k in ["PROJECT_ID", "ASSIGNEE_ID", "STAGE_ID", "ISSUE_TYPE_ID"]
-        if not config[k]
-    ]
-    if missing:
-        print(f"ERROR: Missing required config in .env: {', '.join(missing)}")
-        print("Reference: local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md")
-        sys.exit(1)
-
-    task_file = Path(args.file)
-    if not task_file.exists():
-        print(f"ERROR: File not found: {args.file}")
-        sys.exit(1)
-
-    content = task_file.read_text()
-    tasks = parse_tasks(content)
-    print(f"Found {len(tasks)} tasks to create\n")
-
-    if not tasks:
-        print("No tasks found. Verify the file uses TASK_NAME_START/END "
-              "and TASK_DESCRIPTION_START/END markers.")
-        sys.exit(0)
-
-    results = []
-    for i, task in enumerate(tasks, 1):
-        print(f"Task {i}: {task['name']}")
-        result = create_issue(task, config)
-        result["name"] = task["name"]
-        results.append(result)
-        if result["status"] == "success":
-            print(f"  Created — ID: {result['id']}\n")
-        else:
-            detail = result.get("response", result.get("error", "Unknown"))
-            print(f"  FAILED — {detail}\n")
-
-    success = [r for r in results if r["status"] == "success"]
-    failed = [r for r in results if r["status"] != "success"]
-    print(f"\n{'=' * 60}")
-    print(f"Summary: {len(success)} of {len(tasks)} tasks created successfully")
-    if failed:
-        print(f"Failed: {len(failed)}")
-    print(f"{'=' * 60}")
-
-    if success:
-        print("\nTask ID Mapping:")
-        for r in success:
-            print(f"  {r['name'][:70]}")
-            print(f"    ID: {r['id']}")
-
-
-if __name__ == "__main__":
-    main()
-```
+**Key improvements in current scripts:**
+- HTML cleaning function removes excessive whitespace
+- Support for `--skip N` parameter to handle partial file processing
+- Better error handling and reporting
+- Update script can modify existing issues without recreating them
 
 // turbo
-5. Execute:
+5. Execute the appropriate script:
+
+**For CREATE (new issues):**
 ```bash
-cd "local-docs/project-automation/task-creation/plane-api" && python3 "local-docs/project-automation/skills-engineering/plane-api-commands/scripts/create-plane-issues.py" --file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md"
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
+--file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
+[--skip N]
 ```
 
-6. Report results: total tasks found/created, task-to-issue-ID mapping, any errors with fixes.
+**For UPDATE (existing issues with cleaned HTML):**
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
+--file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
+--start-issue "HAIRL-XXX" \
+[--skip N]
+```
+
+**Examples:**
+
+Create all tasks:
+```bash
+python3 create-plane-issues.py --file "implementation-tasks-2026-02-13-001.md"
+```
+
+Update HAIRL-877 to HAIRL-892, skipping first 2 tasks in file:
+```bash
+python3 update-plane-issues.py \
+--file "implementation-tasks-2026-02-13-002.md" \
+--start-issue "HAIRL-877" \
+--skip 2
+```
+
+6. Report results: total tasks found/created/updated, task-to-issue-ID mapping, any errors with fixes.
+
+## Key Improvements (What Changed)
+
+Previous versions had issues:
+1. ❌ No HTML cleaning → excessive whitespace in Plane descriptions
+2. ❌ No update capability → had to recreate issues to fix formatting
+3. ❌ No skip parameter → couldn't handle partial file processing
+4. ❌ Security policy blocks when accessing `.env` from skill execution
+
+Current version fixes:
+1. ✅ HTML cleaning function removes excessive whitespace automatically
+2. ✅ Update script can modify existing issues (only `description_html` field)
+3. ✅ Skip parameter for both create and update scripts
+4. ✅ Clear instructions to run in external terminal if `.env` access is blocked
+5. ✅ Better error messages and validation
 
 ## Why Python (not bash)
 
@@ -288,11 +176,67 @@ cd "local-docs/project-automation/task-creation/plane-api" && python3 "local-doc
 | 429 | Rate limit (60/min) | Add delay |
 | 5xx | Server error | Retry with backoff |
 
+## Common Issues and Solutions
+
+### Issue: "ERROR: Access to '\.env' is blocked by security policy"
+
+**Symptom:** Script execution fails when trying to read `.env` file from within AI agent context.
+
+**Root Cause:** Security sandbox blocks access to credential files.
+
+**Solution:** Run the command in an external terminal (iTerm, Terminal.app) where file access is not restricted:
+1. Open a terminal application
+2. Navigate to: `cd "local-docs/project-automation/task-creation/plane-api"`
+3. Run the Python script directly with full paths
+4. The `.env` file in that directory will be accessible
+
+### Issue: Excessive whitespace in Plane issue descriptions
+
+**Symptom:** Task descriptions in Plane have multiple blank lines, excessive spaces between HTML tags.
+
+**Root Cause:** Original markdown had formatting whitespace that wasn't cleaned before sending to Plane API.
+
+**Solution:** 
+- For NEW tasks: Use `create-plane-issues.py` (includes HTML cleaning automatically)
+- For EXISTING tasks: Use `update-plane-issues.py` to clean descriptions in place
+
+### Issue: Tasks created in wrong order or with wrong issue numbers
+
+**Symptom:** Script processes tasks that shouldn't be included, or maps to wrong Plane issue IDs.
+
+**Root Cause:** Task file may contain tasks already processed or unrelated tasks at the beginning.
+
+**Solution:** Use `--skip N` parameter:
+1. Count how many tasks at the start of the file should be skipped
+2. Add `--skip N` to command line
+3. For update operations, ensure `--start-issue` matches the first task after skipping
+
+**Example:** File has 18 tasks, first 2 already processed, want to handle tasks 3-18 starting at HAIRL-877:
+```bash
+python3 update-plane-issues.py \
+--file "tasks.md" \
+--start-issue "HAIRL-877" \
+--skip 2
+```
+
+### Issue: Script fails with "Missing required config in .env"
+
+**Symptom:** `PROJECT_ID`, `ASSIGNEE_ID`, `STAGE_ID`, or `ISSUE_TYPE_ID` not found.
+
+**Root Cause:** `.env` file incomplete.
+
+**Solution:**
+1. Open `local-docs/project-automation/task-creation/plane-api/.env`
+2. Compare with `samasu-system-variables.md`
+3. Add missing variables with correct UUIDs
+4. Never commit `.env` to git (it's in `.gitignore`)
+
 ## References
 
 - System IDs: `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`
 - Task artifacts: `local-docs/project-automation/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
 - Plane API docs: https://developers.plane.so/api-reference/introduction
+- Scripts location: `local-docs/project-automation/skills-engineering/plane-api-commands/scripts/`
 
 ## Deployment
 

@@ -76,53 +76,39 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ```mermaid
 flowchart TD
-  subgraph W1S1["1. Service Selection"]
-    direction TB
-    W1S1_1["Patient opens mobile app and selects &quot;Get a Hair Transplant&quot;"] --> W1S1_2["Patient chooses treatment type (Hair, Beard, Both)"] --> W1S1_3["System validates patient eligibility"]
-  end
+    Start["Service Selection"] --> Service["Patient opens mobile app and selects &quot;Get a Hair Transplant&quot;<br/>Patient chooses treatment type (Hair, Beard, Both)<br/>System validates patient eligibility"]
+    Service --> Eligible{"Eligibility valid?"}
+    Eligible -->|No| EligibleErr["Show eligibility error + block progression"]
+    Eligible -->|Yes| Dest["Destination Selection<br/>Patient selects preferred countries/locations (max 10 countries)<br/>System displays starting prices for each location<br/>Patient can select multiple destinations<br/>System suggests nearest countries to patient's location first"]
 
-  subgraph W1S2["2. Destination Selection"]
-    direction TB
-    W1S2_1["Patient selects preferred countries/locations (max 10 countries)"] --> W1S2_2["System displays starting prices for each location"] --> W1S2_3["Patient can select multiple destinations"] --> W1S2_4["System suggests nearest countries to patient's location first"]
-  end
+    Dest --> DestOk{"Destination selection valid?"}
+    DestOk -->|No| DestErr["Show validation error + stay on destination selection"] --> Dest
+    DestOk -->|Yes| Details["Detailed Information Collection<br/>Patient provides detailed hair concerns:<br/>- Nature of concern (text)<br/>- Duration of concern (dropdown enum)<br/>- Previous treatments (text)<br/>- Symptom severity (1-10 slider)<br/>- Lifestyle factors (optional text)<br/>- Additional notes (optional text)"]
 
-  subgraph W1S3["3. Detailed Information Collection"]
-    direction TB
-    W1S3_1["Patient provides detailed hair concerns: nature, duration, previous treatments, severity (1-10), lifestyle factors, additional notes"] --> W1S3_2["Patient uploads visual evidence (max 5 photos/videos: JPG/PNG ≤ 2MB each, MP4 ≤ 30s ≤ 20MB each)"]
-  end
+    Details --> Upload["Visual Evidence Upload<br/>Patient uploads visual evidence (max 5 photos/videos)<br/>Photos: JPG/PNG &lt;= 2MB each<br/>Videos: MP4 &lt;= 30s, &lt;= 20MB each"]
+    Upload --> MediaOk{"Uploads meet policy?"}
+    MediaOk -->|No| MediaErr["Show upload policy error + require changes"] --> Upload
+    MediaOk -->|Yes| Scan["3D Head Scan Capture<br/>Patient receives scan instructions<br/>Patient captures 3D head scan using mobile camera<br/>System validates scan quality<br/>Scan data stored for provider review"]
 
-  subgraph W1S4["4. 3D Head Scan Capture"]
-    direction TB
-    W1S4_1["Patient receives scan instructions"] --> W1S4_2["Patient captures 3D head scan using mobile camera"] --> W1S4_3["System validates scan quality"] --> W1S4_4["Scan data stored for provider review"]
-  end
+    Scan --> ScanOk{"Scan quality valid?"}
+    ScanOk -->|No| Retake["Prompt retake + guidance"] --> Scan
+    ScanOk -->|Yes| Dates["Treatment Date Selection<br/>Patient selects preferred treatment dates (max 10 date ranges)<br/>Date ranges can be up to 2 years in the future<br/>Patient can select multiple non-overlapping ranges<br/>System validates date availability"]
 
-  subgraph W1S5["5. Treatment Date Selection"]
-    direction TB
-    W1S5_1["Patient selects preferred treatment dates (max 10 date ranges, up to 2 years in future)"] --> W1S5_2["Patient can select multiple non-overlapping ranges"] --> W1S5_3["System validates date availability"]
-  end
+    Dates --> DatesOk{"Date selection valid?"}
+    DatesOk -->|No| DatesErr["Show validation error + stay on date selection"] --> Dates
+    DatesOk -->|Yes| Med["Medical Questionnaire Completion<br/>Patient completes comprehensive medical questionnaire (allergies, medications, chronic diseases, previous surgeries, etc.)<br/>Each question requires Yes/No answer<br/>Detailed explanation required for &quot;Yes&quot; answers<br/>System applies 3-tier medical alert system:<br/>- Critical (red)<br/>- Standard (yellow/amber)<br/>- None (green)"]
 
-  subgraph W1S6["6. Medical Questionnaire Completion"]
-    direction TB
-    W1S6_1["Patient completes comprehensive medical questionnaire (allergies, medications, chronic diseases, previous surgeries, etc.)"] --> W1S6_2["Each question requires Yes/No answer; detailed explanation required for Yes answers"] --> W1S6_3["System applies 3-tier medical alert system: Critical (red), Standard (amber), None (green)"]
-  end
+    Med --> MedOk{"Questionnaire complete + valid?"}
+    MedOk -->|No| MedErr["Show validation error + stay on medical questionnaire"] --> Med
+    MedOk -->|Yes| ProviderSel["Provider Selection<br/>Patient selects preferred providers (max 5 providers) on Screen 7a<br/>System suggests providers based on positive reviews and admin curation<br/>Patient can search/filter providers by country, rating, and specialty"]
 
-  subgraph W1S7["7. Provider Selection"]
-    direction TB
-    W1S7_1["Patient selects preferred providers (max 5) on Screen 7a"] --> W1S7_2["System suggests providers based on positive reviews and admin curation"] --> W1S7_3["Patient can search/filter providers by country, rating, and specialty"]
-  end
+    ProviderSel --> ProvOk{"Provider selection valid?"}
+    ProvOk -->|No| ProvErr["Show validation error + stay on provider selection"] --> ProviderSel
+    ProvOk -->|Yes| Review["Inquiry Review &amp; Submission<br/>Patient reviews complete inquiry summary (including selected providers)<br/>Patient confirms all information accuracy<br/>Patient submits inquiry to system<br/>System generates unique inquiry ID (HPID format)"]
 
-  subgraph W1S8["8. Inquiry Review &amp; Submission"]
-    direction TB
-    W1S8_1["Patient reviews complete inquiry summary (including selected providers)"] --> W1S8_2["Patient confirms all information accuracy"] --> W1S8_3["Patient submits inquiry to system"] --> W1S8_4["System generates unique inquiry ID (HPID format)"]
-  end
-
-  W1S1_3 --> W1S2_1
-  W1S2_4 --> W1S3_1
-  W1S3_2 --> W1S4_1
-  W1S4_4 --> W1S5_1
-  W1S5_3 --> W1S6_1
-  W1S6_3 --> W1S7_1
-  W1S7_3 --> W1S8_1
+    Review --> SubmitOk{"Submission succeeds?"}
+    SubmitOk -->|No| SubmitErr["Show submission error + allow retry"] --> Review
+    SubmitOk -->|Yes| Created["Inquiry created (HPID generated)"]
 ```
 
 ### Alternative Flows
@@ -135,8 +121,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A1S1["1. System saves draft automatically"] --> A1S2["2. Patient can resume from last completed step"]
-  A1S2 --> A1S3["3. Draft expires after 7 days of inactivity"]
+    Exit["Patient abandons inquiry mid-process (before submission)"] --> Save["System saves draft automatically"]
+    Save --> Resume{"Patient returns within 7 days?"}
+    Resume -->|Yes| Continue["Patient can resume from last completed step"]
+    Resume -->|No| Expire["Draft expires after 7 days of inactivity"]
 ```
 
 **A2: Patient has existing incomplete inquiry**:
@@ -147,9 +135,12 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A2S1["1. System shows &quot;continue with your request&quot; option"] --> A2S2["2. Patient can resume from last completed step"]
-  A2S2 --> A2S3["3. Patient can modify existing inquiry if still in &quot;Inquiry&quot; stage"]
-  A2S3 --> A2S4["4. System displays inquiry status as &quot;incomplete&quot; or &quot;pending&quot;"]
+    Start["Patient returns to app with an existing incomplete inquiry"] --> Prompt["System shows &quot;continue with your request&quot; option"]
+    Prompt --> Resume["Patient can resume from last completed step"]
+    Resume --> CanEdit{"Inquiry still in &quot;Inquiry&quot; stage?"}
+    CanEdit -->|Yes| Modify["Patient can modify existing inquiry"]
+    CanEdit -->|No| Block["Show blocked message (stage changed)"]
+    Modify --> Status["System displays inquiry status as &quot;incomplete&quot; or &quot;pending&quot;"]
 ```
 
 **A3: Medical questionnaire reveals critical conditions**:
@@ -160,9 +151,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A3S1["1. System flags inquiry with critical medical alerts (red indicators)"] --> A3S2["2. Providers are alerted to high-risk conditions"]
-  A3S2 --> A3S3["3. Admin can review and provide guidance to providers"]
-  A3S3 --> A3S4["4. Note: Medical alerts are for provider awareness, not patient rejection"]
+    Detect["Medical questionnaire reveals critical conditions"] --> Flag["System flags inquiry with critical medical alerts (red indicators)"]
+    Flag --> Providers["Providers are alerted to high-risk conditions"]
+    Providers --> Admin["Admin can review and provide guidance to providers"]
+    Admin --> Note["Note: Medical alerts are for provider awareness, not patient rejection"]
 ```
 
 **A4: Patient cancels inquiry (see Workflow 5)**:
@@ -173,9 +165,12 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A4S1["1. Patient initiates cancellation from Inquiry Dashboard (Screen 8)"] --> A4S2["2. System validates eligibility, captures cancellation reason, and processes cancellation"]
-  A4S2 --> A4S3["3. All associated quotes auto-cancelled; providers notified; inquiry becomes read-only"]
-  A4S3 --> A4S4["4. Patient can immediately create a new inquiry (no cooldown; one-active-inquiry rule still applies)"]
+    Start["Patient initiates cancellation from Inquiry Dashboard (Screen 8)<br/>in stages: Inquiry, Quoted, or Accepted"] --> Eligible{"Stage eligible?"}
+    Eligible -->|No| Block["Block cancellation + error message"]
+    Eligible -->|Yes| Process["System validates eligibility, captures cancellation reason, and processes cancellation"]
+    Process --> Cascade["All associated quotes auto-cancelled; providers notified;<br/>inquiry becomes read-only"]
+    Cascade --> New["Patient can immediately create a new inquiry (no cooldown;<br/>one-active-inquiry rule still applies)"]
+    New --> Ref["See Workflow 5 for full cancellation behavior"]
 ```
 
 ---
@@ -190,29 +185,28 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  subgraph W2S1["1. Inquiry Processing"]
-    direction TB
-    W2S1_1["System receives completed patient inquiry"] --> W2S1_2["System validates all required data completeness"] --> W2S1_3["System generates inquiry ID and timestamps"]
-  end
+    Start["System receives submitted inquiry"] --> Validate{"Inquiry complete + valid?"}
 
-  subgraph W2S2["2. Provider Matching"]
-    direction TB
-    W2S2_1["System identifies providers in patient-selected countries"] --> W2S2_2["System includes providers explicitly selected by patient"] --> W2S2_3["System creates provider-specific inquiry views"]
-  end
+    Validate -->|No| Invalid["Do not distribute; return errors / flag for fix"]
+    Validate -->|Yes| Identify["Generate inquiry ID (HPID) + timestamps"]
 
-  subgraph W2S3["3. Inquiry Distribution"]
-    direction TB
-    W2S3_1["System distributes inquiry to all matching providers"] --> W2S3_2["Providers receive notification of new inquiry"] --> W2S3_3["Inquiry appears in provider dashboard"] --> W2S3_4["System tracks distribution timestamps"]
-  end
+    Identify --> Match["Match providers by selected countries + explicit selections"]
+    Match --> Cap{"Matched providers &gt; 10?"}
+    Cap -->|Yes| Select10["Select up to 10 providers (ensure explicitly selected providers included; remaining per matching rules)"]
+    Cap -->|No| Matched["Use matched provider list"]
 
-  subgraph W2S4["4. Provider Access Control"]
-    direction TB
-    W2S4_1["Providers see anonymized patient information until payment confirmation"] --> W2S4_2["Patient names partially masked (e.g., &quot;John D*****&quot;)"] --> W2S4_3["Contact details hidden until payment confirmation"] --> W2S4_4["Medical alerts prominently displayed"]
-  end
+    Select10 --> Views["Create provider-specific inquiry views (anonymized)"]
+    Matched --> Views
 
-  W2S1_3 --> W2S2_1
-  W2S2_3 --> W2S3_1
-  W2S3_4 --> W2S4_1
+    Views --> Found{"Any providers to distribute to?"}
+    Found -->|No| Manual["Notify admin: unmatched inquiry + manual assignment"]
+    Manual --> Delay["Optionally notify patient of delay"]
+
+    Found -->|Yes| Distribute["Distribute inquiry to providers + record timestamps"]
+    Distribute --> Notify["Send provider notifications (within 5 minutes)"]
+    Notify --> NotifyOk{"Notification dispatch OK?"}
+    NotifyOk -->|No| Retry["Queue/retry + alert on SLA risk; log attempts"] --> Access
+    NotifyOk -->|Yes| Access["Provider views enforce anonymization until payment<br/>+ medical alerts shown prominently"]
 ```
 
 ### Alternative Flows
@@ -225,8 +219,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  B1S1["1. System notifies admin of unmatched inquiry"] --> B1S2["2. Admin can manually assign providers"]
-  B1S2 --> B1S3["3. Patient notified of potential delay"]
+    Start["System attempts provider matching"] --> Found{"Any providers matched?"}
+    Found -->|No| NotifyAdmin["System notifies admin of unmatched inquiry"]
+    NotifyAdmin --> Manual["Admin manually assigns providers"]
+    Manual --> NotifyPatient["Patient notified of potential delay (optional)"]
+    Found -->|Yes| Continue["Proceed with normal distribution"]
 ```
 
 **B2: Provider capacity exceeded**:
@@ -237,7 +234,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  B2S1["1. Note: Provider capacity management will be handled in a separate FR"]
+    Start["System considers provider capacity signals (if available)"] --> Gate{"Provider capacity exceeded?"}
+    Gate -->|Yes| Advisory["Capacity checks are advisory in MVP;<br/>do NOT block inquiry distribution"]
+    Gate -->|No| Continue["Proceed with normal distribution"]
+    Advisory --> Continue
 ```
 
 ---
@@ -252,34 +252,19 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  subgraph W3S1["1. Inquiry Review"]
-    direction TB
-    W3S1_1["Provider accesses inquiry list in dashboard"] --> W3S1_2["Provider views inquiry details with medical alerts"] --> W3S1_3["Provider reviews patient 3D scan and medical questionnaire"] --> W3S1_4["Provider assesses treatment feasibility"]
-  end
+    Start["Provider opens Inquiry List (Screen 9)"] --> Open["Provider opens Inquiry Detail (Screen 10)"]
+    Open --> Review["Provider reviews scan/media + questionnaire + alerts"]
+    Review --> Action{"Provider action"}
 
-  subgraph W3S2["2. Inquiry Status Management"]
-    direction TB
-    W3S2_1["Provider can review inquiry details"] --> W3S2_2["System tracks provider response time"] --> W3S2_3["Note: Quote creation process handled in FR-004"]
-  end
-
-  W3S1_4 --> W3S2_1
+    Action -->|Proceed to quote| Quote["Continue to FR-004 (Quote creation flow)"]
+    Action -->|Need clarification| RequestInfo["Provider requests clarification via admin"]
+    RequestInfo --> AdminHelp["Admin facilitates communication"]
+    AdminHelp --> Stay["Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
 ```
 
 ### Alternative Flows
 
-**C1: Provider cannot accommodate patient dates**:
-
-- **Trigger**: Provider's schedule does not align with patient's requested date ranges
-- **Outcome**: Provider declines inquiry with reason; cannot suggest alternative dates (handled in FR-004)
-- **Flow Diagram**:
-
-```mermaid
-flowchart TD
-  C1S1["1. Provider can decline inquiry with reason"] --> C1S2["2. System logs provider response"]
-  C1S2 --> C1S3["3. Provider cannot suggest alternative dates (handled in FR-004)"]
-```
-
-**C2: Provider needs additional information**:
+**C1: Provider needs additional information**:
 
 - **Trigger**: Provider cannot make assessment based on submitted inquiry data
 - **Outcome**: Clarification requested through admin; inquiry stays in current stage
@@ -287,8 +272,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  C2S1["1. Provider can request clarification through admin"] --> C2S2["2. Admin facilitates communication"]
-  C2S2 --> C2S3["3. Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
+    Review["Provider cannot assess from submitted data"] --> Need{"Need clarification?"}
+    Need -->|Yes| Request["Provider requests clarification via admin"]
+    Request --> Admin["Admin facilitates communication"]
+    Admin --> Stay["Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
+    Need -->|No| Continue["Proceed toward quote creation (FR-004)"]
 ```
 
 ---
@@ -303,49 +291,34 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  subgraph W4S1["1. Inquiry Oversight"]
-    direction TB
-    W4S1_1["Admin views all inquiries across all stages"] --> W4S1_2["Admin monitors inquiry distribution and response rates"] --> W4S1_3["Admin tracks provider performance metrics"] --> W4S1_4["Admin identifies system-wide issues"]
-  end
+    Start["Admin opens inquiry (Screen 11/12)"] --> Choose{"Admin action"}
 
-  subgraph W4S2["2. Inquiry Management"]
-    direction TB
-    W4S2_1["Admin can edit inquiry details (with caution warnings)"] --> W4S2_2["Admin can reassign inquiries to different providers"] --> W4S2_3["Admin can override quote expiration periods"] --> W4S2_4["Admin can escalate urgent cases"]
-  end
+    Choose -->|Edit inquiry| Edit["Edit inquiry fields (with warnings)"]
+    Edit --> Reason1{"Reason provided?"}
+    Reason1 -->|No| Block1["Block save; require reason"] --> Edit
+    Reason1 -->|Yes| Audit1["Save changes + audit log"]
+    Audit1 --> Renotify{"Re-notify parties if impactful?"}
+    Renotify -->|Yes| Send1["Send notifications per rules/config"]
+    Renotify -->|No| Done1["Done"]
+    Send1 --> Done1
 
-  subgraph W4S3["3. System Configuration"]
-    direction TB
-    W4S3_1["Admin manages medical questionnaire content"] --> W4S3_2["Admin configures country/location lists"] --> W4S3_3["Admin sets inquiry expiration rules"] --> W4S3_4["Admin manages provider availability settings"]
-  end
+    Choose -->|Reassign providers| Reassign["Select provider(s) + validate eligibility"]
+    Reassign --> Audit2["Apply reassignment + audit log"] --> Done2["Done"]
 
-  W4S1_4 --> W4S2_1
-  W4S2_4 --> W4S3_1
-```
+    Choose -->|Override expiry/distribution| Override["Set override values"]
+    Override --> Valid{"Override valid?"}
+    Valid -->|No| OverrideErr["Show error; do not apply"] --> Override
+    Valid -->|Yes| Audit3["Apply override + audit log"] --> Done3["Done"]
 
-### Alternative Flows
+    Choose -->|Soft delete - archive| Archive["Confirm archive + reason"]
+    Archive --> Audit4["Archive + audit log"] --> Notify["Notify patient if required"] --> Done4["Done"]
 
-**D1: Admin needs to delete inquiry**:
+    Choose -->|Escalate urgent case| Esc["Mark urgent + assign owner"]
+    Esc --> Audit5["Log escalation"] --> Done5["Done"]
 
-- **Trigger**: Inquiry needs to be removed from active system
-- **Outcome**: Soft delete (archival) with audit trail; patient notified
-- **Flow Diagram**:
-
-```mermaid
-flowchart TD
-  D1S1["1. Admin performs soft delete (archival)"] --> D1S2["2. System logs deletion with reason"]
-  D1S2 --> D1S3["3. Patient notified of inquiry cancellation"]
-```
-
-**D2: Inquiry requires manual intervention**:
-
-- **Trigger**: System or user-reported issue with an inquiry
-- **Outcome**: Admin resolves issue and updates inquiry status
-- **Flow Diagram**:
-
-```mermaid
-flowchart TD
-  D2S1["1. Admin identifies problematic inquiries"] --> D2S2["2. Admin contacts patient or provider directly"]
-  D2S2 --> D2S3["3. Admin resolves issues and updates inquiry status"]
+    Choose -->|Contact patient/provider| Contact["Admin contacts patient or provider"]
+    Contact --> Resolve["Admin resolves issue + updates inquiry (if needed)"]
+    Resolve --> Audit6["System logs intervention in audit trail"] --> Done6["Done"]
 ```
 
 ---
@@ -360,44 +333,30 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  subgraph W5S1["1. Initiate Cancellation"]
-    direction TB
-    W5S1_1["Patient opens Inquiry Dashboard (Screen 8) and taps into the inquiry to view its detail"] --> W5S1_2["Patient selects &quot;Cancel Inquiry&quot; from the inquiry detail action menu"]
-    W5S1_2 --> W5S1_3["System validates inquiry is in an eligible stage (Inquiry, Quoted, or Accepted)"]
-    W5S1_3 --> W5S1_4["If inquiry is in Confirmed, In Progress, Aftercare, or Completed stage, system blocks cancellation with error message"]
-  end
+    Start["Patient opens Inquiry detail (Screen 8)"] --> Cancel["Patient taps &quot;Cancel Inquiry&quot;"]
+    Cancel --> CheckStage{"Stage eligible?<br/>Inquiry / Quoted / Accepted"}
 
-  subgraph W5S2["2. Capture Cancellation Reason"]
-    direction TB
-    W5S2_1["System displays cancellation confirmation modal (Screen 8a) with warning about irreversibility"] --> W5S2_2["Patient selects a cancellation reason from predefined options (required; admin-configurable via FR-026 Screen 5a)"]
-    W5S2_2 --> W5S2_3["Patient may optionally provide additional feedback text"]
-  end
+    CheckStage -->|No| Block["Block cancellation + message: Contact support"] --> End1["Exit"]
+    CheckStage -->|Yes| Modal["Show cancellation confirmation modal (Screen 8a)"]
 
-  subgraph W5S3["3. Process Cancellation"]
-    direction TB
-    W5S3_1["System updates inquiry status to &quot;Cancelled&quot; with timestamp and reason"] --> W5S3_2["System auto-cancels all associated quotes with status &quot;Cancelled (Inquiry Cancelled)&quot; regardless of their current state"]
-    W5S3_2 --> W5S3_3["If inquiry was in Accepted stage with active 48-hour appointment slot hold (per FR-005/FR-006), system releases the hold immediately"]
-  end
+    Modal --> ReasonOk{"Reason valid/selected?"}
+    ReasonOk -->|No| Modal
+    ReasonOk -->|Yes| Preflight["Preflight (no state change):<br/>confirm inquiry still active<br/>load quotes + slot-hold + notification targets"]
 
-  subgraph W5S4["4. Notify Stakeholders"]
-    direction TB
-    W5S4_1["System sends cancellation confirmation notification to patient (Email + Push per preferences) within 5 minutes"] --> W5S4_2["System sends inquiry.cancelled notification to all affected providers (Email + Push) within 5 minutes"]
-    W5S4_2 --> W5S4_3["System sends quote.cancelled_inquiry notification per affected quote (provider-facing) within 5 minutes"]
-    W5S4_3 --> W5S4_4["Provider cancellation notifications do NOT reveal the patient's cancellation reason (patient-private data for analytics)"]
-    W5S4_4 --> W5S4_5["System logs cancellation event in immutable audit trail"]
-  end
+    Preflight --> PreflightOk{"Preflight successful?"}
+    PreflightOk -->|No| PreflightErr["Show temporary error + Retry/Back<br/>(do NOT cancel yet)"] --> Modal
+    PreflightOk -->|Yes| Confirm["Patient confirms cancellation"]
 
-  subgraph W5S5["5. Post-Cancellation State"]
-    direction TB
-    W5S5_1["System displays Cancellation Success screen (Screen 8b) with impact summary and next-step actions"] --> W5S5_2["Inquiry appears in patient's Inquiry Dashboard with &quot;Cancelled&quot; badge (read-only)"]
-    W5S5_2 --> W5S5_3["Patient can view cancelled inquiry details for reference but cannot modify or reopen"]
-    W5S5_3 --> W5S5_4["Patient can immediately create a new inquiry (no cooldown; one-active-inquiry-at-a-time rule applies)"]
-  end
+    Confirm --> Commit["Atomic commit:<br/>set inquiry = Cancelled + timestamp + reason<br/>cancel quotes (if any)<br/>release slot hold (if any)<br/>write immutable audit event"]
+    Commit -.-> Race["If quote submitted concurrently:<br/>quote flow must re-check inquiry status<br/>and reject if not active (FR-004)"]
 
-  W5S1_3 --> W5S2_1
-  W5S2_3 --> W5S3_1
-  W5S3_3 --> W5S4_1
-  W5S4_5 --> W5S5_1
+    Commit --> Notify["Send/enqueue notifications (target &lt;= 5 minutes)<br/>providers: reason NOT shared"]
+    Notify --> NotifyOk{"Notification enqueue/send OK?"}
+    NotifyOk -->|Yes| Success["Show success screen (Screen 8b)"]
+    NotifyOk -->|No| NotifyFallback["Queue/retry notifications + log attempts<br/>(do not roll back cancellation)"] --> Success
+
+    Success --> ReadOnly["Inquiry shows &quot;Cancelled&quot; badge (read-only)"]
+    ReadOnly --> End2["Patient returns to My Inquiries or starts new inquiry"]
 ```
 
 ### Alternative Flows
@@ -410,7 +369,9 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  E1S1["1. No quote cascade needed; only inquiry status updated"] --> E1S2["2. No provider notifications for quote cancellation (only inquiry.cancelled to distributed providers)"]
+    Preflight["Preflight detects 0 associated quotes"] --> Commit["Commit cancellation (single atomic update)"]
+    Commit --> Notify["Send inquiry.cancelled to distributed providers<br/>(no quote.cancelled_inquiry needed)"]
+    Notify --> Patient["Send patient confirmation"] --> Done["Show success (Screen 8b)"]
 ```
 
 **E2: Patient cancels inquiry during Accepted stage**:
@@ -421,8 +382,9 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  E2S1["1. Accepted quote auto-cancelled; 48-hour appointment slot hold released immediately"] --> E2S2["2. Provider notified of both inquiry cancellation and slot release"]
-  E2S2 --> E2S3["3. Booking/payment flow becomes inaccessible for this inquiry"]
+    Preflight["Preflight detects Accepted stage + active slot hold"] --> Commit["Commit cancellation (atomic):<br/>cancel accepted quote + release slot hold"]
+    Commit --> Notify["Notify providers of inquiry cancellation + slot release<br/>(reason not shared)"]
+    Notify --> Block["Booking/payment becomes inaccessible for this inquiry"]
 ```
 
 **E3: System cancels inquiry due to account deletion request (DSR)**:

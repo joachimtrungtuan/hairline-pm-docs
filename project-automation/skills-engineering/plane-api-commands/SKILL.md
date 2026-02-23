@@ -19,12 +19,13 @@ If user does not specify, ask them to choose:
 - `list-tags`
 - `list-work-item-types`
 - `list-stages`
-- `create-work-item`
+- `create-work-item` (create new Plane issues)
+- `update-work-item` (update existing Plane issues with cleaned HTML)
 
 ## Prerequisites
 
-1. `.env` file at `local-docs/task-creation/plane-api/.env` with `PLANE_API_KEY`
-2. System variables at `local-docs/plane-config/samasu-system-variables.md`
+1. `.env` file at `local-docs/project-automation/task-creation/plane-api/.env` with `PLANE_API_KEY`
+2. System variables at `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`
 3. Tools: `python3`, `curl` (`jq` optional)
 
 ### Credential Handling (CRITICAL)
@@ -36,7 +37,7 @@ If user does not specify, ask them to choose:
 
 ## Default Configuration
 
-Load all IDs from `local-docs/plane-config/samasu-system-variables.md`. Fallback defaults:
+Load all IDs from `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`. Fallback defaults:
 
 | Parameter | Default |
 |-----------|---------|
@@ -73,14 +74,79 @@ Description content must be valid HTML for Plane.so `description_html` field.
 
 **Before starting work**, create a checklist of all workflow steps below. Mark each step in-progress when starting and completed when done. Use the platform's task/todo tracking tools (task lists, todo items, progress trackers). This prevents step-skipping and keeps the workflow auditable.
 
+## Available Scripts
+
+Two Python scripts are available for Plane operations:
+
+### 1. `create-plane-issues.py` - Create New Issues
+
+Creates new Plane issues from markdown task files. Use for first-time task creation.
+
+**Key Features:**
+- Cleans HTML descriptions (removes excessive whitespace)
+- Validates all required configuration
+- Reports success/failure per task with issue IDs
+- Supports `--skip N` to skip first N tasks in the file
+
+**Usage:**
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
+--file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
+[--skip N]
+```
+
+### 2. `update-plane-issues.py` - Update Existing Issues
+
+Updates existing Plane issues with cleaned HTML descriptions. Use when issues already exist but need description cleanup.
+
+**Key Features:**
+- Updates only the `description_html` field
+- Cleans HTML to remove excessive whitespace
+- Maps task file order to sequential issue identifiers
+- Supports `--skip N` parameter for partial file processing
+
+**Usage:**
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
+--file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
+--start-issue "HAIRL-XXX" \
+[--skip N]
+```
+
+**Example Scenarios:**
+
+1. **Create all tasks in a new file:**
+   ```bash
+   python3 create-plane-issues.py --file "implementation-tasks-2026-02-13-001.md"
+   ```
+
+2. **Update existing issues HAIRL-877 to HAIRL-892 with cleaned HTML:**
+   ```bash
+   python3 update-plane-issues.py \
+   --file "implementation-tasks-2026-02-13-002.md" \
+   --start-issue "HAIRL-877" \
+   --skip 2
+   ```
+   (Skips first 2 tasks, updates starting from HAIRL-877)
+
+3. **Create tasks from a subset of a file:**
+   ```bash
+   python3 create-plane-issues.py \
+   --file "implementation-tasks-2026-02-13-002.md" \
+   --skip 5
+   ```
+   (Skips first 5 tasks, creates remaining ones)
+
 ## Workflow: Creating Issues from Markdown
 
 ### 1. Load credentials
 
-Read `.env` from `local-docs/task-creation/plane-api/.env`:
+Read `.env` from `local-docs/project-automation/task-creation/plane-api/.env`:
 
 ```python
-env_path = "local-docs/task-creation/plane-api/.env"
+env_path = "local-docs/project-automation/task-creation/plane-api/.env"
 env_vars = {}
 with open(env_path) as f:
     for line in f:
@@ -94,28 +160,59 @@ if not api_key:
     raise SystemExit("PLANE_API_KEY not found in .env")
 ```
 
-### 2. Read and parse the markdown task file
+### 2. Recreate the script with HTML cleaning
 
-Use the script at `scripts/create-plane-issues.py`. The script:
+Before executing, write the script **exactly** to `scripts/create-plane-issues.py` or `scripts/update-plane-issues.py`. The scripts include:
 
-- Reads `.env` for API credentials (never hardcoded)
-- Reads `samasu-system-variables.md` config values or accepts them from `.env`
-- Parses `TASK_NAME_START/END` and `TASK_DESCRIPTION_START/END` blocks
-- Builds JSON payloads with proper escaping via `json.dumps()`
-- Posts each issue to Plane API sequentially
-- Reports success/failure per task with issue IDs
+- HTML cleaning function to remove excessive whitespace
+- Proper credential loading from `.env`
+- Configuration validation
+- Clear error reporting
+- Skip parameter support for partial file processing
 
-### 3. Execute
+**Critical: HTML Cleaning Function**
 
+Both scripts must include this function to ensure clean Plane descriptions:
+
+```python
+def clean_html(html: str) -> str:
+    """Clean HTML by removing excessive whitespace while preserving structure."""
+    # Remove excessive spaces between tags
+    html = re.sub(r'>\s+<', '><', html)
+    # Normalize multiple spaces to single space within text content
+    html = re.sub(r'  +', ' ', html)
+    # Remove leading/trailing whitespace from each line
+    lines = [line.strip() for line in html.split('\n') if line.strip()]
+    # Join with no extra newlines
+    return ''.join(lines)
+```
+
+This function must be called in `parse_tasks()` before returning task descriptions.
+
+### 3. Execute the appropriate script
+
+Choose based on whether issues already exist:
+
+**For NEW issues:**
 ```bash
-cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/task-creation/plane-api" && python3 "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/skills-engineering/plane-api-commands/scripts/create-plane-issues.py" --file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md"
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
+--file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md"
+```
+
+**For UPDATING existing issues:**
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
+--file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
+--start-issue "HAIRL-XXX"
 ```
 
 ### 4. Report results
 
 Output:
 
-- Total tasks found and created
+- Total tasks found and created/updated
 - Task name to Plane issue ID mapping
 - Any errors with likely fixes
 
@@ -135,7 +232,9 @@ Output:
 | List Tags | GET | `/workspaces/{slug}/projects/{id}/labels/` |
 | List Issue Types | GET | `/workspaces/{slug}/projects/{id}/issue-types/` |
 | List States | GET | `/workspaces/{slug}/projects/{id}/states/` |
+| List Issues | GET | `/workspaces/{slug}/projects/{id}/issues/` |
 | Create Issue | POST | `/workspaces/{slug}/projects/{id}/issues/` |
+| Update Issue | PATCH | `/workspaces/{slug}/projects/{id}/issues/{issue_id}/` |
 
 ### Create Issue Payload
 
@@ -151,6 +250,16 @@ Output:
 }
 ```
 
+### Update Issue Payload
+
+```json
+{
+  "description_html": "<h2>Overview</h2><p>...</p>"
+}
+```
+
+**Note:** The update script fetches issue UUIDs by querying all issues and matching `sequence_id` (e.g., HAIRL-892 → sequence_id: 892).
+
 ## Error Handling
 
 | Code | Meaning | Fix |
@@ -163,6 +272,6 @@ Output:
 
 ## References
 
-- System IDs: `local-docs/plane-config/samasu-system-variables.md`
-- Task artifacts: `local-docs/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
+- System IDs: `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`
+- Task artifacts: `local-docs/project-automation/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
 - Plane API docs: https://developers.plane.so/api-reference/introduction
