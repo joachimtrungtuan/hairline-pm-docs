@@ -11,7 +11,7 @@
 ## Summary Dashboard
 
 | # | Flow | Module | Related FRs | Status |
-|---|------|--------|-------------|--------|
+| --- | --- | --- | --- | --- |
 | P01.1 | Delete Account | P-01: Auth & Profile Management | FR-001, FR-026, FR-023 | 🟡 Specified |
 | P01.2 | Settings Screen | P-01: Auth & Profile Management | FR-001, FR-020, FR-027 | 🟡 Specified |
 | P01.3 | Change Password | P-01: Auth & Profile Management | FR-001 | 🟡 Specified |
@@ -20,8 +20,8 @@
 | P02.3 | Expired Offers/Quotes | P-02: Quote Request & Management | FR-004, FR-005 | 🟡 Specified |
 | P02.4 | Legal/Policy Screens (Quote Context) | P-02: Quote Request & Management | FR-005, FR-027 | 🟡 Specified |
 | P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🟡 Specified |
-| P04.1 | Input Passport Details | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
-| P04.2 | Input Hotel & Flight Details | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
+| P04.1 | Passport Submission (Path A) | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
+| P04.2 | Flight & Hotel Submission (Path B) | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
 | P05.1 | Day-to-Day Treatment Progress | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.2 | Previous Treatments List | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.3 | Submitted Reviews List | P-05: Aftercare & Progress Monitoring | FR-013 | 🔴 Not Designed |
@@ -106,7 +106,7 @@ flowchart TD
 **Purpose**: Explain deletion request consequences before patient submits a deletion request (DSR)
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Display at top of screen |
 | Screen Title | text | Yes | "Delete Your Account" | Displayed prominently in red/destructive color |
 | Back Navigation | action | Yes | Back arrow to return to Profile | Top-left corner |
@@ -135,7 +135,7 @@ flowchart TD
 **Purpose**: Verify patient identity before submitting deletion request
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Verify Your Identity" | Displayed prominently |
 | Back Navigation | action | Yes | Back arrow to return to warning screen (P01.1-S1) | Top-left corner |
 | Security Icon | icon | Yes | Lock or shield icon indicating security step | Display at top center |
@@ -161,7 +161,7 @@ flowchart TD
 **Purpose**: Confirm deletion request (DSR) has been submitted and explain next steps
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Confirmation Icon | icon | Yes | Green checkmark or shield icon | Display at top center to indicate successful submission |
 | Screen Title | text | Yes | "Deletion Request Submitted" | Displayed prominently |
 | Request Status | badge | Yes | Current request status | Default: "Pending Admin Review" |
@@ -230,7 +230,7 @@ flowchart TD
 **Purpose**: Top-level settings navigation hub
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Settings" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
 | Navigation Section: Notifications | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to P01.2-S2 |
@@ -254,7 +254,7 @@ flowchart TD
 **Purpose**: Manage push and email notification preferences
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Notification Settings" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
 | Explanation Text | text | Yes | "Choose how you want to receive notifications from Hairline." | Displayed below title for context |
@@ -279,7 +279,7 @@ flowchart TD
 **Purpose**: Provide access to security and privacy items
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Privacy & Security" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
 | Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to Flow P01.3 (Change Password) |
@@ -297,7 +297,7 @@ flowchart TD
 **Purpose**: Display Privacy Policy content (static/read-only)
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Privacy Policy" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (P01.2-S3) | Top-left corner |
 | Policy Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
@@ -316,7 +316,7 @@ flowchart TD
 **Purpose**: Display Terms & Conditions content (static/read-only)
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Terms & Conditions" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Settings main (P01.2-S1) | Top-left corner |
 | Document Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
@@ -374,7 +374,7 @@ flowchart TD
 **Purpose**: Let an authenticated patient change their password (with an escape hatch to password reset)
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Change Password" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (P01.2-S3) | Top-left corner |
 | Current Password | text | Yes | Masked password input | Required unless user chooses "Forgot your password?" |
@@ -398,7 +398,7 @@ flowchart TD
 **Purpose**: Confirm password change and return user back to settings
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Confirmation Icon | icon | Yes | Success check icon | Displayed prominently |
 | Screen Title | text | Yes | "Password Updated" | Displayed prominently |
 | Message Text | text | Yes | Short confirmation copy | Must not include attempt limits or sensitive details |
@@ -453,7 +453,7 @@ flowchart TD
 **Inquiry-Level Fields** (always visible; one instance per screen):
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Context | text | Yes | Enhanced Inquiry Dashboard | Extends FR-003 Screen 8 with FR-005 comparison & acceptance |
 | Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value |
 | Timeline | list | Yes | Chronological status changes | Timestamps present |
@@ -465,7 +465,7 @@ flowchart TD
 **Per-Quote Card Fields** (repeated for each quote in the list):
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Treatment | text | Yes | Treatment name | Read-only |
 | Inclusions | chips | No | Package/customizations | Read-only |
 | Included Services | list | No | Included services list | Read-only; derived from quote inclusions |
@@ -480,7 +480,7 @@ flowchart TD
 **Quote List & Comparison Panel Fields** (list controls always visible; comparison panel renders only when ≥2 quotes selected):
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Quotes Received | list | Yes | Provider quotes with key highlights | Must list all non-archived quotes |
 | Sort & Filter | group | Yes | Sort/filter quotes (e.g., price, grafts, rating, date) | Criteria list must be defined (FR-005) |
 | Compare Selection (Per Quote) | checkbox | No | Select quotes to compare side-by-side | Max 3 selected; disabled for expired/withdrawn quotes |
@@ -544,7 +544,7 @@ flowchart TD
 **Purpose**: Confirm patient's intent to cancel and capture cancellation reason
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
 | Modal Title | text | Yes | "Cancel Inquiry?" | Displayed prominently in red/destructive color |
 | Warning Message | text | Yes | Explanation of consequences | "Canceling this inquiry is irreversible. All quotes you've received will be cancelled and providers will be notified." |
@@ -573,7 +573,7 @@ flowchart TD
 **Purpose**: Confirm the inquiry has been successfully cancelled
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Success Icon | icon | Yes | Checkmark or completion illustration | Green color; displayed at top center |
 | Confirmation Title | text | Yes | "Inquiry Cancelled" | Displayed prominently below icon |
 | Confirmation Message | text | Yes | Brief success message | "Your inquiry has been successfully cancelled." |
@@ -633,7 +633,7 @@ flowchart TD
 **Purpose**: Visual treatment for expired quotes in the quote list and detail view
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Expired Badge | badge | Yes | "Expired" label overlaid on the quote card | Red/muted badge; always visible on expired quote cards |
 | Card Overlay Styling | group | Yes | Grayed-out / reduced-opacity treatment for the entire quote card | Opacity ~50%; text color muted; visually distinct from active quotes |
 | Expiry Date Display | datetime | Yes | "Expired on [date]" shown below or replacing the countdown timer | Replaces the active Expiry Timer field (FR-005 Screen 1); format: "Expired on [Month DD, YYYY at HH:MM]" |
@@ -658,7 +658,7 @@ flowchart TD
 **Purpose**: Action state displayed when all received quotes for an inquiry have expired
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Expired State Icon | icon | Yes | Clock or hourglass illustration indicating all quotes have expired | Displayed at top center; muted/neutral color |
 | State Title | text | Yes | "All Quotes Have Expired" | Displayed prominently below icon |
 | Explanation Message | text | Yes | "The quotes you received for this inquiry have all expired. You can cancel this inquiry and submit a new one, or contact support for assistance." | Clear, actionable copy |
@@ -712,7 +712,7 @@ flowchart TD
 **Purpose**: Reusable full-screen viewer for static legal documents accessed from the Quote Detail screen. Renders one of three document types depending on the link tapped: **Cancellation Policy**, **Privacy Commitment**, or **Terms of Service**.
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | Dynamic based on document type: "Cancellation Policy", "Privacy Commitment", or "Terms of Service" | Displayed at top of screen; must match the tapped link |
 | Back Navigation | action | Yes | Back arrow to return to Quote Detail (FR-005 Screen 2) | Top-left corner |
 | Document Version | badge | Conditional | Version label of the legal document | Shown if version metadata is available (FR-027) |
@@ -810,7 +810,7 @@ flowchart TD
 - **FR-007B Screen 2** (Patient Booking Details - Installment Schedule View): Links to this screen via "Update Payment Method" action for updating installment payment methods
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Payment Methods" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Profile screen | Top-left corner |
 | Payment Method Cards | list | Yes | List of saved payment methods; each card displays: payment type icon (Visa/MC/Amex), card brand, masked last 4 digits (e.g., "•••• 4242"), expiry date (MM/YY), and default badge if applicable | Must list all saved methods; ordered: default first, then by most recently added |
@@ -840,7 +840,7 @@ flowchart TD
 **Purpose**: Secure form to add a new payment method or update editable fields of an existing one
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | Dynamic: "Add Payment Method" (add mode) or "Edit Payment Method" (edit mode) | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Payment Methods List (P03.1-S1) | Top-left corner; prompts discard confirmation if unsaved changes exist |
 | Secure Form Notice | text | Yes | "Your payment details are secured and encrypted" with lock icon | Displayed above card input fields; builds trust |
@@ -873,7 +873,7 @@ flowchart TD
 **Purpose**: Confirm patient's intent to remove a saved payment method
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
 | Modal Title | text | Yes | "Remove Payment Method?" | Displayed prominently in red/destructive color |
 | Method Summary | group | Yes | Shows the method being removed: payment type icon, card brand, masked last 4 digits, and expiry date | Read-only; matches the card being removed for clear identification |
@@ -895,52 +895,44 @@ flowchart TD
 
 ## P-04: Travel & Logistics
 
-### Flow P04.1: Input Passport Details
+### Flow P04.1: Passport Submission (Path A — Provider-Included Travel)
 
-**Related FRs**: FR-008 (Travel Booking Integration)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md`
+**Related FRs**: FR-008 (Travel & Logistics Coordination)
+**Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md` — Screen 1, Main Flow 1, Alternative Flow A1, Business Rules (Passport Rules, Automated Trigger)
 **Status**: 🟡 Specified
+
+> **Scope**: This flow covers the **patient-side passport submission** for **Path A (provider-included travel)** only. Passport submission is **not required** and not shown for Path B (patient self-booked travel) — see FR-008 REQ-008-005 / REQ-008-005b.
 
 #### Flow Diagram
 
 ```mermaid
 flowchart TD
-    Start["Booking confirmed → Travel managed<br/>by provider (provider handles flight & hotel)"] --> Notify["System sends notification/prompt:<br/>'Submit your passport details<br/>for travel booking'"]
-    Notify --> Navigate["Patient navigates to<br/>Booking Detail → Travel section"]
-    Navigate --> CheckExisting{"Passport details<br/>already submitted?"}
+    Start["[AUTOMATED] Inquiry reaches Confirmed status<br/>(deposit paid, booking confirmed per FR-006)<br/>AND package includes provider-booked travel (Path A).<br/>System sends passport submission request<br/>to patient (in-app + email). (REQ-008-005)"] --> Navigate["Patient opens notification or navigates<br/>to Booking Detail → Travel section"]
+    Navigate --> CheckExisting{"Passport already<br/>submitted for this<br/>appointment?"}
 
-    CheckExisting -->|No| ShowForm["Display Passport Details Form (P04.1-S1)<br/>in editable mode"]
-    CheckExisting -->|Yes| CheckLocked{"Details locked<br/>by provider?"}
+    CheckExisting -->|No| ShowForm["Display Passport Submission Form (P04.1-S1)"]
+    CheckExisting -->|"Yes — record locked"| ShowReadOnly["Display Passport Details<br/>Read-Only View (P04.1-S2)"]
 
-    CheckLocked -->|No| ShowFormPrefilled["Display Passport Details Form (P04.1-S1)<br/>pre-filled with saved data; editable"]
-    CheckLocked -->|Yes| ShowReadOnly["Display Passport Details (P04.1-S2)<br/>in read-only locked view"]
     ShowReadOnly --> LockedActions{"Patient action"}
-    LockedActions -->|"Contact Provider"| ContactProvider["Open secure messaging thread<br/>with provider (FR-012)"]
+    LockedActions -->|"Request Correction"| ContactAdmin["Patient contacts admin/support<br/>for correction (FR-008 REQ-008-017)"]
     LockedActions -->|Back| ExitFlow["Return to Booking Detail"]
-    ContactProvider --> ExitFlow
+    ContactAdmin --> ExitFlow
 
-    ShowForm --> FillForm["Patient fills in passport fields:<br/>full name, passport number, nationality,<br/>dates, gender, special requirements"]
-    ShowFormPrefilled --> FillForm
-
-    FillForm --> UploadPhoto["Patient uploads passport<br/>photo/scan (front page)"]
+    ShowForm --> FillForm["Patient fills in passport form fields:<br/>full name, passport number, date of birth,<br/>gender, nationality, place of birth,<br/>issue date, expiry date"]
+    FillForm --> UploadPhoto["Patient uploads passport photo<br/>(data page; JPEG/PNG/HEIC; max 10 MB)"]
     UploadPhoto --> PatientAction{"Patient action"}
-    PatientAction -->|"Save as Draft"| SaveDraft["System saves form as draft<br/>(incomplete fields allowed)"]
-    SaveDraft --> DraftConfirm["Show 'Draft Saved' confirmation;<br/>return to Booking Detail"]
-    DraftConfirm --> ExitFlow
 
-    PatientAction -->|"Submit"| ClientValidate{"All required fields valid<br/>and passport photo uploaded?"}
-    ClientValidate -->|No| ShowErrors["Show field-level validation errors"]
+    PatientAction -->|"Submit"| ClientValidate{"All required fields valid<br/>AND passport photo uploaded<br/>AND photo quality passes<br/>(lighting, focus, blur)?"}
+    ClientValidate -->|No| ShowErrors["Show field-level validation errors<br/>(specific error per field)"]
     ShowErrors --> FillForm
 
-    ClientValidate -->|Yes| CheckExpiry{"Passport expiry ≥ 6 months<br/>from scheduled travel date?"}
-    CheckExpiry -->|No| ExpiryWarning["Show warning:<br/>'Your passport expires within 6 months<br/>of your travel date. Most countries<br/>require at least 6 months validity.<br/>Please verify or renew your passport.'"]
-    ExpiryWarning --> ConfirmAnyway{"Patient acknowledges<br/>warning and proceeds?"}
-    ConfirmAnyway -->|No| FillForm
-    ConfirmAnyway -->|Yes| SubmitDetails
+    ClientValidate -->|Yes| CheckExpiry{"Passport expiry date<br/>is a future date?"}
+    CheckExpiry -->|No| ExpiryError["Show validation error:<br/>'Passport expiry date must be<br/>in the future'"]
+    ExpiryError --> FillForm
 
-    CheckExpiry -->|Yes| SubmitDetails["System saves passport details<br/>and marks as 'Submitted'"]
-    SubmitDetails --> NotifyProvider["System notifies provider:<br/>'Patient passport details submitted'"]
-    NotifyProvider --> ShowSuccess["Display success confirmation (P04.1-S1):<br/>'Passport details submitted successfully.<br/>You will be notified if any changes<br/>are needed.'"]
+    CheckExpiry -->|Yes| SubmitDetails["System stores passport image<br/>(reference only, no auto-parsing)<br/>and form field data separately.<br/>Status: Submitted. Record locked."]
+    SubmitDetails --> NotifyProvider["System notifies provider (email + in-app):<br/>'Patient passport details submitted'<br/>(REQ-008-004)"]
+    NotifyProvider --> ShowSuccess["Display Submission Confirmation (P04.1-S2):<br/>read-only view of form fields<br/>(passport photo NOT shown in confirmation)"]
     ShowSuccess --> ExitFlow
 
     PatientAction -->|Back / Cancel| CheckUnsaved{"Unsaved changes?"}
@@ -950,229 +942,329 @@ flowchart TD
     CheckUnsaved -->|No| ExitFlow
 ```
 
+**Rejected Submission Path (Validation Failure)** (FR-008 Alternative Flow A1):
+
+```mermaid
+flowchart TD
+    A1S1["Patient taps Submit on passport form"]
+    A1S2{"All required fields present<br/>and valid?"}
+    A1S3{"Passport photo quality passes<br/>(lighting, focus, blur)?"}
+    A1S4["Reject submission and show field-level errors<br/>(no record stored; status remains Awaiting)"]
+    A1S5["System stores passport image (reference only)<br/>and form data. Status: Submitted.<br/>Record locked. Provider notified."]
+
+    A1S1 --> A1S2
+    A1S2 -->|No| A1S4
+    A1S2 -->|Yes| A1S3
+    A1S3 -->|No| A1S4
+    A1S3 -->|Yes| A1S5
+```
+
 #### Screen Specifications
 
-##### Screen P04.1-S1: Passport Details Form
+##### Screen P04.1-S1: Passport Submission Form
 
-**Purpose**: Collect patient's passport information for provider-managed travel booking; accessed from Booking Detail → Travel section
+**Purpose**: Capture patient passport details (photo + structured form) after appointment is confirmed and the package includes provider-booked travel (Path A). The passport photo is stored as a reference document for manual provider verification — no OCR or automatic data extraction is performed. All passport fields must be filled in manually by the patient via the form (FR-008 Screen 1).
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Passport Details" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Booking Detail → Travel section | Top-left corner; prompts discard confirmation if unsaved changes exist |
-| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, travel destination (clinic city/country) | Provides context so patient knows which booking these details are for |
-| Submission Status Badge | badge | Yes | Current status of passport submission | Values: "Not Submitted", "Draft", "Submitted", "Locked by Provider"; color-coded |
-| Section: Personal Information | group | Yes | Section header: "Personal Information" | Separator/header for personal fields |
-| Full Name (as on passport) | text | Yes | Full legal name exactly as printed on passport | Required; max 200 characters; alphabetic characters, spaces, hyphens, and apostrophes allowed |
-| Date of Birth | datetime | Yes | Patient's date of birth | Required; date picker; must be in the past; patient must be at least 18 years old |
-| Gender | select | Yes | Gender as shown on passport | Options: "Male", "Female", "Other / X" (per ICAO passport standards) |
-| Nationality | select | Yes | Patient's nationality / citizenship | Required; searchable country list (ISO 3166-1); defaults to patient profile country if available |
-| Section: Passport Information | group | Yes | Section header: "Passport Information" | Separator/header for passport fields |
-| Passport Number | text | Yes | Passport document number | Required; alphanumeric; 5–20 characters (varies by country); no special characters |
-| Issuing Country | select | Yes | Country that issued the passport | Required; searchable country list (ISO 3166-1) |
-| Passport Issue Date | datetime | Yes | Date the passport was issued | Required; date picker; must be in the past |
-| Passport Expiry Date | datetime | Yes | Date the passport expires | Required; date picker; must be a future date; system warns if < 6 months from scheduled travel date |
-| Passport Expiry Warning (Conditional) | text | Conditional | Warning about passport validity | Shown if expiry date is less than 6 months from scheduled travel date: "Most countries require at least 6 months passport validity. Please verify your passport is valid for travel." |
-| Section: Passport Document | group | Yes | Section header: "Passport Photo / Scan" | Separator/header for upload |
-| Passport Photo/Scan Upload | image | Yes | Upload of passport front page (photo or scan) | Accepted formats: JPG, PNG, PDF; max file size: 10 MB; camera capture or gallery selection; must show full passport front page including photo, name, and number |
+| Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, travel destination (clinic city/country) | Provides context so patient knows which booking these details are for. Note: travel destination is a design complement — FR-008 Screen 1 does not explicitly list this field |
+| Submission Status Badge | badge | Yes | Current status of passport submission | Values: "Awaiting", "Incomplete", "Submitted"; color-coded (derived from FR-008 Screen 6 provider-side badge values; FR-008 Screen 1 does not define a patient-side badge — this is a design complement for UX consistency) |
+| Section: Passport Photo | group | Yes | Section header: "Passport Photo" | Separator/header for upload section |
+| Passport Photo Upload | image | Yes | Photo of the passport's data page | Accepted formats: JPEG, PNG, HEIC; max 10 MB; must be legible; **must pass photo quality check** (lighting, focus, blur) before submission is allowed; camera capture or gallery selection (FR-008 Screen 1: `passport_image`) |
 | Upload Preview | image | Conditional | Thumbnail preview of uploaded document with option to replace | Shown after successful upload; includes "Replace" and "Remove" actions |
-| Upload Guidelines | text | Yes | Instructions for acceptable passport photo/scan | "Please upload a clear photo or scan of your passport's photo page. Ensure the full page is visible, including your photo, name, and passport number." |
-| Section: Special Requirements (Optional) | group | No | Section header: "Special Requirements" | Separator/header for optional fields |
-| Special Requirements | text | No | Free text for special travel needs (e.g., wheelchair assistance, dietary needs, medical equipment) | Optional; max 500 characters; placeholder: "Any special travel requirements? (e.g., wheelchair assistance, dietary needs)" |
-| Submit Button | button | Yes | Primary CTA: "Submit Passport Details" | Disabled until all required fields are valid and passport photo is uploaded; triggers server-side save and provider notification |
-| Save as Draft Button | action | Yes | Secondary action: "Save as Draft" | Saves current form state without requiring all fields; allows partial completion |
-| Success Confirmation (Conditional) | group | Conditional | Success state after submission | "Passport details submitted successfully. Your provider has been notified. You will receive an update if any changes are needed." with "Back to Booking" CTA |
-| Error State (Conditional) | text | Conditional | Displayed if save/submit fails | "Unable to save passport details. Please check your connection and try again." with Retry button |
+| Upload Guidelines | text | Yes | Instructions for acceptable passport photo | "Please upload a clear photo of your passport's data page. Ensure the full page is visible, including your photo, name, and passport number. All fields below must be filled in manually." |
+| Upload Progress Indicator | group | Conditional | Progress bar during photo upload | Shown during upload; provides clear progress indication (FR-008 Screen 1 Notes) |
+| Section: Personal Information | group | Yes | Section header: "Personal Information" | Separator/header for personal fields |
+| Full Name (as on passport) | text | Yes | Full legal name exactly as printed on passport | Required; max 100 characters (FR-008: `passport_name`); emphasis: "Enter your name exactly as it appears on your passport" |
+| Date of Birth | datetime | Yes | Date of birth as on passport | Required; date picker; must be a valid past date (FR-008: `passport_dob`) |
+| Gender | select | Yes | Gender as shown on passport | Options: "Male", "Female", "Other" (FR-008: `gender`) |
+| Location (Nationality) | text | Yes | Country of nationality | Required; non-empty (FR-008: `location`) |
+| Place of Birth | text | Yes | City/country of birth as on passport | Required; non-empty (FR-008: `place_of_birth`) |
+| Section: Passport Information | group | Yes | Section header: "Passport Information" | Separator/header for passport fields |
+| Passport Number | text | Yes | Machine-readable passport number | Required; max 20 characters (FR-008: `passport_number`); note: displayed masked in patient views after submission |
+| Passport Issue Date | datetime | Yes | Date the passport was issued | Required; date picker; must be a valid past date (FR-008: `passport_issue`) |
+| Passport Expiry Date | datetime | Yes | Date the passport expires | Required; date picker; must be a future date (FR-008: `passport_expiry`) |
+| Submit Button | button | Yes | Primary CTA: "Submit Passport Details" | Disabled until all required fields are valid and passport photo is uploaded; triggers server-side save, record lock, and provider notification |
+| Error State (Conditional) | text | Conditional | Displayed if submission fails | "Unable to submit passport details. Please check your connection and try again." with Retry button |
 
 **Business Rules**:
 
-- Passport expiry must be at least 6 months from the scheduled travel date; if it is not, the system shows a non-blocking warning but allows the patient to proceed after acknowledgment — the provider is ultimately responsible for verifying travel document validity (FR-008)
-- Full name must match the passport document exactly; discrepancies may cause travel booking failures, so the form should emphasize this requirement visually
-- Passport photo/scan accepts JPG, PNG, and PDF formats with a maximum file size of 10 MB; the upload supports both camera capture (for mobile convenience) and gallery selection
-- Once submitted, passport details are **locked immediately** and cannot be edited by the patient or provider; the form transitions to read-only state (Screen P04.1-S2). Any correction must be requested through admin only (FR-008 REQ-008-017)
-- "Save as Draft" allows the patient to partially complete the form and return later without losing progress; drafts do not trigger provider notification
-- All passport data is classified as sensitive PII and must be encrypted at rest and in transit; access is restricted to the patient, the assigned provider (for travel booking), and authorized admin staff (FR-008 Data & Privacy Rules)
+- This form is triggered **automatically** when the inquiry transitions to **Confirmed** status AND the accepted package includes provider-booked travel (Path A). No manual action triggers it (FR-008 REQ-008-005). It is NOT shown for Path B (patient self-booked) appointments (FR-008 REQ-008-005b)
+- Full name must match the passport document exactly (`passport_name`); the form should emphasize this requirement visually to prevent travel booking failures
+- Passport photo is stored as a reference document only — **no OCR or automatic data extraction**; all form fields must be completed manually by the patient (FR-008 Screen 1 Business Rules)
+- Accepted photo formats: JPEG, PNG, HEIC; max 10 MB; must be legible (FR-008 Screen 1)
+- Passport photo quality must pass the on-device quality gate (lighting, focus, blurriness) before submission is allowed. Use the app's standard Flutter implementation (Google ML Kit) for this quality gate. If quality fails, submission is rejected and no record is stored; patient must retry with a clearer photo (FR-008 Alternative Flow A1)
+- Once submitted, the passport record is **locked immediately** by the system and cannot be edited, removed, or re-submitted by the patient or provider. Corrections must be requested through admin only, who applies corrections via Screen 12 with a mandatory audit log entry (FR-008 REQ-008-017)
+- If passport details were previously submitted for an earlier appointment, the patient may reuse them; if the passport has since changed (e.g. renewed), admin must update the record (FR-008 Screen 1 Business Rules)
+- All passport data is classified as sensitive PII: encrypted at rest (AES-256) and in transit (TLS 1.3); access restricted to the submitting patient, assigned provider, and admin (FR-008 Data & Privacy Rules, REQ-008-002, REQ-008-003)
 
-##### Screen P04.1-S2: Passport Details (Submitted / Read-Only View)
+##### Screen P04.1-S2: Passport Details — Submitted / Read-Only View
 
-**Purpose**: Display submitted passport details in read-only mode after the patient has submitted them. Records are locked immediately on submission — neither patient nor provider can edit. Any correction requires admin intervention.
+**Purpose**: Display submitted passport details in read-only mode. The confirmation view shows the manually entered form fields only — the passport photo is NOT displayed in this confirmation view (FR-008 Screen 1 Notes). Records are locked immediately on submission; neither patient nor provider can edit. Any correction requires admin intervention.
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Screen Title | text | Yes | "Passport Details" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Booking Detail → Travel section | Top-left corner |
 | Submitted Status Banner | group | Yes | Prominent banner: "Your passport details have been submitted and are now locked. To request a correction, please contact support." | Displayed at top below title; info color |
 | Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date | Same as P04.1-S1 |
-| Submitted Badge | badge | Yes | "Submitted" status | Displayed next to title |
+| Submitted Badge | badge | Yes | "Submitted" status | Displayed next to title; green |
 | Submission Timestamp | datetime | Yes | Date/time the patient submitted the record | Format: "Submitted on [Month DD, YYYY at HH:MM]" |
-| All Form Fields (Read-Only) | group | Yes | All fields from P04.1-S1 displayed in read-only mode: full name, date of birth, gender, nationality, passport number (masked), issue date, expiry date, passport photo thumbnail | All fields non-editable; data displayed as text labels |
-| Passport Photo Thumbnail | image | Yes | Thumbnail of uploaded passport photo/scan | Tappable to view full-size image; read-only |
-| Contact Support Button | button | Yes | "Contact Support to Request a Correction" | Opens support channel; corrections applied by admin only with audit log (FR-008 REQ-008-017) |
+| Full Name (Read-Only) | text | Yes | Full name as submitted | Non-editable; displayed as text label |
+| Date of Birth (Read-Only) | text | Yes | Date of birth as submitted | Non-editable |
+| Gender (Read-Only) | text | Yes | Gender as submitted | Non-editable |
+| Location / Nationality (Read-Only) | text | Yes | Nationality as submitted | Non-editable |
+| Place of Birth (Read-Only) | text | Yes | Place of birth as submitted | Non-editable |
+| Passport Number (Read-Only, Masked) | text | Yes | Passport number with masking (e.g. `A1234****`) | Non-editable; masked for patient display; full number visible to assigned provider and admin only (FR-008 REQ-008-002) |
+| Passport Issue Date (Read-Only) | text | Yes | Issue date as submitted | Non-editable |
+| Passport Expiry Date (Read-Only) | text | Yes | Expiry date as submitted | Non-editable |
+| Contact Support Button | button | Yes | "Contact Support to Request a Correction" | Opens support/admin channel; corrections applied by admin only with mandatory audit log entry (FR-008 REQ-008-017, Alternative Flow A2) |
 | Back to Booking Button | action | Yes | "Back to Booking" | Returns to Booking Detail |
 
 **Business Rules**:
 
-- The read-only state is triggered immediately when the patient submits passport details; it is not provider-controlled (FR-008 REQ-008-017)
-- Neither the patient nor the provider can edit a submitted passport record; only admin can apply corrections, which create a new locked version with a mandatory audit log entry
-- The submitted view displays all form fields for the patient's reference; passport number is shown masked (e.g. `A1234****`)
+- The read-only state is triggered immediately when the patient submits passport details — locking is automatic and system-controlled, not provider-controlled (FR-008 REQ-008-017)
+- Neither the patient nor the provider can edit a submitted passport record; only admin can apply corrections, which create a new locked version with a mandatory audit log entry (FR-008 Alternative Flow A2)
+- The confirmation view displays the manually entered form fields only: Full Name, Date of Birth, Gender, Location (Nationality), Place of Birth, Passport Issue Date, Passport Expiry Date, and masked Passport Number. **The passport photo is not displayed in the confirmation view** (FR-008 Screen 1 Notes)
+- Passport number is shown masked (e.g. `A1234****`) in patient views; shown in full to the assigned provider and admin only (FR-008 REQ-008-002)
 - Submission timestamp provides an audit trail of when details were provided
 
 ---
 
-### Flow P04.2: Input Hotel & Flight Details (Self-Managed)
+### Flow P04.2: Flight & Hotel Submission (Path B — Patient Self-Booked Travel)
 
-**Related FRs**: FR-008 (Travel Booking Integration)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md`
+**Related FRs**: FR-008 (Travel & Logistics Coordination)
+**Source Reference**: `local-docs/project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md` — Screen 2, Screen 3, Screen 4, Screen 5, Main Flow 2, Alternative Flow A2, Alternative Flow B1, Business Rules (Flight Records, Hotel Records, Automated Trigger)
 **Status**: 🟡 Specified
+
+> **Scope**: This flow covers the **patient-side flight and hotel submission** for **Path B (patient self-booked travel)** only. In Path B, the patient books flights and hotel independently outside the platform and submits confirmed details for provider coordination. **No passport submission** is required or shown in Path B — see FR-008 REQ-008-005b.
 
 #### Flow Diagram
 
 ```mermaid
 flowchart TD
-    Start["Booking confirmed → Patient handles<br/>own travel (self-managed)"] --> Prompt["System sends prompt:<br/>'Share your travel details<br/>so your provider can coordinate<br/>logistics (e.g., airport pickup)'"]
-    Prompt --> Navigate["Patient navigates to<br/>Booking Detail → Travel section"]
-    Navigate --> TravelHub["Display Travel Details Hub<br/>with two sub-sections"]
+    Start["[AUTOMATED] Inquiry reaches Confirmed status<br/>(deposit paid, booking confirmed per FR-006)<br/>AND travel is patient self-booked (Path B).<br/>System sends flight and hotel submission<br/>request to patient (in-app + email).<br/>No passport request sent. (REQ-008-005b)"] --> Navigate["Patient opens notification or navigates<br/>to Booking Detail → Travel section"]
 
-    TravelHub --> HubAction{"Patient selects section"}
-    HubAction -->|"Flight Details"| CheckFlightExists{"Flight details<br/>already saved?"}
-    HubAction -->|"Hotel / Accommodation"| CheckHotelExists{"Hotel details<br/>already saved?"}
-    HubAction -->|Back| ExitFlow["Return to Booking Detail"]
+    Navigate --> TravelCheck["Display Travel Requirement Check (P04.2-S1):<br/>'Do you need to arrange travel<br/>for this appointment?'"]
 
-    CheckFlightExists -->|No| ShowFlightForm["Display Flight Details Form (P04.2-S1)<br/>empty"]
-    CheckFlightExists -->|Yes| ShowFlightPrefilled["Display Flight Details Form (P04.2-S1)<br/>pre-filled; editable"]
-    ShowFlightForm --> FillFlight["Patient enters outbound flight details<br/>(airline, flight number, airports, dates/times)"]
-    ShowFlightPrefilled --> FillFlight
-    FillFlight --> OptionalReturn{"Patient adds<br/>return flight?"}
-    OptionalReturn -->|Yes| FillReturn["Patient enters return flight details"]
-    OptionalReturn -->|"Not yet / Skip"| FlightSave
-    FillReturn --> OptionalConnecting{"Multi-leg journey?"}
-    OptionalConnecting -->|Yes| AddLeg["Patient taps 'Add Connecting Flight'<br/>and enters connecting flight details"]
-    OptionalConnecting -->|No| FlightSave
-    AddLeg --> FlightSave
+    TravelCheck --> TravelNeeded{"Patient response"}
+    TravelNeeded -->|"Yes — I need to arrange travel"| FlightForm["Display Outbound Flight<br/>Submission Form (P04.2-S2)"]
+    TravelNeeded -->|"No — I am local / no travel needed"| NoTravel["System sets travel status to<br/>'no_travel_required'.<br/>Suppresses all further travel reminders<br/>for this appointment. (Alt Flow B1)"]
+    NoTravel --> ItineraryNoTravel["Display Travel Itinerary View (P04.2-S5)<br/>showing 'No travel required'"]
+    ItineraryNoTravel --> ExitFlow["Return to Booking Detail"]
 
-    FlightSave --> FlightAction{"Patient action"}
-    FlightAction -->|"Save"| ValidateFlight{"Dates valid?<br/>(arrival ≤ treatment start;<br/>return ≥ treatment end)"}
-    ValidateFlight -->|No| FlightDateWarning["Show non-blocking warning:<br/>'Your arrival/return dates may not<br/>align with your treatment schedule.<br/>Please verify.'"]
-    FlightDateWarning --> ConfirmFlightSave{"Save anyway?"}
-    ConfirmFlightSave -->|Yes| SaveFlight
-    ConfirmFlightSave -->|No| FillFlight
-    ValidateFlight -->|Yes| SaveFlight["System saves flight details;<br/>notifies provider of update"]
-    FlightAction -->|Cancel| TravelHub
+    FlightForm --> FillOutbound["Patient enters outbound flight details:<br/>airline, flight number, airports,<br/>departure/arrival dates and times,<br/>ticket confirmation number, ticket class"]
+    FillOutbound --> SubmitOutbound{"Patient action"}
 
-    SaveFlight --> FlightSuccess["Show 'Flight details saved'<br/>confirmation"]
-    FlightSuccess --> TravelHub
+    SubmitOutbound -->|"Submit Outbound"| ValidateOutbound{"All required fields valid?<br/>arrival_date ≥ departure_date?<br/>outbound before procedure?"}
+    ValidateOutbound -->|No| OutboundErrors["Show field-level validation errors"]
+    OutboundErrors --> FillOutbound
+    ValidateOutbound -->|Yes| SaveOutbound["System stores outbound flight record.<br/>Status: Submitted. Record locked.<br/>Leg type: outbound."]
+    SaveOutbound --> NotifyOutbound["System notifies provider (email + in-app):<br/>'Patient submitted outbound flight details'<br/>(REQ-008-022)"]
+    NotifyOutbound --> PromptReturn{"System prompts:<br/>'Would you like to submit<br/>your return flight details?'"}
 
-    CheckHotelExists -->|No| ShowHotelForm["Display Hotel Details Form (P04.2-S2)<br/>empty"]
-    CheckHotelExists -->|Yes| ShowHotelPrefilled["Display Hotel Details Form (P04.2-S2)<br/>pre-filled; editable"]
-    ShowHotelForm --> FillHotel["Patient enters hotel name, address,<br/>check-in/out dates, booking reference"]
-    ShowHotelPrefilled --> FillHotel
+    PromptReturn -->|Yes| ReturnForm["Display Return Flight<br/>Submission Form (P04.2-S2,<br/>leg_type: return)"]
+    PromptReturn -->|"Not yet / Skip"| HotelPrompt
 
-    FillHotel --> HotelAction{"Patient action"}
-    HotelAction -->|"Save"| ValidateHotel{"Dates valid?<br/>(check-in ≤ treatment start;<br/>check-out ≥ treatment end)"}
-    ValidateHotel -->|No| HotelDateWarning["Show non-blocking warning:<br/>'Your stay dates may not cover<br/>your full treatment + recovery period.<br/>Please verify.'"]
-    HotelDateWarning --> ConfirmHotelSave{"Save anyway?"}
-    ConfirmHotelSave -->|Yes| SaveHotel
-    ConfirmHotelSave -->|No| FillHotel
-    ValidateHotel -->|Yes| SaveHotel["System saves hotel details;<br/>notifies provider of update"]
-    HotelAction -->|Cancel| TravelHub
+    ReturnForm --> FillReturn["Patient enters return flight details"]
+    FillReturn --> SubmitReturn{"Patient action"}
+    SubmitReturn -->|"Submit Return"| ValidateReturn{"All required fields valid?<br/>arrival_date ≥ departure_date?"}
+    ValidateReturn -->|No| ReturnErrors["Show field-level validation errors"]
+    ReturnErrors --> FillReturn
+    ValidateReturn -->|Yes| SaveReturn["System stores return flight record.<br/>Status: Submitted. Record locked.<br/>Leg type: return."]
+    SaveReturn --> NotifyReturn["System notifies provider (email + in-app)"]
+    NotifyReturn --> HotelPrompt
 
-    SaveHotel --> HotelSuccess["Show 'Hotel details saved'<br/>confirmation"]
-    HotelSuccess --> TravelHub
+    SubmitOutbound -->|Back / Cancel| DiscardFlightCheck{"Unsaved changes?"}
+    SubmitReturn -->|Back / Cancel| DiscardFlightCheck
+    DiscardFlightCheck -->|Yes| DiscardFlightPrompt["Prompt: 'Discard unsaved changes?'"]
+    DiscardFlightPrompt -->|Discard| ExitFlow
+    DiscardFlightPrompt -->|Stay| FillOutbound
+    DiscardFlightCheck -->|No| ExitFlow
+
+    HotelPrompt["System prompts patient to submit<br/>hotel details"] --> HotelForm["Display Hotel Submission Form (P04.2-S3)"]
+
+    HotelForm --> FillHotel["Patient enters hotel details:<br/>name, address, check-in/out dates & times,<br/>reservation number, room type"]
+    FillHotel --> SubmitHotel{"Patient action"}
+    SubmitHotel -->|"Submit Hotel"| ValidateHotel{"All required fields valid?<br/>check_out_date after check_in_date?"}
+    ValidateHotel -->|No| HotelErrors["Show field-level validation errors"]
+    HotelErrors --> FillHotel
+    ValidateHotel -->|Yes| SaveHotel["System stores hotel record.<br/>Status: Submitted. Record locked."]
+    SaveHotel --> NotifyHotel["System notifies provider (email + in-app):<br/>'Patient submitted hotel details'<br/>(REQ-008-022)"]
+    NotifyHotel --> ShowItinerary["Display Travel Itinerary View (P04.2-S5):<br/>unified read-only view of all<br/>submitted travel records"]
+    ShowItinerary --> ExitFlow
+
+    SubmitHotel -->|Back / Cancel| DiscardHotelCheck{"Unsaved changes?"}
+    DiscardHotelCheck -->|Yes| DiscardHotelPrompt["Prompt: 'Discard unsaved changes?'"]
+    DiscardHotelPrompt -->|Discard| ExitFlow
+    DiscardHotelPrompt -->|Stay| FillHotel
+    DiscardHotelCheck -->|No| ExitFlow
 ```
 
-> **Note**: Both flight and hotel details feed into the patient's unified itinerary (FR-008 REQ-008-014) and are visible to the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, proximity check). Records are locked immediately after submission; corrections require admin intervention (FR-008 REQ-008-017).
+**Record Edit Attempt Path** (FR-008 Alternative Flow A2):
+
+```mermaid
+flowchart TD
+    A2S1["Patient attempts to edit a submitted<br/>travel record (flight or hotel)"]
+    A2S2["System blocks the edit.<br/>Record is locked after submission."]
+    A2S3["System displays message:<br/>'This record has been submitted and locked.<br/>Corrections must be requested through admin.'"]
+    A2S4["Patient contacts admin/support<br/>with correction details"]
+    A2S5["Admin reviews and applies correction<br/>via admin override (Screen 12)<br/>with mandatory audit log entry"]
+    A2S6["System updates itinerary and notifies<br/>patient and provider of the correction"]
+
+    A2S1 --> A2S2
+    A2S2 --> A2S3
+    A2S3 --> A2S4
+    A2S4 --> A2S5
+    A2S5 --> A2S6
+```
 
 #### Screen Specifications
 
-##### Screen P04.2-S1: Flight Details Input
+##### Screen P04.2-S1: Travel Requirement Check
 
-**Purpose**: Collect patient's self-booked flight information for provider coordination; accessed from Booking Detail → Travel section → "Flight Details"
+**Purpose**: Allow the patient to confirm whether they need to arrange travel for their upcoming appointment. Shown immediately after the automated travel submission request is received (Path B only). Local patients who do not require flights or a hotel can dismiss the submission workflow here (FR-008 Screen 2).
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| Screen Title | text | Yes | "Flight Details" | Displayed at top of screen |
-| Back Navigation | action | Yes | Back arrow to return to Travel section in Booking Detail | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| --- | --- | --- | --- | --- |
+| Appointment Summary | group | Yes | Clinic name + appointment date (read-only context) | Read-only; provides context |
+| Prompt Heading | text | Yes | "Do you need to arrange travel for this appointment?" | Displayed prominently |
+| Option A: Yes | button | Yes | Primary CTA: "Yes — I need to arrange travel" | Proceeds to P04.2-S2 (Flight Submission) |
+| Option B: No | button | Yes | Secondary CTA: "No — I am local / no travel needed" | Sets travel status to `no_travel_required`; suppresses all further travel reminders for this appointment; redirects to P04.2-S5 (Itinerary View) showing "No travel required" |
+
+**Business Rules**:
+
+- This screen is shown **only for Path B** (patient self-booked travel). It is NOT shown for Path A — passport submission is requested instead (Flow P04.1) (FR-008 Screen 2)
+- If patient selects **"Yes"**: system proceeds to Screen P04.2-S2 (Flight Submission) and then Screen P04.2-S3 (Hotel Submission) in sequence (FR-008 Screen 2)
+- If patient selects **"No"**: system sets the appointment's travel status to `no_travel_required`, suppresses all further travel submission reminders for this appointment, and redirects to Screen P04.2-S5 (Travel Itinerary View) showing "No travel required" (FR-008 Alternative Flow B1)
+- Once set to `no_travel_required`, the patient **cannot reverse this themselves**. If the patient's situation changes, they must contact admin (FR-008 Screen 2)
+- Admin can override `no_travel_required` from the admin Travel Records Oversight (FR-008 Screen 11) and re-send the travel submission request (FR-008 Screen 2)
+- This decision is recorded with a timestamp and actor ID (patient) (FR-008 Screen 2)
+
+##### Screen P04.2-S2: Flight Information — Patient Submission
+
+**Purpose**: Allow the patient to submit confirmed flight details for one leg of their trip. Used twice for a round-trip: once for the outbound leg (`leg_type: outbound`) and once for the return leg (`leg_type: return`). Both legs are independent; either may be submitted separately if the return is not yet confirmed (FR-008 Screen 3).
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | Dynamic: "Outbound Flight" or "Return Flight" based on `leg_type` | Displayed at top of screen; must clearly indicate which leg (FR-008 Screen 3) |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner; prompts discard confirmation if unsaved changes exist |
 | Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, destination city | Provides context for which booking these details relate to |
-| Last Updated Indicator | datetime | Conditional | "Last updated [date]" | Shown if flight details were previously saved; helps patient track currency of information |
-| Section: Outbound Flight | group | Yes | Section header: "Outbound Flight" | Separator/header with airplane departure icon |
-| Airline Name (Outbound) | text | Yes | Name of the airline | Required; free text with autocomplete suggestions from common airline list; max 100 characters |
-| Flight Number (Outbound) | text | Yes | Flight number (e.g., "BA 2456") | Required; alphanumeric; max 10 characters; format: airline code + number |
-| Departure Airport/City (Outbound) | text | Yes | Departure airport or city name | Required; free text with IATA airport code autocomplete; displays both city and airport name |
-| Arrival Airport/City (Outbound) | text | Yes | Arrival airport or city name | Required; free text with IATA airport code autocomplete; should match or be near the clinic city |
-| Departure Date & Time (Outbound) | datetime | Yes | Date and time of departure | Required; date-time picker; cannot be in the past |
-| Arrival Date & Time (Outbound) | datetime | Yes | Date and time of arrival at destination | Required; date-time picker; must be after departure; system warns if arrival is after treatment start date |
-| Section: Return Flight | group | No | Section header: "Return Flight" with "Add Return Flight" button if not yet entered | Collapsible section; initially collapsed if no return details saved |
-| Add Return Flight Toggle | action | Conditional | "Add Return Flight" button/link to expand return flight section | Shown only if return section is collapsed and not yet filled |
-| Airline Name (Return) | text | Conditional | Name of the return airline | Required if return section is expanded; same rules as outbound |
-| Flight Number (Return) | text | Conditional | Return flight number | Required if return section is expanded; same rules as outbound |
-| Departure Airport/City (Return) | text | Conditional | Departure airport for return (clinic city) | Required if expanded; defaults to outbound arrival airport |
-| Arrival Airport/City (Return) | text | Conditional | Arrival airport for return (home city) | Required if expanded; defaults to outbound departure airport |
-| Departure Date & Time (Return) | datetime | Conditional | Date and time of return departure | Required if expanded; must be after outbound arrival; system warns if before estimated treatment end date |
-| Arrival Date & Time (Return) | datetime | Conditional | Date and time of return arrival | Required if expanded; must be after return departure |
-| Section: Connecting Flights (Optional) | group | No | Section header: "Connecting Flights" | Shown only if patient taps "Add Connecting Flight" |
-| Add Connecting Flight Button | action | No | "+ Add Connecting Flight" | Appends a new connecting flight entry (same fields: airline, flight number, departure/arrival airports, departure/arrival times); max 3 connecting flights per direction |
-| Connecting Flight Entries | list | Conditional | Repeatable group of connecting flight fields per leg | Each entry includes: airline, flight number, departure airport, arrival airport, departure time, arrival time; "Remove" action per entry |
-| Booking Reference Number | text | No | Airline booking/confirmation reference code | Optional; alphanumeric; max 20 characters; helps provider and patient for support inquiries |
-| Upload Booking Confirmation | image | No | Upload of booking confirmation document (screenshot, PDF, or email confirmation) | Optional; accepted formats: JPG, PNG, PDF; max file size: 10 MB |
-| Upload Preview (Conditional) | image | Conditional | Thumbnail preview of uploaded document with Replace/Remove actions | Shown after successful upload |
-| Date Alignment Warning (Conditional) | text | Conditional | Non-blocking warning about date misalignment with treatment schedule | Shown if outbound arrival is after treatment start date OR return departure is before estimated treatment end date; "Your travel dates may not align with your treatment schedule. Please verify with your provider." |
-| Save Button | button | Yes | Primary CTA: "Save Flight Details" | Disabled until all required outbound fields are valid |
-| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to Travel section without saving; prompts if unsaved changes |
-| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination (e.g., airport pickup)." | Displayed below Save button; informational |
+| Leg Type Indicator | badge | Yes | "Outbound" or "Return" badge | Prominent visual indicator; drives form header label (FR-008: `leg_type`) |
+| Airline Name | text | Yes | Name of the airline | Required; non-empty (FR-008: `airline_name`) |
+| Flight Number | text | Yes | Specific flight number | Required; non-empty (FR-008: `flight_number`) |
+| Departure Airport | text | Yes | IATA code + airport name | Required; non-empty (FR-008: `departure_airport`) |
+| Arrival Airport | text | Yes | IATA code + airport name | Required; non-empty (FR-008: `arrival_airport`) |
+| Departure Date | datetime | Yes | Scheduled departure date | Required; valid date; outbound must be before procedure start date (FR-008: `departure_date`) |
+| Departure Time | datetime | Yes | Scheduled departure time | Required; valid time HH:MM (FR-008: `departure_time`) |
+| Arrival Date | datetime | Yes | Scheduled arrival date | Required; must be ≥ departure date (FR-008: `arrival_date`, REQ-008-008) |
+| Arrival Time | datetime | Yes | Scheduled arrival time | Required; valid time HH:MM (FR-008: `arrival_time`) |
+| Ticket Confirmation Number | text | Yes | Booking reference from airline | Required; non-empty (FR-008: `ticket_confirmation_number`) |
+| Ticket Class | select | Yes | Flight class | Required; must select one: "Economy", "Business", "First" (FR-008: `ticket_class`) |
+| Baggage Allowance | text | No | Checked + carry-on allowance details | Optional; free text; max 300 characters (FR-008: `baggage_allowance`) |
+| Special Requests | text | No | Seat preference, meal preference, etc. | Optional; free text; max 500 characters (FR-008: `special_request`) |
+| Submit Button | button | Yes | Primary CTA: "Submit [Outbound/Return] Flight" | Disabled until all required fields are valid; triggers record lock and provider notification |
+| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to previous screen without saving; prompts if unsaved changes |
+| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination (e.g., airport pickup)." | Displayed below Submit button; informational |
+| Error State (Conditional) | text | Conditional | Displayed if submission fails | "Unable to submit flight details. Please check your connection and try again." with Retry button |
 
 **Business Rules**:
 
-- Outbound arrival date should be on or before the treatment start date to allow reasonable travel buffer; if it is not, the system shows a non-blocking warning but allows saving — the patient is responsible for verifying alignment with their provider
-- Return departure date should be on or after the estimated treatment end date (accounting for recovery); a non-blocking warning is shown if the dates appear misaligned
-- Flight details are shared with the assigned provider in read-only mode for logistics coordination (e.g., airport pickup, transfer arrangements); provider cannot edit the patient's self-managed travel details (FR-008)
-- Flight records are **locked immediately after submission**; the patient cannot edit them post-submission. Any correction must be requested through admin only (FR-008 REQ-008-017)
-- Connecting flights support multi-leg journeys (max 3 connecting flights per direction) for patients with layovers
-- All saved flight details contribute to the patient's unified itinerary (FR-008 REQ-008-014)
+- The form header must display the leg type label clearly: "Outbound Flight" or "Return Flight" (FR-008 Screen 3)
+- After submitting the outbound leg, the system prompts the patient to also submit the return leg. Both legs are independent; either may be submitted separately if the return is not yet confirmed (FR-008 Screen 3)
+- Maximum of **2 flight records** per appointment (outbound + return). No connecting flights in MVP (FR-008 Flight Records rules)
+- `total_price` is explicitly **excluded** from this form. Flight cost is captured at the package/quote level (FR-004/FR-007) (FR-008 REQ-008-009)
+- Flight date validation: `arrival_date` must be ≥ `departure_date`; outbound `departure_date` must be before procedure start date (FR-008 REQ-008-008)
+- Once submitted, the flight record is **locked immediately**. The patient cannot edit it, and the provider cannot edit a patient-submitted record. Corrections must be requested through admin only (FR-008 REQ-008-017)
+- `baggage_allowance` uses the normalised singular form (not `baggages_allowance`) per FR-008 REQ-008-010
+- All submitted flight records contribute to the unified patient itinerary (FR-008 REQ-008-014)
 
-##### Screen P04.2-S2: Hotel/Accommodation Details Input
+##### Screen P04.2-S3: Hotel Information — Patient Submission
 
-**Purpose**: Collect patient's self-booked accommodation information for provider coordination; accessed from Booking Detail → Travel section → "Hotel / Accommodation"
+**Purpose**: Allow the patient to submit their confirmed hotel booking details so the provider has visibility for coordination. One hotel record per appointment in MVP (FR-008 Screen 4).
 
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| Screen Title | text | Yes | "Hotel / Accommodation" | Displayed at top of screen |
-| Back Navigation | action | Yes | Back arrow to return to Travel section in Booking Detail | Top-left corner; prompts discard confirmation if unsaved changes exist |
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "Hotel Information" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner; prompts discard confirmation if unsaved changes exist |
 | Booking Context Header | group | Yes | Read-only summary: booking reference, treatment type, provider name, procedure date, clinic city | Provides context for which booking these details relate to |
-| Last Updated Indicator | datetime | Conditional | "Last updated [date]" | Shown if hotel details were previously saved |
-| Section: Accommodation Details | group | Yes | Section header: "Accommodation Details" | Separator/header with hotel icon |
-| Hotel/Accommodation Name | text | Yes | Name of the hotel, Airbnb, or other accommodation | Required; free text; max 200 characters |
-| Address Line 1 | text | Yes | Street address | Required; max 200 characters |
-| Address Line 2 | text | No | Additional address info (apt/suite/floor) | Optional; max 100 characters |
-| City | text | Yes | City name | Required; should match or be near the clinic city; max 100 characters |
-| State/Region | text | No | State, region, or province | Optional; max 100 characters |
-| Postal Code | text | No | Postal/ZIP code | Optional; format varies by country |
-| Country | select | Yes | Country of the accommodation | Required; searchable country list (ISO 3166-1); defaults to clinic country |
-| Map Preview (Conditional) | group | Conditional | Map thumbnail auto-generated from the entered address | Shown after address fields are populated; non-interactive preview showing location pin; tappable to open in external maps app |
-| Distance from Clinic (Conditional) | text | Conditional | "Approximately [X km / X miles] from [Clinic Name]" | Shown if both accommodation address and clinic address are known; auto-calculated; helps patient assess proximity |
-| Section: Stay Dates | group | Yes | Section header: "Stay Dates" | Separator/header |
-| Check-in Date | datetime | Yes | Date of check-in | Required; date picker; should be on or before treatment start date; system warns if after treatment start |
-| Check-out Date | datetime | Yes | Date of check-out | Required; date picker; must be after check-in date; system warns if before estimated treatment end date + recovery buffer |
-| Date Alignment Warning (Conditional) | text | Conditional | Non-blocking warning about stay dates vs. treatment schedule | Shown if check-in is after treatment start OR check-out is before estimated treatment end + recovery period; "Your stay dates may not cover your full treatment and recovery period. Please verify with your provider." |
-| Section: Booking Information | group | No | Section header: "Booking Information" | Separator/header |
-| Booking Reference Number | text | No | Hotel booking/confirmation reference | Optional; alphanumeric; max 30 characters |
-| Hotel Contact Phone | text | No | Hotel reception phone number | Optional; international phone format with country code selector |
-| Room Type | text | No | Type of room booked (e.g., "Standard Double", "Suite") | Optional; free text; max 50 characters |
-| Upload Booking Confirmation | image | No | Upload of booking confirmation document | Optional; accepted formats: JPG, PNG, PDF; max file size: 10 MB |
-| Upload Preview (Conditional) | image | Conditional | Thumbnail preview of uploaded document with Replace/Remove actions | Shown after successful upload |
-| Special Notes | text | No | Free text for any additional accommodation notes | Optional; max 500 characters; placeholder: "Any notes about your accommodation? (e.g., early check-in arranged, specific room requests)" |
-| Save Button | button | Yes | Primary CTA: "Save Hotel Details" | Disabled until all required fields are valid |
-| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to Travel section without saving; prompts if unsaved changes |
-| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination." | Displayed below Save button; informational |
-| Error State (Conditional) | text | Conditional | Displayed if save fails | "Unable to save hotel details. Please check your connection and try again." with Retry button |
+| Hotel Name | text | Yes | Full name of the hotel/lodging | Required; non-empty (FR-008: `hotel_name`) |
+| Hotel Address | text | Yes | Full address for patient navigation | Required; non-empty (FR-008: `hotel_address`) |
+| Check-In Date | datetime | Yes | Arrival date at hotel | Required; valid date; must be before check-out (FR-008: `check_in_date`) |
+| Check-In Time | datetime | Yes | Expected check-in time | Required; valid time HH:MM (FR-008: `check_in_time`) |
+| Check-Out Date | datetime | Yes | Departure date from hotel | Required; must be after check-in date (FR-008: `check_out_date`, REQ-008-012) |
+| Check-Out Time | datetime | Yes | Expected check-out time | Required; valid time HH:MM (FR-008: `check_out_time`) |
+| Reservation Number | text | Yes | Booking/reservation reference | Required; non-empty (FR-008: `reservation_number`) |
+| Room Type | text | Yes | Room category (e.g. Single, Double, Suite) | Required; non-empty (FR-008: `room_type`) |
+| Amenities Included | text | No | Gym, breakfast, parking, etc. | Optional; free text; max 500 characters (FR-008: `amenities`) |
+| Transportation Details | text | No | Transfer/pickup info tied to this stay | Optional; free text; max 500 characters; this is the canonical field for airport pickup and transfer coordination in MVP (FR-008: `transportation`, REQ-008-013) |
+| Special Requests | text | No | Accessibility needs, preferences, etc. | Optional; free text; max 500 characters (FR-008: `special_request`) |
+| Phone Number | text | No | Hotel contact phone | Optional; valid phone format (FR-008: `contact_number`) |
+| Email | text | No | Hotel contact email | Optional; valid email format (FR-008: `contact_email`) |
+| Submit Button | button | Yes | Primary CTA: "Submit Hotel Details" | Disabled until all required fields are valid; triggers record lock and provider notification |
+| Cancel Button | action | Yes | Secondary action: "Cancel" | Returns to previous screen without saving; prompts if unsaved changes |
+| Provider Visibility Notice | text | Yes | "These details will be shared with your provider for logistics coordination." | Displayed below Submit button; informational |
+| Error State (Conditional) | text | Conditional | Displayed if submission fails | "Unable to submit hotel details. Please check your connection and try again." with Retry button |
 
 **Business Rules**:
 
-- Check-in date should be on or before the treatment start date to ensure the patient is settled before the procedure; a non-blocking warning is shown if check-in is after treatment start, but saving is allowed since the patient may have alternative arrangements
-- Check-out date should be after the estimated treatment end date plus a reasonable recovery buffer (provider-specific; typically 2–5 days post-procedure for hair transplant recovery); a non-blocking warning is shown if the stay appears too short
-- Hotel details are shared with the assigned provider in read-only mode for logistics coordination (proximity verification, potential transport arrangements); provider cannot edit the patient's self-managed accommodation details (FR-008)
-- Hotel records are **locked immediately after submission**; the patient cannot edit them post-submission. Any correction must be requested through admin only (FR-008 REQ-008-017)
-- Distance from clinic is auto-calculated when both the accommodation address and the clinic address are available; this helps the patient and provider assess logistics feasibility
-- All saved hotel details contribute to the patient's unified itinerary (FR-008 REQ-008-014)
+- One hotel record per appointment in MVP (FR-008 Hotel Records rules)
+- `check_out_date` must be after `check_in_date` (FR-008 REQ-008-012)
+- The `Transportation Details` field is the **canonical field** for recording airport pickup and transfer notes in MVP. There is no separate transport form. Providers should use this field to understand patient transfer arrangements and plan clinic-side logistics (FR-008 REQ-008-013, Screen 4 Business Rules)
+- Once submitted, the hotel record is **locked immediately**. The patient cannot edit it, and the provider cannot edit a patient-submitted record. Corrections must be requested through admin only (FR-008 REQ-008-017)
+- All submitted hotel records contribute to the unified patient itinerary (FR-008 REQ-008-014)
+
+##### Screen P04.2-S4: Submitted Travel Record — Read-Only View
+
+**Purpose**: Display a submitted flight or hotel record in read-only mode. Shown when a patient navigates to a travel record that has already been submitted and locked. Neither patient nor provider can edit; corrections require admin intervention (FR-008 REQ-008-017).
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | Dynamic: "Outbound Flight", "Return Flight", or "Hotel Details" | Based on record type |
+| Back Navigation | action | Yes | Back arrow to return to Travel Itinerary (P04.2-S5) or Booking Detail | Top-left corner |
+| Locked Status Banner | group | Yes | Prominent banner: "This record has been submitted and is locked. To request a correction, please contact support." | Displayed at top; info color |
+| Submitted Badge | badge | Yes | "Submitted" status | Green badge |
+| Submission Timestamp | datetime | Yes | Date/time the record was submitted | Format: "Submitted on [Month DD, YYYY at HH:MM]" |
+| Submitter | text | Yes | Name of the submitter | "Submitted by: [patient name]" |
+| All Record Fields (Read-Only) | group | Yes | All fields from the relevant submission form displayed in read-only mode | All fields non-editable; displayed as text labels |
+| Contact Support Button | button | Yes | "Contact Support to Request a Correction" | Opens support/admin channel; corrections applied by admin only with mandatory audit log entry (FR-008 REQ-008-017, Alternative Flow A2) |
+| Back to Itinerary Button | action | Yes | "Back to Itinerary" | Returns to Travel Itinerary View (P04.2-S5) |
+
+**Business Rules**:
+
+- Records are locked immediately on submission — system-controlled, not provider-controlled (FR-008 REQ-008-017)
+- Neither the patient nor the provider can edit a submitted record; only admin can apply corrections, which create a new locked version with a mandatory audit log entry (FR-008 Alternative Flow A2)
+- Submission timestamp and submitter provide an audit trail of when and by whom details were provided (FR-008 REQ-008-016)
+
+##### Screen P04.2-S5: Travel Itinerary View — Patient
+
+**Purpose**: Unified, read-only view of all confirmed travel details for the appointment, assembled automatically from submitted records (FR-008 Screen 5).
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "Travel Itinerary" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Booking Detail | Top-left corner |
+| Booking Context Header | group | Yes | Booking reference, treatment type, provider name, procedure date | Read-only |
+| No Travel Required Message (Conditional) | text | Conditional | "No travel required for this appointment." | Shown if patient selected "No" on P04.2-S1; no other sections shown |
+| Section: Package Travel Items (Conditional) | group | Conditional | List of provider-included services (e.g. "Hotel included", "Airport transfer included") | Shown only if provider-included items exist; read-only (FR-008 Screen 5) |
+| Section: Outbound Flight | group | Conditional | Airline, flight number, departure → arrival airport, date/time, confirmation number, ticket class | Shown if outbound flight record exists; tappable to view full detail (P04.2-S4) |
+| Section: Return Flight | group | Conditional | Same fields as outbound | Shown only if return flight record exists |
+| Outbound Awaiting Prompt (Conditional) | group | Conditional | "Outbound flight not yet submitted" with link to submission form | Shown if no outbound record submitted yet |
+| Return Awaiting Prompt (Conditional) | group | Conditional | "Return flight not yet submitted" with link to submission form | Shown if no return record submitted yet |
+| Section: Hotel | group | Conditional | Hotel name, address, check-in/out date & time, reservation number, transportation details | Shown if hotel record exists; tappable to view full detail (P04.2-S4) |
+| Hotel Awaiting Prompt (Conditional) | group | Conditional | "Hotel details not yet submitted" with link to submission form | Shown if no hotel record submitted yet |
+| Submission Timestamps | datetime | Yes | Each section shows submission timestamp and submitter (patient or provider) | Read-only; per FR-008 Screen 5 |
+
+**Business Rules**:
+
+- Patient sees own records only; no access to other patients' data (FR-008 Screen 5)
+- All records are read-only once submitted. No edit capability exists for the patient; any correction requires admin intervention (FR-008 Screen 5, REQ-008-017)
+- Each record section shows the submission timestamp and the submitter (patient or provider) (FR-008 Screen 5)
+- If a record is pending (not yet submitted), the section displays the relevant "Awaiting submission" prompt with a link to the submission screen (FR-008 Screen 5)
+- The itinerary is assembled automatically from all submitted travel records per appointment (FR-008 REQ-008-014)
+- Passport section is **not shown** in Path B (passport is not collected for patient self-booked travel) (FR-008 Screen 5)
 
 ---
 
@@ -1709,5 +1801,5 @@ When new missing flows are identified, follow these steps:
 ## Change Log
 
 | Date | Version | Changes | Author |
-|------|---------|---------|--------|
+| --- | --- | --- | --- |
 | 2026-02-05 | 0.1 | Initial structure with placeholders for 14 missing flows across 7 patient modules (P-01, P-02, P-03, P-04, P-05, P-06, P-08) | Product & Engineering |

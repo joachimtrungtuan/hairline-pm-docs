@@ -1289,17 +1289,17 @@ Total Quote:                           £3,000
 **Requirements**:
 
 - **Centralized Question Management**: Admin MUST be able to add, edit, remove, and reorder medical questionnaire questions
-- **Question Content**: Each question MUST have: question text, question type (Yes/No), detailed explanation prompt for "Yes" answers
+- **Question Content**: Each question MUST have: question text, question type (system-defined: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text), and type-specific content. Inquiry-context sets recommend Yes/No questions; other types are allowed after admin confirms a publish-time warning
 - **Severity Flagging**: Each question MUST have a severity flag (Critical/Standard/No Alert)
 - **Alert System**: When patient answers "Yes" to Critical questions → inquiry flagged with red alerts
 - **Alert System**: When patient answers "Yes" to Standard questions → inquiry flagged with yellow/amber alerts  
 - **Alert System**: When patient answers "No" to all questions → inquiry flagged with green (no alerts)
-- **Question Grouping**: Admin MUST be able to organize questions into categories (Allergies, Cardiovascular, etc.)
+- **Set-Level Categorisation**: Admin MUST be able to organise questionnaire sets into categories (Allergies, Cardiovascular, etc.) for catalog filtering — categories apply at the set level, not individual question level (per FR-025 PRD)
 - **Version Control**: System MUST track questionnaire changes with timestamps and admin identification
 - **Question Validation**: System MUST validate question completeness before activation
 - **Questionnaire Preview**: Admin MUST be able to preview questionnaire as patients will see it
-- **Bulk Operations**: Admin MUST be able to import/export questionnaire templates
-- **Question Templates**: System MUST provide pre-built question templates for common medical conditions
+- **Bulk Operations** *(V2)*: Admin SHOULD be able to import/export questionnaire templates — deferred to V2; not requested by client in transcriptions
+- **Question Templates** *(V2)*: System SHOULD provide pre-built question templates for common medical conditions — deferred to V2; not requested by client in transcriptions
 
 **Question Examples**:
 

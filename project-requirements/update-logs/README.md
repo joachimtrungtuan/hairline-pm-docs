@@ -67,6 +67,27 @@ This folder contains documentation update reports and verification logs for the 
   - **Final Verification**: Confirmed FR-026 PRD covers all in-scope client requirements with no major discrepancies
   - **Status**: All critical and high-priority issues resolved; implementation-ready
 
+### 2026-02-25/ (1 file)
+
+#### **FR-025 Verification & System PRD Alignment**
+
+- `FR025_VERIFICATION_UPDATES_2026-02-25.md` - FR-025 Medical Questionnaire Management post-verification updates
+  - Inquiry question type constraint changed to soft warning (Yes/No recommended, other types allowed after confirm)
+  - Visual Scale 1–5 removed; replaced by Visual Scale 1–10 as sole visual scale type
+  - FR-002 dependency removed (no actual data flow)
+  - FR-020 alert event integration note added
+  - System PRD: Bulk Operations and Question Templates deferred to V2 (not in client transcriptions)
+  - System PRD: Question Grouping aligned to set-level categorisation per FR-025 design
+  - System PRD: Question types expanded from Yes/No-only to full type list
+
+### 2026-02-05 (1 file)
+
+#### **Cancel Inquiry FR Updates**
+
+- `2026-02-05-cancel-inquiry-fr-updates.md` - Cancel inquiry feature updates
+
+---
+
 ## Quick Reference by Topic
 
 ### Documentation Updates
@@ -97,6 +118,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-28**: `FR001_PRD_CREATION_2025-10-28.md` - FR-001 PRD creation
 - **2025-11-04**: `FR005_PRD_VERIFIED_2025-11-04.md` - FR-005 PRD verification
 - **2025-11-06**: `FR026_ANALYSIS_C1_RESOLVED_2025-11-06.md` - FR-026 analysis and critical issues resolution
+- **2026-02-25**: `FR025_VERIFICATION_UPDATES_2026-02-25.md` - FR-025 verification and system PRD alignment
 
 ### 2025-12-22/ (1 file)
 
@@ -129,4 +151,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: November 6, 2025
+**Last Updated**: February 25, 2026

@@ -3,7 +3,7 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-02-23
+**Last Updated**: 2026-02-24
 **Status**: ✅ Verified & Approved
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview)
 
@@ -61,20 +61,20 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 ### Provider Platform (PR-04)
 
 - Mark which travel services are included in a package when travel is provider-included (flight / hotel / airport transport). These inclusions determine which records the provider must enter after confirmation.
-- View travel status indicators per confirmed patient updated automatically when the inquiry reaches **Confirmed** status (e.g. "Awaiting passport details", "Passport submitted")
-- View submitted passport details per confirmed patient (passport number shown in full for booking purposes)
-- Enter confirmed flight details (outbound + return legs) and hotel details on behalf of the patient after completing the external booking — provider-booked path
-- View patient-submitted flight and hotel details for coordination — patient self-booked path
-- View combined travel itinerary per appointment
+- View travel status indicators (passport, outbound flight, return flight, hotel) within the **booking/quote detail screen** — updated automatically when the booking reaches **Confirmed** status (e.g. "Awaiting passport details", "Passport submitted"). No separate travel dashboard.
+- View submitted passport details for a confirmed patient (passport number shown in full for booking purposes) — accessed from the Travel section of the booking detail screen.
+- Enter confirmed flight details (outbound + return legs) and hotel details on behalf of the patient after completing the external booking — provider-booked path; accessed from the Travel section of the booking detail screen.
+- View patient-submitted flight and hotel details for coordination — patient self-booked path; read-only view accessed from the Travel section of the booking detail screen.
+- View combined travel itinerary per appointment within the booking detail screen.
 
 ### Admin Platform (A-04)
 
-- Oversight view: all travel records (passport, flight, hotel) across all appointments and providers
-- Monitor automated travel request status per appointment (whether requests were sent, what is pending)
-- Manually re-trigger travel submission requests to patients if needed (e.g. after a failed delivery)
-- Edit or override any travel record with a mandatory audit log entry
-- Manage travel settings and future API configurations
-- Future: configure commission parameters and per-country enablement once API booking is live
+- View travel status (passport, flight, hotel) and records within the **booking/inquiry detail screen** — no separate travel dashboard. Admin navigates to any booking via the existing admin inquiry/booking management, then accesses the Travel section there.
+- Monitor automated travel request status per appointment (whether requests were sent, what is pending) from within each booking's Travel section.
+- Manually re-trigger travel submission requests to patients for any pending record directly from the Travel section.
+- Edit or override any travel record via Screen 12, reached from the Travel section of the booking detail screen; all corrections require a mandatory audit log entry.
+- Manage travel settings and future API configurations.
+- Future: configure commission parameters and per-country enablement once API booking is live.
 
 ### Shared Services
 
@@ -102,8 +102,8 @@ flowchart TD
   A1["Provider includes travel services in package (flight / hotel / airport transport)"]
   A2["[AUTOMATED] Inquiry reaches Confirmed. System sends passport request to patient (in-app + email)."]
   A3["Patient uploads passport photo and completes passport form"]
-  A4{"Passport valid and complete?"}
-  A5["System flags record as Incomplete with specific error. Patient re-submits."]
+  A4{"Passport submission passes validation<br/>(required fields + dates + photo quality)?"}
+  A5["System rejects submission with specific errors<br/>(no record stored). Patient corrects and retries."]
   A6["System stores passport image (for reference) and form fields separately. Provider notified: status = Passport Submitted."]
   A7["Provider reviews passport and completes booking externally (outside the platform)"]
   A8{"Package includes flights?"}
@@ -178,29 +178,25 @@ flowchart TD
 
 ### Alternative Flows
 
-**A1: Incomplete Passport Submission**
+**A1: Passport Submission Rejected (Validation Failure)**
 
-- **Trigger**: Patient submits passport form with missing required fields or an unreadable photo.
-- **Outcome**: Patient corrects and re-submits; provider status remains on hold until passport is complete. Admin is notified if re-submission times out.
+- **Trigger**: Patient attempts to submit passport details but fails validation (missing required fields, invalid dates, or passport photo quality checks fail).
+- **Outcome**: Submission is rejected; **no passport record is created/updated**; patient remains on Screen 1 with field-level errors. Passport status remains **Awaiting** until a successful submission is completed.
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-  A1S1["Patient submits passport photo and form"]
-  A1S2{"All required fields present and photo legible?"}
-  A1S3["System stores passport image (reference only) and form field data separately. Status: Submitted. Provider notified."]
-  A1S4["System flags record as Incomplete with specific error message"]
-  A1S5["Patient receives re-submission prompt with error guidance"]
-  A1S6{"Patient re-submits within timeout period?"}
-  A1S7["Admin notified of overdue passport submission for manual follow-up"]
+  A1S1["Patient taps Submit on Screen 1 (Passport Submission)"]
+  A1S2{"All required fields present<br/>and valid?"}
+  A1S3{"Passport photo quality passes<br/>(lighting, focus, blur)?"}
+  A1S4["Reject submission and show field-level errors<br/>(no record stored; status remains Awaiting)"]
+  A1S5["Store passport image (reference only) and form field data separately.<br/>Status: Submitted. Record locked. Provider notified."]
 
   A1S1 --> A1S2
-  A1S2 -->|Yes| A1S3
   A1S2 -->|No| A1S4
-  A1S4 --> A1S5
-  A1S5 --> A1S6
-  A1S6 -->|Yes| A1S1
-  A1S6 -->|No - timed out| A1S7
+  A1S2 -->|Yes| A1S3
+  A1S3 -->|No| A1S4
+  A1S3 -->|Yes| A1S5
 ```
 
 **A2: Provider or Patient Attempts to Edit a Submitted Record**
@@ -278,8 +274,9 @@ flowchart TD
 - This screen is triggered automatically when the inquiry reaches **Confirmed** status **and the package includes provider-booked travel (Path A)**. It is NOT shown for patient self-booked journeys (Path B).
 - Passport number is captured and stored but **masked in display** (e.g. `A1234****`); full number visible only to the assigned provider and admin.
 - Passport photo is stored in compliant secure storage as a reference document only. It is **not parsed or processed automatically** — all passport fields must be filled in manually by the patient via the form.
+- Passport photo upload MUST run an on-device quality check before submission is allowed (lighting conditions, focus, blurriness). Use the app's standard Flutter implementation (Google ML Kit) for this quality gate. If the check fails, the app blocks submission and provides an actionable error (e.g., "Too blurry — retake in better light"). This is a **quality gate only** (no OCR / data extraction).
 - The stored image is accessible to the assigned provider and admin for manual verification purposes; it is not shown in any list or itinerary view.
-- Once submitted, the passport record is **locked** and cannot be edited by the patient or provider. Corrections must be requested through admin.
+- Once submitted, the passport record is **locked** and cannot be edited, deleted, or re-submitted by the patient or provider. Corrections must be requested through admin (Screen 12 replacement + audit reason).
 - If passport details were previously submitted for an earlier appointment, the patient may reuse them; if the passport has since changed (e.g. renewed), admin must update the record.
 - All passport fields are treated as PII and subject to GDPR/data protection rules.
 
@@ -410,29 +407,32 @@ flowchart TD
 
 ### Provider Platform
 
-#### Screen 6: Travel Coordination Dashboard — Provider
+#### Screen 6: Travel Section — Booking/Quote Detail Screen (Provider)
 
-**Purpose**: Per-patient travel status overview for all confirmed appointments; entry point to view passport details and enter travel records on the patient's behalf (Path A).
+**Purpose**: Travel status and actions surfaced as a section within the provider's existing booking/quote detail screen (FR-006 Screen 4). No standalone travel dashboard — the provider accesses all travel coordination directly from the booking they are already viewing, keeping travel in context with the appointment it belongs to.
+
+**Placement**: Rendered as a collapsible "Travel" section at the bottom of the confirmed booking detail screen. Visible only once the booking reaches **Confirmed** status.
 
 **Data Fields**:
 
 | Field Name | Type | Description |
 |---|---|---|
-| Patient Name / ID | Text | Confirmed patient identifier |
-| Appointment Date | Date | Procedure date |
-| Passport Status | Badge | Awaiting / Submitted / Incomplete |
+| Travel Path | Badge | Provider-included (Path A) / Patient self-booked (Path B) |
+| Passport Status | Badge | Awaiting / Submitted / Incomplete — **Path A only**; hidden for Path B |
 | Outbound Flight Status | Badge | Not included / Awaiting / Submitted |
 | Return Flight Status | Badge | Not included / Awaiting / Submitted |
 | Hotel Status | Badge | Not included / Awaiting / Submitted |
-| Actions | Buttons | View Passport · Enter/Update Travel (Path A) · View Travel (Path B) |
+| Actions | Buttons | View Passport (Path A) · Enter Flight / Enter Hotel (Path A, if not yet submitted) · View Travel Details (Path B) |
 
 **Business Rules**:
 
-- Status indicators update in real-time when travel records are submitted (by patient in Path B, by provider in Path A) and when admin applies corrections.
-- Provider can only view and act on patients assigned to their clinic; no cross-clinic access.
-- For **Path A** appointments, provider can enter travel records only for the travel services included in the accepted package. If a service is not included, status shows "Not included" and no entry action is shown.
-- For **Path B** appointments, provider can view patient-submitted travel records in read-only mode and cannot enter/modify travel records.
-- Provider can flag a patient-submitted record (Path B) as requiring review; admin resolves the dispute.
+- Status badges update in real-time when travel records are submitted (by patient in Path B, by provider in Path A) and when admin applies corrections.
+- Provider can only see and act on the booking currently open; no cross-patient or cross-clinic access from this section.
+- For **Path A** appointments, "Enter Flight" and "Enter Hotel" action buttons appear only for travel services included in the accepted package. Services not included show "Not included" — no entry action is rendered.
+- For **Path B** appointments, only "View Travel Details" is shown (read-only). Provider cannot enter or modify patient-submitted records.
+- Provider can flag a patient-submitted record (Path B) as requiring review from the View Travel Details screen (Screen 10); admin resolves the dispute.
+- "Incomplete" is an admin-managed status used when a submitted passport record is deemed unusable/incorrect and is pending admin correction (Screen 12). Patients/providers cannot "re-submit" to change a locked record.
+- Each action button navigates to the relevant screen: View Passport → Screen 7; Enter Flight → Screen 8; Enter Hotel → Screen 9; View Travel Details → Screen 10.
 
 ---
 
@@ -529,23 +529,16 @@ flowchart TD
 - Once submitted, this record is **locked**. Neither the provider nor the patient can edit it. If a correction is needed, the provider must contact admin.
 - A hotel record submitted by the provider is not editable by the patient.
 
-#### Screen 10: Travel Details View — Provider (Path B)
+#### Screen 10: Travel Details — Booking/Quote Detail Screen (Provider, Path B)
 
-**Purpose**: Allow the provider to view the patient-submitted flight and hotel details for a Path B (patient self-booked) appointment. This is a read-only coordination view — the provider did not book the travel and cannot modify these records.
+**Purpose**: Patient-submitted flight and hotel details rendered inline within the Travel section of the provider's booking/quote detail screen for Path B appointments. No separate screen — the provider reads all travel coordination detail without leaving the booking context.
 
-**Layout**: Two tabs — Flight Details and Hotel Details. No passport tab (passport is not collected in Path B).
+**Placement**: Rendered as two collapsible sub-sections ("Flight Details" and "Hotel Details") that expand within Screen 6's Travel section when the provider opens a Path B booking. Passport sub-section is not present (not collected in Path B).
 
----
-
-**Tab 1: Flight Details**
-
-*(Up to two sub-sections: Outbound and Return. Each shown if the patient has submitted that leg.)*
-
-**Outbound Flight**:
+**Flight Details** *(up to two sub-sections: Outbound and Return)*:
 
 | Field Name | API Field | Display |
 |---|---|---|
-| Leg Type | `leg_type` | Outbound |
 | Airline Name | `airline_name` | Plain text |
 | Flight Number | `flight_number` | Plain text |
 | Departure Airport | `departure_airport` | Plain text |
@@ -561,19 +554,9 @@ flowchart TD
 | Submitted By | — | Patient name + submission timestamp |
 | Status | — | Submitted / Awaiting |
 
-**Return Flight**:
+Return flight uses the same fields, shown as a separate sub-section. If no return record exists, shows "Return flight not yet submitted."
 
-Same fields as Outbound. Displayed as a separate sub-section. If no return record exists, shows "Return flight not yet submitted."
-
-**Tab 1 Business Rules**:
-
-- Entirely read-only. Provider cannot enter or correct flight records in Path B.
-- If neither leg has been submitted yet, tab shows "Awaiting patient submission."
-- Provider can use this tab to verify patient arrival times for transport or clinic preparation.
-
----
-
-**Tab 2: Hotel Details**
+**Hotel Details**:
 
 | Field Name | API Field | Display |
 |---|---|---|
@@ -593,52 +576,49 @@ Same fields as Outbound. Displayed as a separate sub-section. If no return recor
 | Submitted By | — | Patient name + submission timestamp |
 | Status | — | Submitted / Awaiting |
 
-**Tab 2 Business Rules**:
+**Business Rules**:
 
-- Entirely read-only. Provider cannot enter or correct hotel records in Path B.
-- If no hotel record has been submitted yet, tab shows "Awaiting patient submission."
-- Provider can use the Transportation Details field to understand patient transfer arrangements and plan clinic-side logistics accordingly.
-
-**General Business Rules (Screen 10)**:
-
-- This screen is accessible only for Path B appointments. For Path A, the provider uses Screens 8 and 9 to enter records, and views them from Screen 6's status dashboard.
+- Entirely read-only. Provider cannot enter or correct any record in Path B.
+- If a flight leg has not been submitted, its sub-section shows "Awaiting patient submission."
+- If no hotel record has been submitted, the Hotel Details sub-section shows "Awaiting patient submission."
+- Provider can use the Transportation Details field to plan clinic-side logistics (e.g. verifying patient arrival times for airport pickup arrangements).
+- Visible only for Path B appointments. For Path A, the provider enters records directly via Screens 8 and 9 from the same Travel section.
 - Provider can only view records for patients assigned to their clinic; no cross-clinic access.
-- Provider cannot flag or edit records from this screen. If a record appears incorrect, the provider must contact admin.
+- If a record appears incorrect, the provider must contact admin — no edit or flag capability from this view.
 
 ---
 
 ### Admin Platform
 
-#### Screen 11: Travel Records Oversight
+#### Screen 11: Travel Section — Admin Booking/Inquiry Detail Screen
 
-**Purpose**: Filterable, cross-clinic overview of all travel records linked to appointments; primary tool for admin monitoring and intervention.
+**Purpose**: Travel status, records, and correction actions surfaced as a section within the admin's existing booking/inquiry detail screen. No standalone travel oversight dashboard — admin accesses all travel coordination for a specific appointment directly from the booking they are already viewing.
+
+**Placement**: Rendered as a "Travel" section within the confirmed booking/inquiry detail screen in the admin platform. Visible for all confirmed bookings regardless of travel path.
 
 **Data Fields**:
 
 | Field Name | Type | Description |
 |---|---|---|
-| Patient Name / ID | Text | Patient identifier |
-| Provider / Clinic | Text | Assigned clinic |
-| Appointment Date | Date | Procedure date |
 | Travel Path | Badge | Provider-included (Path A) / Patient self-booked (Path B) |
-| Passport Status | Badge | Awaiting / Submitted / Incomplete |
+| Passport Status | Badge | Awaiting / Submitted / Incomplete — **Path A only**; hidden for Path B |
 | Outbound Flight Status | Badge | Not included / Awaiting / Submitted |
 | Return Flight Status | Badge | Not included / Awaiting / Submitted |
 | Hotel Status | Badge | Not included / Awaiting / Submitted |
-| Actions | Buttons | View detail · Re-notify patient · Admin correction (via Screen 12) |
+| Actions | Buttons | Re-notify patient (per pending record) · Apply Correction (→ Screen 12) |
 
 **Business Rules**:
 
-- Admin can filter by: patient name/ID, provider/clinic, appointment date range, record type, submission status.
-- Admin can view all records without access restrictions.
-- "Re-notify patient" button triggers a manual reminder for any pending submission.
-- All admin edits require a mandatory note (reason for change) and are logged for audit.
+- Admin can view all travel records without access restrictions; no cross-clinic filtering needed — admin is already within a specific booking.
+- "Re-notify patient" triggers a manual reminder for any specific pending travel record (passport, flight, or hotel).
+- "Apply Correction" navigates to Screen 12 for the detailed correction workflow.
+- All admin edits require a mandatory reason note and are logged for audit.
 
 ---
 
 #### Screen 12: Travel Record Detail & Admin Correction
 
-**Purpose**: Drill-down view per appointment presenting all travel records in three tabs. Admin can inspect all submitted records and apply corrections with a mandatory reason note. Records are locked for patients and providers; only admin can write to them post-submission.
+**Purpose**: Full travel record view and correction screen for a specific appointment, reached via "Apply Correction" from the Travel section of the admin booking/inquiry detail screen (Screen 11). Admin can inspect all submitted records and apply corrections with a mandatory reason note. Records are locked for patients and providers; only admin can write to them post-submission.
 
 **Screen Header (always visible across all tabs)**:
 
@@ -674,6 +654,7 @@ Same fields as Outbound. Displayed as a separate sub-section. If no return recor
 
 - Passport number and photo are shown unmasked/in full to admin only.
 - If no passport has been submitted yet, tab shows "Awaiting submission" with a "Re-notify patient" button.
+- If the passport record is marked "Incomplete", it indicates admin has determined the submitted passport data/photo is unusable/incorrect and requires correction. The patient cannot re-submit; admin must apply a correction (replace photo and/or edit fields) with a mandatory reason note.
 - Admin correction replaces the current record with a new locked version; the previous version is retained in the system's backend records.
 - Every admin correction to this tab requires a mandatory "Reason for correction" note before saving.
 
@@ -768,9 +749,10 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 ### Travel Path Determination
 
-- The travel path is binary and determined by the accepted package offer:
-  - **Path A (provider-included travel)**: provider books included travel services externally; the platform captures passport details (from patient) and confirmed travel details (from provider).
-  - **Path B (patient self-booked travel)**: patient books externally; the platform captures confirmed travel details (from patient). No passport request is sent.
+- The travel path is binary and **automatically derived** from the accepted package's `included_services`:
+  - **Path A (provider-included travel)**: `included_services` contains `flight` or `hotel` (or both). Provider books included travel services externally; the platform captures passport details (from patient) and confirmed travel details (from provider).
+  - **Path B (patient self-booked travel)**: `included_services` does not contain `flight` or `hotel` (may contain only `transport`, or be empty). Patient books externally; the platform captures confirmed travel details (from patient). No passport request is sent.
+- `travel_path` is **not a user-selectable field**. The provider selects which travel services to include via the `included_services` checklist during **quote creation** (FR-004 Screen 1), and the system derives `travel_path` automatically on save. The derived value is persisted onto the accepted package. FR-008 consumes `travel_path` and `included_services` post-confirmation to route the automated requests and determine which record statuses/actions are applicable.
 - In **Path A**, the accepted package MAY include any mix of travel services (flight, hotel, transport). Services not included are treated as "Not included" for that appointment and are not collected in MVP.
 - **No submitter mixing**:
   - In **Path A**, flight/hotel details are entered by the provider only (patient does not submit flight/hotel records).
@@ -1003,7 +985,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Package Travel Inclusion
 
-- **REQ-008-018**: The provider MUST be able to mark a package's travel path as either Path A (provider-included travel) or Path B (patient self-books travel). For Path A packages, the provider MUST also be able to indicate which travel services are included (any mix of flight, hotel, airport transport). This selection MUST be reflected in the package breakdown and determines the travel workflow post-confirmation. **Note**: The UI for this selection lives in FR-004 (Quote Submission) or FR-024 (Treatment Package Management). FR-008 consumes `travel_path` and the package travel inclusions from the accepted package.
+- **REQ-008-018**: The travel path MUST be automatically derived from the quote's `included_services` selection — not manually chosen by the provider. If `included_services` contains `flight` or `hotel`, `travel_path` = `provider_included` (Path A); otherwise `travel_path` = `patient_self_booked` (Path B). The provider selects which travel services to include (any mix of flight, hotel, airport transport) via the `included_services` checklist during quote creation (FR-004 Screen 1: Quote Creation/Edit). This selection MUST be reflected in the package breakdown and determines the travel workflow post-confirmation. The derived `travel_path` and `included_services` are persisted onto the accepted package and consumed by FR-008 post-confirmation.
 - **REQ-008-019**: When a package is Path A (provider-included travel), the system MUST surface a travel status tracker on the provider's confirmed appointment view covering: passport status, outbound flight status, return flight status, and hotel status.
 
 ### Notifications
@@ -1051,7 +1033,8 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### PackageTravelInclusion
 
-**Key attributes**: `package_id`, `travel_path` (enum: `provider_included` | `patient_self_booked`), `included_services` (array: `flight`, `hotel`, `transport`)
+**Key attributes**: `package_id`, `travel_path` (enum: `provider_included` | `patient_self_booked` — **derived, not user-selected**), `included_services` (array: `flight`, `hotel`, `transport`)
+**Derivation rule**: `travel_path` is computed from `included_services` — if the array contains `flight` or `hotel`, `travel_path = provider_included`; otherwise `travel_path = patient_self_booked`. Computed on save during quote creation (FR-004) and persisted for query convenience.
 **Relationships**: Part of the accepted package offer; drives which travel path (A or B) applies post-confirmation. For Path A, included services define which travel records the provider is responsible for entering.
 
 ---
@@ -1064,6 +1047,9 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 | 2025-11-10 | 1.1 | Added clarifications and success criteria | AI |
 | 2026-02-13 | 2.0 | Full rewrite: removed in-app booking from MVP scope; added two-path model (provider-included vs patient self-booked); added passport capture; added round-trip flight model; added transport guidance; resolved UI/API discrepancies (Total Price removed, baggage_allowance normalised, leg_type added); updated all screens, flows, requirements, entities | AI |
 | 2026-02-23 | 2.1 | Verified & approved; aligned System PRD/Constitution to Phase 2 flight/hotel APIs; updated Path A to allow any mix of included services with provider-only entry (no submitter mixing); standardized travel record keying on `quote_id` | AI |
+| 2026-02-24 | 2.2 | Screen redesign: removed standalone travel dashboards for provider and admin; travel status and actions now embedded as a Travel section within the existing booking/quote detail screen (Screens 6, 10, 11); Screen 12 entry point updated accordingly; module header corrected (removed PR-04, added S-04); "Confirmed" trigger aligned with FR-006 deposit-paid definition; data retention extended to 7 years; OCR deferred to future phase; FR-005 estimated travel costs dependency removed (deferred); REQ-008-018 cross-reference to FR-004/FR-024 added; travel table definitions added to system-data-schema.md | AI |
+| 2026-02-24 | 2.3 | Clarified passport submission behavior: reject invalid submissions (no stored incomplete record), lock records post-submission with admin-only corrections, added Flutter (Google ML Kit) photo-quality gate, and clarified `travel_path`/`included_services` origin in FR-004. | AI |
+| 2026-02-25 | 2.4 | Changed `travel_path` from manual provider selection to automatic derivation from `included_services`. If flight or hotel is included → Path A (provider_included), otherwise → Path B (patient_self_booked). Updated REQ-008-018, Travel Path Determination section, and PackageTravelInclusion entity. Aligned with FR-004 v1.6. | AI |
 
 ---
 
@@ -1071,13 +1057,13 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | [Name] | 2026-02-23 | ✅ Verified & Approved |
+| Technical Lead | [Name] | 2026-02-23 | ✅ Verified & Approved |
+| Stakeholder | [Name] | 2026-02-23 | ✅ Verified & Approved |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-02-23
+**Last Updated**: 2026-02-24

@@ -165,6 +165,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 | Treatment | select | Yes | Admin-curated treatment | Must select one |
 | Package | select | No | Provider-bounded package | Optional per quote |
 | Package Customization | checklist | No | Per-quote inclusions | Free add-ons allowed (logged) |
+| Included Travel Services (`included_services`) | checklist | No | Travel services the provider includes as part of the package | Options: `flight`, `hotel`, `transport`. Provider checks whichever services they cover. No cross-field dependency — selection is standalone. |
 | Custom Services | repeater | No | Provider-defined services (name/desc/cost) | Each item validated; logged |
 | Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
 | 3D Markup | drawing | No | Draw on 3D image | Stored with audit |
@@ -185,6 +186,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 - Price must be specified per each selected treatment date
 - Providers may add Custom Services as needed (name, description, optional price); all custom items are audited
 - Treatment Plan must cover consecutive calendar days without skipping; validation blocks gaps or overlaps
+- `included_services` is persisted onto the accepted package. `travel_path` is **not a user-facing field** — it is automatically derived: if `included_services` contains `flight` or `hotel`, `travel_path = provider_included` (Path A); otherwise `travel_path = patient_self_booked` (Path B). The derived value is computed on save and consumed post-confirmation by **FR-008 (Travel & Logistics Coordination)** to route the correct patient travel flow (passport request vs flight/hotel submission request)
 
 Notes:
 
@@ -577,6 +579,8 @@ Acceptance Scenarios:
 | 2025-11-04 | 1.2 | Template compliance: added Actors/Trigger/Outcome to workflows; normalized Dependencies; restructured Assumptions; formalized Implementation Notes; added User Scenarios & Testing | Product & Engineering |
 | 2026-02-05 | 1.3 | Added inquiry cancellation cascade: new trigger in Workflow 3, "Cancelled (Inquiry Cancelled)" quote status, alternative flow for patient inquiry cancellation, REQ-004-013, updated Key Entities status enum. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 | 2026-02-08 | 1.4 | Cancellation integrity fixes: Added inquiry-active guard to Workflow 1 and business rules (concurrent submission rejection). Fixed changelog version collision and chronological order. Updated Screen 4 Status badge to include all patient-visible states. Added terminal-state exclusion to Workflow 4. Added "Inquiry Cancelled" banner specs to Screen 2 and Screen 3. Added cancellation statuses to Admin Screen 5 filters. Added User Story 4 (provider experience during cancellation) and cancellation edge cases. | AI |
+| 2026-02-24 | 1.5 | Added `travel_path` + `included_services` fields to Quote Creation/Edit (Screen 1) to define post-confirmation travel responsibilities and package travel inclusions consumed by FR-008. | AI |
+| 2026-02-25 | 1.6 | Removed `travel_path` as a manual select field. Travel path is now automatically derived from `included_services`: if flight or hotel is included → Path A (provider_included), otherwise → Path B (patient_self_booked). Simplified `included_services` to a standalone checklist without cross-field conditional gating. | AI |
 
 ## Appendix: Approvals
 
