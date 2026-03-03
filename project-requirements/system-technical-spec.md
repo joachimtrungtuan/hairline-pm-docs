@@ -4,7 +4,7 @@
 **Document Type**: System-Level Technical Specification  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2025-10-23
+**Last Updated**: 2026-03-03
 
 ---
 
@@ -32,14 +32,14 @@ This document provides the technical architecture, design decisions, and impleme
 
 - Framework: React Native (iOS/Android) OR Flutter (to be decided)
 - State Management: Redux/Provider
-- 3D Scanning: ARKit (iOS), ARCore (Android)
+- Head Scan Capture: V1 standardized photo set; V2 true 3D scanning via ARKit (iOS) / ARCore (Android)
 
 **Infrastructure**:
 
 - Cloud Provider: AWS (or GCP)
 - Container Orchestration: Docker + Kubernetes (future)
 - CDN: CloudFront
-- Storage: S3 (media files, 3D scans)
+- Storage: S3 (media files, head scan photo sets (V1), 3D scans (V2))
 
 **Third-Party Services**:
 
@@ -1195,7 +1195,7 @@ export default defineConfig({
 - Team expertise
 - Development timeline
 - Performance requirements
-- 3D scanning library availability
+- 3D scanning library availability (V2)
 
 **Recommended**: **React Native** for code sharing with web frontend and existing team React expertise
 
@@ -1220,7 +1220,17 @@ hairline-mobile/
 └── package.json
 ```
 
-### 3D Scanning Integration
+### V1: Head Scan Photo Set Capture
+
+**Release scope note**: In V1, "3D scan" capture is implemented as a standardized head scan photo set (multiple 2D views; JPG/PNG). No true 3D model capture/viewing is required for V1.
+
+**Implementation sketch**:
+
+- Guided camera flow captures required viewpoints (e.g., front/top/left/right/back)
+- Client uploads multiple images; backend validates file types/size and stores via media service
+- Viewer is an image gallery (zoom + compare), not an interactive 3D model viewer
+
+### V2: 3D Scanning Integration (ARKit/ARCore)
 
 **iOS (ARKit)**:
 

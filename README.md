@@ -77,7 +77,7 @@ task-prompt/                     # 📝 Task generation templates
 
 ### Module Structure
 
-- **Patient Modules**: P-01 through P-07 (Auth, Quotes, Booking, Travel, Aftercare, Communication, 3D Scanning)
+- **Patient Modules**: P-01 through P-07 (Auth, Quotes, Booking, Travel, Aftercare, Communication, 3D Scanning *(V1 = photo set)*)
 - **Provider Modules**: PR-01 through PR-07 (Auth, Inquiries & Quotes, Treatment, Aftercare, Financial, Settings, Communication)
 - **Admin Modules**: A-01 through A-10 (Patient Mgmt, Provider Mgmt, Aftercare, Travel, Billing, Discounts, Affiliates, Analytics, Settings, Communication)
 - **Shared Services**: S-01 through S-06 (3D Processing, Payment, Notifications, Travel API, Media Storage, Audit Log)

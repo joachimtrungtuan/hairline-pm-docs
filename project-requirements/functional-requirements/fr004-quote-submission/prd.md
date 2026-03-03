@@ -179,6 +179,14 @@ The Quote Submission & Management module empowers providers to receive distribut
 | Summary (read-only) | group | Yes | Read-only summary of inputs | Must reflect latest data |
 | Expiry (read-only) | datetime | Yes | Derived deadline | From admin-configured window |
 
+**Treatment Plan (per-day) entry fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Day Number | number | Yes (read-only) | Sequential day index (1..N) | Must be consecutive with no gaps |
+| Date | date | Yes (read-only) | Calendar date for the plan entry | Must map to selected Treatment Dates; sequential dates only |
+| Day Description | text | Yes | Short description of what happens that day (e.g., "Consultation & Scans", "Hair Transplant Procedure") | Required; max length enforced |
+
 **Notes**:
 
 - Package Customization examples: Medical consultation, Max grafts, PRP injection, Day-3 wash, Lifetime warranty, Language translator
@@ -417,6 +425,7 @@ Notes:
 ## Key Entities
 
 - **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], appointmentSlotAt, appointmentTimeZone, clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
+  - `plan` (Treatment Plan) is an ordered array of per-day entries `{ dayNumber, date, description }`. This is used downstream by **FR-010** to seed the In Progress view day descriptions (providers can update day status + notes in FR-010, but day descriptions remain read-only there).
   - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**
   - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
 - **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
@@ -581,6 +590,7 @@ Acceptance Scenarios:
 | 2026-02-08 | 1.4 | Cancellation integrity fixes: Added inquiry-active guard to Workflow 1 and business rules (concurrent submission rejection). Fixed changelog version collision and chronological order. Updated Screen 4 Status badge to include all patient-visible states. Added terminal-state exclusion to Workflow 4. Added "Inquiry Cancelled" banner specs to Screen 2 and Screen 3. Added cancellation statuses to Admin Screen 5 filters. Added User Story 4 (provider experience during cancellation) and cancellation edge cases. | AI |
 | 2026-02-24 | 1.5 | Added `travel_path` + `included_services` fields to Quote Creation/Edit (Screen 1) to define post-confirmation travel responsibilities and package travel inclusions consumed by FR-008. | AI |
 | 2026-02-25 | 1.6 | Removed `travel_path` as a manual select field. Travel path is now automatically derived from `included_services`: if flight or hotel is included → Path A (provider_included), otherwise → Path B (patient_self_booked). Simplified `included_services` to a standalone checklist without cross-field conditional gating. | AI |
+| 2026-03-03 | 1.7 | Clarified Treatment Plan (per-day) schema: defined per-day entry fields (dayNumber/date/description) and documented `plan` structure used downstream by FR-010 In Progress day descriptions. | AI |
 
 ## Appendix: Approvals
 

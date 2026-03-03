@@ -9,7 +9,7 @@ Scope: Reduce FR-002 Screen Specifications to minimal integration contracts and 
 - Replaced expanded screen subsections with a single "Screen Specifications (Minimal - Integration Contracts)":
   - Request: templateVersion, responses, media (headVideo | altPhotos | altClips), patientContext
   - Response: normalized, alerts, media, audit
-  - Rules: enforce FR-025 constraints; watermark; anonymization until payment; structured errors
+  - Rules: enforce FR-025 constraints; anonymization until payment; structured errors
 - Clarified V1 head-video ingestion with alternative media support; 3D model ingestion remains a future extension handled by consumer UIs.
 - Simplification: Removed user stories and numbered functional requirements; retained only integration contracts, business rules, and edge cases.
 
@@ -18,7 +18,6 @@ Scope: Reduce FR-002 Screen Specifications to minimal integration contracts and 
 - Matched `system-prd.md` FR-002 items:
   - Alt media support (photos/videos) — included
   - Scan validation feedback — structured error codes with guidance
-  - Watermarking with unique/anonymized identifier — included
   - Medical history/risk alerts — RiskTag severity mapping retained
   - Anonymization until payment — enforced in rules
 - Aligned with transcriptions: provider reads anonymized intake; engine provides normalized payload and media URIs.

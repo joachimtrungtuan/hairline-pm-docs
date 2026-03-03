@@ -78,7 +78,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 ### 7. Modularity & Independent Deployment
 
 - System broken into independent modules per tenant
-- Shared services as microservices (3D scan processing, payments, notifications)
+- Shared services as microservices (head scan media processing *(V1 photo set; V2 true 3D)*, payments, notifications)
 - Clear module boundaries and interfaces
 
 ### 8. Performance & Scalability
@@ -113,7 +113,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - **P-04**: Travel & Logistics (P2)
 - **P-05**: Aftercare & Progress Monitoring (P1)
 - **P-06**: Communication (P2)
-- **P-07**: 3D Scan Capture & Viewing (P1)
+- **P-07**: 3D Scan Capture & Viewing *(V1 photo set; V2 true 3D)* (P1)
 - **P-08**: Help Center & Support Access (P1)
 
 ### Provider Platform Modules (7 core)
@@ -141,11 +141,11 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 
 ### Shared Services (independently deployable)
 
-- **S-01**: 3D Scan Processing Service (P1)
+- **S-01**: Head Scan Media Processing Service *(V1 photo set; V2 true 3D)* (P1)
 - **S-02**: Payment Processing Service (Stripe integration) (P1)
 - **S-03**: Notification Service (email, SMS, push notifications) (P1)
 - **S-04**: Travel API Gateway (MVP travel record storage + itinerary coordination; Phase 2 flight/hotel API integrations) (P2)
-- **S-05**: Media Storage Service (images, 3D scans, documents) (P1)
+- **S-05**: Media Storage Service (images, head scan photo sets (V1), 3D scans (V2), documents) (P1)
 - **S-06**: Audit Log Service (centralized, immutable audit trail) (P1)
 
 ## Security & Compliance Highlights
@@ -155,7 +155,6 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 - AES-256 encryption at rest
 - TLS 1.3 for data in transit
 - Patient anonymization until payment
-- 3D scan watermarking
 
 ### Authentication & Authorization
 

@@ -25,8 +25,8 @@
 | P05.1 | Day-to-Day Treatment Progress | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.2 | Previous Treatments List | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
 | P05.3 | Submitted Reviews List | P-05: Aftercare & Progress Monitoring | FR-013 | 🔴 Not Designed |
-| P06.1 | Notification Listing & Bubble | P-06: Communication | FR-020 | 🔴 Not Designed |
-| P08.1 | Help & Support | P-08: Help Center & Support Access | FR-033, FR-034 | 🔴 Not Designed |
+| P06.1 | Notification Listing & Bubble | P-06: Communication | FR-020 | 🟡 Specified |
+| P08.1 | Help & Support | P-08: Help Center & Support Access | FR-033, FR-034 | 🟡 Specified |
 
 ---
 
@@ -1530,88 +1530,98 @@ Include rules for:
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Notification bubble visible on main navigation bar (shows unread count badge)
-%% 2. Patient taps notification bell/icon
-%% 3. System displays notification list screen
-%% 4. Notifications grouped by date (Today, Yesterday, Earlier)
-%% 5. Each notification shows: category icon, title, message preview, timestamp, read/unread indicator
-%% 6. Patient taps a notification → marks as read AND navigates to the relevant screen (deep link)
-%% 7. "Mark All as Read" action available
-%% 8. Notification types: quote received, booking update, payment due, treatment update, new message, system alert
-%% Reference FR-020 for notification types, categories, and delivery rules
+flowchart TD
+    AppNav["Patient views any main screen\n(Home, Inquiries, Treatments, Profile)"] --> BubbleCheck{"Unread notifications\npresent?"}
+
+    BubbleCheck -->|No| NoBadge["Bell icon shown — no badge\n(count = 0)"]
+    BubbleCheck -->|Yes| WithBadge["Bell icon shown with\nunread count badge"]
+
+    NoBadge --> TapBell["Patient taps notification bell icon"]
+    WithBadge --> TapBell
+
+    TapBell --> NotifList["Display Notification List Screen (P06.1-S2)"]
+
+    NotifList --> ListAction{"Patient action"}
+
+    ListAction -->|"Tap 'Mark All as Read'"| MarkAll["System marks all as read\nBadge count resets to 0"]
+    MarkAll --> NotifList
+
+    ListAction -->|"Select filter tab"| Filtered["Display filtered list\n(All / Quotes / Payments / Treatment / Messages)"]
+    Filtered --> ListAction
+
+    ListAction -->|"Tap a notification"| MarkOneRead["System marks notification as read\nBadge count decrements"]
+    MarkOneRead --> HasDeepLink{"Deep link\ntarget?"}
+    HasDeepLink -->|Yes| Navigate["Navigate to linked screen\n(inquiry, booking, payment, treatment, etc.)"]
+    HasDeepLink -->|No| StayList["Stay on notification list\n(system/info notifications)"]
+    Navigate --> End1["Patient views the linked screen"]
+
+    ListAction -->|"Swipe left - Mark as Read"| SwipeRead["Single notification marked as read"]
+    SwipeRead --> NotifList
+
+    ListAction -->|"Swipe left - Delete"| ConfirmDel{"Confirm delete?"}
+    ConfirmDel -->|Yes| SoftDelete["Soft-delete notification\n(removed from list, not recoverable)"]
+    SoftDelete --> NotifList
+    ConfirmDel -->|No| NotifList
+
+    ListAction -->|"Pull to refresh"| Refresh["Reload latest notifications"]
+    Refresh --> NotifList
+
+    ListAction -->|"Scroll to bottom"| LoadMore["Load next page (20 per page)"]
+    LoadMore --> NotifList
+
+    ListAction -->|Back| End2["Return to previous screen"]
 ```
 
 #### Screen Specifications
 
 ##### Screen P06.1-S1: Notification Bubble Component
 
-**Purpose**: Persistent unread notification indicator in app navigation
+**Purpose**: Persistent unread notification indicator in app navigation bar
 
-<!-- PLACEHOLDER — Agent Instructions:
-This is a UI component that appears on the main tab bar or app header — not a full screen.
-
-Create a table with these expected fields:
-- Bell/notification icon
-- Unread count badge (number overlay)
-- Badge visibility rules (hidden when count is 0, shows "99+" for counts exceeding 99)
-- Tap action (navigate to notification list screen P06.1-S2)
-- Animation/attention indicator for newly arrived notifications
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| --- | --- | --- | --- | --- |
+| Bell Icon | icon | Yes | Notification bell icon displayed in the main app navigation bar or header | Fixed position; always visible across all main app screens |
+| Unread Count Badge | badge | Conditional | Numeric overlay showing count of unread notifications | Hidden when unread count is 0; displays "99+" for counts exceeding 99; positioned top-right of bell icon |
+| New Notification Pulse | action | Conditional | Brief animation/pulse effect on bell icon when a new notification arrives | Triggered by incoming push notification or polling update; plays once per new notification batch |
+| Tap Action | action | Yes | Tap navigates to Notification List Screen (P06.1-S2) | Does NOT mark any notifications as read; navigates to list only |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Badge count reflects unread notifications only
-- Count updates in real-time (via push notification or periodic polling)
-- Badge is hidden when unread count is 0
-- Tapping the bell icon navigates to the list — it does NOT mark notifications as read
--->
+
+- Badge count reflects unread notifications only; read notifications do not contribute to the count
+- Count updates in real-time via WebSocket push or periodic polling (< 30 second lag) (FR-020 REQ-020-008)
+- Badge is hidden (not shown) when unread count is 0; shown as "99+" when count exceeds 99
+- Tapping the bell icon navigates to the notification list — it does NOT mark any notifications as read
+- A brief attention animation triggers on the bell when new notifications arrive in the background (e.g., from push delivery)
 
 ##### Screen P06.1-S2: Notification List Screen
 
-**Purpose**: Full chronological list of all patient notifications
+**Purpose**: Full chronological list of all patient notifications with filter, action, and navigation support
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-020 PRD for notification types, categories, and retention rules.
-
-Create a table with these expected fields:
-- Screen title ("Notifications")
-- "Mark All as Read" action button
-- Date group headers (Today, Yesterday, This Week, Earlier)
-- Notification cards, each showing:
-  - Category icon (quote, payment, treatment, message, system)
-  - Notification title (bold if unread)
-  - Message preview (1–2 lines, truncated)
-  - Timestamp (relative format: "2h ago", "Yesterday at 3:00 PM")
-  - Read/unread visual indicator (dot or background color difference)
-  - Swipe actions: Mark as Read, Delete
-- Filter tabs: All, Quotes, Payments, Treatment, Messages
-- Empty state ("No notifications yet")
-- Pull-to-refresh gesture
-- Infinite scroll / pagination for long lists
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "Notifications" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Mark All as Read Button | action | Conditional | Tap marks all notifications as read in one action | Shown only when at least one unread notification exists; triggers badge reset to 0 |
+| Filter Tabs | chips | Yes | Filter list by category: All, Quotes, Payments, Treatment, Messages | "All" is default selected; tapping a tab filters list to that category |
+| Date Group Headers | group | Yes | Section separators: "Today", "Yesterday", "This Week", "Earlier" | A section is only shown if it contains at least one notification |
+| Notification Card | group | Yes | Individual notification entry (tappable row) | Tapping marks as read AND navigates to linked content (if applicable) |
+| — Category Icon | icon | Yes | Icon representing notification type (quote, payment, treatment, message, system) | Color-coded by category per design system |
+| — Notification Title | text | Yes | Notification subject/title | Bold weight when unread; regular weight when read |
+| — Message Preview | text | Yes | 1–2 line preview of the notification body text | Truncated to 2 lines with ellipsis |
+| — Timestamp | datetime | Yes | Relative time elapsed since notification was sent (e.g., "2h ago", "Yesterday at 3:00 PM") | Switches to absolute date format for notifications older than 7 days |
+| — Read/Unread Indicator | badge | Yes | Visual indicator differentiating unread from read notifications | Unread: prominent blue dot or highlighted background; Read: no indicator |
+| — Swipe Actions | action | Conditional | Swipe-left on a card reveals: "Mark as Read", "Delete" | "Mark as Read" action only shown for unread notifications; "Delete" always available |
+| Empty State | group | Conditional | Message shown when no notifications match the current filter | "No notifications yet" for All tab; "No [Category] notifications" for filtered tabs |
+| Pull-to-Refresh | action | Yes | Drag down gesture to reload latest notifications | Standard OS pull-to-refresh; shows loading indicator while refreshing |
+| Infinite Scroll / Pagination | action | Yes | Scrolling to the bottom loads the next page of older notifications | 20 notifications per page; shows loading spinner at bottom while loading |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Tapping a notification marks it as read AND navigates to the relevant screen via deep link
-- Notifications ordered newest first within each date group
-- Old notifications may expire per data retention policy (check FR-020 and FR-023)
-- System notifications (e.g., maintenance, policy updates) styled differently from transactional ones
-- Deleted notifications are soft-deleted and not recoverable by the patient
--->
+
+- Tapping a notification simultaneously marks it as read AND navigates to the relevant screen via deep link (if applicable); system or informational notifications with no deep link target stay on the list (FR-020 Screen 1)
+- Notifications are ordered newest first within each date group
+- Notifications persist for 90 days, then archive and are no longer shown in the patient listing (FR-020 Consolidated Screen Notes)
+- System notifications (e.g., maintenance alerts, policy updates) are styled distinctly from transactional notifications (quote, booking, payment, treatment, aftercare)
+- Deleted notifications are soft-deleted and are not recoverable by the patient
 
 ---
 
@@ -1626,138 +1636,160 @@ Include rules for:
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient navigates to Help & Support (from Settings P01.2-S1 or other entry points)
-%% 2. Help & Support hub screen with options:
-%%    a. FAQ / Help Center → browse articles/categories → view article detail
-%%    b. Contact Support → create new support ticket (FR-034 flow)
-%%    c. My Support Tickets → list of open/closed tickets → view ticket detail
-%%    d. Live Chat (if available) → opens chat interface
-%%    e. Emergency Contact → displays contact info directly
-%% 3. Each sub-flow has back navigation to the Help & Support hub
-%% Reference FR-033 for help centre content structure, FR-034 for ticketing flow
+flowchart TD
+    Entry["Patient navigates to Help & Support\n(from Settings P01.2-S1 or in-app deep link)"] --> Hub["Display Help & Support Hub (P08.1-S1)"]
+
+    Hub --> HubAction{"Patient action"}
+
+    HubAction -->|"Type in search bar"| SearchResults["Display matching articles/FAQs\n(ranked by relevance)"]
+    SearchResults --> ArticleTap["Patient taps article"]
+    ArticleTap --> ArticleDetail["Display Article Detail\n(title, body, was-this-helpful, related articles)"]
+    ArticleDetail --> HelpfulChoice{"Was this helpful?"}
+    HelpfulChoice -->|Yes| FeedbackLogged["Positive feedback logged"]
+    FeedbackLogged --> Hub
+    HelpfulChoice -->|No| ContactPrompt["Show 'Contact Support' CTA"]
+    ContactPrompt --> ContactForm
+
+    HubAction -->|"Browse Help Center"| HelpCenter["Display Help Center (P08.1-S2)\nCategories: FAQs, Tutorial Guides,\nTroubleshooting Tips, Resources, Videos"]
+    HelpCenter --> SelectCategory["Patient selects category"]
+    SelectCategory --> ContentList["Display content list for category\n(articles, files, or videos)"]
+    ContentList --> ArticleDetail
+    HelpCenter --> SearchResults
+
+    HubAction -->|"Contact Support"| ContactForm["Display Contact Support Form\n(subject, category, message,\npriority, optional attachment)"]
+    ContactForm --> FormSubmit{"Patient submits?"}
+    FormSubmit -->|No - Cancel| Hub
+    FormSubmit -->|Yes| CreateCase["System creates support case\n(CASE-YYYY-#####); links to patient record;\nsends confirmation email (FR-020)"]
+    CreateCase --> CaseConfirm["Display Submission Confirmation\nCase ID shown\n'We will respond within 24 hours'"]
+    CaseConfirm --> TicketList["Navigate to My Support Tickets (P08.1-S3)"]
+
+    HubAction -->|"My Support Tickets"| TicketList
+    TicketList --> TicketAction{"Patient action"}
+    TicketAction -->|"Tap 'Create New Ticket'"| ContactForm
+    TicketAction -->|"Tap ticket card"| TicketDetail["Display Ticket Detail (P08.1-S4)\n(case info, status, thread)"]
+    TicketDetail --> ThreadAction{"Patient action"}
+    ThreadAction -->|"Type and send reply"| SendReply["Patient reply added to thread\nAdmin notified (FR-020)"]
+    SendReply --> TicketDetail
+    ThreadAction -->|Back| TicketList
+    TicketAction -->|Back| Hub
+
+    HubAction -->|Back| End["Return to previous screen\n(Settings or in-app origin)"]
 ```
 
 #### Screen Specifications
 
 ##### Screen P08.1-S1: Help & Support Hub
 
-**Purpose**: Central access point for all help resources and support channels
+**Purpose**: Central entry point for all help resources and support channels
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-033 (Help Centre Management) and FR-034 (Support Center Ticketing) PRDs.
-This screen is the entry point for all help and support features.
-Accessed from Settings (P01.2-S1) and potentially from other deep links in the app.
-
-Create a table with these expected fields:
-- Screen title ("Help & Support")
-- Search bar (search across FAQ articles)
-- Quick help categories (tappable cards/tiles for common topics)
-- Navigation sections:
-  - FAQ / Help Center (→ browse help articles, FR-033)
-  - Contact Support (→ create support ticket, FR-034)
-  - My Support Tickets (→ list of patient's tickets, FR-034)
-  - Live Chat (if available)
-- Emergency contact section (always visible):
-  - Emergency phone number
-  - Emergency email
-- Back navigation
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "Help & Support" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Settings or previous screen | Top-left corner |
+| Search Bar | text | Yes | "Search help articles…" placeholder; searches across all published patient-audience FAQ and article content | Results appear inline or on a separate results screen; scoped to patient audience only (FR-033 Rule 3) |
+| Browse Help Center | link | Yes | Row with book/article icon + "Help Center" label + chevron | Navigates to P08.1-S2; covers FAQs, Tutorial Guides, Troubleshooting Tips, Resource Library, Video Tutorials |
+| Contact Support | link | Yes | Row with headset/message icon + "Contact Support" label + chevron | Opens Contact Support form (new ticket submission, FR-034) |
+| My Support Tickets | link | Yes | Row with ticket icon + "My Support Tickets" label + chevron + open ticket count badge | Navigates to P08.1-S3; badge shows count of open/in-progress tickets |
+| Emergency Contact Section | group | Yes | Always-visible section at bottom of screen with emergency contact details | Must remain visible regardless of scroll position (sticky or always rendered) |
+| — Emergency Phone | text | Yes | Emergency phone number for urgent post-treatment concerns | Read-only; tap-to-call on mobile |
+| — Emergency Email | text | Yes | Emergency email address | Read-only; tap-to-compose on mobile |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Help Center content is read-only for patients (managed by admin via FR-033)
-- Search covers all published help articles
-- Emergency contact information is always visible and accessible
-- Support ticket creation follows FR-034 flow and rules
-- Live Chat availability depends on business hours configuration
--->
+
+- All Help Center content is read-only for patients; it is managed exclusively by admins via FR-033 and scoped to the patient audience
+- Search covers all published patient-audience articles and FAQs; results are ranked by relevance; if no results match, show a "Contact Support" prompt
+- Emergency contact section must always be visible — it cannot be hidden or require scrolling past it
+- Support ticket creation follows FR-034 workflow; submissions automatically create cases with Ticket Source = "Patient App" and Submitter Type = "Patient" (FR-034 REQ-034-024)
+- "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0
 
 ##### Screen P08.1-S2: Help Center / FAQ Browser
 
-**Purpose**: Browse and search help articles organized by category
+**Purpose**: Browse patient-facing help content organized by category, search articles, and view article detail
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-033 PRD for help centre content structure and categories.
-
-Create a table with these expected fields:
-- Screen title ("Help Center")
-- Search bar (with auto-suggest)
-- Category list (tappable, each showing: icon, category name, article count)
-- Featured/popular articles section
-- Recently viewed articles (if applicable)
-- Article list within a category:
-  - Article title
-  - Brief excerpt
-  - Last updated indicator
-- Article detail view:
-  - Article title
-  - Content body (rich text, scrollable)
-  - "Was this helpful?" feedback (Yes/No)
-  - "Contact Support" CTA if article didn't help
-  - Related articles list
-- Back navigation (category → hub)
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "Help Center" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Help & Support Hub (P08.1-S1) | Top-left corner |
+| Search Bar | text | Yes | Full-text search across all patient-audience help content | Auto-suggests results while typing; scoped to patient audience (FR-033) |
+| Category Cards | group | Yes | Tappable content category tiles (5 categories for patient platform) | Categories: FAQs, Tutorial Guides, Troubleshooting Tips, Resource Library, Video Tutorials (FR-033); no Service Status category for patients |
+| — Category Icon | icon | Yes | Icon representing the content type | Visual differentiator per category |
+| — Category Label | text | Yes | Category name | Read-only |
+| — Item Count Badge | badge | No | Number of published items in the category | Read-only; hidden if count is 0 |
+| Featured / Popular Articles | list | No | Curated shortlist of popular or featured articles | Managed by admin via FR-033; up to 5 items |
+| Article / Content List (in-category) | list | Yes | Full list of published articles/files/videos for the selected category | Shown after patient taps a category card |
+| — Item Title | text | Yes | Article or file/video title | Tappable; navigates to article or resource detail |
+| — Item Excerpt | text | No | 1–2 line description or preview | Truncated with ellipsis |
+| — Last Updated | datetime | No | Date content was last published or updated | Relative or short date format |
+| Article Detail — Title | text | Yes | Full article title | Read-only |
+| Article Detail — Body | text | Yes | Full article/guide content (rich text, scrollable) | Read-only; supports formatted text, inline images |
+| Article Detail — "Was this helpful?" | group | Yes | Binary feedback: "Yes" / "No" buttons | Submits anonymous feedback to admin analytics (FR-033 Rule 1012) |
+| Article Detail — Contact Support CTA | link | Conditional | "Still need help? Contact Support" shown after patient taps "No" on helpfulness | Routes to Contact Support form (FR-034) |
+| Article Detail — Related Articles | list | No | 2–4 related articles suggested by the system | Admin-configured or auto-generated; tappable |
+| No Results State | group | Conditional | Shown when search returns 0 results | "No results for '[query]'. Try different keywords or Contact Support." |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Articles are organized by categories defined in FR-033
-- Search returns results ranked by relevance
-- Article content is read-only, managed by admin
-- "Was this helpful?" feedback is sent to the admin dashboard
-- If no articles match search, show "Contact Support" prompt
--->
+
+- All article and content data is managed by admins via FR-033; patients have read-only access with no ability to create, edit, or delete content (FR-033 Rule 2)
+- Patient content is completely isolated from provider content — patients only see patient-audience articles (FR-033 Rule 1, Rule 3)
+- Search is scoped to the patient audience repository; results are ranked by relevance; empty search results must always surface a "Contact Support" path
+- "Was this helpful?" feedback is aggregated at article level and visible in admin content analytics (FR-033) — not tied to individual patient identity (FR-033 Privacy Rule 2)
+- Content updates published by admin propagate to patient view within 1 minute (FR-033)
 
 ##### Screen P08.1-S3: My Support Tickets
 
-**Purpose**: List all support tickets submitted by the patient
+**Purpose**: List all support cases submitted by the patient, with ability to create new tickets
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-034 PRD for support ticket structure and lifecycle.
-
-Create a table with these expected fields:
-- Screen title ("My Support Tickets")
-- "Create New Ticket" button
-- Ticket list, each card showing:
-  - Ticket reference number
-  - Subject / title
-  - Status badge (Open, In Progress, Waiting for Reply, Resolved, Closed)
-  - Date submitted
-  - Last updated timestamp
-  - Assigned agent name (optional)
-- Filter options: All, Open, Resolved
-- Sort: Most recent first
-- Empty state ("No support tickets — need help? Create a ticket")
-- Tapping a ticket → ticket detail view with conversation thread
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | "My Support Tickets" | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to Help & Support Hub (P08.1-S1) | Top-left corner |
+| Create New Ticket Button | action | Yes | Primary CTA to submit a new support request | Opens Contact Support form (leads to P08.1-S4 on submit); always visible |
+| Filter Chips | chips | Yes | Filter ticket list: All, Open, In Progress, Resolved/Closed | "All" is default; tapping a chip filters the list |
+| Ticket Card | group | Yes | Individual support case summary row (tappable) | Tapping navigates to Ticket Detail view |
+| — Case ID | text | Yes | Unique case reference (format: CASE-YYYY-#####) | Read-only; displayed in subdued style |
+| — Subject / Title | text | Yes | Subject line of the support request | Bold; truncated to 1–2 lines |
+| — Status Badge | badge | Yes | Current lifecycle status: Open, In Progress, Resolved, Closed | Color-coded: Open (blue), In Progress (yellow), Resolved (green), Closed (grey) |
+| — Submitted Date | datetime | Yes | Date the ticket was submitted | Short date format |
+| — Last Updated | datetime | Yes | Timestamp of last activity (admin reply, status change) | Relative format: "2h ago", "Yesterday" |
+| Empty State | group | Conditional | Shown when patient has no tickets (or none match filter) | "No support tickets yet. Need help? Tap 'Create New Ticket'." |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Tickets ordered by most recently updated
-- Open tickets pinned to top
-- Patient can reply to open tickets (adds to conversation thread)
-- Resolved/closed tickets are read-only
-- Patient can reopen a resolved ticket within a defined window (check FR-034)
--->
+
+- Tickets are ordered by most recently updated (newest activity at top) within each filter tab
+- All statuses (Open, In Progress, Resolved, Closed) are visible in "All"; filter chips narrow the view per status group
+- Creating a new ticket follows FR-034 Workflow A5: patient selects category (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback), enters subject, message, priority, and optional attachment; system creates case with Ticket Source = "Patient App" (FR-034 REQ-034-021)
+- Patient receives a confirmation email with the case reference number upon submission (FR-020, FR-034 A5 step 11)
+- Ticket cards are always tappable regardless of status — patients can view the full thread even for Closed cases
+
+##### Screen P08.1-S4: Ticket Detail View
+
+**Purpose**: Full support case detail with communication thread and patient reply capability
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Screen Title | text | Yes | Case subject / title | Displayed at top of screen |
+| Back Navigation | action | Yes | Back arrow to return to My Support Tickets (P08.1-S3) | Top-left corner |
+| Case ID | text | Yes | Unique case reference (CASE-YYYY-#####) | Read-only |
+| Status Badge | badge | Yes | Current case status: Open, In Progress, Resolved, Closed | Color-coded per status |
+| Case Category | badge | Yes | Selected category (e.g., "Account Access", "Payment Question") | Read-only |
+| Submitted Date | datetime | Yes | Date and time case was submitted | Read-only |
+| Feedback Resolution (Conditional) | badge | Conditional | For feedback/feature request cases only: Implemented, Planned, Declined, Under Review | Read-only; shown only when admin has set a feedback resolution value (FR-034) |
+| Communication Thread | list | Yes | Chronological list of all messages (admin replies + patient messages) | Scrollable; newest message at bottom; messages marked with sender label (You / Support Team) |
+| — Message Sender | text | Yes | Label: "You" for patient messages, "Support Team" for admin replies | Read-only |
+| — Message Body | text | Yes | Full message content | Read-only for admin messages; supports plain text |
+| — Message Timestamp | datetime | Yes | Date and time message was sent | Relative or absolute format |
+| — Attachment (Conditional) | image | Conditional | Attached screenshot or document within message | Read-only; tap to view full-size |
+| Reply Input Field | text | Conditional | Multi-line text input for patient to reply to admin | Shown only when case is Open or In Progress; hidden for Resolved/Closed cases |
+| Send Reply Button | action | Conditional | Submits patient reply to the case thread | Enabled when reply input is non-empty; disabled for Resolved/Closed cases; admin notified on send (FR-020) |
+| Empty Thread State | text | Conditional | Shown when no messages exist yet (case just created) | "Your case has been submitted. Our team will respond within 24 hours." |
+
+**Business Rules**:
+
+- Patients can reply to admin messages only when the case is Open or In Progress; Resolved and Closed cases are read-only (FR-034 REQ-034-026)
+- Patient replies are added to the shared communication thread and the assigned admin receives a notification via FR-020 (`support.case_user_reply` event)
+- Internal admin notes are never shown to the patient — only messages explicitly sent to the patient are visible in the thread (FR-034)
+- Feedback resolution field is only shown for feedback or feature request case categories (FR-034 Feedback Management)
+- Status changes (Open → In Progress, In Progress → Resolved) trigger push/email notifications to the patient per FR-020 (`support.case_status_changed`, `support.case_resolved`)
 
 ---
 
@@ -1803,3 +1835,4 @@ When new missing flows are identified, follow these steps:
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
 | 2026-02-05 | 0.1 | Initial structure with placeholders for 14 missing flows across 7 patient modules (P-01, P-02, P-03, P-04, P-05, P-06, P-08) | Product & Engineering |
+| 2026-02-25 | 0.2 | Filled in P06.1 (Notification Listing & Bubble) and P08.1 (Help & Support): replaced all placeholders with flow diagrams, screen spec tables, and business rules sourced from FR-020, FR-033, FR-034. Added Screen P08.1-S4 (Ticket Detail View). Updated summary dashboard statuses to 🟡 Specified. | Claude Code |

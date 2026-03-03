@@ -385,9 +385,9 @@ Before starting testing, ensure:
      - [ ] Upload valid MP4 video (≤ 30s, ≤ 20MB)
      - [ ] Verify video preview
    - [ ] **Combined limit**:
-     - [ ] Upload 3 photos + 2 videos (total 5) - should work
-     - [ ] Try uploading 6th media file - should fail
-   - [ ] Continue to 3D scan
+   - [ ] Upload 3 photos + 2 videos (total 5) - should work
+   - [ ] Try uploading 6th media file - should fail
+   - [ ] Continue to head scan capture (photo set)
 
 **Expected Results**:
 
@@ -405,14 +405,16 @@ Before starting testing, ensure:
 
 ---
 
-### 2.3 3D Head Scan Capture
+### 2.3 Head Scan Photo Set Capture (V1)
+
+**Note**: True 3D head scanning is a V2 enhancement. In V1, the "scan" is a standardized photo set (multiple 2D views).
 
 **Test Steps**:
 
 1. **Scan Instructions**
    - [ ] Verify scan instructions screen displays
    - [ ] Read through instructions (front, top, left, right angles)
-   - [ ] Tap "Start Scan"
+   - [ ] Tap "Start Capture"
 
 2. **Scan Capture Process**
    - [ ] Verify camera access permission requested
@@ -429,8 +431,8 @@ Before starting testing, ensure:
 
 3. **Scan Review**
    - [ ] Verify scan preview displays
-   - [ ] Test rotating/viewing scan if viewer available
-   - [ ] Verify scan saved
+   - [ ] Verify photo set gallery preview (no interactive 3D rotation in V1)
+   - [ ] Verify scan/photo set saved
    - [ ] Continue to date selection
 
 **Expected Results**:
@@ -438,14 +440,14 @@ Before starting testing, ensure:
 - Clear scan guidance
 - Quality validation works
 - Retake option available if poor quality
-- Scan securely uploaded
+- Photo set securely uploaded
 
 **Error-Prone Areas**:
 
 - Camera permission handling
 - Quality validation thresholds
 - Lighting/distance detection
-- Scan upload reliability (large file)
+- Upload reliability (multiple files)
 - Offline/poor network handling
 
 ---
@@ -544,7 +546,7 @@ Before starting testing, ensure:
      - [ ] Selected countries with prices
      - [ ] Concern details
      - [ ] Media files (thumbnails)
-     - [ ] 3D scan reference
+     - [ ] Head scan photo set reference
      - [ ] Date ranges
      - [ ] Medical questionnaire summary (alerts)
    - [ ] **Test editing**:
@@ -1490,11 +1492,11 @@ Before starting testing, ensure:
    - [ ] Verify responses saved
    - [ ] Verify milestone updated to "Completed"
 
-3. **3D Scan Monitoring**
-   - [ ] Navigate to "3D Scan" section
+3. **Scan Monitoring (Head Scan Photo Sets in V1)**
+   - [ ] Navigate to "Scan" section
    - [ ] Verify scan schedule displayed (e.g., every 2 weeks)
    - [ ] Tap "Capture Scan"
-   - [ ] Follow scan instructions (similar to inquiry submission scan)
+   - [ ] Follow capture instructions (similar to inquiry submission scan)
    - [ ] Complete scan
    - [ ] Verify scan uploaded and saved
    - [ ] Verify scan added to timeline
@@ -1502,7 +1504,7 @@ Before starting testing, ensure:
      - [ ] Verify timeline UI displays all scan dates
      - [ ] Drag/scroll through timeline
      - [ ] Select different scan dates
-     - [ ] Verify 3D scan viewer updates for selected date
+     - [ ] Verify scan viewer (photo set gallery in V1) updates for selected date
      - [ ] Compare before/after (initial scan vs latest)
      - [ ] Verify visual progress indicators
 
@@ -1524,7 +1526,7 @@ Before starting testing, ensure:
 
 - Milestone-based tracking clear
 - Questionnaires adaptive per milestone
-- 3D scan timeline interactive
+- Scan timeline interactive (photo sets in V1)
 - Medication tracking helpful
 - Instructions accessible
 
@@ -1532,7 +1534,7 @@ Before starting testing, ensure:
 
 - Milestone progression logic
 - Questionnaire frequency (every 2 days vs every month)
-- 3D scan upload reliability
+- Scan upload reliability (multiple files)
 - Timeline interaction UX on mobile
 - Medication reminder timing
 
@@ -1555,8 +1557,8 @@ Before starting testing, ensure:
    - [ ] Verify response received
    - [ ] Verify notification received
 
-3. **Request 3D Scan Review**
-   - [ ] In chat, look for preset action: "Request 3D scan review"
+3. **Request Scan/Photo Set Review**
+   - [ ] In chat, look for preset action: "Request scan review"
    - [ ] Tap request
    - [ ] Verify support team notified
    - [ ] Wait for response with scan analysis
@@ -1605,8 +1607,8 @@ Before starting testing, ensure:
      - [ ] Text review (description)
      - [ ] Optional: Before/after photo upload
    - [ ] **Test interactive before/after** (client requirement):
-     - [ ] If opted in, verify 3D scan before/after included
-     - [ ] Verify interactive progress visualization (scan timeline)
+     - [ ] If opted in, verify head scan photo set before/after included (V1)
+     - [ ] Verify interactive progress visualization (scan timeline; photo sets in V1)
    - [ ] Select overall rating
    - [ ] Enter text review
    - [ ] Optionally upload before/after photos
@@ -1623,14 +1625,14 @@ Before starting testing, ensure:
    - [ ] Verify all provider reviews displayed
    - [ ] Verify ratings visible (overall and breakdown)
    - [ ] Verify before/after photos visible (if shared)
-   - [ ] Verify interactive 3D scan timeline (if opted in by reviewer)
+   - [ ] Verify interactive scan timeline (if opted in by reviewer; photo sets in V1)
    - [ ] Scroll through reviews
    - [ ] Verify reviews sorted (recent first or highest rated)
 
 **Expected Results**:
 
 - Review form clear and easy
-- Before/after with 3D scans interactive
+- Before/after with scan media interactive (photo sets in V1)
 - Review submission successful
 - Provider reviews visible to patients
 
@@ -1638,7 +1640,7 @@ Before starting testing, ensure:
 
 - Review eligibility (3-month rule)
 - Before/after photo upload validation
-- Interactive 3D timeline performance
+- Interactive scan timeline performance
 - Review approval workflow (admin side)
 
 ---
@@ -1689,7 +1691,7 @@ These scenarios test interactions between multiple modules.
 9. **Engage with Aftercare**
    - [ ] Access aftercare dashboard (Module 6.1)
    - [ ] Complete milestone questionnaires
-   - [ ] Upload 3D scan for monitoring
+   - [ ] Upload head scan photo set for monitoring
    - [ ] Chat with support team
 
 10. **Leave Review**
@@ -1974,7 +1976,7 @@ These scenarios focus on user experience, not just functionality.
    - [ ] Inquiry submission > Uploading media/scan
    - [ ] Payment processing > Waiting for authorization
    - [ ] Messaging > Sending message
-   - [ ] 3D scan capture > Processing scan
+   - [ ] Head scan capture > Processing uploads
 
 2. **For each scenario, verify**:
    - [ ] Loading indicator visible (spinner, progress bar, skeleton UI)
@@ -2521,7 +2523,7 @@ Before recommending approval for release, verify:
 - [ ] Security basics verified (auth, payment, data privacy)
 - [ ] No app crashes during testing
 - [ ] All PRD requirements implemented (or gaps documented)
-- [ ] Client requirements from transcriptions verified (3D scan timeline, monitoring, messaging)
+- [ ] Client requirements from transcriptions verified (scan timeline/monitoring, messaging)
 
 **Recommendation**:
 

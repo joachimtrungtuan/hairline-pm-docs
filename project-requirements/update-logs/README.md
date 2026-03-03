@@ -86,6 +86,54 @@ This folder contains documentation update reports and verification logs for the 
 
 - `2026-02-05-cancel-inquiry-fr-updates.md` - Cancel inquiry feature updates
 
+### 2026-02-28/ (1 file)
+
+#### **FR-010 Second Revision — Mermaid Workflows & 3-Tenant Screen Specs**
+
+- `FR010_REVISION_2026-02-28.md` - FR-010 second revision pass (v1.2 → v1.3)
+  - Admin full edit capability restored (confirmed in AdminPlatform-Part1 transcription)
+  - Deprecated media note removed; elapsed time annotation removed cleanly
+  - Entry point wording clarified (tab becomes active AS case transitions Confirmed → In Progress)
+  - Donor area and clinician reassignment removed (not in client transcriptions)
+  - End Treatment gate added (all days must reach terminal status)
+  - Graft count confirmed as single end-of-treatment entry (no per-day tracking)
+  - A3 (mid-procedure plan modification) and A4 (multi-day flow) and B4 (consent withdrawal) removed
+  - All business workflows converted to Mermaid `flowchart TD` format
+  - Screen Specifications completely restructured to 3-tenant format: Patient (2), Provider (4), Admin (2) screens
+
+### 2026-03-02/ (2 files)
+
+#### **FR-012 Implementation Tasks (Provider + Admin Focus)**
+
+- `IMPLEMENTATION_TASKS_FR012_2026-03-02.md` - Task breakdowns created for FR-012 gaps (Provider PR-07 + Admin A-10), including FE-only tasks and supporting FE+BE/BE tasks
+
+#### **FR-010 Post-Verification Issue Resolution**
+
+- `FR010_VERIFICATION_FIXES_2026-03-02.md` - FR-010 v1.3 → v1.4: 14 verification issues resolved
+  - Aftercare scope boundary fixed (FR-010 stops at Complete Treatment; FR-011 owns aftercare)
+  - Media types clarified (treatment photos + 3D head scans as distinct types)
+  - Final 3D Head Scan made required; RBAC aligned to FR-031 (Owner + Manager + Clinical Staff)
+  - Singular clinician model aligned to FR-004; donor/recipient removed
+  - No-Show/Postponed clarified as admin-managed labels; User Story 2 rewritten (no Pause)
+
+### 2026-03-03/ (4 files)
+
+#### **FR-006 + FR-010 Alignment**
+
+- `FR006_FR010_ALIGNMENT_2026-03-03.md` - Added Aftercare to FR-006 booking statuses; clarified FR-010 payment gating (no payment capture), No-Show label semantics, and medication free-text model
+
+#### **FR-010 Scan Photo Set (V1) + Doc Cleanup**
+
+- `FR010_SCAN_PHOTOSET_DOC_CLEANUP_2026-03-03.md` - Standardized FR-010 head scan capture for V1 as a photo set, aligned system PRD wording, and removed deprecated scan-overlay notes across local docs
+
+#### **FR-010 Admin Override + Soft Delete + Day-Only In Progress**
+
+- `FR010_ADMIN_OVERRIDE_SOFT_DELETE_DAY_MODEL_2026-03-03.md` - Clarified day-only In Progress model (status + quote plan description + notes), required admin override reasons in audit trail, and enforced soft-delete-only semantics for treatment documentation/media (plus FR-004 plan schema clarification)
+
+#### **FR-010 PRD Verified**
+
+- `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated to ✅ Approved; footer confirmed aligned to `prd-template.md`
+
 ---
 
 ## Quick Reference by Topic
@@ -119,6 +167,14 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-11-04**: `FR005_PRD_VERIFIED_2025-11-04.md` - FR-005 PRD verification
 - **2025-11-06**: `FR026_ANALYSIS_C1_RESOLVED_2025-11-06.md` - FR-026 analysis and critical issues resolution
 - **2026-02-25**: `FR025_VERIFICATION_UPDATES_2026-02-25.md` - FR-025 verification and system PRD alignment
+- **2026-02-27**: `FR010_REVISION_2026-02-27.md` - FR-010 major revision: tabbed display model, entry point fix, day-by-day model, clinician model, status list, elapsed time removal, withdraw consent simplification, graft number, and Cancel button
+- **2026-02-28**: `FR010_REVISION_2026-02-28.md` - FR-010 second revision: admin edit capability, Mermaid workflow conversion, 3-tenant screen specifications restructure
+- **2026-03-02**: `IMPLEMENTATION_TASKS_FR012_2026-03-02.md` - FR-012 implementation task breakdowns (Provider + Admin focus)
+- **2026-03-02**: `FR010_VERIFICATION_FIXES_2026-03-02.md` - FR-010 post-verification: 14 issues resolved (aftercare scope, media types, RBAC, clinician model, etc.)
+- **2026-03-03**: `FR006_FR010_ALIGNMENT_2026-03-03.md` - FR-006/FR-010 alignment: Aftercare status, payment gating, No-Show label, medication free-text
+- **2026-03-03**: `FR010_SCAN_PHOTOSET_DOC_CLEANUP_2026-03-03.md` - FR-010 scan photo set (V1) + scan-overlay wording cleanup across local docs; system PRD alignment
+- **2026-03-03**: `FR010_ADMIN_OVERRIDE_SOFT_DELETE_DAY_MODEL_2026-03-03.md` - FR-010 admin override + soft delete + day-only In Progress model; FR-004 plan schema clarification
+- **2026-03-03**: `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated; footer confirmed aligned to template
 
 ### 2025-12-22/ (1 file)
 
@@ -151,4 +207,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: February 25, 2026
+**Last Updated**: March 3, 2026

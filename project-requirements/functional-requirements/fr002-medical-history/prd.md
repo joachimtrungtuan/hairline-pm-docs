@@ -8,8 +8,9 @@
 
 ## Executive Summary
 
-FR-002 defines shared backend engines for processing medical intake data and head media, consumed by FR-003 (Inquiry) and others. It excludes patient-facing UI. The engine ingests medical questionnaire responses (defined/versioned via FR-025), generates severity alerts, validates and processes head media, applies anonymization/watermarking, and persists artifacts for provider review. For the current release, the patient app supplies a guided head video (not a 3D model); the engine validates and stores this media.
+FR-002 defines shared backend engines for processing medical intake data and head media, consumed by FR-003 (Inquiry) and others. It excludes patient-facing UI. The engine ingests medical questionnaire responses (defined/versioned via FR-025), generates severity alerts, validates and processes head media, applies anonymization, and persists artifacts for provider review. For V1, the patient app supplies a standardized head scan photo set (multiple 2D views; not a true 3D model); the engine validates and stores this media.
 This FR covers backend engines only; patient capture UX is handled by FR-003 and consumed by `P-07` for V1.
+For V1, "3D scan" capture is implemented as a standardized head scan photo set (multiple 2D views). True 3D capture is deferred to V2.
 
 ## Module Scope
 
@@ -25,12 +26,12 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 **Patient Platform (P-07)**:
 
 - Patient-facing capture UI is handled by FR-003 (Inquiry Submission module)
-- Patient app submits questionnaire responses and head video to engine via FR-003
+- Patient app submits questionnaire responses and head scan photo set (V1) to engine via FR-003
 - Patients do not directly interact with FR-002 engine; all interaction through FR-003
 
 **Provider Platform (PR-02)**:
 
-- Providers consume read-only processed artifacts (normalized questionnaire, alerts, watermarked media)
+- Providers consume read-only processed artifacts (normalized questionnaire, alerts, processed media)
 - Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing
 - Providers see anonymized artifacts until payment confirmation (per system PRD)
 
@@ -43,7 +44,7 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 **Shared Services (S-01, S-05)**:
 
-- **S-01: 3D Media Processing Service**: Validates head video quality, applies watermarking, handles media transformations
+- **S-01: 3D Media Processing Service**: Validates head scan media (V1 photo set) and handles media transformations
 - **S-05: Media Storage Service**: Stores processed media artifacts with secure access controls
 - **Medical Intake Engine**: Validates questionnaire responses, computes severity alerts, normalizes data, manages versioning
 - Engine operations are stateless between calls except for persisted artifacts
@@ -53,7 +54,7 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 **In Scope**:
 
-- FR-003 → Engine: Submission of questionnaire responses and head video for processing
+- FR-003 → Engine: Submission of questionnaire responses and head scan media for processing
 - Engine → FR-003: Return of normalized payload, alert tags, and media URIs
 - Engine → Providers (via FR-003/PR-02): Read-only access to processed artifacts
 - Admin → Engine (via FR-025): Template and rule configuration updates
@@ -70,7 +71,7 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 ### Entry Points
 
-1. **FR-003 Submission**: FR-003 (Inquiry Submission) calls engine API with questionnaire responses and head video
+1. **FR-003 Submission**: FR-003 (Inquiry Submission) calls engine API with questionnaire responses and head scan media
 2. **Template Updates**: Engine automatically consumes updated templates/rules when FR-025 publishes new versions
 3. **Admin Configuration**: Admin publishes template versions via FR-025 (A-09 settings); engine applies to new inquiries
 
@@ -86,9 +87,9 @@ This FR covers backend engines only; patient capture UX is handled by FR-003 and
 
 ```mermaid
 flowchart TD
-  S1["1. FR-003 submits questionnaire responses (with templateVersion) and head video metadata"] --> S2["2. Engine validates completeness against FR-025 template and media constraints"]
+  S1["1. FR-003 submits questionnaire responses (with templateVersion) and head scan media metadata"] --> S2["2. Engine validates completeness against FR-025 template and media constraints"]
   S2 --> S3["3. Engine computes severity alerts/risk tags based on configured rules"]
-  S3 --> S4["4. Engine watermarks head video with anonymized patient identifier and persists to storage"]
+  S3 --> S4["4. Engine persists head scan media under anonymized patient identifier and stores to storage"]
   S4 --> S5["5. Engine returns normalized intake payload, alert tags, and media URIs to FR-003"]
 ```
 
@@ -177,21 +178,22 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 - templateVersion (string)
 - responses (object keyed by questionId per FR-025)
 - media: one of
-  - headVideo { uri, durationSeconds, sizeBytes, frameHints? }
-  - altPhotos { uris[] } | altClips { uris[] }  // aligns with system PRD alt media support
+  - headScanPhotoSet { uris[], sizeBytesTotal?, viewHints? }  // V1: standardized photo set capture
+  - headVideo { uri, durationSeconds, sizeBytes, frameHints? } // optional fallback / future
+  - altPhotos { uris[] } | altClips { uris[] }  // aligns with system PRD supplemental media support
 - patientContext { anonymizedPatientId }
 
 **Response (to FR-003 / PR-02)**:
 
 - normalized { responsesNormalized, templateVersionUsed }
 - alerts RiskTag[] { code, label, severity (critical|standard|none), rationale, derivedFrom }
-- media { storedUri, watermarkRef, validationStatus }
+- media { storedUri, validationStatus }
 - audit { processingId, processedAt }
 
 **Rules**:
 
 - Enforce FR-025 required fields and media constraints; stamp templateVersionUsed/rulesetVersion.
-- Watermark media with anonymizedPatientId; no PII in payloads.
+- Store media under anonymizedPatientId; no PII in payloads.
 - Providers see anonymized artifacts until payment confirmation (system PRD alignment).
 - On validation failure, return structured error codes and remediation guidance; do not persist artifacts.
 
@@ -210,12 +212,14 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 3. All access is role-based; admin access is logged with justification for sensitive views.
 4. Intake payloads and media artifacts processed under this FR are encrypted in transit (TLS 1.3) and at rest (AES-256), in alignment with the Constitution and FR-026.
 
-### Media Rules (Head Video Intake)
+### Media Rules (Head Scan Media Intake)
 
-1. For this release, head media is a guided video file captured in the patient app and uploaded to the system.
-2. Minimum duration: 15 seconds (configurable via A-09 policy); must include front, top, left, and right angles.
-3. Maximum upload size: 50MB; basic brightness/blur checks enforced.
-4. On validation failure, engine returns structured error codes and guidance to the caller (FR-003).
+1. For V1, head media is a standardized **photo set** captured in the patient app and uploaded to the system (not a true 3D model).
+2. Photo set MUST include required viewpoints (e.g., front/top/left/right/back) as defined by policy (A-09).
+3. Allowed formats: JPG/PNG; maximum per-file size and maximum total size MUST be enforced via policy (A-09).
+4. Basic quality checks (e.g., brightness/blur) MUST be enforced and actionable guidance returned on failure.
+5. If `headVideo` is accepted (optional fallback/future), duration constraints (min/max) apply via policy (A-09).
+6. On validation failure, engine returns structured error codes and guidance to the caller (FR-003); no artifacts persisted.
 
 ### Admin Editability
 
@@ -229,23 +233,23 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 
 Why: Core value of engine; required for all downstream flows.
 
-Independent Test: Submit valid responses + compliant head video metadata and verify normalized payload, alerts, and stored media URIs are returned within SLA.
+Independent Test: Submit valid responses + compliant head scan media metadata and verify normalized payload, alerts, and stored media URIs are returned within SLA.
 
 Acceptance Scenarios:
 
 1. Given valid responses and compliant media, When submitted, Then engine returns normalized payload, alerts, and stored URI in < 3s (p95)
 2. Given responses reference a published templateVersion, When processed, Then response stamps templateVersionUsed and rulesetVersion
-3. Given anonymizedPatientId in context, When media is stored, Then watermarkRef is present and no PII appears in payloads
+3. Given anonymizedPatientId in context, When media is stored, Then storedUri is present and no PII appears in payloads
 
 ### User Story 2 - Handle Validation Failures (Priority: P1)
 
 Why: Clear guidance reduces retries and support burden.
 
-Independent Test: Submit payloads violating media duration/size/quality and verify structured error codes with remediation guidance; no artifacts persisted.
+Independent Test: Submit payloads violating media completeness/size/quality (and duration if video) and verify structured error codes with remediation guidance; no artifacts persisted.
 
 Acceptance Scenarios:
 
-1. Given video duration below minimum, When processed, Then engine returns MEDIA_DURATION_TOO_SHORT with guidance; no storage
+1. Given required viewpoints are missing, When processed, Then engine returns MEDIA_INCOMPLETE_VIEW_SET with guidance; no storage
 2. Given file size exceeds limit, When processed, Then engine returns MEDIA_SIZE_EXCEEDED with compression guidance; no storage
 3. Given brightness/blur below threshold, When processed, Then engine returns MEDIA_QUALITY_INSUFFICIENT with retake instructions; no storage
 
@@ -270,7 +274,7 @@ Acceptance Scenarios:
 ### System Performance Metrics
 
 - SC-002-S1: 99% of valid submissions produce normalized payload + media URIs in < 3 seconds (p95).
-- SC-002-S2: 95% of compliant head videos pass validation on first attempt.
+- SC-002-S2: 95% of compliant head scan photo sets pass validation on first attempt.
 - SC-002-S3: 0% PII detected in engine responses during automated checks.
 
 ### Business Impact Metrics
@@ -286,19 +290,19 @@ Acceptance Scenarios:
 
 - **REQ-002-001**: Engine MUST validate responses against FR-025 template requirements
 - **REQ-002-002**: Engine MUST derive risk/alert tags deterministically from rules
-- **REQ-002-003**: Engine MUST validate, watermark, and persist media artifacts
+- **REQ-002-003**: Engine MUST validate and persist media artifacts
 - **REQ-002-004**: Engine MUST return normalized payload, alerts, media URIs, and audit fields
 
 ### Data Requirements
 
 - **REQ-002-005**: Responses MUST be stamped with templateVersionUsed and rulesetVersion
-- **REQ-002-006**: Media artifacts MUST store watermarkRef and validationStatus
+- **REQ-002-006**: Media artifacts MUST store validationStatus
 - **REQ-002-007**: Audit records MUST capture processingId and processedAt
 
 ### Security & Privacy Requirements
 
 - **REQ-002-008**: No PII in engine responses; anonymized identifiers only
-- **REQ-002-009**: Media MUST be watermarked with anonymizedPatientId
+- **REQ-002-009**: Media MUST be stored under anonymizedPatientId
 - **REQ-002-010**: All operations MUST be fully auditable and retention-compliant
 
 ### Integration Requirements
@@ -328,7 +332,8 @@ Acceptance Scenarios:
 
 ## Key Entities
 
-- IntakeProcessingRequest: templateVersion, responses, media(headVideo|altPhotos|altClips), patientContext(anonymizedPatientId)
+- IntakeProcessingRequest: templateVersion, responses, media(headScanPhotoSet|headVideo|altPhotos|altClips), patientContext(anonymizedPatientId)
+  - Note: V1 expects `media` as `headScanPhotoSet` (photo set). `headVideo` is optional fallback/future.
   - Key attributes: required fields completeness, media metadata
   - Relationships: references published questionnaire template (FR-025)
 
@@ -339,21 +344,21 @@ Acceptance Scenarios:
 - RiskTag: code, label, severity(critical|standard|none), rationale, derivedFrom
   - Relationships: belongs to IntakeProcessingResult
 
-- MediaArtifact: storedUri, watermarkRef, validationStatus, metadata
+- MediaArtifact: storedUri, validationStatus, metadata
   - Relationships: referenced by IntakeProcessingResult
 
 ## Assumptions
 
 ### User Behavior Assumptions
 
-- Patients capture and upload guided head videos following instructions in FR-003
+- Patients capture and upload standardized head scan photo sets following instructions in FR-003
 - Providers review anonymized artifacts and alerts without requiring PII pre-payment
 - Admins proactively maintain questionnaire templates and risk rules (FR-025)
 
 ### Technology Assumptions
 
-- Patient devices can record compliant video (duration, size, quality) per policy
-- Stable connectivity allows upload of video within size constraints
+- Patient devices can capture compliant head scan photo sets (file formats, size, quality) per policy
+- Stable connectivity allows upload of head scan media within size constraints
 - Cloud storage is available for persisted media artifacts with secure access
 
 ### Business Process Assumptions
@@ -369,6 +374,7 @@ Acceptance Scenarios:
 - Stateless processing per request; artifacts persisted in storage with references returned
 - Deterministic normalization and alert derivation based on versioned rules
 - Media validation includes duration, size, brightness/blur heuristics
+  - V1: validate photo set completeness (required views) + file constraints; duration applies only if video is accepted
 
 ### Integration Points
 
@@ -385,7 +391,7 @@ Acceptance Scenarios:
 ### Security Considerations
 
 - No PII in engine responses; anonymized identifiers only
-- Media watermarked with anonymizedPatientId; artifacts access-controlled
+- Media stored under anonymizedPatientId; artifacts access-controlled
 - Full audit trail for processing operations and configuration versions
 
 ---
@@ -396,6 +402,7 @@ Acceptance Scenarios:
 | --- | --- | --- | --- |
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template alignment: workflows metadata, assumptions, implementation notes, user scenarios, FR summary, key entities, external deps, status blocks | Product & Engineering |
+| 2026-03-03 | 1.2 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated integration contract and media validation rules accordingly. | AI |
 
 ## Appendix: Approvals
 

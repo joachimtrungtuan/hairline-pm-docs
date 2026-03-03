@@ -8,7 +8,8 @@
 
 ## Executive Summary
 
-The Inquiry Submission & Distribution module enables patients to submit comprehensive treatment requests through the mobile app, which are then automatically distributed to relevant providers based on location and availability. The module supports multi-country selection, detailed medical questionnaires, 3D head scanning, and comprehensive inquiry management across all platform tenants.
+The Inquiry Submission & Distribution module enables patients to submit comprehensive treatment requests through the mobile app, which are then automatically distributed to relevant providers based on location and availability. The module supports multi-country selection, detailed medical questionnaires, head scan capture *(V1 photo set; true 3D in V2)*, and comprehensive inquiry management across all platform tenants.
+In V1, "3D head scan" capture is implemented as a standardized head scan photo set (multiple 2D views). True 3D capture is deferred to V2.
 
 ## Module Scope
 
@@ -29,7 +30,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Provider Platform (PR-02)**:
 
 - View distributed inquiries with anonymized patient info and medical alerts
-- Review inquiry details including 3D scans and questionnaire
+- Review inquiry details including head scan capture assets *(V1 photo set; true 3D in V2)* and questionnaire
 - Manage inquiry status prior to quote creation (quote creation in FR-004)
 
 **Admin Platform (A-01)**:
@@ -41,7 +42,7 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 **Shared Services (S-XX)**:
 
 - Notification service for distribution and status changes
-- Media/scanning service for secure storage and retrieval of 3D scans
+- Media service for secure storage and retrieval of head scan capture assets *(V1 photo sets; V2 true 3D)*
 - Audit logging, anonymization and soft delete utilities
 
 ### Communication Structure
@@ -68,9 +69,9 @@ The Inquiry Submission & Distribution module enables patients to submit comprehe
 
 ### Workflow 1: Patient Inquiry Creation (Primary Flow)
 
-**Actors**: Patient, System, Medical Questionnaire Engine, 3D Scan Service  
+**Actors**: Patient, System, Medical Questionnaire Engine, Head Scan Media Service  
 **Trigger**: Patient starts a new inquiry in the mobile app and proceeds through the creation steps  
-**Outcome**: A complete inquiry is created with destinations, media, scan reference, date ranges, and medical questionnaire; inquiry ID generated
+**Outcome**: A complete inquiry is created with destinations, media, head scan reference, date ranges, and medical questionnaire; inquiry ID generated
 
 **Flow Diagram**:
 
@@ -88,7 +89,7 @@ flowchart TD
     Details --> Upload["Visual Evidence Upload<br/>Patient uploads visual evidence (max 5 photos/videos)<br/>Photos: JPG/PNG &lt;= 2MB each<br/>Videos: MP4 &lt;= 30s, &lt;= 20MB each"]
     Upload --> MediaOk{"Uploads meet policy?"}
     MediaOk -->|No| MediaErr["Show upload policy error + require changes"] --> Upload
-    MediaOk -->|Yes| Scan["3D Head Scan Capture<br/>Patient receives scan instructions<br/>Patient captures 3D head scan using mobile camera<br/>System validates scan quality<br/>Scan data stored for provider review"]
+    MediaOk -->|Yes| Scan["Head Scan Photo Set Capture (V1)<br/>Patient receives capture instructions<br/>Patient captures standardized head scan photo set (multiple 2D views)<br/>System validates capture quality<br/>Media stored for provider review"]
 
     Scan --> ScanOk{"Scan quality valid?"}
     ScanOk -->|No| Retake["Prompt retake + guidance"] --> Scan
@@ -488,15 +489,15 @@ flowchart TD
 - Videos: MP4 ≤ 30s, ≤ 20MB each
 - Text fields have character limits
 
-#### Screen 4: Head Video Capture (V1 3D Scan Substitute)
+#### Screen 4: Head Scan Photo Set Capture (V1)
 
-**Purpose**: Patient captures guided head video for provider assessment (V1 implementation of “3D scan”)
+**Purpose**: Patient captures standardized head scan photo set for provider assessment *(V1 implementation of “3D scan”; true 3D deferred to V2)*
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Head Video | capture | Yes | Guided head video of patient’s head | Must meet duration/quality constraints from FR-002 |
+| Head Scan Photo Set (V1) | capture/upload | Yes | Standardized head scan photo set (multiple 2D views of patient’s head) | Must meet completeness/quality/file constraints from FR-002 |
 | Quality Indicators | derived | Yes | Real-time quality feedback | Retake if below threshold |
 
 **Notes**:
@@ -506,13 +507,13 @@ flowchart TD
   - Quality indicators and feedback
   - Retake options available
 - Media Characteristics (V1):
-  - Guided video file (not true 3D model)
+  - Standardized photo set (multiple 2D views; not a true 3D model)
   - Validated and processed by FR-002 engine and S-01/S-05
   - Future 3D model capture and interactive viewer deferred to V2 (per system PRD)
 
 **Business Rules**:
 
-- Head video must meet minimum quality threshold required by FR-002
+- Head scan photo set must meet minimum completeness/quality thresholds required by FR-002
 - Patient can retake capture if quality poor
 - Captured media encrypted and stored securely
 - Media accessible to providers for assessment via engine outputs
@@ -592,7 +593,9 @@ flowchart TD
 - All questions require Yes/No answers
 - Detailed explanations required for "Yes" answers
 - Medical alerts generated automatically
-- Questionnaire managed by admin (not hard-coded)
+- Questionnaire managed by admin (not hard-coded) via FR-025 (Medical Questionnaire Management)
+- **MVP**: Inquiry questionnaires support Yes/No questions only (enforced in FR-025 publishing/activation rules)
+- **Future (V2+)**: If Inquiry questionnaires allow non-Yes/No question types, the inquiry response schema and UI must be extended to support typed answers (e.g., numeric scale, multi-select, free text)
 
 #### Screen 7: Inquiry Summary & Submission
 
@@ -607,7 +610,7 @@ flowchart TD
 
 **Notes**:
 
-- Summary includes: treatment type, countries with prices, concern details, media, 3D scan, date ranges, questionnaire summary
+- Summary includes: treatment type, countries with prices, concern details, media, head scan photo set (V1), date ranges, questionnaire summary
 - Submission Controls: per-section Edit, Submit button, T&C acceptance
 
 **Business Rules**:
@@ -806,7 +809,7 @@ flowchart TD
 | Countries | list | Yes | Selected treatment countries | Non-empty |
 | Problem Details | group | Yes | Concern text, duration, previous treatments | Complete |
 | Media | gallery | No | Photos/videos previews | File constraints enforced |
-| 3D Scan | viewer | No | Special viewer for 3D scan | Available if captured |
+| Head Scan (V1 Photo Set) | viewer/gallery | No | Head scan capture assets (photo set in V1; 3D model in V2) | Available if captured |
 | Date Ranges | list | Yes | All selected date ranges | Non-overlapping |
 | Medical Questionnaire | group | Yes | Full Q&A responses | Completed |
 | Medical Alerts | chips | Yes | Tiered alert indicators | Critical/Standard/None |
@@ -835,10 +838,11 @@ flowchart TD
   - Photos (JPG/PNG ≤ 2MB each, max 5): show thumbnails with modal preview
   - Videos (MP4 ≤ 30s, ≤ 20MB each, max 5): show poster frame with player
   - Validation messages for any file policy violations
-- 3D Scan:
-  - Special viewer control (orbit/zoom)
+- Head Scan:
+  - V1: Photo set gallery viewer (zoom/compare)
   - Quality score and capture metadata if available
   - Retake indicator if replaced after initial capture
+  - V2 (future): If a true 3D model exists, viewer may support orbit/zoom
 - Date Ranges:
   - Display all selected ranges, non-overlapping
   - Primary range shown first; additional ranges listed below
@@ -855,7 +859,7 @@ flowchart TD
 
 - Full patient details visible only after payment confirmation
 - Medical alerts color-coded by severity
-- 3D scan requires special viewer
+- Head scan requires viewer (photo set gallery in V1; interactive 3D in V2)
 - All data editable by admin
 - Provider can review inquiry details
 - **Note**: Quote creation functionality handled in FR-004
@@ -914,7 +918,7 @@ flowchart TD
 - Full Inquiry (read-only groups):
   - Patient (unmasked for admin): name, contact, country
   - Inquiry metadata: ID, stage, created/updated/activity times
-  - Countries, Problem details, Media, 3D scan viewer, Date ranges
+  - Countries, Problem details, Media, head scan viewer, Date ranges
   - Medical questionnaire Q&A and derived alerts
 - Admin Actions:
   - Edit inquiry details with caution banners and field-level audit
@@ -1008,7 +1012,7 @@ flowchart TD
 
 1. **Data Retention**
    - Inquiry data retained for 7 years minimum
-   - 3D scans retained for 2 years after inquiry completion
+  - Head scan media retained for 2 years after inquiry completion (photo sets in V1; 3D scans in V2)
    - Medical questionnaire responses retained for 7 years
    - All data encrypted at rest and in transit
    - Cancelled inquiries are subject to the same retention policy as completed inquiries; cancellation does not accelerate data deletion timelines
@@ -1021,7 +1025,7 @@ flowchart TD
 
 3. **Data Security**
    - All inquiry data encrypted at rest and in transit
-   - 3D scans watermarked with patient ID
+  - Head scan media stored securely with access controls
    - Access attempts logged and monitored
    - Soft deletes only (no hard deletes allowed)
 
@@ -1085,7 +1089,7 @@ flowchart TD
    - Date ranges cannot overlap
    - Provider capacity validation
    - Medical questionnaire completeness validation
-   - 3D scan quality validation
+  - Head scan media quality validation
    - Inquiry uniqueness validation
 
 ## Success Criteria
@@ -1093,7 +1097,7 @@ flowchart TD
 ### Patient Experience Metrics
 
 - **SC-001**: 95% of patients can complete inquiry submission in under 15 minutes
-- **SC-002**: 90% of patients successfully upload 3D scans on first attempt
+- **SC-002**: 90% of patients successfully upload head scan photo sets (V1) on first attempt
 - **SC-003**: 85% of patients complete medical questionnaire without assistance
 - **SC-004**: Patient satisfaction score of 4.5+ stars for inquiry process
 
@@ -1129,7 +1133,7 @@ flowchart TD
 
 ### Core Requirements
 
-- **REQ-003-001**: System MUST allow patients to create and submit inquiries with destinations, media, date ranges, 3D scan, and medical questionnaire.
+- **REQ-003-001**: System MUST allow patients to create and submit inquiries with destinations, media, date ranges, head scan media (V1 photo set; V2 true 3D), and medical questionnaire.
 - **REQ-003-002**: System MUST distribute completed inquiries to matching providers in selected countries and those explicitly chosen by the patient.
 - **REQ-003-003**: Providers MUST see anonymized patient data and tiered medical alerts until payment/acceptance per system PRD.
 - **REQ-003-004**: System MUST support draft autosave and resume with 7-day inactivity expiry for incomplete inquiries.
@@ -1138,7 +1142,7 @@ flowchart TD
 ### Data Requirements
 
 - **REQ-003-006**: System MUST retain inquiry data for at least 7 years; scan retention per system policy.
-- **REQ-003-007**: System MUST link inquiries to patients, providers, locations, 3D scans, and questionnaire responses.
+- **REQ-003-007**: System MUST link inquiries to patients, providers, locations, head scan media, and questionnaire responses.
 
 ### Security & Privacy Requirements
 
@@ -1167,7 +1171,7 @@ flowchart TD
   - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
 - **ProviderInquiry**: inquiryId, providerId, distributionAt, viewedAt, status
   - Relationships: belongsTo Inquiry; belongsTo Provider
-- **MedicalQuestionnaireResponse**: inquiryId, questionId, answer, details
+- **MedicalQuestionnaireResponse**: inquiryId, questionId, answer, details *(MVP: `answer` is boolean; V2+: extend to typed answers if Inquiry supports additional question types)*
   - Relationships: belongsTo Inquiry
 - **MedicalAlert**: inquiryId, level (critical/standard/none), reason
   - Relationships: belongsTo Inquiry
@@ -1180,7 +1184,7 @@ flowchart TD
   - Destinations (selected treatment countries/locations)
   - Treatment date ranges (up to configured limits)
   - Problem details and questionnaireSummary (including derived medical alerts)
-  - Media attachments (photos/videos and/or head video/scanRef from FR-002)
+  - Media attachments (photos/videos and head scan photo set / scanRef from FR-002)
   - Linked patient identifier (HPID-based patientId)
   - Distribution metadata via related ProviderInquiry records
 - These fields MUST be fully populated before an inquiry is eligible for distribution to providers.
@@ -1190,7 +1194,7 @@ flowchart TD
 ### Internal Dependencies
 
 - **FR-001**: Patient Authentication & Profile Management (patient registration)
-- **FR-002**: Medical History & 3D Scanning (scan capture technology)
+- **FR-002**: Medical History & 3D Scanning (head scan media validation/processing; V1 photo set; V2 true 3D)
 - **FR-004**: Quote Submission & Management (provider quote creation)
 - **FR-020**: Notifications & Alerts (inquiry notifications)
 - **FR-025**: Medical Questionnaire Management (centralized settings)
@@ -1198,8 +1202,8 @@ flowchart TD
 
 ### External Dependencies
 
-- **3D Scanning SDK**: ARKit (iOS) and ARCore (Android) for mobile scan capture
-- **Cloud Storage**: Secure storage for 3D scans and documents
+- **3D Scanning SDK (V2)**: ARKit (iOS) and ARCore (Android) for true 3D capture (future enhancement)
+- **Cloud Storage**: Secure storage for head scan photo sets (V1), 3D scans (V2), and documents
 - **Geolocation Services**: Country/location detection and mapping
 - **Currency APIs**: Real-time exchange rates for pricing
 
@@ -1221,7 +1225,7 @@ flowchart TD
 
 ### Technology Assumptions
 
-- Patients have access to smartphones with camera capabilities for 3D scanning
+- Patients have access to smartphones with camera capabilities for head scan capture (V1 photo set; V2 true 3D)
 - Patients have reliable internet access for inquiry submission
 - Infrastructure can handle concurrent inquiry operations without degradation
 
@@ -1229,7 +1233,7 @@ flowchart TD
 
 - Sufficient provider capacity exists to handle inquiry volume (capacity management handled separately)
 - Admin team has capacity to manage inquiry operations and system configuration
-- 3D scans and questionnaire responses will be of sufficient quality for medical assessment
+- Head scan media (V1 photo set) and questionnaire responses will be of sufficient quality for medical assessment
 - Medical data handling meets healthcare compliance requirements
 - Medical questionnaire alerts are for provider awareness, not patient rejection
 
@@ -1238,7 +1242,7 @@ flowchart TD
 ### Technical Considerations
 
 - **Real-time Distribution**: Inquiry distribution requires real-time processing
-- **File Management**: 3D scan storage and retrieval must be optimized for performance
+- **File Management**: Head scan media storage and retrieval must be optimized for performance
 - **Mobile Optimization**: Patient screens must work seamlessly on mobile devices
 - **Offline Capability**: Core inquiry features should work with limited connectivity
 
@@ -1252,7 +1256,7 @@ flowchart TD
 ### Scalability Considerations
 
 - **Database Design**: Efficient querying for large numbers of inquiries
-- **File Storage**: Scalable storage solution for 3D scans and documents
+- **File Storage**: Scalable storage solution for head scan media (V1 photo sets; V2 3D scans) and documents
 - **Distribution Logic**: Automated distribution algorithms for high-volume inquiries
 - **Provider Assignment**: Intelligent provider matching based on capacity and specialization
 
@@ -1271,7 +1275,7 @@ flowchart TD
 
 Why: Core entry point that powers distribution and provider review.
 
-Independent Test: Patient completes all sections (destinations, media, 3D scan, date ranges, questionnaire) and submits; verify inquiry creation and distribution readiness.
+Independent Test: Patient completes all sections (destinations, media, head scan media, date ranges, questionnaire) and submits; verify inquiry creation and distribution readiness.
 
 Acceptance Scenarios:
 
@@ -1295,12 +1299,12 @@ Acceptance Scenarios:
 
 Why: Ensures providers can triage efficiently while protecting patient privacy.
 
-Independent Test: Provider opens distributed inquiry and reviews anonymized details, media, 3D scan, date ranges, and medical alerts.
+Independent Test: Provider opens distributed inquiry and reviews anonymized details, media, head scan media, date ranges, and medical alerts.
 
 Acceptance Scenarios:
 
 1. Given distributed inquiry, When provider opens it, Then anonymized patient and medical alerts are visible
-2. Given 3D scan and media, When provider views, Then performance and policy constraints are respected
+2. Given head scan media and media, When provider views, Then performance and policy constraints are respected
 3. Given pre-quote stage, When provider attempts to modify patient data, Then system blocks and logs read-only access
 
 ### User Story 4 - Patient Cancels Inquiry (Priority: P2)
@@ -1345,6 +1349,7 @@ Acceptance Scenarios:
 | 2026-02-10 | 1.6 | Moved Cancel Inquiry screens from Provider Platform section to Patient Platform section (they are patient-facing). Renumbered Screen 11 → Screen 8a (Cancel Inquiry Confirmation Modal) and Screen 11a → Screen 8b (Cancellation Success Confirmation). Updated all internal cross-references. | AI |
 | 2026-02-10 | 1.7 | Verification fixes: Added Screen 7a (Provider Selection) with full field table and business rules — resolves orphaned provider selection from Workflow 1. Updated Workflow 1 to separate provider selection (step 7) from review/submission (step 8). Aligned provider response time from 48h to 72h to match system PRD. | AI |
 | 2026-02-11 | 1.8 | Workflow 5 (Patient-Initiated Inquiry Cancellation): Updated trigger and Step 1 to include intermediary inquiry detail view before Cancel Inquiry action, aligning with P02.2 design complement flow. Patient now navigates: Dashboard → Inquiry Detail → Cancel Inquiry (action menu) instead of Dashboard → Cancel Inquiry (direct). | AI |
+| 2026-03-03 | 1.9 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated Workflow 1 terminology and Screen 4 accordingly. | AI |
 
 ## Appendix: Approvals
 

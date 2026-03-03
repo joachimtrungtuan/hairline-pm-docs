@@ -252,7 +252,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | id | UUID | PRIMARY KEY | Unique inquiry identifier |
 | patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
 | problem | VARCHAR(255) | NOT NULL | Main hair loss concern |
-| scan_url | VARCHAR(255) | NOT NULL | S3 path to 3D scan or photos |
+| scan_url | VARCHAR(255) | NOT NULL | S3 path to head scan capture assets (V1 photo set; V2 3D scan) |
 | treatment_schedule | JSON | NOT NULL | Preferred treatment dates (range) |
 | problem_details | TEXT | NOT NULL | Detailed description of concern |
 | nature_of_concern | VARCHAR(255) | NULLABLE | Type of hair loss (genetic, alopecia, etc.) |
@@ -658,7 +658,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | milestone_name | VARCHAR(255) | NOT NULL | Milestone name (e.g., "Post-Op Phase", "Early Recovery") |
 | duration_days | INTEGER | NOT NULL | Duration of this milestone (7, 30, 90 days) |
 | order_index | INTEGER | NOT NULL | Order in sequence (1, 2, 3...) |
-| scan_frequency_days | INTEGER | NULLABLE | How often to request 3D scan (1=daily, 5=every 5 days, 7=weekly) |
+| scan_frequency_days | INTEGER | NULLABLE | How often to request scan/photo set (1=daily, 5=every 5 days, 7=weekly) |
 | scan_count | INTEGER | NULLABLE | How many scans required in this milestone |
 | questionnaire_frequency_days | INTEGER | NULLABLE | How often to request questionnaire (1=daily, 7=weekly) |
 | activity_restrictions | JSON | NULLABLE | List of activity restrictions for this phase |
@@ -708,7 +708,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - `belongsTo` → `AfterCare`
 - `belongsTo` → `AftercareMilestoneDefinition`
-- `hasMany` → `AftercareMilestoneScan` (3D scans for this milestone)
+- `hasMany` → `AftercareMilestoneScan` (scan uploads for this milestone; V1 photo set, V2 true 3D)
 - `hasMany` → `AftercareQuestionnaireResponse` (questionnaire responses)
 
 ---
@@ -716,7 +716,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 ### 17. Aftercare Milestone Scans
 
 **Table**: `aftercare_milestone_scans`  
-**Description**: 3D scans and photos uploaded at recovery milestones
+**Description**: Scan uploads at recovery milestones (V1 photo set; V2 true 3D)
 
 **Columns**:
 
@@ -724,7 +724,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique scan identifier |
 | aftercare_milestone_id | UUID | FOREIGN KEY, NOT NULL | References aftercare_milestones.id |
-| scan_url | VARCHAR(255) | NOT NULL | S3 path to 3D scan or photo |
+| scan_url | VARCHAR(255) | NOT NULL | S3 path to scan media (V1 photo set image; V2 3D scan asset) |
 | scan_type | VARCHAR(255) | NOT NULL | Type (front, top, sides, back, 3d_model) |
 | scan_date | DATE | NOT NULL | Date scan was uploaded |
 | is_overdue | BOOLEAN | DEFAULT false | Whether scan was submitted late |

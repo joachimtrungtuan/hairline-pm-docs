@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2025-10-30
+**Last Updated**: 2026-03-03
 
 ---
 
@@ -65,7 +65,7 @@ The Hairline Platform consists of four distinct applications serving different u
 - **Travel Convenience (Phase 2)**: Book flights and hotels directly through the platform (MVP focuses on travel detail capture + coordination)
 - **Quality Assurance**: All providers vetted and verified by Hairline
 - **Comprehensive Support**: Dedicated aftercare team for post-procedure guidance
-- **3D Scanning**: Advanced assessment tools for accurate treatment planning
+- **Head Scan Media** *(V1 photo set; true 3D in V2)*: Visual assessment inputs for treatment planning
 
 #### For Providers
 
@@ -197,7 +197,7 @@ The Hairline Platform consists of four distinct applications serving different u
 1. **Discovery & Registration**
    - Patient downloads app and creates account
    - Completes health questionnaire
-   - Performs 3D scan of head (or uploads photos/videos)
+   - Captures head scan photo set *(V1; true 3D scan in V2)* (and uploads optional photos/videos)
 
 2. **Inquiry Submission**
    - Selects preferred countries/cities for treatment
@@ -262,13 +262,13 @@ The Hairline Platform consists of four distinct applications serving different u
 
 1. **Inquiry Receipt**
    - Receives notification of new inquiry matching clinic's location
-   - Reviews patient details, 3D scan, medical history, preferences
+   - Reviews patient details, head scan capture assets *(V1 photo set; true 3D scan in V2)*, medical history, preferences
    - Reviews medical questionnaire with color-coded alerts
 
 2. **Quote Creation**
    - **Selects treatment** (from admin-created list: FUE, FUT, DHI, etc.) - foundation, same for all providers
    - **Selects optional packages** (from own package list: hotels, transport, flights, medications, PRP) - provider-specific add-ons
-   - Analyzes 3D scan to estimate graft count needed
+   - Analyzes head scan capture assets *(V1 photo set; true 3D scan in V2)* to estimate graft count needed
    - **Selects clinician** who will perform the procedure (from clinic's staff list)
    - Customizes graft count, technique specifications
    - Sets pricing for treatment + selected packages
@@ -386,15 +386,14 @@ The Hairline Platform consists of four distinct applications serving different u
 **Module(s)**: P-07: 3D Scan Capture & Viewing | S-01: 3D Scan Processing Service | S-05: Media Storage Service
 
 **Note on Release Scope:**
-For V1, the system accepts a guided head video (or photos/clips) for intake and validation. True 3D model capture, generation of multiple 2D views from 3D, and full ARKit/ARCore 3D processing pipeline are deferred to V2 (future enhancement), as patient-side hardware and provider UX matures.
+For V1, the system implements "3D scan" capture as a standardized head scan **photo set** (multiple 2D views). True 3D model capture and the full ARKit/ARCore 3D processing pipeline are deferred to V2 (future enhancement), as patient-side hardware and provider UX mature.
 
 **Requirements**:
 
 - Patients MUST complete comprehensive medical questionnaire before submitting inquiry
-- System MUST capture 3D scan of patient's head using mobile camera
-- System MUST support alternative upload of photos/videos
+- System MUST capture head scan media of patient's head using mobile camera *(V1: standardized photo set; V2: true 3D scan)*
+- System MUST support upload of additional photos/videos as supplemental evidence
 - System MUST validate scan quality and provide feedback
-- System MUST watermark all patient scans with anonymized patient identifier
 - Medical history MUST include allergies, medications, previous procedures, health conditions
 - System MUST anonymize patient data in provider-facing views until payment completion
 
@@ -409,10 +408,10 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **3D Scanning**:
 
-- MUST support iOS ARKit and Android ARCore
-- MUST provide real-time guidance for scan capture
-- MUST process scan on device or cloud (based on device capability)
-- MUST generate multiple 2D views from 3D scan for provider review
+- V1: MUST provide real-time guidance for standardized head scan photo set capture
+- V1: MUST capture multiple predefined 2D views for provider review
+- V2 (future): MUST support iOS ARKit and Android ARCore for true 3D capture
+- V2 (future): MAY generate multiple 2D views from a 3D scan for provider review
 
 ---
 
@@ -684,21 +683,20 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 **Requirements**:
 
-- Providers MUST be able to mark patient as "arrived" when patient shows up at clinic
-- System MUST automatically move status to "In Progress" upon patient arrival
-- Providers MUST be able to update treatment progress during procedure (real-time updates)
-- System MUST capture: procedure date/time, surgeon name, technique, graft count, donor area, recipient area
-- Providers MUST be able to upload before/during/after photos
-- System MUST store treatment notes and observations throughout procedure
-- Providers MUST be able to prescribe medications and provide instructions
+- Providers MUST be able to **Check In** a confirmed booking when the patient arrives at clinic
+- System MUST automatically move status to **"In Progress"** upon Check In
+- System MUST block Check In when there is an outstanding balance (Payment Status ≠ Full paid)
+- Providers MUST be able to update day-based treatment progress during procedure (real-time updates)
+- System MUST capture treatment documentation: procedure date/time, assigned clinician/surgeon, treatment type (from treatmentId), estimated vs. actual graft count, and treatment notes/observations
+- Providers MUST be able to upload before/during/after photos and head-scan capture assets *(V1: standardized photo set; V2: true 3D capture)* via S-05
+- Providers MUST be able to prescribe medications and provide post-op instructions
 - System MUST generate post-op instruction sheet for patient
-- System MUST mark treatment as "completed" to trigger move to "Aftercare" status
-- System MUST record final payment collection (if not already completed)
+- System MUST record treatment completion and signal FR-011 to activate aftercare plan and transition status to **"Aftercare"**
 
 **Status Transitions**:
 
-- Patient arrives → Status: "In Progress"
-- Treatment completed → Status: "Aftercare"
+- Patient Check In → Status: "In Progress"
+- Treatment completed (End Treatment saved) → Status: "Aftercare" *(via FR-011 aftercare activation)*
 - Final review submitted → Status: "Completed"
 
 ---
@@ -725,7 +723,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Admin creates milestone templates: Post-Op Phase, Recovery Phase, Growth Phase, Final Assessment
 - Each milestone defines:
   - Duration (e.g., 7 days, 30 days, 90 days, 180 days, 12 months)
-  - Required 3D scan frequency (daily, every 5 days, weekly, bi-weekly, monthly)
+  - Required scan/photo set frequency (daily, every 5 days, weekly, bi-weekly, monthly)
   - Required questionnaires (pain assessment, sleep quality, compliance check, activity restrictions)
   - Questionnaire frequency (daily, weekly, bi-weekly, monthly)
   - Educational resources (videos, instruction guides, best practice documents)
@@ -750,9 +748,9 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 #### Part B: Patient Aftercare Activities
 
-**3D Scan Requirements**:
+**Head Scan Requirements** *(V1 photo set; true 3D in V2)*:
 
-- Patients MUST upload 3D head scans at milestone-defined intervals
+- Patients MUST upload head scan photo sets (V1) at milestone-defined intervals
 - System MUST notify patients when scan is due
 - System MUST provide scan guidance (same as initial scan during inquiry)
 - System MUST track scan completion progress
@@ -798,7 +796,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - System calculates overall recovery progress percentage
 - Based on: scans completed, questionnaires completed, milestone time elapsed
 - Patients can see their progress in app dashboard
-- System shows "next upcoming task" (e.g., "3D Scan due in 2 days")
+- System shows "next upcoming task" (e.g., "Scan due in 2 days")
 
 ---
 
@@ -865,13 +863,13 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 - Aftercare specialists can view:
   - Patient's complete aftercare plan
   - Milestone progress (current phase, completion percentage)
-  - 3D scan history (all uploaded scans with timestamps)
+  - Scan history (head scan photo sets in V1) with timestamps
   - Questionnaire responses (pain levels, sleep quality, compliance data)
   - Medication schedule and adherence
   - Activity restrictions for current milestone
   - Provider's custom instructions
 - Aftercare specialists can request additional information:
-  - Request 3D scan (if patient missed scheduled scan)
+  - Request scan/photo set (if patient missed scheduled scan)
   - Request live video consultation (if visual assessment needed)
   - Request updated photos
 - System MUST flag urgent cases for immediate attention
@@ -923,7 +921,7 @@ For V1, the system accepts a guided head video (or photos/clips) for intake and 
 
 1. ✅ Provider selects aftercare template during treatment completion
 2. ✅ Provider adds custom instructions and medications
-3. ✅ Patients upload 3D scans at milestone intervals (milestone-defined frequency)
+3. ✅ Patients upload scan photo sets at milestone intervals (milestone-defined frequency)
 4. ✅ Patients complete questionnaires at milestone intervals (pain, sleep, compliance)
 5. ✅ Standalone aftercare service (patients can purchase separately)
 6. ✅ Admin assigns provider for standalone aftercare requests
@@ -1289,7 +1287,7 @@ Total Quote:                           £3,000
 **Requirements**:
 
 - **Centralized Question Management**: Admin MUST be able to add, edit, remove, and reorder medical questionnaire questions
-- **Question Content**: Each question MUST have: question text, question type (system-defined: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text), and type-specific content. Inquiry-context sets recommend Yes/No questions; other types are allowed after admin confirms a publish-time warning
+- **Question Content**: Each question MUST have: question text, question type (system-defined: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text), and type-specific content. **MVP**: Inquiry-context sets MUST be Yes/No only. **Future (V2+)**: additional question types may be allowed once inquiry response schema supports typed answers (then enforce via publish-time warning and validation)
 - **Severity Flagging**: Each question MUST have a severity flag (Critical/Standard/No Alert)
 - **Alert System**: When patient answers "Yes" to Critical questions → inquiry flagged with red alerts
 - **Alert System**: When patient answers "Yes" to Standard questions → inquiry flagged with yellow/amber alerts  
@@ -1702,7 +1700,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 - Mobile app load time MUST be < 3 seconds
 - System MUST support 10,000+ concurrent patients
 - System MUST support 1,000+ concurrent providers
-- 3D scan processing MUST complete within 60 seconds
+- Scan media processing MUST complete within 60 seconds
 
 ### NFR-002: Scalability
 
@@ -1790,10 +1788,9 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 **Handling**:
 
 - Provider MUST report no-show within 24 hours
-- System MUST flag booking as "no-show"
-- System MUST retain deposit payment per cancellation policy
-- Provider MUST receive payout of deposit minus platform commission
-- System MUST notify patient and offer to reschedule (subject to provider approval and additional fees)
+- System MUST flag the booking as **No-Show** (case flag/label; not a booking pipeline status)
+- Admin MUST review the case and handle cancellation policy enforcement (deposit retention/refunds) and payout reconciliation
+- System MUST notify patient and offer to reschedule (subject to provider approval and any additional fees)
 
 ### EC-005: Medical Complication During Recovery
 
@@ -1935,7 +1932,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 ### Assumptions
 
-1. Patients have access to smartphones with camera (for 3D scanning)
+1. Patients have access to smartphones with camera (for head scan photo set capture)
 2. Providers have stable internet connection for real-time quote submission
 3. Payment processing can be handled via third-party service (Stripe)
 4. Phase 2 travel APIs are available and cost-effective for flight/hotel integration
@@ -1951,7 +1948,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 4. **Firebase/OneSignal**: For push notifications
 5. **Flight API** (Amadeus/Skyscanner): For Phase 2 travel booking integration
 6. **Hotel API** (Booking.com/Expedia): For Phase 2 hotel booking integration
-7. **3D Scanning SDK**: For mobile-based head scanning (ARKit/ARCore)
+7. **3D Scanning SDK (V2)**: For true 3D head scanning (ARKit/ARCore); V1 uses photo sets
 8. **Currency Exchange API**: For real-time exchange rates
 9. **Translation API**: For multi-language support (Google Translate API)
 

@@ -8,7 +8,9 @@
 
 ## Executive Summary
 
-The Aftercare & Recovery Management module provides comprehensive post-procedure support for hair transplant patients through milestone-based tracking, 3D scan monitoring, questionnaire assessments, and multi-tenant communication. The module supports both treatment-linked aftercare (for Hairline platform patients) and standalone aftercare services (for external clinic patients).
+The Aftercare & Recovery Management module provides comprehensive post-procedure support for hair transplant patients through milestone-based tracking, scan monitoring, questionnaire assessments, and multi-tenant communication. The module supports both treatment-linked aftercare (for Hairline platform patients) and standalone aftercare services (for external clinic patients).
+
+**Note on Scan Media (V1 vs V2)**: In V1, all references to "3D scans" in this FR refer to standardized head scan photo sets (multiple 2D views). True 3D scanning (ARKit/ARCore) is deferred to V2.
 
 ## Module Scope
 
@@ -24,7 +26,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 **Patient Platform (P-05)**:
 
 - View aftercare dashboard (milestones, tasks, progress)
-- Upload 3D scans per schedule; complete questionnaires; track medications
+- Upload head scan photo sets per schedule *(V1; true 3D in V2)*; complete questionnaires; track medications
 - Receive reminders and urgent alerts; contact aftercare team
 
 **Provider Platform (PR-04)**:
@@ -48,7 +50,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **In Scope**:
 
-- Patient ↔ Aftercare Team: Structured messaging, questionnaires, and 3D scan submissions
+- Patient ↔ Aftercare Team: Structured messaging, questionnaires, and scan/photo set submissions
 - Provider ↔ Aftercare Team: Case updates and escalations
 - Admin ↔ All Parties: Oversight and interventions
 - System-generated updates: Milestone reminders, progress updates, urgent flags
@@ -242,13 +244,13 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 **Main Flow**:
 
 1. **Milestone-Based Tasks**
-   - System sends notification for upcoming tasks (3D scan, questionnaire)
+   - System sends notification for upcoming tasks (scan/photo set, questionnaire)
    - Patient completes required activities
    - System tracks completion and progress
 
-2. **3D Scan Upload**
+2. **Scan Upload (Head Scan Photo Set in V1)**
    - Patient receives scan reminder notification
-   - Patient captures 3D head scan using mobile app
+   - Patient captures head scan photo set (V1) using mobile app
    - System validates scan quality and provides feedback
    - Scan stored and made available to aftercare team
 
@@ -261,7 +263,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 4. **Progress Tracking**
    - System automatically calculates overall recovery progress percentage based on:
      - Milestone completion (timeframe-based)
-     - Task completion (3D scans, questionnaires)
+     - Task completion (scan uploads, questionnaires)
      - Compliance rates (medication adherence, activity restrictions)
    - Patient views progress dashboard with real-time updates
    - System shows next upcoming tasks with countdown timers
@@ -302,7 +304,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
      - Provider assignments and customizations
      - Medication schedules and instructions
      - Questionnaire responses and flags
-     - 3D scan data and progress tracking
+     - Scan data and progress tracking
      - Communication logs and escalations
 
 3. **Template Management**
@@ -311,7 +313,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
    - Admin manages educational resources
    - **Admin Editability**: Admin can edit all template components:
      - Milestone durations and descriptions
-     - 3D scan schedules and frequencies
+     - Scan schedules and frequencies
      - Questionnaire types and question content
      - Educational resources and activity restrictions
 
@@ -352,11 +354,11 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Current Milestone | text | Yes | Name and phase of current milestone | Must exist in plan |
 | Days Remaining | number | No | Days left in current milestone | Non-negative integer |
 | Next Task | text/datetime | No | Next upcoming task with countdown | Shows due date/time |
-| Last 3D Scan | datetime/status | No | Timestamp and status of last scan | Valid status enum |
+| Last Scan Upload | datetime/status | No | Timestamp and status of last scan upload | Valid status enum |
 | Last Questionnaire | datetime | No | Timestamp of last questionnaire completion | ISO 8601 |
 | Medication Adherence | percent | No | Adherence percentage for current period | 0–100% |
 | Upcoming Tasks | list | No | Next 7 days tasks | Items must exist in schedule |
-| Upload 3D Scan | action | Cond. | Action to capture/upload scan | Enabled if due |
+| Upload Scan | action | Cond. | Action to capture/upload scan/photo set | Enabled if due |
 | Complete Questionnaire | action | Cond. | Action to complete due questionnaire | Enabled if due |
 | View Instructions | action | No | Open instructions content | Always available |
 | Contact Support | action | No | Contact aftercare support | Always available |
@@ -364,7 +366,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 **Business Rules**:
 
 - Progress percentage = (completed tasks / total tasks) * 100
-- Tasks include: 3D scans, questionnaires, medication adherence
+- Tasks include: scan uploads, questionnaires, medication adherence
 - Overdue tasks highlighted in red
 - Completed tasks shown in green
 
@@ -376,9 +378,9 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Quick action buttons provide easy access to most common patient activities
 - Mobile-first design optimized for smartphone screens
 
-#### Screen 2: 3D Scan Upload
+#### Screen 2: Scan Upload (V1 Photo Set)
 
-**Purpose**: Patient uploads milestone 3D head scans
+**Purpose**: Patient uploads milestone scan media (V1 head scan photo sets; true 3D in V2)
 
 **Data Fields**:
 
@@ -388,9 +390,9 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Scan Due Date | datetime | Yes | Due date for this scan (read-only) | ISO 8601 format |
 | Days Overdue | number | No | Days past due date (if applicable) | Non-negative integer |
 | Scan Guidance | text | No | Instructions for proper scan capture | Display only |
-| Camera Viewfinder | component | Yes | Live camera preview for 3D scan | ARKit/ARCore required |
+| Camera Viewfinder | component | Yes | Live camera preview for photo set capture | Standard camera capture |
 | Quality Indicator | status | Yes | Real-time scan quality feedback | Valid quality enum |
-| Capture Scan | action | Yes | Button to capture 3D scan | Enabled when quality threshold met |
+| Capture Scan | action | Yes | Button to capture scan/photo set | Enabled when quality threshold met |
 | Retake | action | Cond. | Button to retake if quality poor | Enabled when quality below threshold |
 | Upload Progress | progress | No | Upload progress bar (0-100%) | 0-100% |
 | Upload Status | message | No | Success/error message after upload | Valid status enum |
@@ -405,10 +407,11 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Notes**:
 
-- Use ARKit (iOS) or ARCore (Android) for 3D head scanning
+- V1: Guided photo capture (standardized photo set)
+- V2 (future): Use ARKit (iOS) or ARCore (Android) for true 3D head scanning
 - Quality validation should provide real-time feedback during capture
 - Implement resumable upload for unreliable network connections
-- Store scans in secure cloud storage with patient ID watermarking
+- Store scans in secure cloud storage
 
 #### Screen 3: Questionnaire Completion
 
@@ -419,36 +422,25 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Milestone Name | text | Yes | Current milestone and phase | Display only |
-| Questionnaire Type | text | Yes | Type (Pain Assessment, Sleep Quality, etc.) | Must exist in FR-025 catalog |
+| Questionnaire Set | text | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog |
 | Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format |
 | Completion Status | status | Yes | Completed/Pending/Overdue | Valid status enum |
-| Pain Scale | number | Cond. | Pain level 1-10 (if Pain Assessment type) | Integer 1-10 |
-| Pain Description | text | No | Text description of pain | Max 500 chars |
-| Hours Slept | number | Cond. | Hours slept (if Sleep Quality type) | Integer 0-24 |
-| Sleep Quality Rating | number | Cond. | Quality rating 1-5 (if Sleep Quality type) | Integer 1-5 |
-| Sleep Disruptions | checkbox[] | Cond. | List of disruptions (if Sleep Quality type) | Valid disruption types |
-| Medication Adherence | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
-| Activity Restrictions | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
-| Washing Instructions | boolean | Cond. | Yes/no (if Compliance Check type) | Boolean |
-| Swelling | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
-| Redness | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
-| Bleeding | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
-| Infection Signs | boolean | Cond. | Yes/no (if Symptom Check type) | Boolean |
+| Questions | dynamic form | Yes | Full question list rendered from the assigned Questionnaire Set | Validation per question type (required fields, min/max ranges, option sets) |
 | Save Draft | action | No | Save progress without submitting | Always available |
 | Submit | action | Yes | Submit completed questionnaire | Enabled when all required fields complete |
-| Warning Message | alert | No | Warning for concerning responses | Shown when pain >7 or infection signs detected |
+| Warning Message | alert | No | Warning for concerning responses | Shown when responses trigger urgent flag per milestone rules |
 
 **Business Rules**:
 
 - All required fields must be completed
-- Concerning responses (pain >7, infection signs) trigger urgent flag
+- Concerning responses trigger urgent flag per milestone rules
 - Drafts saved automatically every 30 seconds
 - One submission per questionnaire allowed
 
 **Notes**:
 
 - Questionnaire structure and questions managed in FR-025 (Medical Questionnaire Management)
-- Dynamic form rendering based on questionnaire type from template
+- Dynamic form rendering based on the assigned Questionnaire Set questions from FR-025
 - Auto-save draft functionality to prevent data loss
 - Real-time validation for concerning responses (triggers urgent flag immediately)
 - Mobile-optimized form layout for easy completion on small screens
@@ -547,7 +539,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Service Description | text | Yes | Template description with features | Display only |
 | Duration | text | Yes | Service duration (from template) | Display only |
 | Milestones Included | list | Yes | Milestone summary | Display only |
-| Features Included | list | Yes | Features (3D scans, questionnaires, etc.) | Display only |
+| Features Included | list | Yes | Features (scan uploads, questionnaires, etc.) | Display only |
 | Pricing Options | component | Yes | Available pricing for this template | Based on template configuration |
 | Payment Method | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model |
 | Price (Fixed) | currency | Cond. | One-time payment amount | Shown if Fixed or Both |
@@ -701,7 +693,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
 | Questionnaire Responses | list | Yes | All questionnaire completions | Chronological order |
 | Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
-| Questionnaire Type | text | Yes | Type of questionnaire completed | Valid questionnaire type |
+| Questionnaire Set | text | Yes | Questionnaire set completed | Display only |
 | Medication Adherence History | list | Yes | Historical adherence data | Chronological order |
 | Adherence Period | date range | Yes | Date range for adherence period | Valid date range |
 | Adherence Percentage | percent | Yes | Percentage for that period | 0-100% |
@@ -755,13 +747,11 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Milestone Name | text | Yes | Name of milestone | Max 200 chars |
 | Milestone Duration | number | Yes | Duration in days | Positive integer; editable |
 | 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum; editable |
-| Questionnaire Types | list | Yes | Types of questionnaires per milestone | Must exist in FR-025 catalog |
+| Questionnaire Set | select | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog |
 | Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum; editable |
 | Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
 | Activity Restrictions | text | No | Restrictions for this milestone | Max 500 chars; editable |
 | Modify Duration | action | No | Button to modify milestone duration | Always available |
-| Add Questionnaire | action | No | Button to add questionnaire | Always available |
-| Remove Questionnaire | action | No | Button to remove questionnaire | Enabled when questionnaires exist |
 | Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars |
 | Override Restrictions | action | No | Button to override activity restrictions | Always available |
 | **Step 3: Medication Setup** | | | | |
@@ -972,7 +962,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
 | Questionnaire Responses | list | Yes | All responses with timestamps | Chronological order |
 | Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
-| Questionnaire Type | text | Yes | Type of questionnaire | Display only |
+| Questionnaire Set | text | Yes | Questionnaire set | Display only |
 | Medication Adherence | component | Yes | Compliance tracking and history | Display only |
 | Adherence Percentage | percent | Yes | Overall adherence percentage | 0-100% |
 | Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% |
@@ -1083,8 +1073,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Milestone Name | text | Yes | Name of milestone | Max 200 chars |
 | Milestone Duration | number | Yes | Duration in days | Positive integer |
 | 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum |
-| Questionnaire Set | select | Yes | Single Questionnaire Set selection | Must exist in FR-025 catalog |
-| Questionnaire Selection | list | Yes | Questions from selected set (aftercare context) | Filtered by context type |
+| Questionnaire Set | select | Yes | Questionnaire Set selection for this milestone | Must exist in FR-025 catalog |
 | Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum |
 | Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
 | Resource Title | text | Yes | Resource title | Max 200 chars |
@@ -1122,14 +1111,14 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Pricing changes to active templates require admin approval and don't affect existing patients (locked at purchase time)
 - Multi-currency pricing uses real-time exchange rates as baseline but allows admin override for final pricing
 - Template Name is used as service name for patient-facing display (no separate service name needed)
-- Questionnaires are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 only selects among existing questionnaires and configures schedule/frequency per milestone.
-- Screen 16 must surface only questionnaires with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context questionnaires if flagged as compatible.
-- Each aftercare template references exactly one Questionnaire Set (single-select). All milestones within the template schedule questions only from that selected set. Changing the selected set replaces questionnaire references across all milestones in the template.
+- Questionnaire sets and questions are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 selects among existing Questionnaire Sets and configures schedule/frequency per milestone.
+- Screen 16 must surface only Questionnaire Sets with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context Questionnaire Sets if flagged as compatible.
+- Each milestone independently selects a Questionnaire Set (single-select per milestone). Different milestones within the same template may reference different sets (e.g., Week 1: Pain Assessment; Week 4: Sleep Quality).
 
 **Cross-Module Reference**:
 
 - Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management
-- After selecting questionnaires here, their delivery and response handling follow the schedules defined per milestone
+- After selecting Questionnaire Sets here, their delivery and response handling follow the schedules defined per milestone
 
 **Notes**:
 
@@ -1137,7 +1126,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Template list shows usage count to prevent deletion of active templates
 - Template editor provides comprehensive configuration for all milestone aspects
 - Questionnaire integration with FR-025 ensures consistent questionnaire management
-- Single Questionnaire Set per template simplifies configuration while maintaining flexibility
+- Per-milestone Questionnaire Set selection enables phase-specific assessments without duplicating templates
 - Resource management supports various media types for educational content
 - File size limits (100MB) ensure reasonable storage usage while supporting high-quality content
 - Approval workflow for active template changes prevents disruption to ongoing aftercare plans
@@ -1283,7 +1272,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
    - Milestone completion requires all tasks completed
 
 2. **Task Completion**
-   - 3D scans must meet quality threshold
+- Scan uploads must meet quality threshold
    - Questionnaires must be completed in full
    - Medication adherence tracked but not mandatory for milestone completion
    - Overdue tasks trigger escalation after 48 hours
@@ -1314,7 +1303,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 1. **Data Retention**
    - Aftercare data retained for 7 years minimum
-   - 3D scans retained for 2 years after aftercare completion
+- Scan media retained for 2 years after aftercare completion
    - Communication logs retained for 3 years
 
 2. **Data Access**
@@ -1324,7 +1313,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 3. **Data Security**
    - All aftercare data encrypted at rest and in transit
-   - 3D scans watermarked with patient ID
+- Scan media stored securely with access controls
    - Access attempts logged and monitored
 
 ### Admin Editability Rules
@@ -1384,7 +1373,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - **SC-001**: 90% of patients complete their first milestone within 7 days of activation
 - **SC-002**: 85% of patients maintain 80%+ task completion rate throughout aftercare
-- **SC-003**: 95% of patients can successfully upload 3D scans on first attempt
+- **SC-003**: 95% of patients can successfully upload scan photo sets (V1) on first attempt
 - **SC-004**: Patient satisfaction score of 4.5+ stars for aftercare experience
 
 ### Provider Efficiency Metrics
@@ -1401,7 +1390,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### System Performance Metrics
 
-- **SC-011**: 3D scan upload completes in under 60 seconds for 95% of uploads
+- **SC-011**: Scan upload completes in under 60 seconds for 95% of uploads
 - **SC-012**: Questionnaire completion rate of 90% within scheduled timeframe
 - **SC-013**: System supports 1000+ concurrent aftercare patients
 - **SC-014**: 99.5% uptime for aftercare module during business hours
@@ -1422,8 +1411,8 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
   - **Integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
 
 - **FR-002 / Module P-XX**: Medical History & 3D Scanning
-  - **Why needed**: Provides 3D scan capture technology and infrastructure for patient milestone scans
-  - **Integration point**: Shares 3D scanning SDK integration and scan storage infrastructure; reuses scan quality validation logic
+  - **Why needed**: Provides head scan media validation/storage infrastructure for patient milestone scans (V1 photo set; V2 true 3D)
+  - **Integration point**: Reuses scan quality validation and scan storage infrastructure
 
 - **FR-007 / Module S-XX**: Payment Processing
   - **Why needed**: Processes standalone aftercare service payments before activation
@@ -1435,13 +1424,18 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### External Dependencies (APIs, Services)
 
-- **3D Scanning SDK - ARKit/ARCore**:
-  - **Purpose**: Provides 3D head scanning capabilities on mobile devices for patient milestone scans
+- **Head Scan Capture (V1)**:
+  - **Purpose**: Standardized head scan photo set capture on mobile devices for patient milestone scans
+  - **Integration**: Native camera capture + guided instructions + upload (JPG/PNG)
+  - **Failure handling**: Retry capture; allow partial save as draft where supported; show clear remediation guidance
+
+- **3D Scanning SDK - ARKit/ARCore (V2)**:
+  - **Purpose**: True 3D head scanning capabilities on supported mobile devices (future enhancement)
   - **Integration**: Native SDK integration in mobile apps (iOS ARKit, Android ARCore) for real-time 3D capture
-  - **Failure handling**: Fallback to 2D photo capture if 3D scanning unavailable; user notification of degraded functionality
+  - **Failure handling**: Fallback to V1 photo set capture; user notification of degraded functionality
 
 - **Cloud Storage Service**:
-  - **Purpose**: Secure storage for 3D scans, documents, and educational resources
+  - **Purpose**: Secure storage for head scan photo sets (V1), 3D scans (V2), documents, and educational resources
   - **Integration**: RESTful API for file upload/download with signed URLs for secure access
   - **Failure handling**: Retry with exponential backoff; queue uploads for retry if service unavailable; notify user of upload delays
 
@@ -1483,7 +1477,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### Technology Assumptions
 
-- Patients have smartphones with camera capabilities for 3D scanning
+- Patients have smartphones with camera capabilities for head scan capture (V1 photo set; V2 true 3D)
 - Patients have reliable internet access for uploading scans and completing questionnaires
 - Infrastructure can handle concurrent aftercare operations without degradation
 
@@ -1491,7 +1485,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 - Sufficient provider capacity exists to handle aftercare case load
 - Admin team can manage operations and respond to escalations
-- 3D scans and questionnaire responses will be of sufficient quality for assessment
+- Scan media and questionnaire responses will be of sufficient quality for assessment
 - Standalone aftercare payments will process successfully without significant failures
 
 ## Implementation Notes
@@ -1499,7 +1493,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 ### Technical Considerations
 
 - **Real-time Updates**: Progress tracking and notifications require real-time data synchronization
-- **File Management**: 3D scan storage and retrieval must be optimized for performance
+- **File Management**: Scan media storage and retrieval must be optimized for performance
 - **Mobile Optimization**: Patient screens must work seamlessly on mobile devices
 - **Offline Capability**: Core aftercare features should work with limited connectivity
 
@@ -1528,7 +1522,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 ### Scalability Considerations
 
 - **Database Design**: Efficient querying for large numbers of aftercare cases
-- **File Storage**: Scalable storage solution for 3D scans and documents
+- **File Storage**: Scalable storage solution for scan media (V1 photo sets; V2 true 3D) and documents
 - **Notification Delivery**: Reliable delivery of high-volume notifications
 - **Provider Assignment**: Automated assignment algorithms for standalone cases
 
@@ -1546,7 +1540,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 ### Core Requirements
 
 - **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths
-- **REQ-011-002**: Patients MUST be able to complete milestone tasks (3D scans, questionnaires) with reminders and quality validation
+- **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
 - **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
 
@@ -1586,7 +1580,7 @@ Acceptance Scenarios:
 
 Why: Ensures ongoing patient engagement and monitoring.
 
-Independent Test: Patient receives reminders; uploads 3D scan; completes questionnaire; progress updates; alerts generated if concerning.
+Independent Test: Patient receives reminders; uploads scan/photo set; completes questionnaire; progress updates; alerts generated if concerning.
 
 Acceptance Scenarios:
 
@@ -1651,6 +1645,7 @@ Acceptance Scenarios:
 |------|---------|---------|--------|
 | 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template compliance: added Shared Services; Communication Structure (In/Out of Scope); Triggers/Outcomes for workflows; restructured Assumptions; added User Scenarios & Testing; Appendices | Product & Engineering |
+| 2026-03-03 | 1.2 | Clarified that V1 scan uploads are standardized head scan photo sets (multiple 2D views), with true 3D scanning deferred to V2. Updated module scope, dependencies, and external integrations accordingly. | AI |
 
 ## Appendix: Approvals
 

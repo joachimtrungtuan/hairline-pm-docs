@@ -14,6 +14,8 @@ The Admin Patient Management module provides Hairline internal administrators wi
 
 This is a critical operational module that ensures the platform can provide effective patient support, resolve disputes, maintain data quality, and comply with regulatory requirements for medical data management.
 
+**Note on Scan Media (V1 vs V2)**: In V1, patient "3D scans" are implemented as standardized head scan photo sets (multiple 2D views; JPG/PNG). An interactive 3D model viewer is a V2 enhancement.
+
 ### Business Value
 
 - **Operational Oversight**: Complete visibility into patient activities, treatment status, and platform engagement
@@ -50,7 +52,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 - Complete patient account search and filtering
 - View all patient profile information and treatment history
-- Access patient medical history, 3D scans, and documents
+- Access patient medical history, head scan capture assets *(V1 photo set; V2 true 3D)*, and documents
 - View complete inquiry, quote, booking, and treatment lifecycle
 - Monitor patient-provider communications for compliance
 - Manually intervene in bookings (reschedule, modify, cancel)
@@ -62,7 +64,7 @@ This is a critical operational module that ensures the platform can provide effe
 **Shared Services (S-##)**:
 
 - **S-03: Notification Service**: Sends notifications when admins take actions affecting patients
-- **S-05: Media Storage Service**: Provides access to patient 3D scans, photos, documents
+- **S-05: Media Storage Service**: Provides access to patient head scan assets *(V1 photo set; V2 true 3D)*, photos, documents
 - **S-06: Audit Log Service**: Logs all admin actions on patient accounts for compliance
 
 ### Communication Structure
@@ -114,7 +116,7 @@ This is a critical operational module that ensures the platform can provide effe
 7. System loads patient detail view with tabbed sections:
    - **Overview**: Profile summary, contact info, current status
    - **Treatment Journey**: Milestone timeline summarizing journey progress with deep links to the latest case stage/inquiry detail
-   - **Medical Data**: Medical questionnaire, 3D scans, health history
+   - **Medical Data**: Medical questionnaire, head scan assets *(V1 photo set; V2 true 3D)*, health history
    - **Payments**: Payment history, outstanding balances, refunds
    - **Communications**: Message history with providers and support
    - **Admin Actions**: Audit log of admin interventions
@@ -141,7 +143,7 @@ This is a critical operational module that ensures the platform can provide effe
   4. System logs access with timestamp, admin ID, and justification
   5. System displays:
      - Medical questionnaire responses with severity flags (red, yellow, green)
-     - 3D head scan viewer (interactive 3D model)
+     - Head scan viewer *(V1 photo set gallery; V2 interactive 3D model)*
      - Uploaded photos/videos
      - Declared medications and allergies
      - Previous procedure history
@@ -410,7 +412,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 ### Screen 4: Patient Detail View - Medical Data Tab
 
-**Purpose**: Displays patient medical questionnaire, 3D scans, and health history with strict access controls
+**Purpose**: Displays patient medical questionnaire, head scan assets, and health history with strict access controls
 
 **Data Fields**:
 
@@ -418,8 +420,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 |------------|------|----------|-------------|------------------|
 | Access Justification | textarea | Yes (required for access) | Admin reason for viewing medical data | Min 20 characters |
 | Medical Questionnaire | component | Yes (display only) | Responses with severity flags | Read-only, color-coded |
-| 3D Scan Viewer | interactive-3d | No (display only) | Latest head scan with rotation/zoom | Read-only, watermarked |
-| Previous Scans | gallery | No (display only) | Historical scans for comparison | Clickable thumbnails |
+| Head Scan Viewer | media viewer | No (display only) | Latest head scan assets (V1 photo set; V2 3D model) | Read-only |
+| Previous Scans | gallery | No (display only) | Historical head scan uploads for comparison | Clickable thumbnails |
 | Uploaded Photos | gallery | No (display only) | Patient-uploaded images | Clickable thumbnails |
 | Declared Medications | list | No (display only) | Current medications | Read-only |
 | Allergies | list | No (display only) | Known allergies | Read-only |
@@ -435,8 +437,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - Red (Critical): HIV, blood disorders, heart conditions
   - Yellow (Standard): Allergies, medications, controlled conditions
   - Green (No alerts): No medical concerns
-- 3D scans always watermarked with patient code (prevent unauthorized distribution)
-- Interactive 3D viewer allows rotation and zoom; download capability available to all Super Admins (logged in audit trail)
+- V1: Head scan viewer shows a photo set gallery with zoom and basic comparison
+- V2: Interactive 3D viewer (if available) allows rotation and zoom; downloads logged in audit trail
 - Photo gallery supports zoom but prevents right-click save (security measure)
 
 **Notes**:
@@ -621,7 +623,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Admin access to patient medical data MUST be logged with justification (Protected Health Information)
-- **Privacy Rule 2**: Patient 3D scans displayed in admin interface MUST be watermarked with patient code (prevent unauthorized distribution)
+- **Privacy Rule 2**: Patient scans displayed in admin interface MUST be read-only and access-controlled (prevent unauthorized distribution)
 - **Privacy Rule 3**: Super Admins can download patient scans; all downloads are logged in audit trail for compliance
 - **Privacy Rule 4**: Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance)
 - **Privacy Rule 5**: Patient data deletion requests (GDPR right to be forgotten) MUST result in anonymization + archival, not permanent deletion
@@ -642,7 +644,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 **Fixed (Not Editable by Admin)**:
 
 - Patient medical questionnaire responses (immutable; submitted by patient only)
-- Patient 3D scans and uploaded photos (immutable; uploaded by patient only)
+- Patient head scan assets (photo sets in V1; 3D scans in V2) and uploaded photos (immutable; uploaded by patient only)
 - Transaction timestamps and amounts (immutable financial records)
 - Audit log entries (immutable for compliance)
 - Patient password (admin can reset but cannot view current password)
@@ -721,16 +723,16 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Integration point**: Communications tab fetches message history; admin can flag conversations
 
 - **FR-002 / Module P-07: 3D Scan Capture & Viewing**
-  - **Why needed**: Admin views patient 3D scans for dispute resolution and support
-  - **Integration point**: Medical data tab embeds 3D scan viewer component
+  - **Why needed**: Admin views patient head scan assets (V1 photo set; V2 true 3D) for dispute resolution and support
+  - **Integration point**: Medical data tab embeds head scan viewer component
 
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: Admin actions trigger notifications to patients (password reset, booking modifications)
   - **Integration point**: System sends notifications when admin intervenes; admin can manually send notifications
 
 - **Module S-05: Media Storage Service**
-  - **Why needed**: Admin accesses patient 3D scans, photos, and documents stored in media service
-  - **Integration point**: Medical data tab fetches scan files from media storage with proper authentication
+  - **Why needed**: Admin accesses patient head scan assets, photos, and documents stored in media service
+  - **Integration point**: Medical data tab fetches scan media from storage with proper authentication
 
 - **Module S-06: Audit Log Service** (if exists)
   - **Why needed**: All admin actions logged in centralized audit service for compliance
@@ -780,7 +782,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 ### Technology Assumptions
 
 - **Assumption 1**: Admins access platform via desktop/laptop browsers (Chrome, Firefox, Safari - latest 2 versions)
-- **Assumption 2**: Admins have stable internet connectivity (patient data and 3D scans require significant bandwidth)
+- **Assumption 2**: Admins have stable internet connectivity (patient data and scan media require significant bandwidth)
 - **Assumption 3**: Admin interface supports screen resolutions ≥ 1366x768 (responsive design for tablets acceptable)
 - **Assumption 4**: Database query performance optimized with proper indexing on patient search fields (name, email, code, date)
 
@@ -799,7 +801,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Architecture**: Patient management interface requires robust search engine (Elasticsearch or similar) for fast full-text patient search across large datasets
 - **Performance**: Patient detail view uses lazy loading for tabs (load data only when tab clicked) to prevent slow initial page load
-- **Performance**: 3D scan viewer uses progressive loading (low-res preview first, high-res on demand) for large scan files
+- **Performance**: Head scan viewer uses progressive loading (low-res preview first, high-res on demand) for large scan files
 - **Storage**: Audit log requires separate database or table with write-optimized schema (append-only, no updates/deletes)
 - **Caching**: Patient list search results cached for 30 seconds (Redis) to reduce database load for repeated searches
 
@@ -810,7 +812,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Authentication**: Admin JWT token with Super Admin role validation
   - **Error handling**: Display cached data if API unavailable; show warning banner
 
-- **Integration 2**: Medical data tab requests 3D scans from media storage service
+- **Integration 2**: Medical data tab requests head scan media from media storage service
   - **Data format**: Signed URLs for secure scan file access (S3 presigned URLs)
   - **Authentication**: Admin token verified; access logged in audit service
   - **Error handling**: Display error message if scan unavailable; offer retry button
@@ -865,14 +867,14 @@ Provider claims patient misrepresented medical history. Admin needs to access pa
 
 **Why this priority**: Dispute resolution is critical for platform trust and legal protection. Admin must have ability to access medical data with proper safeguards.
 
-**Independent Test**: Can be tested by creating test patient with completed medical questionnaire and uploaded scans, simulating dispute scenario, and verifying admin prompted for access justification, can view data, and access is fully logged in audit trail.
+**Independent Test**: Can be tested by creating test patient with completed medical questionnaire and uploaded head scan assets, simulating dispute scenario, and verifying admin prompted for access justification, can view data, and access is fully logged in audit trail.
 
 **Acceptance Scenarios**:
 
 1. **Given** admin navigates to patient detail view, **When** admin clicks "Medical Data" tab, **Then** system displays justification prompt requiring admin to enter reason for access (minimum 20 characters)
 2. **Given** admin enters valid justification, **When** admin submits justification, **Then** system logs access in audit trail with timestamp, admin ID, and justification, then displays medical questionnaire with severity flags
 3. **Given** medical questionnaire displayed, **When** admin reviews responses, **Then** critical conditions (HIV, blood disorders) highlighted in red, standard conditions (allergies, medications) in yellow
-4. **Given** admin clicks 3D scan viewer, **When** scan loads, **Then** interactive 3D model displayed with watermark showing patient code; admin can rotate, zoom, and download (with audit logging)
+4. **Given** admin clicks Head Scan Viewer, **When** media loads, **Then** scan assets display (V1 photo set gallery; V2 interactive 3D model where available); downloads logged in audit trail
 
 ---
 
@@ -1007,7 +1009,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 - **REQ-016-001**: System MUST allow admins to search patients by name, email, patient code, or phone number with results returned in < 2 seconds
 - **REQ-016-002**: System MUST display comprehensive patient profile including: personal info, current journey status, registration date, last activity, and flags/alerts
 - **REQ-016-003**: System MUST provide complete treatment journey timeline showing all inquiries, quotes, bookings, payments, procedures, and aftercare milestones
-- **REQ-016-004**: System MUST allow admins to view patient medical questionnaire and 3D scans with mandatory access justification prompt (HIPAA/GDPR compliance)
+- **REQ-016-004**: System MUST allow admins to view patient medical questionnaire and head scan assets (V1 photo set; V2 true 3D) with mandatory access justification prompt (HIPAA/GDPR compliance)
 - **REQ-016-005**: System MUST display complete payment history including successful transactions, failed attempts, refunds, outstanding balances, and installment schedules
 - **REQ-016-006**: System MUST allow admins to view all patient communications (with providers, support, aftercare) for compliance monitoring
 - **REQ-016-007**: System MUST log every admin action on patient accounts in immutable audit trail with timestamp, admin ID, action type, and justification
@@ -1027,13 +1029,12 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 - **REQ-016-015**: System MUST log all medical data access in audit trail (who accessed, when, what data viewed, justification)
 - **REQ-016-016**: System MUST process patient data deletion requests (GDPR) via anonymization + archival workflow, retaining compliance records (7 years)
 - **REQ-016-017**: System MUST prevent hard deletion of patient accounts; all deletions must be soft-deletes with anonymization
-- **REQ-016-018**: System MUST watermark all patient 3D scans displayed in admin interface with patient code
 
 ### Security & Privacy Requirements
 
 - **REQ-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
 - **REQ-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
-- **REQ-016-021**: System MUST log all admin downloads of patient 3D scans in audit trail with timestamp, admin ID, and justification
+- **REQ-016-021**: System MUST log all admin downloads of patient head scan media in audit trail with timestamp, admin ID, and justification
 - **REQ-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
 - **REQ-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
 
@@ -1041,7 +1042,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 
 - **REQ-016-024**: System MUST integrate with patient authentication module (P-01) for password reset and account unlock functionality
 - **REQ-016-025**: System MUST integrate with payment module (P-03) to display transaction history and initiate refunds via Stripe API
-- **REQ-016-026**: System MUST integrate with 3D scan storage service (S-05) to display patient scans with secure signed URLs
+- **REQ-016-026**: System MUST integrate with media storage service (S-05) to display patient head scan media with secure signed URLs
 - **REQ-016-027**: System MUST integrate with notification service (S-03) to send notifications when admin takes actions affecting patients
 
 ---
@@ -1073,6 +1074,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 | 2025-12-29 | 1.2 | Removed formal Support Ticket system scope from FR-016 and referenced dedicated FR-034 (Support Center & Ticketing) | AI Assistant |
 | 2026-02-05 | 1.3 | Cancel Inquiry flow (FR-003 Workflow 5): Added "Cancelled" and "Accepted" to Stage filter and badge values (Screen 1); added "Patient Inquiry Cancellation" as system-generated audit event type (Screen 7) | AI     |
 | 2026-02-09 | 1.4 | Cancellation integrity fixes: Added cancellation reason/timestamp fields to Screen 2 (Overview) with oversight-only rules. Added "Inquiry Cancelled" milestone to Screen 3 (Treatment Journey) with cascade summary. Updated Entity 1 journey_status enum to include accepted/cancelled with cancellation fields. Completed status badge color coding for all journey stages. Added User Story 8 (admin reviews cancelled inquiry). Fixed Last Updated date. | AI |
+| 2026-03-03 | 1.5 | Clarified V1 scan media as head scan photo sets and updated admin medical data viewing to treat interactive 3D model viewing as a V2 enhancement. Updated viewer terminology, dependencies, and requirements accordingly. | AI |
 
 ---
 
@@ -1089,4 +1091,4 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-03-03

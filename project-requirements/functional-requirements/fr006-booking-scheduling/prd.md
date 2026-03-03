@@ -261,7 +261,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 | Patient Code | text | Yes | Patient identifier | Read-only |
 | Inquiry Reference | text | Yes | Original inquiry HPID | Link to inquiry details |
 | Quote Reference | text | Yes | Original quote reference | Link to quote details |
-| Booking Status | badge | Yes | Accepted / Confirmed / In Progress / Cancelled | Filterable by status |
+| Booking Status | badge | Yes | Accepted / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable by status |
 | Appointment Date | datetime | Yes | Pre-scheduled appointment slot | Sortable by date |
 | Treatment Type | text | Yes | Treatment name | Filterable |
 | Total Amount | number | Yes | Total booking amount | Sortable |
@@ -269,7 +269,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 | Deposit Amount | number | Yes | Deposit amount (if paid) | Read-only |
 | Payment Status | badge | Yes | Deposit only / Installments / Full paid | Read-only |
 | Created Date | datetime | Yes | Booking creation timestamp | Sortable |
-| Actions | buttons | Yes | View Details, Check In (if confirmed) | RBAC enforced |
+| Actions | buttons | Yes | View Details, Check In (if confirmed + fully paid) | RBAC enforced |
 
 **Business Rules**:
 
@@ -300,7 +300,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Booking Reference | text | Yes | Unique booking reference | Read-only |
-| Booking Status | badge | Yes | Current status (Accepted/Confirmed/In Progress/Cancelled) | Read-only |
+| Booking Status | badge | Yes | Current status (Accepted/Confirmed/In Progress/Aftercare/Completed/Cancelled) | Read-only |
 | Booking Created Date | datetime | Yes | Booking creation timestamp | Read-only |
 | Appointment Date | datetime | Yes | Confirmed appointment slot (pre-scheduled in quote) | Read-only |
 | Appointment Time | time | Yes | Appointment start time | Read-only |
@@ -389,7 +389,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 | Action | Type | Condition | Description |
 |--------|------|-----------|-------------|
-| Check In | button | Status = Confirmed, Appointment date = today or past | Mark patient as arrived (handoff to FR-010) |
+| Check In | button | Status = Confirmed, Appointment date = today or past, Payment Status = Full paid | Mark patient as arrived (handoff to FR-010) |
 | View Inquiry | link | Always | Open full inquiry details (FR-003) |
 | View Quote | link | Always | Open full quote details (FR-004) |
 | View 3D Scan | link | Always | Open 3D scan viewer |
@@ -399,7 +399,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 - Patient full identity only visible if booking status is "Confirmed" (payment successful).
 - All booking data is read-only (cannot be edited by provider).
-- Check In button only available if status is "Confirmed" and appointment date is today or past.
+- Check In button only available if status is "Confirmed", appointment date is today or past, and Payment Status is "Full paid" (no outstanding balance).
 - All sections display data from previous stages (inquiry → quote → acceptance → booking) in chronological order.
 - Links to original inquiry and quote provide full context and audit trail.
 
@@ -426,7 +426,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 | Patient Name | text | Yes | Full patient name | Searchable |
 | Patient Email | text | Yes | Patient email | Searchable |
 | Provider Name | text | Yes | Provider/clinic name | Filterable |
-| Booking Status | badge | Yes | Accepted / Confirmed / In Progress / Cancelled / Completed | Filterable |
+| Booking Status | badge | Yes | Accepted / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable |
 | Appointment Date | datetime | Yes | Appointment slot | Sortable, filterable by date range |
 | Treatment Type | text | Yes | Treatment name | Filterable |
 | Total Amount | number | Yes | Total booking amount | Sortable |
@@ -895,7 +895,7 @@ None.
 
 - **Entity 1 - Booking**: Represents a confirmed or pending booking derived from an accepted quote.
   - **Key attributes**: booking reference, quote ID, provider ID, patient ID, slot, status, payment state, refund state.
-  - **Status values**: `Accepted` (quote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Completed` (procedure finished) | `Cancelled` (booking cancelled per cancellation policy, B2 flow).
+  - **Status values**: `Accepted` (quote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted) | `Cancelled` (booking cancelled per cancellation policy, B2 flow).
   - **Relationships**: One booking links to one accepted quote; one provider calendar entry; one patient.
 
 - **Entity 2 - Calendar Slot**: Represents a provider's pre-scheduled appointment time.
@@ -916,6 +916,7 @@ None.
 | 2025-12-16 | 1.4 | Documentation alignment: Clarified installment option eligibility and payment option wording to reference FR-029 as the configuration source for deposit/split payment/commission settings (no functional change). | AI |
 | 2026-02-05 | 1.5 | Added pre-booking validation guard (inquiry not cancelled), Alternative Flow B3 (patient cancels inquiry during 48h slot hold with immediate release). See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
 | 2026-02-09 | 1.6 | Integrity fixes: Added Screen 1 blocked state spec (cancelled inquiry UI), REQ-006-014 (pre-booking cancellation guard requirement), concurrent payment+cancellation race edge cases, explicit Booking status enum, Calendar Slot release triggers, fixed Last Updated date. | AI |
+| 2026-03-03 | 1.7 | Cross-FR alignment: Added `Aftercare` to booking status enum and booking status filters; clarified Check In requires Payment Status = Full paid (no outstanding balance) to align with FR-010/FR-007. | Product alignment (2026-03-03) |
 
 ---
 
@@ -932,4 +933,4 @@ None.
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-03-03

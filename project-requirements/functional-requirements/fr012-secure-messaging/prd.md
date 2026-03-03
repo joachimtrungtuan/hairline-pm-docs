@@ -20,7 +20,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 - **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; audio/video calls for live consultations; notifications for new messages and calls; view conversation history; send text and media.
 - **Provider Platform (PR-07)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; audio/video call capability for consultations; view conversation history; send text and media responses.
-- **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request 3D scans or schedule reviews.
+- **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request scan/photo set updates (V1) or schedule reviews.
 - **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages; Twilio integration for audio/video calls.
 
 ### Multi-Tenant Breakdown
@@ -59,7 +59,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Flag history tracking: view all flag events, status changes, and admin notes for each conversation.
 - Select conversation to open detailed Message Thread View for full conversation history, participant info, flag management, and actions.
 - **Emergency intervention capability**: Admin can send messages ONLY in critical situations (serious policy violations, urgent disputes, patient safety emergencies).
-- Intervention actions: flag for observation, resolve flags, export conversation logs (with flag history), request 3D scan, schedule review.
+- Intervention actions: flag for observation, resolve flags, export conversation logs (with flag history), request scan/photo set, schedule review.
 - Configure moderation rules and automatic keyword flags; maintain compliance audit trail.
 - Admin emergency messages clearly identified with "Hairline Admin" badge; logged with mandatory reason.
 
@@ -493,7 +493,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Flag notes | textarea | No | Internal admin notes about flag | Max 500 chars; NOT visible to users | Right (in dialog) |
 | Resolve Flag | button | No | Mark flag as resolved | Button next to each flag; confirmation required | Right |
 | Enable Emergency Intervention | button | No | Activate emergency intervention mode (Screen 6B) | Prominent button with warning styling; opens confirmation dialog | Right |
-| Actions menu | dropdown | No | Additional admin actions | Options: Export conversation, Request 3D scan, Schedule review | Right |
+| Actions menu | dropdown | No | Additional admin actions | Options: Export conversation, Request scan/photo set, Schedule review | Right |
 
 **Business Rules**:
 

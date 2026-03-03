@@ -37,9 +37,9 @@ Context types are **system-defined** (fixed in source code). Admins cannot creat
 
 | Context Type | Where Used | Question-Level Constraints |
 |---|---|---|
-| **Inquiry** | Patient inquiry submission (FR-003) | Yes/No recommended; other question types allowed after admin confirms a publish-time warning. Severity flag required per question; Yes-answer detail prompt required for Yes/No questions |
+| **Inquiry** | Patient inquiry submission (FR-003) | **MVP**: Yes/No only (hard constraint). Severity flag required per question; Yes-answer detail prompt required. **Future**: additional question types allowed only after FR-003 supports typed answers |
 | **Aftercare** | Aftercare milestone templates (FR-011) | All system-defined types supported; no severity flags. Delivery frequency is set at milestone assignment time in FR-011 — not on the question itself |
-| **Multi-Context** | Both flows | Supports all question types; severity flag and Yes-answer detail prompt required per question. Delivery frequency set in FR-011 when assigned to an aftercare milestone |
+| **Multi-Context** | Both flows | **MVP**: Yes/No only (must be inquiry-compatible). Severity flag required per question; Yes-answer detail prompt required. Delivery frequency set in FR-011 when assigned to an aftercare milestone. **Future**: may support additional question types once inquiry supports typed answers |
 
 Each questionnaire set carries a required Context Type and optional tags (e.g., "pain", "sleep", "compliance"). Downstream modules filter the catalog by compatible Context Type when presenting assignment options.
 
@@ -312,6 +312,7 @@ flowchart TD
 - Context Type cannot be changed while Status = Active; editing it creates a new Draft version automatically
 - The set must have a Category assigned before publishing
 - All questions in Inquiry/Multi-Context sets must have a Severity flag before publishing
+- **MVP**: Inquiry/Multi-Context sets can contain only Yes/No question types (enforced at publish-time)
 - Publishing increments the version number and archives the previous Active version
 - Delivery frequency for Aftercare questionnaire sets is not configured here; it is set per milestone when the set is assigned in FR-011
 
@@ -325,7 +326,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Question Type | select | Yes | System-defined type: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text | Locked after first save; delete and recreate to change type |
+| Question Type | select | Yes | System-defined type: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text | **MVP constraint**: if parent set Context Type is Inquiry or Multi-Context, only Yes/No is selectable. Locked after first save; delete and recreate to change type |
 | Question Text | rich text | Yes | Main question content shown to patient | Min 10 chars |
 | Help Text | text | No | Sub-label displayed below the question in both apps | Max 300 chars |
 | Detail Prompt (Yes answer) | text | Conditional | Prompt shown to patient when they answer Yes | Required for Yes/No questions in Inquiry/Multi-Context sets |
@@ -501,7 +502,8 @@ flowchart TD
 3. **Context-Specific Question Rules**
    - Questions in Inquiry or Multi-Context sets: Severity Flag is required; Yes-answer detail prompt is required for Yes/No questions
    - Questions in Aftercare or Multi-Context sets: no frequency setting at question level — delivery frequency is configured in FR-011 at the milestone assignment step
-   - When an Inquiry set contains non-Yes/No questions, the system displays a publish-time warning reminding the admin that Inquiry questionnaires are typically Yes/No only. The admin may confirm and proceed — the warning does not block publishing
+   - **MVP**: Inquiry and Multi-Context sets MUST contain only Yes/No questions; the system blocks publishing if any non-Yes/No questions exist
+   - **Future (V2+)**: Once FR-003 supports typed answers, Inquiry/Multi-Context sets may allow additional question types (with a publish-time warning)
 
 4. **Severity Flagging Rules** (Inquiry and Multi-Context sets only)
    - Critical questions: High-risk conditions (HIV, hepatitis, blood disorders, heart conditions)
@@ -546,9 +548,9 @@ flowchart TD
    - Medical alerts must be generated automatically from questionnaire responses
    - Alert severity must match question severity flags
    - Alert display must be consistent with color-coding standards
-   - Provider notifications must be triggered by critical alerts
+   - Providers must be able to quickly scan alerts (red/amber/green) in-portal
    - Alert history must be maintained for provider reference
-   - FR-025 generates structured alert events (containing inquiry ID, alert level, triggering question IDs, and response summary) that are published to FR-020's notification engine for delivery to providers via their configured notification channels
+   - **MVP**: No additional email/push notification is emitted solely due to medical alert severity; providers learn via standard inquiry notifications and in-portal alert indicators
 
 3. **Aftercare Module Integration (FR-011)**
 
@@ -611,7 +613,6 @@ flowchart TD
 
 - **FR-003**: Inquiry Submission & Distribution (consumes active Inquiry-context questionnaire set)
 - **FR-011**: Aftercare & Recovery Management (milestones assign individual Aftercare-context questionnaire sets per milestone)
-- **FR-020**: Notifications & Alerts (provider alert delivery for inquiry alerts; aftercare milestone reminders)
 - **FR-001**: Patient Authentication & Profile Management (admin access control)
 
 ### External Dependencies
@@ -680,6 +681,7 @@ flowchart TD
 | 2025-10-23 | 1.0 | Initial PRD creation | AI |
 | 2026-02-24 | 2.0 | Restructured to two-level model (Questionnaire Sets → Questions); updated screens, workflows, and FR-011 integration rule; decoupled publishing from inquiry activation (explicit "Set as Active for Inquiry" toggle) | AI |
 | 2026-02-25 | 2.1 | Post-verification fixes: Inquiry question type constraint changed to soft warning (Yes/No recommended, other types allowed after admin confirms warning); replaced Visual Scale 1–5 with Visual Scale 1–10 as sole visual scale type; removed FR-002 as dependency (no data flow); added FR-020 alert event integration note; system PRD updated to defer Bulk Operations and Question Templates to V2, and align question grouping to set-level categorisation | AI |
+| 2026-02-25 | 2.2 | Decision update: Enforced MVP Inquiry/Multi-Context question type constraint (Yes/No only) with future typed-answer extension; removed medical-alert notification integration into FR-020 (in-portal indicators only) | AI |
 
 ---
 
