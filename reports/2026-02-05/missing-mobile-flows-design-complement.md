@@ -22,9 +22,9 @@
 | P03.1 | Payment Methods Management | P-03: Booking & Payment | FR-007, FR-007b | 🟡 Specified |
 | P04.1 | Passport Submission (Path A) | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
 | P04.2 | Flight & Hotel Submission (Path B) | P-04: Travel & Logistics | FR-008 | 🟡 Specified |
-| P05.1 | Day-to-Day Treatment Progress | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
-| P05.2 | Previous Treatments List | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🔴 Not Designed |
-| P05.3 | Submitted Reviews List | P-05: Aftercare & Progress Monitoring | FR-013 | 🔴 Not Designed |
+| P05.1 | Day-to-Day Treatment Progress | P-05: Aftercare & Progress Monitoring | FR-010, FR-011 | 🟡 Specified |
+| P05.2 | Previous Treatments List | P-05: Aftercare & Progress Monitoring | Mobile-tenant design complement (references FR-010, FR-011, FR-013 data) | 🟡 Specified |
+| P05.3 | Submitted Reviews List | P-05: Aftercare & Progress Monitoring | Mobile-tenant design complement (references FR-013 data) | 🟡 Specified |
 | P06.1 | Notification Listing & Bubble | P-06: Communication | FR-020 | 🟡 Specified |
 | P08.1 | Help & Support | P-08: Help Center & Support Access | FR-033, FR-034 | 🟡 Specified |
 
@@ -1274,25 +1274,27 @@ flowchart TD
 
 **Related FRs**: FR-010 (Treatment Execution), FR-011 (Aftercare Recovery Management)
 **Source Reference**: `local-docs/project-requirements/functional-requirements/fr010-treatment-execution/prd.md`, `fr011-aftercare-recovery-management/prd.md`
-**Status**: 🔴 Not Designed
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Treatment case reaches "In Progress" status
-%% 2. Patient opens case detail → "Treatment Progress" tab/section
-%% 3. System displays timeline/calendar view of treatment days
-%% 4. Each day entry shows: provider notes, photos, medications, status
-%% 5. Patient can:
-%%    a. View a day's details (provider-submitted updates) → Day Detail View
-%%    b. Add own notes/journal entry for a day
-%%    c. Upload progress photos
-%%    d. Log symptoms or concerns
-%% 6. Overall progress indicator visible (day X of Y, percentage, milestone markers)
-%% 7. "Contact Provider" quick action accessible from progress view
-%% Reference FR-010 for treatment execution tracking, FR-011 for aftercare monitoring
+flowchart TD
+    Notify["System notifies patient: treatment case moved to 'In Progress'"] --> OpenCase["Patient opens active treatment case\n(from Home or Treatments list)"]
+    OpenCase --> ProgressView["Display Treatment Progress Timeline (P05.1-S1)"]
+
+    ProgressView --> Action{"Patient action"}
+
+    Action -->|"Tap a treatment day row"| DayPopup["Display Day Details Popup (P05.1-S2)"]
+    DayPopup --> Dismiss["Patient dismisses popup"]
+    Dismiss --> ProgressView
+
+    Action -->|"Provider updates day status (real-time sync)"| Sync["Status badges refresh automatically\n(no manual refresh required)"]
+    Sync --> ProgressView
+
+    Action -->|"Provider completes End Treatment on provider platform\n(system sends treatment completion notification)"| TreatmentEnd["Patient receives notification:\ntreatment complete + post-op instructions delivered"]
+    TreatmentEnd --> Completed["Treatment record marked Completed;\nbooking transitions to Aftercare (FR-011)"]
+    Completed --> CompletedView["Display Completed Treatment View (P05.1-S3)\nwith actual graft count, summary note,\nbefore/after photos, and post-op instructions"]
 ```
 
 #### Screen Specifications
@@ -1301,93 +1303,110 @@ flowchart TD
 
 **Purpose**: Day-by-day overview of the treatment progress
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-010 and FR-011 PRDs for treatment phases and progress tracking mechanisms.
-This is the main progress view within an active treatment case.
-
-Create a table with these expected fields:
-- Treatment case header (treatment name, provider name, start date)
-- Overall progress bar/indicator (day X of Y)
-- Current phase indicator (e.g., "Pre-op Day 2", "Recovery Day 5")
-- Timeline/calendar view with day entries
-- Each day card: date, status icon (completed/current/upcoming), summary text, photo thumbnail (if any)
-- Filter options: All days, Provider updates only, My entries only
-- "Add Today's Entry" floating action button
-- Quick access actions: Contact Provider, Emergency Info
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Case Status Badge | badge | Yes | "In Progress" status badge displayed prominently at the top of the screen | Display only |
+| Provider / Clinic Name | text | Yes | Name of the treating provider and clinic | Display only |
+| Treatment Name | text | Yes | Treatment type from admin-curated catalog (e.g., "FUE - Follicular Unit Extraction") | Display only |
+| Package Name | text | No | Optional add-on package included in the accepted quote (e.g., "5-Star Hotel Package") | Hidden if no package was selected |
+| Assigned Clinician | text | Yes | Clinician assigned to the patient's case from the accepted quote | Display only |
+| Procedure Date | datetime | Yes | Scheduled treatment start date(s) | Display only |
+| Estimated Graft Count | number | Yes | Graft count estimate from the accepted quote, shown for patient reference | Display only |
+| Beginning Note | text | No | Provider's note entered at the start of treatment; visible to the patient only if submitted by provider | Hidden if provider has not entered one; no placeholder text shown |
+| Overall Progress | group | Yes | Summary indicator showing "X of Y days complete"; auto-calculated from day statuses | Display only |
+| Treatment Days List | list | Yes | One row per treatment day: day label, description from treatment plan, and current status badge | Tap a row to open Day Details Popup (P05.1-S2) |
+| Journey Timeline | group | Yes | Visual case stage milestones: Inquiries → Quotes → Accepted → Confirmed → In Progress; current stage highlighted with timestamps | Display only |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Provider-submitted entries are read-only for patients
-- Patients can only add entries for the current day or past days (not future)
-- Photos uploaded by patient are visible to the assigned provider
-- Timeline auto-scrolls to the current day on load
-- Progress percentage calculated from treatment plan total duration
--->
 
-##### Screen P05.1-S2: Day Detail View
+- Provider-submitted day statuses are synced to the patient view in real-time via server push; the patient always sees the latest status without manual refresh.
+- Provider clinical notes (day notes) are never visible to the patient — patients see only status badges and day descriptions sourced from the original treatment plan.
+- The "Beginning Note" section is hidden entirely if the provider has not entered one; no placeholder or empty state is shown.
+- Overall progress is auto-calculated from day statuses (e.g., "2 of 3 days complete"); auto-calculated by the system.
+- Estimated graft count is shown for patient reference during treatment; actual graft count appears after End of Treatment in the Completed Treatment View (P05.1-S3).
+- All fields are read-only; the patient cannot take any action on this screen — in-app chat with the provider is out of scope during the treatment stage (patient is physically present at the clinic).
+
+##### Screen P05.1-S2: Day Details Popup
 
 **Purpose**: Detailed view of a single day's treatment progress entries
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Day header (date, day number in plan, phase name)
-- Provider section:
-  - Provider notes (rich text, read-only)
-  - Provider-uploaded photos (gallery view)
-  - Medications administered/prescribed
-  - Vital signs / measurements (if recorded)
-  - Next steps / instructions for the patient
-- Patient section:
-  - Patient journal entry (text input, editable)
-  - Patient-uploaded photos
-  - Symptom log (pain level 1–10 slider, symptom checklist)
-  - Questions/concerns for provider (text input)
-- Status badge (e.g., "On Track", "Attention Needed")
-- "Edit My Entry" action
-- Navigation: Previous Day / Next Day arrows
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Day Label | text | Yes | "Day 1", "Day 2", etc., corresponding to the treatment plan day sequence | Display only |
+| Scheduled Date | datetime | Yes | Calendar date for this treatment day (e.g., "15 Mar 2026") | Display only |
+| Day Description | text | Yes | Description from the accepted quote's per-day Treatment Plan entry (e.g., "Hair Transplant Procedure") | Display only |
+| Status Badge | badge | Yes | Current status for this day, synced from provider in real-time: Not started / In progress / Finished / Need caution/attention / Cancelled/Deferred | Display only; color-coded per status |
+| Close | action | — | Dismisses the popup and returns to the Treatment Progress Timeline (P05.1-S1) | — |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Patient entries can be edited within 24 hours of initial submission
-- Provider entries appear in real-time as the provider submits updates
-- Photos support zoom and swipeable gallery view
-- Symptom data is structured for provider dashboard analytics
-- Critical symptom selections (e.g., high pain, bleeding) should trigger a prompt to contact the provider
--->
+
+- The day status badge is synced from the provider's documentation in real-time; the patient sees changes immediately after the provider saves.
+- Provider clinical notes for this day are never visible to the patient — only the day description from the original treatment plan is shown.
+- The popup is purely informational; no patient editing or interaction is available.
+- Status color coding: Not started = grey; In progress = blue; Finished = green; Need caution/attention = amber; Cancelled/Deferred = red.
+- The popup is accessible for all days regardless of status, including past, current, and future days.
+
+##### Screen P05.1-S3: Completed Treatment View
+
+**Purpose**: Show the patient a read-only summary of a completed treatment, including the actual graft count, provider's treatment summary note, before/after photos, and post-op instructions. This screen replaces the In Progress view (P05.1-S1) once the provider completes the End of Treatment workflow.
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Case Status Badge | badge | Yes | "Completed" status badge displayed prominently at the top of the screen | Display only |
+| Provider / Clinic Name | text | Yes | Name of the treating provider and clinic | Display only |
+| Treatment Name | text | Yes | Treatment type from admin-curated catalog (e.g., "FUE - Follicular Unit Extraction") | Display only |
+| Package Name | text | No | Optional add-on package included in the accepted quote (e.g., "5-Star Hotel Package") | Hidden if no package was selected |
+| Assigned Clinician | text | Yes | Clinician assigned to the patient's case from the accepted quote | Display only |
+| Procedure Date | datetime | Yes | Scheduled treatment start date(s) | Display only |
+| Actual Graft Count | number | Yes | Total grafts successfully transplanted — definitive result entered by provider at End of Treatment | Display only |
+| Estimated Graft Count | number | Yes | Original graft estimate from the accepted quote — shown for patient reference alongside the actual count | Display only; secondary to Actual Graft Count |
+| Treatment Summary Note | text | Yes | Provider-authored high-level treatment outcome summary — maps to the required Conclusion Notes field from End of Treatment (FR-010 Screen 6); always present for completed treatments | Display only |
+| Prescription | text | Yes | Prescribed medications and dosage instructions entered by the provider at End of Treatment (FR-010 Screen 6) | Display only |
+| Advice | text | Yes | Post-operative recovery advice entered by the provider at End of Treatment (FR-010 Screen 6) | Display only |
+| Medication Instructions | text | Yes | Medication details: drug name, dosage, frequency, and duration as entered by the provider at End of Treatment (FR-010 Screen 6) | Display only |
+| Before/After Photos | image | No | Treatment photos uploaded by the provider (before and after procedure) — accessible to the patient after completion | Gallery view; supports swipe and zoom |
+| Treatment Days Summary | list | Yes | Completed day-by-day treatment record: day label, description from treatment plan, and final status badge per day | Display only; all days in terminal status |
+| Journey Timeline | group | Yes | Visual case stage milestones: Inquiries → Quotes → Accepted → Confirmed → In Progress → Aftercare; Aftercare stage highlighted with completion timestamp (booking transitions to "Aftercare" per FR-011, not "Completed") | Display only |
+
+**Business Rules**:
+
+- This view is accessible only after the provider has completed the End of Treatment workflow; it replaces the In Progress view (P05.1-S1) for this case.
+- Actual graft count is the definitive record; estimated graft count from the quote is preserved alongside it for patient reference and comparison.
+- Provider clinical day notes remain hidden from the patient — only day descriptions from the original treatment plan and final status badges are shown.
+- Prescription, Advice, and Medication Instructions are the three post-op instruction fields captured by the provider at End of Treatment (FR-010 Screen 6); all three are required at treatment completion and will always be present.
+- Before/after photos are provider-uploaded treatment photos; patients cannot upload or modify photos from this screen.
+- All fields are read-only; the patient cannot take any action on this screen.
+- Head scan photo sets (V1) captured by the provider are NOT displayed to the patient — they are clinical documentation for provider and admin use only.
 
 ---
 
 ### Flow P05.2: Previous Treatments List
 
-**Related FRs**: FR-010 (Treatment Execution), FR-011 (Aftercare Recovery Management)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr010-treatment-execution/prd.md`
-**Status**: 🔴 Not Designed
+**Related FRs**: References data from FR-010 (Treatment Execution), FR-011 (Aftercare Recovery Management), FR-013 (Reviews & Ratings)
+**Source Reference**: Mobile-tenant design complement — this screen is not defined in any FR PRD; it is a navigation screen created for the patient mobile app to aggregate treatment cases across all stages
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient navigates to Profile/History → "My Treatments"
-%% 2. System displays list of all treatment cases (all statuses)
-%% 3. Each card shows: treatment name, provider, dates, status badge, outcome
-%% 4. Patient can filter by: All, In Progress, Completed, Cancelled
-%% 5. Patient taps a treatment → navigates to treatment case detail
-%% Keep it simple — primarily a list and navigation flow
+flowchart TD
+    Navigate["Patient navigates to Profile / History → 'My Treatments'"] --> TreatmentList["Display My Treatments List (P05.2-S1)"]
+
+    TreatmentList --> ListAction{"Patient action"}
+
+    ListAction -->|"Select filter tab\n(All / In Progress / Completed / Cancelled)"| Filtered["Display filtered treatment list"]
+    Filtered --> ListAction
+
+    ListAction -->|"Tap sort option"| Sorted["Reorder list by selected sort criterion"]
+    Sorted --> ListAction
+
+    ListAction -->|"Type in search bar"| SearchResult["Filter list in real-time by treatment name or provider"]
+    SearchResult --> ListAction
+
+    ListAction -->|"Tap a treatment card"| CaseDetail["Navigate to full treatment case detail view"]
+    CaseDetail --> End1["Patient views case details\n(treatment plan, booking info, progress, or outcome)"]
+
+    ListAction -->|"Tap 'Leave a Review' on eligible completed case"| ReviewFlow["Navigate to Submit Review flow (FR-013)"]
 ```
 
 #### Screen Specifications
@@ -1396,57 +1415,69 @@ Include rules for:
 
 **Purpose**: List all patient's treatment cases across all stages
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Screen title ("My Treatments")
-- Filter tabs/chips: All, In Progress, Completed, Cancelled
-- Treatment case cards, each showing:
-  - Treatment name / type
-  - Provider name & avatar
-  - Treatment dates (start → end, or expected dates)
-  - Current status badge (In Progress, Completed, Cancelled)
-  - Outcome summary (for completed cases)
-  - Thumbnail photo (if available)
-- Sort options: Most recent, Status, Provider
-- Empty state per filter tab (e.g., "No completed treatments yet")
-- Search treatments input (for patients with many treatments)
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "My Treatments" | Display only |
+| Filter Tabs | chips | No | All / In Progress / Completed / Cancelled (admin-managed label); filters the list in real-time | Default: All |
+| Search Bar | text | No | Search by treatment name or provider name | Real-time filter; minimum 1 character |
+| Sort Options | select | No | Most Recent / By Status / By Provider | Default: Most Recent |
+| Treatment Card — Treatment Name | text | Yes | Treatment type from admin catalog (e.g., "FUE - Follicular Unit Extraction") | Display only |
+| Treatment Card — Provider Name & Avatar | group | Yes | Provider name and avatar image | Display only |
+| Treatment Card — Treatment Dates | datetime | Yes | Start date; end date shown for Completed and Cancelled cases | Display only |
+| Treatment Card — Status Badge | badge | Yes | In Progress / Completed / Cancelled (admin-managed label — not a system-defined FR-010 status; set by admin when a case is closed via FR-010 Cancel/Close Case flow) | Color-coded per status |
+| Treatment Card — Progress Indicator | group | No | "Day X of Y" summary for In Progress cases | Hidden if status ≠ In Progress |
+| Treatment Card — Outcome Summary | text | No | Brief outcome note for completed cases (e.g., "2,500 grafts — FUE completed") | Hidden if status ≠ Completed |
+| Treatment Card — Cancellation Reason | text | No | Admin-provided reason text for cancelled cases; sourced from admin's case closure decision (FR-010 Cancel/Close Case flow sends reason to admin, who decides what is communicated to the patient) | Hidden if status ≠ Cancelled; shown only if admin has provided a patient-facing reason |
+| Treatment Card — Leave Review CTA | action | No | "Leave a Review" button shown on eligible completed cases with no existing review | Shown only if: status = Completed, ≥ 3 months post-procedure per FR-013 eligibility, and no review yet submitted |
+| Empty State | text | No | Context-specific empty message per active filter (e.g., "No completed treatments yet") | Shown when no treatments match the active filter |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Default sort: most recent first
-- In Progress treatments pinned to top of "All" list
-- Cancelled treatments display cancellation reason
-- Completed treatments show option to leave a review (if not yet reviewed, links to FR-013)
-- All treatment cards are tappable — navigate to the full treatment case detail
--->
+
+- This screen is a mobile-tenant design complement — it aggregates treatment data from FR-010 and FR-011 but is not defined in either FR PRD.
+- In Progress treatments are pinned to the top of the "All" tab regardless of date, ensuring the active case is always immediately visible.
+- Default sort across all tabs is most recent first (by treatment start date descending).
+- "Cancelled" is an admin-managed label, not a system-defined treatment pipeline status in FR-010. When a provider initiates Cancel/Close Case (FR-010 flow B4), admin handles downstream actions including setting the patient-visible status. The cancellation reason shown to the patient is the admin-provided patient-facing reason, not the raw provider-submitted reason.
+- Cancelled treatments display the admin-provided cancellation reason inline on the card only if the admin has set a patient-facing reason; otherwise no reason text is shown.
+- The "Leave a Review" CTA appears on completed treatment cards only when: status = Completed, at least 3 months have elapsed since completion (per FR-013 time-gating), and no review has been submitted for that treatment.
+- All treatment cards are tappable and navigate to the full treatment case detail view for that treatment.
 
 ---
 
 ### Flow P05.3: Submitted Reviews List
 
 **Related FRs**: FR-013 (Reviews & Ratings)
-**Source Reference**: `local-docs/project-requirements/functional-requirements/fr013-reviews-ratings/prd.md`
-**Status**: 🔴 Not Designed
+**Source Reference**: Mobile-tenant design complement — FR-013 defines Screen 1 (Submit Review form) for patients but does not define a "My Reviews" list or review detail view; this flow creates those screens for the patient mobile app based on FR-013's multi-tenant scope ("view own submitted review status")
+**Status**: 🟡 Specified
 
 #### Flow Diagram
 
 ```mermaid
-%% PLACEHOLDER — Agent Instructions:
-%% Create a flowchart TD showing:
-%% 1. Patient navigates to Profile → "My Reviews"
-%% 2. System displays list of all reviews submitted by the patient
-%% 3. Each review card shows: treatment name, provider, star rating, date, excerpt
-%% 4. Patient taps a review → full review detail view
-%% 5. Decision: "Within edit window?" → Yes: show "Edit Review" option / No: read-only
-%% Keep it simple — list view + detail view
-%% Reference FR-013 for review structure and edit policies
+flowchart TD
+    Navigate["Patient navigates to Profile → 'My Reviews'"] --> ReviewList["Display My Reviews List (P05.3-S1)"]
+
+    ReviewList --> ListAction{"Patient action"}
+
+    ListAction -->|"Tap sort option"| Sorted["Reorder reviews by selected sort criterion"]
+    Sorted --> ListAction
+
+    ListAction -->|"Tap a review card"| ReviewDetail["Display Review Detail View (P05.3-S2)"]
+
+    ReviewDetail --> StatusCheck{"Review status?"}
+    StatusCheck -->|"Published"| PublishedActions["Edit Review and Request Takedown\nbuttons visible"]
+    StatusCheck -->|"Removed by Admin"| RemovedView["Review displayed read-only\nwith admin removal reason shown\n(no edit or takedown buttons)"]
+
+    PublishedActions --> EditAction{"Patient action"}
+    EditAction -->|"Tap 'Edit Review'"| EditForm["Open edit form pre-filled\nwith existing review content"]
+    EditForm --> SaveEdit["Patient saves edits"]
+    SaveEdit --> Updated["Updated review published immediately\n(no moderation gate)"]
+    Updated --> ReviewDetail
+
+    EditAction -->|"Tap 'Request Takedown'"| ConfirmTakedown{"Confirm takedown\nrequest?"}
+    ConfirmTakedown -->|Yes| TakedownSubmitted["Takedown request submitted\nReview unpublished + archived by admin\n(retained per 7-year data policy)"]
+    ConfirmTakedown -->|No| ReviewDetail
+
+    ReviewDetail --> BackToList["Patient navigates back to\nMy Reviews List (P05.3-S1)"]
+    BackToList --> ReviewList
 ```
 
 #### Screen Specifications
@@ -1455,67 +1486,56 @@ Include rules for:
 
 **Purpose**: List all reviews submitted by the patient
 
-<!-- PLACEHOLDER — Agent Instructions:
-Read FR-013 PRD for review structure and patient review management rules.
-Accessed from patient profile area.
-
-Create a table with these expected fields:
-- Screen title ("My Reviews")
-- Review cards, each showing:
-  - Treatment name / type
-  - Provider name & avatar
-  - Star rating (1–5)
-  - Review date
-  - Review text excerpt (truncated to 2 lines)
-  - Status badge (Published, Under Review, Draft)
-- Sort options: Most recent, Rating (high to low / low to high)
-- Empty state ("No reviews yet — complete a treatment to leave a review")
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Screen Title | text | Yes | "My Reviews" | Display only |
+| Sort Options | select | No | Most Recent / Rating High to Low / Rating Low to High | Default: Most Recent |
+| Review Card — Treatment Name | text | Yes | Name of the treatment that was reviewed | Display only |
+| Review Card — Provider Name & Avatar | group | Yes | Provider name and avatar image | Display only |
+| Review Card — Overall Star Rating | number | Yes | Overall rating 1–5 rendered as star icons | Display only |
+| Review Card — Review Date | datetime | Yes | Date the review was submitted | Display only |
+| Review Card — Review Excerpt | text | Yes | Truncated preview of the review text, max 2 lines | Display only; truncated with ellipsis |
+| Review Card — Status Badge | badge | Yes | Published / Removed by Admin | Color-coded per status |
+| Empty State | text | No | "No reviews yet — complete a treatment to leave a review" | Shown when the patient has no submitted reviews |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Only completed treatments can have reviews
-- Reviews may have a limited edit window (e.g., 30 days after submission — check FR-013)
-- Published reviews are visible to other patients and the provider
-- "Under Review" status indicates the review is being moderated
--->
+
+- This list shows only reviews the patient has already submitted; reviews can only be created for completed treatments that meet the FR-013 time-gating threshold (≥ 3 months post-procedure).
+- Reviews are published immediately upon submission — there is no admin moderation gate before publication (per client transcription: reviews are a direct submit-and-display flow).
+- Published reviews are visible to other patients and the provider on the provider's public profile.
+- "Removed by Admin" status means an admin has removed the review post-publication due to a policy violation; the patient sees the removal reason provided by admin.
+- Admin retains the ability to edit or remove any published review at any time for policy violations (e.g., PII exposure, inappropriate content); removal is unpublish + archival per 7-year data retention policy.
+- Default sort is most recent first (by review submission date descending).
 
 ##### Screen P05.3-S2: Review Detail View
 
 **Purpose**: Full view of a submitted review with edit capability
 
-<!-- PLACEHOLDER — Agent Instructions:
-Create a table with these expected fields:
-- Treatment name & provider info header
-- Star rating display (large)
-- Full review text
-- Review submission date
-- Photos attached to review (gallery, if any)
-- Provider response section (if the provider has responded)
-- "Edit Review" button (visible only if within edit window)
-- "Delete Review" option
-- Back navigation
-
-Format:
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
--->
+| Treatment Name | text | Yes | Name of the treatment that was reviewed | Display only |
+| Provider Name & Avatar | group | Yes | Provider name and avatar image | Display only |
+| Overall Star Rating | number | Yes | Overall rating 1–5 displayed as large star icons | Display only |
+| Category Ratings | group | Yes | Individual ratings for Facility / Staff / Results / Value (1–5 stars each) — all categories are required at submission per FR-013 Screen 1 | Display only |
+| Review Text | text | Yes | Full review narrative text submitted by the patient | Display only |
+| Review Submission Date | datetime | Yes | Date and time the review was submitted | Display only |
+| Review Photos | image | No | Before/after or progress photos attached to the review | Gallery view; supports swipe and zoom |
+| Status Badge | badge | Yes | Published / Removed by Admin | Display only; color-coded per status |
+| Admin Removal Reason | text | No | Reason provided by admin if the review was removed for a policy violation | Shown only if status = Removed by Admin |
+| Provider Response | group | No | Provider's public response text and response timestamp | Display only; shown only if provider has submitted a response |
+| Edit Review | action | No | Opens the edit review form pre-filled with existing content; updated review is published immediately | Visible only if status = Published |
+| Request Takedown | action | No | Submits a takedown request to admin; review is unpublished and archived per 7-year data retention policy (not permanently deleted) | Visible only if status = Published; requires confirmation prompt |
+| Back Navigation | action | Yes | Returns to My Reviews List (P05.3-S1) | — |
 
 **Business Rules**:
-<!-- PLACEHOLDER — Agent Instructions:
-Include rules for:
-- Edit is only available within the allowed edit window (check FR-013 for specific duration)
-- Delete requires a confirmation prompt
-- Provider responses are read-only for the patient
-- Edited reviews may go back to "Under Review" moderation status
--->
+
+- Reviews are published immediately upon submission — no moderation gate exists (per client transcription).
+- The "Edit Review" button is visible for Published reviews; the patient can edit their review at any time while it remains published. Updated content is published immediately.
+- If admin has removed the review ("Removed by Admin"), the review is displayed read-only with the admin removal reason; edit and takedown buttons are hidden.
+- "Request Takedown" submits a request to admin for unpublish + archival; the review is NOT permanently deleted — 7-year minimum data retention applies. The patient is informed that the review will be removed from public view but retained in the system per data policy.
+- Admin can edit or remove any published review at any time for policy violations (e.g., PII, inappropriate content). Removal is unpublish + archival with reason, not permanent deletion.
+- Provider responses are public and read-only for the patient; the patient cannot reply to or flag the provider's response from this screen.
+- Category ratings (Facility / Staff / Results / Value) are displayed based on the sub-ratings submitted in the original review form (FR-013 Screen 1).
 
 ---
 
@@ -1836,3 +1856,5 @@ When new missing flows are identified, follow these steps:
 | --- | --- | --- | --- |
 | 2026-02-05 | 0.1 | Initial structure with placeholders for 14 missing flows across 7 patient modules (P-01, P-02, P-03, P-04, P-05, P-06, P-08) | Product & Engineering |
 | 2026-02-25 | 0.2 | Filled in P06.1 (Notification Listing & Bubble) and P08.1 (Help & Support): replaced all placeholders with flow diagrams, screen spec tables, and business rules sourced from FR-020, FR-033, FR-034. Added Screen P08.1-S4 (Ticket Detail View). Updated summary dashboard statuses to 🟡 Specified. | Claude Code |
+| 2026-03-03 | 0.3 | Filled in all P-05 flows (P05.1 Day-to-Day Treatment Progress, P05.2 Previous Treatments List, P05.3 Submitted Reviews List): replaced all Mermaid placeholders and HTML comment placeholders with flow diagrams, screen spec tables, and business rules sourced from FR-010, FR-011, FR-013. Updated summary dashboard and flow header statuses to 🟡 Specified. | Claude Code |
+| 2026-03-03 | 0.3.1 | P05.1 corrections: (1) Aftercare transition branch rewritten — now correctly shows provider-triggered End Treatment as the passive system event the patient receives, not an automatic day-status trigger; (2) Removed Contact Provider action from flow diagram and screen spec P05.1-S1 — explicitly out of scope per FR-010 (patient is physically at clinic); (3) Aligned all day status labels to exact FR-010 casing: Not started / In progress / Finished / Need caution/attention / Cancelled/Deferred. | Claude Code |

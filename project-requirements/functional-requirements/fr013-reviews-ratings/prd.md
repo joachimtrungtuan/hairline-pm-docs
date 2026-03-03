@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Enable verified patients to submit post‑procedure reviews with ratings and optional photos, subject to admin moderation before publication. Display provider ratings (average, count, distribution) and allow providers to respond publicly. This builds trust, informs patient decision‑making, and provides providers and Hairline with structured feedback for quality improvement while maintaining fairness, authenticity, and compliance.
+Enable verified patients to submit post‑procedure reviews with ratings and optional photos, published immediately upon submission (no pre-publication moderation gate). Admin retains the ability to edit or remove published reviews post-publication for policy violations. Display provider ratings (average, count, distribution) and allow providers to respond publicly. This builds trust, informs patient decision‑making, and provides providers and Hairline with structured feedback for quality improvement while maintaining fairness, authenticity, and compliance.
 
 ---
 
@@ -18,18 +18,18 @@ Enable verified patients to submit post‑procedure reviews with ratings and opt
 
 ### Multi-Tenant Architecture
 
-- Patient Platform (P-02): Submit a review after confirmed procedure completion (time-gated 3+ months), provide overall and category ratings, write feedback, optionally attach before/after photos, view own submitted review status (pending/approved/rejected), and edit prior to moderation decision.
-- Provider Platform (PR-06 display context): View public reviews on provider profile, see rating averages and distribution, and post public responses to approved reviews.
-- Admin Platform (A-01): Moderate incoming reviews (approve/reject with reason), redact PII/inappropriate content, manage flagged content, and produce reports on review volume and ratings trends.
-- Shared Services (S-05, S-03): Media Storage for review photos; Notification Service for invite reminders, moderation outcomes, and provider reply alerts.
+- Patient Platform (P-02): Submit a review after confirmed procedure completion (time-gated 3+ months), provide overall and category ratings, write feedback, optionally attach before/after photos; review is published immediately upon submission; patient can edit their published review at any time.
+- Provider Platform (PR-06 display context): View public reviews on provider profile, see rating averages and distribution, and post public responses to published reviews.
+- Admin Platform (A-01): Monitor published reviews, edit or remove reviews post-publication for policy violations (PII, inappropriate content), manage flagged content, seed authenticated reviews for new providers, and produce reports on review volume and ratings trends.
+- Shared Services (S-05, S-03): Media Storage for review photos; Notification Service for invite reminders, admin removal notifications, and provider reply alerts.
 
 ### Multi-Tenant Breakdown
 
 Patient Platform (P-02):
 
 - Receive invitation to review after procedure completion threshold.
-- Submit ratings (overall 1–5 stars; category ratings) and feedback; optionally attach photos.
-- View status and outcome of moderation; see published review on provider profile.
+- Submit ratings (overall 1–5 stars; category ratings) and feedback; optionally attach photos; review published immediately.
+- Edit own published review at any time; view review status (Published / Removed by Admin).
 
 Provider Platform (display + response):
 
@@ -38,8 +38,9 @@ Provider Platform (display + response):
 
 Admin Platform (A-01):
 
-- Review moderation queue with filters (date, provider, rating, status, flagged).
-- Approve, reject (with reason), or request edits; redact sensitive data.
+- Review management dashboard with filters (date, provider, rating, status, flagged).
+- Edit or remove published reviews for policy violations (with reason); redact sensitive data post-publication.
+- Seed authenticated reviews for new providers (flagged as "Verified Off-platform").
 - Manage review categories and invite cadence; export reports.
 
 Shared Services (S-05, S-03):
@@ -52,13 +53,13 @@ Shared Services (S-05, S-03):
 - Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow.
 - Patient navigates to “Write a Review” from provider history.
 - Providers access “Reviews” in dashboard to read and respond once published.
-- Admins access “Moderation” from Admin platform navigation.
+- Admins access “Review Management” from Admin platform navigation.
 
 ---
 
 ### Backlog (Future Enhancements)
 
-- Admin-seeded authenticated reviews import for new providers (clearly flagged as “Verified Off‑platform” with verification source and date). Publication still follows moderation policy to maintain authenticity and fairness.
+- Admin-seeded authenticated reviews import for new providers (clearly flagged as “Verified Off‑platform” with verification source and date) — moved to main scope per client transcription (AdminPlatform-Part1, lines 91–100).
 
 ---
 
@@ -66,32 +67,33 @@ Shared Services (S-05, S-03):
 
 ### Main Flow: Patient Submits a Review
 
-Actors: Patient, System, Admin (later moderation)
+Actors: Patient, System
 Trigger: Patient opens “Write a Review” from invite or history
-Outcome: Review submitted for moderation with ratings, feedback, and optional photos
+Outcome: Review published immediately with ratings, feedback, and optional photos; provider rating metrics updated
 
 Steps:
 
 1. Patient completes overall and category ratings, enters feedback, and optionally attaches photos.
 2. System validates inputs (rating ranges, feedback length, file type/size) and verifies eligibility.
-3. System records the review as “Pending Moderation” and notifies Admin queue.
-4. Patient sees confirmation and pending status; may edit until moderation begins.
+3. System publishes the review immediately and updates provider’s rating metrics.
+4. Patient sees confirmation; review is live on the provider’s profile. Patient may edit the review at any time.
 
-### A1: Admin Moderation – Approve
+### A1: Admin Removes a Published Review (Post-Publication)
 
-- Trigger: Admin reviews a pending submission and approves it.
+- Trigger: Admin identifies a policy violation in a published review (PII, inappropriate content, flagged by users/keyword detection).
 - Steps:
-  1. Admin confirms no policy violations, optional redaction performed.
-  2. System publishes the review and updates provider’s rating metrics.
-- Outcome: Review appears on provider profile; patient and provider are notified.
+  1. Admin reviews the published content and determines violation.
+  2. Admin removes the review with a reason; system unpublishes and archives the review (retained per 7-year data policy).
+  3. System notifies patient with removal reason.
+- Outcome: Review removed from public view; patient sees “Removed by Admin” status with reason; provider rating metrics recalculated.
 
-### A2: Admin Moderation – Reject/Request Edits
+### A2: Admin Edits a Published Review (Post-Publication)
 
-- Trigger: Admin finds violation or requires clarification.
+- Trigger: Admin identifies content requiring redaction (PII, sensitive data) but the review itself is otherwise valid.
 - Steps:
-  1. Admin rejects with reason or requests edits.
-  2. System notifies patient with reason; patient may resubmit.
-- Outcome: Review remains unpublished until an approved version is submitted.
+  1. Admin redacts specific content (PII, inappropriate phrases) from the published review.
+  2. System updates the published review with redacted content; audit trail records what was changed, by whom, and when.
+- Outcome: Review remains published with redacted content; audit log preserved.
 
 ### B1: Provider Response
 
@@ -130,36 +132,40 @@ Data Fields:
 Business Rules:
 
 - Eligibility enforced (completed procedure and ≥ 3 months).
-- One review per completed procedure; editing allowed until moderation starts.
+- One review per completed procedure; patient can edit their published review at any time.
+- Review is published immediately upon submission — no pre-publication moderation gate.
 - Clear photo guidelines; sensitive/identifying content discouraged.
 
 Notes:
 
-- Show progress and save-draft; disclose moderation and display policies.
+- Show progress and save-draft; disclose display policies and admin's right to remove for violations.
 
 ---
 
-### Screen 2: Admin – Moderation Queue
+### Screen 2: Admin – Review Management
 
-Purpose: Efficiently review, approve, reject, or request edits; manage flags.
+Purpose: Monitor published reviews, edit or remove for policy violations, manage flags, and seed authenticated reviews for new providers.
 
 Data Fields:
 
 | Field Name    | Type   | Required | Description                                | Validation Rules       |
 |---------------|--------|----------|--------------------------------------------|------------------------|
-| Filters       | UI     | No       | Status, provider, date, rating, flags      | N/A                    |
+| Filters       | UI     | No       | Status (Published / Removed / Flagged), provider, date, rating | N/A                    |
 | Review item   | Card   | Yes      | Ratings, feedback, photos, patient alias   | N/A                    |
-| Actions       | Buttons| Yes      | Approve, Reject (reason), Request Edits    | Reason min 10 chars    |
-| Redaction     | Tools  | No       | Remove PII/violations before approval      | Track changes in audit |
+| Actions       | Buttons| Yes      | Edit (redact), Remove (with reason)        | Reason min 10 chars    |
+| Redaction     | Tools  | No       | Remove PII/violations from published review | Track changes in audit |
+| Add Review    | Button | No       | Seed authenticated review for a provider (flagged as "Verified Off-platform") | Requires verification source and date |
 
 Business Rules:
 
-- Every decision records moderator, timestamp, and reason.
+- Every admin action (edit, remove, seed) records admin identity, timestamp, and reason in audit trail.
 - Redactions are tracked and visible in audit history.
+- Removal is unpublish + archival (not permanent deletion) per 7-year data retention policy.
+- Admin-seeded reviews must be flagged as "Verified Off-platform" with verification source and date (per client transcription: AdminPlatform-Part1, lines 91–100).
 
 Notes:
 
-- Bulk actions for clear-cut spam; export moderation report.
+- Bulk actions for clear-cut spam; export review management report.
 
 ---
 
@@ -191,22 +197,22 @@ Notes:
 
 - Eligibility check required: only patients with a completed procedure may review.
 - Time gating: review invitation and entry allowed ≥ 3 months post-procedure.
-- One review per completed procedure; subsequent updates via edit (pre‑moderation) or addendum after approval.
+- One review per completed procedure; patient can edit their published review at any time (updated content published immediately).
 - Ratings use 1–5 scale with half‑stars display allowed for averages.
 
 ### Data & Privacy Rules
 
 - Patient display name uses aliasing (e.g., first name + initial) by default.
-- Photos and text must not expose sensitive personal information; admin may redact or reject.
+- Photos and text must not expose sensitive personal information; admin may redact or remove post-publication.
 - Reviews retained for minimum 7 years; takedown requests handled by unpublish + archival with restricted access.
-- All moderation and publication actions are fully auditable (who, when, what, reason).
+- All admin actions (edits, removals, seeded reviews) are fully auditable (who, when, what, reason).
 
 ### Admin Editability Rules
 
 Editable by Admin:
 
 - Review categories/labels; invitation cadence and reminders.
-- Photo guidelines text; moderation reasons catalogue.
+- Photo guidelines text; removal reasons catalogue.
 - Visibility rules for display name (alias/full name toggle policy).
 
 Fixed in Codebase (Not Editable):
@@ -216,11 +222,11 @@ Fixed in Codebase (Not Editable):
 
 Configurable with Restrictions:
 
-- Flagging thresholds and auto‑hold rules (within safe bounds approved by policy).
+- Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy).
 
-Moderation Policy Notes:
+Admin-Seeded Review Policy:
 
-- Admin-imported authenticated reviews must be flagged as "Verified Off‑platform" and subject to the same moderation standards before publication.
+- Admin-imported authenticated reviews must be flagged as "Verified Off‑platform" with verification source and date. These are published directly by admin (no patient submission flow).
 
 ---
 
@@ -239,8 +245,8 @@ Moderation Policy Notes:
 
 ### Admin Management Metrics
 
-- SC-006: 95% of reviews receive a moderation decision within 48 hours.
-- SC-007: 100% of decisions capture moderator, timestamp, and reason in audit log.
+- SC-006: 95% of flagged reviews receive an admin review decision within 48 hours.
+- SC-007: 100% of admin actions (edits, removals) capture admin identity, timestamp, and reason in audit log.
 
 ### System Performance Metrics
 
@@ -262,7 +268,7 @@ Moderation Policy Notes:
 - P-01: Auth & Profile Management – identity and role context.
 - P-03: Booking & Payment – confirm procedure completion and dates for eligibility/time gating.
 - S-05: Media Storage Service – secure handling of review photos.
-- S-03: Notification Service – invitations, reminders, and decision notifications.
+- S-03: Notification Service – invitations, reminders, admin removal notifications, and provider response alerts.
 
 ### External Dependencies (APIs, Services)
 
@@ -279,7 +285,7 @@ Moderation Policy Notes:
 
 ### User Behavior Assumptions
 
-- Patients are willing to leave reviews when prompted and informed of moderation policy.
+- Patients are willing to leave reviews when prompted and informed of display policies.
 - Providers will respond to reviews to improve public trust.
 
 ### Technology Assumptions
@@ -289,7 +295,7 @@ Moderation Policy Notes:
 
 ### Business Process Assumptions
 
-- Admin team monitors moderation queue daily during business hours.
+- Admin team monitors flagged reviews and review management dashboard during business hours.
 - Legal/compliance guidance exists for defamation and takedown handling.
 
 ---
@@ -298,14 +304,14 @@ Moderation Policy Notes:
 
 ### Technical Considerations
 
-- Architecture: Separate review write path (pending) and read path (published) with audit logs.
+- Architecture: Reviews published immediately on write; admin audit logs for post-publication edits and removals.
 - Media handling: Validate size/type, generate thumbnails; protect access.
 - Anti‑abuse: Duplicate detection, keyword flags, rate limits for submissions and responses.
 
 ### Integration Points
 
-- Patient app → Review service: submit, edit prior to moderation, status.
-- Admin dashboard → Review service: moderation queue, decisions, audits.
+- Patient app → Review service: submit (published immediately), edit, request takedown, status.
+- Admin dashboard → Review service: review management, edit/remove, seed reviews, audits.
 - Provider dashboard → Review service: fetch published reviews, post responses.
 
 ### Scalability Considerations
@@ -327,23 +333,24 @@ Moderation Policy Notes:
 
 Why: Capture authentic post‑procedure experience to inform others.
 
-Independent Test: Eligible test patient submits review with photos; appears in moderation queue.
+Independent Test: Eligible test patient submits review with photos; review is published immediately and visible on provider profile.
 
 Acceptance Scenarios:
 
-1. Given an eligible patient, when they submit required ratings and feedback, then the review saves as Pending and confirms to the patient.
+1. Given an eligible patient, when they submit required ratings and feedback, then the review is published immediately and the patient sees confirmation.
 2. Given valid photos, when uploaded, then the system accepts and associates them with the review.
+3. Given a published review, when the provider profile loads, then averages and distribution reflect the new review.
 
-### User Story 2 – Admin approves a review (P1)
+### User Story 2 – Admin removes a published review (P1)
 
-Why: Ensure quality and policy compliance.
+Why: Ensure policy compliance post-publication.
 
-Independent Test: Admin approves a pending review; it publishes with audit entry.
+Independent Test: Admin removes a published review for policy violation; review is unpublished with audit entry and patient is notified.
 
 Acceptance Scenarios:
 
-1. Given a pending review, when an admin approves it, then the review is published and ratings metrics update.
-2. Given publication, when the provider profile loads, then averages and distribution reflect the new review.
+1. Given a published review with a policy violation, when an admin removes it with a reason, then the review is unpublished and archived, ratings metrics are recalculated, and the patient sees "Removed by Admin" status with the reason.
+2. Given a removal, when the provider profile loads, then averages and distribution no longer include the removed review.
 
 ### User Story 3 – Provider responds to a review (P2)
 
@@ -360,7 +367,7 @@ Acceptance Scenarios:
 
 - Ineligible attempts (too early/no completed procedure) are blocked with clear messaging.
 - Photos exceed limits: user informed, upload prevented until compliant.
-- Duplicate or spam reviews: auto‑flag and queue for moderation.
+- Duplicate or spam reviews: auto‑flag for admin review post-publication.
 - Takedown request: review unpublished and archived; provider metrics recalculated.
 
 ---
@@ -371,8 +378,8 @@ Acceptance Scenarios:
 
 - **REQ-013-001**: System MUST allow eligible patients to submit reviews (overall + categories, feedback, optional photos).
 - **REQ-013-002**: System MUST enforce time gating (≥ 3 months) and single review per completed procedure.
-- **REQ-013-003**: System MUST provide admin moderation with approve/reject/request edits and audit trail.
-- **REQ-013-004**: System MUST publish approved reviews on provider profiles with provider responses.
+- **REQ-013-003**: System MUST publish reviews immediately upon patient submission (no pre-publication moderation gate) and provide admin with post-publication edit/remove capabilities with full audit trail.
+- **REQ-013-004**: System MUST display published reviews on provider profiles with provider responses; admin-removed reviews are unpublished and archived.
 - **REQ-013-005**: System MUST calculate and display provider average rating, count, and distribution.
 
 ### Data Requirements
@@ -393,15 +400,15 @@ Acceptance Scenarios:
 
 ### Marking Unclear Requirements
 
-No unresolved clarifications remain for V1 scope; editing after approval is limited to provider response. Future enhancements may include patient edit windows for typos post‑publication with re‑moderation.
+No unresolved clarifications remain for V1 scope. Patient can edit their published review at any time (updated content published immediately). Admin can edit or remove post-publication for policy violations.
 
 ---
 
 ## Key Entities
 
-- Review: overall rating, category ratings, feedback, status, timestamps, links (patient, procedure, provider).
+- Review: overall rating, category ratings, feedback, status (Published / Removed by Admin), timestamps, links (patient, procedure, provider), source type (patient-submitted / admin-seeded "Verified Off-platform").
 - ReviewPhoto: file references, thumbnails, alt text; associated review ID.
-- ModerationDecision: status (approved/rejected/request edits), reason, moderator, timestamp.
+- AdminAction: action type (edit/remove), reason, admin identity, timestamp, changes made; associated review ID.
 - ProviderResponse: text, author (provider), timestamp; associated review ID.
 
 ---
@@ -412,6 +419,7 @@ No unresolved clarifications remain for V1 scope; editing after approval is limi
 |------------|---------|------------------------------------------------|--------|
 | 2025-11-11 | 1.0     | Initial PRD creation                           | AI     |
 | 2025-11-11 | 1.1     | Filled scope, workflows, rules, and criteria   | AI     |
+| 2026-03-03 | 1.2     | **Removed pre-publication moderation gate** — reviews now publish immediately upon patient submission (per client transcription: no moderation gate was requested). Admin retains post-publication edit/remove capability for policy violations. Key changes: (1) Main Flow updated — review published immediately, no "Pending Moderation" status; (2) A1/A2 workflows replaced — from approve/reject to post-publication remove/edit; (3) Screen 2 renamed from "Moderation Queue" to "Review Management"; (4) Patient can edit published review at any time; (5) Status values simplified to Published / Removed by Admin; (6) ModerationDecision entity replaced with AdminAction entity; (7) Admin-seeded reviews moved from Backlog to main admin scope per client transcription (AdminPlatform-Part1, lines 91–100); (8) All metrics, requirements, and business rules updated to reflect no-moderation model. | Product alignment (2026-03-03) |
 
 ---
 
@@ -428,4 +436,4 @@ No unresolved clarifications remain for V1 scope; editing after approval is limi
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-03
+**Last Updated**: 2026-03-03
