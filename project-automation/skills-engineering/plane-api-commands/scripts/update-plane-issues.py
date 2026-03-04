@@ -63,10 +63,10 @@ def parse_tasks(content: str) -> list:
 
 
 def get_issue_id(issue_identifier: str, config: dict) -> str:
-    """Get the internal UUID for an issue from its identifier (e.g., HAIRL-892)."""
+    """Get the internal UUID for a work item from its identifier (e.g., HAIRL-892)."""
     url = (
         f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/issues/?fields=id,sequence_id"
+        f"/projects/{config['PROJECT_ID']}/work-items/?fields=id,sequence_id"
     )
     cmd = [
         "curl", "-s", "-X", "GET", url,
@@ -89,7 +89,7 @@ def get_issue_id(issue_identifier: str, config: dict) -> str:
 
 
 def update_issue(issue_identifier: str, task: dict, config: dict) -> dict:
-    """Update one Plane issue via API."""
+    """Update one Plane work item via API."""
     # Get the internal UUID for the issue
     issue_id = get_issue_id(issue_identifier, config)
     if not issue_id:
@@ -103,7 +103,7 @@ def update_issue(issue_identifier: str, task: dict, config: dict) -> dict:
     }
     url = (
         f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/issues/{issue_id}/"
+        f"/projects/{config['PROJECT_ID']}/work-items/{issue_id}/"
     )
     cmd = [
         "curl", "-s", "-X", "PATCH", url,

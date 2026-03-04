@@ -232,11 +232,11 @@ Output:
 | List Tags | GET | `/workspaces/{slug}/projects/{id}/labels/` |
 | List Issue Types | GET | `/workspaces/{slug}/projects/{id}/issue-types/` |
 | List States | GET | `/workspaces/{slug}/projects/{id}/states/` |
-| List Issues | GET | `/workspaces/{slug}/projects/{id}/issues/` |
-| Create Issue | POST | `/workspaces/{slug}/projects/{id}/issues/` |
-| Update Issue | PATCH | `/workspaces/{slug}/projects/{id}/issues/{issue_id}/` |
+| List Work Items | GET | `/workspaces/{slug}/projects/{id}/work-items/` |
+| Create Work Item | POST | `/workspaces/{slug}/projects/{id}/work-items/` |
+| Update Work Item | PATCH | `/workspaces/{slug}/projects/{id}/work-items/{work_item_id}/` |
 
-### Create Issue Payload
+### Create Work Item Payload
 
 ```json
 {
@@ -246,11 +246,11 @@ Output:
   "assignees": ["{assignee_id}"],
   "state": "{state_id}",
   "priority": "medium",
-  "issue_type": "{issue_type_id}"
+  "type": "{work_item_type_id}"
 }
 ```
 
-### Update Issue Payload
+### Update Work Item Payload
 
 ```json
 {

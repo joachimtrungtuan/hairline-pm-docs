@@ -150,9 +150,9 @@ Current version fixes:
 | List Tags | GET | `/workspaces/{slug}/projects/{id}/labels/` |
 | List Issue Types | GET | `/workspaces/{slug}/projects/{id}/issue-types/` |
 | List States | GET | `/workspaces/{slug}/projects/{id}/states/` |
-| Create Issue | POST | `/workspaces/{slug}/projects/{id}/issues/` |
+| Create Work Item | POST | `/workspaces/{slug}/projects/{id}/work-items/` |
 
-### Create Issue Payload
+### Create Work Item Payload
 
 ```json
 {
@@ -162,7 +162,7 @@ Current version fixes:
   "assignees": ["{assignee_id}"],
   "state": "{state_id}",
   "priority": "medium",
-  "issue_type": "{issue_type_id}"
+  "type": "{work_item_type_id}"
 }
 ```
 

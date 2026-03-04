@@ -116,7 +116,7 @@ This folder contains documentation update reports and verification logs for the 
   - Singular clinician model aligned to FR-004; donor/recipient removed
   - No-Show/Postponed clarified as admin-managed labels; User Story 2 rewritten (no Pause)
 
-### 2026-03-03/ (5 files)
+### 2026-03-03/ (7 files)
 
 #### **FR-006 + FR-010 Alignment**
 
@@ -141,6 +141,10 @@ This folder contains documentation update reports and verification logs for the 
 #### **FR-013 Moderation Gate Removed**
 
 - `FR013_MODERATION_REMOVED_2026-03-03.md` - Removed pre-publication moderation gate from FR-013 (not requested in client transcriptions); reviews now publish immediately upon patient submission; admin retains post-publication edit/remove capability for policy violations; ModerationDecision entity replaced with AdminAction; admin-seeded reviews moved from Backlog to main scope per client transcription
+
+#### **P-05 Mobile UX/UI Implementation Tasks**
+
+- `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - Created Plane-ready UX/UI tasks for P-05 mobile flows (P05.1–P05.3) screens; assigned to Mr. Khue
 
 ---
 
@@ -184,6 +188,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR010_ADMIN_OVERRIDE_SOFT_DELETE_DAY_MODEL_2026-03-03.md` - FR-010 admin override + soft delete + day-only In Progress model; FR-004 plan schema clarification
 - **2026-03-03**: `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated; footer confirmed aligned to template
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
+- **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 
 ### Design Specifications
 

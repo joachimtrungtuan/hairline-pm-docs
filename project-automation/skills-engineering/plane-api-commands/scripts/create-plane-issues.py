@@ -17,6 +17,35 @@ import sys
 from pathlib import Path
 
 
+def load_label_ids(system_vars_path: Path) -> dict:
+    """
+    Best-effort parse of label IDs from samasu-system-variables.md.
+
+    Supports lines like:
+    - **UX/UI** - `uuid`
+    - * UX/UI: `uuid`
+    """
+    if not system_vars_path.exists():
+        return {}
+    text = system_vars_path.read_text(encoding="utf-8")
+    label_ids: dict[str, str] = {}
+
+    patterns = [
+        r"^\s*\d+\.\s*\*\*(?P<name>[^*]+)\*\*\s*-\s*`(?P<id>[a-f0-9-]{36})`",
+        r"^\s*\*\s*(?P<name>[^:]+):\s*`(?P<id>[a-f0-9-]{36})`",
+    ]
+    for line in text.splitlines():
+        for pat in patterns:
+            m = re.match(pat, line.strip(), re.IGNORECASE)
+            if m:
+                name = m.group("name").strip()
+                label_id = m.group("id").strip()
+                label_ids[name] = label_id
+                break
+
+    return label_ids
+
+
 def load_env(env_path: Path) -> dict:
     """Load variables from a .env file."""
     env_vars = {}
@@ -63,7 +92,13 @@ def parse_tasks(content: str) -> list:
 
 
 def create_issue(task: dict, config: dict) -> dict:
-    """Create one Plane issue via API."""
+    """Create one Plane work item via API."""
+    labels: list[str] = []
+    if "[UX/UI TASK]" in task["name"]:
+        ux_label_id = config.get("LABEL_UX_UI_ID")
+        if ux_label_id:
+            labels.append(ux_label_id)
+
     payload = {
         "name": task["name"],
         "description_html": task["description"],
@@ -71,11 +106,15 @@ def create_issue(task: dict, config: dict) -> dict:
         "assignees": [config["ASSIGNEE_ID"]],
         "state": config["STAGE_ID"],
         "priority": config.get("PRIORITY", "medium"),
-        "issue_type": config["ISSUE_TYPE_ID"],
+        # Plane API v1 uses "type" for work item type
+        "type": config["ISSUE_TYPE_ID"],
     }
+    if labels:
+        payload["labels"] = labels
+
     url = (
         f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/issues/"
+        f"/projects/{config['PROJECT_ID']}/work-items/"
     )
     cmd = [
         "curl", "-s", "-X", "POST", url,
@@ -118,6 +157,7 @@ def main():
         sys.exit(1)
 
     # Build config from env
+    label_ids = load_label_ids(Path("samasu-system-variables.md"))
     config = {
         "PLANE_API_KEY": api_key,
         "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-digital"),
@@ -127,6 +167,7 @@ def main():
         "STAGE_ID": env_vars.get("STAGE_ID", ""),
         "PRIORITY": env_vars.get("PRIORITY", "medium"),
         "ISSUE_TYPE_ID": env_vars.get("ISSUE_TYPE_ID", ""),
+        "LABEL_UX_UI_ID": env_vars.get("LABEL_UX_UI_ID", label_ids.get("UX/UI", "")),
     }
 
     # Validate required config

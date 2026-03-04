@@ -152,11 +152,11 @@ for i, task in enumerate(tasks, 1):
         "assignees": [ASSIGNEE_ID],
         "state": STAGE_ID,
         "priority": PRIORITY,
-        "issue_type": ISSUE_TYPE_ID,
+        "type": ISSUE_TYPE_ID,
     }
     
     # API endpoint
-    url = f"{BASE_URL}/workspaces/{WORKSPACE_SLUG}/projects/{PROJECT_ID}/issues/"
+    url = f"{BASE_URL}/workspaces/{WORKSPACE_SLUG}/projects/{PROJECT_ID}/work-items/"
     
     # Convert payload to JSON (Python handles escaping correctly)
     payload_json = json.dumps(payload)
@@ -304,7 +304,7 @@ DEFAULT_WORKSPACE_SLUG="samasu-digital"
 ### Create Issue API
 
 ```
-POST /workspaces/{workspace_slug}/projects/{project_id}/issues/
+POST /workspaces/{workspace_slug}/projects/{project_id}/work-items/
 
 Headers:
   X-API-Key: {api_key}
@@ -318,7 +318,7 @@ Body:
   "assignees": ["{assignee_id}"],
   "state": "{state_id}",
   "priority": "medium",
-  "issue_type": "{issue_type_id}"
+  "type": "{work_item_type_id}"
 }
 ```
 
