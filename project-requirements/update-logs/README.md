@@ -146,6 +146,12 @@ This folder contains documentation update reports and verification logs for the 
 
 - `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - Created Plane-ready UX/UI tasks for P-05 mobile flows (P05.1–P05.3) screens; assigned to Mr. Khue
 
+### 2026-03-06/ (1 file)
+
+#### **P-06 + P-08 Mobile UX/UI Implementation Tasks**
+
+- `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - Created Plane-ready UX/UI tasks for P-06 and P-08 mobile flows (P06.1, P08.1), with one task per screen and Mr. Khue recorded as assignee
+
 ---
 
 ## Quick Reference by Topic
@@ -189,6 +195,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated; footer confirmed aligned to template
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
+- **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 
 ### Design Specifications
 
@@ -225,4 +232,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 3, 2026
+**Last Updated**: March 6, 2026
