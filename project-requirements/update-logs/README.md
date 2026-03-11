@@ -152,6 +152,19 @@ This folder contains documentation update reports and verification logs for the 
 
 - `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - Created Plane-ready UX/UI tasks for P-06 and P-08 mobile flows (P06.1, P08.1), with one task per screen and Mr. Khue recorded as assignee
 
+### 2026-03-09/ (1 file)
+
+#### **FR-034 FE + BE Implementation Tasks**
+
+- `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - Created Plane-ready FR-034 task breakdowns with frontend tasks split by admin screen and backend tasks grouped by broader support-center capabilities; assigned to Joachim Trung
+
+### 2026-03-10/ (2 files)
+
+#### **Testing Plan Alignment**
+
+- `TESTING_PLAN_ALIGNMENT_2026-03-10.md` - Corrected automated testing-plan FR traceability, removed unsupported admin/provider registration assumptions, and replaced ambiguous expected outcomes with PRD-backed assertions
+- `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Fixed stale manual auth scope, clarified canonical developer-report artifacts, and added missing FR traceability for automated password/payment coverage
+
 ---
 
 ## Quick Reference by Topic
@@ -161,6 +174,8 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-23**: `DOCUMENTATION_UPDATES_2025-10-23.md` - Complete changelog
 - **2025-10-27**: `CROSS_REFERENCE_UPDATES_2025-10-27.md` - Cross-reference fixes
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Module structure changes
+- **2026-03-10**: `TESTING_PLAN_ALIGNMENT_2026-03-10.md` - Automated testing-plan alignment to approved FR/system PRD scope
+- **2026-03-10**: `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Manual/automated testing-plan follow-up fixes after review
 
 ### Verification Reports
 
@@ -196,6 +211,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
+- **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
 
 ### Design Specifications
 
@@ -232,4 +248,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 6, 2026
+**Last Updated**: March 10, 2026
