@@ -14,6 +14,14 @@
 - The canonical developer handoff and result-report artifact is [test-checklist-report.md](/Users/joachimtrungtuan/My%20Documents/Va%CC%82n%20Tay%20Media/Products/Hairline/local-docs/testing-plans/2026-03-10/automated/admin-dashboard/test-checklist-report.md).
 - If any manual run is executed, record the final business gaps and discrepancies in the summary section of the automated checklist/report, not only inside step-level notes here.
 
+## Scope & Deferred Items
+
+**In scope:** Admin dashboard end-to-end oversight — sign-in, provider/patient management, and monitoring the full treatment lifecycle. Patient actions are simulated via seeded data or the mobile app as an entry tool.
+
+**Deferred to future testing round:**
+- **Messaging & Communication oversight (FR-012):** Only basic messaging visibility is verified. Comprehensive messaging testing (conversation flagging depth, real-time sync, file sharing) is deferred. Must be revisited when messaging is tested as a standalone module.
+- **Admin Analytics & Reporting:** Dashboard metric accuracy is spot-checked but not exhaustively validated against DB counts.
+
 ## Table of Contents
 
 1. [Test Environment Setup](#1-test-environment-setup)
@@ -21,7 +29,8 @@
 3. [Test Scenarios](#3-test-scenarios)
    - [TC-A-001: Admin Team Access & Sign-In](#tc-a-001-admin-team-access--sign-in)
    - [TC-A-002: Admin Onboarding & Dashboard Overview](#tc-a-002-admin-onboarding--dashboard-overview)
-   - [TC-A-003: Managing Providers & Patients](#tc-a-003-managing-providers--patients)
+   - [TC-A-003: Admin Creates Provider Account (FR-015 Wizard Flow)](#tc-a-003-admin-creates-provider-account-fr-015-wizard-flow)
+   - [TC-A-003B: Managing Providers & Patients](#tc-a-003b-managing-providers--patients)
    - [TC-A-004: Monitoring Inquiries](#tc-a-004-monitoring-inquiries)
    - [TC-A-005: Overseeing Quotes & Pricing](#tc-a-005-overseeing-quotes--pricing)
    - [TC-A-006: Booking & Payment Administration](#tc-a-006-booking--payment-administration)
@@ -162,13 +171,28 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 10 | While logged in as admin, navigate to a provider-only route | Access blocked or redirected | |
 | 11 | Log in as provider in a separate session and navigate to an admin-only route | Access blocked or redirected | |
 
+#### Super Admin RBAC Configuration (FR-031)
+
+| Step | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| 12 | Log in as Super Admin and navigate to System Settings > Access Control | RBAC configuration module loads (FR-031) | |
+| 13 | View admin role permission matrix (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) | All admin roles displayed with their permission toggles | |
+| 14 | View provider role permission matrix (Owner, Manager, Clinical Staff, Billing Staff) | All provider roles displayed with configurable permissions | |
+| 15 | Modify a permission for a provider role (e.g., toggle Clinical Staff access to billing) | Permission change saved; audit trail logged | |
+| 16 | Log in as non-Super Admin (e.g., Aftercare Specialist) and attempt to access RBAC configuration | Access denied — only Super Admins can access this module | |
+| 17 | Invite a new admin team member (enter email, assign role) | Invitation sent; pending status shown | |
+
 #### Edge Cases
 
 - [ ] Admin login with wrong password shows error
 - [ ] Revoked admin session is no longer usable after access removal
 - [ ] Admin cannot access provider-specific routes
 - [ ] Provider cannot access admin-specific routes (role isolation)
+- [ ] Non-Super Admin cannot access RBAC configuration (FR-031) — access blocked or module hidden
+- [ ] Permission changes take effect immediately for affected users (or on next login)
+- [ ] Admin role with reduced permissions only sees permitted modules in sidebar
 - [ ] Session timeout behavior (if applicable)
+- [ ] Audit trail records all permission changes with user, timestamp, and before/after values
 
 ---
 
@@ -194,18 +218,89 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 7 | Click notification to see detail | Notification expands or navigates to source | |
 | 8 | Check real-time update (if WebSocket active) | New data appears without page refresh | |
 
+#### Edge Cases to Verify
+
+- [ ] Dashboard with no seeded data — widgets show zero counts or empty states gracefully (no broken UI)
+- [ ] Notification dropdown with many items — infinite scroll works (FR-020)
+- [ ] Click notification that links to a deleted/archived record — handles gracefully (404 page or redirect)
+- [ ] Different admin roles see different sidebar modules based on RBAC (FR-031)
+
 #### Acceptance Criteria
 
 - [ ] Dashboard loads within 3 seconds
 - [ ] All metric widgets display data (no empty/error states with seeded data)
-- [ ] Navigation sidebar reflects admin role (not provider role)
+- [ ] Navigation sidebar reflects admin role permissions (not provider role)
 - [ ] Notifications dropdown shows with infinite scroll (FR-020)
+- [ ] Real-time WebSocket updates functional (if Reverb running)
 
 ---
 
-### TC-A-003: Managing Providers & Patients
+### TC-A-003: Admin Creates Provider Account (FR-015 Wizard Flow)
 
-**Objective:** Verify admin can view, search, and manage provider and patient records.
+**Objective:** Verify admin can create a new provider account using the wizard-style interface, and the provider receives activation email and can set up their account.
+**FR Reference:** FR-015 (Provider Management — Admin-Initiated)
+
+#### Pre-conditions
+- Logged in as admin
+- Mailpit running for activation email
+
+#### Provider Creation Wizard
+
+| Step | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| 1 | Navigate to Provider Management section | Provider list loads with "Add New Provider" button visible (top-right) | |
+| 2 | Click "Add New Provider" | Wizard-style creation form opens | |
+| 3 | **Step 1 — Basic Information:** Enter profile picture/logo (optional), cover image (optional), full name, email, phone (with country code), bio/description (min 50 chars), seat limit (default 100) | All fields accept input; bio enforces 50-char minimum | |
+| 4 | **Step 2 — Professional Details:** Enter specialty, medical license number, years of experience, languages spoken (at least 1), awards (optional) | Fields save; at least 1 language required | |
+| 5 | **Step 3 — Clinic Information:** Enter clinic name, full address (street, city, state, postal code, country), clinic phone, operating hours | All address fields populated | |
+| 6 | **Step 4 — Document Upload:** Upload medical license (required, PDF/image), board certifications (optional), malpractice insurance (optional) | Files upload with preview; documents are for record-keeping only | |
+| 7 | **Step 5 — Commission Configuration:** Select commission model (Percentage or Flat Rate), enter value | Commission value saved | |
+| 8 | **Step 6 — Review Summary:** Review all entered information | Summary accurately reflects all input from Steps 1-5 | |
+| 9 | Click "Create Provider" | System validates required fields and creates provider with status = "Active" | |
+| 10 | Check Mailpit for activation email | Provider receives welcome email with one-time password setup link (expires 24 hours) | |
+| 11 | Open activation link from email | Password creation form displayed | |
+| 12 | Set password (min 12 chars, uppercase/lowercase/digit/special) | Password validated and saved | |
+| 13 | Log in as new provider on Provider Dashboard | Provider dashboard loads; onboarding/welcome screen prompts profile completion | |
+| 14 | Verify new provider appears in admin's Provider Management list | Provider listed with "Active" status, correct details | |
+
+#### Provider Status Management
+
+| Step | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| 15 | Suspend an active provider | Status changes to "Suspended" (yellow badge); provider notified | |
+| 16 | Attempt to log in as the suspended provider | Access denied or restricted | |
+| 17 | Reactivate the suspended provider | Status returns to "Active" (green badge) | |
+| 18 | Deactivate a provider | Status changes to "Deactivated" (red badge); provider notified | |
+| 19 | Toggle "Featured Provider" for an active provider | Featured badge (gold star) appears; provider visible in patient app featured list | |
+| 20 | Resend activation email for a provider who hasn't set password yet | New activation email sent to Mailpit; previous link invalidated | |
+
+#### Edge Cases to Verify
+
+- [ ] **Create provider with missing required fields** (no name, no email, no clinic name, bio < 50 chars, no language) — wizard blocks progression with field-level validation
+- [ ] **Create provider with duplicate email** — system rejects with clear error
+- [ ] **Activation link expired (24+ hours)** — link rejected; provider can request resend from login page ("Didn't receive activation email?")
+- [ ] **Resend activation email rate-limited** — max 3 resend requests per hour per email
+- [ ] **Password too weak** — system rejects with specific feedback (which criteria failed)
+- [ ] **Admin edits provider commission after creation** — change persists; affects future payout calculations
+- [ ] **Document upload with invalid file type** — system rejects with clear error
+- [ ] **Provider profile changes (via FR-032) sync to admin view** — changes made by provider in their dashboard reflect in admin's provider detail page
+
+#### Acceptance Criteria
+
+- [ ] Full 6-step wizard flow completes without errors
+- [ ] All required field validations enforce correctly at each step
+- [ ] Activation email arrives with working one-time link
+- [ ] Provider can set password and log in after account creation
+- [ ] Provider status transitions work: Active ↔ Suspended → Deactivated
+- [ ] Featured provider toggle reflects in patient-facing listings
+- [ ] Commission configuration (Percentage / Flat Rate) saves correctly
+- [ ] Status badge colors correct: Active (green), Suspended (yellow), Deactivated (red)
+
+---
+
+### TC-A-003B: Managing Providers & Patients
+
+**Objective:** Verify admin can view, search, and manage existing provider and patient records.
 **FR Reference:** FR-015 (Provider Management), FR-016 (Patient Management)
 
 #### Pre-conditions
@@ -215,28 +310,37 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 
 | Step | Action | Expected Result | Pass/Fail |
 |------|--------|-----------------|-----------|
-| 1 | Navigate to provider management section | Provider list loads | |
-| 2 | Search for a provider by name | Search results filter correctly | |
-| 3 | Click on a provider to view details | Provider detail page loads with: clinic info, team, credentials | |
-| 4 | View provider detail page | Provider detail page shows clinic info, team members, credentials, status | |
-| 5 | Check provider status controls | Ability to set provider status: Active, Suspended, or Deactivated (FR-015) | |
+| 1 | Navigate to provider management section | Provider list loads (default: Active providers) | |
+| 2 | Search for a provider by name, clinic name, or email | Search results filter correctly (case-insensitive) | |
+| 3 | Filter by status (Active, Suspended, Deactivated) | Filters narrow results correctly | |
+| 4 | Filter by Featured only | Only featured providers shown | |
+| 5 | Sort provider table by name, created date, commission rate | Sorting works for each column | |
+| 6 | Click on a provider to view details | Provider detail page: clinic info, team, credentials, commission, documents, status | |
+| 7 | Verify provider detail shows documents status (Complete/Incomplete) | Documents status column accurate | |
 
 #### Patient Management
 
 | Step | Action | Expected Result | Pass/Fail |
 |------|--------|-----------------|-----------|
-| 6 | Navigate to Patients section | Patient list/table loads | |
-| 7 | Search for a patient by name or ID | Search results filter correctly | |
-| 8 | Sort patient table by various columns | Sorting works (name, date, status) | |
-| 9 | Click on a patient to view details | Patient detail page: medical history, inquiries, treatments | |
-| 10 | View patient's treatment history | Treatment timeline visible | |
-| 11 | View patient billing/payment records | Payment history accessible | |
+| 8 | Navigate to Patients section | Patient list/table loads | |
+| 9 | Search for a patient by name or ID | Search results filter correctly | |
+| 10 | Sort patient table by various columns | Sorting works (name, date, status) | |
+| 11 | Click on a patient to view details | Patient detail page: medical history, inquiries, treatments | |
+| 12 | View patient's treatment history | Treatment timeline visible | |
+| 13 | View patient billing/payment records | Payment history accessible | |
+
+#### Edge Cases to Verify
+
+- [ ] Search with partial text matches results correctly
+- [ ] Provider list with 50+ entries — pagination works (50 per page per FR-015)
+- [ ] Navigate away and back — filters/sorting persist
+- [ ] Patient data shows correct masked/unmasked state depending on treatment stage
 
 #### Acceptance Criteria
 
-- [ ] Search is responsive and accurate
-- [ ] Pagination works for large datasets
-- [ ] Table sorting persists when navigating back
+- [ ] Search is responsive and accurate across provider name, clinic, email, license number
+- [ ] Pagination works for large datasets (50 per page)
+- [ ] Table sorting works and persists
 - [ ] Patient data shows masked/anonymized status correctly (before payment)
 - [ ] Admin can view all data across all providers
 
@@ -261,14 +365,25 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 5 | Check expired inquiry handling | Expired inquiries marked clearly, no actions available | |
 | 6 | Verify inquiry-quote linkage visible | Can see which quotes were submitted for each inquiry | |
 | 7 | Flag a conversation related to an inquiry | Flag saved (FR-016) | |
+| 8 | Edit/override an inquiry detail (admin authority per FR-003) | Edit saved with audit trail | |
+| 9 | Soft-delete an inquiry | Inquiry removed from active list; remains in archive with audit record | |
+
+#### Edge Cases to Verify
+
+- [ ] Inquiry cancelled by patient — all linked quotes show "Cancelled (Inquiry Cancelled)"; inquiry is read-only
+- [ ] Inquiry distributed to maximum 10 providers — distribution count visible and capped
+- [ ] Inquiry with critical medical alerts — alerts prominently displayed in admin view
+- [ ] Admin reassigns inquiry to different providers — reassignment reflected with audit trail
+- [ ] Inquiry soft-deleted by admin — disappears from active list but remains in audit/archive
 
 #### Acceptance Criteria
 
 - [ ] Admin sees all inquiries across all providers (platform-wide view)
 - [ ] Status filters narrow results correctly
-- [ ] Distribution SLA tracking visible
+- [ ] Distribution SLA tracking visible (≤5 minutes)
 - [ ] Expired inquiries handled gracefully
 - [ ] Conversation flagging works (FR-016)
+- [ ] Inquiry-to-quote linkage visible for cross-referencing
 
 ---
 
@@ -291,12 +406,22 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 5 | Verify quote status transitions visible | Quote statuses (Draft/Submitted/Accepted/Expired) accurately displayed | |
 | 6 | View quote expiry enforcement (48-hour) | Expired quotes marked and non-actionable | |
 
+#### Edge Cases to Verify
+
+- [ ] **Quote soft-deleted by provider:** Admin can see archived quote in audit trail and restore if needed
+- [ ] **Provider withdrawal after acceptance:** Admin sees "provider-withdrawn" status; can resolve (re-route, reschedule, or cancel with refund)
+- [ ] **All quotes for an inquiry expired with none accepted:** Admin can see expired state; patient may need to create new inquiry
+- [ ] **Quote with cancelled inquiry:** Quote shows "Cancelled (Inquiry Cancelled)" status; admin can view but not reactivate
+- [ ] **Admin inline edit of a quote (policy-bound):** Admin can edit within policy limits; changes audited
+
 #### Acceptance Criteria
 
 - [ ] Admin has visibility into all quotes platform-wide
 - [ ] Commission rates apply correctly to quote pricing
-- [ ] Quote status transitions are accurate
+- [ ] Quote status transitions are accurate (Draft/Submitted/Accepted/Expired/Withdrawn/Archived/Cancelled)
 - [ ] Financial summaries match individual quote totals
+- [ ] Admin can perform soft delete/restore with full audit trail
+- [ ] Provider withdrawal cases visible and resolvable
 
 ---
 
@@ -322,14 +447,24 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 8 | Navigate to patient billing detail page | Detailed billing breakdown shown | |
 | 9 | Verify provider payout/billing records | Provider billing section shows earned amounts | |
 
+#### Edge Cases to Verify
+
+- [ ] **Payment failure with retry:** Admin sees payment failure record and retry attempts (exponential backoff per FR-007)
+- [ ] **48-hour slot hold after failed payment:** Admin can see held slot status; slot auto-releases after 48 hours
+- [ ] **Patient cancels during 48-hour slot hold:** Slot released immediately; no payment collected; admin can verify
+- [ ] **Refund processing:** Admin processes refund per cancellation policy; refund status trackable
+- [ ] **Installment completion enforcement (≥30 days before procedure):** System enforces the rule; admin can verify
+- [ ] **Multi-currency display consistency:** Same booking shows correct currency throughout all admin views
+
 #### Acceptance Criteria
 
 - [ ] All payment records visible to admin
-- [ ] Deposit percentage configurable in admin settings
-- [ ] Installment plans calculate correctly
+- [ ] Deposit percentage configurable in admin settings (default 20-30% range, via FR-029)
+- [ ] Installment plans calculate correctly (2-9 monthly, interest-free per FR-007B)
 - [ ] Multi-currency amounts display correctly
 - [ ] Payment history shows complete audit trail
 - [ ] Provider billing/commission calculations are accurate
+- [ ] Refund processing workflow functional
 
 ---
 
@@ -351,14 +486,26 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 4 | View treatment timeline | Chronological view of all treatment events | |
 | 5 | Check procedure documentation (photos, notes, medications) | Documentation uploaded by provider visible to admin | |
 | 6 | Verify admin can add notes or flags to a treatment | Admin notes saved | |
-| 7 | Check real-time status updates | Treatment status changes reflected without page refresh | |
+| 7 | View payment status on treatment detail (outstanding balance / split pay) | Payment status visible for operational follow-up (FR-010) | |
+| 8 | Check real-time status updates | Treatment status changes reflected without page refresh | |
+
+#### Edge Cases to Verify
+
+- [ ] **Admin edits an active treatment record:** Day statuses, notes, end-of-treatment fields editable by admin (per FR-010)
+- [ ] **Admin manually triggers status transition:** Admin can override treatment status if needed
+- [ ] **No-show case escalated to admin:** Admin receives notification with reason; can handle status transition, deposit retention, and rebooking manually
+- [ ] **Medical postponement escalated to admin:** Admin transitions case to "Postponed" (admin-managed label); initiates rescheduling with no financial penalty
+- [ ] **Treatment interrupted — admin intervention:** Admin handles case closure, partial documentation, financial reconciliation
+- [ ] **Real-time treatment progress:** Admin sees current day and day status for all active treatments without page refresh
 
 #### Acceptance Criteria
 
-- [ ] Admin has read access to all treatment records
+- [ ] Admin has read AND edit access to all treatment records (per FR-010)
 - [ ] Treatment status transitions visible in timeline
+- [ ] Day-by-day status and progress visible for active treatments
 - [ ] Procedure documentation (photos, notes) viewable
-- [ ] Admin can flag or annotate treatments
+- [ ] Admin can flag, annotate, and edit treatments
+- [ ] Cancel/Close case escalations from providers visible with reason and notes
 - [ ] Filter/search works across large treatment datasets
 
 ---
@@ -384,14 +531,23 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 7 | View aftercare messaging/communication | Aftercare conversations accessible | |
 | 8 | Check standalone aftercare service pricing configuration | Template-based pricing configurable per FR-011: Fixed Price, Monthly Subscription, or Both; multi-currency support (pricing set per template per currency) | |
 
+#### Edge Cases to Verify
+
+- [ ] **Admin reassigns aftercare case to different specialist:** Reassignment reflected; new specialist notified
+- [ ] **Aftercare escalation from provider:** Admin receives escalation notification and can intervene
+- [ ] **Standalone aftercare request (external clinic patient):** Admin can intake, assign, and configure standalone aftercare case
+- [ ] **Aftercare template management:** Admin can create/edit/delete milestone templates, questionnaire templates, and educational resources
+- [ ] **Overdue patient milestone:** Admin sees overdue indicator; can send reminder or flag case
+
 #### Acceptance Criteria
 
 - [ ] Admin can view all aftercare cases platform-wide
 - [ ] Aftercare specialist assignment works
 - [ ] Patient milestone tracking accurate
-- [ ] Scan photo comparisons available
+- [ ] Scan photo set comparisons available (V1: 2D multi-view)
 - [ ] Questionnaire responses render correctly
-- [ ] Aftercare pricing configurable
+- [ ] Aftercare pricing configurable per template per currency (Fixed Price, Monthly Subscription, or Both per FR-011)
+- [ ] Template management (create/edit) functional
 
 ---
 
@@ -413,12 +569,20 @@ php artisan db:seed --class=HairlineDashboardSampleDataSeeder
 | 4 | Verify all linked records are consistent | Inquiry, quote, booking, payment, treatment, aftercare all cross-linked correctly | |
 | 5 | Verify completed treatment is read-only (or requires explicit unlock to edit) | No accidental modifications to finalized records | |
 
+#### Edge Cases to Verify
+
+- [ ] **Completed treatment with partial aftercare (some milestones incomplete):** Admin can see which milestones were skipped or incomplete
+- [ ] **Completed treatment where provider withdrawal occurred mid-process:** Full audit trail shows the intervention history
+- [ ] **Admin attempts to edit a completed treatment:** System blocks or requires explicit unlock with audit logging
+- [ ] **Cross-reference consistency:** Inquiry HPID → Quote → Booking → Payment → Treatment → Aftercare all linked with matching IDs and amounts
+
 #### Acceptance Criteria
 
 - [ ] Completed treatments show full lifecycle history
 - [ ] Treatment outcome documentation (photos, notes) viewable
-- [ ] All linked records (inquiry → quote → booking → payment → aftercare) are consistent
+- [ ] All linked records (inquiry → quote → booking → payment → aftercare) are consistent and cross-referenced
 - [ ] Completed treatments are appropriately locked from accidental edits
+- [ ] Full audit trail preserved across all stages
 
 ---
 
@@ -429,8 +593,10 @@ Admin parallel verification of the treatment flow (performed alongside provider 
 | # | Stage | Admin Action | Status | Notes |
 |---|-------|-------------|--------|-------|
 | 1 | Admin team access | Log in as active Hairline Team member | ☐ | |
+| 1b | RBAC configuration | Super Admin verifies role permissions (FR-031) | ☐ | TC-A-001 |
 | 2 | Dashboard overview | Verify platform metrics | ☐ | |
-| 3 | Provider management | View/search providers | ☐ | |
+| 2b | Provider creation | Create new provider via 6-step wizard; verify activation email | ☐ | TC-A-003 |
+| 3 | Provider management | View/search/filter providers and patients | ☐ | TC-A-003B |
 | 4 | Inquiry monitoring | Verify inquiry distribution | ☐ | |
 | 5 | Quote oversight | Monitor submitted quotes | ☐ | |
 | 6 | Booking confirmation | Verify booking & payment records | ☐ | |

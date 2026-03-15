@@ -165,6 +165,12 @@ This folder contains documentation update reports and verification logs for the 
 - `TESTING_PLAN_ALIGNMENT_2026-03-10.md` - Corrected automated testing-plan FR traceability, removed unsupported admin/provider registration assumptions, and replaced ambiguous expected outcomes with PRD-backed assertions
 - `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Fixed stale manual auth scope, clarified canonical developer-report artifacts, and added missing FR traceability for automated password/payment coverage
 
+### 2026-03-11/ (1 file)
+
+#### **Legal Static Content Creation**
+
+- `LEGAL_STATIC_CONTENT_2026-03-11.md` - Created first publishable draft set of public legal/support pages for Privacy Policy, Terms of Use, Contact Support, and Account Deletion under `local-docs/project-static-content/legal-content/`, aligned to current Hairline support, deletion, retention, and medical-data handling requirements
+
 ---
 
 ## Quick Reference by Topic
@@ -176,6 +182,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Module structure changes
 - **2026-03-10**: `TESTING_PLAN_ALIGNMENT_2026-03-10.md` - Automated testing-plan alignment to approved FR/system PRD scope
 - **2026-03-10**: `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Manual/automated testing-plan follow-up fixes after review
+- **2026-03-11**: `LEGAL_STATIC_CONTENT_2026-03-11.md` - Public legal/support page draft creation for Privacy Policy, Terms of Use, Contact Support, and Account Deletion
 
 ### Verification Reports
 
@@ -248,4 +255,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 10, 2026
+**Last Updated**: March 11, 2026

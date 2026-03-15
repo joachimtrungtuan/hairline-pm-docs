@@ -117,21 +117,46 @@ def create_issue(task: dict, config: dict) -> dict:
         f"/projects/{config['PROJECT_ID']}/work-items/"
     )
     cmd = [
-        "curl", "-s", "-X", "POST", url,
+        "curl", "-sS", "-X", "POST", url,
         "-H", f"X-API-Key: {config['PLANE_API_KEY']}",
         "-H", "Content-Type: application/json",
         "-d", json.dumps(payload),
+        "-w", "\n__HTTP_STATUS__:%{http_code}",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode == 0:
-        try:
-            resp = json.loads(result.stdout)
-            if "id" in resp:
-                return {"status": "success", "id": resp["id"]}
-            return {"status": "error", "response": result.stdout}
-        except json.JSONDecodeError:
-            return {"status": "error", "response": result.stdout}
-    return {"status": "error", "error": result.stderr}
+    if result.returncode != 0:
+        return {"status": "error", "error": result.stderr.strip() or "curl failed"}
+
+    body, _, status = result.stdout.rpartition("\n__HTTP_STATUS__:")
+    status = status.strip() or "000"
+
+    try:
+        resp = json.loads(body) if body.strip() else {}
+    except json.JSONDecodeError:
+        resp = None
+
+    if status.startswith("2") and isinstance(resp, dict):
+        plane_id = (
+            resp.get("sequence_id")
+            or resp.get("identifier")
+            or resp.get("id")
+            or resp.get("uuid")
+        )
+        if plane_id is not None:
+            return {
+                "status": "success",
+                "id": plane_id,
+                "http_status": status,
+            }
+
+    response_text = body.strip()
+    if isinstance(resp, dict) and resp:
+        response_text = json.dumps(resp)
+    return {
+        "status": "error",
+        "http_status": status,
+        "response": response_text or "(empty response body)",
+    }
 
 
 def main():
@@ -203,10 +228,14 @@ def main():
         result["name"] = task["name"]
         results.append(result)
         if result["status"] == "success":
-            print(f"  Created — ID: {result['id']}\n")
+            print(
+                f"  Created — ID: {result['id']} "
+                f"(HTTP {result.get('http_status', 'unknown')})\n"
+            )
         else:
+            http_status = result.get("http_status", "unknown")
             detail = result.get("response", result.get("error", "Unknown"))
-            print(f"  FAILED — {detail}\n")
+            print(f"  FAILED — HTTP {http_status}: {detail}\n")
 
     # Summary
     success = [r for r in results if r["status"] == "success"]
