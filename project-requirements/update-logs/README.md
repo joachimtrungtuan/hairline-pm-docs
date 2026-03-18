@@ -171,6 +171,12 @@ This folder contains documentation update reports and verification logs for the 
 
 - `LEGAL_STATIC_CONTENT_2026-03-11.md` - Created first publishable draft set of public legal/support pages for Privacy Policy, Terms of Use, Contact Support, and Account Deletion under `local-docs/project-static-content/legal-content/`, aligned to current Hairline support, deletion, retention, and medical-data handling requirements
 
+### 2026-03-18/ (1 file)
+
+#### **Layout Audit Status Corrections**
+
+- `AUDIT_REPORT_STATUS_CORRECTIONS_2026-03-18.md` - Corrected the missing mobile flows layout audit report to match the actual delivered layouts, downgrading overstated findings and aligning flow verdicts/action items to evidence-backed status
+
 ---
 
 ## Quick Reference by Topic
@@ -183,6 +189,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-10**: `TESTING_PLAN_ALIGNMENT_2026-03-10.md` - Automated testing-plan alignment to approved FR/system PRD scope
 - **2026-03-10**: `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Manual/automated testing-plan follow-up fixes after review
 - **2026-03-11**: `LEGAL_STATIC_CONTENT_2026-03-11.md` - Public legal/support page draft creation for Privacy Policy, Terms of Use, Contact Support, and Account Deletion
+- **2026-03-18**: `AUDIT_REPORT_STATUS_CORRECTIONS_2026-03-18.md` - Corrected the missing mobile flows layout audit report to distinguish proven defects from pattern deviations and ambiguous static-state findings
 
 ### Verification Reports
 
@@ -255,4 +262,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 11, 2026
+**Last Updated**: March 18, 2026
