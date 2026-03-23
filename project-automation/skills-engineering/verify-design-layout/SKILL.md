@@ -91,7 +91,8 @@ The following platform skills MUST be invoked to evaluate screen layout design q
 | File | Purpose | When to Load |
 |------|---------|-------------|
 | `references/pass-fail-rules.md` | Detailed evaluation criteria, status definitions, edge cases | Before spawning sub-agents (main agent) AND included in sub-agent prompt |
-| `references/sub-agent-instructions.md` | Self-contained instructions for Haiku sub-agents analyzing layouts | When constructing sub-agent prompts |
+| `references/sub-agent-instructions.md` | Self-contained instructions for sub-agents analyzing layouts | When constructing sub-agent prompts |
+| `references/ux-ui-evaluation-rules.md` | Concrete UX/UI checklist (27 universal + 10 mobile + 10 web rules), severity criteria, rule IDs | Included in sub-agent prompt alongside sub-agent-instructions.md |
 | `templates/report-template.md` | Output report template with placeholders | At Workflow Step 6 — to create the report file before analysis begins |
 
 ## Workflow
@@ -240,6 +241,7 @@ Spawn a sub-agent with:
 - The layout file paths identified in 8b
 - Full content of `references/sub-agent-instructions.md`
 - Full content of `references/pass-fail-rules.md`
+- Full content of `references/ux-ui-evaluation-rules.md`
 
 **Model**: Always use `model: "haiku"` (Claude Code) or the platform's equivalent low-cost model.
 
@@ -255,13 +257,18 @@ On receiving results:
 
 #### 8d. ANALYZE (UX/UI) — Evaluate design quality
 
-After field-level analysis, evaluate each screen's layout design quality:
+After field-level analysis, evaluate each screen's layout design quality using the concrete checklist in `references/ux-ui-evaluation-rules.md`. Every finding MUST cite a rule ID from that document — no finding based on subjective impression is acceptable.
 
-1. **Invoke the platform's UX/UI skills** against each screen's layout file:
-   - Always invoke `ui-ux-pro-max` — evaluates visual hierarchy, spacing, typography, color usage, interaction patterns, accessibility, consistency
-   - Additionally invoke `mobile-design` if the platform is mobile (Patient Mobile, Provider Mobile) — evaluates touch targets, safe areas, gestures, native conventions
-   - Additionally invoke `web-design-guidelines` if the platform is web (Admin Web, Provider Web) — evaluates layout grid, navigation, form design, responsive breakpoints
-2. **Collect UX/UI observations** per screen: issues, recommendations, and severity (🔴 Critical UX / ⚠️ UX Improvement / 💡 UX Suggestion)
+1. **Determine which rule sections apply** based on platform (identified in Step 3):
+   - Always apply Section 3 (Universal checks U-01 through U-27)
+   - Mobile platforms → also apply Section 4 (Mobile checks M-01 through M-10)
+   - Web platforms → also apply Section 5 (Web checks W-01 through W-10)
+2. **Invoke the platform's UX/UI skills** for additional expertise:
+   - Always invoke `ui-ux-pro-max`
+   - Additionally invoke `mobile-design` for mobile platforms
+   - Additionally invoke `web-design-guidelines` for web platforms
+3. **Run every applicable rule** from `references/ux-ui-evaluation-rules.md` against the layout. For each rule: evaluate → PASS (omit from report) or ISSUE → assign severity using Section 2 criteria
+4. **Collect UX/UI findings** per screen: each finding must include rule ID, severity (from Section 2 criteria — not intuition), observation, and evidence (which layout file, what was seen)
 
 #### 8e. WRITE — Write all findings to report file (main agent only)
 

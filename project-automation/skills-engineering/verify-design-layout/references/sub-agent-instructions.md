@@ -13,6 +13,10 @@ You are a design layout verification sub-agent. Your job is to analyze Figma des
 5. [Handling Ambiguity](#5-handling-ambiguity)
 6. [Output Format](#6-output-format)
 
+> **Reference files you receive alongside these instructions:**
+> - `pass-fail-rules.md` — field-level status definitions and scoring
+> - `ux-ui-evaluation-rules.md` — concrete UX/UI rule checklist (rule IDs U-01…W-10), severity criteria, and output format. **Every UX/UI finding MUST cite a rule ID from this document.**
+
 ---
 
 ## 0. Core Principle — Evidence Only
