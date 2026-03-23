@@ -5,10 +5,6 @@ description: Review completed Figma design layouts (PNG/JPG images or JSON expor
 
 # Verify Design Layout
 
-## Purpose
-
-Verify completed Figma design layouts against screen specifications at the field level. Identify missing fields, wrong types, broken flow continuity, and extra unspecified elements. Output a structured report with per-flow, per-screen, per-field verdicts.
-
 ## Required Input (Non-Negotiable)
 
 All three inputs below are **mandatory**. If any is missing or empty, **abort the operation immediately** — do not proceed, do not guess, do not improvise. Ask the user to provide the missing input using the AskUserQuestion tool (Claude Code) or equivalent.
@@ -72,28 +68,16 @@ Where `<project-root>` is the repository root (same level as `local-docs/`, `mai
 13. **No silent skips** — if a layout file cannot be read or a screen has no layout, report it explicitly
 14. **Report goes to `local-docs/reports/`** — follow date-folder convention (see Workflow Step 7)
 15. **Evidence-backed only** — the agent must not rely on prior knowledge or assumptions about what a screen looks like or what fields it contains. Every claim (field present, field missing, field mismatched) MUST be verified against the actual layout file AND the actual requirement document. Every verdict in the report must cite its proof: the specific layout file examined and the specific spec section/field row it was checked against. If a claim cannot be backed by evidence from the provided resources, it must not appear in the report.
-16. **UX/UI evaluation mandatory** — after verifying field completeness, every screen MUST also be evaluated for UX/UI design quality using the platform's UX/UI skills. This is a separate evaluation layer on top of the field-level check. See Workflow Step 8d and the skill list below.
-
-## UX/UI Evaluation Skills
-
-The following platform skills MUST be invoked to evaluate screen layout design quality. Use them during the UX/UI evaluation step (Workflow Step 8d).
-
-| Skill | When to Use | What It Evaluates |
-|-------|------------|-------------------|
-| `ui-ux-pro-max` | Every screen | Overall UI/UX design quality — visual hierarchy, spacing, typography, color usage, interaction patterns, accessibility, consistency |
-| `mobile-design` | Screens for mobile platforms (Patient Mobile, Provider Mobile) | Mobile-specific patterns — touch targets, safe areas, gestures, native conventions (iOS/Android), responsive behavior |
-| `web-design-guidelines` | Screens for web platforms (Admin Web, Provider Web) | Web interface compliance — layout grid, navigation patterns, form design, responsive breakpoints |
-
-**Selection rule**: Always invoke `ui-ux-pro-max`. Additionally invoke `mobile-design` OR `web-design-guidelines` based on the platform identified in Step 3.
+16. **UX/UI evaluation mandatory** — after verifying field completeness, every screen MUST also be evaluated for UX/UI design quality using the concrete checklist in `references/ux-ui-evaluation-rules.md` and the platform UX/UI skills. See Workflow Step 8d.
 
 ## Skill File Structure
 
 | File | Purpose | When to Load |
 |------|---------|-------------|
-| `references/pass-fail-rules.md` | Detailed evaluation criteria, status definitions, edge cases | Before spawning sub-agents (main agent) AND included in sub-agent prompt |
+| `references/pass-fail-rules.md` | Detailed evaluation criteria, status definitions, edge cases | Before spawning sub-agents AND included in sub-agent prompt |
 | `references/sub-agent-instructions.md` | Self-contained instructions for sub-agents analyzing layouts | When constructing sub-agent prompts |
 | `references/ux-ui-evaluation-rules.md` | Concrete UX/UI checklist (27 universal + 10 mobile + 10 web rules), severity criteria, rule IDs | Included in sub-agent prompt alongside sub-agent-instructions.md |
-| `templates/report-template.md` | Output report template with placeholders | At Workflow Step 6 — to create the report file before analysis begins |
+| `assets/report-template.md` | Output report template — copied and filled per task | At Workflow Step 6 — copy to `local-docs/reports/YYYY-MM-DD/` before analysis begins |
 
 ## Workflow
 
@@ -170,7 +154,7 @@ For multi-FR mode, confirm which FRs and whether they share flows to check toget
 
 ### 6. Create report file from template
 
-1. Load `templates/report-template.md` (located at `local-docs/project-automation/skills-engineering/verify-design-layout/templates/report-template.md`)
+1. Load `assets/report-template.md` (located at `local-docs/project-automation/skills-engineering/verify-design-layout/assets/report-template.md`)
 2. Determine the report file path using this exact formula:
 
    **Directory**: `local-docs/reports/YYYY-MM-DD/` where `YYYY-MM-DD` is today's date. If the directory does not exist, create it.
