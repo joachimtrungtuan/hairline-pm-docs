@@ -23,6 +23,7 @@ You must NOT rely on prior knowledge, assumptions, or guesses about what a scree
 2. **The spec** — the field is listed (or not listed) in the provided data fields table
 
 Every verdict in your output must cite its proof:
+
 - For ✅ PASS: "Field X visible in layout [file] at [location], matches spec row [field name]"
 - For ❌ MISSING: "Field X required per spec row [field name], not found in layout [file]"
 - For ❌⚠️ MISMATCH: "Field X found in layout [file] but shows [actual] vs spec requirement [expected]"
@@ -33,10 +34,16 @@ If you cannot confirm a field's presence or absence from the provided resources,
 
 The main orchestrator provides:
 
-1. **Flow context**: Flow name, flow ID, actor, sequence of screens
+1. **Flow context (user journey)**: The end-to-end user flow — what the user's goal is, what steps they take, in what order, what triggers each transition between screens. You MUST read and understand this before analyzing any screen. It tells you:
+   - **Why** each screen exists (its purpose in the journey)
+   - **How the user arrives** at this screen (what they did on the previous screen)
+   - **Where the user goes next** (what action on this screen leads to the next)
+   - **What data carries forward** between screens (e.g., a selection on Screen 1 affects what Screen 2 displays)
 2. **Screen specifications**: For each screen in the flow — purpose, data fields table (field name, type, required, description, validation rules), business rules, conditional/blocked states
 3. **Layout file list**: File paths in `layout-temp/` mapped to this flow's screens
 4. **Pass/fail rules**: The full evaluation criteria (see companion document)
+
+**Important**: The flow context is not optional background reading. Use it actively during analysis to evaluate whether each screen supports the user journey correctly — not just whether the right fields are present, but whether the screen makes sense in context (e.g., does it have the right navigation to the next step? does it show data that the user entered on a previous screen? does the CTA label match the flow's intended action?).
 
 ## 2. Analysis Procedure — Image Files (PNG/JPG)
 
@@ -116,6 +123,16 @@ Identify any significant UI nodes (buttons, inputs, text blocks, sections) that 
 
 For each screen, work through this checklist:
 
+**Flow context checks (do these FIRST):**
+
+- [ ] **User journey understood**: You know how the user arrives at this screen, what their goal is, and where they go next
+- [ ] **Screen purpose matches flow**: The layout's apparent purpose aligns with what the flow says this screen should do
+- [ ] **Entry point present**: The screen has a clear entry point consistent with the previous step in the flow (e.g., if the user came from a list, the screen shows detail for the selected item)
+- [ ] **Exit path present**: The screen has navigation/action that leads to the next step in the flow (e.g., submit button, next button, confirm action)
+- [ ] **Data continuity**: Data that should carry forward from previous screens is displayed (e.g., selected item details, user inputs from earlier steps)
+
+**Field-level checks:**
+
 - [ ] **Screen identity confirmed**: Layout matches the expected screen (title, purpose)
 - [ ] **All required fields checked**: Every row in the data fields table has been evaluated
 - [ ] **Field types verified**: Each field's visual/structural type matches spec
@@ -130,6 +147,7 @@ For each screen, work through this checklist:
 ### File doesn't match expected screen
 
 If a layout file appears to show a different screen than what it was mapped to:
+
 - Evaluate it against whichever screen it actually shows
 - Note the mapping mismatch in your output
 - The unmapped screen becomes ⬜ NO DESIGN unless another file covers it
@@ -137,18 +155,21 @@ If a layout file appears to show a different screen than what it was mapped to:
 ### Two screens in one file
 
 If a single layout file shows content from two screens (e.g., a list with an expanded detail panel):
+
 - Evaluate both screens from this one file
 - Note in output that screens are combined
 
 ### Ambiguous field identification
 
 If you cannot determine whether a visual element corresponds to a specific field:
+
 - Mark as ⚠️ MINOR with note: "Uncertain match — visual element resembles [field name] but cannot confirm"
 - Never assume PASS when uncertain — err toward MINOR or MISSING
 
 ### Low-resolution or cropped images
 
 If an image is too low-resolution or cropped to verify a field:
+
 - Mark as ⚠️ MINOR with note: "Cannot verify — image quality/cropping insufficient"
 - Do not mark as PASS
 
@@ -156,10 +177,18 @@ If an image is too low-resolution or cropped to verify a field:
 
 Return your analysis as structured text. Use this exact format for each screen:
 
-```
+```md
 === SCREEN: [Screen ID] — [Screen Name] ===
 LAYOUT FILE: [file path]
 SCREEN IDENTITY: [Confirmed / Mismatch — describe]
+
+FLOW CONTEXT CHECK:
+- User arrives from: [previous screen/action in flow]
+- Screen purpose in flow: [what this screen should accomplish]
+- Entry point: [Present / Missing — describe]
+- Exit path to next step: [Present / Missing — describe what action leads forward]
+- Data continuity: [Correct / Issues — describe any data from previous screens that should appear]
+- Flow context issues: [list or "None"]
 
 FIELD ANALYSIS:
 | Field Name | Required | Status | Notes |
@@ -176,6 +205,7 @@ EXTRA ELEMENTS:
 SCREEN SUMMARY:
 - Required fields: [N]
 - Pass: [N] | Minor: [N] | Mismatch: [N] | Missing: [N] | Extra: [N]
+- Flow context issues: [count or "None"]
 - Critical issues: [list or "None"]
 - Coverage: [X]%
 ```
@@ -184,7 +214,7 @@ Repeat for each screen in the flow.
 
 End with a flow summary:
 
-```
+```md
 === FLOW SUMMARY: [Flow ID] — [Flow Name] ===
 - Screens evaluated: [N] of [N]
 - Screen statuses: [list each screen status]

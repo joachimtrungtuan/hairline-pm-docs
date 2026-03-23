@@ -51,20 +51,41 @@
 
 **Layout**: `{subfolder/filename.ext}`
 
+##### Flow Context
+
+- **User arrives from**: {previous screen/action in flow}
+- **Screen purpose**: {what this screen accomplishes in the user journey}
+- **Entry point**: {Present / Missing — description}
+- **Exit path**: {Present / Missing — what action leads to next step}
+- **Data continuity**: {Correct / Issues — data from previous screens that should appear}
+- **Flow context issues**: {List or "None"}
+
+##### Field Verification
+
 | Field | Required | Layout | Notes |
 |-------|----------|--------|-------|
 | {Field Name} | {Yes/No/Conditional} | {✅/⚠️/❌⚠️/❌/➕} | {Details — label mismatch, wrong type, missing, etc.} |
 
 **Extra Elements**:
+
 - {Element description} — {Notes}
 
 **Screen Status**: {🟢/🟡/🔴/⬜} {COMPLETE/GOOD/PARTIAL/FAIL/NO DESIGN}
 **Field Coverage**: {pass+minor}/{total required} ({XX}%)
 **Critical Issues**: {List or "None"}
 
+##### UX/UI Design Evaluation
+
+**Skills invoked**: {ui-ux-pro-max, mobile-design / web-design-guidelines}
+
+| Severity | Observation | Recommendation |
+|----------|-------------|----------------|
+| {🔴 Critical UX / ⚠️ UX Improvement / 💡 UX Suggestion} | {Description of the UX/UI issue} | {What to change} |
+
 {Repeat #### Screen block for each screen in the flow}
 
 **Flow Coverage Gaps**:
+
 - {Gap description — e.g., "No error state layout for Screen S2"}
 - {Gap description}
 
@@ -79,14 +100,20 @@
 | Priority | Flow | Screen | Issue | Recommendation |
 |----------|------|--------|-------|----------------|
 | 🔴 Critical | {Flow ID} | {Screen ID} | {Issue description} | {What to fix} |
+| 🔴 Critical UX | {Flow ID} | {Screen ID} | {UX issue description} | {What to fix} |
 | ⚠️ Important | {Flow ID} | {Screen ID} | {Issue description} | {What to fix} |
+| ⚠️ UX Improvement | {Flow ID} | {Screen ID} | {UX issue description} | {What to fix} |
 | 💡 Suggestion | {Flow ID} | {Screen ID} | {Issue description} | {What to improve} |
+| 💡 UX Suggestion | {Flow ID} | {Screen ID} | {UX issue description} | {What to improve} |
 
 ### Priority Legend
 
 - **🔴 Critical**: Blocks flow progression, breaks data integrity, or causes security/legal risk. Must fix before development.
+- **🔴 Critical UX**: Severe usability issue that would prevent users from completing the flow or cause significant confusion. Must fix before development.
 - **⚠️ Important**: Functional discrepancy that could cause user confusion or require rework during development. Should fix before development.
-- **💡 Suggestion**: Cosmetic or minor UX improvement. Can fix anytime.
+- **⚠️ UX Improvement**: Usability or design quality issue that deviates from platform conventions or best practices. Should fix before development.
+- **💡 Suggestion**: Cosmetic or minor improvement. Can fix anytime.
+- **💡 UX Suggestion**: Minor design enhancement that would improve polish. Can fix anytime.
 
 ---
 

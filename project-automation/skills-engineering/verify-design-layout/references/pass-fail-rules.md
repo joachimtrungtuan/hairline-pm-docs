@@ -24,6 +24,7 @@ Each data field listed in the FR's Screen Specification table receives exactly o
 The field is **present** in the layout AND **matches** the spec.
 
 **All of these must be true:**
+
 - Field is visually identifiable in the layout (image) or structurally present (JSON)
 - Field type matches: a `select` field shows a dropdown/picker, a `text` field shows text display, a `checkbox` shows a toggleable control, etc.
 - Label is functionally equivalent — exact wording match not required, but meaning must be the same (e.g., "Email" vs "Email Address" = PASS)
@@ -35,6 +36,7 @@ The field is **present** in the layout AND **matches** the spec.
 The field is **present** and **functionally correct** but has a **cosmetic discrepancy**.
 
 **Triggers (any one is enough):**
+
 - Label casing differs: "Notification settings" vs "Notification Settings"
 - Minor label wording: "Go Back" vs "Back" (same function)
 - Styling deviates from spec but doesn't break functionality: wrong color on a non-critical element, different icon style
@@ -46,6 +48,7 @@ The field is **present** and **functionally correct** but has a **cosmetic discr
 The field is **present** but **wrong** — it would mislead users or break logic.
 
 **Triggers (any one is enough):**
+
 - Wrong field type: spec says `password` input but layout shows `email` input
 - Wrong data displayed: field shows data from a different entity or context
 - Contradicts spec behavior: spec says "disabled until X" but layout shows enabled state
@@ -59,6 +62,7 @@ The field is **present** but **wrong** — it would mislead users or break logic
 The field is **not present** in the layout at all.
 
 **Criteria:**
+
 - The field is listed as `Required: Yes` in the FR data fields table
 - No visual element in the layout corresponds to this field
 - No JSON node matches this field's name or type
@@ -71,6 +75,7 @@ The field is **not present** in the layout at all.
 An element exists in the layout that has **no corresponding spec entry**.
 
 **Criteria:**
+
 - A visible UI element (field, button, label, section) appears in the layout
 - No matching entry in the FR's data fields table or business rules
 - Not a standard navigation element (back button, status bar, tab bar) unless those are explicitly specified
@@ -99,6 +104,7 @@ Computed by aggregating field-level statuses for all fields in that screen's spe
 ### 🟡 PARTIAL
 
 Any of these:
+
 - 50–89% of required fields are ✅ PASS or ⚠️ MINOR
 - Has 1–2 ❌ MISSING required fields (non-critical)
 - Has 1–2 ❌⚠️ MISMATCH fields
@@ -107,6 +113,7 @@ Any of these:
 ### 🔴 FAIL
 
 Any of these:
+
 - <50% required field coverage
 - ≥3 ❌ MISSING required fields
 - Any **critical field** (see Section 4) is ❌ MISSING or ❌⚠️ MISMATCH
@@ -138,6 +145,7 @@ Computed by aggregating screen-level statuses for all screens in the flow.
 ### 🔴 BLOCKED
 
 Any of these:
+
 - Any screen is 🔴 FAIL
 - Any screen is ⬜ NO DESIGN
 - Flow transitions are broken (no visible path from Screen N to Screen N+1)
@@ -155,6 +163,7 @@ A field is **critical** if its absence or mismatch would:
 4. **Mislead the user about state**: Status badges, confirmation messages, error indicators
 
 **Examples of critical fields:**
+
 - Submit/confirm/action buttons (any flow)
 - Password/OTP input fields (authentication flows)
 - Payment amount + deposit breakdown (payment flows)
@@ -175,6 +184,7 @@ If one layout file contains two screens combined (e.g., a list view with an expa
 ### State variants
 
 Many screens have multiple states (empty, populated, error, loading, blocked). Each state that is explicitly defined in the FR should have a corresponding layout file or be visibly represented. If a state is missing:
+
 - If it's an error/blocked state → ❌ MISSING (these are often critical)
 - If it's an empty state → ⚠️ MINOR (unless the FR marks it as required)
 - If it's a loading state → ⚠️ MINOR (usually not designed separately)
@@ -189,7 +199,7 @@ If `layout-temp/` contains screens that don't map to any in-scope flow, list the
 
 ### Approximate field coverage percentage
 
-```
+```md
 coverage% = (count of ✅ PASS + count of ⚠️ MINOR) / (total required fields) × 100
 ```
 
@@ -201,7 +211,7 @@ coverage% = (count of ✅ PASS + count of ⚠️ MINOR) / (total required fields
 
 ### Screen score
 
-```
+```md
 required_fields = count of fields where Required = Yes or Required = Conditional (when condition is met)
 pass_count = count of ✅ PASS fields
 minor_count = count of ⚠️ MINOR fields
@@ -220,7 +230,7 @@ else → 🔴 FAIL
 
 ### Flow score
 
-```
+```md
 screen_statuses = [status for each screen in flow]
 
 if all status in (COMPLETE, GOOD) → 🟢 COMPLETE
