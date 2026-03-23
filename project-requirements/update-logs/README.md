@@ -177,6 +177,22 @@ This folder contains documentation update reports and verification logs for the 
 
 - `AUDIT_REPORT_STATUS_CORRECTIONS_2026-03-18.md` - Corrected the missing mobile flows layout audit report to match the actual delivered layouts, downgrading overstated findings and aligning flow verdicts/action items to evidence-backed status
 
+### 2026-03-19/ (2 files)
+
+#### **Provider Dashboard Audit — Second-Pass Verification**
+
+- `AUDIT_VERIFICATION_PROVIDER_2026-03-19.md` - Codebase verification pass on `audit_2026-03-18_provider.md`; 6 verdict corrections applied (P-ONB-016 CORRECT→BUG, P-QOT-035 NDR→BUG, P-APT-015 CORRECT→NDR, P-TRT-021 CORRECT→PARTIAL, P-TRT-028 NDR→PARTIAL, P-AFT-018 NDR→MISSING); 2 new P2 bugs added; overall totals updated to BUG 17, PARTIAL 62, CORRECT 171, MISSING 2, NDR 3
+
+#### **Missing Mobile Flows Backend API Audit**
+
+- `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Created a backend endpoint readiness audit for all 15 missing patient mobile flows, mapping each flow to existing patient-facing APIs, partial implementations, and missing backend contracts
+
+### 2026-03-23/ (1 file)
+
+#### **FR-025 Admin Dashboard Design Verification**
+
+- `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - Full FR-025 admin-dashboard layout verification against the approved PRD; Workflow 1, Workflow 2, and Workflow 4 blocked by missing set-level catalog/activation design and incomplete severity-preview coverage
+
 ---
 
 ## Quick Reference by Topic
@@ -190,11 +206,14 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-10**: `TESTING_PLAN_REVIEW_FIXES_2026-03-10.md` - Manual/automated testing-plan follow-up fixes after review
 - **2026-03-11**: `LEGAL_STATIC_CONTENT_2026-03-11.md` - Public legal/support page draft creation for Privacy Policy, Terms of Use, Contact Support, and Account Deletion
 - **2026-03-18**: `AUDIT_REPORT_STATUS_CORRECTIONS_2026-03-18.md` - Corrected the missing mobile flows layout audit report to distinguish proven defects from pattern deviations and ambiguous static-state findings
+- **2026-03-19**: `AUDIT_VERIFICATION_PROVIDER_2026-03-19.md` - Provider dashboard audit second-pass: 6 verdict corrections, 2 new P2 bugs (no self-revoke guard, no quote-edit status guard), totals updated
+- **2026-03-19**: `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Backend endpoint readiness audit for all 15 missing patient mobile flows against `main/hairline-backend`
 
 ### Verification Reports
 
 - **2025-10-23**: `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification
 - **2025-10-23**: `REQUIREMENTS_VERIFICATION_2025-10-23.md` - Requirements verification
+- **2026-03-23**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - FR-025 admin dashboard layout verification; 3 flows blocked due to missing or divergent designs
 
 ### Workflow Corrections
 
@@ -262,4 +281,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 18, 2026
+**Last Updated**: March 23, 2026
