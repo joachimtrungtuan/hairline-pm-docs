@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Design Layout"
+  short_description: "Review Figma design layouts against FR screen specifications to identify missing fields, wrong types, and flow gaps"
+  default_prompt: "Verify the design layouts in layout-temp/ against the specified FR screen specifications. Identify missing fields, mismatched types, broken flow continuity, and extra unspecified elements. Produce a structured report."
