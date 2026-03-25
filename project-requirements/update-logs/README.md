@@ -193,6 +193,46 @@ This folder contains documentation update reports and verification logs for the 
 
 - `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - Full FR-025 admin-dashboard layout verification against the approved PRD; Workflow 1, Workflow 2, and Workflow 4 blocked by missing set-level catalog/activation design and incomplete severity-preview coverage
 
+### 2026-03-24/ (8 files)
+
+#### **P01 Delete Account Design Layout Verification**
+
+- `P01_DELETE_ACCOUNT_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Re-verified flow `P01.1 Delete Account` against the refreshed mobile layouts; all 3 screens now designed, overall flow verdict `🟡 PARTIAL` and user approval `🟢 Approved with minor issues`
+
+#### **P01 Settings Screen Design Layout Verification**
+
+- `P01_SETTINGS_SCREEN_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Re-verified flow `P01.2 Settings Screen` against the refreshed mobile layouts; all 5 screens now designed and the overall flow verdict is `🟢 COMPLETE`
+
+#### **P01 Change Password Design Layout Verification**
+
+- `P01_CHANGE_PASSWORD_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flow `P01.3 Change Password` against the current mobile layouts; both primary screens are present, overall verdict remains `🟡 PARTIAL`, and approval was granted with deferred missing failure-state variants
+
+#### **P02 Quote Request & Management Design Layout Verification**
+
+- `P02_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified all four `P02` mobile flows against the current layout set; `P02.1` through `P02.4` are all `🟡 PARTIAL`, with follow-up work focused on missing state coverage and a few rule mismatches
+
+#### **P03 Payment Methods Design Layout Verification**
+
+- `P03_PAYMENT_METHODS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flow `P03.1 Payment Methods Management` against the current mobile layouts; all 3 screens are present, overall verdict is `🟡 PARTIAL`, and follow-up work is limited to edit-mode restrictions and remove-confirmation details
+
+#### **P04 Travel & Logistics Design Layout Verification**
+
+- `P04_TRAVEL_LOGISTICS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flows `P04.1` and `P04.2` against the current mobile layout set; both flows are `🔴 BLOCKED` due to passport-confirmation privacy issues, a missing `P04.2-S4` read-only travel-record screen, and itinerary/detail-state gaps
+
+#### **P05 Aftercare & Progress Monitoring Design Layout Verification**
+
+- `P05_AFTERCARE_PROGRESS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flows `P05.1`, `P05.2`, and `P05.3` against the current mobile layout set; `P05.1` is `🔴 BLOCKED`, `P05.2` is `🟢 COMPLETE`, and `P05.3` is `🟡 PARTIAL` due to a missing day-details popup and off-spec review-status terminology
+
+#### **Aftercare FR-010 / FR-011 Relationship Audit**
+
+- `AFTERCARE_FR010_FR011_RELATIONSHIP_AUDIT_2026-03-24.md` - Cross-mapped current Aftercare mobile layouts to `FR-010`, `FR-011`, and the `P05.*` mobile complement flows; found `FR011-W2`, `FR011-W2b`, `FR011-W3`, and `P05.1` still blocked, with `P05.2` complete and `P05.3` partial
+
+### 2026-03-25/ (1 file)
+
+#### **Aftercare FR-011 Mobile Scope Narrowing**
+
+- `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Narrowed the existing Aftercare relationship report to `FR-011` patient mobile screens only, removing `FR-010` / `P05.*` coverage from the report body while preserving the FR-011 field-level verification findings
+
 ---
 
 ## Quick Reference by Topic
@@ -214,6 +254,15 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-23**: `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification
 - **2025-10-23**: `REQUIREMENTS_VERIFICATION_2025-10-23.md` - Requirements verification
 - **2026-03-23**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - FR-025 admin dashboard layout verification; 3 flows blocked due to missing or divergent designs
+- **2026-03-24**: `P01_DELETE_ACCOUNT_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P01.1 delete-account mobile layout verification rerun; all screens now exist, overall verdict `🟡 PARTIAL` and approval `🟢 Approved with minor issues`
+- **2026-03-24**: `P01_SETTINGS_SCREEN_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P01.2 settings-screen mobile layout verification rerun; all screens now exist and the overall verdict is `🟢 COMPLETE`
+- **2026-03-24**: `P01_CHANGE_PASSWORD_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P01.3 change-password mobile layout verification; both primary screens exist, overall verdict `🟡 PARTIAL`, and approval was granted with deferred missing failure-state variants
+- **2026-03-24**: `P02_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P02 quote-request mobile layout verification across `P02.1`–`P02.4`; all four flows are `🟡 PARTIAL` with targeted follow-up gaps documented in the per-flow reports
+- **2026-03-24**: `P03_PAYMENT_METHODS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P03.1 payment-methods mobile layout verification; all three screens exist, overall verdict `🟡 PARTIAL`, with targeted follow-up on edit-mode card restrictions and remove-confirmation identification
+- **2026-03-24**: `P04_TRAVEL_LOGISTICS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P04.1/P04.2 travel-logistics mobile layout verification; both flows are `🔴 BLOCKED` due to passport-confirmation privacy issues, missing `P04.2-S4`, and itinerary/detail-state gaps
+- **2026-03-24**: `P05_AFTERCARE_PROGRESS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P05 mobile layout verification across `P05.1`–`P05.3`; after a full in-progress-tab remap, `P05.1` is `🟡 PARTIAL`, `P05.2` is `🟢 COMPLETE`, and `P05.3` is `🟡 PARTIAL` with review-status terminology follow-up
+- **2026-03-24**: `AFTERCARE_FR010_FR011_RELATIONSHIP_AUDIT_2026-03-24.md` - Broader Aftercare relationship audit across `FR-010`, `FR-011`, and `P05.*`; maps the current layout set across `aftercare/`, `in progress/`, and `reviews/`, with checkout, questionnaire, educational-resource, and day-detail gaps still blocking full alignment
+- **2026-03-25**: `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Scope update for the shared Aftercare report: it now serves as an `FR-011` patient-mobile-only verification artifact, with the broader `FR-010` / `P05.*` relationships removed from the report body
 
 ### Workflow Corrections
 
@@ -281,4 +330,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 23, 2026
+**Last Updated**: March 25, 2026
