@@ -193,7 +193,7 @@ This folder contains documentation update reports and verification logs for the 
 
 - `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - Full FR-025 admin-dashboard layout verification against the approved PRD; Workflow 1, Workflow 2, and Workflow 4 blocked by missing set-level catalog/activation design and incomplete severity-preview coverage
 
-### 2026-03-24/ (8 files)
+### 2026-03-24/ (10 files)
 
 #### **P01 Delete Account Design Layout Verification**
 
@@ -223,6 +223,14 @@ This folder contains documentation update reports and verification logs for the 
 
 - `P05_AFTERCARE_PROGRESS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flows `P05.1`, `P05.2`, and `P05.3` against the current mobile layout set; `P05.1` is `🔴 BLOCKED`, `P05.2` is `🟢 COMPLETE`, and `P05.3` is `🟡 PARTIAL` due to a missing day-details popup and off-spec review-status terminology
 
+#### **P06 Notification Design Layout Verification**
+
+- `P06_NOTIFICATION_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flow `P06.1 Notification Listing & Bubble` against the current mobile notification layouts; overall verdict is `🟡 PARTIAL` due to a missing back arrow, off-spec filter interaction model, and unread-state control mismatches
+
+#### **P08 Help & Support Design Layout Verification**
+
+- `P08_HELP_SUPPORT_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - Verified flow `P08.1 Help & Support` against the current help-center mobile layouts; overall verdict is `🟡 PARTIAL` and the flow is approved with minor issues after downgrading the remaining gaps to UX/detail follow-up
+
 #### **Aftercare FR-010 / FR-011 Relationship Audit**
 
 - `AFTERCARE_FR010_FR011_RELATIONSHIP_AUDIT_2026-03-24.md` - Cross-mapped current Aftercare mobile layouts to `FR-010`, `FR-011`, and the `P05.*` mobile complement flows; found `FR011-W2`, `FR011-W2b`, `FR011-W3`, and `P05.1` still blocked, with `P05.2` complete and `P05.3` partial
@@ -232,6 +240,12 @@ This folder contains documentation update reports and verification logs for the 
 #### **Aftercare FR-011 Mobile Scope Narrowing**
 
 - `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Narrowed the existing Aftercare relationship report to `FR-011` patient mobile screens only, removing `FR-010` / `P05.*` coverage from the report body while preserving the FR-011 field-level verification findings
+
+### 2026-03-26/ (1 file)
+
+#### **Layout Temp FR Audit**
+
+- `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Cross-audited the current root-level `layout-temp/` folder to identify direct FR ownership, derived FR content references, and current compliance status across inquiry, quote comparison, quote detail, legal-policy, provider-profile, and treatment-detail layout clusters; this is the canonical consolidated report for the `2026-03-26` layout-temp review
 
 ---
 
@@ -261,8 +275,11 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-24**: `P03_PAYMENT_METHODS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P03.1 payment-methods mobile layout verification; all three screens exist, overall verdict `🟡 PARTIAL`, with targeted follow-up on edit-mode card restrictions and remove-confirmation identification
 - **2026-03-24**: `P04_TRAVEL_LOGISTICS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P04.1/P04.2 travel-logistics mobile layout verification; both flows are `🔴 BLOCKED` due to passport-confirmation privacy issues, missing `P04.2-S4`, and itinerary/detail-state gaps
 - **2026-03-24**: `P05_AFTERCARE_PROGRESS_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P05 mobile layout verification across `P05.1`–`P05.3`; after a full in-progress-tab remap, `P05.1` is `🟡 PARTIAL`, `P05.2` is `🟢 COMPLETE`, and `P05.3` is `🟡 PARTIAL` with review-status terminology follow-up
+- **2026-03-24**: `P06_NOTIFICATION_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P06.1 notification mobile layout verification; overall verdict `🟡 PARTIAL` because the delivered list omits back navigation and replaces the approved chip-bar filter model with a modal filter sheet
+- **2026-03-24**: `P08_HELP_SUPPORT_DESIGN_LAYOUT_VERIFICATION_2026-03-24.md` - P08.1 help/support mobile layout verification; overall verdict `🟡 PARTIAL`, and the flow is approved with minor issues after treating the remaining gaps as UX/detail follow-up rather than blockers
 - **2026-03-24**: `AFTERCARE_FR010_FR011_RELATIONSHIP_AUDIT_2026-03-24.md` - Broader Aftercare relationship audit across `FR-010`, `FR-011`, and `P05.*`; maps the current layout set across `aftercare/`, `in progress/`, and `reviews/`, with checkout, questionnaire, educational-resource, and day-detail gaps still blocking full alignment
 - **2026-03-25**: `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Scope update for the shared Aftercare report: it now serves as an `FR-011` patient-mobile-only verification artifact, with the broader `FR-010` / `P05.*` relationships removed from the report body
+- **2026-03-26**: `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Canonical cross-audit of the current `layout-temp/` root folder; confirms 4 primary FR screen owners (`FR-003`, `FR-004`, `FR-005`, `FR-027`), 2 additional direct content relationships (`FR-024`, `FR-032`), and separates compliant, partial, reference-only, and unmapped layout families
 
 ### Workflow Corrections
 
@@ -330,4 +347,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 25, 2026
+**Last Updated**: March 26, 2026
