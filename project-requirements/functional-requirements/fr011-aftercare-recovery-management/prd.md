@@ -1272,7 +1272,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
    - Milestone completion requires all tasks completed
 
 2. **Task Completion**
-- Scan uploads must meet quality threshold
+   - Scan uploads must meet quality threshold
    - Questionnaires must be completed in full
    - Medication adherence tracked but not mandatory for milestone completion
    - Overdue tasks trigger escalation after 48 hours
@@ -1303,7 +1303,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 1. **Data Retention**
    - Aftercare data retained for 7 years minimum
-- Scan media retained for 2 years after aftercare completion
+   - Scan media retained for 2 years after aftercare completion
    - Communication logs retained for 3 years
 
 2. **Data Access**
@@ -1313,7 +1313,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 3. **Data Security**
    - All aftercare data encrypted at rest and in transit
-- Scan media stored securely with access controls
+   - Scan media stored securely with access controls
    - Access attempts logged and monitored
 
 ### Admin Editability Rules
