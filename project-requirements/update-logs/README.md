@@ -37,7 +37,7 @@ This folder contains documentation update reports and verification logs for the 
 
 #### **PRD Verification & Documentation Sync**
 
-- `FR001_PRD_VERIFIED_2025-10-30.md` - FR-001 status set to Verified & Approved; detailed Screen 14/16 finalized
+- `FR001_PRD_VERIFIED_2025-10-30.md` - FR-001 status set to Verified & Approved; detailed Screen 13/15 finalized
 - `DOCUMENTATION_SYNC_2025-10-30.md` - Synced high-level docs and README date to Oct 30, 2025
 - `FR002_MINIMAL_SPECS_2025-10-30.md` - FR-002 screen specs minimized to integration contracts; verified consistency
 
@@ -80,11 +80,17 @@ This folder contains documentation update reports and verification logs for the 
   - System PRD: Question Grouping aligned to set-level categorisation per FR-025 design
   - System PRD: Question types expanded from Yes/No-only to full type list
 
-### 2026-02-05 (1 file)
+### 2026-02-05/ (1 file)
 
 #### **Cancel Inquiry FR Updates**
 
 - `2026-02-05-cancel-inquiry-fr-updates.md` - Cancel inquiry feature updates
+
+### 2026-02-27/ (1 file)
+
+#### **FR-010 Major Revision — Tabbed Display & Day-by-Day Model**
+
+- `FR010_REVISION_2026-02-27.md` - FR-010 major revision (v1.1 → v1.2): entry point corrected to Confirmed list, tabbed case detail page adopted, day-by-day treatment plan model enforced, clinician model aligned, elapsed time removed, consent withdrawal simplified, graft number clarified
 
 ### 2026-02-28/ (1 file)
 
@@ -247,6 +253,18 @@ This folder contains documentation update reports and verification logs for the 
 
 - `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Cross-audited the current root-level `layout-temp/` folder to identify direct FR ownership, derived FR content references, and current compliance status across inquiry, quote comparison, quote detail, legal-policy, provider-profile, and treatment-detail layout clusters; this is the canonical consolidated report for the `2026-03-26` layout-temp review
 
+### 2026-03-27/ (1 file)
+
+#### **Missing Mobile Flows Manual Testing Tracker**
+
+- `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
+
+### 2026-03-28/ (1 file)
+
+#### **FR-001 Screen Restructure & Renumber**
+
+- `FR001_Screen_Renumber_2026-03-28.md` - Corrected screen misclassification in FR-001 prd.md: Screens 14–19 (patient profile, settings, account management) were placed under Admin; only Screen 13 was a genuine admin screen. Restructured section headings and renumbered all screens: patient Screens 1–18 sequential, admin Screen 19. Updated all cross-references in prd.md and 8 external files (update-logs, task-creation, reports).
+
 ---
 
 ## Quick Reference by Topic
@@ -280,6 +298,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-24**: `AFTERCARE_FR010_FR011_RELATIONSHIP_AUDIT_2026-03-24.md` - Broader Aftercare relationship audit across `FR-010`, `FR-011`, and `P05.*`; maps the current layout set across `aftercare/`, `in progress/`, and `reviews/`, with checkout, questionnaire, educational-resource, and day-detail gaps still blocking full alignment
 - **2026-03-25**: `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Scope update for the shared Aftercare report: it now serves as an `FR-011` patient-mobile-only verification artifact, with the broader `FR-010` / `P05.*` relationships removed from the report body
 - **2026-03-26**: `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Canonical cross-audit of the current `layout-temp/` root folder; confirms 4 primary FR screen owners (`FR-003`, `FR-004`, `FR-005`, `FR-027`), 2 additional direct content relationships (`FR-024`, `FR-032`), and separates compliant, partial, reference-only, and unmapped layout families
+- **2026-03-27**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a reusable manual-testing tracker for all 15 missing mobile flows with per-row placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
 ### Workflow Corrections
 
@@ -311,6 +330,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
+- **2026-03-28**: `FR001_Screen_Renumber_2026-03-28.md` - FR-001 screen section restructure and full renumber: patient Screens 1–18, admin Screen 19; 8 external files updated
 
 ### Design Specifications
 
@@ -347,4 +367,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 26, 2026
+**Last Updated**: March 28, 2026

@@ -7,8 +7,8 @@ Scope: Finalize FR-001 Patient Authentication & Profile Management PRD and align
 ## Changes
 
 - Set PRD status to "Verified & Approved".
-- Screen 14 (Profile Overview): finalized delete-account soft-delete, re-auth, blockers, previous treatments (Completed-only), reviews eligibility.
-- Screen 16 (Settings): MVP global notification toggles only; category toggles deferred to V2; optimistic UI + rollback; security actions require re-auth; device sessions revoke; GDPR export.
+- Screen 13 (Profile Overview): finalized delete-account soft-delete, re-auth, blockers, previous treatments (Completed-only), reviews eligibility.
+- Screen 15 (Settings): MVP global notification toggles only; category toggles deferred to V2; optimistic UI + rollback; security actions require re-auth; device sessions revoke; GDPR export.
 - Minimal API/State added for PRD-level clarity.
 
 ## Consistency

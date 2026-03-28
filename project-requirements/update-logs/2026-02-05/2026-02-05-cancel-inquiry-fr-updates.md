@@ -83,8 +83,8 @@ Added patient-initiated inquiry cancellation across **9 FRs** with **~37 section
 
 | # | Section | Change |
 |---|---------|--------|
-| 1 | Screen 14: Profile Overview | Added clarifying note distinguishing account deletion auto-close from explicit inquiry cancellation |
-| 2 | Screen 16: Settings | Added "Inquiry Cancelled" to system event notification triggers list |
+| 1 | Screen 13: Profile Overview | Added clarifying note distinguishing account deletion auto-close from explicit inquiry cancellation |
+| 2 | Screen 15: Settings | Added "Inquiry Cancelled" to system event notification triggers list |
 
 #### FR-016: Admin Patient Management (v1.2 → v1.3)
 
