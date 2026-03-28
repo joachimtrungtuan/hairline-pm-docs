@@ -310,9 +310,11 @@ flowchart TD
 
 **Data Fields**:
 
-- Hairline logo with integrated green plus sign
-- Loading indicator with animated dots
-- App version information (system)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Hairline Logo | image | Yes | Hairline logo with integrated green plus sign | Branding consistent across all platforms |
+| Loading Indicator | display | Yes | Animated loading indicator with dots | Displays for maximum 3 seconds |
+| App Version | text | No | App version number (system-populated) | Displayed as informational metadata |
 
 **Business Rules**:
 
@@ -326,11 +328,13 @@ flowchart TD
 
 **Data Fields**:
 
-- Background image of satisfied patient
-- Semi-transparent overlay for text readability
-- "Begin Your Transformation Journey with Hairline" headline
-- "Get Started" primary button (green)
-- "Already have an account? Get Started" secondary link
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Background Image | image | Yes | Background image of satisfied patient | Rotates based on admin configuration |
+| Background Overlay | display | Yes | Semi-transparent overlay for text readability | Static styling element |
+| Headline Text | text | Yes | "Begin Your Transformation Journey with Hairline" | Static marketing copy |
+| Get Started Button | button | Yes | Primary CTA (green) | Leads to registration flow (Screen 3) |
+| Login Link | link | Yes | "Already have an account? Get Started" secondary link | Leads to login flow (Screen 9) |
 
 **Business Rules**:
 
@@ -345,14 +349,16 @@ flowchart TD
 
 **Data Fields**:
 
-- "First, tell us your name" header
-- Back arrow navigation
-- "First name" text input field
-- "Last name" text input field
-- "Continue" button (green)
-- Terms & Conditions link (opens latest published Terms; FR-027)
-- Privacy Policy link (opens latest published Privacy Policy; FR-027)
-- Terms acceptance checkbox: "I agree to the Terms & Conditions" (required)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "First, tell us your name" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| First Name | text | Yes | Patient's first name input | Min 2, max 50 characters |
+| Last Name | text | Yes | Patient's last name input | Min 2, max 50 characters |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until both name fields are valid and Terms acceptance is checked |
+| Terms & Conditions Link | link | Yes | Opens latest published Terms & Conditions (FR-027) | Navigates to Terms content; does not disrupt form state |
+| Privacy Policy Link | link | Yes | Opens latest published Privacy Policy (FR-027) | Navigates to Privacy Policy content; does not disrupt form state |
+| Terms Acceptance Checkbox | checkbox | Yes | "I agree to the Terms & Conditions" | Required; on first acceptance triggers FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel) |
 
 **Business Rules**:
 
@@ -368,13 +374,15 @@ flowchart TD
 
 **Data Fields**:
 
-- "Let's create an account with your email" header
-- Back arrow navigation
-- "Email address" text input field
-- "Password" text input field (masked)
-- "Confirm password" text input field (masked)
-- "Create account" button (green)
-- Terms of Service and Privacy Policy footer text
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Let's create an account with your email" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Email Address | text | Yes | Patient email address input | Valid email format required; must be unique across platform |
+| Password | text | Yes | Account password input (masked) | Min 12 chars, at least 1 uppercase, 1 lowercase, 1 digit, 1 special char from !@#$%^&(),.?":{}|<>; real-time strength validation |
+| Confirm Password | text | Yes | Password confirmation input (masked) | Must match Password field exactly |
+| Create Account Button | button | Yes | Primary CTA (green) | Disabled until all fields valid |
+| Legal Footer Text | text | Yes | Terms of Service and Privacy Policy reference | Static informational text; non-interactive |
 
 **Business Rules**:
 
@@ -394,11 +402,13 @@ flowchart TD
 
 **Data Fields**:
 
-- "Enter verification code" header
-- Back arrow navigation
-- Six separate input boxes for code digits
-- "Continue" button (green)
-- "Resend code" link (rate limited)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Enter verification code" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| OTP Code Input | text | Yes | Six separate input boxes for 6-digit verification code | Numeric only; all 6 digits required before Continue is enabled |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until all 6 digits entered; submits OTP for validation |
+| Resend Code Link | link | Yes | "Resend code" link | Rate-limited; triggers new OTP email to registered address |
 
 **Business Rules**:
 
@@ -412,14 +422,16 @@ flowchart TD
 
 **Data Fields**:
 
-- "Create your profile" header
-- Back arrow navigation
-- Large green circular icon with person silhouette
-- "Gender" dropdown field
-- "Date of birth" date picker field
-- "Phone number" text input with country code dropdown (centrally managed list)
-- "Country" dropdown field (centrally managed list)
-- "Create account" button (green)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Create your profile" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Avatar Placeholder | image | No | Large green circular icon with person silhouette | Decorative; updatable after account creation via Edit Profile |
+| Gender | select | Yes | Dropdown for gender selection | Options: Male, Female, Other, Prefer not to say |
+| Date of Birth | date | Yes | Date picker for patient's date of birth | Opens Screen 7 (Calendar Picker); minimum age 18; maximum age 100 |
+| Phone Number | text | Yes | Phone number input with country code dropdown | Country code list centrally managed in Admin Settings (A-09); format validated per selected country code |
+| Country | select | Yes | Dropdown for country selection | Centrally managed list (Admin Settings A-09); selection affects currency and language preferences |
+| Create Account Button | button | Yes | Primary CTA (green) | Disabled until all required fields are complete |
 
 **Business Rules**:
 
@@ -436,10 +448,12 @@ flowchart TD
 
 **Data Fields**:
 
-- Month/year navigation arrows
-- Calendar grid with selectable dates
-- Selected date highlighted in green
-- "Done" confirmation button
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Month/Year Navigation | action | Yes | Left/right arrows to navigate between months and years | Defaults to current month/year on open |
+| Calendar Grid | date | Yes | Grid of selectable dates for the displayed month | Dates exceeding minimum age (18 years) or maximum age (100 years) are disabled |
+| Selected Date Indicator | display | Conditional | Highlights the currently selected date in green | Shown when a date is selected |
+| Done Button | button | Yes | "Done" confirmation button | Confirms selection and updates the Date of Birth field in Screen 6 |
 
 **Business Rules**:
 
@@ -454,10 +468,12 @@ flowchart TD
 
 **Data Fields**:
 
-- "How did you find out about us?" header
-- Back arrow navigation
-- "Select an option" dropdown field (centrally managed list)
-- "Continue" button (green)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "How did you find out about us?" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Discovery Source | select | Yes | "Select an option" dropdown | Options centrally managed in Admin Settings (A-09); selection required before Continue is enabled |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until an option is selected; proceeds to main app on tap |
 
 **Business Rules**:
 
@@ -473,14 +489,16 @@ flowchart TD
 
 **Data Fields**:
 
-- Background image with semi-transparent overlay
-- "Login" header
-- "Login with email and password" subtitle
-- "Email address" text input field
-- "Password" text input field (masked)
-- "Forgot your password?" link
-- "Login" button (green)
-- "New to Hairline? Get Started" footer link
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Background Image | image | Yes | Background image with semi-transparent overlay | Static branding element |
+| Screen Title | text | Yes | "Login" | Displayed at top |
+| Subtitle Text | text | Yes | "Login with email and password" | Displayed below screen title |
+| Email Address | text | Yes | Patient email address input | Valid email format required |
+| Password | text | Yes | Patient password input (masked) | Masked by default; show/hide toggle available |
+| Forgot Password Link | link | Yes | "Forgot your password?" link | Navigates to Screen 10 (Password Reset Initiation) |
+| Login Button | button | Yes | Primary CTA (green) | Disabled until both fields have input; submits credentials |
+| Register Link | link | Yes | "New to Hairline? Get Started" footer link | Navigates to registration flow (Screen 3) |
 
 **Business Rules**:
 
@@ -496,11 +514,13 @@ flowchart TD
 
 **Data Fields**:
 
-- "Forgot password?" header
-- Back arrow navigation
-- "Enter your email to request a password reset code" instruction
-- "Email address" text input field
-- "Send code" button (green)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Forgot password?" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Instruction Text | text | Yes | "Enter your email to request a password reset code" | Static instructional copy |
+| Email Address | text | Yes | Patient email address input | Valid email format required |
+| Send Code Button | button | Yes | Primary CTA (green) | Disabled until email field has valid input; sends OTP to registered email |
 
 **Business Rules**:
 
@@ -515,12 +535,14 @@ flowchart TD
 
 **Data Fields**:
 
-- "Enter reset code" header
-- Back arrow navigation
-- "Enter the 6 digit code that you received in your email" instruction
-- Six separate input boxes for code digits
-- "Continue" button (green)
-- "Resend code" link
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Enter reset code" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Instruction Text | text | Yes | "Enter the 6 digit code that you received in your email" | Static instructional copy |
+| OTP Code Input | text | Yes | Six separate input boxes for 6-digit reset code | Numeric only; all 6 digits required; code expires after 15 minutes (configurable via Admin Settings A-09) |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until all 6 digits entered; submits code for validation |
+| Resend Code Link | link | Yes | "Resend code" link | Triggers new OTP email; rate-limited |
 
 **Business Rules**:
 
@@ -535,12 +557,14 @@ flowchart TD
 
 **Data Fields**:
 
-- "Reset password" header
-- Back arrow navigation
-- "Enter a new password and login to their account" instruction
-- "Password" text input field with visibility toggle
-- "Confirm Password" text input field
-- "Save and login" button (green)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | "Reset password" | Displayed at top |
+| Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
+| Instruction Text | text | Yes | "Enter a new password and login to their account" | Static instructional copy |
+| New Password | text | Yes | New password input (masked) with visibility toggle | Must meet strength requirements: 12+ chars, 1 upper, 1 lower, 1 digit, 1 special char from !@#$%^&(),.?":{}|<> |
+| Confirm Password | text | Yes | Password confirmation input | Must match New Password field exactly |
+| Save and Login Button | button | Yes | Primary CTA (green) | Disabled until both fields valid and matching; creates new session on success |
 
 **Business Rules**:
 
@@ -549,43 +573,24 @@ flowchart TD
 - Password visibility toggle available
 - Successful reset creates new session
 
-### Admin Platform Screens
-
-#### Screen 13: Patient Management Dashboard
-
-**Purpose**: Admin oversight of patient accounts
-
-**Data Fields**:
-
-- Patient list with search and filter options
-- Patient status indicators (Active, Inactive, Pending Verification)
-- Profile completion status
-- Last login information
-- Action buttons (Edit, View, Suspend)
-
-**Business Rules**:
-
-- Admin can view all patient profiles
-- Admin can edit patient information with reason logging
-- Admin can suspend/reactivate accounts
-- All admin actions logged for audit trail
-
-#### Screen 14: Profile Overview (Patient)
+#### Screen 13: Profile Overview (Patient)
 
 **Purpose**: Show patient's profile with key actions
 
 **Data Fields**:
 
-- Large circular avatar placeholder
-- Patient full name
-- Patient email
-- **Action Buttons** (top section): "Profile edit", "Settings"
-- **Menu Items** (scrollable list):
-  - Payment method
-  - Previous treatment (Completed only)
-  - Reviews
-  - Delete account (navigates to Screen 17; destructive action)
-  - Logout
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Avatar | image | No | Large circular patient profile photo or placeholder | Tappable to navigate to Edit Profile (Screen 14) |
+| Patient Name | text | Yes | Patient's full name (first + last) | Read-only display; sourced from profile |
+| Patient Email | text | Yes | Patient's registered email address | Read-only display |
+| Profile Edit Button | button | Yes | "Profile edit" action button (top section) | Navigates to Screen 14 (Edit Profile) |
+| Settings Button | button | Yes | "Settings" action button (top section) | Navigates to Screen 15 (Settings Main) |
+| Payment Method | link | Yes | Scrollable menu item: Payment method | Navigates to payment method management |
+| Previous Treatments | link | Yes | Scrollable menu item: Previous treatment | Shows Completed treatments only |
+| Reviews | link | Yes | Scrollable menu item: Reviews | Shows "Write review" CTA if eligible (Completed ≥ 3 months); else read-only history |
+| Delete Account | link | Yes | Scrollable menu item: Delete account (destructive) | Navigates to Screen 16 (DSR); requires re-auth if last auth > 5 minutes |
+| Logout | link | Yes | Scrollable menu item: Logout | Revokes session tokens and returns patient to Landing screen (Screen 2) |
 
 **Business Rules**:
 
@@ -607,27 +612,30 @@ flowchart TD
 6. Given patient selects Reviews, When eligible (Completed ≥ 3 months), Then “Write review” CTA is shown; else read-only history only.
 7. Given patient opens Previous treatment, Then list shows only Completed items with links to details.
 
-#### Screen 15: Edit Profile
+#### Screen 14: Edit Profile
 
 **Purpose**: Allow patient to edit core profile fields
 
 **Data Fields**:
 
-- Avatar with add/update overlay
-- First name, Last name
-- Email address (may require re-verification if changed)
-- Phone number with country code (centrally managed list)
-- Birthday (date picker)
-- Gender (enum)
-- Location / Country (centrally managed list)
-- "Save and update" button
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Avatar | image | No | Patient profile photo with add/update overlay | Tappable; opens image picker to update profile photo |
+| First Name | text | Yes | Patient's first name | Min 2, max 50 characters |
+| Last Name | text | Yes | Patient's last name | Min 2, max 50 characters |
+| Email Address | text | Yes | Patient's registered email address | Valid format; triggers 6-digit OTP re-verification if changed |
+| Phone Number | text | Yes | Phone number input with country code dropdown | Country code list centrally managed (Admin A-09); format validated per country code |
+| Date of Birth | date | Yes | Date of birth picker | Minimum age 18; uses date picker overlay |
+| Gender | select | Yes | Gender selection dropdown | Options: Male, Female, Other, Prefer not to say |
+| Country | select | Yes | Country selection dropdown | Centrally managed list (Admin A-09); affects currency and language preferences |
+| Save and Update Button | button | Yes | Primary CTA: "Save and update" | Disabled until all required fields are valid; persists changes |
 
 **Business Rules**:
 
 - Validation applied per field; back navigation available
 - Email change triggers re-verification via 6-digit OTP
 
-#### Screen 16: Settings Main Screen
+#### Screen 15: Settings Main Screen
 
 **Purpose**: Top-level settings navigation hub
 
@@ -636,16 +644,16 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Settings" | Displayed at top of screen |
-| Back Navigation | action | Yes | Back arrow to return to Profile screen (Screen 14) | Top-left corner |
-| Notification Settings | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to Screen 16a |
-| Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to Screen 16b |
-| Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to Screen 16d |
+| Back Navigation | action | Yes | Back arrow to return to Profile screen (Screen 13) | Top-left corner |
+| Notification Settings | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to Screen 15a |
+| Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to Screen 15b |
+| Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to Screen 15d |
 | Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Help & Support flow (FR-033/FR-034) |
 
 **Business Rules**:
 
 - Navigation sections are static items — always visible in the same order
-- Tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 16
+- Tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 15
 - Help & Support routes to the Help Center & Support Access module (FR-033/FR-034)
 - Settings items are patient-app only; no provider/admin controls appear here
 
@@ -657,7 +665,7 @@ flowchart TD
 - POST deleteAccountRequest { reason? } (deletion request / DSR; queued for Admin review per FR-023)
 - Read-only lists: previousTreatments[], reviews[]
 
-#### Screen 16a: Notification Settings
+#### Screen 15a: Notification Settings
 
 **Purpose**: Manage push and email notification preferences
 
@@ -666,7 +674,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Notification Settings" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 15) | Top-left corner |
 | Explanation Text | text | Yes | "Choose how you want to receive notifications from Hairline." | Displayed below title for context |
 | MVP Notice (Conditional) | text | Conditional | "Per-category preferences coming soon. For now, you can enable/disable all notifications by channel." | Shown only in MVP; removed in V2 when per-category toggles ship |
 | Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default for new accounts: ON |
@@ -692,7 +700,7 @@ flowchart TD
 3. Given inquiry stage changes (e.g., Quote received), When Email or Push is ON, Then the user receives a stage update notification according to FR-020.
 4. Given user changes notification preferences, Then a preference-change audit entry is recorded with who/when/before/after.
 
-#### Screen 16b: Privacy & Security Menu
+#### Screen 15b: Privacy & Security Menu
 
 **Purpose**: Provide access to security and privacy items
 
@@ -701,15 +709,15 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Privacy & Security" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
-| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to Screen 18 (Change Password flow) |
-| Privacy Policy | link | Yes | Row with shield/document icon + "Privacy Policy" label + chevron | Navigates to Screen 16c |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 15) | Top-left corner |
+| Change Password | link | Yes | Row with key icon + "Change Password" label + chevron | Navigates to Screen 17 (Change Password flow) |
+| Privacy Policy | link | Yes | Row with shield/document icon + "Privacy Policy" label + chevron | Navigates to Screen 15c |
 
 **Business Rules**:
 
-- Change Password always routes to Screen 18; this menu does not embed inline password-edit controls
+- Change Password always routes to Screen 17; this menu does not embed inline password-edit controls
 - Privacy Policy is read-only static content sourced from the Legal Content system (FR-027)
-- If legal content cannot be loaded, show a retry state and allow returning to Screen 16 without blocking the user
+- If legal content cannot be loaded, show a retry state and allow returning to Screen 15 without blocking the user
 - This menu contains only patient-facing items (no admin/provider configuration)
 - All server-write actions use optimistic UI with retry/backoff; on final failure, UI rolls back to last persisted values
 
@@ -718,7 +726,7 @@ flowchart TD
 1. Given user selects Change Password and submits currentPassword and a new password that meets policy, When request succeeds, Then prior refresh tokens are revoked and user remains logged in with current session.
 2. Given user cannot remember current password, When they tap "Forgot your password?" on the Change Password screen, Then the app routes to Password Reset Initiation (Screen 10).
 
-#### Screen 16c: Privacy Policy
+#### Screen 15c: Privacy Policy
 
 **Purpose**: Display Privacy Policy content (static/read-only)
 
@@ -727,7 +735,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Privacy Policy" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 16b) | Top-left corner |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 15b) | Top-left corner |
 | Policy Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
 | Last Updated | datetime | Conditional | Last updated timestamp for the policy | Shown if available (FR-027) |
 | Policy Content | text | Yes | Scrollable rich-text policy body | Must be readable and selectable; supports long content |
@@ -745,7 +753,7 @@ flowchart TD
 
 1. Given user opens Privacy Policy, Then the latest published policy content is shown with version label, last updated date (if available), and working back navigation (FR-027).
 
-#### Screen 16d: Terms & Conditions
+#### Screen 15d: Terms & Conditions
 
 **Purpose**: Display Terms & Conditions content (static/read-only)
 
@@ -754,7 +762,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Terms & Conditions" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 16) | Top-left corner |
+| Back Navigation | action | Yes | Back arrow to return to Settings Main (Screen 15) | Top-left corner |
 | Document Version | badge | Conditional | Current legal content version label | Shown if version metadata is available (FR-027) |
 | Last Updated | datetime | Conditional | Last updated timestamp for the document | Shown if available (FR-027) |
 | Document Content | text | Yes | Scrollable rich-text terms body | Must be readable and selectable; supports long content |
@@ -781,23 +789,25 @@ flowchart TD
 1. Given user changes password, Then a security audit entry is recorded and password policy is enforced.
 2. Given user initiates a password reset (forgot password), Then audit captures the reset request event (without storing OTP codes).
 
-#### Screen 17: Delete Account (Deletion Request / DSR)
+#### Screen 16: Delete Account (Deletion Request / DSR)
 
 **Purpose**: Allow patient to submit a data deletion request (right to erasure) with clear expectations and legal retention disclosures
 
 **Data Fields**:
 
-- Back navigation
-- Warning icon + "Delete your account" header
-- Blocking message (if active treatment/aftercare or payment in progress) with "Contact support" link
-- Consequences section: what may be deleted/anonymized (PII, preferences, messages, reviews, uploaded media where not legally retained)
-- Retained data section: what will be retained and why (medical + financial records retained ≥ 7 years; restricted access)
-- Processing timeline notice: verified deletion requests completed within 30 calendar days (SLA)
-- Optional "Reason for deletion" selector (does not block submission)
-- Primary CTA: "Request deletion"
-- Final confirmation modal: "Submit deletion request?" (Confirm / Cancel)
-- **Identity re-verification step (conditional)**: When last auth > 5 minutes, system navigates to Screen 19 (Identity Re-verification) before showing the final confirmation modal. On successful verification, patient returns to the confirmation modal.
-- Submission confirmation state: "Deletion request submitted" with request reference and next steps (status updates, possible additional verification)
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Back Navigation | action | Yes | Back arrow to return to Profile Overview (Screen 13) | Top-left corner; cancels the deletion flow |
+| Warning Header | display | Yes | Warning icon + "Delete your account" title | Displayed at top; signals destructive action |
+| Blocking Message | text | Conditional | Shown if active treatment/aftercare or payment in progress; includes "Contact support" link | Blocks request submission until blocking condition is resolved |
+| Consequences Section | text | Yes | Lists items that may be deleted/anonymized: PII, preferences, messages, reviews, uploaded media where not legally retained | Read-only informational text |
+| Retained Data Section | text | Yes | Explains what will be retained and why: medical + financial records retained ≥ 7 years; restricted access | Read-only informational text |
+| Processing Timeline Notice | text | Yes | "Verified deletion requests completed within 30 calendar days (SLA)" | Read-only informational text |
+| Reason for Deletion | select | No | Optional reason selector for account deletion | Optional; does not block submission; `deleteAccountRequest { reason? }` |
+| Request Deletion Button | button | Yes | Primary CTA: "Request deletion" | Triggers identity re-verification (Screen 18) if last auth > 5 minutes; else shows confirmation modal |
+| Confirmation Modal | modal | Yes | "Submit deletion request?" with Confirm / Cancel actions | Shown after re-auth passes; Confirm submits DSR; Cancel returns to screen |
+| Identity Re-verification | action | Conditional | Navigates to Screen 18 when last successful auth > 5 minutes | Required before showing confirmation modal when auth is stale |
+| Submission Confirmation | display | Conditional | "Deletion request submitted" with request reference and next-step instructions | Shown after successful DSR submission |
 
 **Business Rules**:
 
@@ -805,12 +815,12 @@ flowchart TD
 - If active treatment/aftercare exists, deletion request is blocked with guidance to contact support (patient safety)
 - If payment is in progress, deletion request is blocked until payment completes
 - If an active inquiry exists, deletion request is allowed and system auto-closes open inquiries
-- Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 19 (Identity Re-verification) using password or 6-digit email OTP
+- Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 18 (Identity Re-verification) using password or 6-digit email OTP
 - Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`)
 - Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy)
 - On submission: system creates deletion request record, sends confirmation, and later sends status updates and outcome (including legal basis for any retained records)
 
-#### Screen 18: Change Password
+#### Screen 17: Change Password
 
 **Purpose**: Allow an authenticated patient to change their password (with an in-flow link to password reset if they forgot the current password)
 
@@ -819,7 +829,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Screen Title | text | Yes | "Change Password" | Displayed at top |
-| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 16b) | Top-left corner |
+| Back Navigation | action | Yes | Back arrow to return to Privacy & Security menu (Screen 15b) | Top-left corner |
 | Current Password | text | Yes | Masked password input | Required; show/hide toggle icon |
 | Forgot Your Password Link | link | Yes | "Forgot your password?" link shown under Current Password | Navigates to Password Reset Initiation (Screen 10) |
 | New Password | text | Yes | Masked password input | Must meet password policy (12+ chars, mixed case, digit, special char) |
@@ -827,7 +837,7 @@ flowchart TD
 | Password Policy Helper | text | Yes | Short reminder of password requirements | Must not list attempt limits; reference policy only |
 | Save Button | button | Yes | Primary CTA: "Save" | Disabled until all required fields are present |
 | Error Message (Conditional) | text | Conditional | Inline field-level errors for validation or server failures | Must not reveal whether current password is correct — use generic "Unable to change password. Please check your entries and try again." |
-| Throttle/Lockout Message (Conditional) | text | Conditional | Displayed when authentication throttling or lockout is triggered | "Too many attempts. Please try again later." with back navigation to Screen 16b |
+| Throttle/Lockout Message (Conditional) | text | Conditional | Displayed when authentication throttling or lockout is triggered | "Too many attempts. Please try again later." with back navigation to Screen 15b |
 
 **Business Rules**:
 
@@ -835,10 +845,10 @@ flowchart TD
 - New password must meet password rules and cannot reuse last 5 passwords
 - Do not hardcode attempt counts in UI copy; throttling/lockout follows configured authentication security policy
 - Validation errors shown inline without revealing sensitive details (avoid "current password incorrect" style disclosures)
-- On success: prior refresh tokens are revoked and current session remains active; system displays Screen 18a (success confirmation)
-- If throttled/locked, show blocked message and navigate back to Screen 16b
+- On success: prior refresh tokens are revoked and current session remains active; system displays Screen 17a (success confirmation)
+- If throttled/locked, show blocked message and navigate back to Screen 15b
 
-#### Screen 18a: Password Changed Confirmation
+#### Screen 17a: Password Changed Confirmation
 
 **Purpose**: Confirm password change succeeded and return user back to settings
 
@@ -849,17 +859,17 @@ flowchart TD
 | Confirmation Icon | icon | Yes | Green success checkmark icon | Displayed prominently at top center |
 | Screen Title | text | Yes | "Password Updated" | Displayed prominently |
 | Message Text | text | Yes | Short confirmation copy (e.g., "Your password has been successfully changed.") | Must not include attempt limits or sensitive details |
-| Done Button | button | Yes | Primary CTA: "Done" | Returns to Privacy & Security menu (Screen 16b) |
+| Done Button | button | Yes | Primary CTA: "Done" | Returns to Privacy & Security menu (Screen 15b) |
 
 **Business Rules**:
 
 - Confirmation screen is shown only after the server confirms the password change
 - If token revocation fails after password change succeeds, the user still sees success but the app MUST retry revocation in background and log a security event
-- Returning to Settings must preserve navigation state (back stack returns to Screen 16b)
+- Returning to Settings must preserve navigation state (back stack returns to Screen 15b)
 
-#### Screen 19: Identity Re-verification (Shared Component)
+#### Screen 18: Identity Re-verification (Shared Component)
 
-**Purpose**: Verify patient identity before performing sensitive actions (used by Screen 17 Delete Account and any future sensitive action requiring re-auth)
+**Purpose**: Verify patient identity before performing sensitive actions (used by Screen 16 Delete Account and any future sensitive action requiring re-auth)
 
 **Data Fields**:
 
@@ -884,7 +894,30 @@ flowchart TD
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy)
 - Successful verification returns the patient to the calling screen's next step (e.g., final confirmation modal for Delete Account)
 - Patient can cancel at any time to exit without completing the sensitive action
-- This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Delete Account Screen 17; extensible to future sensitive actions)
+- This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Delete Account Screen 16; extensible to future sensitive actions)
+
+### Admin Platform Screens
+
+#### Screen 19: Patient Management Dashboard
+
+**Purpose**: Admin oversight of patient accounts
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Patient List | list | Yes | Searchable and filterable list of all patient accounts | Supports search by name/email; filter by status |
+| Status Indicator | display | Yes | Patient account status badge: Active, Inactive, Pending Verification | Colour-coded for quick visual scan |
+| Profile Completion | display | Yes | Profile completion status per patient | Read-only; reflects required field completion |
+| Last Login | display | Yes | Timestamp of the patient's most recent login | Read-only; displayed in admin-configured timezone |
+| Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: deactivates account |
+
+**Business Rules**:
+
+- Admin can view all patient profiles
+- Admin can edit patient information with reason logging
+- Admin can suspend/reactivate accounts
+- All admin actions logged for audit trail
 
 ## Business Rules
 
@@ -1250,9 +1283,9 @@ A patient successfully updates their profile information and manages account set
 |------|---------|---------|--------|
 | 2025-10-28 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template compliance: Added User Scenarios & Testing, Functional Requirements Summary, Key Entities, restructured Assumptions, added Appendices | Product & Engineering |
-| 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Clarified distinction between account deletion auto-close and explicit inquiry cancellation (Screen 14); added "Inquiry Cancelled" to system event triggers in Settings (Screen 16) | AI     |
-| 2026-02-06 | 1.3 | Settings (Screen 16): Added Terms & Conditions entry; refactored Privacy & Security into a 2-item menu (Change Password, Privacy Policy); removed device sessions and data export from patient settings. Added Change Password (Screen 18) with "Forgot your password?" link to Password Reset (Screens 10–12). Added Delete Account DSR request screen (Screen 17) and clarified DSR submission behavior. | AI     |
-| 2026-02-06 | 1.4 | Integrity fixes aligned with design complement (P01.2/P01.3). Expanded Screen 16 into sub-screens (16, 16a–16d) with formal 5-column field tables. Added Screen 18a (Password Changed Confirmation) with token-revocation resilience rule. Added Screen 19 (Identity Re-verification shared component) for sensitive actions requiring re-auth. Added error/throttle/lockout states to Screen 18. Added version metadata and error/loading states to legal content screens (16c, 16d). Added audit privacy constraint for legal content views. Clarified Screen 14 navigation structure (action buttons vs menu items). Updated Screen 17 to reference Screen 19 for identity re-verification. | AI     |
+| 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Clarified distinction between account deletion auto-close and explicit inquiry cancellation (Screen 13); added "Inquiry Cancelled" to system event triggers in Settings (Screen 15) | AI     |
+| 2026-02-06 | 1.3 | Settings (Screen 15): Added Terms & Conditions entry; refactored Privacy & Security into a 2-item menu (Change Password, Privacy Policy); removed device sessions and data export from patient settings. Added Change Password (Screen 17) with "Forgot your password?" link to Password Reset (Screens 10–12). Added Delete Account DSR request screen (Screen 16) and clarified DSR submission behavior. | AI     |
+| 2026-02-06 | 1.4 | Integrity fixes aligned with design complement (P01.2/P01.3). Expanded Screen 15 into sub-screens (16, 16a–16d) with formal 5-column field tables. Added Screen 17a (Password Changed Confirmation) with token-revocation resilience rule. Added Screen 18 (Identity Re-verification shared component) for sensitive actions requiring re-auth. Added error/throttle/lockout states to Screen 17. Added version metadata and error/loading states to legal content screens (16c, 16d). Added audit privacy constraint for legal content views. Clarified Screen 13 navigation structure (action buttons vs menu items). Updated Screen 16 to reference Screen 18 for identity re-verification. | AI     |
 | 2026-02-10 | 1.5 | Verification fixes: (1) Unified password reset OTP expiry from 1 hour to 15 min configurable, aligning with FR-026 system-level OTP policy. (2) Replaced hardcoded lockout values (5 attempts, 15-min lockout) with configurable references per FR-026. (3) Added design decision note on Screen 4 explaining OTP verification replaces confirm-email field per client transcription. (4) Made discovery question required on Screen 8 per client transcription. Password reuse rule (last 5) also added to system-prd.md and constitution. | AI     |
 
 ## Appendix: Approvals
