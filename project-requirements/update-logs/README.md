@@ -259,11 +259,19 @@ This folder contains documentation update reports and verification logs for the 
 
 - `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
-### 2026-03-28/ (1 file)
+### 2026-03-28/ (3 files)
 
 #### **FR-001 Screen Restructure & Renumber**
 
 - `FR001_Screen_Renumber_2026-03-28.md` - Corrected screen misclassification in FR-001 prd.md: Screens 14–19 (patient profile, settings, account management) were placed under Admin; only Screen 13 was a genuine admin screen. Restructured section headings and renumbered all screens: patient Screens 1–18 sequential, admin Screen 19. Updated all cross-references in prd.md and 8 external files (update-logs, task-creation, reports).
+
+#### **FR-026 / FR-001 Account Deletion Reasons Admin Management**
+
+- `FR026_FR001_AccountDeletionReasons_2026-03-28.md` - Added "Account Deletion Reasons" as a new centrally managed App Data list in FR-026 (Screen 5b, workflow A5, 9 seeded options, Entity 7, REQ-026-012b). FR-001 Screen 16 validation rule and dependency updated. Report file updated. Mirrors Inquiry Cancellation Reasons pattern.
+
+#### **FR-026 Verification Fixes (v1.3 → v1.4)**
+
+- `FR026_VERIFICATION_FIXES_2026-03-28.md` - Applied 8 verification fixes: removed duplicate MFA bullet (deferred to FR-031); added flag_url to Entity 4 and REQ-026-011; added IP/device-level rate limiting as fixed-in-codebase; corrected stale FR-003 Screen 11 → Screen 8a (6 occurrences); fixed propagation test scenarios from 30 seconds to 1 minute; moved FR-024/FR-011 to Downstream Consumers section; standardised "Friend Referral" seeding data; corrected FR-003 module name to P-02: Quote Request & Management.
 
 ---
 
@@ -331,6 +339,8 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
 - **2026-03-28**: `FR001_Screen_Renumber_2026-03-28.md` - FR-001 screen section restructure and full renumber: patient Screens 1–18, admin Screen 19; 8 external files updated
+- **2026-03-28**: `FR026_FR001_AccountDeletionReasons_2026-03-28.md` - FR-026 Account Deletion Reasons: new Screen 5b, workflow A5, 9 seeded options, Entity 7, REQ-026-012b; FR-001 Screen 16 dependency and validation rule updated
+- **2026-03-28**: `FR026_VERIFICATION_FIXES_2026-03-28.md` - FR-026 v1.4 verification fixes: MFA deferred, flag_url added, IP rate limiting documented, FR-003 screen ref corrected, propagation test scenarios fixed, dependency direction corrected, seed data label aligned
 
 ### Design Specifications
 

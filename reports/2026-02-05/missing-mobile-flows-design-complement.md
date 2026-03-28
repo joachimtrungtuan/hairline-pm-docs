@@ -119,7 +119,7 @@ flowchart TD
 | Retained Data Header | text | Yes | "What will be retained (legal requirement):" | Bold, clear separator |
 | Retained Data Explanation | text | Yes | Explanation of legally retained records | Must state: "Medical and financial transaction records are retained for at least 7 years. Access is restricted and the legal basis will be documented in the deletion outcome." |
 | Processing Timeline Notice | text | Yes | Informational message about processing time | Must state: "Verified deletion requests are completed within 30 calendar days." (FR-023) |
-| Deletion Reason Selector (Optional) | select | No | Optional reason for requesting deletion | Optional; options are centrally managed (not hardcoded in this spec) |
+| Deletion Reason Selector (Optional) | select | No | Optional reason for requesting deletion | Optional; options centrally managed in Admin Settings (FR-026, App Data → Account Deletion Reasons) |
 | Final Confirmation Modal (Conditional) | modal | Conditional | Confirmation before submitting deletion request | Shown after "Request Deletion" tap; includes Confirm/Cancel; no irreversible deletion occurs at this step |
 | Request Deletion Button | button | Yes | Primary CTA in destructive style (red) | Enabled unless blocked; tap triggers re-auth check and/or final confirmation modal |
 | Go Back Button | button | Yes | Secondary CTA in default style | Returns to Profile screen, no changes saved |
