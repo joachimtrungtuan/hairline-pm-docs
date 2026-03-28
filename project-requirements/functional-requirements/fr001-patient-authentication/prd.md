@@ -803,7 +803,7 @@ flowchart TD
 | Consequences Section | text | Yes | Lists items that may be deleted/anonymized: PII, preferences, messages, reviews, uploaded media where not legally retained | Read-only informational text |
 | Retained Data Section | text | Yes | Explains what will be retained and why: medical + financial records retained ≥ 7 years; restricted access | Read-only informational text |
 | Processing Timeline Notice | text | Yes | "Verified deletion requests completed within 30 calendar days (SLA)" | Read-only informational text |
-| Reason for Deletion | select | No | Optional reason selector for account deletion | Optional; does not block submission; `deleteAccountRequest { reason? }` |
+| Reason for Deletion | select | No | Optional reason selector for account deletion | Optional; does not block submission; `deleteAccountRequest { reason? }`; options centrally managed in Admin Settings (FR-026, App Data → Account Deletion Reasons) |
 | Request Deletion Button | button | Yes | Primary CTA: "Request deletion" | Triggers identity re-verification (Screen 18) if last auth > 5 minutes; else shows confirmation modal |
 | Confirmation Modal | modal | Yes | "Submit deletion request?" with Confirm / Cancel actions | Shown after re-auth passes; Confirm submits DSR; Cancel returns to screen |
 | Identity Re-verification | action | Conditional | Navigates to Screen 18 when last successful auth > 5 minutes | Required before showing confirmation modal when auth is stale |
@@ -1061,7 +1061,7 @@ flowchart TD
 - **FR-003**: Inquiry Submission & Distribution (requires completed profile)
 - **FR-020**: Notifications & Alerts (email verification, password reset)
 - **FR-025**: Medical Questionnaire Management (profile integration)
-- **FR-026**: App Settings & Security Policies (OTP + throttling config; centrally managed lists)
+- **FR-026**: App Settings & Security Policies (OTP + throttling config; centrally managed lists including account deletion reason options for Screen 16)
 - **FR-027**: Legal Content Management (Terms/Privacy content + acceptance tracking)
 - **FR-023**: Data Retention & Compliance (DSR deletion request handling)
 - **Future FR**: Multi-Factor Authentication (security enhancement)

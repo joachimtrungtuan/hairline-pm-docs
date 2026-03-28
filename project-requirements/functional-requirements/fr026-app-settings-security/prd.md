@@ -30,7 +30,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, and inquiry cancellation reason options
+- **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options
 - **Provider Platform (PR-06)**: Indirectly consumes centrally managed lists for profile settings
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
 - **Shared Services (S-03)**: Notification Service consumes OTP email templates for delivery
@@ -90,7 +90,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Admin-Initiated**:
 
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
-- Admin navigates to Settings → App Data to manage country lists, discovery questions, or inquiry cancellation reasons
+- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, or account deletion reasons
 - Admin navigates to Settings → Notifications to edit OTP email templates
 
 **System-Triggered**:
@@ -201,9 +201,25 @@ The App Settings & Security Policies module provides a centralized, audited, and
   6. Admin clicks "Save"
   7. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Adding new cancellation tracking category from patient feedback" and confirms.
   8. System versions cancellation reasons list (v1.0 → v1.1)
-  9. Within 1 minute, Patient app cancellation modal (FR-003 Screen 11) displays updated reason options
+  9. Within 1 minute, Patient app cancellation modal (FR-003 Screen 8a) displays updated reason options
 
 - **Outcome**: Patients see updated cancellation reason options when cancelling an inquiry
+
+**A5: Admin Edits Account Deletion Reasons**:
+
+- **Trigger**: Product team identifies need to add, reorder, or deactivate deletion reason options for the patient account deletion flow (FR-001 Screen 16)
+- **Steps**:
+  1. Admin navigates to Settings → App Data → Account Deletion Reasons
+  2. System displays current active reasons: "I no longer use this app", "I found a better alternative", "The app doesn't meet my needs", "Too many notifications or emails", "Concerns about privacy or data security", "I had technical issues or bugs", "The app is difficult to use", "I'm taking a break and may return later", "Others"
+  3. Admin clicks "Add Reason" and enters: "Dissatisfied with support"
+  4. Admin toggles "Requires Explanation" to Yes (patient must provide free text when selecting this reason)
+  5. Admin uses drag-and-drop to reorder reasons (priority ranking)
+  6. Admin clicks "Save"
+  7. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Adding new deletion tracking category from patient feedback" and confirms.
+  8. System versions deletion reasons list (v1.0 → v1.1)
+  9. Within 1 minute, Patient app deletion screen (FR-001 Screen 16) displays updated reason options
+
+- **Outcome**: Patients see updated account deletion reason options when requesting account deletion
 
 **B1: Admin Attempts Invalid Configuration**:
 
@@ -270,6 +286,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Countries & Calling Codes (name, ISO code, calling code, flag, order, active)
   - Discovery Questions (answer options, order, active)
   - Inquiry Cancellation Reasons (reason label, order, requires_explanation, active)
+  - Account Deletion Reasons (reason label, requires_explanation, display order, active)
 - Notifications
   - OTP Email Templates
     - Verification Email
@@ -447,7 +464,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ### Screen 5a: Inquiry Cancellation Reasons Manager
 
-**Purpose**: Centralized management of predefined cancellation reason options displayed to patients during inquiry cancellation (FR-003 Screen 11)
+**Purpose**: Centralized management of predefined cancellation reason options displayed to patients during inquiry cancellation (FR-003 Screen 8a)
 
 **Data Fields**:
 
@@ -466,7 +483,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Deactivating a reason does NOT delete historical data — previously captured cancellation reasons retain their original label in audit logs
 - Changes propagate to Patient app within 1 minute
 - Drag-and-drop reordering updates Display Order field
-- When "Requires Explanation" is true for a reason, FR-003 Screen 11 must show a mandatory free text field (max 500 chars) when that reason is selected
+- When "Requires Explanation" is true for a reason, FR-003 Screen 8a must show a mandatory free text field (max 500 chars) when that reason is selected
 
 **Notes**:
 
@@ -474,7 +491,40 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Display usage analytics: how many patients selected each reason, with date range filter
 - Warn before deactivating a frequently selected reason
 - On save, a modal prompts for the mandatory change reason (10-500 chars)
-- Consumer: FR-003 Screen 11 (Cancel Inquiry Confirmation Modal) reads this list to populate the cancellation reason selector
+- Consumer: FR-003 Screen 8a (Cancel Inquiry Confirmation Modal) reads this list to populate the cancellation reason selector
+
+---
+
+### Screen 5b: Account Deletion Reasons Manager
+
+**Purpose**: Centralized management of predefined deletion reason options displayed to patients during account deletion request (FR-001 Screen 16)
+
+**Data Fields**:
+
+| Field Name            | Type     | Required | Description                                           | Validation Rules                      |
+| --------------------- | -------- | -------- | ----------------------------------------------------- | ------------------------------------- |
+| Reason Label          | text     | Yes      | Display text for the deletion reason                  | Max 100 chars, unique                 |
+| Requires Explanation  | checkbox | Yes      | Whether patient must provide free text when selecting | Default: false; "Others" always true  |
+| Display Order         | number   | No       | Sort priority (lower = displayed first)               | Integer, default: 999                 |
+| Active                | checkbox | Yes      | Whether reason is visible in deletion request screen  | Default: true                         |
+
+**Business Rules**:
+
+- Reason labels must be unique (case-insensitive)
+- At least 2 active reasons must exist at all times
+- The "Others" reason is FIXED (cannot be deactivated or deleted) and always requires explanation
+- Deactivating a reason does NOT delete historical data — previously captured deletion reasons retain their original label in audit logs
+- Changes propagate to Patient app within 1 minute
+- Drag-and-drop reordering updates Display Order field
+- When "Requires Explanation" is true for a reason, FR-001 Screen 16 must show an optional free text field (max 500 chars) when that reason is selected (the deletion reason field overall remains optional per FR-001 business rules)
+
+**Notes**:
+
+- Provide drag-and-drop reordering UI (same pattern as Inquiry Cancellation Reasons)
+- Display usage analytics: how many patients selected each reason, with date range filter
+- Warn before deactivating a frequently selected reason
+- On save, a modal prompts for the mandatory change reason (10-500 chars)
+- Consumer: FR-001 Screen 16 (Delete Account / DSR screen) reads this list to populate the deletion reason selector
 
 ---
 
@@ -575,12 +625,14 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Country list: add, edit, deactivate countries and calling codes
 - Discovery questions: add, edit, deactivate answer options
 - Inquiry cancellation reasons: add, edit, reorder, deactivate reason options (FR-003 consumer)
+- Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
 **Fixed in Codebase (Not Editable)**:
 
 - Password policy: minimum 12 characters, at least 1 uppercase, 1 lowercase, 1 digit, 1 special character from !@#$%^&(),.?":{}|<>
 - OTP code length: FIXED at 6 digits
+- IP/device-level rate limiting: Fixed thresholds enforced at the application layer (not admin-configurable): max 20 failed login attempts per IP address per hour; IP lockout duration: 1 hour (see Implementation Notes for enforcement details)
 - Discovery question text: FIXED as "How did you find out about us?"
 - Template names: Cannot rename OTP email templates
 - Setting group structure: Cannot create new setting groups (predefined)
@@ -590,6 +642,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Admin can deactivate countries but cannot delete (soft delete, archived)
 - Admin can deactivate discovery options but must maintain at least 2 active options
 - Admin can deactivate cancellation reasons but must maintain at least 2 active reasons; "Other" reason cannot be deactivated
+- Admin can deactivate account deletion reasons but must maintain at least 2 active reasons; "Others" reason cannot be deactivated
 - Admin can edit email templates but must include required variables ({code} for OTP templates)
 
 ---
@@ -641,7 +694,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Why needed**: P-01 consumes authentication throttling, OTP configuration, country lists, discovery questions
   - **Integration point**: P-01 polls Settings API every 60 seconds to retrieve latest configurations; applies to login flows, OTP verification, profile forms
 
-- **FR-003 / Module P-02: Inquiry Submission & Distribution**
+- **FR-003 / Module P-02: Quote Request & Management**
   - **Why needed**: P-02 consumes inquiry cancellation reason options for the patient cancellation modal (Screen 11)
   - **Integration point**: P-02 polls Settings API to retrieve active cancellation reasons; applies to inquiry cancellation flow (Workflow 5)
 
@@ -657,23 +710,23 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Why needed**: S-05 stores country flag assets (SVG/PNG) uploaded via Country Manager UI
   - **Integration point**: Settings UI uploads flag file to S-05 API, receives URL, and stores URL in country settings
 
-- **FR-024 / Module A-09: Treatment & Package Management**
-  - **Why needed**: Treatments are admin-created foundation items managed through Settings UI
-  - **Relationship**: FR-024 Part A (Treatments) is admin-configured; admin creates treatments (FUE, FUT, DHI) with name, description, type, video, images, technique details
-  - **Integration point**: Treatment management is a submodule of A-09 System Settings & Configuration; shares same Settings Management UI and audit trail
-  - **Scope clarification**: FR-026 provides the settings infrastructure; FR-024 implements treatment-specific CRUD operations
-
-- **FR-011 / Module A-03: Aftercare Team Management**
-  - **Why needed**: Aftercare milestone templates are admin-created and managed through Settings UI
-  - **Relationship**: Aftercare templates (Post-Op Phase, Recovery Phase, Growth Phase, Final Assessment) are admin-configured with milestones, scan frequency, questionnaires, educational resources
-  - **Integration point**: Providers select from admin-created templates during treatment completion; templates define complete aftercare plan structure
-  - **Scope clarification**: FR-026 provides the settings infrastructure; FR-011 implements aftercare template-specific management
-
 - **Admin Authentication & Authorization Module**
   - **Why needed**: Cannot restrict access to Settings Management UI without authentication and role-based permissions
   - **Required roles**: "Settings Manager" (view + edit all settings), "Settings Viewer" (read-only), "Security Admin" (view sensitive values unmasked)
   - **Required permissions**: "read:settings", "write:settings", "view:sensitive", "edit:auth-policies", "edit:app-data", "edit:templates"
   - **Integration point**: All Settings Management UI screens enforce role checks before allowing access; all API endpoints validate OAuth 2.0 tokens with appropriate scopes
+
+### Downstream Consumers (Modules That Depend on FR-026)
+
+The following modules consume FR-026 infrastructure. They are listed here for traceability; FR-026 implementation does NOT block on them.
+
+- **FR-024 / Module A-09: Treatment & Package Management**
+  - **Relationship**: FR-026 provides the settings infrastructure (audit trail, versioning, UI shell); FR-024 implements treatment-specific CRUD operations within that infrastructure
+  - **Integration point**: Treatment management shares the Settings Management UI and audit trail established by FR-026
+
+- **FR-011 / Module A-03: Aftercare Team Management**
+  - **Relationship**: FR-026 provides the settings infrastructure; FR-011 implements aftercare milestone template management within that infrastructure
+  - **Integration point**: Providers select from admin-created aftercare templates; templates are managed via the A-09 settings surface defined in FR-026
 
 ### External Dependencies (APIs, Services)
 
@@ -751,7 +804,6 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ### Security Considerations
 
-- **Authentication**: Multi-factor authentication required for admin access to Settings Management UI
 - **Authorization**: Role-based access control (RBAC) enforced:
   - "Settings Manager" role: Can view and edit all settings
   - "Settings Viewer" role: Can view settings and version history (read-only)
@@ -759,6 +811,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **Encryption**: Sensitive setting values (API keys, secrets) encrypted at rest using AES-256
 - **Audit trail**: All admin actions logged with IP address, user agent, timestamp, and change details
 - **Rate limiting**: Settings API rate limited to 100 requests/minute per admin to prevent abuse
+- **IP/device-level rate limiting**: Fixed at application layer (not admin-configurable); max 20 failed login attempts per IP address per hour with a 1-hour IP lockout. Enforced independently of the per-user authentication throttling configured in Screen 2. Both constraints apply simultaneously (whichever triggers first locks the user out).
 - **Input validation**: All user inputs sanitized to prevent XSS, SQL injection, command injection
 - **HTML Sanitization for Email Templates**:
   - **Sanitization Library**: MUST use DOMPurify (JavaScript) or Bleach (Python) for server-side HTML sanitization
@@ -795,7 +848,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **Discovery Questions**:
   - Initial Option 1: "Search Engine" (Order: 1)
   - Initial Option 2: "Social Media" (Order: 2)
-  - Initial Option 3: "Friend Recommendation" (Order: 3)
+  - Initial Option 3: "Friend Referral" (Order: 3)
 - **Inquiry Cancellation Reasons**:
   - Initial Option 1: "Changed my mind" (Order: 1, Requires Explanation: No)
   - Initial Option 2: "Found a better option elsewhere" (Order: 2, Requires Explanation: No)
@@ -804,6 +857,16 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - Initial Option 5: "Travel restrictions" (Order: 5, Requires Explanation: No)
   - Initial Option 6: "Timeline doesn't work" (Order: 6, Requires Explanation: No)
   - Initial Option 7: "Other" (Order: 7, Requires Explanation: Yes, FIXED — cannot be deactivated)
+- **Account Deletion Reasons**:
+  - Initial Option 1: "I no longer use this app" (Order: 1, Requires Explanation: No)
+  - Initial Option 2: "I found a better alternative" (Order: 2, Requires Explanation: No)
+  - Initial Option 3: "The app doesn't meet my needs" (Order: 3, Requires Explanation: No)
+  - Initial Option 4: "Too many notifications or emails" (Order: 4, Requires Explanation: No)
+  - Initial Option 5: "Concerns about privacy or data security" (Order: 5, Requires Explanation: No)
+  - Initial Option 6: "I had technical issues or bugs" (Order: 6, Requires Explanation: No)
+  - Initial Option 7: "The app is difficult to use" (Order: 7, Requires Explanation: No)
+  - Initial Option 8: "I'm taking a break and may return later" (Order: 8, Requires Explanation: No)
+  - Initial Option 9: "Others" (Order: 9, Requires Explanation: Yes, FIXED — cannot be deactivated)
 - **Countries**:
   - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
 - **Templates**:
@@ -825,7 +888,7 @@ Admin needs to reduce login attempt lockout from 5 attempts to 7 attempts based 
 
 1. **Given** admin is logged in and has "Settings Manager" role, **When** admin navigates to Settings → Authentication & Security, **Then** system displays current throttling policy (5 attempts, 15-minute lockout)
 2. **Given** admin is editing throttling policy, **When** admin changes max attempts to 7 and clicks Save, then submits the reason modal, **Then** system saves new policy, creates audit log, increments version number
-3. **Given** admin saved new throttling policy 30 seconds ago, **When** patient attempts login on Patient app, **Then** new policy (7 attempts) applies immediately
+3. **Given** admin saved new throttling policy at least 1 minute ago, **When** patient attempts login on Patient app, **Then** new policy (7 attempts) applies
 4. **Given** patient makes 6 failed login attempts, **When** patient attempts 7th login, **Then** system allows attempt (does not lock out until 8th attempt)
 5. **Given** admin views version history, **When** admin selects version history for authentication throttling, **Then** system displays complete audit trail including admin ID, timestamp, old/new values, and reason
 
@@ -844,7 +907,7 @@ Marketing team requests updated branding in OTP verification emails; admin needs
 1. **Given** admin is logged in and has "Settings Manager" role, **When** admin navigates to Settings → Notifications → OTP Email Templates, **Then** system displays list of templates (Verification Email, Password Reset Email)
 2. **Given** admin selected "Verification Email" template, **When** admin modifies HTML body and clicks "Preview", **Then** system displays rendered email with sample data ({code} = "123456")
 3. **Given** admin previewed email and verified branding, **When** admin clicks Save and submits the reason modal, **Then** system versions template, creates audit log
-4. **Given** admin saved new template 30 seconds ago, **When** patient requests new OTP on Patient app, **Then** patient receives email with new branding
+4. **Given** admin saved new template at least 1 minute ago, **When** patient requests new OTP on Patient app, **Then** patient receives email with new branding
 5. **Given** patient already received OTP before template change, **When** admin saves new template, **Then** patient's existing OTP email remains unchanged (no retroactive changes)
 
 ---
@@ -862,7 +925,7 @@ Admin needs to add "Albania" to country list to support expanded patient base in
 1. **Given** admin is logged in and has "Settings Manager" role, **When** admin navigates to Settings → App Data → Countries & Calling Codes, **Then** system displays current list of countries
 2. **Given** admin clicks "Add Country", **When** admin enters country name "Albania", ISO code "AL", calling code "+355", **Then** system validates uniqueness of name and ISO code
 3. **Given** admin entered valid country data and uploaded flag, **When** admin clicks Save and submits the reason modal with "Expanding to Albanian market", **Then** system creates audit log, versions country list
-4. **Given** admin saved new country 30 seconds ago, **When** patient opens profile form on Patient app, **Then** "Albania" appears in country dropdown
+4. **Given** admin saved new country at least 1 minute ago, **When** patient opens profile form on Patient app, **Then** "Albania" appears in country dropdown
 5. **Given** patient selects "Albania" in country dropdown, **When** patient views phone number field, **Then** calling code defaults to "+355"
 
 ---
@@ -900,7 +963,7 @@ Product team receives patient feedback suggesting a new cancellation reason cate
 1. **Given** admin is logged in and has "Settings Manager" role, **When** admin navigates to Settings → App Data → Inquiry Cancellation Reasons, **Then** system displays current list of active reasons with usage counts
 2. **Given** admin clicks "Add Reason", **When** admin enters "Provider communication issues" with Requires Explanation = Yes, **Then** system validates label uniqueness
 3. **Given** admin added new reason and reordered via drag-and-drop, **When** admin clicks Save and submits reason modal with "Adding cancellation tracking category from patient feedback", **Then** system versions reason list, creates audit log
-4. **Given** admin saved new reason 30 seconds ago, **When** patient taps Cancel Inquiry on Patient app, **Then** "Provider communication issues" appears in reason selector with mandatory explanation field
+4. **Given** admin saved new reason at least 1 minute ago, **When** patient taps Cancel Inquiry on Patient app, **Then** "Provider communication issues" appears in reason selector with mandatory explanation field
 5. **Given** admin deactivates "Travel restrictions" reason, **When** patient who previously cancelled with that reason is viewed in analytics, **Then** historical data retains "Travel restrictions" label
 
 ---
@@ -930,6 +993,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - How to manage **sensitive value (API key) visibility in version history**? System masks sensitive values in version history UI (display as "[REDACTED]"); admins with "View Sensitive Settings" permission can click "Show" to unmask.
 - How does system handle **settings propagation during Patient app deployment**? Settings API remains available during deployments; Patient app retrieves settings after restart; no data loss.
 - What happens when **admin attempts to deactivate the "Other" cancellation reason**? System prevents deactivation and displays error: "'Other' is a fixed reason and cannot be deactivated."
+- What happens when **admin attempts to deactivate the "Others" deletion reason**? System prevents deactivation and displays error: '"Others" is a fixed reason and cannot be deactivated.'
 - What happens when **admin deactivates a cancellation reason while a patient is mid-cancellation flow**? Patient app uses cached reason list (up to 1 minute stale); if patient submits with a now-deactivated reason, system still accepts the submission (reason was valid at flow start). Next cancellation flow loads updated list.
 - What occurs if **admin deletes country that active patients have selected in profile**? System prevents hard delete (soft delete only); patients who selected deleted country retain selection; country hidden from new users.
 
@@ -952,9 +1016,10 @@ Compliance officer requests complete audit trail of all authentication policy ch
 
 - **REQ-026-009**: System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)
 - **REQ-026-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
-- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, display order, active status
+- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage, nullable), display order, active status
 - **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
-- **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 11.
+- **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 8a.
+- **REQ-026-012b**: System MUST store centrally managed account deletion reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-001 Screen 16.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -991,7 +1056,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
   - **Relationships**: Many Audit Log Entries belong to one Setting Group; Many Audit Log Entries belong to one Admin
 
 - **Entity 4 - Country**: Centrally managed country data
-  - **Key attributes**: country_id, country_name, iso_code, calling_code, display_order, active, created_at, updated_at
+  - **Key attributes**: country_id, country_name, iso_code, calling_code, flag_url (text, nullable — URL to S-05-stored flag asset), display_order, active, created_at, updated_at
   - **Relationships**: Referenced by Patient profiles, Provider profiles
 
 - **Entity 5 - Discovery Question Option**: Centrally managed discovery question answer choices
@@ -1002,7 +1067,11 @@ Compliance officer requests complete audit trail of all authentication policy ch
   - **Key attributes**: reason_id, reason_label, requires_explanation (boolean), display_order, active, usage_count, created_at, updated_at
   - **Relationships**: Referenced by FR-003 Inquiry entity (cancellationReason field stores selected reason_label at time of cancellation)
 
-- **Entity 7 - Email Template**: OTP email template configuration
+- **Entity 7 - Account Deletion Reason**: Centrally managed deletion reason option for patient account deletion request (FR-001 Screen 16)
+  - **Key attributes**: reason_id, reason_label, requires_explanation (boolean), display_order, active, usage_count, created_at, updated_at
+  - **Relationships**: Referenced by FR-001 deletion request entity (deletionReason field stores selected reason_label at time of DSR submission)
+
+- **Entity 8 - Email Template**: OTP email template configuration
   - **Key attributes**: template_id, template_name, subject_line, html_body, plain_text_body, version_number, required_variables (JSON), created_at, updated_at
   - **Relationships**: One Template has many Versions; Consumed by Notification Service (S-03)
 
@@ -1014,7 +1083,9 @@ Compliance officer requests complete audit trail of all authentication policy ch
 | ---------- | ------- | --------------------------------------- | ------------ |
 | 2025-11-04 | 1.0     | Initial PRD creation                    | AI Assistant |
 | 2025-12-11 | 1.1     | Verified status, approvals, footer update | AI Assistant |
-| 2026-02-08 | 1.2     | Added "Inquiry Cancellation Reasons" as new App Data list (Screen 5a) with field table, workflow A4, seeding data (7 initial reasons), Entity 6, REQ-026-012a, User Story 5, edge cases, dependency on FR-003. Consumer: FR-003 Screen 11 cancellation modal. | AI |
+| 2026-02-08 | 1.2     | Added "Inquiry Cancellation Reasons" as new App Data list (Screen 5a) with field table, workflow A4, seeding data (7 initial reasons), Entity 6, REQ-026-012a, User Story 5, edge cases, dependency on FR-003. Consumer: FR-003 Screen 8a cancellation modal. | AI |
+| 2026-03-28 | 1.3     | Added "Account Deletion Reasons" as new App Data list (Screen 5b) with field table, workflow A5, seeding data (9 initial reasons), Entity 7, REQ-026-012b, edge case. Email Template entity renumbered to Entity 8. Consumer: FR-001 Screen 16 deletion request screen. | AI |
+| 2026-03-28 | 1.4     | Verification fixes: removed duplicate MFA bullet from Implementation Notes (deferred to FR-031 per REQ-026-017); added flag_url to Entity 4 and REQ-026-011; added IP/device-level rate limiting as fixed-in-codebase to Business Rules and Security Considerations; corrected stale "FR-003 Screen 11" → "Screen 8a" (6 occurrences); fixed propagation test scenarios from "30 seconds ago" to "1 minute ago"; moved FR-024/FR-011 from Internal Dependencies to new Downstream Consumers section; standardised "Friend Referral" in seeding data; corrected FR-003 module name to "P-02: Quote Request & Management". | AI |
 
 ---
 
@@ -1031,4 +1102,4 @@ Compliance officer requests complete audit trail of all authentication policy ch
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2025-12-11
+**Last Updated**: 2026-03-28
