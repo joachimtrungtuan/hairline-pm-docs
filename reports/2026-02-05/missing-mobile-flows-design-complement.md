@@ -96,7 +96,7 @@ flowchart TD
     FinalConfirm --> PatientConfirms{"Patient confirms<br/>submission?"}
     PatientConfirms -->|No - Cancel| End3["Patient exits flow"]
     PatientConfirms -->|Yes| CreateDSR["System creates Deletion Request (DSR)<br/>and queues for Admin review (FR-023)"]
-    CreateDSR --> CloseInquiries["System auto-closes any open inquiries (FR-001 Screen 14)"]
+    CreateDSR --> CloseInquiries["System auto-closes any open inquiries (FR-001 Screen 13)"]
     CloseInquiries --> NotifyPatient["System sends confirmation notification/email<br/>and future status updates (FR-023)"]
     NotifyPatient --> DisplayConfirmation["Display Deletion Request Submitted Screen (P01.1-S3)"]
 ```
@@ -126,11 +126,11 @@ flowchart TD
 
 **Business Rules**:
 
-- Block deletion request when active treatment/aftercare or payment is in progress; provide support path (FR-001 Screen 14)
+- Block deletion request when active treatment/aftercare or payment is in progress; provide support path (FR-001 Screen 13)
 - Deletion reason is optional and must not block submission (FR-001 `deleteAccountRequest { reason? }`)
-- Re-auth is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 14)
+- Re-auth is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 13)
 - Submitting creates a Deletion Request (DSR) queued for Admin review; verified requests are completed within 30 calendar days with status updates (FR-023)
-- If patient has an active inquiry, deletion request is allowed and system auto-closes open inquiries (FR-001 Screen 14)
+- If patient has an active inquiry, deletion request is allowed and system auto-closes open inquiries (FR-001 Screen 13)
 
 ##### Screen P01.1-S2: Identity Verification Step
 
@@ -152,7 +152,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Re-authentication is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 14)
+- Re-authentication is required when last successful auth > 5 minutes (password or 6-digit email OTP) (FR-001 Screen 13)
 - Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited (FR-001 OTP rules)
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (FR-001)
 - Successful verification returns the patient to the final confirmation modal to submit the deletion request (FR-023)
@@ -179,7 +179,7 @@ flowchart TD
 
 - Deletion request is queued for Admin review and processed after verification (FR-023)
 - Verified deletion requests are completed within 30 calendar days; SLA may pause if additional verification is required (FR-023 Alternative Flow A1)
-- If patient has an active inquiry, the system auto-closes open inquiries on request submission (FR-001 Screen 14)
+- If patient has an active inquiry, the system auto-closes open inquiries on request submission (FR-001 Screen 13)
 - Outcome notification must document actions taken and legal basis for any retained records (FR-023)
 - Non-protected personal data is deleted/anonymized; protected medical/financial records are retained (≥ 7 years) with restricted access (FR-023 REQ-023-005)
 
@@ -242,7 +242,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Navigation sections are static items — always visible in the same order (FR-001 Screen 16)
+- Navigation sections are static items — always visible in the same order (FR-001 Screen 15)
 - Tapping a navigation row must open the corresponding settings screen/flow and preserve back navigation to P01.2-S1
 - Terms & Conditions must open read-only legal content sourced and versioned per FR-027
 - Help & Support always routes to Flow P08.1 (separate module P-08)
@@ -264,17 +264,17 @@ flowchart TD
 | Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
 | Global Push Toggle | toggle | Yes | Master switch: "Push Notifications" with ON/OFF state | Auto-saves immediately on toggle; default: ON |
 | Mandatory Notifications Note | text | Yes | "Security notifications (password reset, account changes) are always sent and cannot be disabled." | Displayed below toggles as info text |
-| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; explicitly lists system-driven event notifications per FR-001 Screen 16 and FR-020 |
+| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; explicitly lists system-driven event notifications per FR-001 Screen 15 and FR-020 |
 | Save Status Indicator (Conditional) | text | Conditional | "Saved" or "Saving..." feedback | Shown briefly after toggle change; success message: "Preferences saved" |
 | Error Message (Conditional) | text | Conditional | Displayed if save fails | "Failed to save preferences. Please try again." with Retry button; on failure, UI reverts to last saved state |
 
 **Business Rules**:
 
-- **MVP scope**: Only global Email/Push toggles available; per-category preferences (Quote, Booking, Payment, Treatment, Message, Promotional) are V2 and not shown in this screen (FR-020, FR-001 Screen 16)
+- **MVP scope**: Only global Email/Push toggles available; per-category preferences (Quote, Booking, Payment, Treatment, Message, Promotional) are V2 and not shown in this screen (FR-020, FR-001 Screen 15)
 - Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles
 - System event notifications (inquiry stage changes, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP
-- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON (FR-001 Screen 16)
-- If save fails, UI must revert to previous toggle state and show actionable error with Retry option (FR-001 Screen 16)
+- Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON (FR-001 Screen 15)
+- If save fails, UI must revert to previous toggle state and show actionable error with Retry option (FR-001 Screen 15)
 
 ##### Screen P01.2-S3: Privacy & Security Menu
 
@@ -393,7 +393,7 @@ flowchart TD
 - New password must meet password policy and cannot reuse the last 5 passwords (FR-001 Password Rules)
 - Validation errors must be shown inline without revealing sensitive details (avoid “current password incorrect” style disclosures)
 - Retry/lockout behavior follows configured authentication throttling policy; UI must not hardcode attempt counts (FR-001)
-- On successful change, prior refresh tokens are revoked and the current session remains active (FR-001 Screen 16)
+- On successful change, prior refresh tokens are revoked and the current session remains active (FR-001 Screen 15)
 
 ##### Screen P01.3-S2: Password Changed Confirmation
 

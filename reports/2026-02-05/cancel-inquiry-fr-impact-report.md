@@ -119,8 +119,8 @@ The patient-initiated Cancel Inquiry flow allows patients to cancel their own in
 
 | # | Section | Change Type | Detail |
 |---|---|---|---|
-| 1 | Screen 14: Profile Overview | **Add note** | Distinguish account deletion auto-close from explicit inquiry cancellation |
-| 2 | Screen 16: Settings | **Add event** | `inquiry.cancelled` in system event notification list |
+| 1 | Screen 13: Profile Overview | **Add note** | Distinguish account deletion auto-close from explicit inquiry cancellation |
+| 2 | Screen 15: Settings | **Add event** | `inquiry.cancelled` in system event notification list |
 
 ### FR-016 — Admin Patient Management
 

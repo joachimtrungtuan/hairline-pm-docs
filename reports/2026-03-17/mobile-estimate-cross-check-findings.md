@@ -123,7 +123,7 @@ Multiple other flows route users to Help & Support: Cancel Inquiry (P02.2), Dele
 The CSV includes Privacy & Security, Change Password, Privacy Policy, and Terms & Conditions screens. However, it is missing:
 
 - **P01.2-S1 (Settings Main Screen)**: The navigation hub that links to all settings sub-screens. Without it, there is no entry point to the screens that *are* estimated.
-- **P01.2-S2 (Notification Settings)**: Global Email/Push toggles (MVP scope; per-category is V2). Required by FR-001 Screen 16 and FR-020 REQ-020-004.
+- **P01.2-S2 (Notification Settings)**: Global Email/Push toggles (MVP scope; per-category is V2). Required by FR-001 Screen 15 and FR-020 REQ-020-004.
 
 **Action Required**: Add both screens, or confirm they are already implemented.
 
