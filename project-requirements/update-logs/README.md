@@ -259,6 +259,12 @@ This folder contains documentation update reports and verification logs for the 
 
 - `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
+### 2026-03-30/ (1 file)
+
+#### **Missing Mobile Flows Manual Testing Tracker Refresh**
+
+- `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_REFRESH_2026-03-30.md` - Created a new dated baseline copy of the missing mobile flows manual-testing tracker for retesting the latest app version while preserving the prior round as comparison history
+
 ### 2026-03-28/ (3 files)
 
 #### **FR-001 Screen Restructure & Renumber**
@@ -307,6 +313,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-25**: `AFTERCARE_FR011_MOBILE_SCOPE_NARROWING_2026-03-25.md` - Scope update for the shared Aftercare report: it now serves as an `FR-011` patient-mobile-only verification artifact, with the broader `FR-010` / `P05.*` relationships removed from the report body
 - **2026-03-26**: `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Canonical cross-audit of the current `layout-temp/` root folder; confirms 4 primary FR screen owners (`FR-003`, `FR-004`, `FR-005`, `FR-027`), 2 additional direct content relationships (`FR-024`, `FR-032`), and separates compliant, partial, reference-only, and unmapped layout families
 - **2026-03-27**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a reusable manual-testing tracker for all 15 missing mobile flows with per-row placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
+- **2026-03-30**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_REFRESH_2026-03-30.md` - Created a new dated baseline copy of the missing mobile flows manual-testing tracker for a fresh app retest round while preserving the March 27 version as history
 
 ### Workflow Corrections
 
@@ -377,4 +384,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 28, 2026
+**Last Updated**: March 30, 2026
