@@ -1138,7 +1138,6 @@ flowchart TD
 - Support sorting by: payout date, net payout amount (ascending/descending)
 - "Export History" button to download full payout history as CSV
 
-
 ## Business Rules
 
 ### General Module Rules
