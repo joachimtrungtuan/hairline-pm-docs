@@ -259,7 +259,7 @@ This folder contains documentation update reports and verification logs for the 
 
 - `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
-### 2026-04-02/ (8 files)
+### 2026-04-02/ (9 files)
 
 #### **FR-017 Post-Verification Fixes (Round 2)**
 
@@ -292,6 +292,10 @@ This folder contains documentation update reports and verification logs for the 
 #### **FR-029 / FR-015 Commission Dual Management Alignment**
 
 - `FR029_FR015_COMMISSION_DUAL_MANAGEMENT_2026-04-02.md` - Reversed the same-day global-only commission split in favor of the implemented design: FR-029 Screen 5 again manages provider-specific commission scopes alongside the global default, FR-015 remains the single-provider commission + payout-frequency surface, and FR-017 now consumes the shared effective commission configuration model
+
+#### **FR-008 Provider Design Layout Verification**
+
+- `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-02.md` - Verified FR-008 provider screens 6-10 against the current layout set; both covered flows are `🔴 BLOCKED` because Screen 6 lacks the required travel-status tracker and Screen 10’s patient-owned review remains off-spec with forbidden editing, misbound hotel data, and missing flight submitted states
 
 ### 2026-04-01/ (3 files)
 
@@ -362,6 +366,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-26**: `LAYOUT_TEMP_FR_AUDIT_2026-03-26.md` - Canonical cross-audit of the current `layout-temp/` root folder; confirms 4 primary FR screen owners (`FR-003`, `FR-004`, `FR-005`, `FR-027`), 2 additional direct content relationships (`FR-024`, `FR-032`), and separates compliant, partial, reference-only, and unmapped layout families
 - **2026-03-27**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a reusable manual-testing tracker for all 15 missing mobile flows with per-row placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 - **2026-03-30**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_REFRESH_2026-03-30.md` - Created a new dated baseline copy of the missing mobile flows manual-testing tracker for a fresh app retest round while preserving the March 27 version as history
+- **2026-04-02**: `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-02.md` - FR-008 provider layout verification for Screens 6-10; both provider travel flows are `🔴 BLOCKED` because Screen 6 lacks the required travel summary/status actions and Screen 10’s patient self-booked review is still off-spec with forbidden editing, misbound hotel data, and missing flight submitted states
 
 ### Workflow Corrections
 
