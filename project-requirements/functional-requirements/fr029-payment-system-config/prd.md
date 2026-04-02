@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, manage the platform’s enabled currency list (system-supported currencies), set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), configure platform commission rates (global default and provider-specific), and define split payment (installment) plans with cutoff rules.
+The Payment System Configuration module empowers platform administrators to manage the complete payment infrastructure for the Hairline multi-tenant platform. This feature enables admins to configure and manage multiple Stripe accounts, map payment accounts to specific countries or regional groups, manage the platform’s enabled currency list (system-supported currencies), set up currency conversion rules with markup percentages, configure deposit rates (20-30% of total booking amount), configure commission settings with both a platform global default and provider-specific commission scopes, and define split payment (installment) plans with cutoff rules.
 
 This configuration layer is critical because Hairline operates across multiple countries with different currencies, banking systems, and regulatory requirements. Admins need the flexibility to assign different Stripe accounts to different regions, protect the platform against currency fluctuations through configurable markup rates, and offer patients flexible payment options (2-9 installments) while ensuring full payment completion before procedure dates.
 
@@ -59,7 +59,7 @@ The module delivers value by:
 - Admins configure currency conversion rate sources (e.g., xe.com API integration)
 - Admins set currency conversion markup percentages (e.g., 5-10%) to protect against rate fluctuations
 - Admins configure deposit rate percentage (20-30%) globally or per provider
-- Admins configure platform commission rates (15-25%) globally or per provider (used for payout and reconciliation calculations)
+- Admins configure commission settings: a platform global default rate (15-25%) plus provider-specific commission scopes for selected providers; FR-015 exposes the same provider-specific commission data inside the provider profile for single-provider management
 - Admins define split payment options (2-9 installments) and cutoff rules (e.g., 30 days before procedure)
 - Admins monitor payment configuration health and receive alerts for rate protection thresholds
 - Admins audit configuration change history for compliance
@@ -69,7 +69,7 @@ The module delivers value by:
 - Payment Processing Service routes patient payment transactions (deposits/installments/finals) to the appropriate Stripe account based on patient location
 - Currency conversion service fetches real-time rates and applies admin-configured markup
 - Deposit calculation service applies configured deposit rate to booking totals
-- Commission calculation service applies configured commission rate to booking totals for reconciliation and payout reporting
+- Commission calculation service applies the effective commission snapshot captured at booking confirmation, using an active provider-specific commission configuration when one exists for the provider or the FR-029 global default otherwise
 - Installment calculation service generates payment schedules based on configured options and cutoff dates
 - Rate protection service monitors currency fluctuations and alerts admins when thresholds exceeded
 - Payment audit logging service tracks all transactions for compliance and reconciliation
@@ -171,26 +171,30 @@ The module delivers value by:
 12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
 13. System sends email notification to affected providers (if provider-specific change)
 
-### Main Flow: Configure Commission Rate Rules
+### Main Flow: Configure Commission Rates
 
 **Actors**: Admin, System
-**Trigger**: Admin navigates to "Payment Configuration > Commission Rates" to configure platform commission percentage
-**Outcome**: Commission rate configured globally or per provider, applied to all new bookings
+**Trigger**: Admin navigates to "Payment Configuration > Commission Rates" to configure the platform global default and provider-specific commission scopes
+**Outcome**: Commission settings configured for new bookings, with FR-029 and FR-015 staying aligned on provider-specific commission data
 
 **Steps**:
 
 1. Admin clicks "Commission Rates" tab on Payment Configuration page
-2. System displays current commission rate configuration (global default and provider-specific overrides)
-3. Admin selects configuration scope: "Global Default" or "Provider-Specific"
-4. Admin sets commission percentage (range: 15-25% with validation)
-5. If provider-specific: Admin searches and selects provider(s) to apply custom rate
-6. Admin reviews summary showing which bookings will be affected (new bookings only)
-7. Admin clicks "Apply Commission Rate"
-8. System validates commission percentage is within allowed range (15-25%)
-9. System stores commission rate configuration with effective date (now) and scope (global or provider IDs)
-10. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
-11. System displays confirmation message: "Commission rate updated. New bookings will use [X]% commission rate."
-12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
+2. System displays Screen 5 with a Global Default section and a Provider Specific section
+3. Admin may update the global commission percentage (range: 15-25% with validation)
+4. Admin clicks "Save Setting" for the global default
+5. System validates the global commission percentage is within allowed range (15-25%) and stores it with effective date = now
+6. Admin may click "Add new provider scope" or edit an existing provider-specific commission scope
+7. System displays a provider-scope modal with Selected Providers, Provider Commission Rate, Effective Date, and a preview calculation
+8. Admin searches for and selects one or more providers
+9. Admin enters the provider-specific commission rate and effective date
+10. System validates selected providers are active and the commission percentage is within allowed range (15-25%)
+11. Admin confirms the add or edit action
+12. System stores the provider-specific commission scope with provider IDs and effective date
+13. System propagates updated commission configuration to Payment Processing Service with cache TTL of 5 minutes
+14. System displays confirmation message: "Commission settings updated. New bookings will use the new effective commission configuration."
+15. System logs each global-default or provider-scope change to audit trail with admin ID, timestamp, scope, and before/after state
+16. If the affected provider is opened in FR-015, the Commission & Financials tab reflects the updated provider-specific commission value
 
 ### Main Flow: Configure Split Payment (Installment) Plans
 
@@ -639,23 +643,27 @@ The module delivers value by:
 
 ### Screen 5: Commission Rate Configuration
 
-**Purpose**: Allows admins to configure platform commission rates (global default and provider-specific overrides) used in billing, reconciliation, and provider payout calculations
+**Purpose**: Allows admins to configure central commission settings: a platform global default plus provider-specific commission scopes used in billing, reconciliation, and provider payout calculations. FR-015 remains the synchronized single-provider edit surface for the same provider-specific commission data.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Configuration Scope | radio | Yes | Global Default or Provider-Specific | Must select one option |
-| Global Commission Rate | number | Conditional | Default commission percentage applied platform-wide | Range: 15-25%, decimal precision: 0.1%, required if scope is Global |
-| Provider Search | search | Conditional | Search for provider by name or ID | Required if scope is Provider-Specific |
-| Selected Providers | list | Conditional | List of providers for custom commission rate | Required if scope is Provider-Specific |
-| Provider Commission Rate | number | Conditional | Custom commission percentage for selected providers | Range: 15-25%, decimal precision: 0.1%, required if scope is Provider-Specific |
-| Effective Date | display-only | N/A | Shows when this rate takes effect (applies to new bookings) | Auto-populated: current timestamp |
+| Global Commission Rate | number | Yes | Default commission percentage applied platform-wide when no provider-specific commission configuration exists for a provider | Range: 15-25%, decimal precision: 0.1% |
+| Global Last Updated | display-only | N/A | Shows when the global default was last changed | Auto-populated timestamp |
+| Selected Providers | async multi-select / chips | Yes | Provider list covered by a provider-specific commission scope | Minimum 1 active provider |
+| Provider Commission Rate | number | Yes | Provider-specific commission percentage for the selected provider scope | Range: 15-25%, decimal precision: 0.1% |
+| Effective Date | date | Yes | Date when the provider-specific scope becomes active for new bookings | Today or future date |
+| Scope Status | badge | Yes | State of the provider-specific commission scope | Active / Archived |
+| Actions | menu | Yes | Scope-level actions | Edit, Archive |
 
 **Business Rules**:
 
 - Commission rate changes apply to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
-- Provider-specific commission rates override global default rate for selected providers
+- Provider-specific commission scopes take precedence over the global default at booking confirmation
+- FR-029 Screen 5 is the central commission-settings screen; FR-015 / A-02 Tab 7 remains a synchronized single-provider edit surface for the same provider-specific commission data
+- Changes made in FR-015 to a provider-specific commission value MUST be reflected in Screen 5 for that provider, and changes made in Screen 5 MUST be reflected in FR-015
+- A provider-specific commission scope may cover one or multiple providers and may be archived when no longer needed
 - System calculates commission amount by multiplying booking total by commission rate percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
 - Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
 - All commission rate changes must be logged to audit trail with before/after state
@@ -663,7 +671,8 @@ The module delivers value by:
 **Notes**:
 
 - Display preview calculation: "For $2,000 booking, 20% commission = $400"
-- Provide in-app link from reconciliation/payout screens to commission configuration (read-only for non-authorized roles)
+- Provide "Add new provider scope", "Edit", and "Archive" actions matching the admin commission-screen design
+- Use FR-029 for global and bulk provider-scope updates; use FR-015 when the admin is already working inside a single provider profile alongside payout frequency
 
 ---
 
@@ -694,6 +703,7 @@ The module delivers value by:
 **Notes**:
 
 - This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable).
+- FR-017 Screen 1 ("Financial Reporting - Revenue Dashboard") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later.
 - Provide quick actions: “Enable common set” (e.g., USD/EUR/GBP) and “Set Default” for an enabled currency.
 
 ---
@@ -732,6 +742,7 @@ The module delivers value by:
 - Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
 - Late payment grace period for split payments (0-14 days)
 - Rate protection alert threshold (global) for currency conversion monitoring
+- Payout buffer window (number of days before a scheduled payout date that the system auto-generates payout statements for admin review; default: 3 days; range: 1–7 days). This setting is consumed by FR-017 / A-05: Admin Billing & Financial Management to determine when provider and affiliate payout statements are created. For example, a Friday payout with a 3-day buffer means statements are generated on Tuesday.
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -758,6 +769,7 @@ The module delivers value by:
 - **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
 - **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to 2 decimal places)
 - **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
+- **Payout Rule 1**: Payout buffer window determines when payout statements are auto-generated before a scheduled payout date. The buffer window is a global setting (default: 3 days, range: 1–7 days). FR-017 / A-05 reads this value to schedule statement creation for provider and affiliate payouts.
 - **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
 - **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
@@ -820,11 +832,15 @@ The module delivers value by:
 
 - **FR-006 / Module P-03**: Booking & Scheduling
   - **Why needed**: Booking flow uses configured deposit rates and split payment rules to calculate deposit amount and determine feasible installment options at booking confirmation
-  - **Integration point**: Booking service queries Payment Configuration API for deposit rate, commission rate, and split payment rules based on provider ID
+  - **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
+
+- **FR-015 / Module A-02**: Provider Management & Onboarding
+  - **Why needed**: FR-015 exposes the single-provider commission edit surface used by admins inside the provider profile
+  - **Integration point**: FR-015 Commission & Financials reads and writes the same provider-specific commission records surfaced in Screen 5; payout frequency remains owned by FR-015
 
 - **FR-007 / Module S-02**: Payment Processing
   - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
-  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency pair effective rates, deposit rates, commission rates, and split payment rules
+  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency pair effective rates, deposit rates, effective commission settings, and split payment rules; provider-specific commission changes made in FR-015 and FR-029 are consumed through the same resolved configuration response
 
 - **FR-007B / Module S-02**: Split Payment / Installment Plans
   - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules
@@ -835,8 +851,8 @@ The module delivers value by:
   - **Integration point**: Payment service queries patient profile for country to route payment to correct Stripe account
 
 - **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
-  - **Why needed**: Provider identity and profile context supports provider-scoped payment configuration (deposit/commission overrides) and payout alignment
-  - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit/commission assignment; payout settings are managed in FR-032 and payout execution in FR-017
+  - **Why needed**: Provider identity and profile context supports provider-scoped deposit overrides and payout alignment
+  - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
 
 ### External Dependencies (APIs, Services)
 
@@ -1111,13 +1127,14 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
 - **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
-- **REQ-029-043**: System MUST allow admins to configure platform commission rates (global default and provider-specific overrides; allowed range 15-25%) applied to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
+- **REQ-029-043**: System MUST allow admins to configure both the platform commission global default and provider-specific commission scopes (allowed range 15-25%) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
+- **REQ-029-043b**: System MUST keep provider-specific commission values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
 - **REQ-029-044**: System MUST lock currency conversion rates (including markup) at quote acceptance and store them per quote/booking/transaction (no rate fluctuation after quote acceptance)
 - **REQ-029-045**: System MUST snapshot commission rate at booking confirmation and store it per booking/transaction for payout and reconciliation consistency
 
 ### Data Requirements
 
-- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, rate sources, currency pairs, global conversion settings, deposit rates, commission rates, split payment rules) with full audit history
+- **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, rate sources, currency pairs, global conversion settings, deposit rates, commission global default, provider-specific commission scopes, split payment rules) with full audit history
 - **REQ-029-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
 - **REQ-029-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
 - **REQ-029-027**: System MUST retain payment configuration audit history for minimum 10 years for financial compliance
@@ -1133,7 +1150,7 @@ As a platform administrator managing international payments, I need to receive t
 
 ### Integration Requirements
 
-- **REQ-029-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency pair effective rates, deposit rates, installment rules)
+- **REQ-029-033**: System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency pair effective rates, deposit rates, effective commission settings, installment rules)
 - **REQ-029-034**: System MUST integrate with external currency conversion rate APIs (xe.com, fixer.io) via HTTP GET requests, using credentials stored per rate source
 - **REQ-029-035**: System MUST send email notifications to admins for payment configuration changes and rate protection alerts
 - **REQ-029-036**: System MUST propagate payment configuration changes to Payment Processing Service within 5 minutes maximum (cache TTL)
@@ -1180,8 +1197,8 @@ As a platform administrator managing international payments, I need to receive t
   - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
 
 - **Entity 6 - Commission Rate Configuration**:
-  - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), commission_percentage, effective_date, created_by_admin_id, created_date
-  - **Relationships**: One global commission rate; many provider-specific commission rate overrides (one per provider); bookings and payouts reference the commission rate snapshot captured at booking confirmation
+  - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_percentage, effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
+  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission rate snapshot captured at booking confirmation
 
 ---
 
@@ -1194,6 +1211,9 @@ As a platform administrator managing international payments, I need to receive t
 | 2025-12-16 | 1.2 | Status updated to Verified & Approved; All approvals completed | Product Team |
 | 2026-01-14 | 1.3 | Added Currency Management screen (central supported currency list) and aligned admin editability rules | AI |
 | 2026-02-10 | 1.4 | **Major redesign of Currency Conversion Configuration (Screen 2).** Replaced flat form with two-screen model: Screen 2A (pair list + global settings + rate sources) and Screen 2B (add/edit pair). Key changes: (1) Rate sources are now first-class entities bundling provider type with API credentials; (2) Each currency pair independently chooses auto-fetch or manual mode; (3) Markup % and sync frequency support global defaults with per-pair overrides; (4) Sync schedule per pair is calculated from pair save timestamp; (5) USD fallback for unconfigured currencies; (6) Graceful source deletion (pairs switch to manual with last rate pre-filled); (7) Visual status indicators per pair and per source. Updated Main Flow, Alternative Flows (A3/A3b), Boundary Flows (B2/B5), Edge Cases, User Stories 2 & 5, REQ-029-006 through REQ-029-012, Key Entities (2a/2b/2c), Admin Editability Rules, Integration Points, and Security references. | AI |
+| 2026-04-02 | 1.5 | Ownership split alignment with FR-015 and FR-017: FR-029 now defines the global platform commission default and booking-time snapshot behavior only; provider-specific commission overrides remain in FR-015, while FR-017 consumes the effective commission snapshot for payout and reconciliation flows | Codex |
+| 2026-04-02 | 1.6 | Currency default alignment: documented Screen 6 as the source of truth for FR-017 Screen 1 reporting-currency initialization and recorded USD as the MVP seed value for the system default currency | Codex |
+| 2026-04-02 | 1.7 | Restored the implemented Commission Rate design: FR-029 Screen 5 now manages both the global commission default and provider-specific commission scopes, FR-015 remains the synchronized single-provider commission edit surface, and downstream booking/payout dependencies were updated to consume the shared effective commission configuration model | Codex |
 
 ---
 
@@ -1210,4 +1230,4 @@ As a platform administrator managing international payments, I need to receive t
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-04-02

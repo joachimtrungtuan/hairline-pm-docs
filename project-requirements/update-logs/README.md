@@ -259,6 +259,54 @@ This folder contains documentation update reports and verification logs for the 
 
 - `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
+### 2026-04-02/ (8 files)
+
+#### **FR-017 Post-Verification Fixes (Round 2)**
+
+- `FR017_POST_VERIFICATION_FIXES_2026-04-02.md` - 8 fixes applied after client transcription review: installment cutoff aligned to FR-029-configurable; discount creation removed from FR-017 system PRD entry; 2-person secondary approval for refunds removed (zero transcription evidence); FR-005 dependency corrected to FR-006; Screen 6 Affiliate Billing two-tab layout added per client request; Screen 3 Due Date provenance documented; integration numbering corrected 1/4/5→1/2/3; SC-019 concurrent admin target corrected from 500 to 50
+
+#### **FR-017 Screen Completeness Audit Fixes**
+
+- `FR017_SCREEN_COMPLETENESS_FIXES_2026-04-02.md` - 18-gap screen completeness audit: added Retry Payout action + Failed section (Screen 1); Approve Confirmation Modal (Screen 2); "At Risk" status + retry indicator (Screen 3); new Screen 3a Invoice Detail (installment schedule, payment history, refund history); new Screen 3b Refund Confirmation Modal; Overdue aging breakdown (Screen 5); Payment Method provenance + Process Payout confirmation + date filter (Screen 6); new Screen 7 Transaction Search & Audit Log; new Screen 8 Currency Alert Detail Modal; refunded treatment display + failed payout status (Screen 9); Failed status + provider message (Screen 10); Entity 1 and Entity 6 status enums corrected
+
+#### **FR-017 Screen Operational Hardening**
+
+- `FR017_SCREEN_OPERATIONAL_HARDENING_2026-04-02.md` - Added batch payout approval controls, dispute-resolution workflow support, re-authentication steps for financial actions, affiliate payout failure/retry handling, reconciliation metadata, reminder and override histories, dashboard exception KPIs, provider transparency improvements, and entity/requirement alignment for the hardened screen model
+
+#### **FR-017 Decision Alignment**
+
+- `FR017_DECISION_ALIGNMENT_2026-04-02.md` - Finalized the post-verification product decisions: FR-018 retains affiliate management/commission calculation while FR-017 owns affiliate billing and payout execution; provider payouts are approval-first with automatic payout-day processing in MVP; commission-adjustment routing corrected from FR-029 to FR-015; stale Super Admin secondary-approval wording removed
+
+#### **FR-017 Second Completeness Audit Fixes**
+
+- `FR017_SECOND_COMPLETENESS_AUDIT_2026-04-02.md` - 13-gap second-pass audit (v1.7→v1.8): Entity 5 action_type list corrected (6 missing values added); Entity 3 gained next_retry_date; Entity 2 gained Voided status + audit fields; Screen 1 added Active Currency Alerts KPI; Screen 2 added Unapprove + Void Statement actions with formal Batch Approval Confirmation Modal; Screen 4/4a added Send Reminder Confirmation Modal and Override Status re-auth requirement; Screen 5 added filter/search/CSV export; Screen 6 added Add Note action, Bulk Payout Toolbar, and Bulk Confirmation Modal; Screen 7 Target Payout Cycle clarified to select dropdown; duplicate FR-006 dependency removed; refund-after-payout edge case documented
+
+#### **FR-017 Constitution and Ownership Alignment**
+
+- `FR017_CONSTITUTION_AND_OWNERSHIP_ALIGNMENT_2026-04-02.md` - Finalized the agreed post-verification decisions across the constitution, FR-017, FR-015, and FR-029: removed mandatory multi-person refund approval from the constitution, split commission ownership between FR-029 global defaults and FR-015 provider-specific overrides, and normalized provider bank-detail ownership to FR-032 Billing Settings
+
+#### **FR-017 Status Verification**
+
+- `FR017_STATUS_VERIFIED_2026-04-02.md` - Updated FR-017 from Draft to ✅ Verified & Approved and aligned its approval metadata to the PRD template pattern used by other verified FRs
+
+#### **FR-029 / FR-015 Commission Dual Management Alignment**
+
+- `FR029_FR015_COMMISSION_DUAL_MANAGEMENT_2026-04-02.md` - Reversed the same-day global-only commission split in favor of the implemented design: FR-029 Screen 5 again manages provider-specific commission scopes alongside the global default, FR-015 remains the single-provider commission + payout-frequency surface, and FR-017 now consumes the shared effective commission configuration model
+
+### 2026-04-01/ (3 files)
+
+#### **FR-017 Scope Update**
+
+- `FR017_SCOPE_UPDATE_2026-04-01.md` - FR-017 patient invoice history BACKLOG; provider section split Stage 1 (earnings) / Stage 2 (payouts); Screen 4 replaced with read-only discount usage view (creation deferred to FR-019); Stripe Account Management scope removed (owned by FR-029/A-09)
+
+#### **FR-017 Verification Alignment**
+
+- `FR017_VERIFICATION_ALIGNMENT_2026-04-01.md` - Applied accepted FR-017 verification resolutions: discount creation removed from FR-017 in favor of FR-019, provider commission ownership corrected to FR-015 with Percentage/Flat Rate support, payout approval clarified as buffer-window approval with payout-day Stripe processing, and MVP MFA wording aligned to the constitution
+
+#### **FR-017 Post-Verification Fixes**
+
+- `FR017_POST_VERIFICATION_FIXES_2026-04-01.md` - 9 fixes from FR-017 verification: replaced shared database with API (Constitution Principle I), added 5 missing dependencies (FR-006/018/029/030/032), renamed Commission % to Commission for dual model support, standardized approval threshold at £10,000, clarified dynamic currency pairs via FR-029, added buffer window to FR-029, added Conversion Rate provenance, updated system PRD payout schedule, reworded Assumption 7 for S-06
+
 ### 2026-03-30/ (1 file)
 
 #### **Missing Mobile Flows Manual Testing Tracker Refresh**
@@ -348,6 +396,17 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-28**: `FR001_Screen_Renumber_2026-03-28.md` - FR-001 screen section restructure and full renumber: patient Screens 1–18, admin Screen 19; 8 external files updated
 - **2026-03-28**: `FR026_FR001_AccountDeletionReasons_2026-03-28.md` - FR-026 Account Deletion Reasons: new Screen 5b, workflow A5, 9 seeded options, Entity 7, REQ-026-012b; FR-001 Screen 16 dependency and validation rule updated
 - **2026-03-28**: `FR026_VERIFICATION_FIXES_2026-03-28.md` - FR-026 v1.4 verification fixes: MFA deferred, flag_url added, IP rate limiting documented, FR-003 screen ref corrected, propagation test scenarios fixed, dependency direction corrected, seed data label aligned
+- **2026-04-01**: `FR017_SCOPE_UPDATE_2026-04-01.md` - FR-017 scope update: patient invoice history BACKLOG; provider section split into Stage 1 (earnings tracking) / Stage 2 (payout consolidation); Screen 4 replaced with read-only discount usage view (creation moved to FR-019); Stripe Account Management removed from A-05 scope (owned by FR-029/A-09); Rules 7/8 and editability items redirected to FR-019/FR-029
+- **2026-04-01**: `FR017_VERIFICATION_ALIGNMENT_2026-04-01.md` - FR-017 post-verification alignment: discount ownership fully moved to FR-019, provider commission contract corrected to FR-015, normal-cycle payout approval separated from payout-day Stripe processing, and MVP MFA wording aligned to the constitution
+- **2026-04-01**: `FR017_POST_VERIFICATION_FIXES_2026-04-01.md` - 9 post-verification fixes across FR-017, FR-029, and system PRD: constitution compliance (shared DB → API), 5 missing dependencies, commission column dual-model support, approval threshold, dynamic currency pairs, buffer window ownership, data provenance, payout schedule, S-06 acknowledgment
+- **2026-04-02**: `FR017_POST_VERIFICATION_FIXES_2026-04-02.md` - 8 fixes (round 2): installment cutoff moved from hardcoded to FR-029-configurable; system PRD discount creation removed from FR-017; 2-person refund approval removed (no client basis); FR-005 dependency corrected to FR-006; Screen 6 two-tab layout added per client transcription; Due Date provenance documented; integration numbering corrected; SC-019 concurrent admin target corrected to 50
+- **2026-04-02**: `FR017_SCREEN_COMPLETENESS_FIXES_2026-04-02.md` - 18-gap screen completeness audit: added Retry Payout action + Failed section (Screen 1); Approve Confirmation Modal (Screen 2); "At Risk" status + retry indicator (Screen 3); new Screen 3a Invoice Detail (installment schedule, payment history, refund history); new Screen 3b Refund Confirmation Modal; Overdue aging breakdown (Screen 5); Payment Method provenance + Process Payout confirmation + date filter (Screen 6); new Screen 7 Transaction Search & Audit Log; new Screen 8 Currency Alert Detail Modal; refunded treatment display + failed payout status (Screen 9); Failed status + provider message (Screen 10); Entity 1 and Entity 6 status enums corrected
+- **2026-04-02**: `FR017_SCREEN_OPERATIONAL_HARDENING_2026-04-02.md` - FR-017 screen model hardening: batch approval UX, payout readiness states, financial re-authentication, affiliate payout failure/retry handling, dispute-resolution controls, reminder/override histories, dashboard exception KPIs, and reconciliation metadata aligned across screens and entities
+- **2026-04-02**: `FR017_DECISION_ALIGNMENT_2026-04-02.md` - Final decision alignment across FR-017 and system PRD: affiliate management/calculation stays in FR-018 while affiliate billing/payout execution moves under FR-017, provider payouts remain approval-first with automatic payout-day processing, commission routing points back to FR-015, and stale Super Admin secondary-approval wording is removed
+- **2026-04-02**: `FR017_SECOND_COMPLETENESS_AUDIT_2026-04-02.md` - 13-gap second-pass audit (v1.7→v1.8): Entity 5 action_type list corrected (6 missing values); Entity 3 next_retry_date added; Entity 2 Voided status added; Screen 1 Active Currency Alerts KPI; Screen 2 Unapprove + Void Statement actions + Batch Approval Confirmation Modal; Screen 4/4a Send Reminder Confirmation Modal + Override Status re-auth; Screen 5 filter/search/CSV export; Screen 6 Add Note + Bulk Payout Toolbar + Bulk Confirmation Modal; Screen 7 Target Payout Cycle clarified; duplicate FR-006 dependency removed; refund-after-payout edge case documented
+- **2026-04-02**: `FR017_CONSTITUTION_AND_OWNERSHIP_ALIGNMENT_2026-04-02.md` - Constitution + ownership normalization pass: refund governance changed from mandatory dual approval to documented justification + audit trail, commission ownership split between FR-029 global defaults and FR-015 provider-specific overrides, and provider bank details normalized to FR-032 Billing Settings
+- **2026-04-02**: `FR017_STATUS_VERIFIED_2026-04-02.md` - FR-017 status transition: updated the PRD to ✅ Verified & Approved and aligned its approval metadata to the standard verified-template pattern
+- **2026-04-02**: `FR029_FR015_COMMISSION_DUAL_MANAGEMENT_2026-04-02.md` - Restored dual commission-management surfaces to match the implemented admin design: FR-029 again manages provider-specific commission scopes centrally, FR-015 remains the single-provider commission + payout-frequency screen, and FR-017 was updated to consume the shared effective commission configuration
 
 ### Design Specifications
 
@@ -384,4 +443,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: March 30, 2026
+**Last Updated**: April 2, 2026

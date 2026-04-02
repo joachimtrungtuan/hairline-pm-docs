@@ -3,7 +3,7 @@
 **Module**: A-05: Billing & Financial Reconciliation | PR-05: Financial Management & Reporting
 **Feature Branch**: `fr017-admin-billing-finance`
 **Created**: 2025-11-12
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-017 from system-prd.md
 
 ---
@@ -170,7 +170,7 @@ flowchart TD
   S16 -->|"transfer.paid"| S17["17. Status → &quot;Paid&quot;; system generates invoice PDF with itemised treatment breakdown"]
   S16 -->|"transfer.failed"| S16A["16a. Status → &quot;Failed&quot;; admin notified: &quot;Payout failed for [Provider Name]&quot;"]
   S16A --> S16B{"16b. Failure cause"}
-  S16B -->|"Invalid bank account"| S16C["16c. Admin contacts provider (A-10); provider updates bank details in PR-06; admin retries payout"]
+  S16B -->|"Invalid bank account"| S16C["16c. Admin contacts provider (A-10); provider updates bank details in FR-032 / PR-06 Billing Settings; admin retries payout"]
   S16B -->|"Other Stripe error"| S16D["16d. Admin investigates error; resolves; retries transfer"]
   S16C --> S14
   S16D --> S14
@@ -259,7 +259,7 @@ flowchart TD
   B3S5 --> B3S6{"6. Admin decision on risk exposure"}
   B3S6 -->|"Accept risk"| B3S7A["7a. Admin documents acceptance — no change to pending payouts; proceeds as normal"]
   B3S6 -->|"Contact providers"| B3S7B["7b. Admin contacts affected providers to renegotiate booking terms, commission split, or payment timing"]
-  B3S6 -->|"Adjust commission"| B3S7C["7c. Admin adjusts commission structure for affected bookings via FR-029 configuration"]
+  B3S6 -->|"Adjust commission"| B3S7C["7c. Admin routes the change to the appropriate commission management surface: FR-015 for single-provider edits or FR-029 for global / bulk provider-scope changes"]
   B3S7A --> B3S8["8. System logs admin decision and action taken in audit trail"]
   B3S7B --> B3S8
   B3S7C --> B3S8
@@ -271,8 +271,8 @@ flowchart TD
 
 > **Tenant scope**:
 >
-> - **Admin Platform (A-05)**: Screens 1–6 below. Core billing management for providers, patients, affiliates, and financial reporting.
-> - **Provider Platform (PR-05)**: Screens 7–8 below. Provider-facing read-only views for earnings tracking (Stage 1) and confirmed payout history (Stage 2). FR-017 defines the screen specs since it owns the financial data model; FR-032 provides the provider dashboard navigation shell.
+> - **Admin Platform (A-05)**: Screens 1–8 below. Core billing management for providers, patients, affiliates, financial reporting, investigation, and audit workflows.
+> - **Provider Platform (PR-05)**: Screens 9–10 below. Provider-facing read-only views for earnings tracking (Stage 1) and confirmed payout history (Stage 2). FR-017 defines the screen specs since it owns the financial data model; FR-032 provides the provider dashboard navigation shell.
 > - **Patient Platform**: No patient-facing billing screens in this FR. Patient payment initiation (deposit, installments, final payment) is owned by FR-007: Payment Processing. Patient-facing invoice history is **[BACKLOG — Future Phase]**.
 > - **Affiliate Platform**: No affiliate-facing screens in this FR. Affiliates view their commission earnings via a read-only dashboard in FR-018 (A-07: Affiliate Program Management). FR-017 Screen 6 is the admin-side view for processing affiliate payouts only.
 
@@ -295,13 +295,14 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Date Range Selector | daterange | Yes | Filter reports by date range | Default: Last 30 days |
-| Currency Selector | select | Yes | View amounts in selected currency | Default: GBP |
+| Currency Selector | select | Yes | View amounts in selected currency | Default: system default currency from FR-029 Screen 6 (USD in MVP seed) |
 | Total Revenue | currency (large) | Yes | Sum of all patient payments | Auto-calculated |
 | Platform Commission | currency | Yes | Total Hairline commission earned | Auto-calculated |
 | Provider Payouts | currency | Yes | Total paid to providers | Auto-calculated |
 | Affiliate Payouts | currency | Yes | Total paid to affiliates | Auto-calculated |
 | At Risk Invoice Count | number | Yes | Count of invoices currently in "At Risk" status | Auto-calculated |
 | Failed Payout Count | number | Yes | Count of provider + affiliate payouts currently in "Failed" status | Auto-calculated |
+| Active Currency Alerts | number | Yes | Count of unacknowledged currency fluctuation alerts. Clicking opens the notification list filtered to unresolved currency alerts; each alert links to Screen 8. Displays "0" when no active alerts (badge hidden at zero) | Auto-calculated from alert state in FR-029 |
 | Refund Trend | chart | Yes | Time-series view of refund amount and refund count across the selected period | Interactive line/bar chart |
 | Outstanding Patient Invoices | currency | Yes | Pending patient payments (total). Clicking this KPI opens an aging breakdown panel: 0–30 days overdue, 31–60 days overdue, 60+ days overdue — each showing count and total amount | Auto-calculated |
 | Overdue Aging Breakdown | panel | Yes | Drill-down from Outstanding Patient Invoices KPI: three buckets (0–30 days, 31–60 days, 60+ days) each showing invoice count and total outstanding amount. "At Risk" invoices shown as a separate row | Visible on click of KPI |
@@ -317,6 +318,8 @@ flowchart TD
 **Business Rules**:
 
 - All currency amounts displayed in selected currency (with real-time conversion if multi-currency)
+- Currency selector initializes to the system default currency configured in FR-029 / A-09 Currency Management; MVP environments seed this default to USD unless an admin changes it later
+- "Active Currency Alerts" count reflects alerts triggered by FR-029 / A-09 rate monitoring that have not yet had a decision recorded via Screen 8; count resets to 0 once all active alerts have a confirmed admin decision
 - "Outstanding Patient Invoices" includes ONLY invoices with status "Pending", "Partial", "Overdue", or "At Risk"
 - Overdue aging buckets calculated from the invoice Due Date to today: 0–30 days, 31–60 days, 60+ days; "At Risk" (all retries exhausted) shown as a separate row regardless of age
 - "Pending Provider Payouts" includes treatments with status "Completed" or "Aftercare" not yet paid
@@ -351,13 +354,13 @@ flowchart TD
 | Payment Schedule | badge | Yes | Provider's individual payout frequency: "Weekly", "2x a Month", or "Monthly" (configured in FR-015 / A-02) | Display only |
 | Next Payout Date | date | Yes | Scheduled payout date for this provider, derived from their individual payout frequency configured in FR-015 / A-02 | Format: DD-MM-YYYY |
 | Outstanding Earnings | currency | Yes | Total revenue pending payout | Format: £X,XXX.XX |
-| Commission | text | Yes | Provider commission configuration from FR-015 / A-02 | Display: 15% or £150 Flat |
+| Commission | text | Yes | Effective commission snapshot for the bookings in this statement. Source: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined; otherwise the FR-029 / A-09 global default captured at booking confirmation | Display: 15% or £150 Flat |
 | Net Payout | currency | Yes | Provider payout after commission | Auto-calculated |
 | Bank Account | text | Yes | Bank account last 4 digits (masked) | Display: ****1234 |
 | Payout Readiness | badge | Yes | Indicates whether the statement can be approved: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required" | Color-coded |
-| Status | badge | Yes | "Pending Approval", "Approved", "Processing", "Paid", "Failed", "Overdue" | Color-coded |
+| Status | badge | Yes | "Pending Approval", "Approved", "Processing", "Paid", "Failed", "Overdue", "Voided" | Color-coded |
 | Blocked Reason | text | Conditional | Explanation shown when payout approval is unavailable | Visible when Payout Readiness is not "Ready" |
-| Actions | buttons | Yes | "View Details", "Approve Payout", "Add Note", "Retry Payout" | Conditional visibility |
+| Actions | buttons | Yes | "View Details", "Approve Payout", "Unapprove", "Void Statement", "Add Note", "Retry Payout" | Conditional visibility |
 
 **Batch Approval Toolbar** (shown when one or more rows are selected):
 
@@ -376,11 +379,13 @@ flowchart TD
 - Payout amount MUST include all treatments with status "Completed" or "Aftercare" completed since the last payout cycle
 - Treatments with status "Scheduled", "In Progress", or "Cancelled" are NOT included
 - Providers with status "Suspended" or "Deactivated" do NOT have statements generated
-- Commission configuration read from provider profile in FR-015 / A-02; supported models are Percentage and Flat Rate
-- Bank account details shown ONLY if provider has a valid bank account on file
+- Commission shown in this list comes from the booking-time snapshot: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default; supported models are Percentage and Flat Rate where applicable
+- Bank account details shown ONLY if provider has a valid bank account on file in FR-032 Billing Settings
 - Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not "Ready" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06
 - "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue"
 - "Retry Payout" button enabled ONLY for statements with status "Failed"; clicking it re-initiates the Stripe transfer for that statement; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt
+- "Unapprove" button enabled ONLY for statements with status "Approved" and ONLY before the payout-day cron runs (i.e., the payout date has not yet been reached); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to "Pending Approval"; action logged in audit trail with action_type "Payout Unapproved"
+- "Void Statement" button enabled ONLY for statements with status "Pending Approval" or "Overdue"; on click, admin must enter a mandatory reason (max 500 chars); statement is marked "Voided" and permanently removed from auto-processing; action logged with action_type "Payout Voided"; a new statement can be re-generated on the next payout cycle; voided statements remain visible in list with "Voided" status badge for audit history
 - "Add Note" button available for all statements at any status (for audit documentation)
 - Batch selection is allowed ONLY for statements with Status = "Pending Approval" or "Overdue" and Payout Readiness = "Ready"
 - Clicking "Approve All Selected Payouts" opens a batch confirmation modal showing selected count, total net payout amount, and a financial re-authentication challenge; confirm remains disabled until re-authentication succeeds
@@ -408,12 +413,13 @@ flowchart TD
 | Provider Name | text | Yes | Clinic name | Display only |
 | Provider ID | text | Yes | Unique provider identifier | Display only |
 | Payout Reference | text | Yes | Unique payout statement reference | Display only |
-| Statement Status | badge | Yes | "Pending Approval", "Approved", "Overdue", "Processing", "Paid", "Failed" | Color-coded |
+| Statement Status | badge | Yes | "Pending Approval", "Approved", "Overdue", "Processing", "Paid", "Failed", "Voided" | Color-coded |
 | Payout Period | daterange | Yes | Date range covered by payout | Format: DD-MM-YYYY to DD-MM-YYYY |
 | Payout Readiness | badge | Yes | Indicates whether approval can proceed: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required" | Color-coded |
 | Blocked Reason | text | Conditional | Reason the statement cannot currently be approved or retried | Visible when Payout Readiness is not "Ready" or Statement Status = "Failed" |
 | Bank Account | text | Yes | Destination bank account (masked) | Display: ****1234 |
 | Treatment List | table | Yes | Itemized list of included bookings | See sub-table below |
+| Payout Adjustments | table | Conditional | Non-treatment deductions or credits applied to this payout, including refund deductions carried from previously paid bookings | See adjustment sub-table below; visible only when adjustments exist |
 | Total Revenue | currency | Yes | Sum of treatment amounts | Auto-calculated |
 | Commission Configuration | text | Yes | Platform commission model/value applied to this payout | Display: 15% or £150 Flat |
 | Commission Amount | currency | Yes | Commission deducted | Auto-calculated |
@@ -440,6 +446,18 @@ flowchart TD
 | Exchange Rate | number | No | Locked rate at booking time (if multi-currency) | Display: 1 GBP = 1.17 EUR |
 | Status | badge | Yes | "Completed", "Aftercare" | Color-coded |
 
+**Payout Adjustments Sub-Table** (nested within payout detail, shown only when adjustments exist):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Adjustment Type | badge | Yes | "Refund Deduction" or "Carry-Forward Adjustment" | Color-coded |
+| Booking Reference | text | Yes | Original booking tied to the adjustment | Clickable link |
+| Effective Date | date | Yes | Date the adjustment first applied to a payout statement | Format: DD-MM-YYYY |
+| Description | text | Yes | Provider-visible label shown on the payout statement | Display only; format example: "Adjustment: Refund deducted — [Booking Reference] — [Date]" |
+| Adjustment Amount | currency | Yes | Deduction or credit applied in the current payout cycle | Display only; negative values allowed |
+| Remaining Balance | currency | Conditional | Outstanding adjustment balance that will carry into a later payout cycle | Visible only when current payout does not fully absorb the adjustment |
+| Status | badge | Yes | "Applied" or "Carried Forward" | Color-coded |
+
 **Business Rules**:
 
 - Payout MUST include ALL treatments with status "Completed" or "Aftercare" within the payout period
@@ -447,14 +465,30 @@ flowchart TD
   - **Weekly**: Monday to Sunday of the preceding week
   - **2x a Month**: Either 1st–15th or 16th–last day of the preceding month period
   - **Monthly**: Full preceding calendar month
+- The commission model/value for each included booking comes from the booking-time snapshot: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default
 - If provider commission model is Percentage, the percentage calculation is applied AFTER currency conversion (if applicable)
 - If provider commission model is Flat Rate, the configured fixed deduction from FR-015 / A-02 is applied per completed procedure included in the payout
 - Exchange rates locked at time of patient booking acceptance (no fluctuation risk to provider during payout)
+- If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]`
+- If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered
 - Internal notes visible ONLY to admins (never exposed to provider)
 - "Approve Payout" is enabled ONLY when Payout Readiness = "Ready", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds
 - "Approve Payout" button marks the statement as "Approved" and queues it for the payout-day cron; Stripe transfer is not initiated during the buffer review action
 - On payout day, the cron initiates Stripe transfer for all statements already in "Approved" status; status changes to "Processing" → "Paid" after Stripe confirmation webhook
 - Stripe Transfer ID remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error
+
+**Batch Approval Confirmation Modal** (appears when admin clicks "Approve All Selected Payouts" in Screen 2):
+
+| Element | Description |
+|---------|-------------|
+| Summary line | "Approve payouts for [count] providers totalling [total net payout]?" |
+| Selected count | Number of payout statements included in this batch |
+| Selected net total | Combined net payout amount across all selected statements |
+| Warning | "Each provider's payout destination was last validated in FR-032 Billing Settings. Confirm all details are correct before proceeding." |
+| Re-authentication | Password re-entry in MVP; MFA challenge after FR-026 / FR-031. Confirm remains disabled until re-authentication succeeds |
+| Confirm button | "Yes, Approve All" — marks all selected statements as "Approved" sequentially; displays live progress: "Approving X of Y statements..." |
+| Cancel button | "No, Cancel" — returns to list with no changes |
+| Result Summary | Displayed after processing completes: "Approved: X / Failed: Y". Failed entries show provider name and error reason. Failed statements remain in "Pending Approval" for individual retry |
 
 **Approve Confirmation Modal** (appears when admin clicks "Approve Payout"):
 
@@ -508,6 +542,24 @@ flowchart TD
 | Installment Plan | badge | No | Installment progress with retry indicator (if applicable): "2/5 installments paid" or "2/5 — Retry 2/3 in progress" if a payment is currently in retry | Display format |
 | Actions | buttons | Yes | "View Details", "Send Reminder", "Process Refund", "Download Invoice", "Override Status" | Conditional |
 
+**Send Reminder Confirmation Modal** (appears when admin clicks "Send Reminder" on Screen 4 or Screen 4a):
+
+| Element | Description |
+|---------|-------------|
+| Summary line | "Send payment reminder to [Patient Name]?" |
+| Invoice reference | Invoice Number and Outstanding Balance shown for context |
+| Reminder Type | Auto-selected based on invoice status: "Upcoming Due Reminder" (Pending), "Overdue Reminder" (Overdue), "At Risk — Final Notice" (At Risk). Display-only; not editable by admin |
+| Channel | "Via: Email + Push Notification" — display only |
+| Confirm button | "Yes, Send Reminder" — triggers FR-020 notification event; creates entry in Reminder History |
+| Cancel button | "No, Cancel" — dismisses modal with no action |
+
+**Business Rules** (Send Reminder):
+
+- Reminder content and template are determined by FR-020 / S-03 based on the reminder type; admin cannot customize the message text
+- On confirm: FR-020 notification event is triggered; Reminder History table on Screen 4a is updated with: type, channel, sent timestamp, delivery status
+- Admin sees a success toast: "Reminder sent to [Patient Name]" (or an error toast if FR-020 returns a failure)
+- Sending a manual reminder does NOT reset or interfere with any automated reminder schedule
+
 **Business Rules**:
 
 - Invoice generated automatically when patient completes booking payment (deposit or full)
@@ -525,6 +577,7 @@ flowchart TD
   - Override is logged to audit trail with: admin ID, timestamp, previous status, new status, reason entered
   - Overridden invoices display a warning badge: "Status manually adjusted — [date]" visible to admins only
   - Override does NOT automatically trigger Stripe refund or charge — admin is responsible for ensuring any off-system action is completed separately
+  - "Override Status" REQUIRES financial re-authentication (password re-entry in MVP; MFA challenge after FR-026 / FR-031) before the Confirm button is enabled — consistent with the module-level RBAC rule that all actions changing a financial status require re-authentication
 
 **Notes**:
 
@@ -699,6 +752,9 @@ flowchart TD
 
 - "View in A-06" deep-link on each row opens the discount's management page in FR-019
 - Used primarily for financial reconciliation: confirming discount costs align with commission calculations
+- Implement filtering by: Status (Active / Expired / Disabled), Discount Type (Platform-Wide / Provider-Specific / Affiliate), and Active Window date range (codes valid within a given period)
+- Support free-text search by discount code or campaign name
+- Export to CSV button for finance reconciliation (includes all visible columns for the filtered result set)
 
 ---
 
@@ -712,6 +768,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
+| Select | checkbox | Conditional | Row selection for bulk payout processing | Enabled ONLY for Status = "Pending", past due date, and Payout Readiness = "Ready" |
 | Affiliate Name | text | Yes | Affiliate partner name (individual or company) | Display only |
 | Affiliate ID | text | Yes | Unique affiliate identifier (e.g., "HP-AFF-00012") | Display only |
 | Payout Reference | text | Yes | Unique affiliate payout reference | Display only |
@@ -730,7 +787,7 @@ flowchart TD
 | Stripe Transfer ID | text | Conditional | Stripe transfer reference for reconciliation | Visible once transfer is created |
 | Failure Reason | text | Conditional | Reason the payout failed or is blocked from processing | Visible when status is "Failed" or readiness is not "Ready" |
 | Processed By | text | Conditional | Admin who initiated or retried the payout | Visible once a payout attempt exists |
-| Actions | buttons | Yes | "View Details", "Process Payout", "Retry Payout", "Download Report" | Conditional |
+| Actions | buttons | Yes | "View Details", "Process Payout", "Retry Payout", "Add Note", "Download Report" | Conditional |
 
 **Business Rules**:
 
@@ -740,7 +797,35 @@ flowchart TD
 - Payouts with status "Pending" become eligible for processing on scheduled payout date
 - "Process Payout" button enabled ONLY for payouts with status "Pending", past due date, Payout Readiness = "Ready", and successful financial re-authentication
 - "Retry Payout" button enabled ONLY for payouts with status "Failed", Payout Readiness = "Ready", and successful financial re-authentication
+- "Add Note" button available for all affiliate payouts at any status (admin-only internal notes, max 500 characters, not visible to affiliate); note saved and logged in audit trail with action_type "Note Added"
 - Affiliates track their own earnings via the Affiliate Platform (read-only dashboard, managed in FR-018)
+
+**Bulk Payout Toolbar** (shown when one or more affiliate payout rows are selected via checkbox):
+
+| Element | Description |
+|---------|-------------|
+| Selected Payouts | Count of currently selected affiliate payout records |
+| Selected Total | Sum of Commission Earned across selected rows |
+| Process All Selected Payouts | Opens Bulk Affiliate Payout Confirmation Modal |
+| Clear Selection | Removes all current row selections |
+
+**Bulk Affiliate Payout Confirmation Modal** (appears when admin clicks "Process All Selected Payouts"):
+
+| Element | Description |
+|---------|-------------|
+| Summary line | "Process payouts for [count] affiliates totalling [total amount]?" |
+| Payout Period | "For payout period: [period]" |
+| Warning | "Confirm all payment destinations are correct before proceeding" |
+| Re-authentication | Password re-entry in MVP; MFA challenge after FR-026 / FR-031 |
+| Confirm button | "Yes, Process All" — initiates Stripe transfers sequentially; status → "Processing" for each. Enabled ONLY after successful re-authentication |
+| Cancel button | "No, Cancel" — returns to affiliate list without action |
+| Result Summary | After processing: "X payouts initiated. Y failed. See failed rows for details." |
+
+**Business Rules** (bulk affiliate payout):
+
+- Batch selection is allowed ONLY for affiliate payouts with Status = "Pending", past due date, and Payout Readiness = "Ready"
+- Processing is sequential; failures for individual affiliates do not block processing of others
+- After batch completes, failed rows are pinned in the Failed / Requires Retry section for individual follow-up
 
 **Process Payout Confirmation Modal** (appears when admin clicks "Process Payout"):
 
@@ -789,117 +874,13 @@ flowchart TD
 
 ---
 
-### Provider Platform Screens (PR-05)
+### Admin Platform Investigation & Audit Screens (A-05)
 
-> Provider access follows the two-stage model: **Stage 1** (per-treatment earnings, always visible as treatments complete) and **Stage 2** (confirmed payout history, visible only after admin approves and Stripe transfer is confirmed). All screens below are **read-only** for providers.
-
----
-
-#### Screen 7: Provider Earnings Tracker (Stage 1 — Treatment Income)
-
-**Purpose**: Provider view of all per-treatment earnings as treatments complete. Shows each treatment case as an individual income record with a running total of pending earnings awaiting the next payout.
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference — links to the treatment case | Clickable link to booking detail in provider portal |
-| Patient Name | text | Yes | Full patient name (revealed post-payment) | Display only |
-| Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY |
-| Treatment Type | text | Yes | Treatment category (FUE, FUT, DHI, etc.) | Display only |
-| Gross Amount | currency | Yes | Full treatment fee paid by patient | Display: £X,XXX.XX |
-| Commission | text | Yes | Platform commission applied to this booking. Displays contextually based on the provider's commission model configured in FR-015 / A-02: percentage (e.g., "15%") for Percentage model, or fixed amount (e.g., "£150 Flat") for Flat Rate model. The underlying data stores both the commission model type (Percentage or Flat Rate) and the commission value to support either display. | Display: "15%" or "£150 Flat" |
-| Commission Deducted | currency | Yes | Commission amount withheld | Auto-calculated |
-| Net Earning | currency | Yes | Provider's net income from this treatment | Auto-calculated |
-| Adjustment Marker | badge | Conditional | "Refunded", "Partial Refund", or "Manual Adjustment" | Visible only when the net earning has changed after initial calculation |
-| Currency | text | Yes | Treatment currency | Display: GBP, USD, TRY |
-| Treatment Status | badge | Yes | "Completed" or "Aftercare" | Color-coded |
-| Payout Status | badge | Yes | "Pending Next Payout", "Included in Payout — [Date]", or "Payout Failed — [Date]" | Display only |
-
-**Summary Bar** (above the treatment list):
-
-| Field | Description |
-|-------|-------------|
-| Total Pending Earnings | Sum of net earnings for all treatments with Payout Status "Pending Next Payout" |
-| Next Payout Date | Provider's next scheduled payout date (derived from their payout frequency in FR-015 / A-02) |
-| Treatments This Period | Count of eligible treatments in current payout cycle |
-
-**Business Rules**:
-
-- Only treatments with status "Completed" or "Aftercare" appear in this list
-- Each row is directly linked to its treatment case via Booking Reference (→ FR-001 booking record / A-01 Patient Management)
-- Earnings update in real time as treatment status changes
-- Provider cannot see the payout statement, buffer window status, or admin approval action
-- Once admin approves and Stripe transfer is initiated, affected treatments update to Payout Status "Included in Payout — [Date]"
-- If the Stripe transfer fails (`transfer.failed` webhook), affected treatments update to Payout Status "Payout Failed — [Date]" and display a warning icon. They revert to "Pending Next Payout" once the admin retries and the transfer succeeds
-- **Refunded treatments**: If a patient refund is processed on a booking that had not yet been paid out, the treatment row is updated to show Net Earning as £0.00 with a "Refunded" label and a strikethrough on the original amount. The treatment is excluded from the Total Pending Earnings calculation. If the refund is partial (e.g., only add-on packages refunded), Net Earning is recalculated based on the adjusted booking amount
-- Adjustment Marker opens a provider-friendly explanation tooltip (e.g., "Adjusted due to partial refund on 12-04-2026"); no internal admin notes are exposed
-- Treatments are never removed from this list; older entries remain visible for historical reference
-
-**Notes**:
-
-- Support filtering by: treatment status, payout status, date range
-- Support sorting by: treatment date, net earning (ascending/descending)
-- "Export" button to download earnings history as CSV
+> Screens 7–8 are admin-only operational tools for investigation, audit, and currency-risk response. They are not part of the provider read-only payout experience.
 
 ---
 
-#### Screen 8: Provider Payout History (Stage 2 — Confirmed Payouts)
-
-**Purpose**: Provider view of all confirmed payouts after Stripe transfer is complete. Each payout is traceable to the treatment cases it covers. Invoice PDF is available for download after transfer confirmation.
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Payout Reference | text | Yes | Unique payout identifier (e.g., "PAY-HP-PRV-00123-2026-04") | Display only |
-| Copy Reference | button | Yes | Copies the payout reference to clipboard | Available for all statuses |
-| Payout Date | date | Yes | Date Stripe transfer was confirmed | Format: DD-MM-YYYY |
-| Transfer Confirmation Date | datetime | Conditional | Exact Stripe confirmation timestamp for successful payouts | Visible when Status = "Paid" |
-| Payout Period | daterange | Yes | Date range of treatments included in this payout | Format: DD-MM-YYYY to DD-MM-YYYY |
-| Treatment Count | number | Yes | Number of treatment cases included | Display only |
-| Gross Total | currency | Yes | Sum of all treatment amounts in this payout | Display: £X,XXX.XX |
-| Commission Deducted | currency | Yes | Total platform commission withheld | Display: £X,XXX.XX |
-| Net Payout | currency | Yes | Amount transferred to provider bank account | Display: £X,XXX.XX |
-| Payout Frequency | badge | Yes | Provider's schedule at time of payout: "Weekly", "2x a Month", or "Monthly" | Display only |
-| Status | badge | Yes | "Processing", "Paid", or "Failed" | Color-coded. "Failed" = Stripe transfer failed; admin has been notified and will retry |
-| Invoice | button | Conditional | Download invoice PDF | Available only when Status = "Paid" |
-| Failure Reason | text | Conditional | Brief description of why payout failed (e.g., "Bank account issue — admin has been notified") | Shown only when Status = "Failed" |
-| Retry Resolution History | timeline | Conditional | Timeline of prior failure and recovery attempts | Shown when the payout ever entered "Failed" status |
-
-**Treatment Breakdown Sub-Table** (shown when provider clicks a payout row):
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference — links to the treatment case | Clickable link to booking detail |
-| Patient Name | text | Yes | Full patient name | Display only |
-| Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY |
-| Treatment Type | text | Yes | FUE, FUT, DHI, etc. | Display only |
-| Treatment Amount | currency | Yes | Full booking fee paid by patient | Display only |
-| Commission | text | Yes | Platform commission applied to this treatment. Displays contextually: percentage (e.g., "15%") for Percentage model, or fixed amount (e.g., "£150 Flat") for Flat Rate model. The underlying data stores both the commission model type and value. | Display: "15%" or "£150 Flat" |
-| Commission Deducted | currency | Yes | Commission withheld for this treatment | Auto-calculated |
-| Net Contribution | currency | Yes | Provider's net income from this treatment in this payout | Auto-calculated |
-| Currency | text | Yes | Booking currency | Display: GBP, USD, TRY |
-
-**Business Rules**:
-
-- Payout entries appear in this list as soon as the Stripe transfer is initiated (status: "Processing"); they remain visible through "Paid" and "Failed" states
-- "Failed" entries appear with a warning icon and a message: "Your payout of [amount] for [period] could not be processed. Hairline is investigating. You will be notified once resolved."
-- Each payout entry links to all treatment cases included in that payout period (Booking Reference → FR-001 / A-01)
-- Invoice PDF is generated only after Stripe `transfer.paid` confirmation; the Download button is disabled during "Processing" status
-- Retry Resolution History remains visible even after a failed payout later resolves to "Paid", so providers can understand why timing changed
-- Provider has read-only access to all data on this screen; no approval or editing actions are available
-- All amounts displayed in the provider's configured payout currency; exchange rate used is locked at booking acceptance time
-
-**Notes**:
-
-- Support filtering by: status, date range
-- Support sorting by: payout date, net payout amount (ascending/descending)
-- "Export History" button to download full payout history as CSV
-
----
-
-#### Screen 9: Transaction Search & Audit Log
+#### Screen 7: Transaction Search & Audit Log
 
 **Purpose**: Unified admin screen for cross-financial record search and audit log review. Supports Workflow B1 (dispute resolution by booking reference) and REQ-017-011/REQ-017-018 (searchable transaction history and audit trail).
 
@@ -945,9 +926,9 @@ flowchart TD
 | Last Evaluated Payout Cycle | text | Most recent payout cycle in which the booking was checked |
 | Prior Inclusion Status | badge | "Already Paid", "Eligible but Missed", "Not Yet Eligible", or "Needs Investigation" |
 | Resolution Action | select | "Confirm Already Paid", "Add to Next Payout", or "Escalate Technical Investigation" |
-| Target Payout Cycle | text | Required when Resolution Action = "Add to Next Payout" |
+| Target Payout Cycle | select | Required when Resolution Action = "Add to Next Payout". Dropdown of the affected provider's upcoming payout cycles, displayed as "[Provider Name] — [Payout Date]" (e.g., "TurkeyClinic — 02-05-2026"). Only cycles in "Pending Approval" or future-scheduled state are selectable |
 | Internal Note | textarea | Mandatory when Resolution Action is selected. Max 500 chars |
-| Notify Provider | checkbox | Optional flag to trigger provider notification once resolution is saved |
+| Notify Provider | checkbox | Visible for all resolution actions. Auto-selected and disabled when Resolution Action = "Add to Next Payout"; optional for other actions |
 | Save Resolution | button | Persists decision and writes audit log entry |
 
 **Business Rules**:
@@ -957,7 +938,7 @@ flowchart TD
 - Results sorted by date descending by default
 - Clicking any row opens the relevant detail screen (Screen 3 for provider payouts, Screen 4a for invoices, etc.)
 - "Add to Next Payout" is available ONLY when the booking was not already paid, is now eligible for payout, and the admin has provided an Internal Note and target payout cycle
-- Saving a dispute resolution writes an audit log entry and, when selected, triggers a provider notification event
+- Saving a dispute resolution writes an audit log entry; when Resolution Action = "Add to Next Payout", provider notification is mandatory and sent automatically. For other resolution actions, notification is sent only when selected
 - If no results found: display "No financial records found for '[search term]'. Check the reference and try again."
 
 ---
@@ -972,8 +953,8 @@ flowchart TD
 |-------|------|-------------|
 | Date Range | daterange | Filter by log entry timestamp |
 | Admin User | select | Filter by which admin performed the action |
-| Action Type | multi-select | Filter by: "Payout Approved", "Payout Retried", "Refund Processed", "Invoice Generated", "Status Overridden", "Note Added", "Installment Retry", "Bulk Approval", "Affiliate Payout Processed", "Affiliate Payout Retried", "Payout Added to Next Cycle", "Reminder Sent", "Currency Alert Decision", "Re-authentication Verified" |
-| Affected Entity | multi-select | Filter by: Invoice, Provider Payout, Installment, Affiliate Commission |
+| Action Type | multi-select | Filter by: "Payout Approved", "Payout Unapproved", "Payout Voided", "Payout Retried", "Bulk Approval", "Refund Processed", "Invoice Generated", "Status Overridden", "Note Added", "Installment Retry", "Affiliate Payout Processed", "Affiliate Payout Retried", "Payout Added to Next Cycle", "Reminder Sent", "Currency Alert Decision", "Re-authentication Verified" |
+| Affected Entity | multi-select | Filter by: Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert |
 | Entity ID | text | Optional; filter to a specific entity ID (e.g., specific invoice or payout) |
 
 **Audit Log Table**:
@@ -998,7 +979,7 @@ flowchart TD
 
 ---
 
-#### Screen 10: Currency Alert Detail Modal
+#### Screen 8: Currency Alert Detail Modal
 
 **Purpose**: Presented when admin clicks a currency fluctuation alert notification. Allows admin to review affected bookings, compare locked vs. current rates, and document their decision. Supports Workflow B2.
 
@@ -1034,7 +1015,7 @@ flowchart TD
 
 | Element | Description |
 |---------|-------------|
-| Decision | Radio: "Accept risk — proceed with payouts at locked rates" / "Contact providers to renegotiate" / "Adjust provider commission via FR-015" |
+| Decision | Radio: "Accept risk — proceed with payouts at locked rates" / "Contact providers to renegotiate" / "Adjust commission configuration (FR-015 single-provider / FR-029 global-or-bulk)" |
 | Notes | textarea — mandatory if any decision is selected. Max 500 chars. Documents rationale |
 | Confirm Decision button | Saves decision and notes to audit trail; dismisses modal |
 | Close button | Dismisses without saving (admin can return via notification history) |
@@ -1042,11 +1023,121 @@ flowchart TD
 **Business Rules**:
 
 - Affected bookings table shows ONLY bookings with a payout date within the next 14 days (i.e., at risk of being affected by the current rate movement)
-- "Adjust provider commission via FR-015" option navigates admin to FR-015 / A-02 provider configuration; does not initiate changes from this screen
+- "Adjust commission configuration (FR-015 single-provider / FR-029 global-or-bulk)" routes admin to the appropriate management surface: FR-015 / A-02 for single-provider profile edits, or FR-029 / A-09 for the central global / provider-scope commission settings screen. This screen does not initiate the edit directly
 - Decision and notes logged in Transaction Audit Log (Entity 5) with action_type = "Currency Alert Decision"
 - Alert dismissed from notification dropdown once admin confirms a decision; re-surfaces if the rate continues to diverge and a new alert fires
 
 ---
+
+### Provider Platform Screens (PR-05)
+
+> Provider access follows the two-stage model: **Stage 1** (per-treatment earnings, always visible as treatments complete) and **Stage 2** (confirmed payout history, visible only after admin approves and Stripe transfer is confirmed). All screens in this section are **read-only** for providers.
+
+---
+
+#### Screen 9: Provider Earnings Tracker (Stage 1 — Treatment Income)
+
+**Purpose**: Provider view of all per-treatment earnings as treatments complete. Shows each treatment case as an individual income record with a running total of pending earnings awaiting the next payout.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Booking Reference | text | Yes | Unique booking reference — links to the treatment case | Clickable link to booking detail in provider portal |
+| Patient Name | text | Yes | Full patient name (revealed post-payment) | Display only |
+| Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY |
+| Treatment Type | text | Yes | Treatment category (FUE, FUT, DHI, etc.) | Display only |
+| Gross Amount | currency | Yes | Full treatment fee paid by patient | Display: £X,XXX.XX |
+| Commission | text | Yes | Platform commission snapshot applied to this booking. Source: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined; otherwise the FR-029 / A-09 global default captured at booking confirmation. Displays contextually: percentage (e.g., "15%") for Percentage model, or fixed amount (e.g., "£150 Flat") for Flat Rate model. | Display: "15%" or "£150 Flat" |
+| Commission Deducted | currency | Yes | Commission amount withheld | Auto-calculated |
+| Net Earning | currency | Yes | Provider's net income from this treatment | Auto-calculated; may be negative when a post-payout refund is deducted from a future cycle |
+| Adjustment Marker | badge | Conditional | "Refunded", "Partial Refund", "Refunded — Deducted from Next Payout", or "Manual Adjustment" | Visible only when the net earning has changed after initial calculation |
+| Currency | text | Yes | Treatment currency | Display: GBP, USD, TRY |
+| Treatment Status | badge | Yes | "Completed" or "Aftercare" | Color-coded |
+| Payout Status | badge | Yes | "Pending Next Payout", "Included in Payout — [Date]", or "Payout Failed — [Date]" | Display only |
+
+**Summary Bar** (above the treatment list):
+
+| Field | Description |
+|-------|-------------|
+| Total Pending Earnings | Sum of net earnings for all treatments with Payout Status "Pending Next Payout" |
+| Next Payout Date | Provider's next scheduled payout date (derived from their payout frequency in FR-015 / A-02) |
+| Treatments This Period | Count of eligible treatments in current payout cycle |
+
+**Business Rules**:
+
+- Only treatments with status "Completed" or "Aftercare" appear in this list
+- Each row is directly linked to its treatment case via Booking Reference (→ FR-001 booking record / A-01 Patient Management)
+- Earnings update in real time as treatment status changes
+- Provider cannot see the payout statement, buffer window status, or admin approval action
+- Once admin approves and Stripe transfer is initiated, affected treatments update to Payout Status "Included in Payout — [Date]"
+- If the Stripe transfer fails (`transfer.failed` webhook), affected treatments update to Payout Status "Payout Failed — [Date]" and display a warning icon. They revert to "Pending Next Payout" once the admin retries and the transfer succeeds
+- **Refunded treatments**: If a patient refund is processed on a booking that had not yet been paid out, the treatment row is updated to show Net Earning as £0.00 with a "Refunded" label and a strikethrough on the original amount. The treatment is excluded from the Total Pending Earnings calculation. If the refund is partial (e.g., only add-on packages refunded), Net Earning is recalculated based on the adjusted booking amount
+- If a patient refund is processed AFTER the provider has already been paid, the original treatment row remains visible with Adjustment Marker "Refunded — Deducted from Next Payout" and Net Earning showing the negative deduction amount clearly; if the deduction spans multiple cycles, the tooltip explains the remaining carry-forward balance
+- Adjustment Marker opens a provider-friendly explanation tooltip (e.g., "Adjusted due to partial refund on 12-04-2026"); no internal admin notes are exposed
+- Treatments are never removed from this list; older entries remain visible for historical reference
+
+**Notes**:
+
+- Support filtering by: treatment status, payout status, date range
+- Support sorting by: treatment date, net earning (ascending/descending)
+- "Export" button to download earnings history as CSV
+
+---
+
+#### Screen 10: Provider Payout History (Stage 2 — Confirmed Payouts)
+
+**Purpose**: Provider view of all confirmed payouts after Stripe transfer is complete. Each payout is traceable to the treatment cases it covers. Invoice PDF is available for download after transfer confirmation.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Payout Reference | text | Yes | Unique payout identifier (e.g., "PAY-HP-PRV-00123-2026-04") | Display only |
+| Copy Reference | button | Yes | Copies the payout reference to clipboard | Available for all statuses |
+| Payout Date | date | Yes | Date Stripe transfer was confirmed | Format: DD-MM-YYYY |
+| Transfer Confirmation Date | datetime | Conditional | Exact Stripe confirmation timestamp for successful payouts | Visible when Status = "Paid" |
+| Payout Period | daterange | Yes | Date range of treatments included in this payout | Format: DD-MM-YYYY to DD-MM-YYYY |
+| Treatment Count | number | Yes | Number of treatment cases included | Display only |
+| Gross Total | currency | Yes | Sum of all treatment amounts in this payout | Display: £X,XXX.XX |
+| Commission Deducted | currency | Yes | Total platform commission withheld | Display: £X,XXX.XX |
+| Net Payout | currency | Yes | Amount transferred to provider bank account | Display: £X,XXX.XX |
+| Payout Frequency | badge | Yes | Provider's schedule at time of payout: "Weekly", "2x a Month", or "Monthly" | Display only |
+| Status | badge | Yes | "Processing", "Paid", or "Failed" | Color-coded. "Failed" = Stripe transfer failed; admin has been notified and will retry |
+| Invoice | button | Conditional | Download invoice PDF | Available only when Status = "Paid" |
+| Failure Reason | text | Conditional | Brief description of why payout failed (e.g., "Bank account issue — admin has been notified") | Shown only when Status = "Failed" |
+| Retry Resolution History | timeline | Conditional | Timeline of prior failure and recovery attempts | Shown when the payout ever entered "Failed" status |
+
+**Treatment Breakdown Sub-Table** (shown when provider clicks a payout row):
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Booking Reference | text | Yes | Unique booking reference — links to the treatment case | Clickable link to booking detail |
+| Patient Name | text | Yes | Full patient name | Display only |
+| Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY |
+| Treatment Type | text | Yes | FUE, FUT, DHI, etc. | Display only |
+| Treatment Amount | currency | Yes | Full booking fee paid by patient | Display only |
+| Commission | text | Yes | Platform commission snapshot applied to this treatment. Source: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined; otherwise the FR-029 / A-09 global default captured at booking confirmation. Displays contextually: percentage (e.g., "15%") for Percentage model, or fixed amount (e.g., "£150 Flat") for Flat Rate model. | Display: "15%" or "£150 Flat" |
+| Commission Deducted | currency | Yes | Commission withheld for this treatment | Auto-calculated |
+| Net Contribution | currency | Yes | Provider's net income from this treatment in this payout | Auto-calculated |
+| Currency | text | Yes | Booking currency | Display: GBP, USD, TRY |
+
+**Business Rules**:
+
+- Payout entries appear in this list as soon as the Stripe transfer is initiated (status: "Processing"); they remain visible through "Paid" and "Failed" states
+- "Failed" entries appear with a warning icon and a message: "Your payout of [amount] for [period] could not be processed. Hairline is investigating. You will be notified once resolved."
+- Each payout entry links to all treatment cases included in that payout period (Booking Reference → FR-001 / A-01)
+- Invoice PDF is generated only after Stripe `transfer.paid` confirmation; the Download button is disabled during "Processing" status
+- Retry Resolution History remains visible even after a failed payout later resolves to "Paid", so providers can understand why timing changed
+- Provider has read-only access to all data on this screen; no approval or editing actions are available
+- All amounts displayed in the provider's configured payout currency; exchange rate used is locked at booking acceptance time
+
+**Notes**:
+
+- Support filtering by: status, date range
+- Support sorting by: payout date, net payout amount (ascending/descending)
+- "Export History" button to download full payout history as CSV
+
 
 ## Business Rules
 
@@ -1080,7 +1171,7 @@ flowchart TD
 - **[Not in scope — see FR-015/A-02]** Per-provider payout frequency (Weekly, 2x a Month, or Monthly): configured per provider via the Commission & Financials tab in Provider Management; FR-017 reads this setting per provider to determine individual statement generation timing
 - **[Not in scope — see FR-019]** Discount code creation, activation, deactivation, and expiration dates: managed in FR-019 / A-06
 - **[Not in scope — see FR-019]** Discount maximum usage limits: managed in FR-019 / A-06
-- **[Not in scope — see FR-015/A-02]** Provider commission configuration (Percentage or Flat Rate): configured per provider in Provider Management; A-05 reads this value for payout calculations
+- **[Not in scope — see FR-015/A-02 and FR-029]** Provider commission configuration (Percentage or Flat Rate): managed through the provider profile in FR-015 and surfaced centrally in FR-029 for global / provider-scope commission administration; A-05 reads the booking-time snapshot for payout calculations
 - **[Not in scope — see FR-029]** Installment cutoff days (default: 30 days before treatment date): configured in FR-029 / A-09: Payment System Configuration; FR-017 reads this value at runtime to determine installment eligibility
 - **[Not in scope — see FR-029]** Currency conversion markup percentage: configured in FR-029 / A-09: Payment System Configuration
 - **[Not in scope — see FR-029]** Payout buffer window (days before payout date that statement is auto-generated, default: 3 days): configured in FR-029 / A-09: Payment System Configuration
@@ -1092,7 +1183,7 @@ flowchart TD
 
 **Fixed in Codebase (Not Editable)**:
 
-- Commission calculation formulas (Percentage and Flat Rate) are fixed in business logic; the active model/value comes from FR-015 / A-02
+- Commission calculation formulas (Percentage and Flat Rate) are fixed in business logic; the active model/value comes from the effective provider commission configuration resolved from FR-015 / A-02 and FR-029 / A-09
 - Currency exchange API source (xe.com or equivalent — configured in environment variables); USD is the fixed base currency; supported currency pairs are dynamically configurable in FR-029 / A-09
 - Stripe account connection parameters (API keys managed via secrets vault)
 - Invoice PDF template structure (branding and layout fixed)
@@ -1173,7 +1264,7 @@ flowchart TD
 
 - **FR-001 / Module P-01: Auth & Profile Management**
   - **Why needed**: Patient account required for billing; payment methods linked to patient profiles
-  - **Integration point**: Patient billing records linked to patient accounts; invoices accessible via patient dashboard
+  - **Integration point**: Patient billing records linked to patient accounts; in MVP, invoice delivery is via email/PDF while any future in-app dashboard access remains backlog
 
 - **FR-003 / Module P-02: Quote Request & Management**
   - **Why needed**: Quote acceptance triggers initial invoice generation
@@ -1184,8 +1275,8 @@ flowchart TD
   - **Integration point**: Quote data flows to booking confirmation; itemized breakdown appears in invoices
 
 - **FR-006 / Module P-03: Booking & Scheduling**
-  - **Why needed**: Booking confirmation (triggered by successful deposit or first installment) initiates invoice generation and payout eligibility tracking; cancellation policy defined here governs refund amounts
-  - **Integration point**: Booking status transitions (Confirmed, Cancelled) trigger invoice creation and payout eligibility updates in A-05; refund amounts follow the graduated cancellation policy owned by FR-006
+  - **Why needed**: Booking confirmation (triggered by successful deposit or first installment) initiates invoice generation and payout eligibility tracking; cancellation policy defined here governs refund amounts; booking status transitions drive billing workflows
+  - **Integration point**: Booking status transitions (Confirmed, Cancelled) trigger invoice creation and payout eligibility updates in A-05; refund amounts follow the graduated cancellation policy owned by FR-006; any provider payout deductions from post-payout refunds are reconciled in subsequent payout cycles
 
 - **FR-007 / Module S-02: Payment Processing Service**
   - **Why needed**: All payment transactions processed via Stripe integration
@@ -1196,8 +1287,8 @@ flowchart TD
   - **Integration point**: Status change "In Progress" → "Aftercare" signals completed treatment; triggers payout calculation in A-05
 
 - **FR-015 / Module A-02: Provider Management & Onboarding**
-  - **Why needed**: Provider bank account details and commission structure configured during onboarding
-  - **Integration point**: A-02 stores bank account details, commission model/value, and payout frequency; A-05 retrieves them for payout processing
+  - **Why needed**: Provider-specific commission settings and payout frequency are configurable in the admin-managed provider profile
+  - **Integration point**: A-02 provides the single-provider commission-management surface plus payout frequency; A-05 reads those values as part of the effective commission configuration resolved for a provider
 
 - **FR-019 / Module A-06: Discount & Promotion Management**
   - **Why needed**: Discount codes created in A-06 affect invoice amounts and commission calculations
@@ -1207,25 +1298,21 @@ flowchart TD
   - **Why needed**: Email notifications for payment confirmations, payout notifications, payment reminders
   - **Integration point**: A-05 triggers notification events (payment success, payout processed, installment due); S-03 sends emails
 
-- **FR-006 / Module P-03: Booking & Scheduling**
-  - **Why needed**: Cancellation policy determines refund amounts; booking lifecycle status drives billing workflows
-  - **Integration point**: Refunds follow graduated cancellation policy defined in FR-006 (Business Rule 7); booking status transitions trigger invoice and payout updates
-
 - **FR-018 / Module A-07: Affiliate Program Management**
   - **Why needed**: Affiliate commission calculation, referral tracking, and commission rate agreements are owned by FR-018; A-05 owns affiliate billing and payout execution based on these values
   - **Integration point**: A-05 reads affiliate commission amounts calculated in FR-018 for billing and payout execution (Screen 6); commission disputes resolved in FR-018 before payout processing in A-05
 
 - **FR-029 / Module A-09: Payment System Configuration**
-  - **Why needed**: Stripe account configuration, currency conversion pair setup, markup percentages, payout buffer window, and deposit rates are all owned by FR-029
-  - **Integration point**: A-05 consumes configured Stripe accounts for payout execution, reads currency pairs and rates for multi-currency calculations, and reads the payout buffer window to determine statement auto-generation timing
+  - **Why needed**: Stripe account configuration, currency conversion pair setup, markup percentages, payout buffer window, deposit rates, the global commission default, and the central provider-scope commission screen are all owned by FR-029
+  - **Integration point**: A-05 consumes configured Stripe accounts for payout execution, reads currency pairs and rates for multi-currency calculations, reads the FR-029 system default currency to initialize Screen 1 reporting filters, reads the payout buffer window to determine statement auto-generation timing, and consumes the effective commission snapshot resolved from FR-029 global/provider-scope settings plus any single-provider edits made in FR-015
 
 - **FR-030 / Module A-09: Notification Rules & Configuration**
   - **Why needed**: Payment reminder schedules and notification preferences are configured in FR-030
   - **Integration point**: A-05 triggers billing notification events; FR-030 configures timing, channels, and admin preferences for those events
 
 - **FR-032 / Module PR-06: Provider Dashboard Settings & Profile Management**
-  - **Why needed**: Provider dashboard navigation shell hosts FR-017 provider-facing screens; provider bank account details managed in FR-032
-  - **Integration point**: Screens 7–8 are rendered within the FR-032 provider dashboard shell; bank account details entered by providers in FR-032 are consumed by A-05 for payout execution
+  - **Why needed**: Provider dashboard navigation shell hosts FR-017 provider-facing screens; provider payout destination details are managed in FR-032
+  - **Integration point**: Screens 9–10 are rendered within the FR-032 provider dashboard shell; bank account details entered and validated in FR-032 Billing Settings are consumed by A-05 for payout execution
 
 ### External Dependencies (APIs, Services)
 
@@ -1287,7 +1374,7 @@ flowchart TD
 
 ### Business Process Assumptions
 
-- **Assumption 1**: Provider bank account verification completed during onboarding (A-02); no re-verification required for each payout
+- **Assumption 1**: Provider bank account validation is completed in FR-032 Billing Settings before payout processing; no additional per-payout re-verification is required beyond readiness checks
 - **Assumption 2**: **[Not in scope — see FR-019]** Discount code approval workflow timing: defined as an assumption in FR-019 / A-06
 - **Assumption 3**: Affiliate commission rates remain constant for 12-month contract periods; no mid-cycle rate changes
 - **Assumption 4**: Refund requests reviewed manually by admin; no automated refund approvals (fraud prevention)
@@ -1502,8 +1589,8 @@ Hairline executives and finance team view real-time financial dashboard to monit
 **Acceptance Scenarios**:
 
 1. **Given** admin navigates to "Financial Reporting" → "Revenue Dashboard"
-   **When** dashboard loads with default date range (last 30 days)
-   **Then** system displays: Total Revenue (£XXX,XXX), Platform Commission (£XX,XXX), Provider Payouts (£XX,XXX), Outstanding Patient Invoices (£X,XXX), Pending Provider Payouts (£XX,XXX)
+   **When** dashboard loads with default date range (last 30 days) and default currency (USD)
+   **Then** system displays: Total Revenue ($XXX,XXX), Platform Commission ($XX,XXX), Provider Payouts ($XX,XXX), Outstanding Patient Invoices ($X,XXX), Pending Provider Payouts ($XX,XXX)
 
 2. **Given** admin changes date range to "Last 90 days" AND currency to "EUR"
    **When** system recalculates metrics
@@ -1590,6 +1677,15 @@ A patient requests refund due to cancellation, admin reviews request against can
   - System displays: "AFFILIATE10 discount applied (10%). PROVIDER15 not applicable (only one discount per booking)."
   - System attributes booking to affiliate for commission calculation
 
+- **What happens when** a patient is refunded after the provider has already been paid out?
+  - Patient cancels booking 10 days before treatment; provider was paid out 3 weeks ago (Stripe transfer complete)
+  - Admin processes refund for patient per cancellation policy (e.g., 0% refund if <15 days, but admin may apply discretionary partial refund with mandatory justification)
+  - Refund is returned to patient via Stripe; the provider payout is NOT clawed back immediately — the equivalent provider amount (commission-adjusted) is deducted from the provider's NEXT payout cycle
+  - Screen 9 (Provider Earnings Tracker): the refunded treatment row is updated with Adjustment Marker "Refunded — Deducted from Next Payout" and Net Earning shows the negative adjustment amount clearly
+  - The deduction is included as a separate line item in the provider's next payout statement (Screen 3 — Provider Payout Detail Modal), labelled "Adjustment: Refund deducted — [Booking Reference] — [Date]", reducing the net payout for that cycle
+  - If the deduction exceeds the provider's next payout amount (e.g., provider has no other completed treatments that cycle), the deduction carries forward to the subsequent cycle — it is never silently absorbed by Hairline
+  - The audit trail records: refund event, deduction amount, affected payout statement ID, and admin ID
+
 - **How does system handle** partial refund (patient cancels add-on packages but keeps base treatment)?
   - Patient booked treatment (£2,000) + hotel package (£500) + PRP add-on (£200), total £2,700
   - Patient cancels hotel and PRP, keeps base treatment
@@ -1649,11 +1745,11 @@ A patient requests refund due to cancellation, admin reviews request against can
   - **Relationships**: One invoice per booking; one patient can have many invoices; one invoice can have many installment payments
 
 - **Entity 2 - Provider Payout**
-  - **Key attributes**: payout_id, payout_reference, provider_id, payout_period (date_range), total_revenue, commission_model, commission_value, commission_amount, net_payout, bank_account_id, payout_readiness_status, payout_status (Pending Approval, Approved, Overdue, Processing, Paid, Failed), approved_by_admin_id, approved_at, processed_at, payout_date, stripe_transfer_id, failure_reason, invoice_pdf_url
+  - **Key attributes**: payout_id, payout_reference, provider_id, payout_period (date_range), total_revenue, commission_model, commission_value, commission_amount, net_payout, bank_account_id, payout_readiness_status, payout_status (Pending Approval, Approved, Overdue, Processing, Paid, Failed, Voided), approved_by_admin_id, approved_at, voided_by_admin_id, voided_at, void_reason, processed_at, payout_date, stripe_transfer_id, failure_reason, invoice_pdf_url
   - **Relationships**: One payout includes many completed bookings; one provider has many payouts over time
 
 - **Entity 3 - Installment Payment**
-  - **Key attributes**: installment_id, invoice_id, installment_number, installment_amount, scheduled_date, payment_status (Pending, Paid, Failed), retry_count, paid_date, stripe_payment_intent_id
+  - **Key attributes**: installment_id, invoice_id, installment_number, installment_amount, scheduled_date, payment_status (Pending, Paid, Failed), retry_count, next_retry_date, paid_date, stripe_payment_intent_id
   - **Relationships**: One invoice can have many installments (2-9); one installment linked to one invoice
 
 - **Entity 4 - Discount Code**
@@ -1661,7 +1757,7 @@ A patient requests refund due to cancellation, admin reviews request against can
   - **Relationships**: One discount code can be applied to many bookings; one booking has at most one discount code
 
 - **Entity 5 - Transaction Audit Log**
-  - **Key attributes**: log_id, admin_user_id, timestamp, action_type (Payout Approved, Payout Retried, Affiliate Payout Processed, Affiliate Payout Retried, Payout Added to Next Cycle, Refund Processed, Reminder Sent, Invoice Generated, Currency Alert Decision, Re-authentication Verified), affected_entity_type (Invoice, Provider Payout, Affiliate Commission, Booking, Currency Alert), affected_entity_id, before_value, after_value, ip_address, notes
+  - **Key attributes**: log_id, admin_user_id, timestamp, action_type (Payout Approved, Payout Unapproved, Payout Voided, Payout Retried, Bulk Approval, Affiliate Payout Processed, Affiliate Payout Retried, Payout Added to Next Cycle, Refund Processed, Reminder Sent, Invoice Generated, Status Overridden, Note Added, Installment Retry, Currency Alert Decision, Re-authentication Verified), affected_entity_type (Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert), affected_entity_id, before_value, after_value, ip_address, notes
   - **Relationships**: One admin action generates one log entry; one entity (invoice/payout) can have many log entries over time
 
 - **Entity 6 - Affiliate Commission**
@@ -1686,6 +1782,14 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-04-02 | 1.5 | Screen operational hardening: (1) Screen 1 — added batch approval controls, payout reference, payout readiness, blocked reason, and batch result states; (2) Screen 2 — added payout reconciliation metadata, retry confirmation modal, per-booking net contribution, and approval gating by readiness + re-authentication; (3) Screen 3a — added adjusted-total visibility, Stripe payment intent ID, reminder history, and override history; (4) Screen 3b — resolved partial-refund conflict with calculated vs adjusted amount fields, justification, final refund preview, and re-authentication; (5) Screen 5 — added At Risk invoice count, failed payout count, refund trend, and affiliate payout status summary; (6) Screen 6 — added affiliate payout failure/retry model, payout reference, payout readiness, destination, reconciliation metadata, and retry modal; (7) Screen 7 — added provider-facing adjustment marker for refunded/adjusted earnings; (8) Screen 8 — added copy reference, transfer confirmation timestamp, and retry resolution history; (9) Screen 9 — added dispute resolution panel and expanded audit action filters; (10) aligned REQ-017-001/009 and Entities 1/2/5/6 with new screen behavior and audit events | Codex |
 | 2026-04-02 | 1.6 | Final decision alignment: (1) clarified that FR-018 owns affiliate management and commission calculation while FR-017 owns affiliate billing/payout execution; (2) confirmed MVP provider payout model is approval-first with automatic payout-day processing; (3) rerouted commission-adjustment references from FR-029 to FR-015; (4) corrected REQ-017-017 so Super Admin has full access rather than a stale secondary-approval role | Codex |
 | 2026-04-02 | 1.7 | Screen specification order cleanup: moved Financial Reporting Dashboard to Screen 1, shifted Provider Billing → Screen 2, Provider Payout Detail → Screen 3, Patient Billing → Screen 4, Patient Invoice Detail → Screen 4a, Refund Confirmation Modal → Screen 4b, Discount Usage Overview → Screen 5, and updated affected in-document references to match. Historical changelog entries before v1.7 retain the pre-renumber screen labels used at that time | Codex |
+| 2026-04-02 | 1.8 | Second completeness audit fixes (13 gaps): (1) Entity 5 action_type expanded — added "Status Overridden", "Note Added", "Installment Retry", "Bulk Approval", "Payout Unapproved", "Payout Voided"; Screen 9 Tab 2 filter synchronized; (2) Entity 3 — added next_retry_date attribute; (3) Screen 5 — added filter (status, type, date range), free-text search, and CSV export; (4) Screen 6 — added "Add Note" action and business rule for affiliate payouts; (5) Screen 6 — added formal Bulk Payout Toolbar and Bulk Affiliate Payout Confirmation Modal; added Select checkbox to data fields; (6) Screen 4/4a — added Send Reminder Confirmation Modal spec with reminder type auto-selection and FR-020 trigger rules; (7) Screen 2 — added formal Batch Approval Confirmation Modal with element table, re-authentication, and result summary states; (8) Screen 2/3 — added "Unapprove" action (Approved status, before payout day only) and "Void Statement" action (Pending Approval / Overdue only); added "Voided" to Status enums in Screens 2, 3, and Entity 2; Entity 2 gained voided_by_admin_id, voided_at, void_reason; (9) Edge Cases — added refund-after-payout scenario (provider deduction carried to next cycle, Screen 7 Adjustment Marker); (10) Removed duplicate FR-006 dependency entry; merged descriptions into single entry; (11) Screen 9 Dispute Resolution Panel "Target Payout Cycle" clarified as select dropdown of provider's upcoming cycles; (12) Screen 1 — added "Active Currency Alerts" KPI with business rule; (13) Screen 4 Override Status — added explicit re-authentication requirement consistent with module RBAC rule | Claude Code |
+| 2026-04-02 | 1.9 | Final screen-model alignment fixes: (1) Screen 3 — added `Payout Adjustments` table and business rules for refund-deduction/carry-forward line items after provider payout; (2) Screen 7 — expanded adjustment markers and net-earning rules to support post-payout refund deductions; (3) Screen 9 — made provider notification mandatory for `Add to Next Payout` resolutions; (4) Screen 9 and Entity 5 — synchronized affected entity types to include Installment, Booking, and Currency Alert consistently | Codex |
+| 2026-04-02 | 2.0 | Constitution and ownership alignment: refund control now follows documented justification + audit trail (matching the amended constitution); commission ownership clarified as FR-015 provider-specific override plus payout frequency, with FR-029 supplying the global default/snapshot policy; provider bank-detail ownership normalized to FR-032 Billing Settings; stale patient-dashboard invoice wording removed from dependencies | Codex |
+| 2026-04-02 | 2.1 | Reporting currency alignment: Screen 1 revenue dashboard now initializes from the FR-029 system default currency (seeded as USD for MVP), acceptance scenario examples updated to USD, and the FR-029 dependency note now documents this filter-source relationship | Codex |
+| 2026-04-02 | 2.2 | Screen ownership grouping correction: clarified tenant scope so Admin Platform covers Screens 1–6 and 9–10, limited the Provider Platform section to Screens 7–8 only, and inserted a dedicated admin investigation/audit subsection before Screens 9–10 to match their actual access rules | Codex |
+| 2026-04-02 | 2.3 | Screen renumbering alignment: moved the admin investigation/audit tools into contiguous admin numbering as Screens 7–8, shifted provider read-only payout screens to 9–10, updated cross-references and FR-032 shell dependency text, and normalized active-alert links to the new Currency Alert modal number. Historical changelog entries before v2.3 retain the pre-v2.3 labels used at that time | Codex |
+| 2026-04-02 | 2.4 | Status updated from Draft to ✅ Verified & Approved and approval metadata aligned to the verified-template pattern used by other approved FRs | Codex |
+| 2026-04-02 | 2.5 | Commission-source model realigned to implemented admin design: FR-029 again exposes provider-specific commission scope management alongside the global default, FR-015 remains the single-provider commission + payout-frequency surface, and all payout/reporting references now point to the shared effective commission configuration instead of the prior FR-015-only provider-specific split | Codex |
 
 ---
 
@@ -1693,9 +1797,9 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Finance Lead | [Name] | [Date] | [Status] |
+| Product Owner |  | 2026-04-02 | ✅ Approved |
+| Technical Lead |  | 2026-04-02 | ✅ Approved |
+| Finance Lead |  | 2026-04-02 | ✅ Approved |
 
 ---
 

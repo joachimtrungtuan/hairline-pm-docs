@@ -1061,10 +1061,11 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 - Admins MUST be able to view all transactions (deposits, final payments, refunds)
 - System MUST calculate provider payouts (total revenue - platform commission)
-- Admins MUST be able to process provider payouts on scheduled basis (bi-weekly or monthly)
+- Admins MUST be able to review and approve provider payout statements on scheduled basis (weekly, bi-weekly/2x a month, or monthly — per provider agreement)
+- System MUST auto-process approved provider payouts on payout day
 - System MUST generate invoices for providers
-- Admins MUST be able to create and manage discount codes
-- System MUST track discount code usage and ROI
+- Admins MUST be able to process affiliate payouts monthly using commission data from FR-018 / A-07
+- System MUST track discount code usage and ROI (discount creation and management owned by FR-019 / A-06: Discount & Promotion Management)
 - Admins MUST be able to view revenue reports by period, provider, country
 - System MUST support multi-currency reporting with conversions
 
@@ -1082,7 +1083,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - System MUST track patient sign-ups and bookings via affiliate codes
 - System MUST calculate affiliate commission (% of platform commission or fixed amount)
 - Affiliates MUST have access to dashboard showing referral count, revenue, commissions
-- Admins MUST be able to process affiliate payouts monthly
+- System MUST expose affiliate commission data and payout status to FR-017 / A-05 for monthly billing and payout execution
 - System MUST generate affiliate performance reports
 
 **Affiliate Features**:

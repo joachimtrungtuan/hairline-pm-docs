@@ -168,7 +168,7 @@ The Hairline Platform Constitution establishes the foundational principles, arch
 
 - PCI-DSS compliant (via Stripe)
 - No card data storage
-- Multi-person approval for refunds
+- Documented justification and audit trail for refunds
 - Locked currency conversion rates at booking
 
 ### Vulnerability Management

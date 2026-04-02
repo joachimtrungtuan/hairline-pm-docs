@@ -504,27 +504,37 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 
 **Purpose**: View and manage commission configuration and financial history. This tab is admin-only and not visible in FR-032.
 
+> **Note on screen label**: This tab appears under the heading **"Affiliate Pay Details"** in the current design screen. This is a legacy mislabeling — the correct scope is provider commission and payout schedule configuration. It does not relate to affiliates.
+
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
 |------------|------|----------|-------------|------------------|------------------------|
 | Commission Model | radio (display/edit) | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only (edit) |
 | Commission Value | number (display/edit) | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) | Admin only (edit) |
-| Current Configuration | display | N/A | Summary of active commission settings | Display format: "15% per transaction" or "£200 flat rate" | Display only |
-| Commission History | list | No | Audit log of past commission changes | Each entry: date, admin user, old value, new value, reason | Display only |
+| Payout Frequency | radio (display/edit) | Yes | How often this provider receives payouts. Period definitions: **Weekly** = Monday to Sunday; **2x a Month** = 1st–15th then 16th–last day of month; **Monthly** = full calendar month | One of: "Weekly", "2x a Month", "Monthly" | Admin only (edit) |
+| Commission Start Date | date (display/edit) | Yes | Date from which commission and payout cycle tracking begins for this provider; payout cycle offset is expressed as number of days from end of last cycle | Format: DD-MM-YYYY | Admin only (set on creation; editable with justification) |
+| Featured Provider | toggle (display/edit) | No | Marks this provider as featured in patient-facing listings | Default: Off | Admin only (edit) |
+| Current Configuration | display | N/A | Summary of active commission and payout settings | Display format: "15% per transaction · Paid Weekly (Mon–Sun)" | Display only |
+| Commission History | list | No | Audit log of past commission and payout setting changes | Each entry: date, admin user, old value, new value, reason | Display only |
 
 **Business Rules**:
 
-- Commission configuration displayed prominently with current model and value
-- Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
+- Commission configuration displayed prominently with current model, value, and payout frequency
+- Admin can edit commission settings and payout frequency (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
+- FR-029 / A-09 owns the central commission-settings screen (global default + provider-specific commission scopes) and the booking-time snapshot policy; this tab remains the single-provider management surface for provider-specific commission configuration and owns payout frequency used by FR-017
 - Commission changes take effect immediately for new transactions
-- All commission changes logged in history with timestamp, admin user, old/new values
-- Provider can view commission rate read-only via FR-032 (but not edit)
+- Payout frequency changes take effect from the next billing cycle — the current in-progress cycle is not affected
+- Changes made to provider-specific commission values here MUST stay synchronized with the provider-specific commission data shown in FR-029 Screen 5 for the same provider
+- All changes to commission and payout frequency logged in history with timestamp, admin user, old/new values
+- Provider can view payout frequency read-only via FR-032 (but not edit)
+- FR-017 reads the payout frequency set here to determine when to generate payout statements for this provider
 
 **Notes**:
 
-- This tab is admin-only; provider sees commission rate read-only in their dashboard (FR-032)
-- Commission changes require admin justification (logged in audit trail)
+- This tab is admin-only; provider sees commission rate and payout frequency read-only in their dashboard (FR-032)
+- Commission and payout frequency changes require admin justification (logged in audit trail)
+- Use FR-015 when the admin is working provider-by-provider; use FR-029 for central or bulk commission-scope administration
 
 ---
 
@@ -986,6 +996,8 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2025-12-07 | 1.1 | **Major alignment update with FR-032:** <br>• Added cross-module integration notes linking to FR-032 (Provider Dashboard Settings) in Executive Summary and Module Scope<br>• Removed all document expiration date fields and related workflows (documents are for record-keeping only)<br>• Removed all out-of-scope items: Save Draft functionality, Tier-based commission references, Document verification workflow (approve/reject)<br>• Aligned all profile fields with FR-032: Profile Picture (5MB, 200x200px min), Cover Image (10MB, 1920x300px), Bio/Description (500 chars, min 50), Languages (multi-select chips from FR-026), Awards (with issuer, description, year, image), Contact Phone, Location (City, Country), Website URL<br>• Clarified activation logic: only required fields block activation (First Name, Last Name, Email, Clinic Name, Bio min 50 chars, at least 1 Language); documents do NOT block activation<br>• Updated Success Criteria to remove verification/expiration references and focus on record-keeping approach<br>• Updated Business Workflows, Screen Specifications (Wizard Steps and Tabbed View), User Stories, Edge Cases, and Entity definitions<br>• Added Admin Editability Rules section distinguishing admin-only vs provider-editable fields (via FR-032)<br>• Updated document entity to include document_type, uploaded_by, soft delete fields<br>• **Added Seat Limit field** to Screen 2 Step 1 (Basic Information): Maximum team members (staff) capacity per provider, default 100, range 1-500, adjustable by admin. Aligns with FR-009 team management enforcement. Added to Business Rules (Rule 7), Entity definitions, Functional Requirements (REQ-015-009), and Edge Cases<br>• **Completely restructured Screen 3** to table format matching FR-032 structure with all 5 tabs: (1) Basic Information, (2) Languages, (3) Staff List, (4) Awards, (5) Reviews, plus admin-only tabs: (6) Documents, (7) Commission & Financials, (8) Activity Log. All fields now documented in table format with Admin/Provider editability clearly marked<br>• **Added provider onboarding workflow** to Main Flow: Secure password setup via one-time email link (expires 24 hours), first login prompts profile completion via FR-032, changes sync to admin view<br>• **Added activation email resend functionality** (Alternative Flow A1): Provider self-service resend via login page + Admin manual resend via Quick Actions button in Screen 3. Rate limited to 3 requests/hour, previous tokens invalidated, secure handling of expired links. Added to Edge Cases, Functional Requirements (REQ-015-006, REQ-015-011, REQ-015-015, REQ-015-016), and Entity definitions with activation_token fields<br>• **Enhanced User Story 3** with detailed suspension workflow scenarios including existing appointments handling, suspended login experience, and reactivation process<br>• **Removed redundant User Stories 5 & 6** (provider-side actions) as these are fully covered in FR-032 User Story 1 | Claude (AI Assistant) |
 | 2025-12-07 | 1.2 | **Major cross-module update - Document management redesign:** Completely restructured Tab 6: Documents to reflect new document management model. Removed "Admin-Only" designation. Providers now manage their own documents via FR-032 Tab 6 (upload, replace, delete); admin role shifted to oversight and supplementary uploads. Updated tab to display all documents with "Uploaded By" badge (Provider/Admin); Admin can view all documents, upload additional documents received externally (email, postal mail), and add notes, but cannot replace/delete provider-uploaded documents (only provider can via FR-032); Admin-uploaded documents show "Admin - [name]" badge and admin has full control over these. Added bidirectional document sync (FR-032 ↔ FR-015 within 1 minute); Updated Business Rules to clarify provider primary management vs. admin oversight model; Added sort/filter options, audit logging enhancements, and comprehensive use case notes. Aligns with FR-032 v1.2 which added full document management capabilities for providers | Claude (AI Assistant) |
 | 2025-12-08 | 1.3 | **Constitution & System PRD alignment update:** <br>• Updated REQ-015-015 to reference the platform-wide password policy from the Hairline Platform Constitution and shared authentication spec (minimum 12 characters, required character classes, bcrypt with minimum cost factor 12, not configurable per FR)<br>• Clarified that sensitive actions (Commission and Seat Limit changes, Commission editing) require admin re-authentication via password in MVP, and MUST transition to MFA-based re-authentication once the shared MFA stack from FR-026 / FR-031 is delivered (all MFA references in this FR are future, non-MVP behavior)<br>• Aligned high-level system behaviour with system-prd.md FR-015 by explicitly reflecting the record-keeping-only document model and Percentage/Flat Rate commission configuration (tier-based commissions deferred to a future FR) | Claude (AI Assistant) |
+| 2026-04-02 | 1.4 | Clarified ownership split with FR-029 and FR-017: FR-029 / A-09 remains owner of the global platform commission default and booking-time snapshot policy, while FR-015 / A-02 owns provider-specific commission overrides and payout frequency consumed by FR-017 payout workflows | Codex |
+| 2026-04-02 | 1.5 | Restored dual management for provider-specific commission settings: FR-015 remains the single-provider commission and payout-frequency screen, while FR-029 Screen 5 now also manages provider-specific commission scopes centrally; the two admin surfaces are documented as synchronized for the same provider commission data | Codex |
 
 ---
 
@@ -1002,4 +1014,4 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: system-prd.md FR-015 (lines 1013-1041)
-**Last Updated**: 2025-12-08
+**Last Updated**: 2026-04-02
