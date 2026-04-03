@@ -259,6 +259,18 @@ This folder contains documentation update reports and verification logs for the 
 
 - `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a single-table manual-testing tracker for all 15 missing mobile flows, with placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 
+### 2026-04-03/ (2 files)
+
+#### **FR-025 Design Layout Re-Verification**
+
+- `FR025_DESIGN_LAYOUT_VERIFICATION_2026-04-03.md` - Re-verified FR-025 Medical Questionnaire Management against 18 new admin layout files covering all 7 screens; 6/7 screens 🟢 GOOD+; S6 🟡 PARTIAL (Print Preview missing, non-critical); no required fields missing; 0 Critical UX issues; 13 UX Improvement + 5 UX Suggestion issues documented
+
+#### **FR-022 Screen Specifications Overhaul**
+
+*(See 2026-04-02 section for context — file dated 2026-04-03)*
+
+---
+
 ### 2026-04-02/ (9 files)
 
 #### **FR-017 Post-Verification Fixes (Round 2)**
@@ -367,6 +379,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-27**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a reusable manual-testing tracker for all 15 missing mobile flows with per-row placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 - **2026-03-30**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_REFRESH_2026-03-30.md` - Created a new dated baseline copy of the missing mobile flows manual-testing tracker for a fresh app retest round while preserving the March 27 version as history
 - **2026-04-02**: `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-02.md` - FR-008 provider layout verification for Screens 6-10; both provider travel flows are `🔴 BLOCKED` because Screen 6 lacks the required travel summary/status actions and Screen 10’s patient self-booked review is still off-spec with forbidden editing, misbound hotel data, and missing flight submitted states
+- **2026-04-03**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-04-03.md` - FR-025 admin layout re-verification (all 7 screens, 18 files); 6/7 🟢 GOOD+; S6 🟡 PARTIAL (Print Preview missing); no required fields missing; 0 Critical UX issues
 
 ### Workflow Corrections
 
@@ -412,6 +425,8 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-02**: `FR017_CONSTITUTION_AND_OWNERSHIP_ALIGNMENT_2026-04-02.md` - Constitution + ownership normalization pass: refund governance changed from mandatory dual approval to documented justification + audit trail, commission ownership split between FR-029 global defaults and FR-015 provider-specific overrides, and provider bank details normalized to FR-032 Billing Settings
 - **2026-04-02**: `FR017_STATUS_VERIFIED_2026-04-02.md` - FR-017 status transition: updated the PRD to ✅ Verified & Approved and aligned its approval metadata to the standard verified-template pattern
 - **2026-04-02**: `FR029_FR015_COMMISSION_DUAL_MANAGEMENT_2026-04-02.md` - Restored dual commission-management surfaces to match the implemented admin design: FR-029 again manages provider-specific commission scopes centrally, FR-015 remains the single-provider commission + payout-frequency screen, and FR-017 was updated to consume the shared effective commission configuration
+- **2026-04-03**: `FR022_SCREEN_SPECIFICATIONS_OVERHAUL_2026-04-03.md` - FR-022 Screen Specifications rewritten: three-tenant structure (Patient/Provider/Admin), 54-screen master reference table, Provider Platform screens added (PR-01–PR-06, previously missing), control behaviors mini-tables, maintenance convention note, system PRD FR-022 section updated with FR-022 as single source of truth
+- **2026-04-03**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-04-03.md` - FR-025 admin layout re-verification against 18 new layout files (all 7 admin screens covered); 6/7 screens GOOD+; S6 PARTIAL (Print Preview missing, non-critical); 0 critical field gaps; 13 UX Improvement + 5 UX Suggestion issues identified
 
 ### Design Specifications
 
@@ -448,4 +463,12 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 2, 2026
+### 2026-04-03/ (1 file)
+
+#### **FR-022 Screen Specifications Overhaul**
+
+- `FR022_SCREEN_SPECIFICATIONS_OVERHAUL_2026-04-03.md` - Comprehensive rewrite of FR-022 Screen Specifications: three-tenant structure (Patient/Provider/Admin), 54-screen master reference table (Module → FR → Screen), Provider Platform screens fully added (PR-01–PR-06, previously missing), control behaviors mini-tables for all screens, maintenance convention note, Executive Summary and Module Scope updated, Functional Requirements Summary expanded (REQ-022-033 through REQ-022-056), system PRD FR-022 section priority corrected (P2→P1 for Provider/Admin) and pointers added at inline filter references
+
+---
+
+**Last Updated**: April 3, 2026
