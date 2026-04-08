@@ -271,6 +271,14 @@ This folder contains documentation update reports and verification logs for the 
 
 ---
 
+### 2026-04-07/ (1 file)
+
+#### **Mobile App Testing Report Progress Update**
+
+- `MOBILE_APP_TESTING_REPORT_PROGRESS_UPDATE_2026-04-07.md` - Updated the April 6 patient mobile testing report and manual testing plan to reflect the current notification UI shell (bottom-nav entry point, empty state, visible search/filter/bulk actions) while keeping data-driven notification behavior blocked pending Firebase registration and backend delivery
+
+---
+
 ### 2026-04-02/ (9 files)
 
 #### **FR-017 Post-Verification Fixes (Round 2)**
@@ -358,6 +366,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-18**: `AUDIT_REPORT_STATUS_CORRECTIONS_2026-03-18.md` - Corrected the missing mobile flows layout audit report to distinguish proven defects from pattern deviations and ambiguous static-state findings
 - **2026-03-19**: `AUDIT_VERIFICATION_PROVIDER_2026-03-19.md` - Provider dashboard audit second-pass: 6 verdict corrections, 2 new P2 bugs (no self-revoke guard, no quote-edit status guard), totals updated
 - **2026-03-19**: `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Backend endpoint readiness audit for all 15 missing patient mobile flows against `main/hairline-backend`
+- **2026-04-07**: `MOBILE_APP_TESTING_REPORT_PROGRESS_UPDATE_2026-04-07.md` - April 6 patient mobile testing artifacts updated for notification coverage: bottom-nav entry point, empty state, visible search/filter/bulk actions recorded, while swipe/deep-link/data-driven behavior remains blocked pending Firebase registration and backend delivery
 
 ### Verification Reports
 
@@ -471,4 +480,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 3, 2026
+**Last Updated**: April 7, 2026
