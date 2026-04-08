@@ -86,6 +86,13 @@ This folder contains documentation update reports and verification logs for the 
 
 - `2026-02-05-cancel-inquiry-fr-updates.md` - Cancel inquiry feature updates
 
+### 2026-02-13/ (2 files)
+
+#### **Plane Automation Improvements & Secrets Scan**
+
+- `PLANE_API_IMPROVEMENTS_2026-02-13.md` - Summary of `plane-api-commands` skill/workflow improvements, including HTML cleanup, issue-update support, skip-parameter support, and `.env` sandbox handling notes
+- `SECRETS_SCAN_REPORT_2026-02-13.md` - Confirmed no hardcoded secrets under `local-docs/project-automation`; credential handling remained limited to environment files, placeholders, and non-secret resource identifiers
+
 ### 2026-02-27/ (1 file)
 
 #### **FR-010 Major Revision — Tabbed Display & Day-by-Day Model**
@@ -353,6 +360,14 @@ This folder contains documentation update reports and verification logs for the 
 
 ---
 
+### 2026-04-09/ (1 file)
+
+#### **Update Log Archive Reorganization**
+
+- `UPDATE_LOG_ARCHIVE_REORGANIZATION_2026-04-09.md` - Moved the misplaced February 13, 2026 documentation reports out of `local-docs/project-automation/logs/` into `update-logs/2026-02-13/`, standardized their filenames, and refreshed the update-log index
+
+---
+
 ## Quick Reference by Topic
 
 ### Documentation Updates
@@ -367,6 +382,10 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-19**: `AUDIT_VERIFICATION_PROVIDER_2026-03-19.md` - Provider dashboard audit second-pass: 6 verdict corrections, 2 new P2 bugs (no self-revoke guard, no quote-edit status guard), totals updated
 - **2026-03-19**: `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Backend endpoint readiness audit for all 15 missing patient mobile flows against `main/hairline-backend`
 - **2026-04-07**: `MOBILE_APP_TESTING_REPORT_PROGRESS_UPDATE_2026-04-07.md` - April 6 patient mobile testing artifacts updated for notification coverage: bottom-nav entry point, empty state, visible search/filter/bulk actions recorded, while swipe/deep-link/data-driven behavior remains blocked pending Firebase registration and backend delivery
+
+- **2026-02-13**: `PLANE_API_IMPROVEMENTS_2026-02-13.md` - `plane-api-commands` automation improvements: HTML cleanup, issue-update support, skip-parameter support, and sandbox-handling notes
+- **2026-02-13**: `SECRETS_SCAN_REPORT_2026-02-13.md` - Secrets scan confirming no hardcoded credentials under `local-docs/project-automation`
+- **2026-04-09**: `UPDATE_LOG_ARCHIVE_REORGANIZATION_2026-04-09.md` - Archive maintenance pass moving misplaced February 13 reports into the canonical `update-logs/2026-02-13/` bucket and standardizing their filenames
 
 ### Verification Reports
 
@@ -480,4 +499,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 7, 2026
+**Last Updated**: April 9, 2026
