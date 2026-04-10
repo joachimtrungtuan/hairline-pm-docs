@@ -1,0 +1,8 @@
+interface:
+  display_name: "Android Emulator QA"
+  short_description: "Automate Flutter Android app testing via emulator"
+  default_prompt: >
+    Run emulator-based QA for the Hairline Flutter Android app.
+    Use the built-in Test Android Apps skill if available,
+    otherwise follow SKILL.md using raw ADB commands.
+    Build: flutter build apk --release + adb uninstall com.samasu.hairline + adb install build/app/outputs/flutter-apk/app-release.apk (uninstall first, never use adb install -r).

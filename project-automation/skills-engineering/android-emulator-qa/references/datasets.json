@@ -1,0 +1,9 @@
+{
+  "_schema_version": "1.0",
+  "_instructions": "Test data catalogue for android-emulator-qa skill. Entries are added via the skill's dataset management workflow — do not edit manually. Each entry is scoped to one screen + scenario type. The 'file_inputs' field lists files that must be pushed to the device before the test step runs; each entry includes both a local_path (relative to the skill folder) and a device_path (destination on the Android device).",
+  "_asset_files": {
+    "assets/sample-hair-photo.jpg": "Default hair photo for inquiry creation and related screens. JPEG format.",
+    "assets/sample-passport.png": "Default passport scan for logistics/travel screens. PNG format."
+  },
+  "datasets": []
+}

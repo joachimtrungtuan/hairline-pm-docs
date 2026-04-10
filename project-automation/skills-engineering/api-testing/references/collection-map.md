@@ -125,7 +125,7 @@ This is the core business flow. Patient creates inquiry -> system distributes to
 
 ## Full Flow
 
-The "Full Flow" folder mirrors the complete patient journey end-to-end. Each sub-folder maps to a dashboard state. See [flow-guides.md](flow-guides.md) for step-by-step testing sequences.
+The "Full Flow" folder mirrors the complete patient journey end-to-end. Each sub-folder maps to a dashboard state. For multi-step flow testing sequences, use the `api-flow-testing` skill with registered flows from `api-flow-testing/references/flow-dictionary.md`.
 
 ### Sub-folders
 

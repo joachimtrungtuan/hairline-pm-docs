@@ -1,203 +1,235 @@
 ---
 name: api-testing
-description: Test Hairline API endpoints via Postman MCP during manual testing sessions. Use when the user needs to (1) investigate API issues — error codes, data mismatches, missing responses, (2) test a specific flow or endpoint, (3) push a flow forward by calling backend APIs manually, (4) check what data the server is returning for a given request. Triggers on phrases like "test API", "call endpoint", "check response", "investigate API issue", "run flow", "test the backend", "API testing", "Postman test", "what does the server return".
+description: Test a SINGLE Hairline API endpoint with comprehensive reporting. Use for: (1) calling one specific endpoint and getting a detailed result, (2) investigating an issue at a single API level, (3) testing a specific scenario — happy path, edge case, error case, auth-boundary, or cross-tenant. Triggers on: "test endpoint", "call this API", "check response for", "what does [endpoint] return", "test single call", "investigate this endpoint", "call [X] endpoint". Does NOT run multi-step flows — for flows, use api-flow-testing instead.
 ---
 
-# API Testing
+# API Testing — Single Endpoint
 
-Test Hairline backend endpoints via the Postman MCP to investigate issues and push flows forward during manual testing.
+Tests exactly one Hairline API endpoint per invocation. Returns a comprehensive report covering status, contract validation, state verification, anomalies, and backend cross-reference.
+
+## Step 0: Upfront Input Collection
+
+Ask ALL of the following before making any calls. Do not start execution until you have all answers.
+
+**1. Which endpoint?** (name, path, or description of what you want to hit)
+
+**2. Auth role?**
+- `patient` / `provider` / `admin` / `none`
+
+**3. Scenario type?**
+- `happy-path` — valid complete data, expect success
+- `edge-case` — boundary values, unusual but valid inputs (specify which)
+- `error-case` — invalid data, missing fields, business rule violations (specify which)
+- `auth-boundary` — wrong role, expired token, wrong profile_type (specify which)
+- `cross-tenant` — Patient A using Patient B's IDs; testing IDOR (specify which)
+
+**4. Test data:** After identifying the endpoint, run the test data selection workflow (see Test Data Management below) before asking anything else. Present the options to the user as part of this upfront phase.
+
+Do not proceed to execution until all four items are resolved.
+
+---
 
 ## Execution Model
 
-**Always spawn a subagent for any API call, HTTP request, or Postman MCP tool invocation.** Do not execute these directly in the main context.
+**Always spawn a subagent for any Postman MCP tool invocation or HTTP request.** Never execute these in the main context.
 
-Rationale:
-- Keeps response payloads out of the main context window
-- Uses a low-cost model for mechanical work, saving tokens
-
-Agent configuration:
-- **Claude**: use `haiku` model (pass `model: "haiku"` to the Agent tool)
-- **Other agents**: use the lowest available thinking-effort model
-
-What to delegate to the subagent:
-- All `runCollection`, `getCollectionRequest`, `getCollection`, `getCollectionFolder`, `getEnvironment` Postman MCP calls
-- Any direct HTTP request execution
-
-What to keep in the main context:
-- Planning, analysis, root-cause investigation, and final reporting (Steps 1, 4, 5)
+- Subagent model: `haiku`
+- Delegate to subagent: `runCollection`, `getCollectionRequest`, `getCollection`, `getCollectionFolder`, `getEnvironment`, and any direct HTTP calls
+- Keep in main context: planning, data selection, analysis, report writing
 
 **Pattern:**
-1. Main agent plans which endpoints to call and with what parameters
-2. Main agent spawns a subagent with a precise, self-contained prompt describing exactly what to call
-3. Subagent executes the calls and returns structured results (status, body, key fields)
-4. Main agent receives the summary and continues analysis
+1. Main agent resolves endpoint, auth, scenario, and test data
+2. Main agent spawns subagent with a precise, self-contained prompt (endpoint details, token, body, what to capture)
+3. Subagent executes and returns: status code, response headers, full response body, response time (ms)
+4. Main agent produces the full report
 
-## Workflow
+---
 
-### Step 1: Understand the request
+## Authentication
 
-Determine what the user needs:
+Every authenticated request requires a valid token. Login first using credentials from `local-docs/testing-plans/testing-credentials/`.
 
-- **Test a specific flow** (e.g., "test the quote creation flow") → Read [flow-guides.md](references/flow-guides.md) for step sequence
-- **Test a specific endpoint** (e.g., "call the login endpoint") → Read [collection-map.md](references/collection-map.md) for endpoint details
-- **Investigate an issue** (e.g., "quotes not showing up") → Identify which endpoints are involved, then test them
-
-### Step 2: Authenticate
-
-Every flow starts with login. Use credentials from `local-docs/testing-plans/testing-credentials/`:
-
-**Patient Login:**
-```json
+```
 POST {{HOST}}/auth/login
-{
-  "email": "<from patient-accounts.md>",
-  "password": "<from patient-accounts.md>",
-  "profile_type": "patient"
-}
+{ "email": "...", "password": "...", "profile_type": "patient|provider|admin" }
 ```
 
-**Provider Login:**
-```json
-POST {{HOST}}/auth/login
-{
-  "email": "<from provider-accounts.md>",
-  "password": "<from provider-accounts.md>",
-  "profile_type": "provider"
-}
-```
+Login test scripts auto-set `PATIENT_TOKEN`, `PATIENT_ID`, `PROVIDER_TOKEN`, `PROVIDER_ID` in the Postman environment.
 
-**Admin Login:**
-```json
-POST {{HOST}}/auth/login
-{
-  "email": "<admin email>",
-  "password": "<admin password>",
-  "profile_type": "admin"
-}
-```
-
-Use the Postman MCP `runCollection` tool with the Hairline environment to execute requests. The login test scripts auto-set `PATIENT_TOKEN`, `PATIENT_ID`, `PROVIDER_TOKEN`, `PROVIDER_ID` in the environment.
-
-**Connection details:**
+**Connection:**
 - Collection ID: `33112351-a879f780-945c-4d62-8a0a-6432b86bb066`
 - Environment ID: `33112351-abff0ede-b0ff-4e99-a7f1-aa27851b6656`
 
-### Step 3: Execute and record
+---
 
-For each endpoint call:
+## Test Data Management
 
-1. **Fetch the request details** from Postman using `getCollectionRequest` with `populate: true`
-2. **Review the request** — check URL, method, headers, body; fill in dynamic values (IDs, tokens)
-3. **Execute** via `runCollection` or guide the user to call it
-4. **Record the response** — capture full response body, status code, headers
-5. **Present a summary** to the user:
-   - Status code + message
-   - Key data points relevant to the investigation
-   - Any anomalies (unexpected nulls, wrong status, missing fields)
+Test data is stored in `references/datasets.json`. Each entry is scoped to a specific endpoint + scenario type.
 
-### Step 4: Analyze (for investigation tasks)
+### Selection workflow (run during Step 0)
 
-When the user reports an issue, follow this analysis pattern:
+1. Read `references/datasets.json`
+2. Filter entries by the target endpoint and scenario type
+3. Present findings to the user:
+   - **If matches found:** List them by name + description. Ask: reuse an existing one, or create a new one for variety?
+   - **If no matches:** Inform the user, then offer to add a new dataset (see Adding a new dataset below)
 
-**For error responses (4xx/5xx):**
-1. Check the HTTP status code meaning
-2. Read the error message in the response body
-3. Cross-reference with the backend controller — find the controller in `main/hairline-backend/app/Http/Controllers/` using the route from [collection-map.md](references/collection-map.md)
-4. Check validation rules in the corresponding Form Request
-5. Report: what went wrong, what input is expected, suggested fix
+### Adding a new dataset
 
-**For data mismatch / missing data:**
-1. Check the response structure against what the frontend/mobile expects
-2. Look at the Eloquent model relationships in `main/hairline-backend/app/Models/`
-3. Check if the data exists at all (call related endpoints to verify)
-4. Check if auth scope is correct (patient seeing provider-only data, etc.)
-5. Report: what data is missing/wrong, where the discrepancy originates
+When no matching data exists or the user wants a new one:
 
-**For empty or meaningless responses:**
-1. Verify the entity exists (call a GET endpoint with the ID)
-2. Check if the status/state is correct for the operation
-3. Verify the authenticated user has permission to see the data
-4. Report: why the response is empty and what prerequisites are missing
+1. Fetch the endpoint's request structure:
+   - First try Postman: `getCollectionRequest` with `populate: true`
+   - If not in Postman: read the Form Request class at `main/hairline-backend/app/Http/Requests/`
+2. Show the user the required fields, types, and validation rules
+3. Propose a dataset payload that complies with the structure and fits the chosen scenario type
+4. For edge/error/auth-boundary cases: propose data that deliberately triggers the target condition
+5. Wait for user confirmation or amendments
+6. On confirmation: append the new entry to `references/datasets.json` using the format below
 
-### Step 5: Report findings
+### Dataset entry format
 
-Present results in this format:
-
-```
-## API Test Result
-
-**Endpoint:** POST /auth/login
-**Status:** 200 OK | 401 Unauthorized | 422 Validation Error
-**Time:** (if available)
-
-### Response Summary
-- Key field 1: value
-- Key field 2: value
-
-### Issues Found (if any)
-- Issue description
-- Root cause (from backend code analysis)
-- Suggested action
-
-### Tokens/IDs Captured
-- PATIENT_TOKEN: Bearer eyJ...
-- PATIENT_ID: uuid-here
+```json
+{
+  "id": "inquiry-happy-001",
+  "endpoint": "POST /inquiries",
+  "scenario": "happy-path",
+  "description": "Standard inquiry with valid transplant area and hair photos",
+  "body": {
+    "transplant_area_id": "...",
+    "notes": "..."
+  },
+  "file_refs": ["assets/sample-hair-photo.jpg"],
+  "notes": "Requires active patient account. INQUIRY_ID will be captured."
+}
 ```
 
-When testing a multi-step flow, present a summary table at the end:
+### File uploads
+
+For endpoints requiring image or file uploads, use assets from the `assets/` folder:
+- `assets/sample-hair-photo.jpg` — default hair photo for inquiry creation
+- `assets/sample-passport.png` — default passport for logistics flow
+
+**If these files have not been populated yet:** warn the user and ask them to drop real JPG files into the `assets/` folder before running an upload-dependent test.
+
+---
+
+## Execution Steps
+
+### Step 1: Locate the endpoint
+
+1. Read [collection-map.md](references/collection-map.md) — search by keyword or path
+2. If not found: grep `main/hairline-backend/routes/api.php` for the operation
+3. If still not found: use Postman `getCollection` to browse the collection structure
+
+### Step 2: Fetch full request details
+
+Use `getCollectionRequest` with `populate: true` to retrieve URL, method, headers, body schema, and test scripts.
+
+### Step 3: Capture pre-call state (state-changing endpoints only)
+
+For endpoints that change entity status (create, update, accept, confirm, start, complete):
+- Make a GET call first to capture current state of the relevant entity
+- Record key field values (especially status fields) before the mutation
+
+### Step 4: Execute
+
+Spawn subagent. Provide: full endpoint details, auth token, request body from selected dataset, any dynamic values (IDs from context, env variables).
+
+Subagent must return: HTTP status code, response headers (especially Content-Type), full response body, response time in ms.
+
+### Step 5: Produce the report
 
 ```
-| # | Endpoint | Status | Result |
-|---|----------|--------|--------|
-| 1 | Patient Login | 200 | Token captured |
-| 2 | Create Inquiry | 201 | Inquiry ID: xxx |
-| 3 | Verify Distribution | 200 | 2 providers matched |
+## API Call Report — [METHOD] [endpoint]
+
+**Scenario:** [scenario type]
+**Dataset used:** [dataset id or "ad-hoc"]
+
+### Request
+- Method + URL: [value]
+- Auth: [role] ([token prefix e.g. Bearer eyJ...])
+- Payload: [body sent]
+
+### Response
+- Status: [actual] (expected: [expected]) ✓/✗
+- Time: [N]ms
+- Body: [full body or summary]
+
+### Contract Validation
+- [✓/✗] [field] — expected [type/value] → got [actual]
+- ...
+
+### State Verification
+- Before: [state of entity before call, or N/A]
+- After: [state of entity after call]
+
+### Artifacts Captured
+- [TOKEN_NAME / ID_NAME]: [value] — available for downstream use
+- ...
+
+### Anomalies
+- [Unexpected nulls, wrong types, missing fields, wrong status codes]
+
+### Backend Reference
+- Route: [HTTP method + path]
+- Controller: [ClassName@method]
+- Relevant note: [brief note if investigation is warranted]
+
+### Suggested Next Steps
+- [Actionable items based on findings]
 ```
 
-## Ad-Hoc Requests
+### Step 6: Backend analysis (errors and anomalies only)
 
-The predefined flows in [flow-guides.md](references/flow-guides.md) cover the main journeys but are not exhaustive. When the user has an ad-hoc request that doesn't match a predefined flow:
+**4xx/5xx responses:**
+1. Read the error message in the response body
+2. Find the controller at `main/hairline-backend/app/Http/Controllers/`
+3. Read the Form Request validation rules
+4. Report: what failed, what valid input looks like, suggested fix
 
-1. **Listen to the user's goal** — what are they trying to achieve or investigate?
-2. **Discover endpoints dynamically** — use the collection map, backend routes, and Postman MCP to find relevant endpoints
-3. **Build a custom sequence** — chain the right endpoints together on the fly
-4. **Apply the same record-and-analyze pattern** from Steps 3-5 above
+**Data mismatch or missing fields:**
+1. Check Eloquent model relationships at `main/hairline-backend/app/Models/`
+2. Verify auth scope (patient accessing provider-only data, etc.)
+3. Report: what is wrong and where the discrepancy originates
 
-Examples of ad-hoc requests:
-- "Check if this patient has any active discounts" → find discount endpoints, call with patient ID
-- "Why is this provider not receiving inquiries?" → check provider profile, distribution config, inquiry matching
-- "Manually change this quote to confirmed status" → find the status update endpoint, call with correct params
-- "What does the aftercare data look like for quote X?" → call aftercare detail endpoints with the quote ID
-- "Test this new endpoint that was just deployed" → get the route from the backend code, construct the request manually
+---
 
-For truly novel endpoints not in the Postman collection yet, construct the request from the backend route definition in `main/hairline-backend/routes/api.php` and the corresponding controller.
+## Multi-Tenant Scenario Notes
+
+Hairline has three distinct roles (Patient, Provider, Admin) each with its own permission boundary. For auth-boundary and cross-tenant scenario types, use these patterns:
+
+| Scenario | What to do |
+|----------|-----------|
+| `auth-boundary: wrong role` | Use a Provider token on a Patient-only endpoint; expect 403 |
+| `auth-boundary: no token` | Omit Authorization header; expect 401 |
+| `auth-boundary: wrong profile_type` | Login with correct creds but wrong profile_type; expect 401/403 |
+| `cross-tenant: IDOR` | Use Patient A's token but supply Patient B's resource ID; expect 403 or 404 |
+| `cross-tenant: provider scope` | Use Provider A's token on Provider B's inquiry; expect 403 |
+
+Always document the expected outcome in the report's Contract Validation section when running these scenarios.
+
+---
 
 ## Endpoint Discovery
 
-When the user describes a scenario but doesn't know which endpoint to use:
+When the user describes a scenario but doesn't know which endpoint to call:
 
 1. Read [collection-map.md](references/collection-map.md) — search by keyword
-2. Search the backend routes in `main/hairline-backend/routes/api.php` — grep for the operation
-3. Check the Postman collection structure using `getCollection` MCP tool
+2. Grep `main/hairline-backend/routes/api.php` for the operation name or resource
+3. Check Postman collection structure with `getCollection`
 4. Cross-reference the controller to confirm the endpoint does what the user expects
 
-## Browsing Postman Requests
+For endpoints not yet in the Postman collection: construct the request from the route definition in `api.php` and the corresponding controller method.
 
-Use these Postman MCP tools:
-
-| Tool | When |
-|------|------|
-| `getCollection` | Browse collection structure, find request IDs |
-| `getCollectionRequest` (with `populate: true`) | Get full request details (URL, body, headers, test scripts) |
-| `getCollectionFolder` | Browse requests within a specific folder |
-| `getEnvironment` | Check current environment variable values |
-| `runCollection` | Execute requests against the live server |
+---
 
 ## References
 
-- [collection-map.md](references/collection-map.md) — Full endpoint-to-backend-route mapping for the entire Hairline Mobile collection
-- [flow-guides.md](references/flow-guides.md) — 13 step-by-step testing flows covering the complete patient journey
+- [collection-map.md](references/collection-map.md) — Full endpoint-to-backend-route mapping
+- [datasets.json](references/datasets.json) — Test data catalogue
 - Test credentials: `local-docs/testing-plans/testing-credentials/` (patient-accounts.md, provider-accounts.md)
 - Backend routes: `main/hairline-backend/routes/api.php`
 - Controllers: `main/hairline-backend/app/Http/Controllers/`
 - Models: `main/hairline-backend/app/Models/`
+- Form Requests: `main/hairline-backend/app/Http/Requests/`

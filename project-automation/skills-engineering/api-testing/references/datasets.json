@@ -1,0 +1,9 @@
+{
+  "_schema_version": "1.0",
+  "_instructions": "Test data catalogue for the api-testing skill. Entries are added via the skill's dataset management workflow — do not edit manually. Each entry is scoped to one endpoint and one scenario type. The 'file_refs' field points to files in the api-testing/assets/ folder.",
+  "_asset_files": {
+    "assets/sample-hair-photo.jpg": "Default hair photo for inquiry creation and related endpoints. JPEG format.",
+    "assets/sample-passport.png": "Default passport scan for logistics flow (Create/Update Passport Details). PNG format."
+  },
+  "datasets": []
+}
