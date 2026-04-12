@@ -10,14 +10,20 @@
 
 ## Executive Summary
 
-Search and filtering capabilities are critical for enabling users to efficiently navigate large datasets across the Hairline platform. This feature provides patients with tools to discover and evaluate providers based on relevant criteria, while admins gain powerful oversight capabilities to search, filter, and manage both patient and provider records.
+Search and filtering capabilities are critical for enabling users to efficiently navigate large datasets across the Hairline platform. This feature provides context-specific search and filter implementations across all three tenants.
 
-The feature spans multiple tenants with context-specific implementations:
+The feature spans all three tenants:
 
-- **Patient Platform**: Provider discovery and selection based on location, ratings, pricing, and credentials
-- **Admin Platform**: Comprehensive patient and provider search with advanced filtering for oversight and support
+- **Patient Platform**: Provider discovery during quote request flow; booking history navigation; messaging inbox; help center content browsing; support ticket filtering
+- **Provider Platform**: Inquiry and quote list management; treatment and aftercare case navigation; analytics filtering; package/settings catalog management; support case tracking
+- **Admin Platform**: Comprehensive patient, provider, and transaction search with advanced filtering across all operational modules
 
-This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - MVP)**, as these are essential for platform operations and oversight. Patient-facing provider search is designated as **P2 (Enhanced)** and will be implemented post-MVP once the provider network is established and there's sufficient data to make filtering meaningful.
+**Priority breakdown**:
+
+- **P1 (MVP)**: Provider Platform (all modules PR-01 through PR-06) and Admin Platform (all modules A-01 through A-10) — these are essential for platform operations and day-to-day provider and admin workflows
+- **P2 (Post-MVP)**: Patient-facing provider search (P-02 provider selection) — deferred until provider network is established and sufficient data makes filtering meaningful. All other Patient Platform list screens (bookings, messages, help center, support tickets) are P1.
+
+> **Maintenance Convention**: This FR is the single source of truth for all search and filter criteria across the platform. When any source FR updates its filter or search field list, this document must be updated accordingly. See the Master Reference Table in the Screen Specifications section for the full inventory.
 
 ---
 
@@ -25,28 +31,26 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-02)**: Provider search and filtering for quote request submission (P2 - Enhanced)
-- **Provider Platform (PR-02, PR-03, PR-04, PR-05, PR-06)**: Search and filtering across all provider workflows - inquiries, quotes, treatments, aftercare cases, financial records, and settings (P1 - MVP)
-- **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10)**: Comprehensive search and filtering across all admin operations - patient management, provider management, aftercare oversight, billing, discounts, affiliates, analytics, system settings, and communication monitoring (P1 - MVP)
+- **Patient Platform (P-02, P-03, P-06, P-08)**: Provider search for quote request (P2); booking list, messages inbox, help center, and support ticket filtering (P1 - MVP)
+- **Provider Platform (PR-01, PR-02, PR-03, PR-04, PR-05, PR-06)**: Search and filtering across all provider workflows — team directory, inquiries, quotes, treatment cases, aftercare cases, analytics, packages, reviews, and support cases (P1 - MVP)
+- **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10)**: Comprehensive search and filtering across all admin operations — patient management, provider management, aftercare oversight, billing, affiliates, analytics, system settings, help centre, and communication monitoring (P1 - MVP)
 - **Shared Services**: None (search logic implemented within each tenant's backend)
 
 ### Multi-Tenant Breakdown
 
-**Patient Platform (P-02)** [P2 - Post-MVP]:
+**Patient Platform** [Mixed Priority]:
 
-- Search providers by name, location, specialty
-- Filter providers by country, city, rating, price range, experience
-- View provider profiles with credentials, reviews, and pricing
-- Select providers for quote request submission
-- Autocomplete for location searches
+- **P2 — Post-MVP**: Search providers by name, location, specialty; filter by country, rating, price range, experience (P-02 quote request flow)
+- **P1 — MVP**: Filter booking list by status, date, treatment type, payment status (P-03); search and filter messages inbox by provider/content and read status (P-06); search help center content; filter support tickets by status (P-08)
 
-**Provider Platform (PR-02, PR-03, PR-04, PR-05, PR-06)** [P1 - MVP]:
+**Provider Platform (PR-01, PR-02, PR-03, PR-04, PR-05, PR-06)** [P1 - MVP]:
 
-- **Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient details, location, date range, status, medical alerts; filter quotes by status, amount, treatment type
-- **Treatment Execution (PR-03)**: Search and filter treatment cases by patient, date, clinician, status, graft count
-- **Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient, milestone status, risk level, completion rate
-- **Financial Management (PR-05)**: Search and filter financial records, reports, payouts by date range, amount, status, transaction type
-- **Profile & Settings (PR-06)**: Search and filter treatment catalogs, packages, pricing by availability, type, date range
+- **Team Management (PR-01)**: Search and filter team directory by name, role, status; filter activity log by date and action type; filter work queue by status and priority
+- **Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient ID, name, concern, date, alerts, location; search and filter quotes by status, concern, location, alerts
+- **Treatment Execution (PR-03)**: Search and filter treatment cases by patient ID, name, booking reference; filter by date and clinician
+- **Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient; filter by milestone, status, date, specialist
+- **Financial Management (PR-05)**: Filter analytics dashboard by date range and treatment type
+- **Profile & Settings (PR-06)**: Search and filter package list by name and type; filter reviews by rating; search and filter support cases by case ID, keywords, status, type, and date
 
 **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10)** [P1 - MVP]:
 
@@ -225,159 +229,1387 @@ This PRD prioritizes the **Admin Platform search & filtering capabilities (P1 - 
 
 ## Screen Specifications
 
-### Screen 1: Admin Patient Search & Filter (A-01)
-
-**Purpose**: Enable admins to search and filter patient records for support, oversight, and operations
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Input | text | No | Global search across name, email, phone, patient ID | Max 100 chars, alphanumeric + @.+- |
-| Status Filter | multi-select dropdown | No | Filter by patient journey stage | Options: All, Inquiry, Quoted, Scheduled, In Progress, Aftercare, Complete |
-| Location Filter | select dropdown | No | Filter by patient country | Options: All, [country list from DB] |
-| Registration Date Range | date range picker | No | Filter by account creation date | Start date ≤ End date, Max 2 years range |
-| Treatment Type Filter | select dropdown | No | Filter by requested treatment | Options: All, Hair Transplant, Beard Transplant, Both |
-| Results Display | table/list | - | Shows matching patients | Paginated, 25 results per page |
-| Export Button | button | - | Export results to CSV/Excel | - |
-
-**Business Rules**:
-
-- Search is performed in real-time with debounce (500ms delay to avoid excessive queries)
-- Search queries patient name (full or partial), email, phone number, and patient ID (HPID format)
-- Filters are applied cumulatively (AND logic - all criteria must match)
-- Results display patient ID, name (or anonymized name if pre-payment), status, location, last activity date
-- Clicking a patient row opens full patient detail view
-- Export includes all fields visible in results table plus additional metadata
-- Search results automatically refresh when filters change
-- Admin can clear all filters with "Reset" button
-
-**Notes**:
-
-- Use server-side search to avoid loading entire patient database to client
-- Implement pagination to handle large result sets efficiently
-- Consider caching recent searches for better performance
-- Display loading indicator during search execution
-- Show result count: "Showing 1-25 of 347 results"
+> **Maintenance Convention**: This section is the **single source of truth** for all search and filter criteria across the Hairline platform. Whenever a source FR is updated — adding, removing, or renaming search fields or filter criteria — the relevant screen entry below **must** be updated to reflect the change. This ensures FR-022 remains the definitive reference for all search and filtering behavior platform-wide. The same living-document protocol applies to FR-020 for notification events: when that catalog changes, FR-020 is updated; when any list screen's filters change, FR-022 is updated.
 
 ---
 
-### Screen 2: Admin Provider Search & Filter (A-02)
+### Master Reference Table
 
-**Purpose**: Enable admins to search and filter provider records for onboarding, oversight, and billing
+The table below maps every platform screen that requires search and/or filter functionality, organized by tenant, module, and FR. Use screen codes (e.g., `P-02-001`) to navigate to the detailed spec below.
 
-**Data Fields**:
+| Tenant | Module | FR | Screen Name | Screen Code | Search | Filter | Priority |
+|--------|--------|----|-------------|-------------|--------|--------|----------|
+| Patient | P-02 | FR-003 | Provider Selection | P-02-001 | ✓ | ✓ | P2 |
+| Patient | P-02 | FR-005 | Quote Comparison List | P-02-002 | — | ✓ | P1 |
+| Patient | P-03 | FR-006 | Patient Bookings List | P-03-001 | ✓ | ✓ | P1 |
+| Patient | P-06 | FR-012 | Patient Messages Inbox | P-06-001 | ✓ | ✓ | P1 |
+| Patient | P-08 | FR-035 | Help Center | P-08-001 | ✓ | ✓ | P1 |
+| Patient | P-08 | FR-035 | My Support Tickets | P-08-002 | — | ✓ | P1 |
+| Provider | PR-01 | FR-009 | Team Directory | PR-01-001 | ✓ | ✓ | P1 |
+| Provider | PR-01 | FR-009 | Provider Activity Log | PR-01-002 | — | ✓ | P1 |
+| Provider | PR-01 | FR-009 | Work Queue | PR-01-003 | — | ✓ | P1 |
+| Provider | PR-02 | FR-003 | Provider Inquiry List | PR-02-001 | ✓ | ✓ | P1 |
+| Provider | PR-02 | FR-004 | Provider Quote List | PR-02-002 | ✓ | ✓ | P1 |
+| Provider | PR-03 | FR-010 | In Progress Cases | PR-03-001 | ✓ | ✓ | P1 |
+| Provider | PR-04 | FR-011 | Aftercare Cases List | PR-04-001 | ✓ | ✓ | P1 |
+| Provider | PR-05 | FR-014 | Provider Analytics Dashboard | PR-05-001 | — | ✓ | P1 |
+| Provider | PR-06 | FR-024 | Provider Package List | PR-06-001 | ✓ | ✓ | P1 |
+| Provider | PR-06 | FR-032 | Reviews Tab | PR-06-002 | — | ✓ | P1 |
+| Provider | PR-06 | FR-032 | My Support Cases | PR-06-003 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-003 | Global Inquiry Table | A-01-001 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-004 | Global Quote Table | A-01-002 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-005 | Quote Acceptance Table | A-01-003 | — | ✓ | P1 |
+| Admin | A-01 | FR-006 | Admin Bookings Table | A-01-004 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-007 | Patient Payment Progress Dashboard | A-01-005 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-013 | Review Management Dashboard | A-01-006 | — | ✓ | P1 |
+| Admin | A-01 | FR-016 | Patient Management List | A-01-007 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-016 | Admin Actions Audit Log | A-01-008 | ✓ | ✓ | P1 |
+| Admin | A-01 | FR-016 | Pending Data Requests | A-01-009 | ✓ | — | P1 |
+| Admin | A-02 | FR-015 | Provider Management List | A-02-001 | ✓ | ✓ | P1 |
+| Admin | A-02 | FR-015 | Provider Reviews Tab | A-02-002 | ✓ | ✓ | P1 |
+| Admin | A-02 | FR-015 | Provider Documents List | A-02-003 | — | ✓ | P1 |
+| Admin | A-03 | FR-011 | Admin Aftercare Cases List | A-03-001 | ✓ | ✓ | P1 |
+| Admin | A-05 | FR-007b | Installment Plans List | A-05-001 | — | ✓ | P1 |
+| Admin | A-05 | FR-017 | Patient Billing Invoices | A-05-002 | ✓ | ✓ | P1 |
+| Admin | A-05 | FR-017 | Transaction Search | A-05-003 | ✓ | ✓ | P1 |
+| Admin | A-05 | FR-017 | Billing Audit Log | A-05-004 | — | ✓ | P1 |
+| Admin | A-05 | FR-018 | Affiliate Payout History | A-05-005 | ✓ | ✓ | P1 |
+| Admin | A-06 | FR-019 | Discount Code List | A-06-001 | ⚠ Gap | ⚠ Gap | — |
+| Admin | A-07 | FR-018 | Affiliate Management List | A-07-001 | ✓ | ✓ | P1 |
+| Admin | A-08 | FR-014 | Analytics Reports Dashboard | A-08-001 | — | ✓ | P1 |
+| Admin | A-09 | FR-024 | Admin Treatment Catalog | A-09-001 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-025 | Questionnaire Catalog | A-09-002 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-027 | Legal Documents List | A-09-003 | — | ✓ | P1 |
+| Admin | A-09 | FR-027 | User Acceptance List | A-09-004 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-029 | Provider Commission Search | A-09-005 | ✓ | — | P1 |
+| Admin | A-09 | FR-029 | Currency Configuration | A-09-006 | ✓ | — | P1 |
+| Admin | A-09 | FR-030 | Notification Rules Dashboard | A-09-007 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-031 | Admin Users List | A-09-008 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-031 | Roles & Permissions | A-09-009 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-031 | Admin Activity Audit Trail | A-09-010 | — | ✓ | P1 |
+| Admin | A-09 | FR-033 | FAQ Management | A-09-011 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-033 | Article Management | A-09-012 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-033 | Resource Management | A-09-013 | ✓ | ✓ | P1 |
+| Admin | A-09 | FR-033 | Video Management | A-09-014 | ✓ | ✓ | P1 |
+| Admin | A-10 | FR-012 | Communication Monitoring Center | A-10-001 | ✓ | ✓ | P1 |
+| Admin | A-10 | FR-034 | Support Center Dashboard | A-10-002 | ✓ | ✓ | P1 |
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Input | text | No | Global search across clinic name, location, credentials | Max 100 chars, alphanumeric + .,- |
-| Status Filter | multi-select dropdown | No | Filter by provider account status | Options: All, Active, Suspended, Pending Onboarding |
-| Location Filter | select dropdown | No | Filter by provider country | Options: All, [country list from DB] |
-| Specialty Filter | multi-select dropdown | No | Filter by treatment specialties | Options: All, FUE, FUT, DHI, Sapphire FUE, etc. |
-| Experience Filter | range slider | No | Filter by years in practice | Range: 0-40 years |
-| Rating Filter | range slider | No | Filter by average patient rating | Range: 0-5 stars, 0.5 increments |
-| Results Display | table/list | - | Shows matching providers | Paginated, 25 results per page |
-| Export Button | button | - | Export results to CSV/Excel | - |
-
-**Business Rules**:
-
-- Search is performed in real-time with debounce (500ms delay)
-- Search queries clinic name, city, country, certification names, staff names
-- Filters are applied cumulatively (AND logic)
-- Results display clinic name, location, status, rating, active patients, total procedures
-- Clicking a provider row opens full provider detail view
-- Export includes all fields visible in results table plus additional metadata
-- Search results automatically refresh when filters change
-- Admin can clear all filters with "Reset" button
-
-**Notes**:
-
-- Server-side search required for performance
-- Implement pagination for large result sets
-- Display loading indicator during search
-- Show result count and current page
-- Consider adding "Featured Provider" badge for admin-curated providers
-
----
-
-### Screen 3: Patient Provider Search (Mobile) [P2 - Post-MVP]
-
-**Purpose**: Enable patients to discover and select providers for quote request
-
-**Data Fields**:
-
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Country Selection | multi-select chips | Yes | Select destination countries | Max 10 countries |
-| Search Input | text | No | Search providers by name or location | Max 50 chars |
-| Sort By | dropdown | No | Sort results by criteria | Options: Recommended, Rating, Price (Low-High), Experience |
-| Rating Filter | star selector | No | Minimum rating filter | Options: All, 4+, 4.5+ |
-| Price Range Filter | dual slider | No | Filter by starting price range | Currency-specific, patient's local currency |
-| Experience Filter | checkbox group | No | Filter by years of experience | Options: All, 5+ years, 10+ years, 15+ years |
-| Results Display | card list | - | Shows matching providers | Scroll pagination, 10 results per load |
-| Provider Selection | checkbox | - | Select providers for quote request | Max 5 selections |
-
-**Business Rules**:
-
-- Country selection is required before provider search is available
-- Search defaults to showing all providers in selected countries, sorted by "Recommended"
-- "Recommended" sort prioritizes admin-featured providers + high ratings + fast response time
-- Filters are applied cumulatively (AND logic)
-- Results display provider card with: name, location, rating, review count, starting price, before/after photo
-- Tapping provider card opens provider detail view
-- Patient can select up to 5 providers for quote request
-- Selected providers displayed at bottom of screen with "Continue to Quote Request" button
-- Search is performed on backend, results delivered in pages of 10
-
-**Notes**:
-
-- Mobile-optimized UI with touch-friendly controls
-- Implement infinite scroll for results (load next 10 on scroll)
-- Cache search results to avoid redundant queries
-- Display loading skeleton while fetching results
-- Show "No providers available" message if country has no active providers
+> **⚠ A-06 Gap**: FR-019 (Promotions & Discounts) does not currently define a filterable Discount Code List screen. FR-022 module scope references A-06 as requiring search and filter for discount codes. When FR-019 is updated to add a Discount Code List screen, screen A-06-001 criteria must be defined in FR-019 and added here.
 
 ---
 
-### Screen 4: Patient Provider Profile View [P2 - Post-MVP]
+### Control Behavior Standards
 
-**Purpose**: Display comprehensive provider information for patient evaluation
+The states below apply uniformly to every screen in this document. Individual screen entries list only the field/filter tables. Any screen-specific deviation is noted inline under that screen.
 
-**Data Fields**:
+| State | View | Trigger | UI Behavior | System Behavior | Visual Indicator |
+|-------|------|---------|-------------|-----------------|------------------|
+| Search Inactive | Search | Default; no input in search field | Placeholder text shown; full default list visible | No query fired; list displays default results | Dimmed placeholder text; neutral input border |
+| Search Active | Search | User types in search field | Typed text visible; clear (×) button appears | Debounced query fires (300–500ms per screen spec); list filters to matching results | Active input border; clear (×) button visible |
+| Filter Inactive | Filter | Default; no filters applied | Filter button in neutral state; no filter chips visible | Default query runs; full result set shown | Neutral filter icon; no chips |
+| Filter Active | Filter | One or more filter controls changed from default | Active filter chips shown below filter bar; filter button highlighted | AND-logic applied across all active filters; list narrows; result count updates | Highlighted filter icon; active chips visible |
+| Reset Filter | Filter | User taps "Clear Filters" / "Reset" / selects default option | All filter controls return to their default values; chips cleared | All filter parameters cleared; default result set restored | Chips removed; filter icon returns to neutral |
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Provider Name | text (display) | - | Clinic name | - |
-| Location | text (display) | - | City, Country | - |
-| Rating | star display | - | Average rating (1-5 stars) | - |
-| Review Count | text (display) | - | Number of verified reviews | - |
-| Starting Price | text (display) | - | Lowest treatment price | Currency-based on patient location |
-| Years of Experience | text (display) | - | Years in practice | - |
-| Specialties | chip display | - | Treatment types offered | - |
-| Certifications | list display | - | Medical licenses and certifications | - |
-| Staff Profiles | card carousel | - | Photos and credentials of surgeons | - |
-| Before/After Gallery | image carousel | - | Patient results (anonymized) | - |
-| Patient Reviews | list | - | Verified patient reviews with ratings | - |
-| Facility Photos | image carousel | - | Clinic facility images | - |
-| Select Provider Button | button | - | Add provider to quote request | - |
+---
 
-**Business Rules**:
+### 1. Patient Platform Screens
 
-- All information displayed is provider-submitted and admin-verified
-- Before/after photos must be anonymized (no patient faces unless consented)
-- Reviews are verified (only patients who completed treatment can review)
-- Provider can only be selected if patient hasn't reached max 5 selections
-- If provider already selected, button shows "Selected" with checkmark
-- Provider profile includes "About Us" section with clinic description
-- Staff profiles show specialties, years of experience, and certifications
+---
 
-**Notes**:
+#### Module P-02 — Quote Request & Management
 
-- Implement image gallery with swipe gestures
-- Load images lazily to improve performance
-- Show "Featured Provider" badge if admin-curated
-- Display "Fast Response" badge if provider has <24hr average quote response time
-- Allow patient to tap "Read More" on long reviews to expand
+##### FR-003 Inquiry Submission
+
+---
+
+###### Screen P-02-001: Provider Selection [P2 — Post-MVP]
+
+**Purpose**: Patient searches for and selects providers during the quote request flow.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Max Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Provider name / keyword | text | "Search providers…" | 500ms | 50 chars | Case-insensitive; matches provider name and specialty tags |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Country / Destination | Multi-select chips | Patient's previously selected destination countries | All selected countries | AND within selection |
+| Rating | Star selector | All, 4+ stars, 4.5+ stars | All | Min threshold |
+| Specialty | Dropdown | Hair Transplant, Beard Transplant, Both | All | Exact match |
+
+---
+
+##### FR-005 Quote Comparison & Acceptance
+
+---
+
+###### Screen P-02-002: Quote Comparison List [P1 — MVP]
+
+**Purpose**: Patient sorts and filters received quotes for comparison before acceptance.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering and sorting only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Sort By | Dropdown | Price (Low–High), Price (High–Low), Graft Count, Rating, Quote Date | Quote Date (most recent) | Single selection |
+| Date Range | Filter chips | Patient's submitted date ranges | All | Narrows to quotes covering that range |
+
+---
+
+#### Module P-03 — Booking & Scheduling
+
+##### FR-006 Booking & Scheduling
+
+---
+
+###### Screen P-03-001: Patient Bookings List [P1 — MVP]
+
+**Purpose**: Patient views and navigates their booking history with search and filter capabilities.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Max Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Booking reference | text | "Search by booking reference…" | 500ms | 50 chars | Exact or partial match on booking reference code |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select dropdown | All, Pending Payment, Confirmed, In Progress, Completed, Cancelled | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by booking date |
+| Treatment Type | Dropdown | All, Hair Transplant, Beard Transplant, Both | All | Exact match |
+| Payment Status | Dropdown | All, Unpaid, Deposit Paid, Fully Paid, Overdue | All | Exact match |
+
+---
+
+#### Module P-06 — Profile & Settings (Messaging)
+
+##### FR-012 Secure Messaging
+
+---
+
+###### Screen P-06-001: Patient Messages Inbox [P1 — MVP]
+
+**Purpose**: Patient searches and filters their conversation inbox to find specific messages or providers.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Min Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Provider name / message content | text | "Search messages…" | 300ms | 2 chars | Searches across provider name and message body |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Read Status | Segmented control / tabs | All, Unread, Read | All | Single selection |
+
+---
+
+#### Module P-08 — Help & Support
+
+##### FR-035 Patient Help & Support
+
+---
+
+###### Screen P-08-001: Help Center [P1 — MVP]
+
+**Purpose**: Patient searches for help articles and browses content by type.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Help content search | text | "Search help articles…" | 300ms | Full-text search across all patient-audience FAQs, articles, resources, and videos; auto-suggests results while typing |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Content Type | Segmented chips / cards | All, FAQs, Articles, Resources, Videos | All | Single selection |
+| Article Subtype | Filter chips (conditional) | All, Tutorial Guides, Troubleshooting Tips | All | Shown only when "Articles" type is selected |
+
+---
+
+###### Screen P-08-002: My Support Tickets [P1 — MVP]
+
+**Purpose**: Patient filters their support ticket list by status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Segmented chips | All, Open, In Progress, Resolved, Closed | All | Single selection |
+
+---
+
+### 2. Provider Platform Screens
+
+---
+
+#### Module PR-01 — Provider Team
+
+##### FR-009 Provider Team Roles
+
+---
+
+###### Screen PR-01-001: Team Directory [P1 — MVP]
+
+**Purpose**: Provider searches for and filters team members within the clinic.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Name / email / role / status | text | "Search team members…" | 500ms | Supports wildcard; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Role | Multi-select | All roles defined in clinic (e.g., Surgeon, Coordinator, Aftercare Specialist) | All | AND |
+| Status | Multi-select | Active, Inactive, Pending Invitation | All | AND |
+| Role Compatibility | Context filter (conditional) | Shown during reassignment workflows only | — | Filters members eligible for role reassignment |
+
+---
+
+###### Screen PR-01-002: Provider Activity Log [P1 — MVP]
+
+**Purpose**: Provider filters the clinic's activity log by date and action type.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Date Range | Date range picker | Custom | Last 30 days | Filters by event date |
+| Action Type | Multi-select | Login, Inquiry, Quote, Treatment, Patient Communication, Settings | All | AND |
+
+---
+
+###### Screen PR-01-003: Work Queue [P1 — MVP]
+
+**Purpose**: Provider filters the work queue by status and priority.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select chips | Draft, Active, Completed, Overdue | Active + Overdue | AND |
+| Priority | Multi-select chips | High, Medium, Low | All | AND |
+
+---
+
+#### Module PR-02 — Inquiry & Quote Management
+
+##### FR-003 Inquiry Submission
+
+---
+
+###### Screen PR-02-001: Provider Inquiry List [P1 — MVP]
+
+**Purpose**: Provider searches for and filters incoming patient inquiries.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient ID / name | text | "Search by patient ID or name…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Patient Age Range | Range slider | 18–100 | All ages | Min–Max range |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | AND |
+| Requested Date Range | Date range picker | Custom | All dates | Overlaps with inquiry dates |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | AND |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match |
+
+---
+
+##### FR-004 Quote Submission
+
+---
+
+###### Screen PR-02-002: Provider Quote List [P1 — MVP]
+
+**Purpose**: Provider searches for and filters their submitted quotes across all patient inquiries.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient / inquiry / treatment / date / status / location | text | "Search quotes…" | 500ms | Case-insensitive; partial match across all indexed fields |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled) | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by quote creation date |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | AND |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | AND |
+
+---
+
+#### Module PR-03 — Treatment Execution
+
+##### FR-010 Treatment Execution
+
+---
+
+###### Screen PR-03-001: In Progress Cases [P1 — MVP]
+
+**Purpose**: Provider searches for and filters active treatment cases by patient or clinician.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient ID / name / booking reference | text | "Search cases…" | 500ms | Real-time filter; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Procedure Date Range | Date range picker | Custom | All dates | Filters by treatment procedure date |
+| Clinician | Dropdown | All; clinic's active clinicians | All | Exact match |
+
+---
+
+#### Module PR-04 — Aftercare Participation
+
+##### FR-011 Aftercare Recovery Management
+
+---
+
+###### Screen PR-04-001: Aftercare Cases List [P1 — MVP]
+
+**Purpose**: Provider searches for and filters patient aftercare cases managed by their clinic.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient name / ID | text | "Search aftercare cases…" | 500ms | Debounced; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Milestone | Dropdown | All; aftercare plan milestone names | All | Exact match |
+| Case Status | Multi-select | Active, Overdue, Completed | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date |
+| Clinician / Specialist | Dropdown | All; clinic's aftercare specialists | All | Exact match |
+
+---
+
+#### Module PR-05 — Financial Management & Reporting
+
+##### FR-014 Provider Analytics & Reporting
+
+---
+
+###### Screen PR-05-001: Provider Analytics Dashboard [P1 — MVP]
+
+**Purpose**: Provider filters analytics reports by date range and treatment type.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Date Range | Segmented + custom picker | Last 7 days, Last 30 days, Last 90 days, Last 12 months, Custom | Last 30 days | Single selection |
+| Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types | All | AND |
+
+---
+
+#### Module PR-06 — Profile & Settings
+
+##### FR-024 Treatment Package Management
+
+---
+
+###### Screen PR-06-001: Provider Package List [P1 — MVP]
+
+**Purpose**: Provider searches for and filters their published treatment packages.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Package name | text | "Search packages…" | 300ms | Real-time filter; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Package Type | Dropdown | All; admin-defined package types | All | Exact match |
+
+---
+
+##### FR-032 Provider Dashboard Settings
+
+---
+
+###### Screen PR-06-002: Reviews Tab [P1 — MVP]
+
+**Purpose**: Provider filters their patient reviews by star rating.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | AND |
+
+---
+
+###### Screen PR-06-003: My Support Cases [P1 — MVP]
+
+**Purpose**: Provider searches for and filters support cases they have submitted.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Min Length | Debounce | Notes |
+|-------|------|-------------|-----------|----------|-------|
+| Case ID / title / keywords | text | "Search cases…" | 3 chars | 300ms | Real-time search across Case ID, Title, Description, Message content |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select | Open, In Progress, Resolved, Closed | Open + In Progress | AND |
+| Type | Multi-select | Support Request, Feedback | All types | AND |
+| Date Range | Date range picker | Custom | Last 90 days | Filters by case creation date |
+
+---
+
+### 3. Admin Platform Screens
+
+---
+
+#### Module A-01 — Patient Management & Oversight
+
+##### FR-003 Inquiry Submission
+
+---
+
+###### Screen A-01-001: Global Inquiry Table [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all patient inquiries across all providers.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient ID / name | text | "Search by patient ID or name…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Patient Location | Dropdown | All; country list from DB | All | Exact match |
+| Provider Location | Dropdown | All; country list from DB | All | Exact match |
+| Inquiry Stage | Multi-select | Inquiry, Quoted, Accepted, Scheduled, Cancelled | All | AND |
+| Payment Status | Dropdown | All, Paid, Unpaid, Partial | All | Exact match |
+| Date Range | Date range picker | Custom | All dates | Filters by inquiry submission date |
+
+---
+
+##### FR-004 Quote Submission
+
+---
+
+###### Screen A-01-002: Global Quote Table [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all quotes across all providers and patients.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient ID / name / provider / inquiry | text | "Search quotes…" | 500ms | Case-insensitive; partial match across all indexed fields |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled) | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by quote creation date |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | AND |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match |
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | AND |
+
+---
+
+##### FR-005 Quote Comparison & Acceptance
+
+---
+
+###### Screen A-01-003: Quote Acceptance Table [P1 — MVP]
+
+**Purpose**: Admin filters the quote acceptance overview by acceptance status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Acceptance Status | Multi-select | Active, Superseded by Cancellation | Active | AND |
+
+---
+
+##### FR-006 Booking & Scheduling
+
+---
+
+###### Screen A-01-004: Admin Bookings Table [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all bookings across the platform.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Booking reference / patient name / patient email / provider name | text | "Search bookings…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Booking Status | Multi-select | All, Pending Payment, Confirmed, In Progress, Completed, Cancelled | All | AND |
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Date Range | Date range picker | Custom | All dates | Filters by booking date |
+| Treatment Type | Dropdown | All, Hair Transplant, Beard Transplant, Both | All | Exact match |
+| Payment Status | Multi-select | All, Unpaid, Deposit Paid, Fully Paid, Overdue | All | AND |
+
+---
+
+##### FR-007 Payment Processing
+
+---
+
+###### Screen A-01-005: Patient Payment Progress Dashboard [P1 — MVP]
+
+**Purpose**: Admin searches for and filters payment records by booking, patient, and payment status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Booking ID / patient name | text | "Search by booking ID or patient name…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Deposit Status | Multi-select | Pending, Paid, Partial | All | AND |
+| Payment Status | Multi-select | Unpaid, Deposit Only, Installments Active, Full Paid, Overdue | All | AND |
+| Final Payment Status | Multi-select | Not Due, Due, Paid, Overdue | All | AND |
+| Overdue Flag | Toggle | Show overdue only | Off | Single flag |
+| Date Range | Date range picker | Custom | All dates | Filters by booking date |
+
+---
+
+##### FR-013 Reviews & Ratings
+
+---
+
+###### Screen A-01-006: Review Management Dashboard [P1 — MVP]
+
+**Purpose**: Admin filters all platform reviews by date, provider, rating, status, and flag.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Date Range | Date range picker | Custom | All dates | Filters by review submission date |
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | AND |
+| Review Status | Multi-select | Pending Moderation, Published, Rejected | All | AND |
+| Flagged | Toggle | Show flagged only | Off | Single flag |
+
+---
+
+##### FR-016 Admin Patient Management
+
+---
+
+###### Screen A-01-007: Patient Management List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all registered patients across the platform.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Min Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Name / email / patient code (HPID) / phone | text | "Search patients…" | 500ms | 2 chars | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select | Inquiry, Quoted, Accepted, Scheduled, In-Progress, Aftercare, Completed, Cancelled, Suspended | All | AND |
+| Date Range | Date range picker + type toggle | Custom; toggle: Registration Date / Last Activity | All dates — Registration Date | Filters by selected date type |
+| Location | Dropdown | All; country list from DB | All | Exact match |
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+
+---
+
+###### Screen A-01-008: Admin Actions Audit Log [P1 — MVP]
+
+**Purpose**: Admin searches for and filters the patient data access and modification audit log.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient name / email / HPID | text | "Search audit log…" | 500ms | Case-insensitive; debounced |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Action Type | Multi-select | View, Edit, Export, Access Request, Deletion Request, Override, and others per FR-016 | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by action timestamp |
+| Admin User | Dropdown | All; admin user list | All | Exact match |
+
+---
+
+###### Screen A-01-009: Pending Data Requests [P1 — MVP]
+
+**Purpose**: Admin searches the pending patient data access and deletion request queue.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient name / email / HPID | text | "Search requests…" | 500ms | Debounced; case-insensitive; searches within Pending Admin Review queue |
+
+> No additional filter controls — this screen is pre-filtered to Status = Pending Admin Review by default.
+
+---
+
+#### Module A-02 — Provider Management & Onboarding
+
+##### FR-015 Provider Management
+
+---
+
+###### Screen A-02-001: Provider Management List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all provider accounts.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Max Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Provider name / clinic name / email / license number | text | "Search providers…" | 500ms | 200 chars | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select | Draft, Active, Suspended, Deactivated | All | AND |
+| Featured | Checkbox | Featured only | Off | Single flag |
+| Commission Type | Dropdown | All, Percentage, Tier-based | All | Exact match |
+| Date Range | Date range picker + type toggle | Custom; toggle: Creation Date / Last Activity | All dates — Creation Date | Filters by selected date type |
+
+---
+
+###### Screen A-02-002: Provider Reviews Tab [P1 — MVP]
+
+**Purpose**: Admin searches for and filters reviews within a provider's profile.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Review keyword | text | "Search reviews…" | 500ms | Partial match on review content |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | AND |
+
+---
+
+###### Screen A-02-003: Provider Documents List [P1 — MVP]
+
+**Purpose**: Admin filters provider-submitted documents by type and uploader.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Document Type | Dropdown | All; admin-defined document types (e.g., Medical License, Insurance, Certification) | All | Exact match |
+| Uploaded By | Dropdown | All, Provider, Admin | All | Exact match |
+
+---
+
+#### Module A-03 — Aftercare Team Management
+
+##### FR-011 Aftercare Recovery Management
+
+---
+
+###### Screen A-03-001: Admin Aftercare Cases List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all aftercare cases across all providers.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Case ID | text | "Search by case ID…" | 500ms | Searchable; sortable |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Milestone | Dropdown | All; milestone names from aftercare plan templates | All | Exact match |
+| Case Status | Multi-select | Active, Overdue, Completed | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date |
+
+---
+
+#### Module A-05 — Billing & Financial Reconciliation
+
+##### FR-007b Payment Installments
+
+---
+
+###### Screen A-05-001: Installment Plans List [P1 — MVP]
+
+**Purpose**: Admin filters installment plans by plan status and procedure date range.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Plan Status | Multi-select | Active, Completed, Overdue, Defaulted | All | AND |
+| Procedure Date Range | Date range picker | Custom | All dates | Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top |
+
+---
+
+##### FR-017 Admin Billing & Finance
+
+---
+
+###### Screen A-05-002: Patient Billing Invoices [P1 — MVP]
+
+**Purpose**: Admin searches for and filters patient invoices by status and date.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Patient name | text | "Search by patient name…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Payment Status | Multi-select | Pending, Partial, Paid, Overdue, Refunded, At Risk | All | AND |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by invoice date |
+| Currency | Dropdown | All; configured currency list | All | Exact match |
+| Payment Method | Dropdown | All, Full Payment, Installment | All | Exact match |
+
+---
+
+###### Screen A-05-003: Transaction Search [P1 — MVP]
+
+**Purpose**: Admin searches for any financial transaction using multiple lookup fields and narrows results by type, date, and status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Search By (type selector) | Dropdown | Booking Reference, Invoice Number, Patient Name/ID, Provider Name/ID, Affiliate Name/ID | Booking Reference | Determines search context |
+| Search Input | text | Auto-updates per "Search By" selection | 500ms | Free-text; case-insensitive; scoped to selected type |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Record Type | Multi-select | Invoice, Provider Payout, Installment, Refund, Affiliate Commission | All | AND |
+| Date Range | Date range picker | Custom | All dates | Filters by transaction date |
+| Status | Multi-select | All applicable statuses per record type | All | AND |
+
+---
+
+###### Screen A-05-004: Billing Audit Log [P1 — MVP]
+
+**Purpose**: Admin filters the billing action audit log by date, admin user, action type, and entity.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp |
+| Admin User | Dropdown | All; admin user list | All | Exact match |
+| Action Type | Multi-select | Payout Approved, Payout Unapproved, Payout Voided, Payout Retried, Bulk Approval, Refund Processed, Invoice Generated, Status Overridden, Note Added, Installment Retry, Affiliate Payout Processed, Affiliate Payout Retried, Payout Added to Next Cycle, Reminder Sent, Currency Alert Decision, Re-authentication Verified | All | AND |
+| Affected Entity | Multi-select | Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert | All | AND |
+| Entity ID | text (optional) | "Filter by entity ID…" | 500ms | Optional free-text lookup |
+
+---
+
+##### FR-018 Affiliate Management
+
+---
+
+###### Screen A-05-005: Affiliate Payout History [P1 — MVP]
+
+**Purpose**: Admin searches for and filters affiliate payout records.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Affiliate name / transaction ID / payout month | text | "Search payout history…" | 500ms | Full-text search; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Affiliate | Dropdown / autocomplete | All; affiliate list | All | Exact selection |
+| Date Range | Date range picker | Custom | All dates | Filters by payout date |
+| Payment Status | Multi-select | Pending, Paid, Failed, Cancelled | All | AND |
+
+---
+
+#### Module A-06 — Discount & Promotion Management
+
+##### FR-019 Promotions & Discounts
+
+> **⚠ Gap — Pending FR-019 Update**: FR-019 does not currently specify a searchable or filterable Discount Code List screen. FR-022 module scope references A-06 as requiring "search and filter discount codes by code, provider participation, status, usage, date range, ROI." When FR-019 is updated to add a Discount Code List screen, the search fields and filter criteria must be defined in FR-019 and added here as screen **A-06-001**.
+
+---
+
+#### Module A-07 — Affiliate Program Management
+
+##### FR-018 Affiliate Management
+
+---
+
+###### Screen A-07-001: Affiliate Management List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters affiliate accounts.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Affiliate name / email | text | "Search affiliates…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select | Active, Suspended, Inactive | All | AND |
+
+---
+
+#### Module A-08 — Analytics & Reporting
+
+##### FR-014 Provider Analytics & Reporting
+
+---
+
+###### Screen A-08-001: Analytics Reports Dashboard [P1 — MVP]
+
+**Purpose**: Admin filters analytics and reporting views by date range, treatment type, and dimension.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Date Range | Segmented + custom picker | Last 7 days, Last 30 days, Last 90 days, Last 12 months, Custom | Last 30 days | Single selection |
+| Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and admin-defined types | All | AND |
+| Dimension | Dropdown | All, By Location, By Provider, By Treatment Type, By Time Period | All | Single selection |
+
+---
+
+#### Module A-09 — System Settings & Configuration
+
+##### FR-024 Treatment Package Management
+
+---
+
+###### Screen A-09-001: Admin Treatment Catalog [P1 — MVP]
+
+**Purpose**: Admin searches for and filters the global treatment catalog.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Treatment name | text | "Search treatments…" | 300ms | Real-time filter; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Treatment Type | Dropdown | All; admin-defined treatment types | All | Exact match |
+
+---
+
+##### FR-025 Medical Questionnaire Management
+
+---
+
+###### Screen A-09-002: Questionnaire Catalog [P1 — MVP]
+
+**Purpose**: Admin searches for and filters the questionnaire set catalog.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Set name keyword | text | "Search questionnaire sets…" | 500ms | Partial match on set name; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Context Type | Dropdown | All, Inquiry, Aftercare, Multi-Context | All | Exact match |
+| Status | Multi-select | Draft, Active, Archived | All | AND |
+| Category | Dropdown | All; admin-defined categories (e.g., Allergies, Cardiovascular) | All | Exact match |
+
+---
+
+##### FR-027 Legal Content Management
+
+---
+
+###### Screen A-09-003: Legal Documents List [P1 — MVP]
+
+**Purpose**: Admin filters the legal document catalog by type, status, and locale.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Document Type | Dropdown | All; admin-defined legal document types (e.g., Terms of Service, Privacy Policy, Consent Form) | All | Exact match |
+| Status | Multi-select | Draft, Published, Archived | All | AND |
+| Locale | Dropdown | All; configured locale list | All | Exact match |
+
+---
+
+###### Screen A-09-004: User Acceptance List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters user acceptance records for legal documents.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| User name / email / user ID | text | "Search users…" | 500ms | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Acceptance Status | Multi-select | Accepted, Pending | All | AND |
+| Locale | Dropdown | All; configured locale list | All | Exact match |
+
+---
+
+##### FR-029 Payment System Config
+
+---
+
+###### Screen A-09-005: Provider Commission Search [P1 — MVP]
+
+**Purpose**: Admin searches for a specific provider when configuring provider-specific commission rates.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Provider name / ID | text | "Search provider by name or ID…" | 500ms | Returns provider record for commission configuration |
+
+> No filter controls — search-only functionality for provider selection.
+
+---
+
+###### Screen A-09-006: Currency Configuration [P1 — MVP]
+
+**Purpose**: Admin searches for a currency by code or name when configuring platform currencies.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Max Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Currency code / name | text | "Filter currencies by code or name…" | 300ms | 100 chars | Real-time filter of currency list |
+
+> No filter controls — search/filter input only for narrowing the currency list.
+
+---
+
+##### FR-030 Notification Rules Config
+
+---
+
+###### Screen A-09-007: Notification Rules Dashboard [P1 — MVP]
+
+**Purpose**: Admin searches for and filters notification rules by event category and rule status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Max Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Event name / template name / recipient type | text | "Search rules…" | 500ms | 100 chars | Case-insensitive; partial match |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Event Category | Dropdown | All, Account/Auth, Inquiry, Quote, Booking/Schedule, Treatment, Payment, Billing/Payouts, Messaging/Support, Aftercare, Reviews, Promotions/Discounts, Provider/Compliance, System/Operations | All | Exact match |
+| Rule Status | Multi-select | Active, Paused, Draft | All | AND |
+
+---
+
+##### FR-031 Admin Access Control
+
+---
+
+###### Screen A-09-008: Admin Users List [P1 — MVP]
+
+**Purpose**: Admin searches for and filters admin user accounts.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Name / email | text | "Search admin users…" | 300ms | Real-time filter; case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Role | Dropdown | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff | All Roles | Exact match |
+| Status | Multi-select | Active, Suspended, Pending Invitation | All | AND |
+
+---
+
+###### Screen A-09-009: Roles & Permissions [P1 — MVP]
+
+**Purpose**: Admin searches for permissions and filters by category or module.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Permission name | text | "Search permissions…" | 300ms | Real-time filter on permission name |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Category | Dropdown | All; admin-defined permission categories | All | Exact match |
+| Module | Dropdown | All; platform modules (Patient, Provider, Admin, System) | All | Exact match |
+
+---
+
+###### Screen A-09-010: Admin Activity Audit Trail [P1 — MVP]
+
+**Purpose**: Admin filters the admin user activity log by action type, date, and outcome.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+> No search input on this screen — filtering only.
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Action Type | Multi-select | Platform-defined admin action types (per FR-031) | All | AND |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp |
+| Outcome | Multi-select | Success, Failed, Blocked | All | AND |
+
+---
+
+##### FR-033 Help Centre Management
+
+---
+
+###### Screen A-09-011: FAQ Management [P1 — MVP]
+
+**Purpose**: Admin searches for and filters FAQ entries in the Help Centre.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Question text | text | "Search FAQ questions…" | 500ms | Partial match on question content |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Topic | Dropdown | All; admin-defined FAQ topics | All | Exact match |
+| Status | Multi-select | Draft, Published, Archived | All | AND |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+
+---
+
+###### Screen A-09-012: Article Management [P1 — MVP]
+
+**Purpose**: Admin searches for and filters help articles.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Article title | text | "Search articles…" | 500ms | Partial match on title |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Article Type | Dropdown | All, Tutorial Guide, Troubleshooting Tip | All | Exact match |
+| Category / Tags | Multi-select | Admin-defined article categories | All | AND |
+| Status | Multi-select | Draft, Published, Archived | All | AND |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+
+---
+
+###### Screen A-09-013: Resource Management [P1 — MVP]
+
+**Purpose**: Admin searches for and filters downloadable help resources.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Resource name | text | "Search resources…" | 500ms | Partial match on name |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Category | Dropdown | All; admin-defined resource categories | All | Exact match |
+| File Type | Multi-select | PDF, Video, Image, Link, and others as configured | All | AND |
+| Status | Multi-select | Draft, Published, Archived | All | AND |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+
+---
+
+###### Screen A-09-014: Video Management [P1 — MVP]
+
+**Purpose**: Admin searches for and filters help videos.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Notes |
+|-------|------|-------------|----------|-------|
+| Video title | text | "Search videos…" | 500ms | Partial match on title |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Category / Tags | Multi-select | Admin-defined video categories | All | AND |
+| Status | Multi-select | Draft, Published, Archived | All | AND |
+| Source Type | Dropdown | All, Uploaded, YouTube, Vimeo, and other configured sources | All | Exact match |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+
+---
+
+#### Module A-10 — Communication Monitoring & Support
+
+##### FR-012 Secure Messaging
+
+---
+
+###### Screen A-10-001: Communication Monitoring Center [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all platform conversations for oversight and support.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Min Length | Debounce | Notes |
+|-------|------|-------------|-----------|----------|-------|
+| Patient / provider / keyword / inquiry ID | text | "Search conversations…" | 2 chars | 300ms | Searches across all four fields simultaneously |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Patient | Autocomplete | Matching patient names | None | Exact selection |
+| Provider | Autocomplete | Matching provider names | None | Exact selection |
+| Service Type | Multi-select | All; platform-defined service types | All | AND |
+| Quote ID | text (optional) | "Filter by quote ID…" | — | Optional exact match |
+| Inquiry ID | text (optional) | "Filter by inquiry ID…" | — | Optional exact match |
+| Date Range | Date range picker + presets | Custom; Today, Last 7 days, Last 30 days, All | All | Filters by message date |
+| Flag Type | Multi-select | Keyword Flagged, Manually Flagged, Intervened, No Flags | All | AND |
+| Conversation Status | Multi-select | Active, Resolved, Escalated | All | AND |
+
+---
+
+##### FR-034 Support Center Ticketing
+
+---
+
+###### Screen A-10-002: Support Center Dashboard [P1 — MVP]
+
+**Purpose**: Admin searches for and filters all support tickets from patients and providers.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Min Length | Debounce | Notes |
+|-------|------|-------------|-----------|----------|-------|
+| Case ID / patient name / provider name / email / title keywords | text | "Search support cases…" | 3 chars | 300ms | Real-time search across all listed fields |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
+| Status | Multi-select | Open, In Progress, Urgent, Unassigned | Open + In Progress | AND |
+| Priority | Multi-select | High, Medium, Low | All | AND |
+| Category | Dropdown | All; admin-defined ticket categories | All | Exact match |
+| Ticket Source | Dropdown | All, Patient App, Provider App, Admin Portal | All | Exact match |
+| Submitter Type | Dropdown | All, Patient, Provider | All | Exact match |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by ticket creation date |
+| Assigned Admin | Dropdown | All; admin user list | All | Exact match |
 
 ---
 
@@ -716,18 +1948,53 @@ An admin needs to generate a monthly report of all scheduled patients for billin
 
 ### Core Requirements (P1 - MVP)
 
+#### Admin Platform
+
 - **REQ-022-001**: System MUST allow admins to search patients by name, email, phone number, and patient ID (HPID format)
-- **REQ-022-002**: System MUST allow admins to filter patients by status, location, registration date range, and treatment type
-- **REQ-022-003**: System MUST allow admins to search providers by clinic name, location, and certifications
-- **REQ-022-004**: System MUST allow admins to filter providers by status, location, specialties, years of experience, and rating
-- **REQ-022-005**: System MUST return search results within 500ms for 95% of queries (p95 latency)
-- **REQ-022-006**: System MUST paginate search results (25 results per page for admin platform)
-- **REQ-022-007**: System MUST support case-insensitive partial matching for search terms
-- **REQ-022-008**: System MUST apply filters cumulatively using AND logic (all criteria must match)
-- **REQ-022-009**: System MUST allow admins to export search results to CSV or Excel format
+- **REQ-022-002**: System MUST allow admins to filter patients by status, location, registration date range, provider, and treatment type
+- **REQ-022-003**: System MUST allow admins to search providers by clinic name, email, and license number
+- **REQ-022-004**: System MUST allow admins to filter providers by status, featured flag, commission type, and date range
+- **REQ-022-009**: System MUST allow admins to export search results to CSV or Excel format where applicable
 - **REQ-022-010**: System MUST display patient status, location, and last activity date in search results
 - **REQ-022-011**: System MUST display provider status, location, rating, and active patient count in search results
-- **REQ-022-012**: System MUST implement search input debounce (500ms) to reduce server load
+
+#### Provider Platform
+
+- **REQ-022-033**: System MUST allow providers to search their inquiry list by patient ID and name
+- **REQ-022-034**: System MUST allow providers to filter inquiries by concern, age range, date range, medical alerts, and patient location
+- **REQ-022-035**: System MUST allow providers to search their quote list across patient, inquiry, treatment, date, status, and location fields
+- **REQ-022-036**: System MUST allow providers to filter quotes by status, date range, concern, patient location, and medical alerts
+- **REQ-022-037**: System MUST allow providers to search treatment cases by patient ID, name, and booking reference
+- **REQ-022-038**: System MUST allow providers to filter treatment cases by procedure date range and clinician
+- **REQ-022-039**: System MUST allow providers to search and filter aftercare cases by patient name/ID, milestone, status, date range, and specialist
+- **REQ-022-040**: System MUST allow providers to filter their analytics dashboard by date range and treatment type
+- **REQ-022-041**: System MUST allow providers to search and filter their package list by name and package type
+- **REQ-022-042**: System MUST allow providers to filter their reviews by star rating
+- **REQ-022-043**: System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range
+- **REQ-022-044**: System MUST allow providers to search team members by name, email, role, and status
+- **REQ-022-045**: System MUST allow providers to filter team activity log by date range and action type
+- **REQ-022-046**: System MUST allow providers to filter work queue by status and priority
+
+#### Patient Platform (P1 Screens)
+
+- **REQ-022-047**: System MUST allow patients to search their booking list by booking reference
+- **REQ-022-048**: System MUST allow patients to filter their booking list by status, date range, treatment type, and payment status
+- **REQ-022-049**: System MUST allow patients to search their messages inbox by provider name and message content
+- **REQ-022-050**: System MUST allow patients to filter their messages inbox by read/unread status
+- **REQ-022-051**: System MUST allow patients to search help center content with full-text search and auto-suggest
+- **REQ-022-052**: System MUST allow patients to filter help center by content type (FAQs, Articles, Resources, Videos)
+- **REQ-022-053**: System MUST allow patients to filter their support tickets by status
+
+#### Shared Behavior Rules
+
+- **REQ-022-005**: System MUST return search results within 500ms for 95% of queries (p95 latency)
+- **REQ-022-006**: System MUST paginate search results (default 25 results per page for admin/provider; 10 per page for patient mobile)
+- **REQ-022-007**: System MUST support case-insensitive partial matching for all text search fields
+- **REQ-022-008**: System MUST apply filters cumulatively using AND logic (all active criteria must match)
+- **REQ-022-012**: System MUST implement search input debounce (300–500ms depending on screen) to reduce server load
+- **REQ-022-054**: System MUST display a result count after every search or filter operation
+- **REQ-022-055**: System MUST show active filter chips for every applied filter and allow individual chip removal
+- **REQ-022-056**: System MUST provide a "Reset" or "Clear All" control to clear all active filters at once
 
 ### Enhanced Requirements (P2 - Post-MVP)
 
@@ -785,6 +2052,7 @@ An admin needs to generate a monthly report of all scheduled patients for billin
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-12 | 1.0 | Initial PRD creation for FR-022 | Claude AI |
+| 2026-04-03 | 2.0 | Major overhaul: Screen Specifications fully rewritten with three-tenant structure (Patient/Provider/Admin); master reference table added (Module → FR → Screen); Provider Platform screens added (PR-01 through PR-06) to match P1-MVP scope; control behaviors mini-tables added to all screen specs (search inactive/active, filter inactive/active, reset filter); maintenance convention note added; Executive Summary and Module Scope updated; Functional Requirements Summary expanded with Provider and Patient P1 REQs | Claude AI |
 
 ---
 
@@ -801,4 +2069,4 @@ An admin needs to generate a monthly report of all scheduled patients for billin
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-022 from system-prd.md
-**Last Updated**: 2025-11-12
+**Last Updated**: 2026-04-03
