@@ -233,7 +233,7 @@ flowchart TD
 |------------|------|----------|-------------|------------------|
 | Screen Title | text | Yes | "Help & Support" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Settings or previous screen | Top-left corner |
-| Search Bar | text | Yes | "Search help articles..." placeholder; searches across all published patient-audience FAQ and article content | Results appear inline or on a separate results screen; scoped to patient audience only (FR-033 Rule 3). **[Scope Note]** FR-033 SC-010 marks full-text search with relevance ranking as a future enhancement — if deferred, patients browse by content type only |
+| Search Bar | text | Yes | "Search help articles..." placeholder; full-text search across all published patient-audience FAQ and article content | Results appear inline or on a separate results screen; scoped to patient audience only (FR-033 Rule 3); relevance-ranked results are required for P1 |
 | Browse Help Center | link | Yes | Row with book/article icon + "Help Center" label + chevron | Navigates to Screen 2; covers 4 content types: FAQs, Articles (Tutorial Guides + Troubleshooting Tips), Resources, Videos (FR-033 REQ-033-003) |
 | Contact Support | link | Yes | Row with headset/message icon + "Contact Support" label + chevron | Opens Contact Support form (Screen 5), creating new ticket via FR-034 |
 | My Support Tickets | link | Yes | Row with ticket icon + "My Support Tickets" label + chevron + open ticket count badge | Navigates to Screen 3; badge shows count of open/in-progress tickets |
@@ -244,7 +244,7 @@ flowchart TD
 **Business Rules**:
 
 - All Help Center content is read-only for patients; it is managed exclusively by admins via FR-033 and scoped to the patient audience (FR-033 REQ-033-008)
-- Search covers all published patient-audience articles and FAQs; results are ranked by relevance; if no results match, show a "Contact Support" prompt. **[Scope Note]** FR-033 SC-010 marks full-text search with relevance ranking as a "future enhancement" — if deferred, this search feature should be simplified to basic content type browsing only
+- Search covers all published patient-audience articles and FAQs; results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.
 - **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible — it cannot be hidden or require scrolling past it. Emergency phone and email values should be configurable by admin via FR-026 (App Settings) or a future dedicated FR.
 - Support ticket creation follows FR-034 Workflow A5; submissions automatically create cases with Ticket Source = "Patient App" and Submitter Type = "Patient" (FR-034 REQ-034-024)
 - "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0
@@ -261,7 +261,7 @@ flowchart TD
 |------------|------|----------|-------------|------------------|
 | Screen Title | text | Yes | "Help Center" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Help & Support Hub (Screen 1) | Top-left corner |
-| Search Bar | text | Yes | Full-text search across all patient-audience help content. **[Scope Note]** FR-033 SC-010 marks full-text search as a "future enhancement" — confirm MVP scope before implementing auto-suggestions and relevance ranking. | Auto-suggests results while typing; scoped to patient audience (FR-033 Rule 3) |
+| Search Bar | text | Yes | Full-text search across all patient-audience help content. | Auto-suggests results while typing; scoped to patient audience (FR-033 Rule 3); required for P1 |
 | Content Type Cards | group | Yes | Tappable content type tiles (4 content types for patient platform per FR-033 REQ-033-003) | Content types: FAQs, Articles, Resources, Videos; no Service Status for patients. Articles content type contains subtypes: Tutorial Guides, Troubleshooting Tips — shown as secondary filters within the Articles list view |
 | — Content Type Icon | icon | Yes | Icon representing the content type | Visual differentiator per content type |
 | — Content Type Label | text | Yes | Content type name | Read-only |
@@ -335,7 +335,7 @@ flowchart TD
 
 - All content data is managed by admins via FR-033 and delivered to patients via FR-035; patients have read-only access with no ability to create, edit, or delete content (FR-033 Rule 2, REQ-033-008)
 - Patient content is completely isolated from provider content — patients only see patient-audience content (FR-033 Rule 1, Rule 3, REQ-033-021)
-- **[Scope Note]** Search is scoped to the patient audience repository; results are ranked by relevance; empty search results must always surface a "Contact Support" path. FR-033 SC-010 marks search as a "future enhancement" — if deferred, patients browse by content type only
+- Search is scoped to the patient audience repository; results are ranked by relevance; empty search results must always surface a "Contact Support" path. This search behavior is required for P1.
 - "Was this helpful?" feedback is aggregated at the content level — admin dashboards show total Yes/No counts per content item. Per FR-033 Privacy Rule 2, patient analytics are aggregated and not tracked at individual user level. Feedback responses do not store individual patient identity.
 - Content updates published by admin propagate to patient view within 1 minute (FR-033)
 - FAQ content must be displayed in collapsible topic sections per FR-033 REQ-033-006, not as a flat list
@@ -608,7 +608,7 @@ flowchart TD
 - **Architecture**: FR-035 is a pure consumer of FR-033 content APIs and FR-034 ticketing APIs — it does not manage its own content or case data. All business logic for content management lives in FR-033, all case lifecycle logic lives in FR-034.
 - **Caching**: Help Center content should be cached locally on the patient device to support offline browsing and reduce API load. Cache invalidation should respect the 1-minute content propagation SLA from FR-033.
 - **Content Delivery**: Videos and large resources should be served via CDN for performance. Video streaming should support adaptive bitrate for variable network conditions.
-- **Search**: If full-text search is deferred per FR-033 SC-010 scope note, implement basic content type browsing with alphabetical/chronological sorting as MVP.
+- **Search**: Full-text search, relevance ordering, and inline suggestions are required for the patient Help Center MVP scope.
 
 ### Integration Points
 

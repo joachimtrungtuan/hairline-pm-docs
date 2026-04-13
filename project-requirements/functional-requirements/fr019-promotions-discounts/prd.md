@@ -187,6 +187,35 @@ Notes:
 
 ---
 
+### Screen 4: Admin – Discount Code Catalog
+
+> **TODO — PLACEHOLDER**: This screen spec must be fully developed when FR-019 is finalized. The authoritative search/filter criteria for this screen are co-owned with **FR-022: Search & Filtering** (`fr022-search-filtering/prd.md` → screen code `FR-019 / Screen 4`). Any changes to filter fields or search behavior must be reflected in both documents simultaneously.
+
+**Purpose**: Admin searches for and filters all discount codes (platform-created and provider-created) across the platform.
+
+**Data Fields** _(placeholder — expand when FR-019 is finalized)_:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Code / keyword search | text input | No | Search by discount code text or keyword | Debounced; case-insensitive; partial match |
+| Filter: Status | multi-select | No | Filter by discount lifecycle status | Options: Active, Draft, Expired, Paused |
+| Filter: Provider Participation | dropdown | No | Filter by participating provider | All; provider list from DB |
+| Filter: Date Range | date range picker | No | Filter by active window | Start/end date overlap |
+| Filter: Usage | range | No | Filter by usage count or utilization threshold | Min–Max range |
+| Filter: ROI | dropdown | No | Filter by ROI tier or performance band | Admin-defined tiers |
+
+**Business Rules** _(placeholder)_:
+
+- Admin can view all platform-created and provider-created discount codes in one unified list.
+- Access restricted to authorized admin roles (RBAC enforced per FR-031).
+
+**Notes**:
+
+- Full UI spec, field validations, acceptance criteria, and column layout to be completed when FR-019 is developed further.
+- Search and filter field definitions are the joint responsibility of this FR and FR-022. See FR-022 Master Reference Table for the current authoritative spec.
+
+---
+
 ## Success Criteria
 
 ### Patient/Provider Experience Metrics
@@ -399,6 +428,7 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 |------------|---------|----------------------------------------------|--------|
 | 2025-11-11 | 1.0     | Initial PRD creation                         | AI     |
 | 2025-11-11 | 1.1     | Filled scope, workflows, rules, and criteria | AI     |
+| 2026-04-12 | 1.2     | Added Screen 4 (Admin Discount Code Catalog) as placeholder with TODO note; screen code FR-019/Screen 4 reserved for FR-022 Master Reference Table | AI     |
 
 ---
 
