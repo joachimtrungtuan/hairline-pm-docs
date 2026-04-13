@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-03-03
+**Last Updated**: 2026-04-13
 
 ---
 
@@ -438,7 +438,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 - Inquiry MUST include: patient scan, medical history, destinations, treatment date ranges, and selected providers
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
-- System MUST filter providers by: location, active status, available capacity, patient explicit selection
+- System MUST allow patients to search/filter providers by country, rating, and specialty, then explicitly select providers for inquiry distribution (see FR-022 / FR-003 / Screen 7a for full search/filter criteria)
 - Provider suggestions MUST be based on: positive reviews, admin curation
 - Patient names MUST be partially masked for providers until booking/payment confirmation (full identity only visible after successful payment, per Constitution)
 - Admins MAY see full patient identity (unmasked) in A-01 views for compliance and support purposes
@@ -515,7 +515,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 - Patients MUST be able to view all received quotes in comparison dashboard
 - System MUST display key differentiators: price, graft count, reviews, credentials
-- Patients MUST be able to filter and sort quotes by criteria
+- Patients MUST be able to filter and sort quotes by criteria (see FR-022 / FR-005 / Screen 1 for full filter criteria)
 - Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Provider)
 - System MUST notify providers of patient questions within 5 minutes (via real-time messaging notifications)
 - Patients MUST be able to accept one quote at a time
@@ -1042,7 +1042,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Requirements**:
 
 - Admins MUST be able to view all patient profiles and inquiries
-- Admins MUST be able to search patients by name, email, phone, patient code
+- Admins MUST be able to search patients by name, email, phone, patient code (see FR-022 / FR-016 / Screen 1 for full search and filter criteria)
 - Admins MUST be able to view patient treatment history and status
 - Admins MUST be able to manually intervene in patient-provider disputes
 - Admins MUST be able to reset patient passwords
@@ -1169,16 +1169,16 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 
 ### FR-022: Search & Filtering
 
-**Priority**: P2 (Enhanced)  
-**Module(s)**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | PR-03: Treatment Execution & Documentation | PR-04: Aftercare Participation | PR-05: Financial Management & Reporting | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding | A-03: Aftercare Team Management | A-05: Billing & Financial Reconciliation | A-06: Discount & Promotion Management | A-07: Affiliate Program Management | A-08: Analytics & Reporting | A-09: System Settings & Configuration | A-10: Communication Monitoring & Support
+**Priority**: P1 (MVP) for Provider Platform operational workflows and Admin Platform; P2 (Post-MVP) for patient provider search and FR-012 messaging search surfaces  
+**Module(s)**: P-02, P-06, P-08 (Patient) | PR-01, PR-02, PR-03, PR-04, PR-05, PR-06, PR-07 (Provider) | A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10 (Admin)
 
 **Requirements**:
 
-- Patients MUST be able to search providers by location, rating, price range
-- Patients MUST be able to filter providers by credentials, years of experience, procedures performed
-- Admins MUST be able to search patients, providers, transactions, inquiries
-- System MUST provide autocomplete for location searches
-- System MUST support advanced filtering with multiple criteria
+- System MUST provide search and filter functionality across all three tenants (Patient, Provider, Admin) — see FR-022 for the complete screen-by-screen criteria
+- For all search and filter field definitions, filter option lists, control behavior states, and screen-level specifications, refer to **FR-022: Search & Filtering** (`local-docs/project-requirements/functional-requirements/fr022-search-filtering/prd.md`) — FR-022 is the single source of truth
+- System MUST support case-insensitive partial matching, debounced search inputs, cumulative AND-logic filtering, and result count display across all search-enabled screens
+- System MUST provide autocomplete for location searches (patient provider discovery, P2)
+- **Maintenance**: Whenever search fields or filter criteria change in any module FR, the FR-022 Master Reference Table must be updated to reflect those changes
 
 ---
 
@@ -1675,7 +1675,7 @@ Total Quote:                           £3,000
 - Admin users MUST be able to view their own activity log (login history, actions performed)
 - Activity log MUST display: timestamp, action type, affected entities, IP address
 - Activity log MUST be read-only (no deletion or modification)
-- Activity log MUST be filterable by date range and action type
+- Activity log MUST be filterable by date range and action type (see FR-022 / FR-031 / Screen 5 for full filter criteria)
 
 **Integration Points**:
 

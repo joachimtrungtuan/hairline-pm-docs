@@ -159,6 +159,16 @@ This folder contains documentation update reports and verification logs for the 
 
 - `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - Created Plane-ready UX/UI tasks for P-05 mobile flows (P05.1–P05.3) screens; assigned to Mr. Khue
 
+### 2026-04-13/ (5 files)
+
+#### **FR-022 Verification + FR-008 Provider Design Review**
+
+- `FR022_VERIFICATION_FIXES_2026-04-13.md` - FR-022 fourth verification pass (v2.4): specialist filter removed from provider scope; B2 overflow workflow removed (pagination is sole model); REQ-022-009 moved to P2; 4 stale system PRD screen code cross-references updated; Active Status + Available Capacity filters added to FR-003/Screen 7a; Implementation Notes debounce corrected. **Fifth pass (v2.5)**: commission type corrected from "Tier-based" to "Flat Rate" (FR-015 sync gap); User Story 2 Scenario 3 status corrected to "Draft"; FR-001 auth dependency replaced with FR-031; PostgreSQL references removed (MySQL 8.0+ only); provider platform max search query length defined (200 chars)
+- `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-13.md` - FR-008 provider full-scope layout verification; Main Flow 1 is `🟡 PARTIAL`, Main Flow 2 is `🔴 BLOCKED` due to missing Path B detail-state coverage, missing `View Travel Details`, and misbound hotel review fields
+- `FR022_FR019_ALIGNMENT_2026-04-13.md` - Applied selected FR-022 follow-up resolutions: moved FR-012 messaging search surfaces to P2 and reassigned provider messaging to PR-07, removed non-authoritative search-result export behavior outside deferred REQ-022-009, finalized FR-019 Screen 4 (Discount Code Catalog), and aligned the system PRD FR-022 summary
+- `FR022_FOLLOWUP_ALIGNMENT_2026-04-13.md` - User-directed follow-up pass: aligned the system PRD Screen 7a summary to FR-003, removed Screen 5 export behavior from FR-012, and removed unsupported admin global/cross-module search claims from FR-022
+- `FR022_STATUS_VERIFIED_2026-04-13.md` - Finalized FR-022 to the verified PRD state: status set to `✅ Verified & Approved`, approvals completed, and change log updated to match `prd-template.md`
+
 ### 2026-03-06/ (1 file)
 
 #### **P-06 + P-08 Mobile UX/UI Implementation Tasks**
@@ -392,11 +402,14 @@ This folder contains documentation update reports and verification logs for the 
 
 - `FR022_VERIFICATION_ROUND3_2026-04-12.md` - Third verification pass (v2.3): resolved PHI masking gap — patient name excluded from provider-facing search (FR-003/Screen 9, FR-004/Screen 2) pre-payment confirmation; standardized all search matching to fuzzy (database full-text indexes) across all screen specs and rules; admin max search length corrected 100→200 chars; multi-select filter Logic column updated from AND to OR (within field) with disambiguation note in Control Behavior Standards; expanded Internal Dependencies with full 30+ FR source maintenance table; added Provider Platform entry points; added missing 300ms debounce to FR-035/Screen 1; marked REQ-022-009 export as P2 spec gap with TODO
 
-### 2026-04-13/ (1 file)
+### 2026-04-13/ (4 files)
 
 #### **FR-022 Verification Round 4 Fixes**
 
 - `FR022_VERIFICATION_FIXES_2026-04-13.md` - Fourth verification pass (v2.4): removed "specialist" from Module Scope PR-04 and REQ-022-039 (specialist filter is admin-only, not in provider screen spec); removed B2 overflow workflow (100-result truncation contradicted REQ-022-006 pagination — pagination is now sole model); moved REQ-022-009 export from P1 to P2 (incomplete spec); updated 4 stale system PRD screen code references (P-02-001→FR-003/Screen 7a, P-02-002→FR-005/Screen 1, A-01-007→FR-016/Screen 1, A-09-010→FR-031/Screen 5); added Active Status and Available Capacity filters to FR-003/Screen 7a per system PRD L441; corrected Implementation Notes debounce from blanket 500ms to 300–500ms per REQ-022-012
+- `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-13.md` - FR-008 provider full-scope layout verification; Main Flow 1 is `🟡 PARTIAL`, Main Flow 2 is `🔴 BLOCKED` due to missing Path B detail-state coverage, missing `View Travel Details`, and misbound hotel review fields
+- `FR022_FOLLOWUP_ALIGNMENT_2026-04-13.md` - User-directed follow-up pass: aligned `system-prd.md` Screen 7a wording to FR-003, removed FR-012 conversation-export behavior, and removed unsupported FR-022 admin global/cross-module search claims
+- `FR022_STATUS_VERIFIED_2026-04-13.md` - Verification completion pass: status changed to `✅ Verified & Approved`, approvals finalized, and footer/change-log metadata aligned to the template
 
 ---
 
@@ -439,6 +452,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-27**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_2026-03-27.md` - Created a reusable manual-testing tracker for all 15 missing mobile flows with per-row placeholders for progress, approval, correct items, incorrect items, further checks, and raw tester notes
 - **2026-03-30**: `MISSING_MOBILE_FLOWS_MANUAL_TESTING_TRACKER_REFRESH_2026-03-30.md` - Created a new dated baseline copy of the missing mobile flows manual-testing tracker for a fresh app retest round while preserving the March 27 version as history
 - **2026-04-02**: `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-02.md` - FR-008 provider layout verification for Screens 6-10; both provider travel flows are `🔴 BLOCKED` because Screen 6 lacks the required travel summary/status actions and Screen 10’s patient self-booked review is still off-spec with forbidden editing, misbound hotel data, and missing flight submitted states
+- **2026-04-13**: `FR008_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-04-13.md` - FR-008 provider full-scope layout verification; Main Flow 1 is `🟡 PARTIAL`, Main Flow 2 is `🔴 BLOCKED` because Path B still lacks valid submitted flight-detail states and the tracker/detail handoff remains incomplete
 - **2026-04-03**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-04-03.md` - FR-025 admin layout re-verification (all 7 screens, 18 files); 6/7 🟢 GOOD+; S6 🟡 PARTIAL (Print Preview missing); no required fields missing; 0 Critical UX issues
 
 ### Workflow Corrections
@@ -493,7 +507,10 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-12**: `FR022_SOURCE_OF_TRUTH_ALIGNMENT_2026-04-12.md` - Follow-up FR-022 alignment: added missing Help & Support hub/library/filter screens from FR-035 and FR-032, corrected Provider Messages to FR-012 Screen 3 with exact search/filter controls, and normalized A-02 provider-management criteria plus the FR-015 commission filter contract
 - **2026-04-12**: `FR022_VERIFICATION_ROUND2_2026-04-12.md` - FR-022 second verification pass: removed unimplemented treatment type filter from REQ-022-002/Module Scope/Main Flow 1; fixed Main Flow 2 diagram nodes; removed P-03 and A-08 from system-prd.md FR-022 module list; rewrote User Story 2/Scenario 2; enumerated Transaction Search status options per record type; updated footer date and approvals table
 - **2026-04-12**: `FR022_VERIFICATION_ROUND3_2026-04-12.md` - FR-022 third verification pass (v2.3): PHI masking gap fixed; all search standardized to fuzzy matching; admin max length 100→200 chars; filter Logic column OR-within-field with disambiguation note; expanded dependency table (30+ source FRs); Provider Platform entry points added; FR-035/Screen 1 debounce added; REQ-022-009 export marked P2 spec gap
-- **2026-04-13**: `FR022_VERIFICATION_FIXES_2026-04-13.md` - FR-022 fourth verification pass (v2.4): specialist filter removed from provider scope; B2 overflow workflow removed (pagination is sole model); REQ-022-009 moved to P2; 4 stale system PRD screen code cross-references updated; Active Status + Available Capacity filters added to FR-003/Screen 7a; Implementation Notes debounce corrected
+- **2026-04-13**: `FR022_VERIFICATION_FIXES_2026-04-13.md` - FR-022 fourth verification pass (v2.4): specialist filter removed from provider scope; B2 overflow workflow removed (pagination is sole model); REQ-022-009 moved to P2; 4 stale system PRD screen code cross-references updated; Active Status + Available Capacity filters added to FR-003/Screen 7a; Implementation Notes debounce corrected. Fifth pass (v2.5): commission type "Tier-based" → "Flat Rate" (FR-015 sync gap); User Story 2 Scenario 3 status corrected to "Draft"; FR-001 auth dependency replaced with FR-031; PostgreSQL references removed (MySQL 8.0+ only); provider platform max query length defined (200 chars)
+- **2026-04-13**: `FR022_FR019_ALIGNMENT_2026-04-13.md` - Selected resolution pass: moved FR-012 messaging search/filter surfaces to P2 and reassigned provider messaging to PR-07, removed non-authoritative search-result export behavior outside deferred REQ-022-009, finalized FR-019 Screen 4 (Discount Code Catalog), and aligned the system PRD FR-022 summary
+- **2026-04-13**: `FR022_FOLLOWUP_ALIGNMENT_2026-04-13.md` - User-directed FR-022 follow-up alignment: system PRD Screen 7a wording reverted to match FR-003, FR-012 conversation export removed, and unsupported FR-022 admin global/cross-module search claims removed
+- **2026-04-13**: `FR022_STATUS_VERIFIED_2026-04-13.md` - FR-022 verification completion: PRD status set to `✅ Verified & Approved`, approvals finalized, and governance metadata aligned to `prd-template.md`
 
 ### Design Specifications
 

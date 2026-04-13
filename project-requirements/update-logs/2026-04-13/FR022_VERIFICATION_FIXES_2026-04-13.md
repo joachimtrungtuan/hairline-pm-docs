@@ -88,3 +88,70 @@ Seven issues identified during verification round 4 were resolved by applying us
 |------|------------|
 | `local-docs/project-requirements/functional-requirements/fr022-search-filtering/prd.md` | Multiple targeted edits (v2.3 → v2.4) |
 | `local-docs/project-requirements/system-prd.md` | 4 cross-reference updates |
+
+---
+
+# FR-022 Verification Round 5 Fixes — 2026-04-13
+
+**FR**: FR-022 Search & Filtering
+**PRD Version**: 2.4 → 2.5
+**Type**: Post-verification issue resolution (Medium × 3, Minor × 2)
+
+---
+
+## Summary
+
+Five issues identified during verification round 5 were resolved by applying user-selected resolution options. All changes are contained within FR-022's PRD file.
+
+---
+
+## Changes Applied
+
+### Medium Issue #1 — Commission Type Filter Corrected: "Tier-based" → "Flat Rate" (Option 1)
+
+**Root cause**: FR-015 was updated in v1.6 (2026-04-12) to rename the commission model from "Tier-based" to "Flat Rate," but the corresponding FR-022 screen spec entry for `FR-015 / Screen 1` was not updated — a maintenance convention gap.
+
+**Change**: `FR-015 / Screen 1` Commission Type filter options updated from `All, Percentage, Tier-based` to `All, Percentage, Flat Rate`.
+
+---
+
+### Medium Issue #2 — User Story 2 Scenario 3: Non-existent Status Corrected (Option 1)
+
+**Root cause**: Acceptance Scenario 3 referenced "Pending Onboarding" as a provider status filter value. FR-015 defines provider statuses as `Draft, Active, Suspended, Deactivated` — "Pending Onboarding" does not exist. The acceptance test would fail.
+
+**Change**: Scenario 3 updated to filter by "Draft" (providers whose setup is incomplete / awaiting activation).
+
+---
+
+### Medium Issue #3 — FR-001 Auth Dependency Replaced with FR-031 (Option 1)
+
+**Root cause**: Internal Dependency 1 cited FR-001 (Patient Authentication / P-01) as the authentication dependency for admin search. Admin authentication is governed by FR-031 (Admin Access Control / A-09), not the patient auth module.
+
+**Change**: Dependency updated to `FR-031 / Module A-09: Admin Access Control` with corrected description and integration point.
+
+---
+
+### Minor Issue #4 — PostgreSQL References Removed (Option 1)
+
+**Root cause**: Three locations referenced "MySQL FULLTEXT, PostgreSQL TSVECTOR" as alternatives. System technical spec confirms MySQL 8.0+ exclusively — no PostgreSQL in the stack.
+
+**Changes**:
+- Technology Assumption 3: updated to "MySQL FULLTEXT — system uses MySQL 8.0+"
+- Edge Case 4 handling: updated to "utf8mb4_unicode_ci (MySQL 8.0+)"
+- Implementation Notes Full-Text Search: updated to "MySQL FULLTEXT indexes (system uses MySQL 8.0+)"
+
+---
+
+### Minor Issue #5 — Provider Platform Max Search Query Length Defined (Option 1)
+
+**Root cause**: Business Rules defined max query length for admin (200 chars) and patient (50 chars) but left the provider platform undefined. Only FR-032/Screen 5 explicitly stated 200 chars; all other provider search fields had no constraint.
+
+**Change**: Business Rules updated to: "200 chars for admin, 200 chars for provider, 50 chars for patient"
+
+---
+
+## Files Modified
+
+| File | Change type |
+|------|------------|
+| `local-docs/project-requirements/functional-requirements/fr022-search-filtering/prd.md` | Multiple targeted edits (v2.4 → v2.5) |
