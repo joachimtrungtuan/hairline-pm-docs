@@ -912,7 +912,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
 | Status | column | Yes | Active/Overdue/Completed | Enum |
 | Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced |
-| Search/Filters | control | No | Provider/Milestone/Status/Date range | Valid enums/ranges |
+| Search/Filters | control | No | Provider/Milestone/Status/Date range/Risk Level/Specialist/Completion Rate | Valid enums/ranges |
 | Pagination | control | No | Page and size controls | Standard UX pattern |
 
 **Business Rules**:
@@ -1646,6 +1646,7 @@ Acceptance Scenarios:
 | 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template compliance: added Shared Services; Communication Structure (In/Out of Scope); Triggers/Outcomes for workflows; restructured Assumptions; added User Scenarios & Testing; Appendices | Product & Engineering |
 | 2026-03-03 | 1.2 | Clarified that V1 scan uploads are standardized head scan photo sets (multiple 2D views), with true 3D scanning deferred to V2. Updated module scope, dependencies, and external integrations accordingly. | AI |
+| 2026-04-12 | 1.3 | Screen 13: Expanded Search/Filters control to include Risk Level, Specialist, and Completion Rate filters, aligning with FR-022 Module Scope for A-03. | AI |
 
 ## Appendix: Approvals
 

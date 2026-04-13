@@ -204,7 +204,7 @@ The Provider Management module enables administrators to onboard and manage hair
 | Search Bar | text | No | Free-text search by provider name, clinic name, email, license number | Max 200 chars |
 | Status Filter | multi-select dropdown | No | Filter providers by status (Draft, Active, Suspended, Deactivated) | Multiple selections allowed |
 | Featured Filter | checkbox | No | Filter to show only featured providers | Boolean toggle |
-| Commission Type Filter | select | No | Filter by commission structure (Percentage, Tier-based, All) | Single selection |
+| Commission Type Filter | select | No | Filter by commission structure (Percentage, Flat Rate, All) | Single selection |
 | Date Range Filter | date range picker | No | Filter by provider creation date or last activity date | Valid date range required |
 | Provider List Table | data table | N/A | Displays provider rows with columns: Name, Clinic, Status, Featured, Commission Rate, Documents Status, Created Date, Actions | Paginated (50 rows per page) |
 
@@ -998,6 +998,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2025-12-08 | 1.3 | **Constitution & System PRD alignment update:** <br>• Updated REQ-015-015 to reference the platform-wide password policy from the Hairline Platform Constitution and shared authentication spec (minimum 12 characters, required character classes, bcrypt with minimum cost factor 12, not configurable per FR)<br>• Clarified that sensitive actions (Commission and Seat Limit changes, Commission editing) require admin re-authentication via password in MVP, and MUST transition to MFA-based re-authentication once the shared MFA stack from FR-026 / FR-031 is delivered (all MFA references in this FR are future, non-MVP behavior)<br>• Aligned high-level system behaviour with system-prd.md FR-015 by explicitly reflecting the record-keeping-only document model and Percentage/Flat Rate commission configuration (tier-based commissions deferred to a future FR) | Claude (AI Assistant) |
 | 2026-04-02 | 1.4 | Clarified ownership split with FR-029 and FR-017: FR-029 / A-09 remains owner of the global platform commission default and booking-time snapshot policy, while FR-015 / A-02 owns provider-specific commission overrides and payout frequency consumed by FR-017 payout workflows | Codex |
 | 2026-04-02 | 1.5 | Restored dual management for provider-specific commission settings: FR-015 remains the single-provider commission and payout-frequency screen, while FR-029 Screen 5 now also manages provider-specific commission scopes centrally; the two admin surfaces are documented as synchronized for the same provider commission data | Codex |
+| 2026-04-12 | 1.6 | Cross-FR cleanup: corrected Screen 1 Provider Management Dashboard commission filter from stale "Tier-based" to "Flat Rate" so the list filter matches the module-wide Percentage/Flat Rate commission model and FR-022 search/filter alignment | Codex |
 
 ---
 

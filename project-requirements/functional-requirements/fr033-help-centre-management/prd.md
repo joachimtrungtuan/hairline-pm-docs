@@ -1094,7 +1094,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 ### System Performance Metrics
 
 - **SC-009**: Help Centre landing page loads in under 2 seconds for 95% of requests (both provider and patient platforms)
-- **SC-010**: Content search returns results in under 1 second for 90% of queries (future enhancement, both audiences)
+- **SC-010**: Content search returns results in under 1 second for 90% of queries (P1 requirement for both audiences)
 - **SC-011**: File downloads (PDFs, videos) begin within 3 seconds of user click (both provider and patient)
 - **SC-012**: System supports 1000 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre without performance degradation
 
@@ -1202,7 +1202,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Multi-Tenant Separation**: Provider content and patient content completely separated at database level to prevent cross-audience data exposure; separate API endpoints for provider content (/api/provider/help-centre) and patient content (/api/patient/help-centre)
 - **File Storage**: Large files (videos, PDFs) stored in cloud object storage (S3, Azure Blob) with CDN for fast global delivery; files tagged with audience type (provider/patient) for access control
 - **Performance**: Implement aggressive caching for published Help Centre content (cache invalidation on content updates); pre-generate content indexes for fast category/tag filtering per audience; patient content cached more aggressively due to higher expected traffic
-- **Search**: Full-text search across all content (title, body, tags) using database full-text indexing or dedicated search engine (Elasticsearch, Algolia) for advanced search features (future enhancement); search scoped to selected audience (provider or patient)
+- **Search**: Full-text search across all content (title, body, tags) is required for P1 and scoped to the selected audience (provider or patient). Database full-text indexing is the minimum implementation baseline; a dedicated search engine remains an optional later enhancement.
 
 ### Integration Points
 
