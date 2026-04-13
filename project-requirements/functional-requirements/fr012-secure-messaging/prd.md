@@ -430,7 +430,6 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Manual observation flags (orange badges) added by admins for proactive monitoring.
 - Tapping/selecting a conversation opens detailed Message Thread View (Screen 6A) for full history, flag management, and optional emergency intervention activation (Screen 6B).
 - Pagination with 20 conversations per page; scroll to load more.
-- Export filtered conversation list to CSV/PDF for compliance audits.
 - Clear visual distinction for conversations with flags, interventions, or high message counts.
 
 **Notes**:
@@ -441,7 +440,6 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Visual hierarchy: flagged conversations more prominent than unflagged.
 - Preset filter quick actions: "Flagged Only", "Intervened Today", "Unresolved Flags", "Last 24 Hours".
 - **Inquiry ID filtering**: Powerful for case investigation - shows all provider conversations for one inquiry side-by-side.
-- Export functionality: Export visible/filtered list with conversation metadata (no message content in list export).
 - Responsive design: filters collapse to sidebar on mobile; conversation list remains scrollable.
 - Performance: Load first 20 conversations quickly; lazy load more on scroll.
 - Badge tooltips: Hover over flags/badges to see flag type, reason, timestamp.
@@ -1016,6 +1014,7 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 | 2025-12-19 | 2.9 | Split Screen 6 into two explicit subsections for clarity: Screen 6A (Message Thread Detail - Monitoring & Flagging) as default read-only state with flag management, and Screen 6B (Message Thread Detail - Emergency Intervention) as activated state with message composition, mandatory reason selection, and prominent warnings; emphasizes seriousness of intervention capability and provides clearer design/implementation guidance; updated entry points and references throughout document | AI |
 | 2025-12-19 | 2.10 | Added explicit 3-panel layout structure to Provider (Screen 4) and Admin (Screens 6A/6B) message detail views: LEFT panel (conversation list synchronized with inbox/monitoring center), CENTER panel (message thread with compose area for provider or read-only for admin monitoring), RIGHT panel (conversation info, tools, quote references for provider; flag management and intervention controls for admin); documented responsive behavior for desktop/tablet/mobile; updated data fields tables to include panel location column; enhanced notes sections with layout specifications | AI |
 | 2025-12-22 | 2.11 | Verified & aligned with system PRD updates: patient ↔ provider is V1 messaging channel; support/aftercare messaging deferred; standardized patient identity reveal to post-payment only; marked MFA as planned control per Constitution; fixed duplicate REQ IDs in summary | AI |
+| 2026-04-13 | 2.12 | Removed Communication Monitoring Center export behavior from Screen 5 to keep admin conversation export deferred until a dedicated export requirement is re-specified in the search/filter catalog. | Codex |
 
 ---
 
@@ -1032,4 +1031,4 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Governance → PRD Standards & Requirements (NON-NEGOTIABLE)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD  
-**Last Updated**: 2025-12-22
+**Last Updated**: 2026-04-13

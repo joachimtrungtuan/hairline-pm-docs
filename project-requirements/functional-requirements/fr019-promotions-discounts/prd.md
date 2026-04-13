@@ -189,30 +189,60 @@ Notes:
 
 ### Screen 4: Admin – Discount Code Catalog
 
-> **TODO — PLACEHOLDER**: This screen spec must be fully developed when FR-019 is finalized. The authoritative search/filter criteria for this screen are co-owned with **FR-022: Search & Filtering** (`fr022-search-filtering/prd.md` → screen code `FR-019 / Screen 4`). Any changes to filter fields or search behavior must be reflected in both documents simultaneously.
-
 **Purpose**: Admin searches for and filters all discount codes (platform-created and provider-created) across the platform.
 
-**Data Fields** _(placeholder — expand when FR-019 is finalized)_:
+This screen is the operational catalog view for existing discount codes. **FR-022** remains the authoritative source for the search/filter criteria; this FR defines the result layout, row actions, and acceptance behavior for the A-06 screen.
+
+**Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Code / keyword search | text input | No | Search by discount code text or keyword | Debounced; case-insensitive; partial match |
-| Filter: Status | multi-select | No | Filter by discount lifecycle status | Options: Active, Draft, Expired, Paused |
-| Filter: Provider Participation | dropdown | No | Filter by participating provider | All; provider list from DB |
-| Filter: Date Range | date range picker | No | Filter by active window | Start/end date overlap |
-| Filter: Usage | range | No | Filter by usage count or utilization threshold | Min–Max range |
-| Filter: ROI | dropdown | No | Filter by ROI tier or performance band | Admin-defined tiers |
+| Code / keyword search | text input | No | Search by discount code text or keyword | Min 2 chars; 500ms debounce; case-insensitive fuzzy match |
+| Filter: Status | multi-select | No | Filter by discount lifecycle status | Options: Active, Draft, Expired, Paused; OR within field |
+| Filter: Provider Participation | dropdown | No | Filter by participating provider | All; provider list from DB; exact match |
+| Filter: Date Range | date range picker | No | Filter by active window | Start/end overlap with discount active window |
+| Filter: Usage | range | No | Filter by redeemed count / utilization threshold | Min–Max range; blank defaults to unbounded |
+| Filter: ROI | dropdown | No | Filter by ROI tier or performance band | Admin-defined tiers; exact match |
+| Result Count | label | Yes | Shows number of matched discount codes | Updates after every search/filter operation |
+| Results Table | table | Yes | Displays matched discount codes for review and action | Columns are fixed for MVP and must render all required fields below |
 
-**Business Rules** _(placeholder)_:
+**Results Table Columns**:
+
+| Column | Source / Meaning | Notes |
+|--------|------------------|-------|
+| Code | Discount code text | Primary identifier; searchable |
+| Discount Owner | Platform-created or provider-created | Shows owner badge and provider name when applicable |
+| Funding Model | Platform only / Both fees / Hairline only / Provider only | Derived from discount definition |
+| Participating Providers | Provider scope summary | Shows `All Providers` or explicit provider count/name summary |
+| Status | Draft / Active / Paused / Expired | Derived from lifecycle state |
+| Active Window | Start and end dates | Used by Date Range filter |
+| Usage | Redeemed count versus limit | Shows current count and cap when capped |
+| ROI Tier | Admin-defined ROI band | Blank states shown as `Not yet calculated` until ROI data exists |
+| Last Updated | Most recent admin/provider mutation timestamp | Default descending sort key for the list |
+
+**Business Rules**:
 
 - Admin can view all platform-created and provider-created discount codes in one unified list.
+- Catalog rows must always display the discount owner and funding model so admins can distinguish provider-created versus platform-created discounts without opening the detail flow.
+- Provider Participation filter matches the provider scope configured on the discount: `All Providers` rows are returned only when the filter is `All`, while provider-specific rows require an exact provider match.
+- Date Range filter uses active-window overlap logic; a discount is included when any part of its active window overlaps the selected range.
+- Usage filter evaluates redeemed count, not available balance or estimated reach.
+- ROI filter uses the same admin-defined ROI tiering rules referenced in FR-022; rows without computed ROI remain visible only when ROI filter is `All`.
+- Search, filters, result count, and reset behavior must stay aligned with FR-022 control standards.
 - Access restricted to authorized admin roles (RBAC enforced per FR-031).
+
+**Acceptance Criteria**:
+
+1. Given the admin opens the Discount Code Catalog, when the screen loads, then the system shows the unified discount list with the fixed MVP columns defined above and the result count for the default query.
+2. Given the admin enters a code or keyword query, when the debounce completes, then the list narrows to matching discount rows using case-insensitive fuzzy matching.
+3. Given the admin applies any combination of Status, Provider Participation, Date Range, Usage, and ROI filters, when the filters are active, then the catalog returns only rows satisfying all active filter types and updates the result count.
+4. Given the admin clears all active filters, when reset is triggered, then all controls return to defaults and the full catalog list is restored.
+5. Given the admin needs more detail on a matched code, when they select a row, then the system opens the existing create/manage detail flow for that discount without losing the active catalog context.
 
 **Notes**:
 
-- Full UI spec, field validations, acceptance criteria, and column layout to be completed when FR-019 is developed further.
-- Search and filter field definitions are the joint responsibility of this FR and FR-022. See FR-022 Master Reference Table for the current authoritative spec.
+- Search and filter field definitions are co-owned with FR-022. Any change to search/filter criteria on this screen must be updated in both FR-019 and FR-022.
+- Row-level actions (pause, resume, edit, archive) must follow the permissions and audit rules defined for Screen 1.
 
 ---
 
@@ -429,6 +459,7 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 | 2025-11-11 | 1.0     | Initial PRD creation                         | AI     |
 | 2025-11-11 | 1.1     | Filled scope, workflows, rules, and criteria | AI     |
 | 2026-04-12 | 1.2     | Added Screen 4 (Admin Discount Code Catalog) as placeholder with TODO note; screen code FR-019/Screen 4 reserved for FR-022 Master Reference Table | AI     |
+| 2026-04-13 | 1.3     | Finalized Screen 4 (Admin Discount Code Catalog): replaced placeholder with full catalog field definitions, fixed result-table columns, business rules, and acceptance criteria aligned to FR-022 search/filter contract | Codex |
 
 ---
 
@@ -444,4 +475,4 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2025-11-11
+**Last Updated**: 2026-04-13
