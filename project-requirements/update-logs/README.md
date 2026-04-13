@@ -366,6 +366,38 @@ This folder contains documentation update reports and verification logs for the 
 
 - `UPDATE_LOG_ARCHIVE_REORGANIZATION_2026-04-09.md` - Moved the misplaced February 13, 2026 documentation reports out of `local-docs/project-automation/logs/` into `update-logs/2026-02-13/`, standardized their filenames, and refreshed the update-log index
 
+### 2026-04-12/ (6 files)
+
+#### **FR-022 Major Revision**
+
+- `FR022_MAJOR_REVISION_2026-04-12.md` - FR-022 major revision: all business workflow flows converted to non-linear Mermaid diagrams (3 main + 6 alternative); all screen spec headings renamed to canonical `FR-XXX / Screen N` / `FR-XXX / Screen N / Tab M` format; Master Reference Table screen codes and gap markers corrected; 8 screen spec content corrections from cross-FR audit
+
+#### **FR-022 Verification Fixes (Cross-FR Search/Filter Consistency)**
+
+- `FR022_VERIFICATION_FIXES_2026-04-12.md` - 15 cross-FR search/filter consistency fixes: added FR-019/Screen 4 + FR-012/Screen 2 to Master Reference Table and screen specs; added A-06 module section; removed A-08 scope; fixed FR-016/Screen 7 (no search, added Show Only My Actions toggle); fixed FR-010/Screen 3 date default (All dates → Current month); removed wrong Clinician/Specialist filter from FR-011/Screen 8; removed "role" token from FR-009/Screen 10 search; added 3 new filters to FR-011/Screen 13; corrected debounce language in Rule 6 and Admin Editability; fixed performance SLA 500ms → 300ms in Performance Rule 1 and REQ-022-005; removed REQ-022-045/046; renamed Screen 11 heading to "Hairline Overview Dashboard"; updated FR-019 (v1.2), FR-011 (v1.3), and FR-005 (v1.5) with matching fixes
+
+#### **FR-022 Scope Alignment**
+
+- `FR022_SCOPE_ALIGNMENT_2026-04-12.md` - Applied selected post-verification resolutions: trimmed FR-022 provider-search scope to match FR-003 Screen 7a, removed deferred/untracked FR-022 search requirements without active screen coverage, and promoted Help Centre full-text search to explicit P1 scope across FR-035 and FR-033
+
+#### **FR-022 Source-of-Truth Alignment (Follow-up)**
+
+- `FR022_SOURCE_OF_TRUTH_ALIGNMENT_2026-04-12.md` - Follow-up alignment pass: added the remaining missing Help & Support screens from FR-035 and FR-032 into FR-022, corrected Provider Messages to source from FR-012 Screen 3 with exact filter behavior, and aligned A-02 provider-management search/filter wording plus FR-015 commission filter values to the admin dashboard model
+
+#### **FR-022 Verification Round 2 Fixes**
+
+- `FR022_VERIFICATION_ROUND2_2026-04-12.md` - Second verification pass: removed "treatment type" filter (absent from screen spec) from REQ-022-002, Module Scope, and Main Flow 1; fixed Main Flow 2 diagram nodes to match FR-015/Screen 1 exactly; removed P-03 and A-08 from FR-022 module list in system-prd.md; rewrote User Story 2/Scenario 2 to test Location filter (not search field); enumerated Transaction Search status options per record type; updated footer date and approvals table
+
+#### **FR-022 Verification Round 3 Fixes**
+
+- `FR022_VERIFICATION_ROUND3_2026-04-12.md` - Third verification pass (v2.3): resolved PHI masking gap — patient name excluded from provider-facing search (FR-003/Screen 9, FR-004/Screen 2) pre-payment confirmation; standardized all search matching to fuzzy (database full-text indexes) across all screen specs and rules; admin max search length corrected 100→200 chars; multi-select filter Logic column updated from AND to OR (within field) with disambiguation note in Control Behavior Standards; expanded Internal Dependencies with full 30+ FR source maintenance table; added Provider Platform entry points; added missing 300ms debounce to FR-035/Screen 1; marked REQ-022-009 export as P2 spec gap with TODO
+
+### 2026-04-13/ (1 file)
+
+#### **FR-022 Verification Round 4 Fixes**
+
+- `FR022_VERIFICATION_FIXES_2026-04-13.md` - Fourth verification pass (v2.4): removed "specialist" from Module Scope PR-04 and REQ-022-039 (specialist filter is admin-only, not in provider screen spec); removed B2 overflow workflow (100-result truncation contradicted REQ-022-006 pagination — pagination is now sole model); moved REQ-022-009 export from P1 to P2 (incomplete spec); updated 4 stale system PRD screen code references (P-02-001→FR-003/Screen 7a, P-02-002→FR-005/Screen 1, A-01-007→FR-016/Screen 1, A-09-010→FR-031/Screen 5); added Active Status and Available Capacity filters to FR-003/Screen 7a per system PRD L441; corrected Implementation Notes debounce from blanket 500ms to 300–500ms per REQ-022-012
+
 ---
 
 ## Quick Reference by Topic
@@ -455,6 +487,13 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-02**: `FR029_FR015_COMMISSION_DUAL_MANAGEMENT_2026-04-02.md` - Restored dual commission-management surfaces to match the implemented admin design: FR-029 again manages provider-specific commission scopes centrally, FR-015 remains the single-provider commission + payout-frequency screen, and FR-017 was updated to consume the shared effective commission configuration
 - **2026-04-03**: `FR022_SCREEN_SPECIFICATIONS_OVERHAUL_2026-04-03.md` - FR-022 Screen Specifications rewritten: three-tenant structure (Patient/Provider/Admin), 54-screen master reference table, Provider Platform screens added (PR-01–PR-06, previously missing), control behaviors mini-tables, maintenance convention note, system PRD FR-022 section updated with FR-022 as single source of truth
 - **2026-04-03**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-04-03.md` - FR-025 admin layout re-verification against 18 new layout files (all 7 admin screens covered); 6/7 screens GOOD+; S6 PARTIAL (Print Preview missing, non-critical); 0 critical field gaps; 13 UX Improvement + 5 UX Suggestion issues identified
+- **2026-04-12**: `FR022_MAJOR_REVISION_2026-04-12.md` - FR-022 major revision: all business workflow flows converted to non-linear Mermaid diagrams (3 main + 6 alternative flows); all screen specification headings renamed from invented module codes to canonical `FR-XXX / Screen N` / `FR-XXX / Screen N / Tab M` format; Master Reference Table screen codes and gap markers corrected; 8 screen spec content corrections from cross-FR audit (added filters, fixed status option enums)
+- **2026-04-12**: `FR022_VERIFICATION_FIXES_2026-04-12.md` - 15 cross-FR search/filter consistency fixes across FR-022, FR-019, FR-011, and FR-005: new screens added to Master Reference Table and spec section (FR-019/Screen 4, FR-012/Screen 2, A-06 module); wrong fields removed (Clinician/Specialist from FR-011/Screen 8, role token from FR-009/Screen 10 search, search view from FR-016/Screen 7); filter additions (3 new filters to FR-011/Screen 13, Show Only My Actions toggle to FR-016/Screen 7); date default corrected (FR-010/Screen 3); debounce Rule 6 and performance SLA 300ms corrected; stale REQ-022-045/046 removed; screen name aligned (Hairline Overview Dashboard)
+- **2026-04-12**: `FR022_SCOPE_ALIGNMENT_2026-04-12.md` - Post-verification resolution pass: FR-022 trimmed back to source-backed patient provider-search criteria, untracked/deferred FR-022 search requirements removed, and FR-035/FR-033 aligned to require Help Centre full-text search in P1
+- **2026-04-12**: `FR022_SOURCE_OF_TRUTH_ALIGNMENT_2026-04-12.md` - Follow-up FR-022 alignment: added missing Help & Support hub/library/filter screens from FR-035 and FR-032, corrected Provider Messages to FR-012 Screen 3 with exact search/filter controls, and normalized A-02 provider-management criteria plus the FR-015 commission filter contract
+- **2026-04-12**: `FR022_VERIFICATION_ROUND2_2026-04-12.md` - FR-022 second verification pass: removed unimplemented treatment type filter from REQ-022-002/Module Scope/Main Flow 1; fixed Main Flow 2 diagram nodes; removed P-03 and A-08 from system-prd.md FR-022 module list; rewrote User Story 2/Scenario 2; enumerated Transaction Search status options per record type; updated footer date and approvals table
+- **2026-04-12**: `FR022_VERIFICATION_ROUND3_2026-04-12.md` - FR-022 third verification pass (v2.3): PHI masking gap fixed; all search standardized to fuzzy matching; admin max length 100→200 chars; filter Logic column OR-within-field with disambiguation note; expanded dependency table (30+ source FRs); Provider Platform entry points added; FR-035/Screen 1 debounce added; REQ-022-009 export marked P2 spec gap
+- **2026-04-13**: `FR022_VERIFICATION_FIXES_2026-04-13.md` - FR-022 fourth verification pass (v2.4): specialist filter removed from provider scope; B2 overflow workflow removed (pagination is sole model); REQ-022-009 moved to P2; 4 stale system PRD screen code cross-references updated; Active Status + Available Capacity filters added to FR-003/Screen 7a; Implementation Notes debounce corrected
 
 ### Design Specifications
 
@@ -499,4 +538,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 9, 2026
+**Last Updated**: April 13, 2026
