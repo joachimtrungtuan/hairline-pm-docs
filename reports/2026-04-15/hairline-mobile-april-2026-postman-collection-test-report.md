@@ -1,7 +1,7 @@
 # Hairline Mobile - Apr 2026 Postman Collection Test Report
 
 **Report Date**: 2026-04-15
-**Retest Date**: 2026-04-16 (Cancel Inquiry retested 2026-04-17)
+**Retest Date**: 2026-04-16 (Cancel Inquiry retested 2026-04-17; FR-008 travel flow retested 2026-04-17)
 **Scope**: "Hairline Mobile - Apr 2026" Postman collection — 71 endpoints
 **Collection ID**: `33112351-34f95c9e-6f99-4d5f-b0a0-7b3265e893c0`
 **Base URL**: `https://backend.hairline.app/api`
@@ -23,15 +23,17 @@ All 71 endpoints in the Apr 2026 collection were tested against the live API on 
 
 | Outcome | Count |
 |---|---:|
-| ✅ Pass (2xx with meaningful data) | 57 |
+| ✅ Pass (2xx with meaningful data) | 55 |
 | ⚠️ State-dependent (correct behaviour, wrong setup state) | 9 |
 | 🔧 Collection mismatch (collection body/params don't match live API) | 3 |
-| ❌ Backend defect (server error / silent failure) | 2 |
+| ❌ Backend defect (server error / silent failure) | 4 |
 | **Total** | **71** |
 
-**Two confirmed backend defects:**
-- `POST /inquiry/cancel` — Returns 200 success but cancellation does not persist; subsequent reads show the inquiry reverted to pre-cancel state. Root cause: `QuoteObserver` and live provider auto-quoting race condition overwriting the cancelled status. (Discovered 2026-04-17 via flow dictionary verification test.)
+**Four confirmed backend defects** (two new defects discovered 2026-04-17 during FR-008 travel flow retest):
+- `POST /inquiry/cancel` — Returns 200 success but cancellation does not persist; subsequent reads show the inquiry reverted to pre-cancel state. Root cause: `QuoteObserver` and live provider auto-quoting race condition overwriting the cancelled status. (Discovered 2026-04-17.)
 - `POST /review/{REVIEW_ID}` — Returns HTTP 500 "An error occurred while updating the review." Uncaught exception in `ReviewController` update method.
+- `POST /quote/flight-book` — Returns HTTP 500. Regression discovered 2026-04-17: endpoint now throws a server error on all requests. Both Path A (provider-included) and Path B (patient self-booked) affected. See Backend Defects section.
+- `POST /quote/hotel-book` — Returns HTTP 500. Same regression as flight-book. See Backend Defects section.
 
 **Four collection fixes were applied during testing** that converted initial 422 failures into passes:
 - Upload Passport Details: collection had wrong field names
@@ -248,10 +250,10 @@ This section documents the required execution order within each folder. Endpoint
 | 11 | Q2 - Inquiry Cancel | GET | `/inquiry/get-patient-single-inquiry` | 200 | ✅ Pass | |
 | 12 | Q4 Q5 - Passport Flight Hotel | POST | `/passport-details/store` | 200 | ✅ Pass | Collection had wrong field names (see Collection Fixes). Correct fields: passport_number, passport_issue, passport_expiry, passport_name, passport_dob, gender, location, place_of_birth. |
 | 13 | Q4 Q5 - Passport Flight Hotel | GET | `/passport-details/get-passport-details` | 200 | ✅ Pass | |
-| 14 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/flight-book` | 200 | ✅ Pass | Collection missing `leg_type` field (valid: outbound, return). Added and passes. |
+| 14 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/flight-book` | 500 | ❌ Defect | **Regression as of 2026-04-17.** Previously passed (2026-04-16). Now returns HTTP 500 on all requests regardless of input. `leg_type` field is still required (valid: `outbound`, `return`) — without it the endpoint correctly returns 422, confirming validation runs. The 500 occurs after validation, during the business logic phase. Both Path A (provider-submitted, hotel-included quote) and Path B (patient-submitted, no hotel/flight quote) affected. See Backend Defects section. |
 | 15 | Q4 Q5 - Passport Flight Hotel | GET | `/quote/flight-detail` | 200 | ✅ Pass | Returns 404 if flight not yet booked. Run after flight-book. |
 | 16 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/flight-update` | 403 | ⚠️ State-dep | "Flight records are locked after submission. Contact admin for corrections." Business rule: locks immediately after flight-book. |
-| 17 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/hotel-book` | 200 | ✅ Pass | |
+| 17 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/hotel-book` | 500 | ❌ Defect | **Regression as of 2026-04-17.** Previously passed (2026-04-16). Same root cause as `flight-book` — server error after validation, during business logic. See Backend Defects section. |
 | 18 | Q4 Q5 - Passport Flight Hotel | GET | `/quote/hotel-detail` | 200 | ✅ Pass | |
 | 19 | Q4 Q5 - Passport Flight Hotel | POST | `/quote/hotel-update` | 403 | ⚠️ State-dep | "Hotel records are locked after submission. Contact admin for corrections." Same lock behaviour as flight. |
 | 20 | Q7 Q8 - Reviews and Takedown | POST | `/review/submit` | 409 | ⚠️ State-dep | "Review already exists for this quote." One review per quote is allowed. Needs a completed quote with no prior review. |
@@ -335,6 +337,32 @@ The cancel controller auto-cancels active quotes inside a `DB::beginTransaction(
 This is a genuine server error, not a state issue. The review exists (confirmed via `GET /patient/reviews/my-reviews`), the patient owns it, and the request was sent with all required fields (`rating`, `facility_rating`, `staff_rating`, `results_rating`, `value_rating`, `review` with ≥100 characters). The backend throws an uncaught exception internally.
 
 **Required fix**: Investigate the `ReviewController` update method. The exception is likely a null reference or missing DB relation when updating an existing review record.
+
+---
+
+### ❌ `POST /quote/flight-book` — HTTP 500 (regression, discovered 2026-04-17)
+
+**Endpoint**: `POST /quote/flight-book`  
+**HTTP status**: 500  
+**Affects**: All requests — both Path A (provider-included travel) and Path B (patient self-booked travel)  
+**Previously**: Passed with 200 on 2026-04-16.
+
+**Symptom**: The endpoint reaches the business logic phase successfully (field validation runs and returns 422 correctly when fields are missing), but then throws an unhandled server error. The error occurs consistently regardless of the quote, the submitter role (patient or provider), or the travel path.
+
+**What we traced**: The controller calls a method on `TravelPathService` that is responsible for validating the submission — checking things like quote status, submitter role constraints, and duplicate detection. That method is referenced in the controller but is not present in the current version of `TravelPathService`. The class has other related methods (`deriveTravelPath`, `isServiceIncluded`, `getTravelStatus`) but the submission validation method is missing entirely.
+
+**Suggested mitigation**: Implement the missing validation method in `TravelPathService`. Based on the controller's usage, it should: (1) confirm the quote is in `confirmed` status before allowing travel details to be submitted, (2) enforce that the submitter role is appropriate for the travel path (e.g. provider submits on Path A, patient submits on Path B), and (3) prevent duplicate leg submissions for the same quote. The exact implementation is left to the developer's discretion.
+
+---
+
+### ❌ `POST /quote/hotel-book` — HTTP 500 (regression, discovered 2026-04-17)
+
+**Endpoint**: `POST /quote/hotel-book`  
+**HTTP status**: 500  
+**Affects**: All requests  
+**Previously**: Passed with 200 on 2026-04-16.
+
+**Symptom and root cause**: Identical to `flight-book` above — the same missing validation method is called in `HotelController` before the hotel record is created. The fix is the same: implement the missing method in `TravelPathService`.
 
 ---
 
