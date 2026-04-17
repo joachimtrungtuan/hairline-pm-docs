@@ -169,6 +169,22 @@ This folder contains documentation update reports and verification logs for the 
 - `FR022_FOLLOWUP_ALIGNMENT_2026-04-13.md` - User-directed follow-up pass: aligned the system PRD Screen 7a summary to FR-003, removed Screen 5 export behavior from FR-012, and removed unsupported admin global/cross-module search claims from FR-022
 - `FR022_STATUS_VERIFIED_2026-04-13.md` - Finalized FR-022 to the verified PRD state: status set to `✅ Verified & Approved`, approvals completed, and change log updated to match `prd-template.md`
 
+### 2026-04-15/ (1 file)
+
+#### **Hairline Mobile April 2026 Postman Collection Test**
+
+- `HAIRLINE_MOBILE_APRIL_2026_POSTMAN_COLLECTION_TEST_2026-04-15.md` - Live sweep of the Hairline Mobile April 2026 API collection routes; 44 original endpoints were tested in the initial sweep, 29 of those are now confirmed meaningful, 7 return successful but sparse payloads pending product confirmation, 8 remain unresolved failures, and 25 follow-up validations were run separately to clear ambiguity. Follow-up checks confirmed the ISO-3 city lookup, meaningful `inquiry_id` payloads, brute-force quote-bearing inquiry coverage, successful provider profile and treatment update retries, an endpoint-correction retry guide for resolved endpoints including the quote decimal-precision rule, and a separate sparse-payload review for endpoints that may legitimately return empty arrays.
+
+### 2026-04-16/ (2 files)
+
+#### **FR-014 Provider Dashboard Design Lock**
+
+- `FR014_DASHBOARD_DESIGN_LOCK_2026-04-16.md` - FR-014 PRD major rewrite (v1.0 → v2.0) to match the finalized Provider Main Dashboard design (Figma node 6358-111596). Design is locked — do not reopen layout or widget-type decisions. Key changes: single-page cockpit (3 sections: A Inbox, B Performance, C Financials); global filters now Time range (default Last 4 weeks) + Country; cross-filtering specified; Section A (Inbox) fully specified with TTFQ tiles and inquiry queue; Section B widgets updated to funnel chart (correct stages), bullet chart (TTFQ vs SLA), calendar heatmap (Booking Intensity Index), and donut chart (Patient Location); Section C updated to area line (Earnings Trend), Pareto bar (Revenue by Treatment), stacked horizontal bar (Quote→Payment Aging, new), and column bar + inline table (Payouts); low-sample threshold changed from <5 to <30 inquiries.
+
+#### **FR-014 12-Screen Analytics Suite Expansion**
+
+- `FR014_12_SCREEN_EXPANSION_2026-04-16.md` - FR-014 PRD full expansion (v2.0 → v3.0): from 3 screens to 13-screen analytics suite (5 Provider + 7 Admin + 1 Export Config). Screen 1 remains locked. New provider screens: Performance & Conversion Deep-Dive (Screen 2), Patient Analytics (Screen 3), Finance & Payouts Deep-Dive (Screen 4), Pricing & Benchmarks (Screen 5). New admin screens: Platform Overview (Screen 6), Provider Performance & Engagement (Screen 7), Patient Acquisition & Funnel (Screen 8), Geographic Intelligence (Screen 9), Treatment Outcomes/Satisfaction (Screen 10), Financial Health & Cashflow (Screen 11), Pricing Intelligence (Screen 12). 104 functional requirements total (REQ-014-001 through REQ-014-104). All widgets verified against system-data-schema.md; data constraints documented (no team-level TTFQ, booking-level affiliate tracking only, satisfaction-only outcome proxy).
+
 ### 2026-03-06/ (1 file)
 
 #### **P-06 + P-08 Mobile UX/UI Implementation Tasks**
@@ -427,6 +443,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-19**: `AUDIT_VERIFICATION_PROVIDER_2026-03-19.md` - Provider dashboard audit second-pass: 6 verdict corrections, 2 new P2 bugs (no self-revoke guard, no quote-edit status guard), totals updated
 - **2026-03-19**: `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Backend endpoint readiness audit for all 15 missing patient mobile flows against `main/hairline-backend`
 - **2026-04-07**: `MOBILE_APP_TESTING_REPORT_PROGRESS_UPDATE_2026-04-07.md` - April 6 patient mobile testing artifacts updated for notification coverage: bottom-nav entry point, empty state, visible search/filter/bulk actions recorded, while swipe/deep-link/data-driven behavior remains blocked pending Firebase registration and backend delivery
+- **2026-04-15**: `HAIRLINE_MOBILE_APRIL_2026_POSTMAN_COLLECTION_TEST_2026-04-15.md` - Live API sweep of the Hairline Mobile April 2026 collection routes; 44 original endpoints were tested in the initial sweep, 29 are confirmed meaningful after follow-up validation, 7 return successful but sparse payloads pending product confirmation, 8 remain unresolved failures, and 25 follow-up validations were run separately to clear ambiguity. Follow-up checks verified that `GET /localization/get-cities/CAN` returns `200` when the country input is the ISO alpha-3 code, that quote-bearing inquiries return meaningful `quote/get-quotes` payloads, that `POST /settings/update-provider-profile` and `POST /treatment/update-treatment` succeed with the required IDs/payloads, and that the report now includes an endpoint-correction retry guide for resolved reruns, including the `quote_amount` decimal-precision rule
 
 - **2026-02-13**: `PLANE_API_IMPROVEMENTS_2026-02-13.md` - `plane-api-commands` automation improvements: HTML cleanup, issue-update support, skip-parameter support, and sandbox-handling notes
 - **2026-02-13**: `SECRETS_SCAN_REPORT_2026-02-13.md` - Secrets scan confirming no hardcoded credentials under `local-docs/project-automation`
@@ -511,6 +528,8 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-13**: `FR022_FR019_ALIGNMENT_2026-04-13.md` - Selected resolution pass: moved FR-012 messaging search/filter surfaces to P2 and reassigned provider messaging to PR-07, removed non-authoritative search-result export behavior outside deferred REQ-022-009, finalized FR-019 Screen 4 (Discount Code Catalog), and aligned the system PRD FR-022 summary
 - **2026-04-13**: `FR022_FOLLOWUP_ALIGNMENT_2026-04-13.md` - User-directed FR-022 follow-up alignment: system PRD Screen 7a wording reverted to match FR-003, FR-012 conversation export removed, and unsupported FR-022 admin global/cross-module search claims removed
 - **2026-04-13**: `FR022_STATUS_VERIFIED_2026-04-13.md` - FR-022 verification completion: PRD status set to `✅ Verified & Approved`, approvals finalized, and governance metadata aligned to `prd-template.md`
+- **2026-04-16**: `FR014_DASHBOARD_DESIGN_LOCK_2026-04-16.md` - FR-014 PRD v2.0: single-page cockpit design locked; Section A (Inbox with TTFQ), Section B (funnel, bullet chart, calendar heatmap, donut), Section C (area line, Pareto, aging stacked bar, payouts); global filters, cross-filtering, and all calculation specs documented
+- **2026-04-16**: `FR014_12_SCREEN_EXPANSION_2026-04-16.md` - FR-014 PRD v3.0: expanded to 13-screen analytics suite (5 Provider + 7 Admin + 1 Export Config); 104 functional requirements; all widgets verified against schema; data constraints documented
 
 ### Design Specifications
 
@@ -555,4 +574,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 13, 2026
+**Last Updated**: April 16, 2026
