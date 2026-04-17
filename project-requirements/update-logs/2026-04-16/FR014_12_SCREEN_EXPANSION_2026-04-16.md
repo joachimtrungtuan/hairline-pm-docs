@@ -155,3 +155,16 @@ Screen 13 (Export Config) is carried forward from v2.0 without modification.
 - Data retention (24 months)
 - Analytics pipeline frequency (15 minutes)
 - Admin requirements baseline
+
+---
+
+## Post-Expansion Structural Correction (2026-04-17)
+
+**Type**: Minor Update
+
+Screen ordering and tenant grouping corrected after expansion:
+
+- **Screen 6 (Export Report Configuration)** moved from tail position (was Screen 13) to immediately follow the Provider analytics screens (Screens 1–5), since it is a Provider-tenant feature
+- **Admin screens renumbered**: old Screens 6–12 → new Screens 7–13
+- **Tenant section headers added** to Screen Specifications following fr009 convention: `### Provider Platform (PR-05)` groups Screens 1–6; `### Admin Platform (A-08)` groups Screens 7–13; individual screen headings demoted from `###` to `####`
+- All screen-number cross-references updated throughout (Module Scope, Business Workflows, Entry Points, Business Rules, Success Criteria, Dependencies, Data Model Gaps, Functional Requirements Summary, Change Log)

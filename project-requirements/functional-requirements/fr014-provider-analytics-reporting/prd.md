@@ -36,17 +36,17 @@ All data shown across every screen is sourced directly from the operational data
 - Patient Analytics (Screen 3) — patient demographics, satisfaction, and journey
 - Finance & Payouts (Screen 4) — revenue breakdown and payout schedule
 - Pricing & Benchmarks (Screen 5) — pricing analysis and platform comparison
-- Export Report Configuration (Screen 13) — generate PDF/CSV exports
+- Export Report Configuration (Screen 6) — generate PDF/CSV exports
 
 ### Admin Platform (A-08) Scope
 
-- Platform Overview Dashboard (Screen 6) — platform health at a glance
-- Provider Performance & Engagement (Screen 7) — provider quality and activity monitoring
-- Patient Acquisition & Funnel (Screen 8) — how patients enter and move through the platform
-- Geographic Intelligence (Screen 9) — demand vs. supply by country
-- Treatment Outcomes (Screen 10) — operational and satisfaction outcomes
-- Financial Health & Cashflow (Screen 11) — platform financial risk and revenue health
-- Pricing Intelligence (Screen 12) — pricing landscape across providers and treatments
+- Platform Overview Dashboard (Screen 7) — platform health at a glance
+- Provider Performance & Engagement (Screen 8) — provider quality and activity monitoring
+- Patient Acquisition & Funnel (Screen 9) — how patients enter and move through the platform
+- Geographic Intelligence (Screen 10) — demand vs. supply by country
+- Treatment Outcomes (Screen 11) — satisfaction-based outcomes
+- Financial Health & Cashflow (Screen 12) — platform financial risk and revenue health
+- Pricing Intelligence (Screen 13) — pricing landscape across providers and treatments
 
 ### Communication Structure
 
@@ -64,7 +64,7 @@ All data shown across every screen is sourced directly from the operational data
 ### Entry Points
 
 - **Provider**: "Analytics" nav item → defaults to Screen 2 (Performance); Screen 1 (Main Dashboard) is the platform landing page, not the analytics section entry
-- **Admin**: "Analytics" nav item → defaults to Screen 6 (Platform Overview)
+- **Admin**: "Analytics" nav item → defaults to Screen 7 (Platform Overview)
 - **Export**: "Export Report" button available on all provider analytics screens
 
 ---
@@ -81,7 +81,7 @@ All data shown across every screen is sourced directly from the operational data
 2. Provider navigates to Patient Analytics (Screen 3) — reviews patient location and satisfaction trends
 3. Provider navigates to Finance & Payouts (Screen 4) — verifies this month's revenue and upcoming payout
 4. Provider navigates to Pricing & Benchmarks (Screen 5) — checks positioning vs. platform median
-5. Provider optionally generates a PDF/CSV export via Screen 13
+5. Provider optionally generates a PDF/CSV export via Screen 6
 
 ### Main Flow: Admin Monitors Platform Health
 
@@ -89,18 +89,18 @@ All data shown across every screen is sourced directly from the operational data
 **Trigger**: Admin clicks "Analytics" in admin nav
 **Outcome**: Admin reviews platform health, flags issues, and takes action
 
-1. Admin lands on Platform Overview (Screen 6) — checks TTFQ distribution and GMV summary
-2. Admin navigates to Provider Performance & Engagement (Screen 7) — reviews underperforming and dormant providers
-3. Admin navigates to Patient Acquisition & Funnel (Screen 8) — checks inquiry volume and funnel drop-offs
-4. Admin navigates to Geographic Intelligence (Screen 9) — identifies underserved markets
-5. Admin navigates to Financial Health & Cashflow (Screen 11) — reviews payout obligations and cash-at-risk
+1. Admin lands on Platform Overview (Screen 7) — checks TTFQ distribution and GMV summary
+2. Admin navigates to Provider Performance & Engagement (Screen 8) — reviews underperforming and dormant providers
+3. Admin navigates to Patient Acquisition & Funnel (Screen 9) — checks inquiry volume and funnel drop-offs
+4. Admin navigates to Geographic Intelligence (Screen 10) — identifies underserved markets
+5. Admin navigates to Financial Health & Cashflow (Screen 12) — reviews payout obligations and cash-at-risk
 6. Admin takes action on flagged providers (links through to provider management in FR-015)
 
 ### Alternative Flows
 
 **A1 — Drill-down from any chart**: Clicking a chart element (funnel stage, map region, table row, bar) opens the relevant filtered list in the corresponding operational module (Inquiries, Quotes, Bookings, Payments, Schedule).
 
-**A2 — Export from any screen**: Provider clicks "Export" button → reaches Screen 13 pre-populated with the current screen's section selected.
+**A2 — Export from any screen**: Provider clicks "Export" button → reaches Screen 6 pre-populated with the current screen's section selected.
 
 **B1 — Analytics pipeline delay**: Non-blocking banner shown; cached data displayed with last-updated timestamp.
 
@@ -112,7 +112,9 @@ All data shown across every screen is sourced directly from the operational data
 
 ---
 
-### Screen 1: Provider / Main Dashboard (Cockpit)
+### Provider Platform (PR-05)
+
+#### Screen 1: Main Dashboard (Cockpit)
 
 > **STATUS: LOCKED — do not modify this screen specification.**
 > Design reference: Figma node 6358-111596
@@ -123,7 +125,7 @@ All data shown across every screen is sourced directly from the operational data
 
 ---
 
-#### Header — Global Filters
+##### Header — Global Filters
 
 | Field | Type | Default |
 |-------|------|---------|
@@ -134,14 +136,14 @@ All data shown across every screen is sourced directly from the operational data
 
 ---
 
-#### Section A — Inbox
+##### Section A — Inbox
 
-##### Tile 1: New Inquiries
+###### Tile 1: New Inquiries
 
 - Value: Today count + This week count (dual display)
 - Tap → Inquiries list (time filter applied)
 
-##### Tile 2: Time to First Quote (TTFQ)
+###### Tile 2: Time to First Quote (TTFQ)
 
 - Value: p50 and p90 vs SLA (compact dual-bullet)
 - Color: Green (p50 ≤ SLA and p90 ≤ 2×SLA) · Amber (p50 ≤ SLA and p90 > 2×SLA) · Red (p50 > SLA)
@@ -149,7 +151,7 @@ All data shown across every screen is sourced directly from the operational data
 
 **TTFQ formula**: `first_quote.sent_at − inquiry.created_at` (wall time, provider timezone). Exclude auto-acks. Calls/messages do not stop the clock.
 
-##### Table: Inquiry Queue
+###### Table: Inquiry Queue
 
 | Column | Notes |
 |--------|-------|
@@ -164,9 +166,9 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Section B — Performance (2×2 Grid)
+##### Section B — Performance (2×2 Grid)
 
-##### B1: Inquiry → Booking Conversion
+###### B1: Inquiry → Booking Conversion
 
 - Chart: Funnel chart
 - Stages: Inquiries → Qualified → Quoted → Accepted → In progress
@@ -176,14 +178,14 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - In progress = payment captured within range
 - Drill-down: click stage → filtered Inquiries list
 
-##### B2: TTFQ vs SLA
+###### B2: TTFQ vs SLA
 
 - Chart: Bullet chart (p50 + p90, SLA as target marker)
 - Axis: 0 → max(3×SLA, 1.2×p90), units = minutes (render h:m)
 - Color: Green/Amber/Red per TTFQ formula above
 - Drill-down: click → Inquiries list grouped by coordinator
 
-##### B3: Booking Intensity vs Monthly Average (Next 6 Weeks)
+###### B3: Booking Intensity vs Monthly Average (Next 6 Weeks)
 
 - Chart: Calendar heatmap (6 rows × 7 cols, Mon→Sun)
 - Colored metric: Intensity Index = `(Bookings_on_day ÷ MonthlyDailyAvg_for_that_day's_month) × 100`
@@ -193,7 +195,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - Baseline priority: 12-month same-month avg → current MTD → rolling 90-day
 - Index clamped 0–300% for coloring; actual value in tooltip
 
-##### B4: Patient Location Breakdown
+###### B4: Patient Location Breakdown
 
 - Chart: Donut (top 8 countries by inquiry share + Other)
 - Center: total Inquiries in range
@@ -204,21 +206,21 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Section C — Financials (2×2 Grid)
+##### Section C — Financials (2×2 Grid)
 
-##### C1: Earnings Trend
+###### C1: Earnings Trend
 
 - Chart: Area line chart (weekly, X = ISO week start, Y = income in provider currency)
 - Single series: Income only
 - Drill-down: click week → Earnings report filtered to that week
 
-##### C2: Revenue by Treatment
+###### C2: Revenue by Treatment
 
 - Chart: Pareto bar chart (ranked bars + cumulative % line)
 - X = treatment (dynamic), Y₁ = income, Y₂ = cumulative %
 - Top N + Other; drill-down: click bar → Cases list filtered by treatment
 
-##### C3: Quote → Payment Aging (Accepted but Unpaid)
+###### C3: Quote → Payment Aging (Accepted but Unpaid)
 
 - Chart: Stacked horizontal bar
 - Buckets: 0–24h · 1–3d · 4–7d · 8–14d · >14d
@@ -226,7 +228,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - Age = now − `quote.accepted_at`; exclude cancelled/expired
 - Drill-down: click bucket → Accepted Quotes list
 
-##### C4: Payouts — History & Upcoming
+###### C4: Payouts — History & Upcoming
 
 - Chart: Column bar (monthly, last 6–12 months) + inline table (2–3 rows)
 - Inline table columns: Type, Period, Amount, Scheduled Date, Cadence
@@ -234,7 +236,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### States
+##### States
 
 - Low sample (<30 inquiries): helper copy; still render counts
 - Loading: skeletons for all tiles and charts
@@ -243,7 +245,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-### Screen 2: Provider / Performance & Conversion
+#### Screen 2: Performance & Conversion
 
 **Purpose**: Deep analysis of how efficiently the provider converts inquiries to bookings, including TTFQ trends and benchmarking.
 
@@ -251,7 +253,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 1: Funnel Conversion Trend
+##### Widget 1: Funnel Conversion Trend
 
 | Property | Value |
 |----------|-------|
@@ -265,7 +267,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 2: Conversion Breakdown by Treatment Type
+##### Widget 2: Conversion Breakdown by Treatment Type
 
 | Property | Value |
 |----------|-------|
@@ -279,7 +281,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 3: Conversion Breakdown by Patient Country
+##### Widget 3: Conversion Breakdown by Patient Country
 
 | Property | Value |
 |----------|-------|
@@ -293,7 +295,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 4: Quote Acceptance Rate Trend
+##### Widget 4: Quote Acceptance Rate Trend
 
 | Property | Value |
 |----------|-------|
@@ -304,7 +306,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 5: TTFQ Trend Over Time
+##### Widget 5: TTFQ Trend Over Time
 
 | Property | Value |
 |----------|-------|
@@ -317,7 +319,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 6: Cancellation & No-Show Rate
+##### Widget 6: Cancellation & No-Show Rate
 
 | Property | Value |
 |----------|-------|
@@ -331,7 +333,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 7: Platform Benchmarks (Anonymised)
+##### Widget 7: Platform Benchmarks (Anonymised)
 
 | Property | Value |
 |----------|-------|
@@ -344,7 +346,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-**Screen 2 Business Rules**:
+**Business Rules**:
 
 - All widgets share the same time range and country filter
 - Treatment type filter applies to all conversion widgets (not to TTFQ)
@@ -352,7 +354,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-### Screen 3: Provider / Patient Analytics
+#### Screen 3: Patient Analytics
 
 **Purpose**: Understanding who the provider's patients are, where they come from, how satisfied they are, and how long their journey takes.
 
@@ -360,7 +362,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 1: Full Patient Location Breakdown
+##### Widget 1: Full Patient Location Breakdown
 
 | Property | Value |
 |----------|-------|
@@ -372,7 +374,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 2: New vs. Returning Patients
+##### Widget 2: New vs. Returning Patients
 
 | Property | Value |
 |----------|-------|
@@ -385,7 +387,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 3: Patient Journey Time
+##### Widget 3: Patient Journey Time
 
 | Property | Value |
 |----------|-------|
@@ -399,7 +401,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 4: Review Sub-Scores by Treatment
+##### Widget 4: Review Sub-Scores by Treatment
 
 | Property | Value |
 |----------|-------|
@@ -412,7 +414,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 5: Treatment Preference Distribution
+##### Widget 5: Treatment Preference Distribution
 
 | Property | Value |
 |----------|-------|
@@ -426,7 +428,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 6: Aftercare Activation Rate
+##### Widget 6: Aftercare Activation Rate
 
 | Property | Value |
 |----------|-------|
@@ -438,7 +440,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-**Screen 3 Business Rules**:
+**Business Rules**:
 
 - Patient age distribution: only include if patient age is directly available in the data model. Do NOT estimate or derive from medical questionnaire free text. If unavailable, this widget is omitted.
 - Returning patient definition: based on the same provider's patient base (not platform-wide repeat visits).
@@ -446,7 +448,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-### Screen 4: Provider / Finance & Payouts
+#### Screen 4: Finance & Payouts
 
 **Purpose**: Full financial picture — revenue breakdown, refunds, installment health, and complete payout history.
 
@@ -454,7 +456,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 1: Revenue Trend
+##### Widget 1: Revenue Trend
 
 | Property | Value |
 |----------|-------|
@@ -468,7 +470,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 2: Revenue by Treatment — Full Breakdown
+##### Widget 2: Revenue by Treatment — Full Breakdown
 
 | Property | Value |
 |----------|-------|
@@ -480,7 +482,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 3: Revenue by Patient Country
+##### Widget 3: Revenue by Patient Country
 
 | Property | Value |
 |----------|-------|
@@ -494,7 +496,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 4: Commission & Net Revenue
+##### Widget 4: Commission & Net Revenue
 
 | Property | Value |
 |----------|-------|
@@ -507,7 +509,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 5: Refunds
+##### Widget 5: Refunds
 
 | Property | Value |
 |----------|-------|
@@ -521,7 +523,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 6: Installment vs. Full Payment Split
+##### Widget 6: Installment vs. Full Payment Split
 
 | Property | Value |
 |----------|-------|
@@ -535,7 +537,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 7: Cash-at-Risk Summary
+##### Widget 7: Cash-at-Risk Summary
 
 | Property | Value |
 |----------|-------|
@@ -546,7 +548,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 8: Payout History & Schedule
+##### Widget 8: Payout History & Schedule
 
 | Property | Value |
 |----------|-------|
@@ -558,7 +560,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-**Screen 4 Business Rules**:
+**Business Rules**:
 
 - Income = payments with `payment_status = 'completed'` and `payment_type ≠ 'refund'`
 - Commission is calculated, not stored as a field; commission displayed with note "Calculated at quote rate"
@@ -567,7 +569,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-### Screen 5: Provider / Pricing & Benchmarks
+#### Screen 5: Pricing & Benchmarks
 
 **Purpose**: Understand pricing strategy — whether the provider's quote amounts are competitive, how price affects conversion, and where they stand relative to platform peers.
 
@@ -575,7 +577,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 1: Average Quote Amount by Treatment
+##### Widget 1: Average Quote Amount by Treatment
 
 | Property | Value |
 |----------|-------|
@@ -587,7 +589,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 2: Quote Amount Distribution
+##### Widget 2: Quote Amount Distribution
 
 | Property | Value |
 |----------|-------|
@@ -599,7 +601,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 3: Price vs. Conversion Rate
+##### Widget 3: Price vs. Conversion Rate
 
 | Property | Value |
 |----------|-------|
@@ -614,7 +616,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-#### Widget 4: Platform Benchmark Comparison
+##### Widget 4: Platform Benchmark Comparison
 
 | Property | Value |
 |----------|-------|
@@ -628,7 +630,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-**Screen 5 Business Rules**:
+**Business Rules**:
 
 - Provider identity is fully anonymised in all benchmark calculations
 - Benchmark data is refreshed weekly (not real-time)
@@ -636,673 +638,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ---
 
-### Screen 6: Admin / Platform Overview Dashboard
-
-**Purpose**: Platform health at a glance — one scrollable page with three sections mirroring the provider dashboard structure but aggregated across all providers.
-
-**Filters**: Time range (same options) + Country + Provider (optional, defaults to All)
-
-**Layout**: Three sections (A: Operations, B: Performance, C: Finance). Single column on ≤1440px (this is an admin view, desktop-only).
-
----
-
-#### Section A — Operational Health
-
-##### Tile 1: Active Providers
-
-- Value: Count of providers with `status = active`
-- Sub-value: New providers onboarded in period
-- Tap → Provider Management (FR-015)
-
-##### Tile 2: Total Inquiries
-
-- Value: Platform-wide inquiry count in period
-- Sub-value: % change vs. prior equivalent period
-- Tap → Inquiries list (admin)
-
-##### Tile 3: New Patients Registered
-
-- Value: `patients.created_at` count in period
-- Tap → Patient Management (FR-016)
-
-##### Tile 4: Provider TTFQ Health Distribution
-
-- Chart: Donut (Green / Amber / Red provider counts)
-- Value: Count and % in each tier
-- Tap → Provider Performance screen (Screen 7) filtered to Red tier
-
-##### Tile 5: Provider Engagement Rate
-
-- Value: % of active providers who submitted at least 1 quote in last 30 days
-- Sub-value: Count of dormant providers (0 quotes in last 30 days)
-- Tap → Screen 7 engagement section filtered to dormant
-
----
-
-#### Section B — Performance Signals
-
-##### B1: Platform-Wide Conversion Funnel
-
-- Chart: Funnel chart (same 5 stages as provider funnel, but platform-wide totals)
-- Shows: Count + Step % for each stage
-- Footer: Overall platform conversion = In progress ÷ Inquiries
-- Drill-down: click stage → admin Inquiries list filtered to that stage
-
-##### B2: Platform TTFQ Distribution
-
-- Chart: Bullet chart (platform p50 + p90 vs SLA default target)
-- Shows: Distribution across all providers
-- Drill-down: click → Screen 7 sorted by TTFQ
-
-##### B3: Top Patient Origin Countries
-
-- Chart: Donut (top 8 countries by inquiry volume + Other)
-- Drill-down: click slice → Screen 9 filtered to that country
-
-##### B4: Treatment Type Distribution
-
-- Chart: Donut (inquiry share by treatment type)
-- Drill-down: click slice → Screen 10 filtered to that treatment
-
----
-
-#### Section C — Financial Summary
-
-##### C1: Platform GMV (Period)
-
-- Value: `SUM(payments.amount)` where `payment_status = 'completed'`, period
-- Sub-value: % change vs. prior period
-- Drill-down → Screen 11
-
-##### C2: Commission Earned (Period)
-
-- Value: `SUM(payments.amount × quotes.commission / 100)` for completed payments
-- Sub-value: As % of GMV
-- Drill-down → Screen 11
-
-##### C3: Upcoming Provider Payout Obligations
-
-- Value: Total payout amount due to providers in next 30 days
-- Sub-value: Number of providers in next payout cycle
-- Drill-down → Screen 11
-
-##### C4: Platform Cash-at-Risk
-
-- Value: Total amount in accepted-but-unpaid quotes, platform-wide
-- Sub-value: Count of quotes >14 days aging
-- Drill-down → Screen 11
-
----
-
-**Screen 6 Business Rules**:
-
-- Default time range: Last 4 weeks (same as provider dashboard)
-- Provider TTFQ health tiers use the individual provider's configured SLA; for platform-wide display, the default SLA is used if no provider SLA is set
-- Section A tiles always show current snapshot (not historical); B and C sections respect the time range filter
-
----
-
-### Screen 7: Admin / Provider Performance & Engagement
-
-**Purpose**: Two-section screen — Performance (conversion quality) and Engagement (activity/dormancy). These are distinct jobs: performance tells you how well a provider works; engagement tells you whether they're working at all.
-
-**Filters**: Time range + Country + TTFQ health tier (All / Green / Amber / Red) + Engagement status (All / Active / At Risk / Dormant)
-
----
-
-#### Section A — Performance
-
-##### Widget 1: Provider League Table
-
-| Column | Value |
-|--------|-------|
-| Provider | Name + country flag |
-| TTFQ p50 | Value + color badge |
-| Conversion rate | Inquiries → In progress % |
-| Quote acceptance rate | Accepted ÷ Quoted % |
-| Avg overall rating | Star rating (from reviews) |
-| Quote response rate | Quotes submitted ÷ inquiries distributed |
-| vs. Platform | Variance column for conversion rate (+/−%) |
-| Status | Health color badge (Green / Amber / Red based on TTFQ + conversion composite) |
-
-- Sortable by any column
-- Default sort: TTFQ status (Red first) then conversion rate ascending
-- Paginated: 20 per page
-- Drill-down: click row → provider's own analytics view (read-only admin view of provider's Screen 2)
-
-##### Widget 2: Performance Distribution
-
-| Property | Value |
-|----------|-------|
-| Chart type | Scatter plot |
-| X axis | TTFQ p50 (minutes) |
-| Y axis | Conversion rate (%) |
-| Points | One per provider (anonymised label: "Provider A", "Provider B", etc.) — except when admin is on provider detail view |
-| Reference lines | Platform median TTFQ · Platform median conversion rate |
-| Quadrants | Fast + High conversion (ideal) · Slow + Low conversion (needs support) |
-| Drill-down | Click point → that provider's detail |
-
----
-
-#### Section B — Engagement
-
-##### Widget 3: Provider Activity Table
-
-| Column | Value |
-|--------|-------|
-| Provider | Name + country |
-| Last active | Date of last login (`users.last_login_at`) |
-| Quotes this month | Count of quotes submitted in current calendar month |
-| Inquiry response rate | Quotes submitted ÷ inquiries distributed (last 30 days) |
-| Status | Active (activity in last 7d) · At Risk (7–30d) · Dormant (>30d no activity) |
-
-- Filter by status (Active / At Risk / Dormant)
-- Drill-down: click row → provider detail in FR-015
-
-##### Widget 4: New Provider Ramp
-
-| Property | Value |
-|----------|-------|
-| Chart type | Line chart (multiple series) |
-| X axis | Days since onboarding (0–90 days) |
-| Y axis | Cumulative quotes submitted |
-| Series | Each provider onboarded in the selected period (one line each, anonymised) |
-| Reference line | Platform average ramp curve |
-| Purpose | Identify new providers who are struggling to get started |
-
-**Data source**: Providers with `created_at` within the selected period; `quotes.created_at − providers.created_at` for days-since-onboarding offset.
-
-##### Widget 5: Engagement Health Summary
-
-| Property | Value |
-|----------|-------|
-| Chart type | Three KPI tiles |
-| Tile 1 | Active providers count (activity in last 7 days) |
-| Tile 2 | At-risk providers count (7–30 days no activity) |
-| Tile 3 | Dormant providers count (>30 days no activity) |
-
----
-
-**Screen 7 Business Rules**:
-
-- Provider identity is NOT anonymised to the admin (admin must be able to identify and contact providers)
-- Last login data requires `users.last_login_at` to be maintained in the users table
-- "Inquiry response rate" = quotes submitted ÷ inquiries distributed to that provider in the same period; if no distribution tracking exists, use quotes submitted ÷ total platform inquiries in period as a proxy (flag this as lower fidelity)
-- Engagement status thresholds (7d / 30d) are configurable by admin
-
----
-
-### Screen 8: Admin / Patient Acquisition & Funnel
-
-**Purpose**: How patients enter the platform and move through the inquiry-to-booking funnel. Affiliate acquisition tracked where available.
-
-**Filters**: Time range + Country + Treatment type
-
-**Note**: Channel attribution (organic, paid, social) is NOT available — this screen covers volume trends, funnel efficiency, and affiliate-sourced traffic only.
-
----
-
-#### Widget 1: Inquiry Volume Trend
-
-| Property | Value |
-|----------|-------|
-| Chart type | Area line chart |
-| X axis | Week or month (toggle) |
-| Y axis | Inquiry count |
-| Comparison overlay | Prior equivalent period (dashed line) |
-| Drill-down | Click period → admin Inquiries list for that period |
-
----
-
-#### Widget 2: Platform Funnel Trend Over Time
-
-| Property | Value |
-|----------|-------|
-| Chart type | Multi-line chart (one line per stage) |
-| X axis | Month |
-| Y axis | Conversion % to that stage from Inquiries |
-| Lines | Qualified % · Quoted % · Accepted % · In progress % |
-| Purpose | Show whether platform-wide conversion is improving or declining |
-| Drill-down | Click line point → admin Inquiries list filtered to that stage + month |
-
----
-
-#### Widget 3: New vs. Returning Patients
-
-| Property | Value |
-|----------|-------|
-| Chart type | Stacked bar chart (monthly) + KPI tiles |
-| Bars | New patient count + Returning patient count per month |
-| Tile 1 | New patient rate (period) |
-| Tile 2 | Returning patient rate (period) |
-| Definition | New = first inquiry ever · Returning = has prior inquiry on record |
-| Drill-down | Click bar segment → Patient list filtered by type and period |
-
----
-
-#### Widget 4: Patient Journey Time (Platform-Wide)
-
-| Property | Value |
-|----------|-------|
-| Chart type | Two KPI tiles + distribution histogram |
-| Tile 1 | Platform median days inquiry → payment (p50) |
-| Tile 2 | Platform p90 days inquiry → payment |
-| Histogram | Distribution across all converting patients (same bins as Screen 3 Widget 3) |
-
----
-
-#### Widget 5: Inquiry Seasonality
-
-| Property | Value |
-|----------|-------|
-| Chart type | Calendar heatmap (monthly view, intensity = inquiry count vs. monthly average) |
-| Layout | 12 rows (months) × 7 columns (Mon→Sun) |
-| Intensity | `inquiry count on day ÷ monthly daily average × 100` |
-| Purpose | Identify seasonal peaks and campaign-worthy slow periods |
-| Cell tooltip | `Inquiries: N • Daily avg: m • Index: X%` |
-
----
-
-#### Widget 6: Affiliate Acquisition
-
-| Property | Value |
-|----------|-------|
-| Chart type | Three KPI tiles + ranked table |
-| Tile 1 | Affiliate-sourced bookings (count in period) |
-| Tile 2 | Affiliate contribution rate = affiliate bookings ÷ total bookings |
-| Tile 3 | Avg affiliate booking value |
-| Table columns | Affiliate name · Bookings · Revenue · Commission owed · Conversion rate |
-| Drill-down | Click affiliate row → affiliate detail in FR-018 |
-
-**Data source**: `discounts` (affiliate codes) linked to `quotes/payments` via FR-018 `Booking with Affiliate Code` entity. Affiliate-sourced = booking where a valid affiliate discount code was applied at payment.
-
-**Limitation note**: Affiliate tracking begins at the booking stage (when the discount code is applied), not at the inquiry stage. It is not possible to attribute an inquiry to an affiliate source.
-
----
-
-**Screen 8 Business Rules**:
-
-- Seasonality heatmap always shows a rolling 12-month view regardless of time range filter (for pattern recognition)
-- Affiliate rows show only affiliates with at least 1 booking in the selected period; inactive affiliates are filtered out
-
----
-
-### Screen 9: Admin / Geographic Intelligence
-
-**Purpose**: Strategic supply/demand view. Where is patient demand concentrated? Where does the platform have insufficient provider coverage? Used for expansion planning and targeted provider recruitment.
-
-**Filters**: Time range (affects inquiry and booking data) + Treatment type
-
----
-
-#### Widget 1: Patient Demand Map
-
-| Property | Value |
-|----------|-------|
-| Chart type | Choropleth map OR ranked table with flag icons (implementation choice) |
-| Value mapped | Inquiry count per patient country (in selected period) |
-| Color scale | 5-bin scale from low (cool) to high (warm) |
-| Tooltip | `Country · Inquiries: N · Booked: B · Conversion rate: R%` |
-| Drill-down | Click country → filtered admin Inquiries list |
-
----
-
-#### Widget 2: Provider Coverage by Country
-
-| Property | Value |
-|----------|-------|
-| Chart type | Ranked horizontal bar chart |
-| Y axis | Country (provider country) |
-| X axis | Active provider count |
-| Drill-down | Click bar → Provider list filtered to that country |
-
----
-
-#### Widget 3: Demand vs. Supply Gap
-
-| Property | Value |
-|----------|-------|
-| Chart type | Ranked table |
-| Columns | Patient country · Inquiry count · Provider count (in that country) · Inquiries per provider · Gap flag |
-| Gap flag | Flagged if inquiries per provider > platform median by ≥50% |
-| Sort | Default: inquiries per provider descending (highest gap first) |
-| Purpose | Identify countries to target for provider recruitment |
-
-**Note**: "Provider country" = provider's registered location. The gap metric is an approximation — patients may travel internationally, so a high inquiries-per-provider ratio in one country does not necessarily mean patients cannot be served.
-
----
-
-#### Widget 4: Conversion Rate by Patient Country
-
-| Property | Value |
-|----------|-------|
-| Chart type | Horizontal ranked bar chart |
-| Y axis | Patient country (top 15 by inquiry volume) |
-| X axis | Conversion rate (Inquiries → In progress) |
-| Secondary bar | Inquiry count (for context) |
-| Reference line | Platform median conversion rate |
-| Drill-down | Click bar → admin Inquiries list filtered to that country |
-
----
-
-#### Widget 5: Emerging Patient Origins
-
-| Property | Value |
-|----------|-------|
-| Chart type | Ranked table |
-| Columns | Country · Inquiry count (current period) · Inquiry count (prior period) · Growth % |
-| Filter | Countries with >10 inquiries in current period and >20% growth vs prior period |
-| Purpose | Spot new markets before they become dominant |
-
----
-
-**Screen 9 Business Rules**:
-
-- Country data sourced from `patients.country`; if null, falls back to IP geolocation (flagged "Estimated" in tooltip)
-- Demand vs. Supply gap table only shows countries with ≥5 inquiries in the selected period to avoid statistical noise
-- Map (if used) requires a separate map rendering library; ranked table is the functional fallback
-
----
-
-### Screen 10: Admin / Treatment Outcomes
-
-**Purpose**: How treatments are performing operationally and in patient satisfaction. **Scope is strictly operational and satisfaction-based** — no clinical outcomes exist in the database (no graft survival rates, no hair density measurements, no complication data).
-
-**Filters**: Time range + Country + Provider (optional) + Treatment type
-
----
-
-#### Widget 1: Treatment Completion Rate
-
-| Property | Value |
-|----------|-------|
-| Chart type | Bar chart |
-| X axis | Treatment type |
-| Y axis | Completion rate = quotes reaching `completed` ÷ quotes reaching `confirmed` |
-| Reference line | Platform average completion rate |
-| Drill-down | Click bar → admin Quotes list filtered to that treatment |
-
----
-
-#### Widget 2: Cancellation & No-Show Rate by Treatment
-
-| Property | Value |
-|----------|-------|
-| Chart type | Grouped bar chart |
-| X axis | Treatment type |
-| Y axis | Rate % |
-| Groups | Cancellation rate · No-show rate |
-| Drill-down | Click bar → admin Quotes list with relevant status filter |
-
----
-
-#### Widget 3: Treatment Volume Trend
-
-| Property | Value |
-|----------|-------|
-| Chart type | Stacked area chart |
-| X axis | Month |
-| Y axis | Booking count |
-| Areas | One per treatment type (dynamic, top 5 + Other) |
-| Purpose | Track which treatments are growing or declining in demand |
-| Drill-down | Click area segment → admin Bookings list filtered to treatment + month |
-
----
-
-#### Widget 4: Average Review Scores by Treatment
-
-| Property | Value |
-|----------|-------|
-| Chart type | Grouped bar chart |
-| X axis | Treatment type |
-| Y axis | Score (1–5) |
-| Groups | Overall · Results · Staff · Facility · Value |
-| Data source | `reviews` sub-scores, joined via `reviews.quote_id → quotes.treatment_id` |
-| Drill-down | Click bar → Reviews list filtered to that treatment |
-
----
-
-#### Widget 5: Aftercare Activation Rate
-
-| Property | Value |
-|----------|-------|
-| Chart type | KPI tile + trend line + bar by treatment type |
-| KPI | Platform-wide aftercare activation rate = aftercare records created ÷ completed treatments |
-| Bar chart | Activation rate broken down by treatment type |
-| Drill-down | Click bar → Aftercare records list |
-
----
-
-#### Widget 6: Provider Distribution by Treatment Specialisation
-
-| Property | Value |
-|----------|-------|
-| Chart type | Stacked horizontal bar chart |
-| Y axis | Treatment type |
-| X axis | Provider count offering that treatment |
-| Drill-down | Click bar → Provider list filtered to that treatment |
-
-**Data source**: `quotes.treatment_id` grouped by `provider_id`; a provider "offers" a treatment if they have submitted at least 1 quote for it in the last 12 months.
-
----
-
-**Screen 10 Business Rules**:
-
-- Completion rate only calculated for providers with ≥5 confirmed bookings in the period to avoid single-event noise
-- No-show is tracked via the quote status label; if no-show status is not explicitly implemented in the data model, this widget is replaced with "cancellation rate only"
-- Do NOT add any clinical outcome metrics (graft count, hair density, success rates) — these are not in the database
-
----
-
-### Screen 11: Admin / Financial Health & Cashflow
-
-**Purpose**: Platform financial risk monitoring and revenue health. The admin's question is: "Is money flowing correctly, what do we owe, and where are the risks?"
-
-**Filters**: Time range + Country + Currency
-
----
-
-#### Widget 1: Platform GMV & Net Revenue
-
-| Property | Value |
-|----------|-------|
-| Chart type | Dual-line area chart |
-| X axis | Month |
-| Y₁ series | Platform GMV (gross payment volume) |
-| Y₂ series | Net revenue (GMV minus total provider payout disbursements) |
-| Drill-down | Click period → detailed payment records |
-
-**Calculation**: GMV = `SUM(payments.amount)` where `payment_status = 'completed'`; Net revenue = GMV − total disbursed provider payouts in same period.
-
----
-
-#### Widget 2: Commission Earned Trend
-
-| Property | Value |
-|----------|-------|
-| Chart type | Bar chart (monthly) |
-| X axis | Month |
-| Y axis | Commission earned = `SUM(payments.amount × quotes.commission / 100)` |
-| Reference line | Target monthly commission (admin-configurable) |
-| Drill-down | Click bar → filtered payment records with commission breakdown |
-
----
-
-#### Widget 3: Refund & Failed Payment Health
-
-| Property | Value |
-|----------|-------|
-| Chart type | Four KPI tiles + trend |
-| Tile 1 | Refund volume (amount, period) |
-| Tile 2 | Refund rate = refund count ÷ total completed payments |
-| Tile 3 | Failed payment count (period) |
-| Tile 4 | Failed payment rate = failed ÷ total attempted payments |
-| Trend | Monthly refund rate + failed rate (dual line) |
-| Drill-down | Click tile → filtered Payments list |
-
----
-
-#### Widget 4: Cash-at-Risk — Platform-Wide Aging
-
-| Property | Value |
-|----------|-------|
-| Chart type | Stacked horizontal bar chart (same as provider C3, but all providers) |
-| Buckets | 0–24h · 1–3d · 4–7d · 8–14d · >14d |
-| X axis | Count of accepted-but-unpaid quotes (all providers) |
-| Optional legend | By provider country |
-| Drill-down | Click bucket → admin Quotes list filtered to accepted status + aging bucket |
-
----
-
-#### Widget 5: Upcoming Provider Payout Obligations
-
-| Property | Value |
-|----------|-------|
-| Chart type | KPI tile + table |
-| KPI | Total upcoming payout amount (next 30 days) |
-| Table columns | Provider · Amount · Payout date · Cadence · Status |
-| Sort | Payout date ascending |
-| Drill-down | Click row → provider payout detail in FR-017 |
-
----
-
-#### Widget 6: Installment Plan Health
-
-| Property | Value |
-|----------|-------|
-| Chart type | Donut + KPI |
-| Segments | On-time · Overdue · Defaulted |
-| KPI | Total outstanding installment balance |
-| Data source | `installment_plans` table status |
-| Drill-down | Click segment → Installment plans list filtered by status |
-
----
-
-#### Widget 7: Affiliate Commission Obligations
-
-| Property | Value |
-|----------|-------|
-| Chart type | KPI tile + upcoming table |
-| KPI | Total affiliate commission owed (pending payout) |
-| Table | Affiliate · Commission owed · Next payout date |
-| Drill-down | Click row → FR-017 affiliate billing |
-
----
-
-#### Widget 8: Revenue by Currency
-
-| Property | Value |
-|----------|-------|
-| Chart type | Donut |
-| Segments | Per currency code (`payments.currency`) |
-| Value | GMV by currency |
-| Purpose | FX exposure visibility — how much revenue is in non-base currencies |
-
----
-
-**Screen 11 Business Rules**:
-
-- All amounts converted to Hairline's base reporting currency (configured in admin settings) using daily FX rates; raw currency amounts shown in tooltips
-- Net revenue calculation excludes payout amounts that are still in "Scheduled" status (not yet disbursed)
-- This screen is only accessible to admin roles with financial data permissions
-
----
-
-### Screen 12: Admin / Pricing Intelligence
-
-**Purpose**: Strategic pricing landscape across all providers and treatments. Helps Hairline understand market pricing, identify outliers, and inform provider guidance and benchmark targets.
-
-**Filters**: Time range + Country + Treatment type
-
----
-
-#### Widget 1: Average Quote Amount by Treatment
-
-| Property | Value |
-|----------|-------|
-| Chart type | Bar chart |
-| X axis | Treatment type |
-| Y axis | Average quote amount (platform base currency) |
-| Error bars | p25–p75 range per treatment |
-| Drill-down | Click bar → Quotes list filtered to that treatment |
-
----
-
-#### Widget 2: Price Range per Treatment
-
-| Property | Value |
-|----------|-------|
-| Chart type | Range bar chart (or box plot if supported) |
-| X axis | Treatment type |
-| Ranges shown | Min · p25 · Median · p75 · Max |
-| Purpose | Show the full spread of prices in the market for each treatment |
-| Reference line | Platform median per treatment |
-| Drill-down | Click bar → Quotes list for that treatment sorted by amount |
-
----
-
-#### Widget 3: Quote Amount by Provider Country
-
-| Property | Value |
-|----------|-------|
-| Chart type | Grouped bar chart |
-| X axis | Provider country |
-| Y axis | Average quote amount |
-| Groups | Per treatment type (top 3 by volume) |
-| Purpose | Surface geographic pricing differences (e.g., Turkish providers vs. UK providers) |
-| Drill-down | Click bar → Quotes list filtered to provider country + treatment |
-
----
-
-#### Widget 4: Conversion Rate by Price Bracket
-
-| Property | Value |
-|----------|-------|
-| Chart type | Bar chart |
-| X axis | Quote amount bracket (dynamic bins based on data distribution) |
-| Y axis | Conversion rate (Accepted ÷ Quoted) for quotes in that bracket |
-| Reference line | Overall platform conversion rate |
-| Purpose | Show whether higher-priced quotes convert less platform-wide |
-| Drill-down | Click bar → Quotes list filtered to that price bracket |
-
----
-
-#### Widget 5: Price Trend Over Time per Treatment
-
-| Property | Value |
-|----------|-------|
-| Chart type | Multi-line chart |
-| X axis | Month (last 12 months) |
-| Y axis | Average quote amount |
-| Lines | One per treatment type (top 5 by volume + Other as grey line) |
-| Purpose | Track whether market prices are rising or falling |
-| Drill-down | Click line point → Quotes list for that treatment + month |
-
----
-
-#### Widget 6: Price Outlier Providers
-
-| Property | Value |
-|----------|-------|
-| Chart type | Ranked table |
-| Columns | Provider · Treatment · Avg quote amount · Platform median · Variance % · Direction |
-| Filter | Providers whose avg quote is ≥30% above or below the platform median for any treatment |
-| Direction | "High" (priced above) or "Low" (priced below) |
-| Purpose | Flag providers who may be pricing themselves out of the market or undervaluing their services |
-| Drill-down | Click row → that provider's detail in FR-015 |
-
----
-
-**Screen 12 Business Rules**:
-
-- All quote amounts converted to platform base currency for comparison; raw amounts shown in tooltips
-- Outlier threshold (30%) is admin-configurable
-- Only quotes with `status ≠ 'inquiry'` (i.e., actually submitted quotes) are included in pricing calculations
-- Minimum 5 quotes per treatment per provider required to include that provider in outlier detection
-
----
-
-### Screen 13: Provider / Export Report Configuration
+#### Screen 6: Export Report Configuration
 
 **Purpose**: Allow providers to generate PDF or CSV exports of any analytics screen's data.
 
@@ -1325,6 +661,674 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - Generated reports stored 7 days for re-download from Report History section
 - Email delivery: PDF attachment + secure link (expires 48 hours)
 - Max 5 active recurring configurations per provider
+
+---
+
+### Admin Platform (A-08)
+
+#### Screen 7: Platform Overview Dashboard
+
+**Purpose**: Platform health at a glance — one scrollable page with three sections mirroring the provider dashboard structure but aggregated across all providers.
+
+**Filters**: Time range (same options) + Country + Provider (optional, defaults to All)
+
+**Layout**: Three sections (A: Operations, B: Performance, C: Finance). Single column on ≤1440px (this is an admin view, desktop-only).
+
+---
+
+##### Section A — Operational Health
+
+###### Tile 1: Active Providers
+
+- Value: Count of providers with `status = active`
+- Sub-value: New providers onboarded in period
+- Tap → Provider Management (FR-015)
+
+###### Tile 2: Total Inquiries
+
+- Value: Platform-wide inquiry count in period
+- Sub-value: % change vs. prior equivalent period
+- Tap → Inquiries list (admin)
+
+###### Tile 3: New Patients Registered
+
+- Value: `patients.created_at` count in period
+- Tap → Patient Management (FR-016)
+
+###### Tile 4: Provider TTFQ Health Distribution
+
+- Chart: Donut (Green / Amber / Red provider counts)
+- Value: Count and % in each tier
+- Tap → Provider Performance screen (Screen 7) filtered to Red tier
+
+###### Tile 5: Provider Engagement Rate
+
+- Value: % of active providers who submitted at least 1 quote in last 30 days
+- Sub-value: Count of dormant providers (0 quotes in last 30 days)
+- Tap → Screen 7 engagement section filtered to dormant
+
+---
+
+##### Section B — Performance Signals
+
+###### B1: Platform-Wide Conversion Funnel
+
+- Chart: Funnel chart (same 5 stages as provider funnel, but platform-wide totals)
+- Shows: Count + Step % for each stage
+- Footer: Overall platform conversion = In progress ÷ Inquiries
+- Drill-down: click stage → admin Inquiries list filtered to that stage
+
+###### B2: Platform TTFQ Distribution
+
+- Chart: Bullet chart (platform p50 + p90 vs SLA default target)
+- Shows: Distribution across all providers
+- Drill-down: click → Screen 7 sorted by TTFQ
+
+###### B3: Top Patient Origin Countries
+
+- Chart: Donut (top 8 countries by inquiry volume + Other)
+- Drill-down: click slice → Screen 9 filtered to that country
+
+###### B4: Treatment Type Distribution
+
+- Chart: Donut (inquiry share by treatment type)
+- Drill-down: click slice → Screen 10 filtered to that treatment
+
+---
+
+##### Section C — Financial Summary
+
+###### C1: Platform GMV (Period)
+
+- Value: `SUM(payments.amount)` where `payment_status = 'completed'`, period
+- Sub-value: % change vs. prior period
+- Drill-down → Screen 11
+
+###### C2: Commission Earned (Period)
+
+- Value: `SUM(payments.amount × quotes.commission / 100)` for completed payments
+- Sub-value: As % of GMV
+- Drill-down → Screen 11
+
+###### C3: Upcoming Provider Payout Obligations
+
+- Value: Total payout amount due to providers in next 30 days
+- Sub-value: Number of providers in next payout cycle
+- Drill-down → Screen 11
+
+###### C4: Platform Cash-at-Risk
+
+- Value: Total amount in accepted-but-unpaid quotes, platform-wide
+- Sub-value: Count of quotes >14 days aging
+- Drill-down → Screen 11
+
+---
+
+**Business Rules**:
+
+- Default time range: Last 4 weeks (same as provider dashboard)
+- Provider TTFQ health tiers use the individual provider's configured SLA; for platform-wide display, the default SLA is used if no provider SLA is set
+- Section A tiles always show current snapshot (not historical); B and C sections respect the time range filter
+
+---
+
+#### Screen 8: Provider Performance & Engagement
+
+**Purpose**: Two-section screen — Performance (conversion quality) and Engagement (activity/dormancy). These are distinct jobs: performance tells you how well a provider works; engagement tells you whether they're working at all.
+
+**Filters**: Time range + Country + TTFQ health tier (All / Green / Amber / Red) + Engagement status (All / Active / At Risk / Dormant)
+
+---
+
+##### Section A — Performance
+
+###### Widget 1: Provider League Table
+
+| Column | Value |
+|--------|-------|
+| Provider | Name + country flag |
+| TTFQ p50 | Value + color badge |
+| Conversion rate | Inquiries → In progress % |
+| Quote acceptance rate | Accepted ÷ Quoted % |
+| Avg overall rating | Star rating (from reviews) |
+| Quote response rate | Quotes submitted ÷ inquiries distributed |
+| vs. Platform | Variance column for conversion rate (+/−%) |
+| Status | Health color badge (Green / Amber / Red based on TTFQ + conversion composite) |
+
+- Sortable by any column
+- Default sort: TTFQ status (Red first) then conversion rate ascending
+- Paginated: 20 per page
+- Drill-down: click row → provider's own analytics view (read-only admin view of provider's Screen 2)
+
+###### Widget 2: Performance Distribution
+
+| Property | Value |
+|----------|-------|
+| Chart type | Scatter plot |
+| X axis | TTFQ p50 (minutes) |
+| Y axis | Conversion rate (%) |
+| Points | One per provider (anonymised label: "Provider A", "Provider B", etc.) — except when admin is on provider detail view |
+| Reference lines | Platform median TTFQ · Platform median conversion rate |
+| Quadrants | Fast + High conversion (ideal) · Slow + Low conversion (needs support) |
+| Drill-down | Click point → that provider's detail |
+
+---
+
+##### Section B — Engagement
+
+###### Widget 3: Provider Activity Table
+
+| Column | Value |
+|--------|-------|
+| Provider | Name + country |
+| Last active | Date of last login (`users.last_login_at`) |
+| Quotes this month | Count of quotes submitted in current calendar month |
+| Inquiry response rate | Quotes submitted ÷ inquiries distributed (last 30 days) |
+| Status | Active (activity in last 7d) · At Risk (7–30d) · Dormant (>30d no activity) |
+
+- Filter by status (Active / At Risk / Dormant)
+- Drill-down: click row → provider detail in FR-015
+
+###### Widget 4: New Provider Ramp
+
+| Property | Value |
+|----------|-------|
+| Chart type | Line chart (multiple series) |
+| X axis | Days since onboarding (0–90 days) |
+| Y axis | Cumulative quotes submitted |
+| Series | Each provider onboarded in the selected period (one line each, anonymised) |
+| Reference line | Platform average ramp curve |
+| Purpose | Identify new providers who are struggling to get started |
+
+**Data source**: Providers with `created_at` within the selected period; `quotes.created_at − providers.created_at` for days-since-onboarding offset.
+
+###### Widget 5: Engagement Health Summary
+
+| Property | Value |
+|----------|-------|
+| Chart type | Three KPI tiles |
+| Tile 1 | Active providers count (activity in last 7 days) |
+| Tile 2 | At-risk providers count (7–30 days no activity) |
+| Tile 3 | Dormant providers count (>30 days no activity) |
+
+---
+
+**Business Rules**:
+
+- Provider identity is NOT anonymised to the admin (admin must be able to identify and contact providers)
+- Last login data requires `users.last_login_at` to be maintained in the users table
+- "Inquiry response rate" = quotes submitted ÷ inquiries distributed to that provider in the same period; if no distribution tracking exists, use quotes submitted ÷ total platform inquiries in period as a proxy (flag this as lower fidelity)
+- Engagement status thresholds (7d / 30d) are configurable by admin
+
+---
+
+#### Screen 9: Patient Acquisition & Funnel
+
+**Purpose**: How patients enter the platform and move through the inquiry-to-booking funnel. Affiliate acquisition tracked where available.
+
+**Filters**: Time range + Country + Treatment type
+
+**Note**: Channel attribution (organic, paid, social) is NOT available — this screen covers volume trends, funnel efficiency, and affiliate-sourced traffic only.
+
+---
+
+##### Widget 1: Inquiry Volume Trend
+
+| Property | Value |
+|----------|-------|
+| Chart type | Area line chart |
+| X axis | Week or month (toggle) |
+| Y axis | Inquiry count |
+| Comparison overlay | Prior equivalent period (dashed line) |
+| Drill-down | Click period → admin Inquiries list for that period |
+
+---
+
+##### Widget 2: Platform Funnel Trend Over Time
+
+| Property | Value |
+|----------|-------|
+| Chart type | Multi-line chart (one line per stage) |
+| X axis | Month |
+| Y axis | Conversion % to that stage from Inquiries |
+| Lines | Qualified % · Quoted % · Accepted % · In progress % |
+| Purpose | Show whether platform-wide conversion is improving or declining |
+| Drill-down | Click line point → admin Inquiries list filtered to that stage + month |
+
+---
+
+##### Widget 3: New vs. Returning Patients
+
+| Property | Value |
+|----------|-------|
+| Chart type | Stacked bar chart (monthly) + KPI tiles |
+| Bars | New patient count + Returning patient count per month |
+| Tile 1 | New patient rate (period) |
+| Tile 2 | Returning patient rate (period) |
+| Definition | New = first inquiry ever · Returning = has prior inquiry on record |
+| Drill-down | Click bar segment → Patient list filtered by type and period |
+
+---
+
+##### Widget 4: Patient Journey Time (Platform-Wide)
+
+| Property | Value |
+|----------|-------|
+| Chart type | Two KPI tiles + distribution histogram |
+| Tile 1 | Platform median days inquiry → payment (p50) |
+| Tile 2 | Platform p90 days inquiry → payment |
+| Histogram | Distribution across all converting patients (same bins as Screen 3 Widget 3) |
+
+---
+
+##### Widget 5: Inquiry Seasonality
+
+| Property | Value |
+|----------|-------|
+| Chart type | Calendar heatmap (monthly view, intensity = inquiry count vs. monthly average) |
+| Layout | 12 rows (months) × 7 columns (Mon→Sun) |
+| Intensity | `inquiry count on day ÷ monthly daily average × 100` |
+| Purpose | Identify seasonal peaks and campaign-worthy slow periods |
+| Cell tooltip | `Inquiries: N • Daily avg: m • Index: X%` |
+
+---
+
+##### Widget 6: Affiliate Acquisition
+
+| Property | Value |
+|----------|-------|
+| Chart type | Three KPI tiles + ranked table |
+| Tile 1 | Affiliate-sourced bookings (count in period) |
+| Tile 2 | Affiliate contribution rate = affiliate bookings ÷ total bookings |
+| Tile 3 | Avg affiliate booking value |
+| Table columns | Affiliate name · Bookings · Revenue · Commission owed · Conversion rate |
+| Drill-down | Click affiliate row → affiliate detail in FR-018 |
+
+**Data source**: `discounts` (affiliate codes) linked to `quotes/payments` via FR-018 `Booking with Affiliate Code` entity. Affiliate-sourced = booking where a valid affiliate discount code was applied at payment.
+
+**Limitation note**: Affiliate tracking begins at the booking stage (when the discount code is applied), not at the inquiry stage. It is not possible to attribute an inquiry to an affiliate source.
+
+---
+
+**Business Rules**:
+
+- Seasonality heatmap always shows a rolling 12-month view regardless of time range filter (for pattern recognition)
+- Affiliate rows show only affiliates with at least 1 booking in the selected period; inactive affiliates are filtered out
+
+---
+
+#### Screen 10: Geographic Intelligence
+
+**Purpose**: Strategic supply/demand view. Where is patient demand concentrated? Where does the platform have insufficient provider coverage? Used for expansion planning and targeted provider recruitment.
+
+**Filters**: Time range (affects inquiry and booking data) + Treatment type
+
+---
+
+##### Widget 1: Patient Demand Map
+
+| Property | Value |
+|----------|-------|
+| Chart type | Choropleth map OR ranked table with flag icons (implementation choice) |
+| Value mapped | Inquiry count per patient country (in selected period) |
+| Color scale | 5-bin scale from low (cool) to high (warm) |
+| Tooltip | `Country · Inquiries: N · Booked: B · Conversion rate: R%` |
+| Drill-down | Click country → filtered admin Inquiries list |
+
+---
+
+##### Widget 2: Provider Coverage by Country
+
+| Property | Value |
+|----------|-------|
+| Chart type | Ranked horizontal bar chart |
+| Y axis | Country (provider country) |
+| X axis | Active provider count |
+| Drill-down | Click bar → Provider list filtered to that country |
+
+---
+
+##### Widget 3: Demand vs. Supply Gap
+
+| Property | Value |
+|----------|-------|
+| Chart type | Ranked table |
+| Columns | Patient country · Inquiry count · Provider count (in that country) · Inquiries per provider · Gap flag |
+| Gap flag | Flagged if inquiries per provider > platform median by ≥50% |
+| Sort | Default: inquiries per provider descending (highest gap first) |
+| Purpose | Identify countries to target for provider recruitment |
+
+**Note**: "Provider country" = provider's registered location. The gap metric is an approximation — patients may travel internationally, so a high inquiries-per-provider ratio in one country does not necessarily mean patients cannot be served.
+
+---
+
+##### Widget 4: Conversion Rate by Patient Country
+
+| Property | Value |
+|----------|-------|
+| Chart type | Horizontal ranked bar chart |
+| Y axis | Patient country (top 15 by inquiry volume) |
+| X axis | Conversion rate (Inquiries → In progress) |
+| Secondary bar | Inquiry count (for context) |
+| Reference line | Platform median conversion rate |
+| Drill-down | Click bar → admin Inquiries list filtered to that country |
+
+---
+
+##### Widget 5: Emerging Patient Origins
+
+| Property | Value |
+|----------|-------|
+| Chart type | Ranked table |
+| Columns | Country · Inquiry count (current period) · Inquiry count (prior period) · Growth % |
+| Filter | Countries with >10 inquiries in current period and >20% growth vs prior period |
+| Purpose | Spot new markets before they become dominant |
+
+---
+
+**Business Rules**:
+
+- Country data sourced from `patients.country`; if null, falls back to IP geolocation (flagged "Estimated" in tooltip)
+- Demand vs. Supply gap table only shows countries with ≥5 inquiries in the selected period to avoid statistical noise
+- Map (if used) requires a separate map rendering library; ranked table is the functional fallback
+
+---
+
+#### Screen 11: Treatment Outcomes
+
+**Purpose**: How treatments are performing operationally and in patient satisfaction. **Scope is strictly operational and satisfaction-based** — no clinical outcomes exist in the database (no graft survival rates, no hair density measurements, no complication data).
+
+**Filters**: Time range + Country + Provider (optional) + Treatment type
+
+---
+
+##### Widget 1: Treatment Completion Rate
+
+| Property | Value |
+|----------|-------|
+| Chart type | Bar chart |
+| X axis | Treatment type |
+| Y axis | Completion rate = quotes reaching `completed` ÷ quotes reaching `confirmed` |
+| Reference line | Platform average completion rate |
+| Drill-down | Click bar → admin Quotes list filtered to that treatment |
+
+---
+
+##### Widget 2: Cancellation & No-Show Rate by Treatment
+
+| Property | Value |
+|----------|-------|
+| Chart type | Grouped bar chart |
+| X axis | Treatment type |
+| Y axis | Rate % |
+| Groups | Cancellation rate · No-show rate |
+| Drill-down | Click bar → admin Quotes list with relevant status filter |
+
+---
+
+##### Widget 3: Treatment Volume Trend
+
+| Property | Value |
+|----------|-------|
+| Chart type | Stacked area chart |
+| X axis | Month |
+| Y axis | Booking count |
+| Areas | One per treatment type (dynamic, top 5 + Other) |
+| Purpose | Track which treatments are growing or declining in demand |
+| Drill-down | Click area segment → admin Bookings list filtered to treatment + month |
+
+---
+
+##### Widget 4: Average Review Scores by Treatment
+
+| Property | Value |
+|----------|-------|
+| Chart type | Grouped bar chart |
+| X axis | Treatment type |
+| Y axis | Score (1–5) |
+| Groups | Overall · Results · Staff · Facility · Value |
+| Data source | `reviews` sub-scores, joined via `reviews.quote_id → quotes.treatment_id` |
+| Drill-down | Click bar → Reviews list filtered to that treatment |
+
+---
+
+##### Widget 5: Aftercare Activation Rate
+
+| Property | Value |
+|----------|-------|
+| Chart type | KPI tile + trend line + bar by treatment type |
+| KPI | Platform-wide aftercare activation rate = aftercare records created ÷ completed treatments |
+| Bar chart | Activation rate broken down by treatment type |
+| Drill-down | Click bar → Aftercare records list |
+
+---
+
+##### Widget 6: Provider Distribution by Treatment Specialisation
+
+| Property | Value |
+|----------|-------|
+| Chart type | Stacked horizontal bar chart |
+| Y axis | Treatment type |
+| X axis | Provider count offering that treatment |
+| Drill-down | Click bar → Provider list filtered to that treatment |
+
+**Data source**: `quotes.treatment_id` grouped by `provider_id`; a provider "offers" a treatment if they have submitted at least 1 quote for it in the last 12 months.
+
+---
+
+**Business Rules**:
+
+- Completion rate only calculated for providers with ≥5 confirmed bookings in the period to avoid single-event noise
+- No-show is tracked via the quote status label; if no-show status is not explicitly implemented in the data model, this widget is replaced with "cancellation rate only"
+- Do NOT add any clinical outcome metrics (graft count, hair density, success rates) — these are not in the database
+
+---
+
+#### Screen 12: Financial Health & Cashflow
+
+**Purpose**: Platform financial risk monitoring and revenue health. The admin's question is: "Is money flowing correctly, what do we owe, and where are the risks?"
+
+**Filters**: Time range + Country + Currency
+
+---
+
+##### Widget 1: Platform GMV & Net Revenue
+
+| Property | Value |
+|----------|-------|
+| Chart type | Dual-line area chart |
+| X axis | Month |
+| Y₁ series | Platform GMV (gross payment volume) |
+| Y₂ series | Net revenue (GMV minus total provider payout disbursements) |
+| Drill-down | Click period → detailed payment records |
+
+**Calculation**: GMV = `SUM(payments.amount)` where `payment_status = 'completed'`; Net revenue = GMV − total disbursed provider payouts in same period.
+
+---
+
+##### Widget 2: Commission Earned Trend
+
+| Property | Value |
+|----------|-------|
+| Chart type | Bar chart (monthly) |
+| X axis | Month |
+| Y axis | Commission earned = `SUM(payments.amount × quotes.commission / 100)` |
+| Reference line | Target monthly commission (admin-configurable) |
+| Drill-down | Click bar → filtered payment records with commission breakdown |
+
+---
+
+##### Widget 3: Refund & Failed Payment Health
+
+| Property | Value |
+|----------|-------|
+| Chart type | Four KPI tiles + trend |
+| Tile 1 | Refund volume (amount, period) |
+| Tile 2 | Refund rate = refund count ÷ total completed payments |
+| Tile 3 | Failed payment count (period) |
+| Tile 4 | Failed payment rate = failed ÷ total attempted payments |
+| Trend | Monthly refund rate + failed rate (dual line) |
+| Drill-down | Click tile → filtered Payments list |
+
+---
+
+##### Widget 4: Cash-at-Risk — Platform-Wide Aging
+
+| Property | Value |
+|----------|-------|
+| Chart type | Stacked horizontal bar chart (same as provider C3, but all providers) |
+| Buckets | 0–24h · 1–3d · 4–7d · 8–14d · >14d |
+| X axis | Count of accepted-but-unpaid quotes (all providers) |
+| Optional legend | By provider country |
+| Drill-down | Click bucket → admin Quotes list filtered to accepted status + aging bucket |
+
+---
+
+##### Widget 5: Upcoming Provider Payout Obligations
+
+| Property | Value |
+|----------|-------|
+| Chart type | KPI tile + table |
+| KPI | Total upcoming payout amount (next 30 days) |
+| Table columns | Provider · Amount · Payout date · Cadence · Status |
+| Sort | Payout date ascending |
+| Drill-down | Click row → provider payout detail in FR-017 |
+
+---
+
+##### Widget 6: Installment Plan Health
+
+| Property | Value |
+|----------|-------|
+| Chart type | Donut + KPI |
+| Segments | On-time · Overdue · Defaulted |
+| KPI | Total outstanding installment balance |
+| Data source | `installment_plans` table status |
+| Drill-down | Click segment → Installment plans list filtered by status |
+
+---
+
+##### Widget 7: Affiliate Commission Obligations
+
+| Property | Value |
+|----------|-------|
+| Chart type | KPI tile + upcoming table |
+| KPI | Total affiliate commission owed (pending payout) |
+| Table | Affiliate · Commission owed · Next payout date |
+| Drill-down | Click row → FR-017 affiliate billing |
+
+---
+
+##### Widget 8: Revenue by Currency
+
+| Property | Value |
+|----------|-------|
+| Chart type | Donut |
+| Segments | Per currency code (`payments.currency`) |
+| Value | GMV by currency |
+| Purpose | FX exposure visibility — how much revenue is in non-base currencies |
+
+---
+
+**Business Rules**:
+
+- All amounts converted to Hairline's base reporting currency (configured in admin settings) using daily FX rates; raw currency amounts shown in tooltips
+- Net revenue calculation excludes payout amounts that are still in "Scheduled" status (not yet disbursed)
+- This screen is only accessible to admin roles with financial data permissions
+
+---
+
+#### Screen 13: Pricing Intelligence
+
+**Purpose**: Strategic pricing landscape across all providers and treatments. Helps Hairline understand market pricing, identify outliers, and inform provider guidance and benchmark targets.
+
+**Filters**: Time range + Country + Treatment type
+
+---
+
+##### Widget 1: Average Quote Amount by Treatment
+
+| Property | Value |
+|----------|-------|
+| Chart type | Bar chart |
+| X axis | Treatment type |
+| Y axis | Average quote amount (platform base currency) |
+| Error bars | p25–p75 range per treatment |
+| Drill-down | Click bar → Quotes list filtered to that treatment |
+
+---
+
+##### Widget 2: Price Range per Treatment
+
+| Property | Value |
+|----------|-------|
+| Chart type | Range bar chart (or box plot if supported) |
+| X axis | Treatment type |
+| Ranges shown | Min · p25 · Median · p75 · Max |
+| Purpose | Show the full spread of prices in the market for each treatment |
+| Reference line | Platform median per treatment |
+| Drill-down | Click bar → Quotes list for that treatment sorted by amount |
+
+---
+
+##### Widget 3: Quote Amount by Provider Country
+
+| Property | Value |
+|----------|-------|
+| Chart type | Grouped bar chart |
+| X axis | Provider country |
+| Y axis | Average quote amount |
+| Groups | Per treatment type (top 3 by volume) |
+| Purpose | Surface geographic pricing differences (e.g., Turkish providers vs. UK providers) |
+| Drill-down | Click bar → Quotes list filtered to provider country + treatment |
+
+---
+
+##### Widget 4: Conversion Rate by Price Bracket
+
+| Property | Value |
+|----------|-------|
+| Chart type | Bar chart |
+| X axis | Quote amount bracket (dynamic bins based on data distribution) |
+| Y axis | Conversion rate (Accepted ÷ Quoted) for quotes in that bracket |
+| Reference line | Overall platform conversion rate |
+| Purpose | Show whether higher-priced quotes convert less platform-wide |
+| Drill-down | Click bar → Quotes list filtered to that price bracket |
+
+---
+
+##### Widget 5: Price Trend Over Time per Treatment
+
+| Property | Value |
+|----------|-------|
+| Chart type | Multi-line chart |
+| X axis | Month (last 12 months) |
+| Y axis | Average quote amount |
+| Lines | One per treatment type (top 5 by volume + Other as grey line) |
+| Purpose | Track whether market prices are rising or falling |
+| Drill-down | Click line point → Quotes list for that treatment + month |
+
+---
+
+##### Widget 6: Price Outlier Providers
+
+| Property | Value |
+|----------|-------|
+| Chart type | Ranked table |
+| Columns | Provider · Treatment · Avg quote amount · Platform median · Variance % · Direction |
+| Filter | Providers whose avg quote is ≥30% above or below the platform median for any treatment |
+| Direction | "High" (priced above) or "Low" (priced below) |
+| Purpose | Flag providers who may be pricing themselves out of the market or undervaluing their services |
+| Drill-down | Click row → that provider's detail in FR-015 |
+
+---
+
+**Business Rules**:
+
+- All quote amounts converted to platform base currency for comparison; raw amounts shown in tooltips
+- Outlier threshold (30%) is admin-configurable
+- Only quotes with `status ≠ 'inquiry'` (i.e., actually submitted quotes) are included in pricing calculations
+- Minimum 5 quotes per treatment per provider required to include that provider in outlier detection
 
 ---
 
@@ -1361,8 +1365,8 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - SLA target (minutes) per provider (used across TTFQ color coding and benchmark charts)
 - Benchmark refresh frequency
 - Provider engagement status thresholds (Active/At Risk/Dormant day boundaries)
-- Outlier detection threshold for Screen 12 (default 30%)
-- Target monthly commission reference line on Screen 11 Widget 2
+- Outlier detection threshold for Screen 13 (default 30%)
+- Target monthly commission reference line on Screen 12 Widget 2
 
 **Fixed in Codebase**:
 
@@ -1392,10 +1396,10 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ### Admin Experience
 
-- **SC-006**: Admin can identify all Red-tier providers from Screen 7 in under 30 seconds
-- **SC-007**: Admin can identify the top 3 countries with demand/supply gaps from Screen 9 in under 1 minute
-- **SC-008**: Admin can verify total upcoming payout obligations from Screen 11 in under 30 seconds
-- **SC-009**: Admin can identify pricing outlier providers for a given treatment from Screen 12 in under 2 minutes
+- **SC-006**: Admin can identify all Red-tier providers from Screen 8 in under 30 seconds
+- **SC-007**: Admin can identify the top 3 countries with demand/supply gaps from Screen 10 in under 1 minute
+- **SC-008**: Admin can verify total upcoming payout obligations from Screen 12 in under 30 seconds
+- **SC-009**: Admin can identify pricing outlier providers for a given treatment from Screen 13 in under 2 minutes
 
 ### System Performance
 
@@ -1424,8 +1428,8 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 ### External
 
 - **Currency Conversion API**: Daily FX rates for multi-currency display; failure fallback = previous day's cached rates
-- **PDF Generation Library**: For export reports (Screen 13)
-- **Map Rendering Library** (optional): For Screen 9 choropleth map; ranked table is the functional fallback
+- **PDF Generation Library**: For export reports (Screen 6)
+- **Map Rendering Library** (optional): For Screen 10 choropleth map; ranked table is the functional fallback
 
 ### Data Model Gaps to Resolve Before Implementation
 
@@ -1433,8 +1437,8 @@ The following fields are referenced in widget calculations but are not explicitl
 
 | Field needed | Where used | Recommended resolution |
 |-------------|------------|----------------------|
-| `quotes.sent_at` | TTFQ calculation (Screens 1, 2, 6, 7) | Add `sent_at TIMESTAMP` to `quotes` table, populated when `status` transitions from `inquiry` → `quote` |
-| `quotes.accepted_at` | Quote→Payment Aging (Screens 1, 4, 11) | Add `accepted_at TIMESTAMP` to `quotes` table, populated when `status` transitions to `accepted` |
+| `quotes.sent_at` | TTFQ calculation (Screens 1, 2, 7, 8) | Add `sent_at TIMESTAMP` to `quotes` table, populated when `status` transitions from `inquiry` → `quote` |
+| `quotes.accepted_at` | Quote→Payment Aging (Screens 1, 4, 12) | Add `accepted_at TIMESTAMP` to `quotes` table, populated when `status` transitions to `accepted` |
 
 *The user has indicated that a quote timeline/activity system may already record status-change events with timestamps. If so, these fields can be derived from that timeline. Confirm with the development team before implementation.*
 
@@ -1458,7 +1462,7 @@ The following fields are referenced in widget calculations but are not explicitl
 
 - **REQ-014-001** through **REQ-014-032**: See v2.0 spec (unchanged). Screen 1 is frozen.
 
-### Screen 2 — Provider / Performance & Conversion
+### Screen 2 — Performance & Conversion
 
 - **REQ-014-033**: System MUST display funnel conversion trend as a multi-line chart with weekly/monthly toggle
 - **REQ-014-034**: System MUST display conversion breakdown by treatment type as a grouped bar chart
@@ -1469,7 +1473,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-039**: System MUST display an anonymised platform benchmark comparison table (TTFQ, conversion, acceptance rate, avg quote, avg rating) with percentile bands
 - **REQ-014-040**: Benchmark pool MUST require minimum 5 providers; display explanatory message if pool is insufficient
 
-### Screen 3 — Provider / Patient Analytics
+### Screen 3 — Patient Analytics
 
 - **REQ-014-041**: System MUST display full patient location table (all countries, sortable) and linked donut chart
 - **REQ-014-042**: System MUST display new vs. returning patient rate as donut and monthly trend line
@@ -1479,7 +1483,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-046**: System MUST display aftercare activation rate KPI with trend sparkline
 - **REQ-014-047**: Patient age distribution widget MUST only be included if age is directly available in the data model; do NOT derive from free-text fields
 
-### Screen 4 — Provider / Finance & Payouts
+### Screen 4 — Finance & Payouts
 
 - **REQ-014-048**: System MUST display revenue trend with weekly/monthly/quarterly toggle
 - **REQ-014-049**: System MUST display revenue by treatment type — full list (not capped at 8)
@@ -1490,14 +1494,21 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-054**: System MUST display cash-at-risk summary KPI linking to Screen 1 Section C3 for full aging detail
 - **REQ-014-055**: System MUST display full payout history (column bar + paginated table covering all history)
 
-### Screen 5 — Provider / Pricing & Benchmarks
+### Screen 5 — Pricing & Benchmarks
 
 - **REQ-014-056**: System MUST display average quote amount by treatment type with trend overlay
 - **REQ-014-057**: System MUST display quote amount distribution histogram with provider median and platform median reference lines
 - **REQ-014-058**: System MUST display price vs. conversion rate scatter plot (one point per treatment); replace with text insight if fewer than 3 treatment types have data
 - **REQ-014-059**: System MUST display platform benchmark comparison table with percentile bands; require minimum 5 providers in benchmark pool
 
-### Screen 6 — Admin / Platform Overview
+### Screen 6 — Export Report Configuration
+
+- **REQ-014-101**: System MUST allow providers to select which analytics screens to include in the export
+- **REQ-014-102**: System MUST support PDF and CSV export formats
+- **REQ-014-103**: System MUST support scheduled recurring exports (weekly/monthly/quarterly)
+- **REQ-014-104**: System MUST store generated reports for 7 days for re-download
+
+### Screen 7 — Platform Overview
 
 - **REQ-014-060**: System MUST display three-section overview (Operations, Performance, Finance) with platform-wide aggregations
 - **REQ-014-061**: System MUST display provider TTFQ health distribution donut (Green/Amber/Red counts)
@@ -1505,7 +1516,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-063**: System MUST display platform-wide conversion funnel and TTFQ bullet chart
 - **REQ-014-064**: System MUST display platform GMV, commission earned, upcoming payout obligations, and cash-at-risk as financial summary tiles
 
-### Screen 7 — Admin / Provider Performance & Engagement
+### Screen 8 — Provider Performance & Engagement
 
 - **REQ-014-065**: System MUST display provider league table (sortable by TTFQ, conversion, acceptance rate, rating, response rate) with platform variance column
 - **REQ-014-066**: System MUST display provider performance scatter plot (TTFQ vs. conversion rate, one point per provider)
@@ -1513,7 +1524,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-068**: System MUST display new provider ramp chart (quotes submitted vs. days since onboarding)
 - **REQ-014-069**: Engagement status thresholds MUST be admin-configurable
 
-### Screen 8 — Admin / Patient Acquisition & Funnel
+### Screen 9 — Patient Acquisition & Funnel
 
 - **REQ-014-070**: System MUST display inquiry volume trend (area line with prior period overlay)
 - **REQ-014-071**: System MUST display platform funnel trend as multi-line monthly chart
@@ -1522,7 +1533,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-074**: System MUST display inquiry seasonality calendar heatmap (rolling 12-month view)
 - **REQ-014-075**: System MUST display affiliate acquisition KPI tiles and ranked table; display limitation note that tracking begins at booking stage, not inquiry stage
 
-### Screen 9 — Admin / Geographic Intelligence
+### Screen 10 — Geographic Intelligence
 
 - **REQ-014-076**: System MUST display patient demand by country (choropleth map OR ranked table — implementation choice)
 - **REQ-014-077**: System MUST display provider coverage by country (ranked bar)
@@ -1530,7 +1541,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-079**: System MUST display conversion rate by patient country (ranked bar with platform median reference)
 - **REQ-014-080**: System MUST display emerging patient origins table (countries with >20% inquiry growth vs. prior period and >10 inquiries in current period)
 
-### Screen 10 — Admin / Treatment Outcomes
+### Screen 11 — Treatment Outcomes
 
 - **REQ-014-081**: System MUST display treatment completion rate per type (bar chart with platform average reference)
 - **REQ-014-082**: System MUST display cancellation and no-show rate per treatment type
@@ -1539,7 +1550,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-085**: System MUST display aftercare activation rate per treatment type
 - **REQ-014-086**: System MUST NOT include any clinical outcome metrics (graft survival, hair density, complication rates) — these are not in the database
 
-### Screen 11 — Admin / Financial Health & Cashflow
+### Screen 12 — Financial Health & Cashflow
 
 - **REQ-014-087**: System MUST display platform GMV and net revenue as dual-line area chart (monthly)
 - **REQ-014-088**: System MUST display commission earned trend with admin-configurable target reference line
@@ -1550,7 +1561,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-093**: System MUST display affiliate commission obligations table
 - **REQ-014-094**: System MUST display revenue by currency donut
 
-### Screen 12 — Admin / Pricing Intelligence
+### Screen 13 — Pricing Intelligence
 
 - **REQ-014-095**: System MUST display average quote amount by treatment type (bar chart with p25–p75 error bars)
 - **REQ-014-096**: System MUST display price range per treatment (range bar or box plot: min, p25, median, p75, max)
@@ -1558,13 +1569,6 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-098**: System MUST display conversion rate by price bracket
 - **REQ-014-099**: System MUST display price trend per treatment over last 12 months
 - **REQ-014-100**: System MUST display price outlier provider table; outlier threshold configurable by admin (default 30%); require minimum 5 quotes per treatment per provider
-
-### Screen 13 — Export Configuration
-
-- **REQ-014-101**: System MUST allow providers to select which analytics screens to include in the export
-- **REQ-014-102**: System MUST support PDF and CSV export formats
-- **REQ-014-103**: System MUST support scheduled recurring exports (weekly/monthly/quarterly)
-- **REQ-014-104**: System MUST store generated reports for 7 days for re-download
 
 ---
 
@@ -1596,7 +1600,7 @@ The following fields are referenced in widget calculations but are not explicitl
 |------|---------|---------|--------|
 | 2025-11-11 | 1.0 | Initial PRD creation | AI Assistant |
 | 2026-04-16 | 2.0 | Major rewrite: single-page cockpit design locked (Screen 1); global filters, cross-filtering, TTFQ spec, all Section A/B/C widgets specified | AI Assistant |
-| 2026-04-16 | 3.0 | Full 12-screen expansion: Screens 2–5 (provider analytics suite) and Screens 6–12 (admin analytics suite) added; Screen 13 (export config) retained; all widgets verified against system-data-schema.md; data model gaps documented; 104 functional requirements; 9 key entities | AI Assistant |
+| 2026-04-16 | 3.0 | Full 12-screen expansion: Screens 2–6 (provider analytics suite + export config) and Screens 7–13 (admin analytics suite) added; all widgets verified against system-data-schema.md; data model gaps documented; 104 functional requirements; 9 key entities | AI Assistant |
 
 ---
 
