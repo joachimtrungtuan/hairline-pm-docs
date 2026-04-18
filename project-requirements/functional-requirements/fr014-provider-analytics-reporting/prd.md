@@ -10,11 +10,11 @@
 
 ## Executive Summary
 
-The Provider Analytics & Reporting module delivers a **12-screen analytics suite** split across two tenants: provider and admin.
+The Provider Analytics & Reporting module delivers a **13-screen suite (12 analytical + 1 export config)** split across two tenants: provider and admin.
 
-On the **provider side**, five screens cover the full operational picture — a locked cockpit dashboard for daily triage (Screen 1), plus four deeper analytical views for conversion performance, patient insights, financial health, and pricing/benchmarks. Each screen has a single job and is accessed via the Analytics section of the provider portal.
+On the **provider side**, six screens cover the full operational picture — a locked cockpit dashboard for daily triage (Screen 1), four deeper analytical views for conversion performance, patient insights, financial health, and pricing/benchmarks (Screens 2–5), and an export configuration utility (Screen 6). Each screen has a single job and is accessed via the Analytics section of the provider portal.
 
-On the **admin side**, seven screens give Hairline visibility into platform-wide health, provider quality and engagement, patient acquisition, geographic supply/demand gaps, treatment outcomes, financial cashflow, and pricing landscape.
+On the **admin side**, seven screens (Screens 7–13) give Hairline visibility into platform-wide health, provider quality and engagement, patient acquisition, geographic supply/demand gaps, treatment outcomes, financial cashflow, and pricing landscape.
 
 All data shown across every screen is sourced directly from the operational database or derived by calculation. Nothing is aspirational or dependent on external integrations unless explicitly noted.
 
@@ -25,7 +25,7 @@ All data shown across every screen is sourced directly from the operational data
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-XX)**: No direct patient-facing features. Patient behaviour data (inquiry timing, booking patterns, location) feeds the analytics pipeline.
-- **Provider Platform (PR-05)**: 5-screen analytics suite accessible from the "Analytics" nav section.
+- **Provider Platform (PR-05)**: 6-screen suite (5 screens in the "Analytics" nav + Screen 1 as the platform landing page, not accessed via the Analytics nav section).
 - **Admin Platform (A-08)**: 7-screen analytics suite accessible from the admin "Analytics" nav section.
 - **Shared Services (S-XX)**: Analytics data pipeline service; report generation service.
 
@@ -73,9 +73,9 @@ All data shown across every screen is sourced directly from the operational data
 
 ### Main Flow: Provider Reviews Analytics Suite
 
-**Actor**: Provider (Owner/Admin role)
+**Actor**: Provider user with analytics access
 **Trigger**: Provider clicks "Analytics" in the nav
-**Outcome**: Provider navigates between 5 analytical screens to understand performance, patients, and financials
+**Outcome**: Provider navigates between the 6 provider screens (Screen 1 as landing page + Screens 2–6 via Analytics nav) to understand performance, patients, and financials
 
 1. Provider lands on Performance & Conversion (Screen 2) — checks funnel health for the week
 2. Provider navigates to Patient Analytics (Screen 3) — reviews patient location and satisfaction trends
@@ -93,8 +93,10 @@ All data shown across every screen is sourced directly from the operational data
 2. Admin navigates to Provider Performance & Engagement (Screen 8) — reviews underperforming and dormant providers
 3. Admin navigates to Patient Acquisition & Funnel (Screen 9) — checks inquiry volume and funnel drop-offs
 4. Admin navigates to Geographic Intelligence (Screen 10) — identifies underserved markets
-5. Admin navigates to Financial Health & Cashflow (Screen 12) — reviews payout obligations and cash-at-risk
-6. Admin takes action on flagged providers (links through to provider management in FR-015)
+5. Admin navigates to Treatment Outcomes (Screen 11) — reviews cancellation rates and aftercare activation
+6. Admin navigates to Financial Health & Cashflow (Screen 12) — reviews payout obligations and cash-at-risk
+7. Admin navigates to Pricing Intelligence (Screen 13) — checks for outlier providers on pricing
+8. Admin takes action on flagged providers (links through to provider management in FR-015)
 
 ### Alternative Flows
 
@@ -291,7 +293,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Secondary bar | Inquiry count (context for the rate) |
 | Drill-down | Click bar → filtered Inquiries list for that country |
 
-**Data source**: `inquiries.patient_id → patients.country` joined with payment records.
+**Data source**: `inquiries.patient_id → patients.location_id → countries.name`, with temporary fallback to legacy `patients.location` only for unmigrated rows.
 
 ---
 
@@ -350,7 +352,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 - All widgets share the same time range and country filter
 - Treatment type filter applies to all conversion widgets (not to TTFQ)
-- Minimum 10 inquiries required to display conversion rate (not a hard lock — counts still shown below threshold)
+- Low-sample handling follows the global Data Quality Rule 7 (<30 inquiries → helper copy, data still rendered); no widget-specific override applies
 
 ---
 
@@ -492,7 +494,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Secondary metric | Patient count |
 | Drill-down | Click bar → Payments list filtered to that country |
 
-**Data source**: `payments.patient_id → patients.country`.
+**Data source**: `payments.patient_id → patients.location_id → countries.name`, with temporary fallback to legacy `patients.location` only for unmigrated rows.
 
 ---
 
@@ -505,7 +507,12 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Tile 2 | Commission deducted |
 | Trend | Gross income line + commission deducted area, stacked |
 
-**Calculation**: Commission = `SUM(payments.amount × (quotes.commission / 100))` for completed payments. Gross and net displayed in provider currency.
+**Calculation**: Commission deducted = sum of the effective provider commission for each completed payment in range. Effective commission must respect the provider's configured commission model:
+
+- Percentage model: `payments.amount × (effective_commission_percentage / 100)`
+- Flat-rate model: `effective_commission_amount` per completed booking/payment
+
+Gross and net are displayed in provider currency.
 
 ---
 
@@ -563,7 +570,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 **Business Rules**:
 
 - Income = payments with `payment_status = 'completed'` and `payment_type ≠ 'refund'`
-- Commission is calculated, not stored as a field; commission displayed with note "Calculated at quote rate"
+- Commission is calculated from the effective provider commission configuration, not from a single percentage-only field; provider screens must display a note clarifying whether the period includes percentage-based deductions, flat-rate deductions, or both
 - All amounts in provider currency; FX rates locked at payment `created_at` date; footer note "Historical exchange rates applied"
 - Payout history only shows payouts that have been processed (not projected future payouts beyond the next scheduled one)
 
@@ -647,7 +654,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
 | Report type | Radio | Yes | PDF Summary or CSV Detailed |
-| Screens to include | Checkboxes | Yes | Performance, Patient Analytics, Finance & Payouts, Pricing & Benchmarks |
+| Screens to include | Checkboxes | Yes | Performance, Patient Analytics, Finance & Payouts, Pricing & Benchmarks (Screen 1 is excluded — it contains real-time operational data not suitable for static reports) |
 | Date range | Date picker | Yes | Max 12-month span |
 | Country filter | Dropdown | No | Optional |
 | Treatment filter | Dropdown | No | Optional |
@@ -672,7 +679,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 **Filters**: Time range (same options) + Country + Provider (optional, defaults to All)
 
-**Layout**: Three sections (A: Operations, B: Performance, C: Finance). Single column on ≤1440px (this is an admin view, desktop-only).
+**Layout**: Three sections (A: Operations, B: Performance, C: Finance). Responsive layout required: multi-column on desktop, reduced-density stacked layout on tablet/mobile, with a single-column fallback on ≤1440px.
 
 ---
 
@@ -699,13 +706,13 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 - Chart: Donut (Green / Amber / Red provider counts)
 - Value: Count and % in each tier
-- Tap → Provider Performance screen (Screen 7) filtered to Red tier
+- Tap → Screen 8 filtered to Red tier
 
 ###### Tile 5: Provider Engagement Rate
 
 - Value: % of active providers who submitted at least 1 quote in last 30 days
 - Sub-value: Count of dormant providers (0 quotes in last 30 days)
-- Tap → Screen 7 engagement section filtered to dormant
+- Tap → Screen 8 engagement section filtered to dormant
 
 ---
 
@@ -722,7 +729,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 - Chart: Bullet chart (platform p50 + p90 vs SLA default target)
 - Shows: Distribution across all providers
-- Drill-down: click → Screen 7 sorted by TTFQ
+- Drill-down: click → Screen 8 (Provider Performance & Engagement) sorted by TTFQ
 
 ###### B3: Top Patient Origin Countries
 
@@ -732,7 +739,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 ###### B4: Treatment Type Distribution
 
 - Chart: Donut (inquiry share by treatment type)
-- Drill-down: click slice → Screen 10 filtered to that treatment
+- Drill-down: click slice → Screen 11 filtered to that treatment
 
 ---
 
@@ -742,32 +749,32 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 - Value: `SUM(payments.amount)` where `payment_status = 'completed'`, period
 - Sub-value: % change vs. prior period
-- Drill-down → Screen 11
+- Drill-down → Screen 12
 
 ###### C2: Commission Earned (Period)
 
-- Value: `SUM(payments.amount × quotes.commission / 100)` for completed payments
+- Value: Sum of effective provider commission deductions for completed payments in period, respecting each provider's configured commission model (`percentage` or `flat rate`)
 - Sub-value: As % of GMV
-- Drill-down → Screen 11
+- Drill-down → Screen 12
 
 ###### C3: Upcoming Provider Payout Obligations
 
 - Value: Total payout amount due to providers in next 30 days
 - Sub-value: Number of providers in next payout cycle
-- Drill-down → Screen 11
+- Drill-down → Screen 12
 
 ###### C4: Platform Cash-at-Risk
 
 - Value: Total amount in accepted-but-unpaid quotes, platform-wide
 - Sub-value: Count of quotes >14 days aging
-- Drill-down → Screen 11
+- Drill-down → Screen 12
 
 ---
 
 **Business Rules**:
 
 - Default time range: Last 4 weeks (same as provider dashboard)
-- Provider TTFQ health tiers use the individual provider's configured SLA; for platform-wide display, the default SLA is used if no provider SLA is set
+- Provider TTFQ health tiers use the platform-wide SLA target (admin-configurable, stored in admin settings); there are no per-provider SLA overrides in this version
 - Section A tiles always show current snapshot (not historical); B and C sections respect the time range filter
 
 ---
@@ -821,7 +828,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Column | Value |
 |--------|-------|
 | Provider | Name + country |
-| Last active | Date of last login (`users.last_login_at`) |
+| Last active | `MAX(action_at)` from `provider_activity_logs` for that `provider_id`; for last login specifically use `MAX(action_at) WHERE action_type = 'login'` |
 | Quotes this month | Count of quotes submitted in current calendar month |
 | Inquiry response rate | Quotes submitted ÷ inquiries distributed (last 30 days) |
 | Status | Active (activity in last 7d) · At Risk (7–30d) · Dormant (>30d no activity) |
@@ -856,7 +863,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 **Business Rules**:
 
 - Provider identity is NOT anonymised to the admin (admin must be able to identify and contact providers)
-- Last login data requires `users.last_login_at` to be maintained in the users table
+- Last-activity data is sourced from `provider_activity_logs.action_at` (canonical activity log); last active = `MAX(action_at)` per provider; last login = `MAX(action_at) WHERE action_type = 'login'` per provider user. Do not use `provider_users.last_login_at` — this field does not exist in the schema.
 - "Inquiry response rate" = quotes submitted ÷ inquiries distributed to that provider in the same period; if no distribution tracking exists, use quotes submitted ÷ total platform inquiries in period as a proxy (flag this as lower fidelity)
 - Engagement status thresholds (7d / 30d) are configurable by admin
 
@@ -1028,7 +1035,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 **Business Rules**:
 
-- Country data sourced from `patients.country`; if null, falls back to IP geolocation (flagged "Estimated" in tooltip)
+- Country data is sourced canonically from `patients.location_id → countries.name`; if `location_id` is null for legacy rows, the UI may temporarily fall back to `patients.location` until migration cleanup is complete. No IP-geolocation fallback is assumed in this version.
 - Demand vs. Supply gap table only shows countries with ≥5 inquiries in the selected period to avoid statistical noise
 - Map (if used) requires a separate map rendering library; ranked table is the functional fallback
 
@@ -1152,7 +1159,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 |----------|-------|
 | Chart type | Bar chart (monthly) |
 | X axis | Month |
-| Y axis | Commission earned = `SUM(payments.amount × quotes.commission / 100)` |
+| Y axis | Commission earned = sum of effective provider commission deductions for completed payments in period, respecting each provider's configured commission model (`percentage` or `flat rate`) |
 | Reference line | Target monthly commission (admin-configurable) |
 | Drill-down | Click bar → filtered payment records with commission breakdown |
 
@@ -1358,11 +1365,16 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - **Rule 14**: Admin can see individual provider identities in admin screens for operational support
 - **Rule 15**: All analytics access logged with user ID, timestamp, screen accessed, and active filters (12-month retention)
 
+### Access Control Rules
+
+- **Rule 15A**: FR-014 consumes the existing role and permission model; it does not define new roles or expand access beyond the owning platform's permission system.
+- **Rule 15B**: If a user lacks permission to view a widget's underlying data domain, the UI MUST not render that widget for that user, and the corresponding widget data MUST not be requested. Remaining widgets reflow within the existing responsive layout.
+
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- SLA target (minutes) per provider (used across TTFQ color coding and benchmark charts)
+- SLA target (minutes) — platform-wide value used across all TTFQ color coding and benchmark charts; per-provider SLA overrides are out of scope for this version
 - Benchmark refresh frequency
 - Provider engagement status thresholds (Active/At Risk/Dormant day boundaries)
 - Outlier detection threshold for Screen 13 (default 30%)
@@ -1373,7 +1385,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - Dashboard section order (Screen 1: A → B → C)
 - TTFQ formula and funnel stage definitions
 - Booking Intensity Index formula
-- Commission calculation formula (`payment.amount × quote.commission / 100`)
+- Commission calculation logic: `IF provider_commissions.type = 'percentage' THEN payment.amount × (effective_rate / 100) ELSE effective_flat_amount` — the conditional is fixed; the rate/amount values are sourced from provider commission configuration
 
 ### Performance Rules
 
@@ -1414,16 +1426,22 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 
 ### Internal
 
-- **FR-003**: Inquiry data (`created_at`, `patient_id`, treatment type, spam flag) — feeds all funnel metrics
+- **FR-003**: Inquiry data (`created_at`, `patient_id`, treatment type, spam flag) plus inquiry distribution records (`inquiry_providers.provider_id`, `source`, `status`, `distributed_at`) — feeds all funnel metrics and provider response/distribution analytics
 - **FR-004**: Quote data (`status`, `quote_amount`, `commission`, `treatment_id`, `sent_at`, `accepted_at`) — feeds TTFQ, acceptance rate, pricing widgets
 - **FR-006**: Booking data (status transitions, `start_date`) — feeds booking intensity heatmap and completion rates
 - **FR-007**: Payment data (`amount`, `currency`, `payment_status`, `payment_type`, `created_at`, `is_installment`) — feeds all financial widgets
 - **FR-010**: Treatment execution status — feeds completion rate and aftercare activation
 - **FR-011**: Aftercare records — feeds aftercare activation rate widgets
 - **FR-013**: Reviews (`overall_rating`, `results_rating`, `staff_rating`, `facility_rating`, `value_rating`) — feeds satisfaction widgets
-- **FR-015**: Provider profile (`country`, `timezone`, `currency`, `payout_cadence`, `sla_minutes`) — drives localization and TTFQ thresholds
+- **FR-015**: Provider master/profile data — provider location and timezone (`providers.country_id`, `providers.city_id`, `providers.timezone`) and effective commission settings (`provider_commissions.type`, `price`, `payment_cycle`) drive localization, commission analytics, and payout cadence
 - **FR-017**: Payout records — feeds all payout history and obligation widgets
 - **FR-018**: Affiliate records and discount codes — feeds affiliate acquisition widgets
+- **FR-026**: Admin settings store — provides admin-configurable analytics values such as SLA target, benchmark refresh frequency, engagement thresholds, and target commission reference line
+- **FR-031**: Access control and permissions — governs which admin analytics surfaces and data domains are visible to each authorized role
+- **S-03**: Notification Service — handles scheduled export email delivery and secure-link notifications for Screen 6
+- **S-05**: Media Storage Service — stores generated export artifacts for 7-day re-download retention and secure-link access
+- **Provider Banking Details**: Provider display currency is derived from `banking_details.currency` via provider default-currency resolution; if absent, the current implementation falls back to USD
+- **Provider Team / Auth Data**: Engagement views rely on `provider_activity_logs.action_at` as the canonical activity timestamp source (documented in system-data-schema.md). Last active = `MAX(action_at)` per provider. The previously referenced `provider_users.last_login_at` field does not exist in the schema and must not be used.
 
 ### External
 
@@ -1431,27 +1449,25 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 - **PDF Generation Library**: For export reports (Screen 6)
 - **Map Rendering Library** (optional): For Screen 10 choropleth map; ranked table is the functional fallback
 
-### Data Model Gaps to Resolve Before Implementation
+### Data Model Additions (Resolved)
 
-The following fields are referenced in widget calculations but are not explicitly present as dedicated columns in the current schema. These require either dedicated timestamp columns or a status history/audit table:
+The following timestamp columns have been added to the `quotes` table in `system-data-schema.md` to support core analytics metrics:
 
-| Field needed | Where used | Recommended resolution |
-|-------------|------------|----------------------|
-| `quotes.sent_at` | TTFQ calculation (Screens 1, 2, 7, 8) | Add `sent_at TIMESTAMP` to `quotes` table, populated when `status` transitions from `inquiry` → `quote` |
-| `quotes.accepted_at` | Quote→Payment Aging (Screens 1, 4, 12) | Add `accepted_at TIMESTAMP` to `quotes` table, populated when `status` transitions to `accepted` |
-
-*The user has indicated that a quote timeline/activity system may already record status-change events with timestamps. If so, these fields can be derived from that timeline. Confirm with the development team before implementation.*
+| Field | Where used | Population |
+|-------|------------|------------|
+| `quotes.sent_at` | TTFQ calculation (Screens 1, 2, 7, 8) | Set when `status` transitions from `inquiry` → `quote` |
+| `quotes.accepted_at` | Quote→Payment Aging (Screens 1, 4, 12) | Set when `status` transitions to `accepted` |
 
 ---
 
 ## Assumptions
 
 - **Assumption 1**: Providers access the analytics section at least weekly; daily triage is via Screen 1 (Main Dashboard), not the analytics section
-- **Assumption 2**: Admin analytics access is desktop-only (≥1440px); responsive layouts are not required for admin screens
+- **Assumption 2**: Admin analytics must remain responsive across desktop, tablet, and mobile viewports in accordance with the platform constitution; lower-width layouts may reduce density but must preserve the core workflows
 - **Assumption 3**: Provider analytics screens are desktop-first (≥1024px), responsive single-column on ≤1024px
-- **Assumption 4**: SLA minutes per provider are configured and maintained in the provider profile (FR-015); if not set, a platform default SLA is used
-- **Assumption 5**: Payout cadence (weekly/bi-weekly/monthly) is configured per provider in provider profile
-- **Assumption 6**: `patients.country` contains the patient's registered country; where missing, IP-based geolocation is used as a fallback (flagged "Estimated" in UI)
+- **Assumption 4**: SLA target is configured as a single platform-wide value (in minutes) by the admin, stored in the admin settings store. Per-provider SLA overrides are out of scope for this version — all providers are measured against the same platform SLA target. Days would be too coarse for this domain (response times range from 30 min to 6+ hours); minutes is the correct unit.
+- **Assumption 5**: Payout cadence (weekly/bi-weekly/monthly) is currently sourced from provider commission configuration (`provider_commissions.payment_cycle`), not from the provider profile record itself
+- **Assumption 6**: Patient-country analytics resolve from `patients.location_id` referencing `countries.id`; during transition, legacy rows may still fall back to `patients.location` for display/grouping compatibility until data cleanup is complete
 - **Assumption 7**: Channel attribution (organic vs. paid vs. social) is not in scope for any screen — only affiliate-sourced traffic is trackable from the current data model
 
 ---
@@ -1488,7 +1504,7 @@ The following fields are referenced in widget calculations but are not explicitl
 - **REQ-014-048**: System MUST display revenue trend with weekly/monthly/quarterly toggle
 - **REQ-014-049**: System MUST display revenue by treatment type — full list (not capped at 8)
 - **REQ-014-050**: System MUST display revenue by patient country
-- **REQ-014-051**: System MUST display commission deducted per period (calculated as `payment.amount × quote.commission / 100`)
+- **REQ-014-051**: System MUST display commission deducted per period using the provider's effective commission model for each completed payment/booking in range (`percentage` or `flat rate`)
 - **REQ-014-052**: System MUST display refund volume and refund rate trend
 - **REQ-014-053**: System MUST display installment vs. full payment split
 - **REQ-014-054**: System MUST display cash-at-risk summary KPI linking to Screen 1 Section C3 for full aging detail
@@ -1503,78 +1519,78 @@ The following fields are referenced in widget calculations but are not explicitl
 
 ### Screen 6 — Export Report Configuration
 
-- **REQ-014-101**: System MUST allow providers to select which analytics screens to include in the export
-- **REQ-014-102**: System MUST support PDF and CSV export formats
-- **REQ-014-103**: System MUST support scheduled recurring exports (weekly/monthly/quarterly)
-- **REQ-014-104**: System MUST store generated reports for 7 days for re-download
+- **REQ-014-060**: System MUST allow providers to select which analytics screens to include in the export
+- **REQ-014-061**: System MUST support PDF and CSV export formats
+- **REQ-014-062**: System MUST support scheduled recurring exports (weekly/monthly/quarterly)
+- **REQ-014-063**: System MUST store generated reports for 7 days for re-download
 
 ### Screen 7 — Platform Overview
 
-- **REQ-014-060**: System MUST display three-section overview (Operations, Performance, Finance) with platform-wide aggregations
-- **REQ-014-061**: System MUST display provider TTFQ health distribution donut (Green/Amber/Red counts)
-- **REQ-014-062**: System MUST display provider engagement rate and dormant provider count
-- **REQ-014-063**: System MUST display platform-wide conversion funnel and TTFQ bullet chart
-- **REQ-014-064**: System MUST display platform GMV, commission earned, upcoming payout obligations, and cash-at-risk as financial summary tiles
+- **REQ-014-064**: System MUST display three-section overview (Operations, Performance, Finance) with platform-wide aggregations
+- **REQ-014-065**: System MUST display provider TTFQ health distribution donut (Green/Amber/Red counts)
+- **REQ-014-066**: System MUST display provider engagement rate and dormant provider count
+- **REQ-014-067**: System MUST display platform-wide conversion funnel and TTFQ bullet chart
+- **REQ-014-068**: System MUST display platform GMV, commission earned, upcoming payout obligations, and cash-at-risk as financial summary tiles
 
 ### Screen 8 — Provider Performance & Engagement
 
-- **REQ-014-065**: System MUST display provider league table (sortable by TTFQ, conversion, acceptance rate, rating, response rate) with platform variance column
-- **REQ-014-066**: System MUST display provider performance scatter plot (TTFQ vs. conversion rate, one point per provider)
-- **REQ-014-067**: System MUST display provider activity table with last active date, monthly quote count, and engagement status (Active/At Risk/Dormant)
-- **REQ-014-068**: System MUST display new provider ramp chart (quotes submitted vs. days since onboarding)
-- **REQ-014-069**: Engagement status thresholds MUST be admin-configurable
+- **REQ-014-069**: System MUST display provider league table (sortable by TTFQ, conversion, acceptance rate, rating, response rate) with platform variance column
+- **REQ-014-070**: System MUST display provider performance scatter plot (TTFQ vs. conversion rate, one point per provider)
+- **REQ-014-071**: System MUST display provider activity table with last active date, monthly quote count, and engagement status (Active/At Risk/Dormant)
+- **REQ-014-072**: System MUST display new provider ramp chart (quotes submitted vs. days since onboarding)
+- **REQ-014-073**: Engagement status thresholds MUST be admin-configurable
 
 ### Screen 9 — Patient Acquisition & Funnel
 
-- **REQ-014-070**: System MUST display inquiry volume trend (area line with prior period overlay)
-- **REQ-014-071**: System MUST display platform funnel trend as multi-line monthly chart
-- **REQ-014-072**: System MUST display new vs. returning patient rate as stacked monthly bar + KPI tiles
-- **REQ-014-073**: System MUST display patient journey time distribution (p50, p90, histogram)
-- **REQ-014-074**: System MUST display inquiry seasonality calendar heatmap (rolling 12-month view)
-- **REQ-014-075**: System MUST display affiliate acquisition KPI tiles and ranked table; display limitation note that tracking begins at booking stage, not inquiry stage
+- **REQ-014-074**: System MUST display inquiry volume trend (area line with prior period overlay)
+- **REQ-014-075**: System MUST display platform funnel trend as multi-line monthly chart
+- **REQ-014-076**: System MUST display new vs. returning patient rate as stacked monthly bar + KPI tiles
+- **REQ-014-077**: System MUST display patient journey time distribution (p50, p90, histogram)
+- **REQ-014-078**: System MUST display inquiry seasonality calendar heatmap (rolling 12-month view)
+- **REQ-014-079**: System MUST display affiliate acquisition KPI tiles and ranked table; display limitation note that tracking begins at booking stage, not inquiry stage
 
 ### Screen 10 — Geographic Intelligence
 
-- **REQ-014-076**: System MUST display patient demand by country (choropleth map OR ranked table — implementation choice)
-- **REQ-014-077**: System MUST display provider coverage by country (ranked bar)
-- **REQ-014-078**: System MUST display demand vs. supply gap table with gap flag; only show countries with ≥5 inquiries in period
-- **REQ-014-079**: System MUST display conversion rate by patient country (ranked bar with platform median reference)
-- **REQ-014-080**: System MUST display emerging patient origins table (countries with >20% inquiry growth vs. prior period and >10 inquiries in current period)
+- **REQ-014-080**: System MUST display patient demand by country (choropleth map OR ranked table — implementation choice)
+- **REQ-014-081**: System MUST display provider coverage by country (ranked bar)
+- **REQ-014-082**: System MUST display demand vs. supply gap table with gap flag; only show countries with ≥5 inquiries in period
+- **REQ-014-083**: System MUST display conversion rate by patient country (ranked bar with platform median reference)
+- **REQ-014-084**: System MUST display emerging patient origins table (countries with >20% inquiry growth vs. prior period and >10 inquiries in current period)
 
 ### Screen 11 — Treatment Outcomes
 
-- **REQ-014-081**: System MUST display treatment completion rate per type (bar chart with platform average reference)
-- **REQ-014-082**: System MUST display cancellation and no-show rate per treatment type
-- **REQ-014-083**: System MUST display treatment volume trend as stacked area chart (monthly)
-- **REQ-014-084**: System MUST display average review sub-scores per treatment type (5 sub-scores)
-- **REQ-014-085**: System MUST display aftercare activation rate per treatment type
-- **REQ-014-086**: System MUST NOT include any clinical outcome metrics (graft survival, hair density, complication rates) — these are not in the database
+- **REQ-014-085**: System MUST display treatment completion rate per type (bar chart with platform average reference)
+- **REQ-014-086**: System MUST display cancellation and no-show rate per treatment type
+- **REQ-014-087**: System MUST display treatment volume trend as stacked area chart (monthly)
+- **REQ-014-088**: System MUST display average review sub-scores per treatment type (5 sub-scores)
+- **REQ-014-089**: System MUST display aftercare activation rate per treatment type
+- **REQ-014-090**: System MUST NOT include any clinical outcome metrics (graft survival, hair density, complication rates) — these are not in the database
 
 ### Screen 12 — Financial Health & Cashflow
 
-- **REQ-014-087**: System MUST display platform GMV and net revenue as dual-line area chart (monthly)
-- **REQ-014-088**: System MUST display commission earned trend with admin-configurable target reference line
-- **REQ-014-089**: System MUST display refund volume/rate and failed payment rate as KPI tiles and monthly trend
-- **REQ-014-090**: System MUST display cash-at-risk aging (stacked horizontal bar, same buckets as Screen 1 C3, platform-wide)
-- **REQ-014-091**: System MUST display upcoming provider payout obligations table (amount, provider, date, cadence)
-- **REQ-014-092**: System MUST display installment plan health donut (On-time / Overdue / Defaulted)
-- **REQ-014-093**: System MUST display affiliate commission obligations table
-- **REQ-014-094**: System MUST display revenue by currency donut
+- **REQ-014-091**: System MUST display platform GMV and net revenue as dual-line area chart (monthly)
+- **REQ-014-092**: System MUST display commission earned trend with admin-configurable target reference line
+- **REQ-014-093**: System MUST display refund volume/rate and failed payment rate as KPI tiles and monthly trend
+- **REQ-014-094**: System MUST display cash-at-risk aging (stacked horizontal bar, same buckets as Screen 1 C3, platform-wide)
+- **REQ-014-095**: System MUST display upcoming provider payout obligations table (amount, provider, date, cadence)
+- **REQ-014-096**: System MUST display installment plan health donut (On-time / Overdue / Defaulted)
+- **REQ-014-097**: System MUST display affiliate commission obligations table
+- **REQ-014-098**: System MUST display revenue by currency donut
 
 ### Screen 13 — Pricing Intelligence
 
-- **REQ-014-095**: System MUST display average quote amount by treatment type (bar chart with p25–p75 error bars)
-- **REQ-014-096**: System MUST display price range per treatment (range bar or box plot: min, p25, median, p75, max)
-- **REQ-014-097**: System MUST display average quote amount by provider country (grouped bar, top 3 treatments)
-- **REQ-014-098**: System MUST display conversion rate by price bracket
-- **REQ-014-099**: System MUST display price trend per treatment over last 12 months
-- **REQ-014-100**: System MUST display price outlier provider table; outlier threshold configurable by admin (default 30%); require minimum 5 quotes per treatment per provider
+- **REQ-014-099**: System MUST display average quote amount by treatment type (bar chart with p25–p75 error bars)
+- **REQ-014-100**: System MUST display price range per treatment (range bar or box plot: min, p25, median, p75, max)
+- **REQ-014-101**: System MUST display average quote amount by provider country (grouped bar, top 3 treatments)
+- **REQ-014-102**: System MUST display conversion rate by price bracket
+- **REQ-014-103**: System MUST display price trend per treatment over last 12 months
+- **REQ-014-104**: System MUST display price outlier provider table; outlier threshold configurable by admin (default 30%); require minimum 5 quotes per treatment per provider
 
 ---
 
 ## Key Entities
 
-- **Entity 1 — Analytics Metrics Aggregate** (provider-level, daily): `provider_id`, `date`, `inquiry_count`, `qualified_count`, `quoted_count`, `accepted_count`, `in_progress_count`, `ttfq_p50_minutes`, `ttfq_p90_minutes`, `sla_minutes`, `weekly_income`, `commission_deducted`, `currency`
+- **Entity 1 — Analytics Metrics Aggregate** (provider-level, daily): `provider_id`, `date`, `inquiry_count`, `qualified_count`, `quoted_count`, `accepted_count`, `in_progress_count`, `ttfq_p50_minutes`, `ttfq_p90_minutes`, `effective_sla_minutes`, `weekly_income`, `commission_deducted`, `currency`
 
 - **Entity 2 — Booking Intensity Record** (provider-level, daily): `provider_id`, `date`, `bookings_on_day`, `monthly_daily_avg`, `intensity_index`, `baseline_type`
 
@@ -1582,7 +1598,7 @@ The following fields are referenced in widget calculations but are not explicitl
 
 - **Entity 4 — Platform Analytics Aggregate** (platform-level, daily): `date`, `total_inquiries`, `total_providers_active`, `platform_ttfq_p50`, `platform_ttfq_p90`, `platform_conversion_rate`, `platform_gmv`, `platform_commission`, `new_patients`
 
-- **Entity 5 — Provider Engagement Snapshot** (provider-level, daily): `provider_id`, `last_login_at`, `quotes_submitted_30d`, `inquiry_response_rate_30d`, `engagement_status`
+- **Entity 5 — Provider Engagement Snapshot** (provider-level, daily): `provider_id`, `last_active_at` (sourced from `MAX(provider_activity_logs.action_at)` per provider), `last_login_at` (sourced from `MAX(provider_activity_logs.action_at WHERE action_type = 'login')` per provider), `quotes_submitted_30d`, `inquiry_response_rate_30d`, `engagement_status`
 
 - **Entity 6 — Benchmark Segment** (platform-level, weekly): `segment_id`, `segment_type`, `provider_count`, `metric_medians` (JSON), `calculated_date`
 
@@ -1601,6 +1617,10 @@ The following fields are referenced in widget calculations but are not explicitl
 | 2025-11-11 | 1.0 | Initial PRD creation | AI Assistant |
 | 2026-04-16 | 2.0 | Major rewrite: single-page cockpit design locked (Screen 1); global filters, cross-filtering, TTFQ spec, all Section A/B/C widgets specified | AI Assistant |
 | 2026-04-16 | 3.0 | Full 12-screen expansion: Screens 2–6 (provider analytics suite + export config) and Screens 7–13 (admin analytics suite) added; all widgets verified against system-data-schema.md; data model gaps documented; 104 functional requirements; 9 key entities | AI Assistant |
+| 2026-04-17 | 3.1 | Verification fixes: Screen 7 drill-downs corrected (Tiles 4/5 → Screen 8; B4 → Screen 11; C1–C4 → Screen 12); screen count corrected to 13 (12 analytical + 1 export config); `quotes.sent_at` and `quotes.accepted_at` resolved via schema addition; Screen 2 conversion-rate threshold unified under Rule 7; drill-down references standardised to number-only form; approvals marked pending review | AI Assistant |
+| 2026-04-17 | 3.2 | Follow-up alignment after code review: commission analytics updated to support percentage and flat-rate provider commission models; dependency references corrected to code-backed sources (`provider_commissions.payment_cycle`, `banking_details.currency`, `inquiry_providers` distribution data, `providers.timezone`); admin analytics restored to responsive-web scope; provider-specific SLA storage called out as an unresolved canonical-data dependency | Codex |
+| 2026-04-17 | 3.3 | Verification fixes (v2): commission formula corrected to conditional (percentage vs. flat-rate); last-activity source resolved to `provider_activity_logs.action_at` (confirmed against backend migrations — `provider_users.last_login_at` does not exist); SLA scoped to platform-wide target (per-provider overrides deferred); Screen 7 B2 drill-down fixed (Screen 7 self-link → Screen 8); Module Scope corrected to 6-screen provider suite; admin workflow extended to include Screens 11 and 13; Screen 6 export exclusion note added; REQ numbering resequenced (Screen 6 moved to REQ-014-060–063; Screens 7–13 shifted to REQ-014-064–104) | Claude Code |
+| 2026-04-18 | 3.4 | Post-verification alignment after backend cross-check: patient-country provenance normalized to `patients.location_id → countries.name` with legacy `patients.location` fallback only for unmigrated rows; unsupported IP-geolocation fallback removed; system PRD SLA parameter aligned to platform-wide target; Screen 6 dependencies expanded to include S-03 Notification Service and S-05 Media Storage Service | Codex |
 
 ---
 
@@ -1608,12 +1628,12 @@ The following fields are referenced in widget calculations but are not explicitl
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | — | — | Pending review |
+| Technical Lead | — | — | Pending review |
+| Stakeholder | — | — | Pending review |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-04-16
+**Last Updated**: 2026-04-17

@@ -992,7 +992,9 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Priority**: P2 (Enhanced)  
 **Module(s)**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 
-**Requirements**:
+**Scope**: Delivers a 13-screen suite — 6 provider-facing screens (cockpit dashboard, performance & conversion, patient analytics, finance & payouts, pricing & benchmarks, export configuration) and 7 admin-facing screens (platform overview, provider performance & engagement, patient acquisition & funnel, geographic intelligence, treatment outcomes, financial health & cashflow, pricing intelligence).
+
+**Provider Requirements**:
 
 - Providers MUST have access to performance dashboard
 - System MUST display: inquiry count, quote count, quote acceptance rate, revenue, patient count
@@ -1001,6 +1003,21 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - System MUST display review ratings and trends over time
 - Providers MUST be able to export reports (PDF, CSV)
 - System MUST provide comparative benchmarks (anonymized industry averages)
+
+**Admin Requirements**:
+
+- Admins MUST have access to a platform overview dashboard showing operational, performance, and financial summaries across all providers
+- System MUST display provider TTFQ health distribution (Green/Amber/Red tiers) and provider engagement rate (active, at risk, dormant)
+- System MUST provide a provider league table sortable by TTFQ, conversion rate, quote acceptance rate, rating, and quote response rate, with platform variance indicators
+- System MUST display provider performance scatter (TTFQ vs. conversion rate) and a new-provider ramp chart for onboarding cohorts
+- System MUST provide patient acquisition analytics: inquiry volume trend, platform funnel trend, new vs. returning patient split, patient journey time distribution, inquiry seasonality heatmap, and affiliate acquisition breakdown
+- System MUST provide geographic intelligence: patient demand by country, provider coverage by country, demand vs. supply gap table, conversion rate by patient country, and emerging patient origins
+- System MUST provide treatment outcome analytics (operational and satisfaction-based only — no clinical outcome metrics): completion rate per treatment, cancellation/no-show rate per treatment, treatment volume trend, review sub-scores per treatment, aftercare activation rate per treatment, provider distribution by treatment specialisation
+- System MUST provide financial health & cashflow analytics: platform GMV and net revenue, commission earned trend with configurable target, refund and failed payment rates, platform-wide cash-at-risk aging, upcoming provider payout obligations, installment plan health, affiliate commission obligations, and revenue by currency
+- System MUST provide pricing intelligence: average quote amount by treatment, price range per treatment, quote amount by provider country, conversion by price bracket, price trend per treatment, and price outlier provider detection
+- System MUST anonymise providers in cross-provider benchmark views (providers cannot identify each other); admin views MUST retain provider identity for operational support
+- Admin-configurable parameters MUST include: platform-wide SLA target, engagement status thresholds, outlier detection threshold, benchmark refresh frequency, target monthly commission reference line
+- System MUST log all analytics access (user ID, timestamp, screen, filters) with 12-month retention
 
 ---
 

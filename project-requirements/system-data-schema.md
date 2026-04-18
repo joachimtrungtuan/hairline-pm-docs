@@ -240,6 +240,43 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ---
 
+**Table**: `provider_activity_logs`
+**Description**: Audit log of all provider team member actions (logins, role changes, invitations, etc.). Used as the canonical source for provider engagement analytics (last active timestamp).
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique log entry identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| provider_user_id | UUID | FOREIGN KEY, INDEX | References provider_users.id |
+| actor_id | UUID | NULLABLE, INDEX | ID of the actor performing the action |
+| actor_type | VARCHAR(255) | NULLABLE | Actor type: provider, hairline, system |
+| action_type | VARCHAR(100) | NOT NULL | Action performed (login, invitation.sent, role.updated, etc.) |
+| description | VARCHAR(500) | NULLABLE | Human-readable description |
+| related_entity_type | VARCHAR(100) | NULLABLE | Type of related entity |
+| related_entity_id | VARCHAR(100) | NULLABLE | ID of related entity |
+| metadata | JSON | NULLABLE | Additional context (IP, user agent, etc.) |
+| action_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | When the action occurred |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `provider_user_id`
+- INDEX: `actor_id`
+- COMPOSITE: `(provider_id, action_at)`, `(provider_user_id, action_at)`
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+- `belongsTo` → `ProviderUser`
+
+**Analytics usage**: Last active date for a provider = `MAX(action_at)` from this table filtered by `provider_id`. Last login = `MAX(action_at) WHERE action_type = 'login'` filtered by `provider_user_id`.
+
+---
+
 ### 5. Inquiries
 
 **Table**: `inquiries`  
@@ -340,6 +377,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | expiration_hours | INTEGER | DEFAULT 48 | Hours until quote expires (customizable, default 48) |
 | auto_accepted | BOOLEAN | DEFAULT false | Whether quote was auto-accepted with pre-scheduled appointment |
 | appointment_pre_scheduled | BOOLEAN | DEFAULT false | Whether provider pre-scheduled appointment in quote |
+| sent_at | TIMESTAMP | NULLABLE | Set when status transitions from `inquiry` → `quote`; feeds TTFQ analytics (FR-014) |
+| accepted_at | TIMESTAMP | NULLABLE | Set when status transitions to `accepted`; feeds Quote→Payment aging analytics (FR-014) |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
