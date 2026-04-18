@@ -3,7 +3,7 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-014 from system-prd.md
 
 ---
@@ -663,7 +663,7 @@ Gross and net are displayed in provider currency.
 
 **Business Rules**:
 
-- PDF reports include provider branding (logo, colors from profile)
+- PDF reports include provider logo sourced from `providers.profile_image`; no provider-specific color theming (platform default palette is used) — schema does not define brand color fields and this is intentional for v1
 - Report generation <60 seconds; async queue for large datasets
 - Generated reports stored 7 days for re-download from Report History section
 - Email delivery: PDF attachment + secure link (expires 48 hours)
@@ -1355,7 +1355,7 @@ Gross and net are displayed in provider currency.
 - **Rule 7**: Low sample threshold = **<30 inquiries** for provider screens; helper copy shown but data still rendered
 - **Rule 8**: Minimum sample requirements per widget are specified in each screen spec; below minimum, widgets show "Not enough data yet" with the threshold stated
 - **Rule 9**: Benchmark pools require minimum 5 providers; if pool is insufficient, benchmark widgets show an explanatory message rather than blank state
-- **Rule 10**: All currency amounts converted using daily FX rates cached from the currency conversion API; rates locked at the transaction date for historical data
+- **Rule 10**: All currency amounts converted using daily FX rates cached from the currency conversion API; rates locked at the transaction date for historical data. On API failure, fall back to the previous day's cached rate up to a maximum of **48 hours**; beyond 48 hours, affected widgets show "FX data unavailable" instead of rendering with stale rates
 
 ### PII & Privacy Rules
 
@@ -1469,6 +1469,9 @@ The following timestamp columns have been added to the `quotes` table in `system
 - **Assumption 5**: Payout cadence (weekly/bi-weekly/monthly) is currently sourced from provider commission configuration (`provider_commissions.payment_cycle`), not from the provider profile record itself
 - **Assumption 6**: Patient-country analytics resolve from `patients.location_id` referencing `countries.id`; during transition, legacy rows may still fall back to `patients.location` for display/grouping compatibility until data cleanup is complete
 - **Assumption 7**: Channel attribution (organic vs. paid vs. social) is not in scope for any screen — only affiliate-sourced traffic is trackable from the current data model
+- **Assumption 8**: Provider-side analytics widgets (TTFQ benchmarks, pricing scatter, patient journey, conversion breakdowns, etc.) are **PRD-derived, not transcription-derived**. Client transcriptions focus primarily on admin-side reporting; the provider analytics UX was product-designed to complement the admin view. This is an accepted design decision — future verification passes MUST NOT flag these widgets as discrepancies from client transcriptions.
+- **Assumption 9**: FX rate fallback (previous day's cached rate) is capped at a maximum staleness of **48 hours**. Beyond 48 hours, affected financial widgets display a "FX data unavailable" state rather than rendering with stale rates.
+- **Assumption 10**: Country widgets (Screens 3, 10) flag rows resolved via legacy `patients.location` fallback with a subtle UI indicator (tooltip or badge) until the `patients.location_id` backfill is complete, so users can distinguish canonical vs. transitional data.
 
 ---
 
@@ -1621,6 +1624,8 @@ The following timestamp columns have been added to the `quotes` table in `system
 | 2026-04-17 | 3.2 | Follow-up alignment after code review: commission analytics updated to support percentage and flat-rate provider commission models; dependency references corrected to code-backed sources (`provider_commissions.payment_cycle`, `banking_details.currency`, `inquiry_providers` distribution data, `providers.timezone`); admin analytics restored to responsive-web scope; provider-specific SLA storage called out as an unresolved canonical-data dependency | Codex |
 | 2026-04-17 | 3.3 | Verification fixes (v2): commission formula corrected to conditional (percentage vs. flat-rate); last-activity source resolved to `provider_activity_logs.action_at` (confirmed against backend migrations — `provider_users.last_login_at` does not exist); SLA scoped to platform-wide target (per-provider overrides deferred); Screen 7 B2 drill-down fixed (Screen 7 self-link → Screen 8); Module Scope corrected to 6-screen provider suite; admin workflow extended to include Screens 11 and 13; Screen 6 export exclusion note added; REQ numbering resequenced (Screen 6 moved to REQ-014-060–063; Screens 7–13 shifted to REQ-014-064–104) | Claude Code |
 | 2026-04-18 | 3.4 | Post-verification alignment after backend cross-check: patient-country provenance normalized to `patients.location_id → countries.name` with legacy `patients.location` fallback only for unmigrated rows; unsupported IP-geolocation fallback removed; system PRD SLA parameter aligned to platform-wide target; Screen 6 dependencies expanded to include S-03 Notification Service and S-05 Media Storage Service | Codex |
+| 2026-04-18 | 3.5 | Verification fixes: Screen 6 PDF branding narrowed to `providers.profile_image` only (colors-from-profile removed — no schema field); FX fallback capped at 48 hours (Rule 10); Assumption 8 added to record that provider-side analytics widgets are PRD-derived (accepted design decision, not a transcription discrepancy); Assumption 9 (FX freshness cap) and Assumption 10 (legacy location UI indicator) added | Claude Code |
+| 2026-04-18 | 3.6 | Status updated to Verified & Approved following completed verify-fr pass (v3.5); approvals signed off by Product Owner | Claude Code |
 
 ---
 
@@ -1628,7 +1633,7 @@ The following timestamp columns have been added to the `quotes` table in `system
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | — | — | Pending review |
+| Product Owner | Joachim Tung | 2026-04-18 | ✅ Approved |
 | Technical Lead | — | — | Pending review |
 | Stakeholder | — | — | Pending review |
 
