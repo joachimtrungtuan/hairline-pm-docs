@@ -174,6 +174,7 @@ This folder contains documentation update reports and verification logs for the 
 #### **Hairline Mobile April 2026 Postman Collection Test**
 
 - `HAIRLINE_MOBILE_APRIL_2026_POSTMAN_COLLECTION_TEST_2026-04-15.md` - Live sweep of the Hairline Mobile April 2026 API collection routes; 44 original endpoints were tested in the initial sweep, 29 of those are now confirmed meaningful, 7 return successful but sparse payloads pending product confirmation, 8 remain unresolved failures, and 25 follow-up validations were run separately to clear ambiguity. Follow-up checks confirmed the ISO-3 city lookup, meaningful `inquiry_id` payloads, brute-force quote-bearing inquiry coverage, successful provider profile and treatment update retries, an endpoint-correction retry guide for resolved endpoints including the quote decimal-precision rule, and a separate sparse-payload review for endpoints that may legitimately return empty arrays.
+- **2026-04-20**: `POSTMAN_STATE_DEPENDENT_RETEST_2026-04-20.md` - Completed the state-dependent portion of the Apr 2026 collection report with Postman MCP retests. The confirmed-state travel updates still hard-lock after submission, duplicate review prevention still fires on the known completed quote, aftercare confirmation still stops at the Stripe client step, purchase history is still empty for the main test account, and the documented instructions route now returns HTML 404 during recheck.
 
 ### 2026-04-16/ (2 files)
 
@@ -202,6 +203,16 @@ This folder contains documentation update reports and verification logs for the 
 #### **FR-014 Verification Fixes v3.5**
 
 - `FR014_VERIFICATION_FIXES_V35_2026-04-18.md` - FR-014 PRD v3.4 → v3.5 verification fixes. Screen 6 PDF branding narrowed to `providers.profile_image` only (colors-from-profile removed — no schema field). Rule 10 updated to cap FX fallback at 48 hours, beyond which affected widgets show "FX data unavailable". Added Assumption 8 recording that provider-side analytics widgets are PRD-derived by design (not a transcription discrepancy — future verification passes must not re-flag). Added Assumption 9 (FX freshness cap) and Assumption 10 (legacy `patients.location` fallback UI indicator).
+
+### 2026-04-20/ (2 files)
+
+#### **FR-017 Full-Scope Design Layout Verification**
+
+- `FR017_DESIGN_LAYOUT_VERIFICATION_2026-04-20.md` - FR-017 full-scope layout verification; `F1`, `F4`, and `F7` are `🟢 COMPLETE`, `F2`, `F3`, `F5`, `F6`, and `F8` are `🟡 PARTIAL`; both provider-finance screens now have layout coverage, but Screen 10 is still incomplete because only the payout-detail state is evidenced
+
+#### **Postman State-Dependent Retest**
+
+- `POSTMAN_STATE_DEPENDENT_RETEST_2026-04-20.md` - Completed the `State-Dependent Failures` section in the Apr 2026 mobile API test report using live Postman MCP retests. Confirmed travel-update lock responses, duplicate-review protection, Stripe client-confirmation dependency, empty purchase history, no active aftercare state, and a new route discrepancy on `get-aftercare-instructions-medications`.
 
 ### 2026-03-06/ (1 file)
 
@@ -555,6 +566,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-17**: `FR014_VERIFICATION_FIXES_V2_2026-04-17.md` - FR-014 PRD v3.3 second verification round: commission formula corrected to conditional (percentage/flat-rate); last-activity source resolved to `provider_activity_logs.action_at` (backend confirmed — `provider_users.last_login_at` never existed); `provider_activity_logs` added to system-data-schema.md; SLA scoped to platform-wide minutes (per-provider deferred); Screen 7 B2 drill-down fixed; admin workflow extended to Screens 11 + 13; REQ numbering resequenced 001–104 gap-free
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment: patient-country provenance normalized to `patients.location_id -> countries.name` with documented legacy fallback, unsupported geolocation fallback removed, system PRD FR-014 SLA wording aligned to platform-wide scope, and Screen 6 dependencies expanded to `S-03` and `S-05`
 - **2026-04-18**: `FR014_VERIFICATION_FIXES_V35_2026-04-18.md` - FR-014 PRD v3.5: Screen 6 branding scoped to `providers.profile_image` (no brand colors in schema); Rule 10 FX fallback capped at 48h; provider-side analytics widgets formally accepted as PRD-derived (Assumption 8) so future verifications do not re-flag them as transcription gaps; legacy `patients.location` fallback given a UI indicator requirement
+- **2026-04-20**: `FR017_DESIGN_LAYOUT_VERIFICATION_2026-04-20.md` - FR-017 full-scope layout verification; admin billing/investigation surfaces are mostly designed, provider payout batch states still have confirmation mismatches, `provider-earnings/` now covers Screen 9, and `payout-history/` now covers a partial Screen 10 payout-detail state while the parent list view remains missing
 
 ### Design Specifications
 
@@ -599,4 +611,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: April 18, 2026
+**Last Updated**: April 20, 2026
