@@ -35,3 +35,15 @@
 - Aftercare-detail happy-path state is still unavailable across the tested patient accounts.
   - The detail endpoints cannot be meaningfully exercised without a real `AFTERCARE_ID`.
   - The instructions/medications route additionally returned HTML 404 on the documented path during the Postman MCP recheck, so that path should be revalidated once a real aftercare case exists.
+
+## Additional Same-Day Retest
+
+- A fresh direct-API lifecycle run was completed on 2026-04-20 using patient `work@joachimtrung.uk`:
+  - inquiry `aae93260-d487-420f-aa07-5ef450fe4681`
+  - quote `4d8e56a7-8b86-438f-bc1f-f002ea46a593`
+  - aftercare `d6a4438b-bf79-4f1f-930e-2097688df71a`
+- This retest confirmed the following:
+  - `GET /after-care/get-patient-aftercare-detail` passes with a real active aftercare record.
+  - `GET /after-care/get-patient-milestone-detail` passes with a real milestone ID from that record.
+  - `GET /after-care/get-questionnaire-form` passes with a real questionnaire ID from that milestone.
+  - `POST /review/submit` is not merely state-blocked on a fresh completed quote; after satisfying all validation requirements it returns `HTTP 500` with `{"message":"An error occurred while submitting the review."}`.
