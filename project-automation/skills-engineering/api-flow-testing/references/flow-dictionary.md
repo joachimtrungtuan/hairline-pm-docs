@@ -46,16 +46,20 @@ Each entry defines: prerequisites, roles involved, step sequence (endpoint + aut
 | `additional_files[]` | file | No | Any type, max 5 files, 10MB each |
 
 ### State Transitions
+
 - Inquiry: *(none)* → `requested`
 
 ### Multi-Tenant Notes
+
 - Only authenticated patients (`Auth::guard('patient')`) can create inquiries. Provider or admin tokens receive 422 "You must be authenticated as a patient."
 
 ### Known Edge Cases
+
 - **Medical history with conditions**: if any medical history key is truthy (e.g., `{"is_diabetes": true}`), a corresponding `_details` key is required. The key resolution order is: `{field}_details`, then `{field-without-is/any-prefix}_details`. All-false values (`{}` or every key set to `false`/`0`) require no details.
 - **Legacy scan format**: the backend also accepts a legacy file array format (`scan_url[]`) without `view`/`image` keys, but the new structured format (`scan_url[0][view]` + `scan_url[0][image]`) is preferred.
 
 ### Known Error Paths
+
 - **Missing `profile_type` at login**: omitting `profile_type: "patient"` → 422 "The profile type field is required."
 - **Invalid `problem` enum**: any value other than `hair`/`beard`/`both` → 422 "The selected problem is invalid."
 - **`scan_url` as URL string**: passing a URL string instead of a multipart file upload → 422 "The scan url must be an array."
@@ -72,6 +76,7 @@ Each entry defines: prerequisites, roles involved, step sequence (endpoint + aut
 - **Not authenticated as patient**: missing or wrong-role token → 422 "You must be authenticated as a patient."
 
 ### Notes
+
 - Step 2 (`GET /duration-options`) is a public endpoint — no auth needed. Skip it if `duration_of_concern_id` is already known.
 - The `INQUIRY_ID` captured in Step 3 is required as a prerequisite for the **Cancel Inquiry** flow.
 - Confirmed working on 2026-04-17 using a 1×1 pixel JPEG test file for `scan_url`.
@@ -104,17 +109,21 @@ Each entry defines: prerequisites, roles involved, step sequence (endpoint + aut
 | `cancellation_optional_feedback` | string | No | Max 2000 chars |
 
 ### State Transitions
+
 - Inquiry: `requested` → `cancelled`
 - Side effect: any active quotes (status ≠ `cancelled` / `rejected`) are auto-cancelled → `cancelled` and providers are notified
 
 ### Multi-Tenant Notes
+
 - The authenticated patient must own the inquiry (`inquiry.patient_id === authenticated patient ID`). Attempting to cancel another patient's inquiry returns 403.
 
 ### Known Edge Cases
+
 - **Inquiry with active quotes**: the backend auto-cancels active quotes as a side effect if the inquiry itself is cancellable. However, if a quote has a non-cancellable status (e.g., `confirmed`, `in_progress`), `isCancellable()` returns false and the whole request returns 400 — no partial cancellation occurs.
 - **Re-running after success**: running cancel a second time on the same inquiry returns 400 — the inquiry is already `cancelled`.
 
 ### Known Error Paths
+
 - **Inquiry has active quotes**: any quote with status not in `cancelled`/`rejected` → 400 "This inquiry cannot be cancelled. It may have active quotes or already be cancelled/completed."
 - **Inquiry already cancelled**: status = `cancelled` → 400 same message.
 - **Inquiry completed**: status = `completed` → 400 same message.
@@ -124,7 +133,91 @@ Each entry defines: prerequisites, roles involved, step sequence (endpoint + aut
 - **"Other" reason without text**: `cancellation_reason_id` maps to the "Other" reason but `cancellation_reason_text` is absent → 422 (enforced by `RequiredIfCancellationReasonOther` rule).
 
 ### Notes
+
 - The most common blocker is running this against an inquiry that already has quotes (even a single non-rejected quote blocks cancellation). Always use a freshly created inquiry with no quotes.
 - ⚠️ **Known backend defect (discovered 2026-04-17)**: The cancel endpoint returns HTTP 200 with `"status": "cancelled"` and a valid `cancelled_at` timestamp, but the cancellation **does not persist**. Subsequent `GET /inquiry/get-patient-single-inquiry` reads show the inquiry reverted to its pre-cancel status (`quoted`), with `cancelled_at: null` and `cancellation_reason_id: null`. Tested consistently on inquiries `07a91136` and `2f709668`. Root cause: the live test environment distributes new inquiries to providers immediately via `InquiryDistributionService`; providers auto-submit quotes quickly; the `QuoteObserver::updateInquiryStatus()` is not guarded against already-cancelled inquiries and can overwrite the `cancelled` state. **Required fix**: add a `STATUS_CANCELLED` guard at the top of `updateStatusFromQuotes()` and all `updateInquiryStatus()` code paths.
+
+---
+
+## Flow: Create Quote
+
+**Registered:** 2026-04-23
+**Last updated:** 2026-04-23
+**Prerequisites:** An inquiry exists in `requested` status (produced by the **Create Inquiry** flow). The provider must not have already submitted a quote for the same inquiry. Provider account is active.
+**Roles involved:** Provider
+
+### Steps
+
+| Step | Endpoint | Auth | Key Inputs | Expected Output | Expected Status |
+|------|----------|------|------------|-----------------|-----------------|
+| 1 | `POST /auth/login` | None | `email`, `password`, `profile_type: "provider"` | `PROVIDER_TOKEN` captured from `response.token` | 200 |
+| 2 | `GET /treatment/get-all-treatments-with-packages` | Provider | *(none)* | Treatment + package list; capture `TREATMENT_ID` | 200 |
+| 3 | `POST /quote/create-quote` | Provider | See field table below | Quote created; `QUOTE_ID` from `response.data.id`; quote status = `quote` | 200 |
+
+> **Note on Step 2**: Optional if `TREATMENT_ID` is already known from a prior run. Skip it only if you have a verified active treatment UUID.
+
+**Step 3 — Input fields (JSON body or multipart/form-data):**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `inquiry_id` | UUID | Yes | Must exist in DB and not be `cancelled` or `completed` |
+| `treatment_id` | UUID | Yes | Must reference an active treatment |
+| `currency` | string | Yes | e.g., `"USD"` |
+| `quote_amount` | decimal string | No | Overall quote total (e.g., `"9200.00"`); recalculated from treatment dates if provided |
+| `note` | string | No | Max 2000 chars |
+| `estimated_grafts` | integer | No | 1–10000 |
+| `treatment_dates` | JSON array | No | Array of date option objects; see sub-table below |
+| `treatment_plan` | JSON array | No | Day-by-day plan; each entry: `day` (int), `date` (YYYY-MM-DD), optional `description` |
+| `custom_services` | JSON array | No | Each entry: `service_name` (required), `service_description`, `price` (decimal string) |
+| `package_id` | UUID | No | Existing package to attach; nullable |
+| `hotel_accommodation` | boolean | No | String booleans `"true"`/`"false"` accepted in multipart |
+| `flight_arrangements` | boolean | No | Same as above |
+| `clinicians` | UUID array | No | Array of `provider_users.id` UUIDs belonging to this provider |
+
+**`treatment_dates` sub-fields (per entry):**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `start_date` | YYYY-MM-DD | Yes (if using treatment_dates) | Must fall within one of the patient's inquiry `date_ranges` |
+| `end_date` | YYYY-MM-DD | Yes | ≥ `start_date` |
+| `appointment_date` | YYYY-MM-DD | Yes | Must be within this entry's `start_date` – `end_date` range |
+| `appointment_time` | HH:mm | Yes | 24-hour format |
+| `appointment_timezone` | IANA string | No | e.g., `"Asia/Ho_Chi_Minh"`; falls back to provider timezone, then UTC |
+| `location_id` | integer | Yes | Country ID from `countries` table (e.g., `1` = Vietnam) |
+| `price` | decimal string | Yes | Treatment date price (e.g., `"9200.00"`) |
+
+### State Transitions
+
+- Quote: *(none)* → `quote` (initial status on creation)
+- Inquiry: `requested` → `quoted` (triggered automatically via `QuoteObserver` when the first quote is submitted for an inquiry)
+
+### Multi-Tenant Notes
+
+- Only authenticated providers (`auth:provider`) can call `POST /quote/create-quote`. Patient or admin tokens return 422.
+- The `provider_id` is resolved from the bearer token — it is not accepted from the request body.
+- A provider can only submit one quote per inquiry. A second attempt by the same provider returns 400 "Already quoted for this inquiry."
+
+### Known Edge Cases
+
+- **Multiple treatment date options**: the flow supports submitting multiple `treatment_dates` entries (different date windows + prices) in a single quote. The patient later selects one.
+- **Auto-quoting on test environment**: in the live test environment, the `InquiryDistributionService` distributes new inquiries to providers immediately. The provider under test may see the inquiry already distributed; this is expected and does not block quote creation.
+
+### Known Error Paths
+
+- **Inquiry cancelled/completed**: → 400 "Cannot create quote for cancelled/completed inquiry"
+- **Provider already quoted**: same provider submitting a second quote for the same inquiry → 400 "Already quoted for this inquiry"
+- **Inactive treatment**: → 422 "Cannot create quote with inactive treatment. Treatment status: [status]"
+- **`appointment_date` outside date range**: → 422 "The appointment date must be within the treatment date range (YYYY-MM-DD to YYYY-MM-DD)"
+- **`treatment_dates` outside inquiry date_ranges**: custom `within_patient_ranges` validator → 422 with range mismatch message
+- **Missing `currency`**: → 422 validation error on `currency` field
+- **Not authenticated as provider**: missing or wrong-role token → 422
+
+### Notes
+
+- The `QUOTE_ID` captured in Step 3 is required as a prerequisite for downstream flows (e.g., Accept Quote, Schedule Quote, Flight/Hotel booking).
+- `treatment_dates` dates must fall within the patient's original inquiry `date_ranges` — use those ranges as the outer bounds when constructing test dates.
+- The `quote_amount` field in the response will differ from the submitted value — the backend calls `recalculateQuoteTotal()` after saving treatment dates, which applies the provider's commission rate. This is expected behaviour, not a bug.
+- All treatments on the test environment have status `in_progress`; the `isActive()` guard accepts this status, so these treatments can be used for quote creation.
+- Confirmed working on 2026-04-23 via live API test (INQUIRY_ID: `c8672e74-988f-4dec-b4a0-158707a15966`, QUOTE_ID: `b1a04677-aaba-4743-9f80-a009094e14cf`).
 
 ---
