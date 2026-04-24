@@ -30,3 +30,5 @@ Created `local-docs/reports/2026-04-23/mobile-bug-report-hl61.md`: a concise mob
 - Added `HL67` for provider profile languages rendering raw JSON/object data instead of clean language names.
 - Added `HL68` for the Travel Itinerary screen not matching backend itinerary data: return flight is submitted in the API but shown as not submitted in the app, and submitted-time/procedure-date field bindings appear inconsistent.
 - Added `HL69` for Treatment process status labels rendering raw backend enum values (`finished`, `in_progress`, `not_started`) instead of user-friendly labels.
+- Added `HL70` for package-backed quote inclusions rendering incorrectly: `included_services` is displayed as raw serialized objects, while `travel_package_inclusions` includes a row not returned by the backend payload.
+- Added the eight supplied LetWeb screenshot links to the `HL70` bug report entry.
