@@ -5,5 +5,57 @@
     "assets/sample-hair-photo.jpg": "Default hair photo for inquiry creation and related endpoints. JPEG format.",
     "assets/sample-passport.png": "Default passport scan for logistics flow (Create/Update Passport Details). PNG format."
   },
-  "datasets": []
+  "datasets": [
+    {
+      "id": "inquiry-happy-v4-001",
+      "endpoint": "POST /inquiry/create-inquiry",
+      "scenario": "happy-path",
+      "description": "Standard hair inquiry targeting provider V4 (Toronto Hair Restoration Centre) — used to validate new provider account is reachable",
+      "body": {
+        "problem": "hair",
+        "transplant_area_id": 1,
+        "date_ranges": "[{\"start_date\":\"2026-05-25\",\"end_date\":\"2026-06-01\"},{\"start_date\":\"2026-06-10\",\"end_date\":\"2026-06-17\"}]",
+        "problem_details": "Moderate crown hair loss over the past 18 months, increasing temple recession.",
+        "nature_of_concern": "Progressive androgenic alopecia, primarily affecting crown and temples.",
+        "duration_of_concern_id": 3,
+        "previous_treatments": "Minoxidil 5% for 12 months with partial response. Finasteride 1mg for 6 months.",
+        "symptom_severity": 6,
+        "lifestyle_factors": "Sedentary office work, occasional stress, balanced diet.",
+        "additional_notes": "Interested in FUE method. Prefer minimal downtime.",
+        "providers": "[\"ba9e7bb4-d597-491c-8b0d-cbaf9fb9f37c\"]",
+        "medical_history": "{\"any_heart_problem\":false,\"is_hbp\":false,\"is_diabetes\":false,\"asthma\":false,\"is_allergies_medication\":false,\"is_latex_alergies\":false,\"any_lung_issues\":false,\"is_medical_device\":false,\"is_hepatitis\":false,\"is_hiv\":false,\"spine_problem\":false,\"any_nero_disorder\":false,\"medical_condition_diagnosed\":false,\"history_bleeding_disorder\":false,\"kidney_disease\":false,\"cancer_history\":false,\"stomach_diseases\":false,\"mental_heath_disorder\":false,\"blood_colts_history\":false,\"any_surgeries\":false,\"is_pregnant\":false,\"is_taking_drugs\":false}"
+      },
+      "file_refs": ["assets/sample-hair-photo.jpg"],
+      "notes": "scan_url[0][view]=front, scan_url[0][image]=sample-hair-photo.jpg. Targets V4 provider (ba9e7bb4). date_ranges start 30+ days from 2026-04-23. INQUIRY_ID captured for Create Quote dataset."
+    },
+    {
+      "id": "quote-happy-v4-001",
+      "endpoint": "POST /quote/create-quote",
+      "scenario": "happy-path",
+      "description": "Quote submitted by provider V4 for an inquiry in requested status — validates V4 can quote, assign clinicians, and set treatment dates",
+      "body": {
+        "inquiry_id": "{{INQUIRY_ID from inquiry-happy-v4-001}}",
+        "treatment_id": "{{TREATMENT_ID from GET /treatment/get-all-treatments-with-packages}}",
+        "currency": "CAD",
+        "quote_amount": "8500.00",
+        "note": "Toronto Hair Restoration Centre offers a comprehensive FUE package tailored to your hair loss pattern. Our experienced team will guide you through every step.",
+        "estimated_grafts": 2500,
+        "clinicians": ["5cf2057f-3bff-471d-a339-6952c3d8699f", "d8d2ce0f-ac49-4bee-9f2d-f0620e60b5a5"],
+        "hotel_accommodation": false,
+        "flight_arrangements": false,
+        "treatment_dates": [
+          {
+            "start_date": "2026-05-25",
+            "end_date": "2026-06-01",
+            "appointment_date": "2026-05-26",
+            "appointment_time": "09:00",
+            "appointment_timezone": "America/Toronto",
+            "location_id": 39,
+            "price": "8500.00"
+          }
+        ]
+      },
+      "notes": "Clinician IDs are fixed for V4 (James Tremblay + Emily Chen). location_id=39 = Canada. treatment_dates fall within inquiry date_ranges. QUOTE_ID captured in response."
+    }
+  ]
 }
