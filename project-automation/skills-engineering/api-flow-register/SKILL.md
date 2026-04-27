@@ -1,11 +1,19 @@
 ---
 name: api-flow-register
-description: Research, propose, confirm, and register API testing flow definitions into the api-flow-testing flow dictionary. Use when: (1) api-flow-testing encounters an unknown flow name and cannot proceed, (2) a flow needs updating after a mid-run discrepancy is detected, (3) the user explicitly asks to register, add, or update a flow in the dictionary. Triggers on: "register this flow", "add flow to dictionary", "update flow definition", "flow not found — register it", "document this flow", "record this testing flow", "the flow needs updating".
+description: >-
+  Research, propose, confirm, and register Hairline API testing flow profiles
+  and related endpoint profiles. Use when: (1) api-flow-testing encounters an
+  unknown flow name and cannot proceed, (2) a flow or endpoint profile needs
+  updating after a mid-run discrepancy, (3) the user explicitly asks to
+  register, add, update, or document a flow or endpoint profile. Triggers on:
+  "register this flow", "add flow to dictionary", "update flow definition",
+  "document this flow", "record this testing flow", "the flow needs updating",
+  "add endpoint profile", "update endpoint profile".
 ---
 
 # API Flow Register
 
-Researches the Hairline backend and PRDs, proposes a step-by-step testing flow, confirms with the user, then writes the flow definition into `api-flow-testing/references/flow-dictionary.md`.
+Researches the Hairline backend and PRDs, proposes a step-by-step testing flow plus any required endpoint profile updates, confirms with the user, then writes flow profiles under `api-flow-testing/references/flow-profiles/` and endpoint profiles under `api-testing/references/endpoint-profiles/`.
 
 ## Step 0: Upfront Input Collection
 
@@ -16,6 +24,7 @@ Ask ALL of the following before doing any research or writing. Do not proceed un
 **2. Trigger type?**
 - `new` — first-time registration of a flow that doesn't exist in the dictionary yet
 - `update` — updating an existing flow entry (if update: describe what changed or what the discrepancy was)
+- `endpoint-update` — updating or creating endpoint profile details without changing a flow
 
 **3. Starting conditions?**
 - What state must exist before step 1? (e.g., "an active patient account exists", "an accepted quote exists", "starts from scratch")
@@ -42,17 +51,36 @@ Using the flow name and starting conditions as context, investigate the followin
 
 Goal: trace the complete sequence of API calls that constitute this flow — which role performs each step, what input is needed, and what state is expected before and after.
 
+Also identify endpoint-level knowledge that belongs in endpoint profiles:
+- Required/optional fields
+- Dynamic ID resolvers
+- Response captures
+- Auth scope and role boundaries
+- State effects
+- Live route quirks or wrong endpoints to avoid
+
 ### Phase 2: Research (updates)
 
 For update triggers:
-1. Read the existing flow entry from `api-flow-testing/references/flow-dictionary.md`
-2. Read the discrepancy description provided in Step 0
-3. Investigate only the affected steps (routes, controllers, Form Requests) to understand what changed
-4. Identify the specific steps that need modification
+1. Read `api-flow-testing/references/flow-index.md` and the relevant flow profile if migrated.
+2. If not migrated, read the existing flow entry from `api-flow-testing/references/flow-dictionary.md`.
+3. Read `api-testing/references/endpoint-index.md` and the affected endpoint profile.
+4. Read the discrepancy description provided in Step 0.
+5. Investigate only the affected steps (routes, controllers, Form Requests) to understand what changed.
+6. Identify the specific flow profile, endpoint profile, and index rows that need modification.
+
+For endpoint-only updates:
+1. Read `api-testing/references/endpoint-index.md`.
+2. Read the affected endpoint profile if it exists.
+3. Read the discrepancy description provided in Step 0.
+4. Investigate only the affected endpoint (routes, controllers, Form Requests) to understand what changed.
+5. Identify the endpoint profile and index row changes needed.
+
+For file/image upload endpoints, document the default bundled asset to use from `api-testing/assets/` and the exact multipart field names. Do not require future runs to rediscover sample upload files.
 
 ### Phase 3: Propose the flow
 
-Present the proposed step sequence to the user. **Do not write to the dictionary yet.**
+Present the proposed step sequence and endpoint profile changes to the user. **Do not write yet.**
 
 Use the proposal format from [formats.md](references/formats.md). For update proposals, show only the changed steps with a before/after diff.
 
@@ -62,30 +90,36 @@ Accept amendments. If the user modifies steps, update the proposal inline and as
 
 ---
 
-### Phase 4: Write to the dictionary
+### Phase 4: Write profiles and indexes
 
-On user confirmation, write to `api-flow-testing/references/flow-dictionary.md`.
+On user confirmation, write only the approved files.
 
-**New flow:** append the entry after the last existing entry (or replace the "_No flows registered yet._" placeholder if it's the first).
+**New flow:** create `api-flow-testing/references/flow-profiles/<flow-name>.md` and add a row to `api-flow-testing/references/flow-index.md`.
 
-**Update:** find the existing entry by flow name and replace it in place. Bump the `Last updated` date.
+**Flow update:** update the flow profile and its row in `flow-index.md`. If the flow still only exists in `flow-dictionary.md`, either migrate it to a profile or patch the legacy entry only when the user requests that.
 
-Use the dictionary entry format from [formats.md](references/formats.md).
+**Endpoint profile:** create or update `api-testing/references/endpoint-profiles/<method-path>.md` and add/update the row in `api-testing/references/endpoint-index.md`.
+
+Use the profile formats from [formats.md](references/formats.md).
 
 ---
 
 ### Phase 5: Confirm and return
 
 After writing:
-1. Tell the user the flow is now registered under the name they provided
-2. If triggered from `api-flow-testing` (because a flow was not found): instruct the user to re-run the flow test — it will now be found in the dictionary
+1. Tell the user which flow and endpoint profiles were created or updated.
+2. If triggered from `api-flow-testing` (because a flow was not found): instruct the user to re-run the flow test — it will now be found through `flow-index.md`.
 
 ---
 
 ## References
 
-- [formats.md](references/formats.md) — proposal and dictionary entry formats; read during Phase 3 and Phase 4
-- `api-flow-testing/references/flow-dictionary.md` — the dictionary this skill writes to; read during Phase 2 (updates) and Phase 4
+- [formats.md](references/formats.md) — proposal, flow profile, and endpoint profile formats; read during Phase 3 and Phase 4
+- `api-flow-testing/references/flow-index.md` — flow lookup index this skill updates
+- `api-flow-testing/references/flow-profiles/` — flow profiles this skill creates/updates
+- `api-flow-testing/references/flow-dictionary.md` — legacy flow dictionary; read only for unmigrated flows
+- `api-testing/references/endpoint-index.md` — endpoint lookup index this skill updates
+- `api-testing/references/endpoint-profiles/` — endpoint profiles this skill creates/updates
 - `main/hairline-backend/routes/api.php` — backend route list; read during Phase 1 research
 - `main/hairline-backend/app/Http/Controllers/` — controller methods; read during Phase 1 research
 - `main/hairline-backend/app/Http/Requests/` — Form Request validation rules; read during Phase 1 research

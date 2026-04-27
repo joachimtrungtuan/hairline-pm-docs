@@ -1,6 +1,14 @@
 ---
 name: api-testing
-description: Test a SINGLE Hairline API endpoint with comprehensive reporting. Use for: (1) calling one specific endpoint and getting a detailed result, (2) investigating an issue at a single API level, (3) testing a specific scenario — happy path, edge case, error case, auth-boundary, or cross-tenant. Triggers on: "test endpoint", "call this API", "check response for", "what does [endpoint] return", "test single call", "investigate this endpoint", "call [X] endpoint". Does NOT run multi-step flows — for flows, use api-flow-testing instead.
+description: >-
+  Test a SINGLE Hairline API endpoint with comprehensive reporting. Use for:
+  (1) calling one specific endpoint and getting a detailed result,
+  (2) investigating an issue at a single API level, (3) testing a specific
+  scenario — happy path, edge case, error case, auth-boundary, or cross-tenant.
+  Triggers on: "test endpoint", "call this API", "check response for",
+  "what does [endpoint] return", "test single call", "investigate this
+  endpoint", "call [X] endpoint". Does NOT run multi-step flows — for flows,
+  use api-flow-testing instead.
 ---
 
 # API Testing — Single Endpoint
@@ -62,6 +70,27 @@ Login test scripts auto-set `PATIENT_TOKEN`, `PATIENT_ID`, `PROVIDER_TOKEN`, `PR
 
 ---
 
+## Endpoint Registry
+
+Endpoint behavior lives in `references/endpoint-profiles/` and is indexed by `references/endpoint-index.md`.
+
+Before testing any endpoint:
+
+1. Read `references/endpoint-index.md`.
+2. Match by method + path first, then by keyword/tag if the user gave a description.
+3. Open only the matching endpoint profile.
+4. Use the profile for required fields, dynamic ID resolvers, response expectations, state effects, and live notes.
+5. If no profile exists, fall back to `collection-map.md`, backend routes, and controller/Form Request research. At the end, propose a new endpoint profile and index row.
+
+Keep live findings in two places:
+
+- Put the short warning or lookup clue in `endpoint-index.md`.
+- Put the detailed finding, evidence, and resolver instructions in the endpoint profile.
+
+Do not create a separate findings file.
+
+---
+
 ## Test Data Management
 
 Test data is stored in `references/datasets.json`. Each entry is scoped to a specific endpoint + scenario type.
@@ -78,7 +107,7 @@ Test data is stored in `references/datasets.json`. Each entry is scoped to a spe
 
 When no matching data exists or the user wants a new one:
 
-1. Fetch the endpoint's request structure:
+1. Read the endpoint profile first. If the profile is missing or incomplete, fetch the endpoint's request structure:
    - First try Postman: `getCollectionRequest` with `populate: true`
    - If not in Postman: read the Form Request class at `main/hairline-backend/app/Http/Requests/`
 2. Show the user the required fields, types, and validation rules
@@ -106,9 +135,14 @@ When no matching data exists or the user wants a new one:
 
 ### File uploads
 
-For endpoints requiring image or file uploads, use assets from the `assets/` folder:
-- `assets/sample-hair-photo.jpg` — default hair photo for inquiry creation
-- `assets/sample-passport.png` — default passport for logistics flow
+For endpoints requiring image or file uploads, use the bundled files from this skill's `assets/` folder unless the user explicitly provides another file:
+
+- `assets/sample-hair-photo.jpg` — default hair photo for inquiry creation, scan uploads, and hair-related image fields
+- `assets/sample-passport.png` — default passport scan for logistics/passport endpoints
+
+Resolve asset paths relative to this skill directory (`local-docs/project-automation/skills-engineering/api-testing/`). For example, `assets/sample-hair-photo.jpg` means `local-docs/project-automation/skills-engineering/api-testing/assets/sample-hair-photo.jpg`.
+
+When an endpoint profile or dataset has `file_refs`, attach those files from `assets/` using the exact multipart field names documented by the endpoint profile. Do not invent remote image URLs for upload fields.
 
 **If these files have not been populated yet:** warn the user and ask them to drop real JPG files into the `assets/` folder before running an upload-dependent test.
 
@@ -118,13 +152,14 @@ For endpoints requiring image or file uploads, use assets from the `assets/` fol
 
 ### Step 1: Locate the endpoint
 
-1. Read [collection-map.md](references/collection-map.md) — search by keyword or path
-2. If not found: grep `main/hairline-backend/routes/api.php` for the operation
-3. If still not found: use Postman `getCollection` to browse the collection structure
+1. Read [endpoint-index.md](references/endpoint-index.md) and open the matching endpoint profile.
+2. If no profile exists, read [collection-map.md](references/collection-map.md) — search by keyword or path.
+3. If not found: grep `main/hairline-backend/routes/api.php` for the operation.
+4. If still not found: use Postman `getCollection` to browse the collection structure.
 
 ### Step 2: Fetch full request details
 
-Use `getCollectionRequest` with `populate: true` to retrieve URL, method, headers, body schema, and test scripts.
+Use the endpoint profile as the first source for request details. Use `getCollectionRequest` with `populate: true` only when the profile is missing, stale, or incomplete.
 
 ### Step 3: Capture pre-call state (state-changing endpoints only)
 
@@ -193,6 +228,18 @@ Subagent must return: HTTP status code, response headers (especially Content-Typ
 2. Verify auth scope (patient accessing provider-only data, etc.)
 3. Report: what is wrong and where the discrepancy originates
 
+### Step 7: Learning capture
+
+If the run reveals reusable endpoint knowledge, propose updates before finishing:
+
+- New or corrected dynamic resolver
+- Wrong or stale route in `collection-map.md`
+- Auth/scope behavior that affects future runs
+- Response shape or capture path difference
+- Validation rule or state prerequisite not already documented
+
+Propose updates to `references/endpoint-index.md` and the relevant endpoint profile. Write them only after user confirmation.
+
 ---
 
 ## Multi-Tenant Scenario Notes
@@ -215,10 +262,12 @@ Always document the expected outcome in the report's Contract Validation section
 
 When the user describes a scenario but doesn't know which endpoint to call:
 
-1. Read [collection-map.md](references/collection-map.md) — search by keyword
-2. Grep `main/hairline-backend/routes/api.php` for the operation name or resource
-3. Check Postman collection structure with `getCollection`
-4. Cross-reference the controller to confirm the endpoint does what the user expects
+1. Read [endpoint-index.md](references/endpoint-index.md) — search by keyword/tag.
+2. Open the matching endpoint profile if found.
+3. If no profile exists, read [collection-map.md](references/collection-map.md).
+4. Grep `main/hairline-backend/routes/api.php` for the operation name or resource.
+5. Check Postman collection structure with `getCollection`.
+6. Cross-reference the controller to confirm the endpoint does what the user expects.
 
 For endpoints not yet in the Postman collection: construct the request from the route definition in `api.php` and the corresponding controller method.
 
@@ -227,6 +276,8 @@ For endpoints not yet in the Postman collection: construct the request from the 
 ## References
 
 - [collection-map.md](references/collection-map.md) — Full endpoint-to-backend-route mapping
+- [endpoint-index.md](references/endpoint-index.md) — First-pass endpoint profile lookup with concise live notes
+- `references/endpoint-profiles/` — Detailed endpoint profiles; open only matching files
 - [datasets.json](references/datasets.json) — Test data catalogue
 - Test credentials: `local-docs/testing-plans/testing-credentials/` (patient-accounts.md, provider-accounts.md)
 - Backend routes: `main/hairline-backend/routes/api.php`

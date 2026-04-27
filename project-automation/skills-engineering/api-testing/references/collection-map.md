@@ -72,11 +72,13 @@ This is the core business flow. Patient creates inquiry -> system distributes to
 | 3 | Provider Get Inquiry Queue | GET | `/inquiry/get-single-inquiry` | `Inquiry\InquiryController@show` | Provider |
 | 4 | Provider View Inquiry Details | GET | `/inquiry/get-single-inquiry` | `Inquiry\InquiryController@show` | Provider |
 | 5.1 | Get All Treatments With Packages | GET | `/treatment/get-all-treatments-with-packages` | `Packages\TreatmentController@getAllTreatmentsWithPackages` | Provider |
-| 5.2 | Get Available Clinicians | GET | `/provider/get-provider-staff` | `Providers\ProviderController@getProviderStaff` | Provider |
+| 5.2 | Get Available Clinicians | GET | `/provider-user/get-all-clinicians` | `Providers\ProviderUserController@getAllClinicians` | Provider |
 | 5.3 | Create Quote (Full data) | POST | `/quote/schedule-quote` | `Quotes\ScheduleController@store` | Provider |
 | 6 | Patient View Quotes | GET | `/quote/get-quote-list` | `Quotes\QuotesController@quotesList` | Patient |
 | 7 | Update Quote Status (Confirm) | POST | `/quote/{id}/update` | `Quotes\QuotesController@update` | Provider/Admin |
 | 8 | Provider View Inquiry (De-anonymized) | GET | `/inquiry/get-single-inquiry` | `Inquiry\InquiryController@show` | Provider |
+
+> Live correction: For quote clinician IDs, use `GET /provider-user/get-all-clinicians` with the same provider token. Do not use `/provider/get-provider-staff` for Create Quote clinician lookup; it returned `Unauthenticated` in live testing with provider tokens on 2026-04-26.
 
 ## Dashboard (Offers)
 
