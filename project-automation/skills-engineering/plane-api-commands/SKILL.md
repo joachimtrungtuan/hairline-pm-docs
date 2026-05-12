@@ -60,6 +60,8 @@ Preferred metadata block:
 
 Backward compatibility: creation and update scripts can parse older task blocks, but new tasks should use the preferred metadata.
 
+Plane metadata is per task block. A single markdown file may legitimately contain different `Parent Task`, `Plane Module`, `Labels`, `Priority`, and `Cycle` values across tasks.
+
 ## Field Rules
 
 - `Plane Task ID`: internal UUID returned by Plane. Leave blank before creation. If populated, do not recreate the task.
@@ -100,6 +102,8 @@ python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues
 
 After user approval for live creation, rerun without `--dry-run`. The script writes internal UUIDs to `Plane Task ID` and readable keys to `Plane Task Key`.
 
+Dry-run output must be reviewed per task. It prints resolved labels, module, cycle, and parent identity for each task, so mixed parent/module files are visible before live creation.
+
 Creation enforcement order:
 
 1. Create the work item
@@ -109,6 +113,44 @@ Creation enforcement order:
 5. Assign `Cycle` through Plane's cycle work-item endpoint when present
 
 If any required assignment fails, the script exits with an error instead of reporting success; the task file will still contain the created issue UUID for recovery.
+
+### 2A. Interrupted Or Partial Runs
+
+If the task file contains a mix of blank and populated `Plane Task ID` fields, do not rerun live creation in strict mode.
+
+Use one of these recovery paths:
+
+- `--resume`: skip tasks that already have `Plane Task ID`, and create only tasks whose ID is blank.
+- `--skip N` / `--limit N`: select a known contiguous range of uncreated tasks.
+- `--reset-local-ids --dry-run`: inspect which local IDs would be cleared if the previous Plane issues were test issues, deleted, or intentionally abandoned.
+
+Strict mode intentionally fails when any selected task already has `Plane Task ID`. This prevents duplicate Plane issues.
+
+Resume example:
+
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
+  --file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-001.md" \
+  --env ".env" \
+  --values "plane-values.json" \
+  --resume \
+  --dry-run
+```
+
+Reset is local-only and does not delete or archive Plane issues. Use it only when duplicate creation is intentional:
+
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
+  --file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-001.md" \
+  --env ".env" \
+  --values "plane-values.json" \
+  --reset-local-ids \
+  --dry-run
+```
+
+To actually clear local IDs, add `--confirm-reset-local-ids`. After reset, live creation will create new Plane issues from scratch.
 
 ### 3. Update Plane work items
 
@@ -138,5 +180,8 @@ Before live writes:
 
 1. Run `python3 -m py_compile scripts/*.py`
 2. Run `fetch-plane-values.py --dry-run` or a real refresh if cache update is needed
-3. Run create/update scripts with `--dry-run`
-4. Confirm `Plane Task ID` is blank before create, and UUID-shaped before update
+3. Check whether selected tasks have existing `Plane Task ID` values
+4. For fresh creation, confirm all selected `Plane Task ID` fields are blank
+5. For partial recovery, use `--resume` or a targeted `--skip` / `--limit` range
+6. Run create/update scripts with `--dry-run`
+7. Confirm the per-task parent/module/cycle distribution before live writes

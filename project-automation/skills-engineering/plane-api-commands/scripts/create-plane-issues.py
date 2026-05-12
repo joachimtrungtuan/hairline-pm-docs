@@ -33,6 +33,15 @@ def metadata_value(task: dict[str, Any], key: str) -> str:
     return str(task["metadata"].get(key.lower(), "")).strip()
 
 
+def lookup_name(values: dict[str, Any], section: str, item_id: str) -> str:
+    if not item_id:
+        return ""
+    for item in values.get(section, []):
+        if isinstance(item, dict) and item.get("id") == item_id:
+            return str(item.get("name") or item_id)
+    return item_id
+
+
 def infer_labels(task_name: str, explicit: str, values: dict[str, Any]) -> list[str]:
     if explicit:
         return [lookup_id(values, "labels", name) for name in split_names(explicit)]
@@ -45,6 +54,12 @@ def infer_labels(task_name: str, explicit: str, values: dict[str, Any]) -> list[
     if "[UX/UI TASK]" in task_name:
         return [lookup_id(values, "labels", "UX/UI")]
     return []
+
+
+def display_label_names(values: dict[str, Any], label_ids: list[str]) -> str:
+    if not label_ids:
+        return "(none)"
+    return ",".join(lookup_name(values, "labels", label_id) for label_id in label_ids)
 
 
 def find_work_item_id_by_sequence(config, sequence_id: int) -> str:
@@ -65,28 +80,28 @@ def find_work_item_id_by_sequence(config, sequence_id: int) -> str:
     raise SystemExit(f"ERROR: Could not resolve HAIRL-{sequence_id} in this project")
 
 
-def resolve_parent(config, raw: str) -> str:
+def resolve_parent(config, raw: str) -> tuple[str, str]:
     value = raw.strip()
     if not value:
-        return ""
+        return "", ""
     cache_key = value.lower()
     if cache_key in PARENT_CACHE:
-        return PARENT_CACHE[cache_key]
+        return PARENT_CACHE[cache_key], value
     if UUID_RE.match(value):
         PARENT_CACHE[cache_key] = value
-        return value
+        return value, value
     if value.upper().startswith("HAIRL-"):
         try:
             resolved = find_work_item_id_by_sequence(config, int(value.split("-", 1)[1]))
             PARENT_CACHE[cache_key] = resolved
-            return resolved
+            return resolved, value.upper()
         except (IndexError, ValueError):
             raise SystemExit(f"ERROR: Invalid parent task key: {value!r}") from None
     path = f"/workspaces/{config.workspace_slug}/work-items/{value}/"
     body, status = api_request(config, "GET", path)
     if status == 200 and isinstance(body, dict) and isinstance(body.get("id"), str):
         PARENT_CACHE[cache_key] = body["id"]
-        return body["id"]
+        return body["id"], value
     raise SystemExit(
         f"ERROR: Could not resolve parent task {value!r}. "
         "Use the internal Plane UUID if the readable key is not accessible by API."
@@ -101,17 +116,13 @@ def resolve_cycle(task: dict[str, Any], values: dict[str, Any]) -> str:
     return str(cycle.get("id", "")) if cycle else ""
 
 
-def build_payload(
-    task: dict[str, Any], config, values: dict[str, Any]
-) -> tuple[dict[str, Any], str, str, str]:
-    if metadata_value(task, "plane task id"):
-        raise SystemExit(
-            f"ERROR: Task already has Plane Task ID and should not be recreated: {task['name']}"
-        )
+def build_plan(task: dict[str, Any], config, values: dict[str, Any]) -> dict[str, Any]:
+    existing_id = metadata_value(task, "plane task id")
+    existing_key = metadata_value(task, "plane task key")
     labels = infer_labels(task["name"], metadata_value(task, "labels"), values)
     module_id = lookup_id(values, "modules", metadata_value(task, "plane module"))
     priority = normalize_priority(metadata_value(task, "priority") or config.default_priority)
-    parent_id = resolve_parent(config, metadata_value(task, "parent task"))
+    parent_id, parent_display = resolve_parent(config, metadata_value(task, "parent task"))
     issue_type_id = lookup_id(
         values,
         "issue_types",
@@ -133,7 +144,19 @@ def build_payload(
     if parent_id:
         payload["parent"] = parent_id
     cycle_id = resolve_cycle(task, values)
-    return payload, cycle_id, module_id, parent_id
+    return {
+        "task": task,
+        "payload": payload,
+        "cycle_id": cycle_id,
+        "cycle_name": lookup_name(values, "cycles", cycle_id),
+        "module_id": module_id,
+        "module_name": lookup_name(values, "modules", module_id),
+        "parent_id": parent_id,
+        "parent_display": parent_display,
+        "label_names": display_label_names(values, labels),
+        "existing_id": existing_id,
+        "existing_key": existing_key,
+    }
 
 
 def add_to_cycle(config, work_item_id: str, cycle_id: str) -> None:
@@ -181,6 +204,49 @@ def task_slice(tasks: list[dict[str, Any]], skip: int, limit: int | None) -> lis
     return selected
 
 
+def clear_plane_ids(content: str, tasks: list[dict[str, Any]]) -> tuple[str, int]:
+    updated = content
+    cleared = 0
+    for task in tasks:
+        if metadata_value(task, "plane task id") or metadata_value(task, "plane task key"):
+            updated = replace_metadata_value(updated, task["name"], "Plane Task ID", "")
+            updated = replace_metadata_value(updated, task["name"], "Plane Task Key", "")
+            cleared += 1
+    return updated, cleared
+
+
+def print_plan_row(index: int, plan: dict[str, Any], status: str) -> None:
+    parent = plan["parent_display"] or "(none)"
+    if plan["parent_display"] and plan["parent_id"] and plan["parent_display"] != plan["parent_id"]:
+        parent = f"{plan['parent_display']}->{plan['parent_id']}"
+    module = plan["module_name"] or "(none)"
+    cycle = plan["cycle_name"] or "(none)"
+    print(
+        f"{index}. {status} {plan['task']['name']} | "
+        f"priority={plan['payload']['priority']} labels={plan['label_names']} "
+        f"module={module} cycle={cycle} parent={parent}"
+    )
+
+
+def print_summary(plans: list[dict[str, Any]]) -> None:
+    created = [p for p in plans if p["existing_id"]]
+    pending = [p for p in plans if not p["existing_id"]]
+    parent_counts: dict[str, int] = {}
+    module_counts: dict[str, int] = {}
+    cycle_counts: dict[str, int] = {}
+    for plan in plans:
+        parent_counts[plan["parent_display"] or "(none)"] = parent_counts.get(plan["parent_display"] or "(none)", 0) + 1
+        module_counts[plan["module_name"] or "(none)"] = module_counts.get(plan["module_name"] or "(none)", 0) + 1
+        cycle_counts[plan["cycle_name"] or "(none)"] = cycle_counts.get(plan["cycle_name"] or "(none)", 0) + 1
+    print(
+        f"Summary: total={len(plans)} already_created={len(created)} "
+        f"to_create={len(pending)}"
+    )
+    print(f"Parents: {parent_counts}")
+    print(f"Modules: {module_counts}")
+    print(f"Cycles: {cycle_counts}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create Plane work items from task markdown.")
     parser.add_argument("--file", required=True, help="Path to implementation task markdown")
@@ -189,6 +255,9 @@ def main() -> None:
     parser.add_argument("--skip", type=int, default=0, help="Skip first N tasks")
     parser.add_argument("--limit", type=int, default=None, help="Create at most N tasks")
     parser.add_argument("--dry-run", action="store_true", help="Validate and print planned payload summary only")
+    parser.add_argument("--resume", action="store_true", help="Skip tasks with existing Plane Task ID and create only blank-ID tasks")
+    parser.add_argument("--reset-local-ids", action="store_true", help="Clear local Plane Task ID and Plane Task Key values from selected tasks")
+    parser.add_argument("--confirm-reset-local-ids", action="store_true", help="Required to actually clear local Plane ID fields")
     args = parser.parse_args()
 
     config = load_config(Path(args.env))
@@ -209,36 +278,67 @@ def main() -> None:
     if not tasks:
         raise SystemExit("ERROR: No task blocks found for creation")
 
+    if args.reset_local_ids:
+        existing = [
+            task for task in tasks
+            if metadata_value(task, "plane task id") or metadata_value(task, "plane task key")
+        ]
+        print(f"Reset-local-ids selected tasks={len(tasks)} fields_to_clear={len(existing)}")
+        for index, task in enumerate(existing, 1):
+            print(
+                f"{index}. clear {task['name']} | "
+                f"id={metadata_value(task, 'plane task id') or '(blank)'} "
+                f"key={metadata_value(task, 'plane task key') or '(blank)'}"
+            )
+        if args.dry_run:
+            return
+        if not args.confirm_reset_local_ids:
+            raise SystemExit(
+                "ERROR: --reset-local-ids requires --confirm-reset-local-ids. "
+                "This only clears local IDs and does not delete Plane issues."
+            )
+        updated_content, cleared = clear_plane_ids(content, tasks)
+        task_path.write_text(updated_content, encoding="utf-8")
+        print(f"Cleared Plane ID fields from {cleared} task(s).")
+        return
+
     project_identifier = str(values.get("project", {}).get("identifier") or "HAIRL")
     updated_content = content
-    print(f"Found {len(tasks)} task(s) to process")
-    for index, task in enumerate(tasks, 1):
-        payload, cycle_id, module_id, parent_id = build_payload(task, config, values)
-        label_count = len(payload.get("labels", []))
-        module_state = "yes" if module_id else "no"
-        parent_state = "yes" if parent_id else "no"
-        cycle_state = "yes" if cycle_id else "no"
-        print(
-            f"{index}. {task['name']} | priority={payload['priority']} "
-            f"labels={label_count} module={module_state} cycle={cycle_state} parent={parent_state}"
+    plans = [build_plan(task, config, values) for task in tasks]
+    print(f"Found {len(plans)} task(s) to process")
+    print_summary(plans)
+    existing = [plan for plan in plans if plan["existing_id"]]
+    if existing and not args.resume:
+        for index, plan in enumerate(plans, 1):
+            status = "already_created" if plan["existing_id"] else "to_create"
+            print_plan_row(index, plan, status)
+        raise SystemExit(
+            "ERROR: selected tasks include existing Plane Task ID values. "
+            "Use --resume to skip them, --skip/--limit to select a fresh range, "
+            "or --reset-local-ids --dry-run to inspect a local reset."
         )
+    for index, plan in enumerate(plans, 1):
+        if plan["existing_id"]:
+            print_plan_row(index, plan, "skip_existing")
+            continue
+        print_plan_row(index, plan, "to_create")
         if args.dry_run:
             continue
-        response = create_issue(config, payload)
+        response = create_issue(config, plan["payload"])
         work_item_id = str(response["id"])
         key = issue_key(project_identifier, response.get("sequence_id"))
         updated_content = replace_metadata_value(
-            updated_content, task["name"], "Plane Task ID", work_item_id
+            updated_content, plan["task"]["name"], "Plane Task ID", work_item_id
         )
         if key:
             updated_content = replace_metadata_value(
-                updated_content, task["name"], "Plane Task Key", key
+                updated_content, plan["task"]["name"], "Plane Task Key", key
             )
         task_path.write_text(updated_content, encoding="utf-8")
         print(f"   created id={work_item_id} key={key or '(none)'}")
-        add_to_module(config, work_item_id, module_id)
-        set_parent(config, work_item_id, parent_id)
-        add_to_cycle(config, work_item_id, cycle_id)
+        add_to_module(config, work_item_id, plan["module_id"])
+        set_parent(config, work_item_id, plan["parent_id"])
+        add_to_cycle(config, work_item_id, plan["cycle_id"])
 
     if not args.dry_run:
         task_path.write_text(updated_content, encoding="utf-8")

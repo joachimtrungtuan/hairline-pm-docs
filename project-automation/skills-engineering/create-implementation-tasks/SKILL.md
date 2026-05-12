@@ -87,6 +87,7 @@ For each missing or incomplete component, create a task.
 
 **Task metadata:**
 
+- Plane metadata is per task block. Do not assume one parent, label, priority, Plane module, or cycle applies to the entire file.
 - `**Status**: Drafted` by default; do not use status as the Plane creation signal
 - `**Plane Task ID**:` blank until created on Plane; after creation this must contain Plane's internal UUID
 - `**Plane Task Key**:` blank until created on Plane; after creation this may contain readable key such as `HAIRL-1131`

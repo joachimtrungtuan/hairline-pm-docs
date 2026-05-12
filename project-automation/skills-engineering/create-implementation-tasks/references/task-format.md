@@ -109,6 +109,7 @@ Data fields should be described as business data (e.g., "Patient must provide: f
 
 ## Plane Metadata Rules
 
+- Plane metadata is per task block. A single file may contain different labels, priorities, Plane modules, cycles, and parent tasks for different tasks.
 - `Plane Task ID` stores the internal Plane UUID returned by the API and remains blank before creation
 - `Plane Task Key` stores the readable key such as `HAIRL-1131` and remains blank before creation
 - `Product Module` stores the PRD/product module code such as `PR-05`, `A-08`, or `S-XX`
