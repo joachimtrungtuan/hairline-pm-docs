@@ -47,11 +47,12 @@ Each task description must be under 300 words.
 ### 1. Resolve date and report priority
 
 1. Get `CURRENT_DATE` via `date +%Y-%m-%d`
-2. Check `local-docs/project-automation/task-creation/${CURRENT_DATE}/verification-report-${CURRENT_DATE}-*.md`
-3. Select matching report by scope:
+2. Refresh active Plane cycle context by running `plane-api-commands` `refresh-values`, or read `plane-values.json` only if it was refreshed in this turn
+3. Check `local-docs/project-automation/task-creation/${CURRENT_DATE}/verification-report-${CURRENT_DATE}-*.md`
+4. Select matching report by scope:
    - With `MODULE_CODE`: require both module and FR match
    - Without `MODULE_CODE`: require FR match
-4. If multiple match, pick highest numeric suffix
+5. If multiple match, pick highest numeric suffix
 
 ### 2. Select task basis (priority order)
 
@@ -86,9 +87,16 @@ For each missing or incomplete component, create a task.
 
 **Task metadata:**
 
-- `**Status**: Drafted` (default), `Confirmed`, or `Added to Plane`
+- `**Status**: Drafted` by default; do not use status as the Plane creation signal
+- `**Plane Task ID**:` blank until created on Plane; after creation this must contain Plane's internal UUID
+- `**Plane Task Key**:` blank until created on Plane; after creation this may contain readable key such as `HAIRL-1131`
 - `**FR**: FR-###` (always)
-- `**Module**: P-##` or `TBD`
+- `**Product Module**: P-##` or `TBD`
+- `**Labels**:` blank by default unless the task nature is already certain; FE tasks should use `FE Task`, BE tasks should use `BE Task`, bug tasks should use `Bugs`, UX/UI tasks should use `UX/UI`
+- `**Priority**: Medium` unless the user explicitly requests another priority
+- `**Plane Module**:` Plane module name from `plane-values.json` when a clear module match exists; otherwise blank
+- `**Cycle**:` active Plane cycle name from the metadata refresh for the current date
+- `**Parent Task**:` blank unless the user provides a parent issue/key; readable keys such as `HAIRL-1131` are acceptable and resolved by the Plane creation script before assignment
 
 **Task description must use HTML format** as documented in `references/task-format.md`. Read that file for the exact template, required sections, and formatting rules before drafting any task.
 
@@ -98,6 +106,9 @@ For each missing or incomplete component, create a task.
 - Default: include only the FR PRD GitHub link per task
 - Include Figma only when provided by user
 - Add System PRD or transcription links only when they materially clarify that specific task
+- Every link must be a raw-clickable link: write the label as plain text before the anchor, and make the anchor text the URL itself
+  - Correct: `<li>FR PRD: <a href="https://example.com/prd.md">https://example.com/prd.md</a></li>`
+  - Incorrect: `<li><a href="https://example.com/prd.md">FR PRD</a></li>`
 - GitHub base: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/`
 - **Path mapping**: The GitHub repo root corresponds to the contents **inside** `local-docs/`. When converting a local path to a GitHub URL, **strip the `local-docs/` prefix** before appending to the base.
   - Correct: `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr001-patient-authentication/prd.md`

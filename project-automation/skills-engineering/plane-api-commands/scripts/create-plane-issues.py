@@ -1,257 +1,252 @@
 #!/usr/bin/env python3
-"""
-Create Plane.so issues from implementation task markdown files.
+"""Create Plane work items from implementation task markdown files."""
 
-Usage:
-    python3 create-plane-issues.py --file <path-to-tasks.md>
-
-Credentials are loaded from .env in the current working directory.
-NEVER hardcode API keys in this script or its output.
-"""
+from __future__ import annotations
 
 import argparse
-import json
-import re
-import subprocess
 import sys
 from pathlib import Path
+from typing import Any
+
+from plane_api_common import (
+    UUID_RE,
+    active_cycle,
+    api_request,
+    issue_key,
+    load_config,
+    load_values,
+    lookup_id,
+    normalize_priority,
+    paginated_get,
+    parse_tasks,
+    project_path,
+    replace_metadata_value,
+    split_names,
+)
 
 
-def load_label_ids(system_vars_path: Path) -> dict:
-    """
-    Best-effort parse of label IDs from samasu-system-variables.md.
-
-    Supports lines like:
-    - **UX/UI** - `uuid`
-    - * UX/UI: `uuid`
-    """
-    if not system_vars_path.exists():
-        return {}
-    text = system_vars_path.read_text(encoding="utf-8")
-    label_ids: dict[str, str] = {}
-
-    patterns = [
-        r"^\s*\d+\.\s*\*\*(?P<name>[^*]+)\*\*\s*-\s*`(?P<id>[a-f0-9-]{36})`",
-        r"^\s*\*\s*(?P<name>[^:]+):\s*`(?P<id>[a-f0-9-]{36})`",
-    ]
-    for line in text.splitlines():
-        for pat in patterns:
-            m = re.match(pat, line.strip(), re.IGNORECASE)
-            if m:
-                name = m.group("name").strip()
-                label_id = m.group("id").strip()
-                label_ids[name] = label_id
-                break
-
-    return label_ids
+PARENT_CACHE: dict[str, str] = {}
+SEQUENCE_ID_CACHE: dict[int, str] | None = None
 
 
-def load_env(env_path: Path) -> dict:
-    """Load variables from a .env file."""
-    env_vars = {}
-    if not env_path.exists():
-        print(f"ERROR: .env file not found at {env_path}")
-        print("Create it with PLANE_API_KEY and configuration values.")
-        sys.exit(1)
-    with open(env_path) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, value = line.split("=", 1)
-                env_vars[key.strip()] = value.strip().strip('"').strip("'")
-    return env_vars
+def metadata_value(task: dict[str, Any], key: str) -> str:
+    return str(task["metadata"].get(key.lower(), "")).strip()
 
 
-def clean_html(html: str) -> str:
-    """Clean HTML by removing excessive whitespace while preserving structure."""
-    # Remove excessive spaces between tags
-    html = re.sub(r'>\s+<', '><', html)
-    # Normalize multiple spaces to single space within text content
-    html = re.sub(r'  +', ' ', html)
-    # Remove leading/trailing whitespace from each line
-    lines = [line.strip() for line in html.split('\n') if line.strip()]
-    # Join with no extra newlines
-    return ''.join(lines)
+def infer_labels(task_name: str, explicit: str, values: dict[str, Any]) -> list[str]:
+    if explicit:
+        return [lookup_id(values, "labels", name) for name in split_names(explicit)]
+    if "[FE TASK]" in task_name:
+        return [lookup_id(values, "labels", "FE Task")]
+    if "[BE TASK]" in task_name:
+        return [lookup_id(values, "labels", "BE Task")]
+    if "[BUG]" in task_name:
+        return [lookup_id(values, "labels", "Bugs")]
+    if "[UX/UI TASK]" in task_name:
+        return [lookup_id(values, "labels", "UX/UI")]
+    return []
 
 
-def parse_tasks(content: str) -> list:
-    """Extract tasks from markdown using TASK_NAME/DESCRIPTION markers."""
-    tasks = []
-    pattern = (
-        r"## TASK_NAME_START\n(.*?)\n## TASK_NAME_END"
-        r"[\s\S]*?"
-        r"## TASK_DESCRIPTION_START\n([\s\S]*?)\n## TASK_DESCRIPTION_END"
+def find_work_item_id_by_sequence(config, sequence_id: int) -> str:
+    global SEQUENCE_ID_CACHE
+    if SEQUENCE_ID_CACHE is None:
+        items = paginated_get(
+            config,
+            project_path(config, "/work-items/?fields=id,sequence_id&per_page=100"),
+        )
+        SEQUENCE_ID_CACHE = {
+            int(item["sequence_id"]): item["id"]
+            for item in items
+            if isinstance(item.get("sequence_id"), int)
+            and isinstance(item.get("id"), str)
+        }
+    if sequence_id in SEQUENCE_ID_CACHE:
+        return SEQUENCE_ID_CACHE[sequence_id]
+    raise SystemExit(f"ERROR: Could not resolve HAIRL-{sequence_id} in this project")
+
+
+def resolve_parent(config, raw: str) -> str:
+    value = raw.strip()
+    if not value:
+        return ""
+    cache_key = value.lower()
+    if cache_key in PARENT_CACHE:
+        return PARENT_CACHE[cache_key]
+    if UUID_RE.match(value):
+        PARENT_CACHE[cache_key] = value
+        return value
+    if value.upper().startswith("HAIRL-"):
+        try:
+            resolved = find_work_item_id_by_sequence(config, int(value.split("-", 1)[1]))
+            PARENT_CACHE[cache_key] = resolved
+            return resolved
+        except (IndexError, ValueError):
+            raise SystemExit(f"ERROR: Invalid parent task key: {value!r}") from None
+    path = f"/workspaces/{config.workspace_slug}/work-items/{value}/"
+    body, status = api_request(config, "GET", path)
+    if status == 200 and isinstance(body, dict) and isinstance(body.get("id"), str):
+        PARENT_CACHE[cache_key] = body["id"]
+        return body["id"]
+    raise SystemExit(
+        f"ERROR: Could not resolve parent task {value!r}. "
+        "Use the internal Plane UUID if the readable key is not accessible by API."
     )
-    for match in re.finditer(pattern, content):
-        name = match.group(1).strip()
-        desc = match.group(2).strip()
-        # Clean HTML to remove excessive spaces
-        desc = clean_html(desc)
-        tasks.append({"name": name, "description": desc})
-    return tasks
 
 
-def create_issue(task: dict, config: dict) -> dict:
-    """Create one Plane work item via API."""
-    labels: list[str] = []
-    if "[UX/UI TASK]" in task["name"]:
-        ux_label_id = config.get("LABEL_UX_UI_ID")
-        if ux_label_id:
-            labels.append(ux_label_id)
+def resolve_cycle(task: dict[str, Any], values: dict[str, Any]) -> str:
+    raw = metadata_value(task, "cycle")
+    if raw:
+        return lookup_id(values, "cycles", raw)
+    cycle = active_cycle(values)
+    return str(cycle.get("id", "")) if cycle else ""
 
-    payload = {
+
+def build_payload(
+    task: dict[str, Any], config, values: dict[str, Any]
+) -> tuple[dict[str, Any], str, str, str]:
+    if metadata_value(task, "plane task id"):
+        raise SystemExit(
+            f"ERROR: Task already has Plane Task ID and should not be recreated: {task['name']}"
+        )
+    labels = infer_labels(task["name"], metadata_value(task, "labels"), values)
+    module_id = lookup_id(values, "modules", metadata_value(task, "plane module"))
+    priority = normalize_priority(metadata_value(task, "priority") or config.default_priority)
+    parent_id = resolve_parent(config, metadata_value(task, "parent task"))
+    issue_type_id = lookup_id(
+        values,
+        "issue_types",
+        metadata_value(task, "issue type") or config.issue_type_id,
+    )
+
+    payload: dict[str, Any] = {
         "name": task["name"],
         "description_html": task["description"],
-        "project": config["PROJECT_ID"],
-        "assignees": [config["ASSIGNEE_ID"]],
-        "state": config["STAGE_ID"],
-        "priority": config.get("PRIORITY", "medium"),
-        # Plane API v1 uses "type" for work item type
-        "type": config["ISSUE_TYPE_ID"],
+        "project": config.project_id,
+        "state": config.state_id,
+        "priority": priority,
+        "type": issue_type_id,
     }
+    if config.assignee_id:
+        payload["assignees"] = [config.assignee_id]
     if labels:
         payload["labels"] = labels
+    if parent_id:
+        payload["parent"] = parent_id
+    cycle_id = resolve_cycle(task, values)
+    return payload, cycle_id, module_id, parent_id
 
-    url = (
-        f"{config['BASE_URL']}/workspaces/{config['WORKSPACE_SLUG']}"
-        f"/projects/{config['PROJECT_ID']}/work-items/"
+
+def add_to_cycle(config, work_item_id: str, cycle_id: str) -> None:
+    if not cycle_id:
+        return
+    path = project_path(config, f"/cycles/{cycle_id}/cycle-issues/")
+    body, status = api_request(config, "POST", path, {"issues": [work_item_id]})
+    if status >= 400 or status == 0:
+        raise SystemExit(f"ERROR: Cycle assignment failed HTTP {status}: {body}")
+
+
+def add_to_module(config, work_item_id: str, module_id: str) -> None:
+    if not module_id:
+        return
+    path = project_path(config, f"/modules/{module_id}/module-issues/")
+    body, status = api_request(config, "POST", path, {"issues": [work_item_id]})
+    if status >= 400 or status == 0:
+        raise SystemExit(f"ERROR: Module assignment failed HTTP {status}: {body}")
+
+
+def set_parent(config, work_item_id: str, parent_id: str) -> None:
+    if not parent_id:
+        return
+    body, status = api_request(
+        config,
+        "PATCH",
+        project_path(config, f"/work-items/{work_item_id}/"),
+        {"parent": parent_id},
     )
-    cmd = [
-        "curl", "-sS", "-X", "POST", url,
-        "-H", f"X-API-Key: {config['PLANE_API_KEY']}",
-        "-H", "Content-Type: application/json",
-        "-d", json.dumps(payload),
-        "-w", "\n__HTTP_STATUS__:%{http_code}",
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode != 0:
-        return {"status": "error", "error": result.stderr.strip() or "curl failed"}
-
-    body, _, status = result.stdout.rpartition("\n__HTTP_STATUS__:")
-    status = status.strip() or "000"
-
-    try:
-        resp = json.loads(body) if body.strip() else {}
-    except json.JSONDecodeError:
-        resp = None
-
-    if status.startswith("2") and isinstance(resp, dict):
-        plane_id = (
-            resp.get("sequence_id")
-            or resp.get("identifier")
-            or resp.get("id")
-            or resp.get("uuid")
-        )
-        if plane_id is not None:
-            return {
-                "status": "success",
-                "id": plane_id,
-                "http_status": status,
-            }
-
-    response_text = body.strip()
-    if isinstance(resp, dict) and resp:
-        response_text = json.dumps(resp)
-    return {
-        "status": "error",
-        "http_status": status,
-        "response": response_text or "(empty response body)",
-    }
+    if status >= 400 or status == 0 or not isinstance(body, dict) or not body.get("id"):
+        raise SystemExit(f"ERROR: Parent assignment failed HTTP {status}: {body}")
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Create Plane issues from markdown task files."
-    )
-    parser.add_argument(
-        "--file", required=True, help="Path to implementation tasks markdown file"
-    )
-    parser.add_argument(
-        "--env", default=".env", help="Path to .env file (default: .env in cwd)"
-    )
+def create_issue(config, payload: dict[str, Any]) -> dict[str, Any]:
+    body, status = api_request(config, "POST", project_path(config, "/work-items/"), payload)
+    if status not in (200, 201) or not isinstance(body, dict) or not body.get("id"):
+        raise SystemExit(f"ERROR: Create failed HTTP {status}: {body}")
+    return body
+
+
+def task_slice(tasks: list[dict[str, Any]], skip: int, limit: int | None) -> list[dict[str, Any]]:
+    selected = tasks[skip:]
+    if limit is not None:
+        selected = selected[:limit]
+    return selected
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Create Plane work items from task markdown.")
+    parser.add_argument("--file", required=True, help="Path to implementation task markdown")
+    parser.add_argument("--env", default=".env", help="Path to .env")
+    parser.add_argument("--values", default="plane-values.json", help="Path to fetched Plane values JSON")
+    parser.add_argument("--skip", type=int, default=0, help="Skip first N tasks")
+    parser.add_argument("--limit", type=int, default=None, help="Create at most N tasks")
+    parser.add_argument("--dry-run", action="store_true", help="Validate and print planned payload summary only")
     args = parser.parse_args()
 
-    # Load credentials from .env
-    env_path = Path(args.env)
-    env_vars = load_env(env_path)
+    config = load_config(Path(args.env))
+    for key, value in {
+        "ASSIGNEE_ID": config.assignee_id,
+        "STAGE_ID/STATE_ID": config.state_id,
+        "ISSUE_TYPE_ID": config.issue_type_id,
+    }.items():
+        if not value:
+            raise SystemExit(f"ERROR: Missing required config value {key}")
 
-    api_key = env_vars.get("PLANE_API_KEY", "")
-    if not api_key:
-        print("ERROR: PLANE_API_KEY not found in .env file.")
-        print("Add it to your .env: PLANE_API_KEY=plane_api_...")
-        sys.exit(1)
-
-    # Build config from env
-    label_ids = load_label_ids(Path("samasu-system-variables.md"))
-    config = {
-        "PLANE_API_KEY": api_key,
-        "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-digital"),
-        "BASE_URL": env_vars.get("BASE_URL", "https://api.plane.so/api/v1"),
-        "PROJECT_ID": env_vars.get("PROJECT_ID", ""),
-        "ASSIGNEE_ID": env_vars.get("ASSIGNEE_ID", ""),
-        "STAGE_ID": env_vars.get("STAGE_ID", ""),
-        "PRIORITY": env_vars.get("PRIORITY", "medium"),
-        "ISSUE_TYPE_ID": env_vars.get("ISSUE_TYPE_ID", ""),
-        "LABEL_UX_UI_ID": env_vars.get("LABEL_UX_UI_ID", label_ids.get("UX/UI", "")),
-    }
-
-    # Validate required config
-    missing = [
-        k for k in ["PROJECT_ID", "ASSIGNEE_ID", "STAGE_ID", "ISSUE_TYPE_ID"]
-        if not config[k]
-    ]
-    if missing:
-        print(f"ERROR: Missing required config in .env: {', '.join(missing)}")
-        print("Reference: local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md")
-        sys.exit(1)
-
-    # Read and parse tasks
-    task_file = Path(args.file)
-    if not task_file.exists():
-        print(f"ERROR: File not found: {args.file}")
-        sys.exit(1)
-
-    content = task_file.read_text()
-    tasks = parse_tasks(content)
-    print(f"Found {len(tasks)} tasks to create\n")
-
+    values = load_values(Path(args.values))
+    task_path = Path(args.file)
+    if not task_path.exists():
+        raise SystemExit(f"ERROR: File not found: {task_path}")
+    content = task_path.read_text(encoding="utf-8")
+    tasks = task_slice(parse_tasks(content), args.skip, args.limit)
     if not tasks:
-        print("No tasks found. Verify the file uses TASK_NAME_START/END "
-              "and TASK_DESCRIPTION_START/END markers.")
-        sys.exit(0)
+        raise SystemExit("ERROR: No task blocks found for creation")
 
-    # Create issues
-    results = []
-    for i, task in enumerate(tasks, 1):
-        print(f"Task {i}: {task['name']}")
-        result = create_issue(task, config)
-        result["name"] = task["name"]
-        results.append(result)
-        if result["status"] == "success":
-            print(
-                f"  Created — ID: {result['id']} "
-                f"(HTTP {result.get('http_status', 'unknown')})\n"
+    project_identifier = str(values.get("project", {}).get("identifier") or "HAIRL")
+    updated_content = content
+    print(f"Found {len(tasks)} task(s) to process")
+    for index, task in enumerate(tasks, 1):
+        payload, cycle_id, module_id, parent_id = build_payload(task, config, values)
+        label_count = len(payload.get("labels", []))
+        module_state = "yes" if module_id else "no"
+        parent_state = "yes" if parent_id else "no"
+        cycle_state = "yes" if cycle_id else "no"
+        print(
+            f"{index}. {task['name']} | priority={payload['priority']} "
+            f"labels={label_count} module={module_state} cycle={cycle_state} parent={parent_state}"
+        )
+        if args.dry_run:
+            continue
+        response = create_issue(config, payload)
+        work_item_id = str(response["id"])
+        key = issue_key(project_identifier, response.get("sequence_id"))
+        updated_content = replace_metadata_value(
+            updated_content, task["name"], "Plane Task ID", work_item_id
+        )
+        if key:
+            updated_content = replace_metadata_value(
+                updated_content, task["name"], "Plane Task Key", key
             )
-        else:
-            http_status = result.get("http_status", "unknown")
-            detail = result.get("response", result.get("error", "Unknown"))
-            print(f"  FAILED — HTTP {http_status}: {detail}\n")
+        task_path.write_text(updated_content, encoding="utf-8")
+        print(f"   created id={work_item_id} key={key or '(none)'}")
+        add_to_module(config, work_item_id, module_id)
+        set_parent(config, work_item_id, parent_id)
+        add_to_cycle(config, work_item_id, cycle_id)
 
-    # Summary
-    success = [r for r in results if r["status"] == "success"]
-    failed = [r for r in results if r["status"] != "success"]
-    print(f"\n{'=' * 60}")
-    print(f"Summary: {len(success)} of {len(tasks)} tasks created successfully")
-    if failed:
-        print(f"Failed: {len(failed)}")
-    print(f"{'=' * 60}")
-
-    if success:
-        print("\nTask ID Mapping:")
-        for r in success:
-            print(f"  {r['name'][:70]}")
-            print(f"    ID: {r['id']}")
+    if not args.dry_run:
+        task_path.write_text(updated_content, encoding="utf-8")
+        print(f"Updated task file with Plane Task ID values: {task_path}")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit("Interrupted")

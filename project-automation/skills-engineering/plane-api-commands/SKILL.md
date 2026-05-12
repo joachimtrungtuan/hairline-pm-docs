@@ -1,277 +1,142 @@
 ---
 name: plane-api-commands
-description: Execute Plane API operations for listing workspace resources and creating work items from implementation task markdown files. Use when asked to run Plane list commands or bulk-create issues with Plane-compatible HTML descriptions.
+description: Execute Plane API operations for Hairline task workflows. Use when asked to refresh Plane metadata values, list Plane resources, create Plane work items from implementation task markdown files, update existing Plane work items, assign parent work items, or add reference links to Plane work item descriptions.
 ---
 
 # Plane API Commands
 
 ## Purpose
 
-Run Plane.so API workflows for listing resources and bulk-creating work items from local task markdown files. All API credentials are loaded from environment files — never hardcode or expose API keys.
+Run Plane.so API workflows with reusable scripts. All credentials come from `local-docs/project-automation/task-creation/plane-api/.env`; never print, copy, or hardcode secrets.
 
-## Supported Operations
+## Hard Rules
 
-If user does not specify, ask them to choose:
+- Do not create new script files while using this skill.
+- Use only the reusable scripts in `scripts/`; if a script cannot support the request, stop and propose a script update instead of writing a one-off.
+- Do not hardcode task-specific IDs, Figma URLs, issue ranges, labels, modules, cycles, or parent values into scripts.
+- Treat `Plane Task ID` as the internal Plane UUID. Store readable keys such as `HAIRL-1131` in `Plane Task Key`.
+- Prefer cached Plane values from `plane-values.json`. Run `fetch-plane-values.py` to refresh the cache when values may have changed.
+- Do not use deprecated `/issues/` endpoints. Use `/work-items/`.
 
-- `list-users`
-- `list-projects`
-- `list-modules`
-- `list-tags`
-- `list-work-item-types`
-- `list-stages`
-- `create-work-item` (create new Plane issues)
-- `update-work-item` (update existing Plane issues with cleaned HTML)
+## Files
 
-## Prerequisites
+- Env: `local-docs/project-automation/task-creation/plane-api/.env`
+- Metadata cache: `local-docs/project-automation/task-creation/plane-api/plane-values.json`
+- Scripts: `local-docs/project-automation/skills-engineering/plane-api-commands/scripts/`
 
-1. `.env` file at `local-docs/project-automation/task-creation/plane-api/.env` with `PLANE_API_KEY`
-2. System variables at `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`
-3. Tools: `python3`, `curl` (`jq` optional)
+## Supported Modes
 
-### Credential Handling (CRITICAL)
-
-- **ALWAYS** load `PLANE_API_KEY` from the `.env` file
-- **NEVER** hardcode, print, echo, log, or embed the API key in scripts, output, commit messages, or any generated content
-- If `.env` is missing or the key is empty, ask the user to create/populate it
-- If permission is denied reading `.env`, ask the user to grant file access — do not request the key in plain text
-
-## Default Configuration
-
-Load all IDs from `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`. Fallback defaults:
-
-| Parameter | Default |
-|-----------|---------|
-| `WORKSPACE_SLUG` | `samasu-digital` |
-| `BASE_URL` | `https://api.plane.so/api/v1` |
-
-For project, assignee, stage, priority, and issue type IDs: always reference `samasu-system-variables.md` for current values. Do not hardcode UUIDs in generated scripts.
+- `refresh-values`: fetch labels, modules, cycles, states, issue types, priorities, and the currently active cycle into `plane-values.json`
+- `create-work-item`: create new Plane work items from task markdown and write `Plane Task ID` / `Plane Task Key` back into the task file
+- `update-work-item`: update existing work item descriptions from task markdown
+- `set-parent`: assign parent work items for existing Plane work items
+- `add-reference-links`: add raw clickable reference links to existing work item descriptions
 
 ## Task File Contract
 
-When creating issues from markdown, require this block format:
+Preferred metadata block:
 
 ```markdown
 ## TASK_NAME_START
-[PREFIX] Task Name
+[FE TASK] Task Name
 ## TASK_NAME_END
 
 **Status**: Drafted
+**Plane Task ID**:
+**Plane Task Key**:
+**FR**: FR-###
+**Product Module**: PR-05
+**Labels**: FE Task
+**Priority**: Medium
+**Plane Module**: [2] Dashboard > Provider
+**Cycle**: 2026_May_C1
+**Parent Task**:
 
 ## TASK_DESCRIPTION_START
 <h2>Overview</h2>
-<p>...</p>
-(HTML content)
+...
 ## TASK_DESCRIPTION_END
 ```
 
-Allowed prefixes: `[FE+BE TASK]`, `[FE TASK]`, `[BE TASK]`, `[BUG]`, `[UX/UI TASK]`
+Backward compatibility: creation and update scripts can parse older task blocks, but new tasks should use the preferred metadata.
 
-Allowed statuses: `Drafted`, `Confirmed`, `Added to Plane`
+## Field Rules
 
-Description content must be valid HTML for Plane.so `description_html` field.
+- `Plane Task ID`: internal UUID returned by Plane. Leave blank before creation. If populated, do not recreate the task.
+- `Plane Task Key`: readable key such as `HAIRL-1131`; informational only.
+- `Labels`: comma-separated Plane label names or UUIDs. If blank, creation infers one label from prefix: `[FE TASK]` -> `FE Task`, `[BE TASK]` -> `BE Task`, `[BUG]` -> `Bugs`, `[UX/UI TASK]` -> `UX/UI`.
+- `Priority`: default `Medium`; accepted values are `None`, `Low`, `Medium`, `High`, `Urgent`.
+- `Plane Module`: Plane module name or UUID. Leave blank if no matching Plane module is intended.
+- `Cycle`: Plane cycle name or UUID. If blank, the create script uses `active_cycle` from `plane-values.json`.
+- `Parent Task`: user may provide a readable key such as `HAIRL-1131`; the create script resolves it to the internal UUID before creation. Internal UUID is also accepted.
 
-## Progress Tracking (Mandatory)
+## Workflow
 
-**Before starting work**, create a checklist of all workflow steps below. Mark each step in-progress when starting and completed when done. Use the platform's task/todo tracking tools (task lists, todo items, progress trackers). This prevents step-skipping and keeps the workflow auditable.
+### 1. Refresh Plane values
 
-## Available Scripts
+Use when the user asks to check Plane values or when labels/modules/cycles may have changed.
 
-Two Python scripts are available for Plane operations:
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/fetch-plane-values.py" \
+  --env ".env" \
+  --output "plane-values.json"
+```
 
-### 1. `create-plane-issues.py` - Create New Issues
+The script prints added/removed/changed values and the active cycle. The cache contains no secrets.
 
-Creates new Plane issues from markdown task files. Use for first-time task creation.
+### 2. Create Plane work items
 
-**Key Features:**
-- Cleans HTML descriptions (removes excessive whitespace)
-- Validates all required configuration
-- Reports success/failure per task with issue IDs
-- Supports `--skip N` to skip first N tasks in the file
+Always dry-run first:
 
-**Usage:**
 ```bash
 cd "local-docs/project-automation/task-creation/plane-api" && \
 python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
---file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
-[--skip N]
+  --file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-001.md" \
+  --env ".env" \
+  --values "plane-values.json" \
+  --dry-run
 ```
 
-### 2. `update-plane-issues.py` - Update Existing Issues
+After user approval for live creation, rerun without `--dry-run`. The script writes internal UUIDs to `Plane Task ID` and readable keys to `Plane Task Key`.
 
-Updates existing Plane issues with cleaned HTML descriptions. Use when issues already exist but need description cleanup.
+Creation enforcement order:
 
-**Key Features:**
-- Updates only the `description_html` field
-- Cleans HTML to remove excessive whitespace
-- Maps task file order to sequential issue identifiers
-- Supports `--skip N` parameter for partial file processing
+1. Create the work item
+2. Immediately write `Plane Task ID` and `Plane Task Key` back into the task file so reruns cannot duplicate an already-created issue
+3. Assign `Plane Module` through Plane's module work-item endpoint when present
+4. Assign `Parent Task` through the work-item update endpoint when present
+5. Assign `Cycle` through Plane's cycle work-item endpoint when present
 
-**Usage:**
+If any required assignment fails, the script exits with an error instead of reporting success; the task file will still contain the created issue UUID for recovery.
+
+### 3. Update Plane work items
+
+Use stored `Plane Task ID` values whenever possible:
+
 ```bash
 cd "local-docs/project-automation/task-creation/plane-api" && \
 python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
---file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
---start-issue "HAIRL-XXX" \
-[--skip N]
+  --file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-001.md" \
+  --env ".env" \
+  --dry-run
 ```
 
-**Example Scenarios:**
+Remove `--dry-run` only after confirming the planned UUID mappings.
 
-1. **Create all tasks in a new file:**
-   ```bash
-   python3 create-plane-issues.py --file "implementation-tasks-2026-02-13-001.md"
-   ```
+### 4. Set parents
 
-2. **Update existing issues HAIRL-877 to HAIRL-892 with cleaned HTML:**
-   ```bash
-   python3 update-plane-issues.py \
-   --file "implementation-tasks-2026-02-13-002.md" \
-   --start-issue "HAIRL-877" \
-   --skip 2
-   ```
-   (Skips first 2 tasks, updates starting from HAIRL-877)
+Use `set-parent-by-sequence.py` only when the parent and children already exist and sequence IDs are known. Prefer adding parent metadata before creation for new tasks.
 
-3. **Create tasks from a subset of a file:**
-   ```bash
-   python3 create-plane-issues.py \
-   --file "implementation-tasks-2026-02-13-002.md" \
-   --skip 5
-   ```
-   (Skips first 5 tasks, creates remaining ones)
+### 5. Add reference links
 
-## Workflow: Creating Issues from Markdown
+Use `add-reference-links-to-work-items.py` with `--link "Label=https://..."` or `--links-json`. The script has no built-in task-specific URLs.
 
-### 1. Load credentials
+## Validation
 
-Read `.env` from `local-docs/project-automation/task-creation/plane-api/.env`:
+Before live writes:
 
-```python
-env_path = "local-docs/project-automation/task-creation/plane-api/.env"
-env_vars = {}
-with open(env_path) as f:
-    for line in f:
-        line = line.strip()
-        if line and not line.startswith('#') and '=' in line:
-            key, value = line.split('=', 1)
-            env_vars[key.strip()] = value.strip().strip('"').strip("'")
-
-api_key = env_vars.get("PLANE_API_KEY", "")
-if not api_key:
-    raise SystemExit("PLANE_API_KEY not found in .env")
-```
-
-### 2. Recreate the script with HTML cleaning
-
-Before executing, write the script **exactly** to `scripts/create-plane-issues.py` or `scripts/update-plane-issues.py`. The scripts include:
-
-- HTML cleaning function to remove excessive whitespace
-- Proper credential loading from `.env`
-- Configuration validation
-- Clear error reporting
-- Skip parameter support for partial file processing
-
-**Critical: HTML Cleaning Function**
-
-Both scripts must include this function to ensure clean Plane descriptions:
-
-```python
-def clean_html(html: str) -> str:
-    """Clean HTML by removing excessive whitespace while preserving structure."""
-    # Remove excessive spaces between tags
-    html = re.sub(r'>\s+<', '><', html)
-    # Normalize multiple spaces to single space within text content
-    html = re.sub(r'  +', ' ', html)
-    # Remove leading/trailing whitespace from each line
-    lines = [line.strip() for line in html.split('\n') if line.strip()]
-    # Join with no extra newlines
-    return ''.join(lines)
-```
-
-This function must be called in `parse_tasks()` before returning task descriptions.
-
-### 3. Execute the appropriate script
-
-Choose based on whether issues already exist:
-
-**For NEW issues:**
-```bash
-cd "local-docs/project-automation/task-creation/plane-api" && \
-python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues.py" \
---file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md"
-```
-
-**For UPDATING existing issues:**
-```bash
-cd "local-docs/project-automation/task-creation/plane-api" && \
-python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
---file "/path/to/implementation-tasks-YYYY-MM-DD-XXX.md" \
---start-issue "HAIRL-XXX"
-```
-
-### 4. Report results
-
-Output:
-
-- Total tasks found and created/updated
-- Task name to Plane issue ID mapping
-- Any errors with likely fixes
-
-## Why Python First
-
-- `json.dumps()` correctly escapes quotes, newlines, and HTML in multiline descriptions
-- Lower failure rate than ad hoc bash string quoting
-- Clearer error handling and summary output
-
-## API Operations Reference
-
-| Operation | Method | Endpoint |
-|-----------|--------|----------|
-| List Users | GET | `/workspaces/{slug}/members/` |
-| List Projects | GET | `/workspaces/{slug}/projects/` |
-| List Modules | GET | `/workspaces/{slug}/projects/{id}/modules/` |
-| List Tags | GET | `/workspaces/{slug}/projects/{id}/labels/` |
-| List Issue Types | GET | `/workspaces/{slug}/projects/{id}/issue-types/` |
-| List States | GET | `/workspaces/{slug}/projects/{id}/states/` |
-| List Work Items | GET | `/workspaces/{slug}/projects/{id}/work-items/` |
-| Create Work Item | POST | `/workspaces/{slug}/projects/{id}/work-items/` |
-| Update Work Item | PATCH | `/workspaces/{slug}/projects/{id}/work-items/{work_item_id}/` |
-
-### Create Work Item Payload
-
-```json
-{
-  "name": "[FE TASK] Task Name",
-  "description_html": "<h2>Overview</h2><p>...</p>",
-  "project": "{project_id}",
-  "assignees": ["{assignee_id}"],
-  "state": "{state_id}",
-  "priority": "medium",
-  "type": "{work_item_type_id}"
-}
-```
-
-### Update Work Item Payload
-
-```json
-{
-  "description_html": "<h2>Overview</h2><p>...</p>"
-}
-```
-
-**Note:** The update script fetches issue UUIDs by querying all issues and matching `sequence_id` (e.g., HAIRL-892 → sequence_id: 892).
-
-## Error Handling
-
-| Code | Meaning | Fix |
-|------|---------|-----|
-| 401 | Invalid/expired API key | Regenerate key in Plane settings, update `.env` |
-| 400 | Validation error | Check required fields and HTML format |
-| 404 | Invalid IDs | Verify workspace/project/state/type IDs in `samasu-system-variables.md` |
-| 429 | Rate limit (60/min) | Add delay between requests |
-| 5xx | Server error | Retry with backoff |
-
-## References
-
-- System IDs: `local-docs/project-automation/task-creation/plane-api/samasu-system-variables.md`
-- Task artifacts: `local-docs/project-automation/task-creation/YYYY-MM-DD/implementation-tasks-*.md`
-- Plane API docs: https://developers.plane.so/api-reference/introduction
+1. Run `python3 -m py_compile scripts/*.py`
+2. Run `fetch-plane-values.py --dry-run` or a real refresh if cache update is needed
+3. Run create/update scripts with `--dry-run`
+4. Confirm `Plane Task ID` is blank before create, and UUID-shaped before update

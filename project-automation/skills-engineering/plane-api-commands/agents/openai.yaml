@@ -1,4 +1,4 @@
 interface:
   display_name: "Plane API Commands"
-  short_description: "Run Plane API list and issue creation workflows"
-  default_prompt: "Run Plane API operations for listing or creating work items."
+  short_description: "Refresh Plane values and create or update Hairline work items"
+  default_prompt: "Run Plane API operations for refreshing metadata, creating work items from task files, or updating existing work items."
