@@ -594,6 +594,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment: patient-country provenance normalized to `patients.location_id -> countries.name` with documented legacy fallback, unsupported geolocation fallback removed, system PRD FR-014 SLA wording aligned to platform-wide scope, and Screen 6 dependencies expanded to `S-03` and `S-05`
 - **2026-04-18**: `FR014_VERIFICATION_FIXES_V35_2026-04-18.md` - FR-014 PRD v3.5: Screen 6 branding scoped to `providers.profile_image` (no brand colors in schema); Rule 10 FX fallback capped at 48h; provider-side analytics widgets formally accepted as PRD-derived (Assumption 8) so future verifications do not re-flag them as transcription gaps; legacy `patients.location` fallback given a UI indicator requirement
 - **2026-05-06**: `FR014_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-05-06.md` - Provider-side layout verification for FR-014 Screens 2-6; Screen 2 and 5 are complete, while Screen 3 has a legend placeholder bug, Screen 4 has patient-country metric and missing-disclosure gaps, and Screen 6 misses export-source preselection
+- **2026-05-11**: `FR014_FULL_DESIGN_LAYOUT_VERIFICATION_2026-05-11.md` - Full two-tenant FR-014 layout verification for Screens 2-13 (Screen 1 excluded as already done); provider flow is complete, admin flow is partial due to a Screen 11 aftercare KPI labeling mismatch, and all 12 in-scope screens now have layout coverage
 - **2026-04-20**: `FR017_DESIGN_LAYOUT_VERIFICATION_2026-04-20.md` - FR-017 full-scope layout verification; admin billing/investigation surfaces are mostly designed, provider payout batch states still have confirmation mismatches, `provider-earnings/` now covers Screen 9, and `payout-history/` now covers a partial Screen 10 payout-detail state while the parent list view remains missing
 
 ### Design Specifications
@@ -669,6 +670,12 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 - `NOTIFICATION_DISPATCH_REPORT_2026-05-07.md` - Created a patient notification dispatch audit report for `rosario12@example.com / password`, listing all 76 persisted inbox notifications with payload summaries and deep-link fields
 
+### 2026-05-11/ (1 file)
+
+#### **FR-014 Full Design Layout Verification**
+
+- `FR014_FULL_DESIGN_LAYOUT_VERIFICATION_2026-05-11.md` - Verified FR-014 across Provider and Admin analytics Screens 2-13 (Screen 1 excluded); provider flow is `🟢 COMPLETE`, admin flow is `🟡 PARTIAL`, and the remaining functional mismatch is the mislabeled aftercare KPI on Screen 11
+
 ### 2026-05-06/ (3 files)
 
 #### **FR-014 Provider Design Layout Verification**
@@ -685,4 +692,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 7, 2026
+**Last Updated**: May 11, 2026
