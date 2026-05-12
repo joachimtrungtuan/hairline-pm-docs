@@ -3,3 +3,6 @@
 
 # Task creation folder
 task-creation/
+
+# Python cache
+__pycache__/

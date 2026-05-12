@@ -172,7 +172,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 | Treatment Dates | multiselect (dates) | Yes | Subset of patient-requested ranges | Non-overlapping; from FR-003 ranges |
 | Price per Date | repeater | Yes | Price for each selected date | Currency rules; one-to-one with dates |
 | Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time (start) | Must map to one of the selected Treatment Dates; timezone required |
-| Promotion | select/text | No | Optional promotion | Valid code or text note |
+| Promotion | select-or-create | No | Optional promotion: select from the provider's reusable promotions list OR open the inline create modal to define an on-the-spot promotion bound to this quote (per FR-019 Screen 9 Mode 1 / Mode 2) | Must resolve to a valid `PromotionProgram` id. Free-text annotations are not permitted — every applied discount must correspond to a structured PromotionProgram record |
 | Clinician | select | Yes | Responsible clinician | Must be active/eligible |
 | Treatment Plan (per-day) | repeater | Yes | Consecutive per-day plan entries | No date gaps; sequential dates |
 | Note | textarea | No | Additional note | Max length enforced |
@@ -247,7 +247,7 @@ Notes:
 | Appointment Slot (Pre-Scheduled) | datetime | Yes | Pre-scheduled appointment date/time (start) | Read-only; timezone required |
 | Custom Services | list | No | Provider-defined services | Name/desc/cost shown |
 | Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
-| Promotion | text/select | No | Promotion applied | Code or description |
+| Promotion | reference | No | Linked `PromotionProgram` applied to the quote (name, type, value, scope) | Read-only; resolves from `promotionId` |
 | Clinician | text | Yes | Responsible clinician | Must be eligible |
 | Treatment Plan (per-day) | table | Yes | Consecutive per-day entries | No gaps/overlaps |
 | 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot |
@@ -327,7 +327,7 @@ Notes:
 | Quote Summary | group | Yes | Treatment, package, custom services, per-day plan | Read-only |
 | Dates & Prices | table | Yes | Each selected date with price | One-to-one mapping |
 | Estimated Grafts | number | Yes | Estimated graft count | Positive integer |
-| Promotion | text/select | No | Promotion applied | Code or description |
+| Promotion | reference | No | Linked `PromotionProgram` applied to the quote (name, type, value, scope) | Read-only; resolves from `promotionId` |
 | Clinician | text | Yes | Responsible clinician | Must be eligible |
 | Treatment Plan (per-day) | table | Yes | Consecutive per-day entries | No gaps/overlaps |
 | 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot |
@@ -352,7 +352,7 @@ Notes:
 | Estimated Grafts | number | Cond. | Adjust graft count | Positive integer; reason required |
 | Custom Services | repeater | Cond. | Add/edit provider-defined services | Name/desc/cost; reason required |
 | Treatment Plan (per-day) | repeater | Cond. | Edit consecutive per-day plan | No gaps/overlaps; reason required |
-| Promotion | text/select | Cond. | Add/change promotion | Valid code; reason required |
+| Promotion | select-or-create | Cond. | Add, replace, or remove the linked `PromotionProgram` on the quote (admin override). Inline create permitted with `scope = AD_HOC_QUOTE_BOUND` per FR-019 Screen 9 Mode 2 | Must resolve to a valid PromotionProgram id (or null to remove); reason required |
 | Notes | textarea | No | Admin note | Stored with audit |
 | Clinician | select | Cond. | Change clinician | Must be eligible |
 | Audit Reason | textarea | Yes | Reason for change | Required for any edit |
@@ -424,7 +424,8 @@ Notes:
 
 ## Key Entities
 
-- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], appointmentSlotAt, appointmentTimeZone, clinicianId, promotionId, promotionNote, plan, note, status, expiresAt, createdAt, updatedAt
+- **Quote**: id, inquiryId, providerId, treatmentId, packageId, customizations[], estimatedGrafts, datePrices[], appointmentSlotAt, appointmentTimeZone, clinicianId, promotionId, plan, note, status, expiresAt, createdAt, updatedAt
+  - `promotionId` resolves to a structured `PromotionProgram` (FR-019). It may reference either a `REUSABLE` provider promotion (Mode 1 selection) or an `AD_HOC_QUOTE_BOUND` provider promotion created inline (Mode 2). The legacy free-text `promotionNote` field is removed as of v1.8 — see FR-019 v1.5.
   - `plan` (Treatment Plan) is an ordered array of per-day entries `{ dayNumber, date, description }`. This is used downstream by **FR-010** to seed the In Progress view day descriptions (providers can update day status + notes in FR-010, but day descriptions remain read-only there).
   - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**
   - Relationships: belongsTo Inquiry; belongsTo Provider; hasMany QuoteVersion; hasMany QuoteAudit
@@ -591,6 +592,7 @@ Acceptance Scenarios:
 | 2026-02-24 | 1.5 | Added `travel_path` + `included_services` fields to Quote Creation/Edit (Screen 1) to define post-confirmation travel responsibilities and package travel inclusions consumed by FR-008. | AI |
 | 2026-02-25 | 1.6 | Removed `travel_path` as a manual select field. Travel path is now automatically derived from `included_services`: if flight or hotel is included → Path A (provider_included), otherwise → Path B (patient_self_booked). Simplified `included_services` to a standalone checklist without cross-field conditional gating. | AI |
 | 2026-03-03 | 1.7 | Clarified Treatment Plan (per-day) schema: defined per-day entry fields (dayNumber/date/description) and documented `plan` structure used downstream by FR-010 In Progress day descriptions. | AI |
+| 2026-05-12 | 1.8 | FR-019 alignment: Promotion field on Screen 1 retyped from `select/text` to `select-or-create` requiring resolution to a structured `PromotionProgram` (FR-019 Screen 9 Mode 1 list-selection OR Mode 2 inline create with `scope = AD_HOC_QUOTE_BOUND`). Screen 3 and Screen 5 Promotion fields retyped to `reference` (read-only resolution of `promotionId`). Screen 7 Admin Inline Edit Promotion field documented for admin override with inline-create permitted. Quote entity `promotionNote` free-text field **removed** — every applied discount must correspond to a structured PromotionProgram record. | Claude |
 
 ## Appendix: Approvals
 

@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-05-12/ (1 file)
+
+#### **FR-019 Screen Specifications Restructure + FR-004 Alignment**
+
+- `FR019_SCREEN_SPECIFICATIONS_RESTRUCTURE_2026-05-12.md` - Major restructure of FR-019 Screen Specifications (v1.3 → v1.5): unified three-program model (Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued), expanded screen inventory from 3 to 11 type-aware screens, preserved Applied vs Completed redemption state distinction, expanded Key Entities (PromotionProgram, PromotionCode, Adoption, Application). v1.5 follow-up: aligned with FR-004 by introducing `scope` (REUSABLE / AD_HOC_QUOTE_BOUND) and `bound_quote_id` on PromotionProgram, split Screen 9 into two entry modes (Standalone vs Inline-from-Quote). FR-004 v1.8: Promotion fields retyped across Screens 1/3/5/7, free-text `promotionNote` field removed (every discount must be a structured PromotionProgram).
+
 ### 2026-05-07/ (3 files)
 
 #### **Notification Dispatch Report**
@@ -596,6 +602,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-06**: `FR014_PROVIDER_DESIGN_LAYOUT_VERIFICATION_2026-05-06.md` - Provider-side layout verification for FR-014 Screens 2-6; Screen 2 and 5 are complete, while Screen 3 has a legend placeholder bug, Screen 4 has patient-country metric and missing-disclosure gaps, and Screen 6 misses export-source preselection
 - **2026-05-11**: `FR014_FULL_DESIGN_LAYOUT_VERIFICATION_2026-05-11.md` - Full two-tenant FR-014 layout verification for Screens 2-13 (Screen 1 excluded as already done); provider flow is complete, admin flow is partial due to a Screen 11 aftercare KPI labeling mismatch, and all 12 in-scope screens now have layout coverage
 - **2026-04-20**: `FR017_DESIGN_LAYOUT_VERIFICATION_2026-04-20.md` - FR-017 full-scope layout verification; admin billing/investigation surfaces are mostly designed, provider payout batch states still have confirmation mismatches, `provider-earnings/` now covers Screen 9, and `payout-history/` now covers a partial Screen 10 payout-detail state while the parent list view remains missing
+- **2026-05-12**: `FR019_SCREEN_SPECIFICATIONS_RESTRUCTURE_2026-05-12.md` - FR-019 v1.4–v1.5 major restructure + FR-004 v1.8 alignment: unified three-program model with 11 type-aware screens, Applied vs Completed redemption state distinction preserved, `scope` (REUSABLE / AD_HOC_QUOTE_BOUND) added with inline-create Mode 2, FR-004 `promotionNote` field removed
 
 ### Design Specifications
 
@@ -676,6 +683,12 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 - `FR014_FULL_DESIGN_LAYOUT_VERIFICATION_2026-05-11.md` - Verified FR-014 across Provider and Admin analytics Screens 2-13 (Screen 1 excluded); provider flow is `🟢 COMPLETE`, admin flow is `🟡 PARTIAL`, and the remaining functional mismatch is the mislabeled aftercare KPI on Screen 11
 
+### 2026-05-12/ (1 file)
+
+#### **FR-019 Screen Specifications Restructure + FR-004 Alignment**
+
+- `FR019_SCREEN_SPECIFICATIONS_RESTRUCTURE_2026-05-12.md` - FR-019 v1.3 → v1.5: three-program model + 11-screen restructure (v1.4) plus FR-004 alignment introducing `scope` and inline-create Mode 2 (v1.5); FR-004 v1.7 → v1.8 retypes Promotion fields across Screens 1/3/5/7 and removes the free-text `promotionNote` field
+
 ### 2026-05-06/ (3 files)
 
 #### **FR-014 Provider Design Layout Verification**
@@ -692,4 +705,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 11, 2026
+**Last Updated**: May 12, 2026

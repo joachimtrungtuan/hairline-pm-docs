@@ -1115,7 +1115,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 ### FR-019: Promotions & Discount Management
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: A-06: Discount & Promotion Management
+**Module(s)**: A-06: Discount & Promotion Management | PR-05: Financial Management & Reporting
 
 **Requirements**:
 
