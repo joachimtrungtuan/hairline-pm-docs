@@ -150,3 +150,9 @@ Five issues resolved from post-verification review:
 - **Screen 2 AC-4**: Added negative-path acceptance criterion rejecting `Auto-applied` mode on Admin-via-Provider (Both-Fees) programs.
 - **PromotionCode status renamed**: `reserved` → `in-progress` in Screen 5 codes table, Screen 6 redemption funnel, and Key Entities; added disambiguation note explaining that `PromotionCode.status = in-progress` and `Application.state = APPLIED` describe the same moment from different entity perspectives.
 - **Screen 2 Notes**: Added one-line explanation of why Application Mode option sets differ between admin and provider forms.
+
+## Minor Follow-up Corrections (2026-05-14)
+
+- Updated FR-022 A-06 search/filter mapping from stale `FR-019 / Screen 4: Discount Code Catalog` to current `FR-019 / Screen 1: Promotion Program Hub`.
+- Added FR-019 v1.8 approval metadata cleanup: Technical Lead and Stakeholder rows now match the PRD's Verified & Approved status.
+- Updated FR-031 A-06 permission wording from `Approve Provider Discounts` to `Manage Admin Campaign Adoptions` so access control matches FR-019's current approval model.

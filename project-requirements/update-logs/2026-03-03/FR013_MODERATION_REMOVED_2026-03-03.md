@@ -3,6 +3,7 @@
 **Date**: 2026-03-03
 **Report Type**: PRD Revision — Transcription Alignment
 **Affected Documents**:
+
 - `local-docs/project-requirements/functional-requirements/fr013-reviews-ratings/prd.md`
 - `local-docs/reports/2026-02-05/missing-mobile-flows-design-complement.md` (P05.3 flow)
 
@@ -76,3 +77,8 @@ The moderation workflow (Submit → Pending Moderation → Admin Approves → Pu
 
 **Version**: FR-013 v1.2
 **Author**: Product alignment (2026-03-03)
+
+## Minor Follow-Up Updates
+
+- **2026-05-14**: Restructured FR-013 `Screen Specifications` into explicit tenant subsections (`Patient Platform`, `Admin Platform`, `Provider Platform`) and corrected heading hierarchy so each screen is now nested under its tenant as `#### Screen N`.
+- **2026-05-14**: Aligned FR-013 review data structure to the current patient app form by adding read-only context fields (`clinic_name`, `treatment_name`), canonical rating keys (`overall/facility/staff/results/value`), explicit patient payload contract (`feedback_text`, `photos[]`), and cross-tenant schema consistency requirements for Provider/Admin review surfaces.

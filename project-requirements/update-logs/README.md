@@ -6,6 +6,22 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-05-14/ (1 file)
+
+#### **FR-013 Review Flow Scope Expansion**
+
+- `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4 major scope alignment: added completed-treatment prerequisite, expanded to 8 review-management screens across Patient/Provider/Admin, moved admin insert/edit reviews into current phase, replaced patient direct deletion with admin-decided takedown request workflow, and synchronized workflows/requirements/entities/metrics accordingly
+
+### 2026-05-13/ (2 files)
+
+#### **Launch Plan**
+
+- `LAUNCH_PLAN_2026-05-13.md` - Created the Hairline Platform Launch Plan for May 14 – June 16, 2026: four development sprints + launch sprint, full module allocation across all three tenants, Mermaid Gantt charts, day-by-day sprint schedules, ceremony cadence, website and App Store timelines, non-dev milestones, and risk register
+
+#### **Mobile Bug Report Pass**
+
+- `MOBILE_BUG_REPORT_PASS_2026-05-13.md` - Created the May 13 mobile bug report skeleton (`HL78`), replaced the starter instruction row with the first real bug entry, and clarified that the missing AI head scan background-removal and annotation steps are a mobile-only integration gap rather than a launch-plan update
+
 ### 2026-05-12/ (1 file)
 
 #### **FR-019 Screen Specifications Restructure + FR-004 Alignment**
@@ -563,6 +579,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR010_ADMIN_OVERRIDE_SOFT_DELETE_DAY_MODEL_2026-03-03.md` - FR-010 admin override + soft delete + day-only In Progress model; FR-004 plan schema clarification
 - **2026-03-03**: `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated; footer confirmed aligned to template
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
+- **2026-05-14**: `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4 scope expansion: admin insert/edit reviews moved in-phase, takedown request approval workflow added (patient cannot directly delete), completed-treatment prerequisite clarified, and screen/workflow model expanded for patient list/detail, provider filtering/detail, and admin takedown queue operations
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
@@ -705,4 +722,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 12, 2026
+**Last Updated**: May 14, 2026
