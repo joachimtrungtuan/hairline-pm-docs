@@ -1,6 +1,6 @@
 # FR-013 - Reviews & Ratings
 
-**Module**: P-02: Quote Request & Management | A-01: Patient Management & Oversight
+**Module**: P-02: Quote Request & Management | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | S-03: Notification Service | S-05: Media Storage Service
 **Feature Branch**: `fr013-reviews-ratings`
 **Created**: 2025-11-11
 **Status**: Draft
@@ -121,9 +121,9 @@ Steps:
 - Steps:
   1. Admin reviews request reason, review content, and compliance context.
   2. Admin approves or rejects request with decision note.
-  3. System applies decision: approved -> review unpublished/archived; rejected -> review remains published.
+  3. System applies decision: approved -> review unpublished/archived and provider rating metrics recalculated; rejected -> review remains published.
   4. System notifies patient of decision and reason.
-- Outcome: Takedown request resolved with audit log and patient notification.
+- Outcome: Takedown request resolved with audit log, provider metrics updated, and patient notification.
 
 ### B1: Provider Response
 
@@ -137,7 +137,7 @@ Steps:
 
 ### B2: Flagging/Inappropriate Content
 
-- Trigger: Content flagged by users or keyword detection.
+- Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement.
 - Steps: System queues flagged content for admin review; Admin may redact, unpublish, or uphold.
 - Outcome: Policy-compliant content remains; violations are removed with audit record.
 
@@ -162,7 +162,7 @@ Data Fields:
 | Staff Rating       | 1-5 stars   | Yes      | Staff professionalism                           | Integer 1-5 |
 | Results Rating     | 1-5 stars   | Yes      | Results satisfaction                            | Integer 1-5 |
 | Value Rating       | 1-5 stars   | Yes      | Value for money                                 | Integer 1-5 |
-| Feedback           | textarea    | Yes      | Narrative experience                            | 100-2000 chars |
+| Feedback           | textarea    | Yes      | Narrative experience                            | 100-2000 chars; 100-char minimum ensures reviews contain enough substance to be useful to other patients |
 | Photos             | image list  | No       | Optional before/after images                    | Up to 5 files; jpg/png; max 10MB each |
 
 Business Rules:
@@ -204,7 +204,8 @@ Data Fields:
 | Header sort icon | action icon | No | Sort/reorder action in top-right header | Opens sort options |
 | Review list | list | Yes | All patient-submitted reviews grouped by treatment case/provider | Sorted by newest first; paginated |
 | Rating + time row | group | Yes | Star rating with relative time (e.g., "5 days ago") | Read-only |
-| Status | badge | Yes | Published / Submitted / Removed | Read-only status from system; color-coded |
+| Status | badge | Yes | Published / Removed | Patient-facing review visibility status; color-coded |
+| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown only when a takedown request exists; sourced from takedown request workflow, not review status |
 | Treatment line | text | Yes | "Treatment: {treatment_name}" | Read-only |
 | Review excerpt | text | Yes | Truncated narrative preview | Max 2 lines + "See more" affordance |
 | Provider row | group | Yes | Provider avatar + provider name | Read-only |
@@ -215,7 +216,9 @@ Data Fields:
 Business Rules:
 
 - Includes all submitted reviews for the logged-in patient across all completed treatment cases.
-- Status badge uses app-facing labels: `Published`, `Submitted`, `Removed`.
+- Review status badge uses app-facing labels: `Published`, `Removed`.
+- `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review.
+- Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`).
 - `Removed` means no longer publicly visible due to admin action or approved takedown.
 - Default list sort is latest submission date descending.
 
@@ -231,7 +234,8 @@ Data Fields:
 | --- | --- | --- | --- | --- |
 | Review detail payload | card | Yes | Full ratings, feedback, photos, provider, treatment context | Read-only in detail mode |
 | Review submission date | datetime | Yes | Date/time the review was submitted | Read-only |
-| Current status | badge | Yes | Published / Submitted / Removed | Read-only |
+| Current status | badge | Yes | Published / Removed | Read-only review visibility status |
+| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown when the review has an associated takedown request |
 | Provider response block | card | No | Provider response content, timestamp, and role badge | Shown only when provider response exists |
 | Admin removal reason | text | No | Reason supplied by admin when review is removed | Shown only when status = Removed |
 | Edit review | button | Conditional | Opens pre-filled edit form | Visible only when status = Published |
@@ -248,7 +252,7 @@ Business Rules:
 - `Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate).
 - Takedown request is submitted from a bottom sheet/modal with optional message and mandatory retention-policy notice.
 - Takedown request creates a pending admin review record.
-- While request is pending, review remains visible unless manually removed by admin.
+- While request status is `Pending`, review remains `Published` unless manually removed by admin.
 
 #### Screen 4: Patient – Provider Profile Reviews Section
 
@@ -520,7 +524,7 @@ Admin-Seeded Review Policy:
 
 ### Provider Efficiency Metrics
 
-- SC-005: 80% of published reviews receive a provider response within 5 business days.
+- SC-005 *(Business KPI — tracked via FR-014 analytics, not enforced by this module)*: 80% of published reviews receive a provider response within 5 business days.
 - SC-006: Providers can locate any review and respond in ≤ 60 seconds.
 
 ### Admin Management Metrics
@@ -548,6 +552,11 @@ Admin-Seeded Review Policy:
 
 - P-01: Auth & Profile Management – identity and role context.
 - P-03: Booking & Payment – confirm procedure completion and dates for eligibility/time gating.
+- PR-06: Provider Profile & Settings Management – provider review display context, provider response surface, and provider review notification preference consumption.
+- FR-020: Notifications & Alerts / S-03 Notification Service – invite/reminder delivery, provider response alerts, admin removal notices, and takedown decision notifications.
+- FR-022: Search & Filtering – provider/admin review list filters and search fields must remain represented in the FR-022 master reference when filter criteria change.
+- FR-030: Notification Rules & Configuration – configurable review event mapping, recipient/channel rules, reminder cadence, and notification templates.
+- FR-032: Provider Dashboard Settings & Profile Management – provider organization-level review notification preference toggle and channel settings.
 - S-05: Media Storage Service – secure handling of review photos.
 - S-03: Notification Service – invitations, reminders, admin removal notifications, and provider response alerts.
 
@@ -747,7 +756,7 @@ No unresolved clarifications remain for V1 scope. Patient can view provider/clin
 
 ## Key Entities
 
-- Review: `overall_rating`, `facility_rating`, `staff_rating`, `results_rating`, `value_rating`, `feedback_text`, status (Published / Submitted / Removed), timestamps, links (patient, procedure, provider), context (`clinic_name`, `treatment_name`), source type (patient-submitted / admin-seeded "Verified Off-platform"), flagged status.
+- Review: `overall_rating`, `facility_rating`, `staff_rating`, `results_rating`, `value_rating`, `feedback_text`, status (Published / Removed; admin-internal Flagged state), timestamps, links (patient, procedure, provider), context (`clinic_name`, `treatment_name`), source type (patient-submitted / admin-seeded "Verified Off-platform"), flagged status.
 - ReviewPhoto: file references, thumbnails, alt text; associated review ID.
 - TakedownRequest: review ID, requester (patient), message (optional), status (Pending / Approved / Rejected), decision note, decision actor (admin), created/decided timestamps.
 - AdminAction: action type (insert/edit/remove/takedown_approve/takedown_reject), reason, admin identity, timestamp, changes made; associated review ID and/or takedown request ID.
@@ -766,9 +775,12 @@ No unresolved clarifications remain for V1 scope. Patient can view provider/clin
 | 2026-05-14 | 1.3     | Aligned Screen Specifications to the current patient review form data structure: added read-only clinic/treatment context fields, canonicalized rating field names (`overall/facility/staff/results/value`), added explicit patient payload contract, and synchronized Provider/Admin screens + requirements to consume the same canonical schema across tenants. | Product alignment (2026-05-14) |
 | 2026-05-14 | 1.4     | Scope uplift per transcription and current UI flow: (1) Admin insert/edit reviews moved to in-phase scope; (2) patient direct delete removed and replaced with takedown-request workflow + admin approve/reject decisioning; (3) main flow prerequisite clarified as completed treatment case; (4) screen model expanded to 8 screens (Patient list/detail+takedown, Provider list/filter/detail, Admin list/detail+takedown queue); (5) workflows, user stories, requirements, entities, and metrics aligned to multi-case/provider-admin operations. | Product alignment (2026-05-14) |
 | 2026-05-14 | 1.5     | Takedown flow UI alignment pass using current visual flow + P05.3 design-complement references: added patient review detail provider-response section, pre-filled edit behavior, bottom-sheet takedown submission with optional message and mandatory 7-year retention notice, list sort/empty-state details, and corresponding requirement/entity refinements. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.6     | Patient "My Reviews" list visual alignment pass: updated Screen 2 to match card UI (title, header sort icon, rating+time row, treatment line, excerpt with "See more", provider avatar/name row, and status badges `Published/Submitted/Removed`), then synchronized related status vocabulary in patient detail and review entity definitions. | Product alignment (2026-05-14) |
+| 2026-05-14 | 1.6     | Patient "My Reviews" list visual alignment pass: updated Screen 2 to match card UI (title, header sort icon, rating+time row, treatment line, excerpt with "See more", provider avatar/name row, and status badges), then synchronized related status vocabulary in patient detail and review entity definitions. | Product alignment (2026-05-14) |
 | 2026-05-14 | 1.7     | Provider review operations refinement: added patient filter to provider review list filters and introduced detailed inline Provider Response Composer interaction model within Review Detail, including validation, cancel/submit behavior, and post-publish immutability rules. | Product alignment (2026-05-14) |
 | 2026-05-14 | 1.8     | Screen specification cleanup and coverage pass: replaced non-incremental screen labeling with strict Screen 1-10 numbering, added patient-facing Provider Profile Reviews Section as an embedded part of the provider profile/quote-review flow, merged provider response composer into Provider Review Detail, added Admin Review Settings & Export screen, expanded display/settings/export requirements, and synchronized user stories/entities/metrics. | Product alignment (2026-05-14) |
+| 2026-05-14 | 1.9     | Verification follow-up: aligned system PRD source-of-truth to immediate review publication with post-publication admin flagging/removal, and expanded FR-013 module/dependency traceability for PR-06, S-03, S-05, FR-020, FR-022, FR-030, and FR-032. | Product alignment (2026-05-14) |
+| 2026-05-14 | 1.10    | Backend-aligned review status vocabulary: removed `Submitted` as a review status, kept patient-facing review status to `Published` / `Removed`, documented `Flagged` as admin-internal, and separated takedown request states (`Pending` / `Approved` / `Rejected`) from review visibility status. | Product alignment (2026-05-14) |
+| 2026-05-14 | 1.11    | Verification fixes: (1) B2 trigger narrowed to system-automated detection only — user-initiated flagging moved to future enhancement; (2) Screen 1 feedback field validation note expanded to document 100-char minimum rationale; (3) A4 step 3 updated to include provider rating metrics recalculation on approved takedown; (4) SC-005 reclassified as a Business KPI tracked via FR-014, not a system-enforced success criterion. | Verification alignment (2026-05-14) |
 
 ---
 

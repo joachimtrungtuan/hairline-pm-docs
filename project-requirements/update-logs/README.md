@@ -6,11 +6,15 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-05-14/ (1 file)
+### 2026-05-14/ (2 files)
+
+#### **FR-013 Verification Fixes (Multi-document)**
+
+- `FR013_VERIFICATION_FIXES_2026-05-14.md` — 8-issue verification resolution across FR-013, FR-032, FR-020, FR-022, system-prd.md: fixed provider response scope conflict (FR-032 aligned to FR-013), added 3 missing review notification events to FR-020, corrected stale FR-013 screen reference in FR-022, narrowed B2 flagging trigger, documented feedback min-length rationale, added metrics recalculation to A4, reclassified SC-005 as business KPI, added patient review edit to system PRD
 
 #### **FR-013 Review Flow Scope Expansion**
 
-- `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4 major scope alignment: added completed-treatment prerequisite, expanded to 8 review-management screens across Patient/Provider/Admin, moved admin insert/edit reviews into current phase, replaced patient direct deletion with admin-decided takedown request workflow, and synchronized workflows/requirements/entities/metrics accordingly
+- `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4-v1.10 scope and verification alignment: added completed-treatment prerequisite, expanded review-management screens across Patient/Provider/Admin, moved admin insert/edit reviews into current phase, replaced patient direct deletion with admin-decided takedown request workflow, aligned system PRD to immediate publication with post-publication admin flagging/removal, expanded module/dependency traceability for PR-06/S-03/S-05/FR-020/FR-022/FR-030/FR-032, and removed `Submitted` from the review status vocabulary
 
 ### 2026-05-13/ (2 files)
 
@@ -579,7 +583,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR010_ADMIN_OVERRIDE_SOFT_DELETE_DAY_MODEL_2026-03-03.md` - FR-010 admin override + soft delete + day-only In Progress model; FR-004 plan schema clarification
 - **2026-03-03**: `FR010_PRD_VERIFIED_2026-03-03.md` - FR-010 PRD status set to Verified & Approved; approvals updated; footer confirmed aligned to template
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
-- **2026-05-14**: `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4 scope expansion: admin insert/edit reviews moved in-phase, takedown request approval workflow added (patient cannot directly delete), completed-treatment prerequisite clarified, and screen/workflow model expanded for patient list/detail, provider filtering/detail, and admin takedown queue operations
+- **2026-05-14**: `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4-v1.10 scope and verification alignment: admin insert/edit reviews moved in-phase, takedown request approval workflow added, completed-treatment prerequisite clarified, review publication aligned to immediate publish with post-publication admin flagging/removal, module/dependency traceability expanded for provider/settings/notification/search/media ownership, and backend-aligned review status vocabulary set to Published/Removed with admin-internal Flagged
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung

@@ -349,7 +349,7 @@ The table below maps every platform screen that requires search and/or filter fu
 | Admin | A-01 | FR-005 | Quote Acceptance Table | `FR-005 / Screen 5` | — | ✓ | P1 |
 | Admin | A-01 | FR-006 | Admin Bookings Table | `FR-006 / Screen 5` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-007 | Patient Payment Progress Dashboard | `FR-007 / Screen 5` | ✓ | ✓ | P1 |
-| Admin | A-01 | FR-013 | Review Management Dashboard | `FR-013 / Screen 2` | — | ✓ | P1 |
+| Admin | A-01 | FR-013 | Review Management Dashboard | `FR-013 / Screen 7` | — | ✓ | P1 |
 | Admin | A-01 | FR-016 | Patient Management List | `FR-016 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-016 | Admin Actions Audit Log | `FR-016 / Screen 7` | — | ✓ | P1 |
 | Admin | A-01 | FR-016 | Pending Data Requests | `FR-016 / Screen 8` | ✓ | — | P1 |
@@ -1000,7 +1000,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-013 / Screen 2: Review Management Dashboard [P1 — MVP]
+###### FR-013 / Screen 7: Review Management Dashboard [P1 — MVP]
 
 **Purpose**: Admin filters all platform reviews by date, provider, rating, status, and flag.
 
@@ -1884,7 +1884,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
   | Admin (A-01) | FR-005 | Screen 5 (Quote Acceptance Table) |
   | Admin (A-01) | FR-006 | Screen 5 (Admin Bookings Table) |
   | Admin (A-01) | FR-007 | Screen 5 (Patient Payment Progress Dashboard) |
-  | Admin (A-01) | FR-013 | Screen 2 (Review Management Dashboard) |
+  | Admin (A-01) | FR-013 | Screen 7 (Review Management Dashboard) |
   | Admin (A-01) | FR-016 | Screens 1, 7, 8 (Patient Management List, Audit Log, Pending Data Requests) |
   | Admin (A-02) | FR-015 | Screens 1, 3/Tab 5, 3/Tab 6 (Provider Management List, Reviews Tab, Documents List) |
   | Admin (A-03) | FR-011 | Screen 13 (Admin Aftercare Cases List) |
@@ -2209,6 +2209,7 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 | 2026-04-13 | 2.7 | Removed unsupported admin global-search/cross-module-search entry-point claims. Per user direction, provider-selection contract changes for Screen 7a were limited to `system-prd.md`; FR-022 content was otherwise left unchanged for that topic. | Codex |
 | 2026-04-13 | 2.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer metadata to match `prd-template.md`. | Documentation governance (2026-04-13) |
 | 2026-05-14 | 2.9 | FR-019 follow-up alignment: updated A-06 search/filter mapping from stale `FR-019 / Screen 4: Discount Code Catalog` to current `FR-019 / Screen 1: Promotion Program Hub`; added Program Type, Scope, and Funding Model filters to match FR-019 v1.7. | Codex |
+| 2026-05-14 | 2.10 | Corrected stale FR-013 screen reference: updated all three occurrences of `FR-013 / Screen 2 (Review Management Dashboard)` to `FR-013 / Screen 7` following FR-013 v1.8 screen renumbering. | Verification alignment (2026-05-14) |
 
 ---
 

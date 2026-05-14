@@ -79,6 +79,9 @@ In Scope:
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
+| Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
+| Reviews | Review Removed by Admin | `review.removed_by_admin` | Patient | Notifies reviewer when admin removes their published review for policy/compliance reasons |
+| Reviews | Takedown Request Decided | `review.takedown_decided` | Patient | Notifies patient of admin approve/reject decision on their takedown request |
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
 | Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
 | Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
@@ -410,6 +413,7 @@ Acceptance Scenarios:
 | 2026-02-05 | 1.5     | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes to reflect patient-initiated cancellation; added new `quote.cancelled_inquiry` event for quote cascade notifications; added content guideline that cancellation reason is patient-private | AI     |
 | 2026-02-09 | 1.6     | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (aligns with FR-003 Workflow 5 mandatory confirmation). Added MVP default channel notes (Email + Push) to both cancellation events. Expanded Screen 1 filter types to enumerate all categories explicitly. Added User Story 4 (cancellation notification delivery with privacy scenarios). Fixed Last Updated date. | AI     |
 | 2026-02-10 | 1.7     | FR-003 verification fixes: Updated stale "Screen 11a" reference to "Screen 8b" in `inquiry.cancelled` event notes (FR-003 v1.6 renumbering). Aligned cancellation notification SLA from "within 2 seconds" to "within 5 minutes" to match FR-003 Workflow 5 step 4. | AI     |
+| 2026-05-14 | 1.8     | Added three missing review notification events to the event catalog: `review.response_posted` (patient notified when provider responds), `review.removed_by_admin` (patient notified when admin removes review), `review.takedown_decided` (patient notified of takedown approve/reject decision). Required by FR-013 REQ-013-016. | Verification alignment (2026-05-14) |
 
 ---
 

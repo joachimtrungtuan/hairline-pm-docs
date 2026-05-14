@@ -964,15 +964,16 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 ### FR-013: Reviews & Ratings
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: P-02: Quote Request & Management | A-01: Patient Management & Oversight
+**Module(s)**: P-02: Quote Request & Management | PR-06: Profile & Settings Management | A-01: Patient Management & Oversight | S-03: Notification Service | S-05: Media Storage Service
 
 **Requirements**:
 
 - Patients MUST be able to submit review and rating after procedure completion (after 3+ months)
+- Patients MUST be able to edit their published review at any time
 - Reviews MUST include: overall rating (1-5 stars), category ratings (facility, staff, results), written feedback
 - System MUST verify that only patients who completed procedure can submit reviews
 - Patients MUST be able to upload before/after photos with review (optional)
-- Reviews MUST be published only after admin moderation (to filter spam/inappropriate content)
+- Reviews MUST be published immediately upon valid patient submission, with post-publication admin flagging/removal available for spam, inappropriate content, or compliance concerns
 - Providers MUST be able to respond to reviews
 - System MUST calculate and display provider average rating
 - System MUST display review count and distribution (5-star, 4-star, etc.)

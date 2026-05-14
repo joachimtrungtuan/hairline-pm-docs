@@ -52,7 +52,7 @@ Expanded FR-013 to align with current phase scope and the latest reviewed UI flo
 
 ## Resulting Version State
 
-- FR-013 PRD updated to **v1.8**
+- FR-013 PRD updated to **v1.10**
 - `Last Updated` set to **2026-05-14**
 - Scope now reflects current-phase operational requirements for patient/provider/admin review management, patient-facing provider review display, review settings/export, and takedown processing.
 
@@ -66,10 +66,12 @@ Expanded FR-013 to align with current phase scope and the latest reviewed UI flo
   - Takedown bottom-sheet/modal behavior with optional patient message
   - Mandatory 7-year retention notice before takedown submission
 - Added patient list-sort and empty-state details to align with the documented mobile flow.
-- Added another same-day UI alignment for Patient `My Reviews` list to match the latest visual: header title + sort icon, card-level rating/time row, treatment line, excerpt + "See more", provider avatar/name row, and app-facing status badges `Published`, `Submitted`, `Removed`.
+- Added another same-day UI alignment for Patient `My Reviews` list to match the latest visual: header title + sort icon, card-level rating/time row, treatment line, excerpt + "See more", provider avatar/name row, and app-facing status badges.
 - Added provider-side follow-up refinements: provider review list now explicitly supports filtering by patient, and Provider Review Detail now includes a detailed inline Provider Response Composer interaction model/state (non-separate screen) with validation, cancel/submit behavior, and post-publish immutability rules.
 - Added incremental screen-number cleanup and coverage expansion: replaced the non-incremental `Screen 5A` label with a merged inline composer state inside Provider Review Detail, renumbered the Screen Specifications to `Screen 1` through `Screen 10`, added patient-facing Provider Profile Reviews for clinic/provider review display, added Admin Review Settings & Export, and synchronized related requirements, user stories, metrics, entities, and changelog entry `v1.8`.
 - Cleaned up Screen Specifications heading hierarchy by removing the duplicate Patient Platform subsection heading so Screens 1-4 sit under one Patient Platform section before Provider/Admin sections.
 - Clarified Screen 4 as an embedded Provider Profile Reviews Section inside the quoting/provider-profile review flow, not a standalone provider profile screen; removed duplicated provider-profile content and kept only FR-013 review fields, `View all`, preview/full-list behavior, and data-model connection notes.
 - Clarified Screen 5 context: Provider Reviews List & Filters may appear as a dedicated Provider Dashboard list or be embedded/linked from the provider's own profile detail section, final placement is left to UX/UI design, and non-review profile fields remain owned by the provider profile detail spec.
 - Added `Admin removal reason` to Screen 9 so approved takedown/removal decisions persist the same patient-facing reason shown on Screen 3 when review status is `Removed`.
+- Verification follow-up after FR-013 review: aligned `system-prd.md` to immediate review publication with post-publication admin flagging/removal instead of pre-publication moderation; expanded FR-013 module/dependency traceability to include PR-06, S-03, S-05, FR-020, FR-022, FR-030, and FR-032; added FR-013 PRD changelog entry `v1.9`.
+- Backend-aligned review status vocabulary after code inspection: removed `Submitted` as a review status, kept patient-facing status to `Published` / `Removed`, documented `Flagged` as admin-internal, and separated takedown request state (`Pending` / `Approved` / `Rejected`) from review visibility status; added FR-013 PRD changelog entry `v1.10`.

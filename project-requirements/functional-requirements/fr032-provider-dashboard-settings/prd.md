@@ -51,7 +51,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers engage in two-way communication with admin by replying to admin messages within their support cases
 - Providers request to reopen closed cases if issue persists or resolution was unsatisfactory
 - Providers request account deletion (soft-delete with admin approval)
-- Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and respond if workflow allows (responses handled by future enhancement; current scope is read-only)
+- Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and post public responses to individual reviews (response composer defined in FR-013 Screen 6)
 
 **Admin Platform (A-XX)**:
 
@@ -934,7 +934,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 #### Tab 5: Reviews
 
-**Purpose**: Browse all patient reviews with filtering and sorting capabilities (read-only).
+**Purpose**: Browse all patient reviews with filtering and sorting capabilities, and post public responses to individual reviews via the FR-013 response composer.
 
 **Data Fields**:
 
@@ -949,7 +949,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Business Rules**:
 
-- Reviews data is read-only in FR-032; providers cannot edit/delete reviews
+- Review content (ratings, feedback, photos) is read-only — providers cannot edit or delete patient-submitted reviews
+- Providers may post a public response to any published review via the inline response composer defined in FR-013 Screen 6; see FR-013 for response rules and immutability
 - Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews")
 - Rating distribution shows bar chart with counts/percentages for each star rating
 - Filters and sort selections persist per user session
@@ -1037,7 +1038,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - **Tab Editability**:
   - **Fully Editable**: Tab 1 (Basic Information), Tab 2 (Languages), Tab 4 (Awards), Tab 6 (Documents) - providers can add, edit, delete content inline
   - **External Module**: Tab 3 (Staff List) - displays FR-009 Screen 1; see FR-009 for functionality
-  - **Read-Only**: Tab 5 (Reviews) - completely read-only; managed by Reviews service, providers cannot edit/delete reviews
+  - **Read/Respond**: Tab 5 (Reviews) - review content is read-only; providers can post public responses via FR-013 response composer; managed by Reviews service, providers cannot edit/delete reviews
 
 ---
 
@@ -1631,7 +1632,7 @@ Each message in the thread displays:
 - **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts which bypass preferences)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
-- **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); conversely, reviews content, staff roster, and Help Centre articles remain read-only views fed by their respective modules
+- **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
 
 ### Data & Privacy Rules
 
@@ -2048,9 +2049,9 @@ A provider closing their clinic permanently requests account deletion, and admin
   - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
   - **Relationships**: Help Centre content created and managed by admins (FR-033); one provider can view many help centre content items (read-only)
 
-- **Entity 7 - Provider Reviews View (Read-Only)**: Represents aggregated reviews and list data shown in Tab 5 (Reviews tab) within Screen 1 (Provider Profile)
-  - **Key attributes**: provider ID, average rating, total reviews count, rating distribution (counts per star), reviews array (review ID, reviewer name, avatar URL, rating, review text, treatment type, review date), last sync timestamp
-  - **Relationships**: Data sourced from Reviews module/service; provider can filter/sort but cannot mutate review records within FR-032
+- **Entity 7 - Provider Reviews View**: Represents aggregated reviews and list data shown in Tab 5 (Reviews tab) within Screen 1 (Provider Profile)
+  - **Key attributes**: provider ID, average rating, total reviews count, rating distribution (counts per star), reviews array (review ID, reviewer name, avatar URL, rating, review text, treatment type, review date, response status), last sync timestamp
+  - **Relationships**: Data sourced from Reviews module/service; provider can filter/sort and post responses via FR-013 Screen 6 response composer, but cannot edit or delete review records within FR-032
 
 ---
 
@@ -2063,6 +2064,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 | 2025-12-07 | 1.2 | **Major update - Full document management capabilities:** Added Tab 6: Documents to Screen 1 (Profile Management) with full provider document management (upload, replace, delete, view); Providers can now manage their own compliance documents (medical licenses, certifications, insurance) with drag-and-drop upload, file validation (PDF/JPG/PNG/DOCX/XLSX, max 10MB), document versioning (old versions archived on replace), soft delete, and optional notes; Admin-uploaded documents display "Admin" badge and are view-only for providers; Added document sync with FR-015 (bidirectional, within 1 minute); Updated Tab 3: Staff List to clarify display-only nature with "Manage Team" button linking to FR-009 for full staff management; Added Seat Usage Summary to Tab 3 showing current usage vs. seat limit; Updated Screen 1 tab count from 5 to 6 tabs; Updated General Business Rules to accurately reflect tab editability (Fully Editable: Tabs 1,2,4,6; Display-Only with External Management: Tab 3 via FR-009; Read-Only: Tab 5 Reviews); Added security rules (time-limited signed URLs), audit logging, sort/filter options, and comprehensive empty/error/loading state handling | AI/Claude |
 | 2026-01-26 | 1.3 | **Added two-way communication for support cases with screen structure improvements:** Split support case functionality into 3 dedicated screens for clarity: **Screen 5.7 (My Support Cases List)** with filters, search, quick stats, and merged table column specifications into Data Fields (consistent with other PRDs); **Screen 5.8 (Support Case Detail View)** with complete case information, communication thread, reply interface, timeline, and export capability; **Screen 5.9 (Reopen Case Request Modal)** for reopening closed cases with reason tracking; Renumbered Screen 5.8 (Service Status) to Screen 5.10; Providers can now view all submitted cases (support requests + feedback) in unified list, view case details with full communication thread, reply to admin messages with attachments, track status and feedback resolution, request case reopening, and export cases as PDF/CSV; Added Quick Stats Bar showing Open, In Progress, Resolved, and Unread Messages counts; Added comprehensive filtering (status, type, date range), real-time search, and unread message indicators; Added new business workflow "View and Reply to Support Cases" with 3 alternative flows (reopen closed case, filter/search cases, receive admin reply notification); Added User Story 6 (View and Reply to Support Cases) with 4 comprehensive acceptance scenarios; Renumbered User Story 6 (Request Account Deletion) to User Story 7; Updated Multi-Tenant Breakdown to document two-way communication capability; Updated FR-034 integration point to clarify communication architecture and notification events (support.case_admin_reply, support.case_user_reply); Updated Help Centre category navigation to include "My Support Cases" link; All changes ensure providers have same two-way communication experience as patients (FR-035) for support cases managed in FR-034 unified ticketing system | AI/Claude |
 | 2026-01-26 | 1.4 | **Removed Case export functionality:** Removed Export Case Button from Screen 5.8 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 5.7 (My Support Cases List); Removed all export-related business rules and constraints; Removed export steps from Business Workflow A2 and User Story 6 acceptance scenario 4; Case export feature was accidentally included and is now removed from both provider-facing (FR-032) and admin-facing (FR-034) specifications | AI/Claude |
+| 2026-05-14 | 1.5 | **Aligned Reviews tab scope with FR-013:** Removed read-only / future-enhancement designation for provider responses. Tab 5 (Reviews) is now "Read/Respond" — review content remains read-only but providers can post public responses via the FR-013 Screen 6 inline response composer. Updated: module scope bullet (line ~54), Tab 5 Purpose, Tab 5 Business Rules, General Business Rule 5, Entity 7 name and description. Resolves scope conflict identified in FR-013 verification. | Verification alignment (2026-05-14) |
 
 ---
 
