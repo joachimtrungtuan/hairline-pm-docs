@@ -969,6 +969,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Requirements**:
 
 - Patients MUST be able to submit review and rating after procedure completion (after 3+ months)
+- System MUST enforce one review per completed procedure (uniqueness keyed to patient + completed procedure record); the edit flow operates on the existing review rather than creating additional reviews
 - Patients MUST be able to edit their published review at any time
 - Reviews MUST include: overall rating (1-5 stars), category ratings (facility, staff, results), written feedback
 - System MUST verify that only patients who completed procedure can submit reviews

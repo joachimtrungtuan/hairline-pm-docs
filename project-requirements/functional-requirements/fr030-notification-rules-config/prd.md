@@ -160,6 +160,10 @@ Notes:
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
+| Reviews | Review Published / New Review Posted | `review.published` | Provider | Notifies provider when a new published review appears on their profile; subject to provider Review Notifications preference in FR-032 |
+| Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
+| Reviews | Review Removed by Admin | `review.removed_by_admin` | Patient | Notifies reviewer when admin removes their published review for policy/compliance reasons |
+| Reviews | Takedown Request Decided | `review.takedown_decided` | Patient | Notifies patient of admin approve/reject decision on their takedown request |
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
 | Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
 | Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
@@ -884,6 +888,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2025-12-22 | 1.1 | Verified per template; aligned retention to no hard-delete (FR-023); clarified provider pre-confirmation masking; locked security-critical auth events; cleaned tenant placeholder labels | AI Assistant |
 | 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes; added `quote.cancelled_inquiry` event with mandatory provider receipt (admin cannot disable); cancellation reason is patient-private | AI     |
 | 2026-02-09 | 1.3 | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (source-of-truth alignment with FR-003 Workflow 5). Formalized `quote.cancelled_inquiry` in Non-Disableable by Default section. Added template variable guidance per recipient with privacy-aware field exclusions. Expanded Screen 1 Event Category filter to enumerate all 14 categories from event catalog. Fixed Last Updated date. | AI     |
+| 2026-05-14 | 1.4 | Added review notification events required by FR-013 / FR-020 alignment: `review.published` for provider new-review notifications, plus `review.response_posted`, `review.removed_by_admin`, and `review.takedown_decided` for patient review status notifications. | Verification alignment (2026-05-14) |
 
 ---
 
@@ -900,4 +905,4 @@ Admin needs to monitor notification delivery performance to identify and resolve
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-05-14

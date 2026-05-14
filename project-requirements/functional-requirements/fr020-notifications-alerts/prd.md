@@ -79,6 +79,7 @@ In Scope:
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
+| Reviews | Review Published / New Review Posted | `review.published` | Provider | Notifies provider when a new published review appears on their profile; subject to provider Review Notifications preference in FR-032 |
 | Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
 | Reviews | Review Removed by Admin | `review.removed_by_admin` | Patient | Notifies reviewer when admin removes their published review for policy/compliance reasons |
 | Reviews | Takedown Request Decided | `review.takedown_decided` | Patient | Notifies patient of admin approve/reject decision on their takedown request |
@@ -91,7 +92,7 @@ In Scope:
 - Channels: email, push; SMS is an optional/configurable channel for urgent events in the target architecture but is **not available in MVP** (no SMS notifications are sent until a later phase explicitly enables this capability).
 - User preferences (MVP):
   - **Patients**: global Email/Push toggles (managed in FR-001: Patient Authentication & Profile Management, Settings → Notifications section); per‑category preferences deferred to V2 (not in scope).
-  - **Providers**: can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, promotion/discount notifications) via notification preferences settings (managed in PR-06: Profile & Settings Management, Settings → Notifications section).
+  - **Providers**: can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications) via notification preferences settings (managed in PR-06: Profile & Settings Management, Settings → Notifications section).
 - Notification listing screens: patient notification history screen (full listing page), provider notification dropdown (infinite scroll), admin notification dropdown (infinite scroll).
 - Throttling/de‑duplication and delivery tracking.
 
@@ -265,7 +266,7 @@ Notification policy, throttling, and delivery monitoring UI live in `FR-030: Not
 ## Business Rules
 
 - **Patient Preferences**: Global Email/Push toggles available to patients in MVP (managed in FR-001: Patient Authentication & Profile Management, Settings → Notifications); category preferences deferred to V2.
-- **Provider Preferences**: Providers can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, promotion/discount notifications) via notification preferences settings (managed in FR-032: Provider Dashboard Settings & Profile Management, Settings → Notifications section).
+- **Provider Preferences**: Providers can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications) via notification preferences settings (managed in FR-032: Provider Dashboard Settings & Profile Management, Settings → Notifications section).
 - **Admin Notifications**: Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020).
 - One notification record per attempt with channel, provider, status, and timestamp.
 - Throttling and suppression policies are transparent in audit logs.
@@ -320,7 +321,7 @@ Configurable with Restrictions:
   - OTP email templates: Managed separately in FR-026 (App Settings & Security Policies) for email verification and password reset flows.
 - **Notification Preferences**:
   - Patient preferences: Managed in FR-001 (Patient Authentication & Profile Management) under Settings → Notifications screen.
-  - Provider preferences: Managed in FR-032 (Provider Dashboard Settings & Profile Management) under Settings → Notifications section (providers can toggle individual notification types on/off: quote notifications, schedule notifications, treatment start notifications, aftercare notifications, promotion/discount notifications).
+  - Provider preferences: Managed in FR-032 (Provider Dashboard Settings & Profile Management) under Settings → Notifications section (providers can toggle individual notification types on/off: quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications).
 
 ---
 
@@ -380,7 +381,7 @@ Acceptance Scenarios:
 - REQ-020-002: System MUST send push notifications to mobile app.
 - REQ-020-003: System MUST support optional/configurable SMS for urgent events.
 - REQ-020-004: System MUST allow patients to configure notification preferences (MVP: global Email/Push toggles managed in FR-001: Patient Authentication & Profile Management).
-- REQ-020-004B: System MUST allow providers to configure notification preferences (choose which notification types to receive: quote, schedule, treatment start, aftercare, promotion/discount notifications).
+- REQ-020-004B: System MUST allow providers to configure notification preferences (choose which notification types to receive: quote, schedule, treatment start, aftercare, review, promotion/discount notifications).
 - REQ-020-005: System MUST support notification event types in the FR-030 MVP event catalog (Admin-Configurable Notification Event Types), routed to enabled channels and templates.
 - REQ-020-006: System MUST throttle notifications to prevent spam and log suppression.
 - REQ-020-007: System MUST track and expose delivery status per attempt.
@@ -396,7 +397,7 @@ Acceptance Scenarios:
 - **NotificationEvent**: type, subject, recipient, payload metadata, createdAt.
 - **NotificationAttempt**: channel, provider, status, timestamp, error, correlationId.
 - **PatientPreference**: userId, emailEnabled, pushEnabled, updatedAt (MVP scope; managed in FR-001).
-- **ProviderPreference**: providerId, quoteNotification, scheduleNotification, startTreatmentNotification, afterCareNotification, promotionDiscountNotification, updatedAt (allows providers to choose which notification types to receive).
+- **ProviderPreference**: providerId, quoteNotification, scheduleNotification, startTreatmentNotification, afterCareNotification, reviewNotification, promotionDiscountNotification, updatedAt (allows providers to choose which notification types to receive).
 - **NotificationRecord**: notificationId, recipientId, recipientType (patient/provider/admin), type, title, message, readStatus, createdAt, readAt (for notification listing screens).
 
 ---
@@ -414,6 +415,7 @@ Acceptance Scenarios:
 | 2026-02-09 | 1.6     | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (aligns with FR-003 Workflow 5 mandatory confirmation). Added MVP default channel notes (Email + Push) to both cancellation events. Expanded Screen 1 filter types to enumerate all categories explicitly. Added User Story 4 (cancellation notification delivery with privacy scenarios). Fixed Last Updated date. | AI     |
 | 2026-02-10 | 1.7     | FR-003 verification fixes: Updated stale "Screen 11a" reference to "Screen 8b" in `inquiry.cancelled` event notes (FR-003 v1.6 renumbering). Aligned cancellation notification SLA from "within 2 seconds" to "within 5 minutes" to match FR-003 Workflow 5 step 4. | AI     |
 | 2026-05-14 | 1.8     | Added three missing review notification events to the event catalog: `review.response_posted` (patient notified when provider responds), `review.removed_by_admin` (patient notified when admin removes review), `review.takedown_decided` (patient notified of takedown approve/reject decision). Required by FR-013 REQ-013-016. | Verification alignment (2026-05-14) |
+| 2026-05-14 | 1.9     | Added provider-facing `review.published` event for new published reviews and aligned provider notification preference wording/entity with FR-032 Review Notifications. | Verification alignment (2026-05-14) |
 
 ---
 
@@ -429,4 +431,4 @@ Acceptance Scenarios:
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-05-14

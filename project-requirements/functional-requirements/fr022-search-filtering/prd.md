@@ -349,7 +349,8 @@ The table below maps every platform screen that requires search and/or filter fu
 | Admin | A-01 | FR-005 | Quote Acceptance Table | `FR-005 / Screen 5` | — | ✓ | P1 |
 | Admin | A-01 | FR-006 | Admin Bookings Table | `FR-006 / Screen 5` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-007 | Patient Payment Progress Dashboard | `FR-007 / Screen 5` | ✓ | ✓ | P1 |
-| Admin | A-01 | FR-013 | Review Management Dashboard | `FR-013 / Screen 7` | — | ✓ | P1 |
+| Provider | PR-06 | FR-013 | Provider Reviews List & Filters | `FR-013 / Screen 5` | — | ✓ | P1 |
+| Admin | A-01 | FR-013 | Review Management Dashboard | `FR-013 / Screen 7` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-016 | Patient Management List | `FR-016 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-016 | Admin Actions Audit Log | `FR-016 / Screen 7` | — | ✓ | P1 |
 | Admin | A-01 | FR-016 | Pending Data Requests | `FR-016 / Screen 8` | ✓ | — | P1 |
@@ -1000,9 +1001,9 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-013 / Screen 7: Review Management Dashboard [P1 — MVP]
+###### FR-013 / Screen 5: Provider Reviews List & Filters [P1 — MVP]
 
-**Purpose**: Admin filters all platform reviews by date, provider, rating, status, and flag.
+**Purpose**: Provider filters their reviews across treatment cases by patient, case, rating, date, response status, and source type.
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1012,11 +1013,40 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
+| Patient | Dropdown | All; patients linked to this provider's completed cases | All | Exact match (supports multi-case patient histories — added in FR-013 v1.7) |
+| Treatment Case | Dropdown | All; cases for the selected patient (or all cases when patient = All) | All | Exact match |
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) |
+| Date Range | Date range picker | Custom | All dates | Filters by review submission date |
+| Response Status | Multi-select | No response, Responded | All | OR (within field) |
+| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) |
+
+---
+
+###### FR-013 / Screen 7: Review Management Dashboard [P1 — MVP]
+
+**Purpose**: Admin filters all platform reviews by date, provider, patient, treatment case, rating, status, source type, flagged status, and response status.
+
+_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
+
+**Search View**
+
+| Field | Type | Placeholder | Debounce | Min Length | Notes |
+|-------|------|-------------|----------|------------|-------|
+| Patient / provider / case identifier | text | "Search reviews…" | 500ms | 2 chars | Case-insensitive |
+
+**Filter View**
+
+| Filter | Type | Options | Default | Logic |
+|--------|------|---------|---------|-------|
 | Date Range | Date range picker | Custom | All dates | Filters by review submission date |
 | Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Patient | Dropdown | All; patient list from DB | All | Exact match |
+| Treatment Case | Dropdown | All; cases scoped by selected patient/provider | All | Exact match |
 | Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) |
-| Review Status | Multi-select | Pending Moderation, Published, Rejected | All | OR (within field) |
-| Flagged | Toggle | Show flagged only | Off | Single flag |
+| Review Status | Multi-select | Published, Removed | All | OR (within field) — updated per FR-013 v1.10 backend-aligned status vocabulary; `Pending Moderation` / `Rejected` removed |
+| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) |
+| Response Status | Multi-select | No response, Responded | All | OR (within field) |
+| Flagged | Toggle | Show flagged only (admin-internal `Flagged` state) | Off | Single flag |
 
 ---
 
