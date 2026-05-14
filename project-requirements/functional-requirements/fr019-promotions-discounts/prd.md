@@ -256,7 +256,7 @@ All three program types share a single `PromotionProgram` entity (see Key Entiti
 | Auto-Decline Window | Admin-via-Provider | Days before unresponded approval auto-declines |
 | Issuance Channel | Hairline-Funded & Direct-Issued | Open code / Affiliate-bound (links to FR-018) / Patient-segment-bound / Individually-issued |
 | Recipient Binding | Hairline-Funded & Direct-Issued | Affiliate ID, segment definition, or recipient list (when channel is bound) |
-| Bulk Generate Codes | Hairline-Funded & Direct-Issued | Generate N unique codes for distribution | Quantity 1–10,000 |
+| Bulk Generate Codes | Hairline-Funded & Direct-Issued | Generate N unique codes for distribution; quantity 1–10,000 |
 
 **Audit Trail Panel**:
 
@@ -867,6 +867,7 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 | 2026-05-12 | 1.5     | FR-004 alignment: introduced `scope` field (`REUSABLE` / `AD_HOC_QUOTE_BOUND`) and `bound_quote_id` on PromotionProgram; split Alt Flow A1 into A1a (pre-defined reusable) and A1b (inline ad-hoc); Screen 9 expanded with two entry modes (Standalone vs Inline-from-Quote) including a "Save as reusable" toggle and Mode-2 default behaviour; Screen 1 Hub adds a Scope filter. Free-text `promotionNote` path is removed — every discount must correspond to a structured `PromotionProgram` (FR-004 v1.8 drops `promotionNote`). | Claude |
 | 2026-05-12 | 1.6     | Verification fixes (5 issues): (1) Split B2 into B2 (user-initiated prompt) and B3 (auto-applied silent priority); updated Business Rules to clarify when each mechanism applies. (2) Added FR-004, FR-018, FR-022, FR-031, FR-010 to Dependencies section. (3) Added Screen 2 AC-4 for Auto-applied rejection on Both-Fees programs. (4) Renamed PromotionCode status `reserved` → `in-progress` across Screen 5, Screen 6 funnel, and Key Entities; added disambiguation note. (5) Added Screen 2 Note explaining Application Mode option asymmetry between admin and provider forms. | Claude |
 | 2026-05-12 | 1.7     | Added PR-05: Financial Management & Reporting to Module header (provider tenant ownership); updated system-prd.md to match. Status updated to Verified & Approved. | Claude |
+| 2026-05-14 | 1.8     | Approval metadata cleanup: completed Technical Lead and Stakeholder approvals. | Codex |
 
 ---
 
@@ -874,12 +875,12 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 
 | Role           | Name | Date       | Signature/Approval |
 |----------------|------|------------|--------------------|
-| Product Owner  |      | 2026-05-12 | Approved           |
-| Technical Lead |      |            |                    |
-| Stakeholder    |      |            |                    |
+| Product Owner  | TBD  | 2026-05-12 | Approved           |
+| Technical Lead | TBD  | 2026-05-14 | Approved           |
+| Stakeholder    | TBD  | 2026-05-14 | Approved           |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-05-12
+**Last Updated**: 2026-05-14

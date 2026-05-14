@@ -616,7 +616,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Create Discounts | Create platform-wide discount codes | ☐ Write |
 | Edit Discounts | Modify discount parameters | ☐ Write |
 | Track Discount Usage | View discount statistics and ROI | ☐ Read |
-| Approve Provider Discounts | Approve/decline provider discount requests | ☐ Write |
+| Manage Admin Campaign Adoptions | Manage provider accept/decline participation and admin override actions for admin-created both-fees campaigns | ☐ Write |
 
 **Category: Affiliate Management (A-07)**:
 
@@ -1388,6 +1388,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 |------|---------|---------|--------|
 | 2025-11-14 | 1.0 | Initial PRD creation for FR-031: Admin Access Control & Permissions | Claude AI / Speckit |
 | 2026-01-04 | 1.0.1 | Lock system/provider role names (Issue #3 option 1); mark status + approvals as ✅ Verified & Approved | GPT-5.2 (AI) |
+| 2026-05-14 | 1.0.2 | Renamed A-06 permission `Approve Provider Discounts` to `Manage Admin Campaign Adoptions` to align with FR-019: provider self-created discounts do not require admin approval; admins manage adoption/override for admin-created both-fees campaigns. | Codex |
 
 ---
 

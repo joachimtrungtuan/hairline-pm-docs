@@ -13,6 +13,7 @@
 The Affiliate Management module enables Hairline to partner with external entities (influencers, clinics, organizations) who promote the platform in exchange for commission-based compensation. This module provides the infrastructure for onboarding affiliates, generating unique tracking codes, monitoring referral performance, calculating commissions, and processing monthly payouts. By creating a scalable affiliate program, Hairline can expand market reach, increase patient acquisition, and drive revenue growth through trusted third-party channels while maintaining full transparency and control over partnership economics.
 
 **Key Value Proposition**:
+
 - **For Affiliates**: Easy-to-use dashboard with real-time tracking of referrals, earnings, and payout history
 - **For Admins**: Streamlined affiliate onboarding, automated commission tracking, and simplified monthly payout processing
 - **For Business**: Cost-effective patient acquisition channel with performance-based compensation model

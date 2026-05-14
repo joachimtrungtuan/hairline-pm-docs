@@ -362,7 +362,7 @@ The table below maps every platform screen that requires search and/or filter fu
 | Admin | A-05 | FR-017 | Transaction Search | `FR-017 / Screen 7 / Tab 1` | ✓ | ✓ | P1 |
 | Admin | A-05 | FR-017 | Billing Audit Log | `FR-017 / Screen 7 / Tab 2` | — | ✓ | P1 |
 | Admin | A-05 | FR-018 | Affiliate Payout History | `FR-018 / Screen 5` | ✓ | ✓ | P1 |
-| Admin | A-06 | FR-019 | Discount Code Catalog | `FR-019 / Screen 4` | ✓ | ✓ | P1 |
+| Admin | A-06 | FR-019 | Promotion Program Hub | `FR-019 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-07 | FR-018 | Affiliate Management List | `FR-018 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-09 | FR-024 | Admin Treatment Catalog | `FR-024 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-09 | FR-025 | Questionnaire Catalog | `FR-025 / Screen 1` | ✓ | ✓ | P1 |
@@ -1315,25 +1315,28 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-019 / Screen 4: Discount Code Catalog [P1 — MVP]
+###### FR-019 / Screen 1: Promotion Program Hub [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all discount codes (platform-created and provider-created) across the platform.
+**Purpose**: Admin searches for and filters all promotion programs across the platform, including Admin-via-Provider, Provider Self-Created, and Hairline-Funded & Direct-Issued programs.
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
-See `fr019-promotions-discounts/prd.md → Screen 4` for the finalized result-table layout, row actions, and acceptance criteria. FR-022 remains the authoritative source for the search/filter contract below.
+See `fr019-promotions-discounts/prd.md → Screen 1` for the finalized result-table layout, row actions, and acceptance criteria. FR-022 remains the authoritative source for the search/filter contract below.
 
 **Search View**
 
 | Field | Type | Placeholder | Debounce | Notes |
 |-------|------|-------------|----------|-------|
-| Code / keyword | text | "Search discount codes…" | 500ms | Case-insensitive; fuzzy match on discount code text and keyword |
+| Code / keyword | text | "Search promotion programs…" | 500ms | Case-insensitive; fuzzy match on code text, program name, and keyword |
 
 **Filter View**
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Status | Multi-select | Active, Draft, Expired, Paused | All | OR (within field) |
+| Program Type | Multi-select | Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued | All | OR (within field) |
+| Scope | Multi-select | Reusable, Ad-Hoc Quote-Bound | All | OR (within field) |
+| Status | Multi-select | Draft, Pending Approval, Active, Paused, Expired, Archived | All | OR (within field) |
+| Funding Model | Multi-select | Both Fees, Hairline Only, Provider Only | All | OR (within field) |
 | Provider Participation | Dropdown | All; provider list from DB | All | Exact match |
 | Date Range | Date range picker | Custom | All dates | Filters by active window overlap |
 | Usage | Range | 0–Max | All | Min–Max usage count |
@@ -1888,7 +1891,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
   | Admin (A-05) | FR-007b | Screen 5 (Installment Plans List) |
   | Admin (A-05) | FR-017 | Screens 4, 7/Tab 1, 7/Tab 2 (Patient Billing Invoices, Transaction Search, Billing Audit Log) |
   | Admin (A-05/A-07) | FR-018 | Screens 1, 5 (Affiliate Management List, Affiliate Payout History) |
-  | Admin (A-06) | FR-019 | Screen 4 (Discount Code Catalog) |
+  | Admin (A-06) | FR-019 | Screen 1 (Promotion Program Hub) |
   | Admin (A-09) | FR-024 | Screen 1 (Admin Treatment Catalog) |
   | Admin (A-09) | FR-025 | Screen 1 (Questionnaire Catalog) |
   | Admin (A-09) | FR-027 | Screens 1, 4A (Legal Documents List, User Acceptance List) |
@@ -2205,6 +2208,7 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 | 2026-04-13 | 2.6 | Applied selected follow-up resolutions: (1) realigned FR-012 search/filter surfaces to source scope by moving patient/provider messaging screens to P2 and assigning provider messaging to PR-07, (2) removed non-authoritative search-result export behavior from FR-022 outside deferred REQ-022-009, and (3) replaced the FR-019/Screen 4 placeholder dependency note with a finalized screen reference. | Codex |
 | 2026-04-13 | 2.7 | Removed unsupported admin global-search/cross-module-search entry-point claims. Per user direction, provider-selection contract changes for Screen 7a were limited to `system-prd.md`; FR-022 content was otherwise left unchanged for that topic. | Codex |
 | 2026-04-13 | 2.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer metadata to match `prd-template.md`. | Documentation governance (2026-04-13) |
+| 2026-05-14 | 2.9 | FR-019 follow-up alignment: updated A-06 search/filter mapping from stale `FR-019 / Screen 4: Discount Code Catalog` to current `FR-019 / Screen 1: Promotion Program Hub`; added Program Type, Scope, and Funding Model filters to match FR-019 v1.7. | Codex |
 
 ---
 
