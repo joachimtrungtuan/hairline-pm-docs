@@ -6,6 +6,28 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-05-20/ (2 files)
+
+#### **Launch Plan Patch — Timeline Shift, Aftercare Reorganisation & User Stories**
+
+- `LAUNCH_PLAN_PATCH_2026-05-20.md` — Four coordinated patch groups: (1) entire timeline shifted +7 days due to operational delay — Sprint 1 now May 21–29 (Kickoff May 22 Fri), launch June 22–23; (2) aftercare modules P-05 / PR-04 / A-03 moved from Sprint 1 → Sprint 2 to group them with the template and config setup (A-09b, A-09c) they depend on; (3) user stories added to all four sprint sections; (4) implementation-readiness correction pass after PRD cross-check — soft-launch/store fallback clarified, FR-036 excluded as future placeholder, Sprint 1/2 notification timing corrected, A-01/FR-026/FR-007/FR-008/FR-019 mappings fixed, FR-021/023/031/035 DoDs expanded, patient i18n/privacy/DSR moved before RC freeze, and integrated launch user stories added.
+
+#### **Launch Plan Review & Coverage Rework**
+
+- `LAUNCH_PLAN_REVIEW_2026-05-20.md` — Three-track review of the Launch Plan plus follow-up correction pass: (1) PRD/FR cross-check via Haiku subagents across all 36 FRs — every sprint's DoD reorganised into Sprint-level gates + per-module sections with explicit FR citations; new coverage added including FR-007b retry/grace, P-05 standalone aftercare path, A-09c Stripe pre-save test + currency-pair sequencing + FX sync, A-10 keyword flagging + "Hairline Admin" intervention, PR-05/A-07/A-04 full stories+DoD authored, FR-013 reviews integrated into Sprint 3, FR-021 i18n + FR-023 compliance added to Sprint 4, FR-022 search/filtering allocated as cross-cutting P1 MVP; (2) timeline logical-consistency fixes, later extended with RC store-submission/code-freeze, store-review fallback, Sprint 2 creative deliverable alignment, and UAT triage; (3) follow-up coverage fixes for FR-002/003/006/007/007b/008/011/012/013/014/017/018/019/021/022/023/032-036 and expanded launch smoke tests. Modules sections of all four sprints use `Tenant | Modules | FR(s)` 3-column tables.
+
+### 2026-05-19/ (1 file)
+
+#### **FR-021 Localization Management Revision**
+
+- `FR021_LOCALIZATION_MANAGEMENT_REVISION_2026-05-19.md` — Major revision of FR-021: added canonical translation registry, tenant-specific language selectors, Admin localization screens for supported locales / registry / key detail / import / export / publish history / coverage, draft-to-publish versioning, rollback, English source-locale protection, JSON validation, fallback behavior, and expanded requirements/entities.
+
+### 2026-05-15/ (1 file)
+
+#### **Agent Guidelines Slimdown**
+
+- `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` — Slimmed `CLAUDE.md` and `AGENTS.md` from 284/277 lines to 101 lines each. Deleted redundant sections (Skill Definitions and Locations table, Deployment Instructions, six General Skills tables, generic Skill Enforcement Rules) and consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table. The two genuinely project-specific enforcement rules (BLOCKING status for the 4 project skills, "read `SKILL.md` end-to-end before running") were folded into the existing "When to Invoke (STRICT)" block. File Structure section retained but trimmed to just the `local-docs/` directory tree.
+
 ### 2026-05-14/ (4 files)
 
 #### **Launch Plan Patch**
@@ -535,6 +557,9 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-07**: `NOTIFICATION_DISPATCH_REPORT_2026-05-07.md` - Created a patient notification dispatch audit report for `rosario12@example.com / password`, listing all 76 persisted inbox notifications with payload summaries and deep-link fields.
 - **2026-05-13**: `LAUNCH_PLAN_2026-05-13.md` - Initial Hairline Platform Launch Plan for May 14 – June 16, 2026 (four dev sprints + launch sprint, full module allocation, Mermaid Gantts, ceremonies, milestones, risk register).
 - **2026-05-14**: `LAUNCH_PLAN_PATCH_2026-05-14.md` - Seven coordinated patches to the launch plan: pulled P-01/PR-01/A-02 into Sprint 1, moved P-03b payment sub-features to Sprint 2, App Store schedule cleanup with final build moved to June 9, Sprint Planning relocated to Fridays (no weekend work), regression load split between Sprint 3 and Sprint 4, soft-launch reframing with minimal safeguards (DB backup, deployment artifact tag, Go/No-Go decision point), and `:done` marker cleanup.
+- **2026-05-20**: `LAUNCH_PLAN_PATCH_2026-05-20.md` - Three patches: (1) full +7-day timeline shift (Sprint 1 now May 21–29, launch June 22–23) due to operational delay; (2) aftercare modules P-05/PR-04/A-03 moved from Sprint 1 → Sprint 2 to group with A-09b/A-09c configuration they depend on; (3) user stories added to all four sprint sections (36 stories total, grouped by role: Patient / Provider / Admin / Platform Foundations).
+- **2026-05-20**: `LAUNCH_PLAN_REVIEW_2026-05-20.md` - Three-track review plus follow-up correction pass: PRD/FR cross-check, sprint DoD/story rework, module table restructure, timeline fixes now including RC store-submission/code-freeze and store-review fallback, FR/module corrections for travel, support, promotions, payment, payout, search, compliance, affiliate, and FR-036 topline placeholder, plus expanded launch smoke tests.
+- **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
 - **2026-04-18**: `FR014_VERIFICATION_FIXES_V35_2026-04-18.md` - FR-014 PRD v3.4 → v3.5 verification fixes: Screen 6 PDF branding narrowed to `providers.profile_image` only; Rule 10 FX fallback capped at 48 hours; Assumption 8 added to record provider-side analytics widgets as PRD-derived by design (future passes must not re-flag as transcription discrepancies); Assumptions 9–10 added for FX freshness cap and legacy location UI indicator
@@ -595,6 +620,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-03**: `FR013_MODERATION_REMOVED_2026-03-03.md` - FR-013 moderation gate removed; reviews publish immediately; admin retains post-publication edit/remove
 - **2026-05-14**: `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4-v1.10 scope and verification alignment: admin insert/edit reviews moved in-phase, takedown request approval workflow added, completed-treatment prerequisite clarified, review publication aligned to immediate publish with post-publication admin flagging/removal, module/dependency traceability expanded for provider/settings/notification/search/media ownership, and backend-aligned review status vocabulary set to Published/Removed with admin-internal Flagged
 - **2026-05-14**: `FR013_VERIFICATION_FIXES_ROUND_4_2026-05-14.md` - FR-013 v1.15 round-4/5 verification fixes and status closeout: split 7y/10y retention windows, structured `source_metadata` provenance schema for admin-seeded reviews, 3-month review eligibility confirmed as product-owner requirement, REQ-013-018a per-treatment aggregation contract for FR-014, patient-edit safeguards, canonical reviewer alias algorithm, FR-022 master reference sync (Screens 5 & 7), provider response wording clarified, FR-020/FR-030 review notification catalog aligned, takedown requests changed to require patient reason, and PRD marked `✅ Verified & Approved` with template-aligned approvals
+- **2026-05-19**: `FR021_LOCALIZATION_MANAGEMENT_REVISION_2026-05-19.md` - FR-021 localization-management overhaul: canonical translation registry, tenant-specific language selectors, Admin locale/registry/key/import/export/publish/coverage screens, draft-to-publish versioned bundles, rollback, English source protection, JSON validation, fallback rules, and expanded requirements/entities.
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
@@ -737,4 +763,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 14, 2026 (FR-013 verified status closeout)
+**Last Updated**: May 20, 2026 (Launch plan: follow-up correction pass for timeline consistency, RC store-submission/code-freeze, FR/module mapping, DoD coverage, FR-036 topline placeholder, and expanded launch smoke tests)
