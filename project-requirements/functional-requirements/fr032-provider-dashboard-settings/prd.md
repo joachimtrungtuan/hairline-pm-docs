@@ -110,7 +110,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 5. Provider uploads new clinic logo/profile picture (optional)
    - System validates image format (JPEG, PNG) and size (<5MB)
    - System displays image preview
-6. Provider selects supported languages from multi-select dropdown (consumes centrally managed language list from FR-026)
+6. Provider selects supported languages from multi-select dropdown (consumes the FR-021 language/locale catalog surfaced through settings)
 7. Provider edits clinic name, description, contact email, Location - City
 8. Provider clicks "Add Award" to add new award entry
    - System opens award form (name, issuer/organization, description, year, award image)
@@ -151,7 +151,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Trigger**: Provider opens language selection dropdown
 - **Steps**:
-  1. System displays all available languages from centrally managed language list (FR-026)
+  1. System displays all available languages from the FR-021 language/locale catalog surfaced through settings
   2. Provider selects multiple languages (e.g., English, Turkish, Spanish)
   3. System updates language tags in profile
   4. System saves language preferences
@@ -870,12 +870,12 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 | Field Name | Type | Required | Description | Validation Rules | Inline Editing |
 |------------|------|----------|-------------|------------------|----------------|
-| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes centrally managed language list from FR-026 | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-026; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label |
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the FR-021 language/locale catalog surfaced through settings | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-021; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label |
 
 **Business Rules**:
 
 - Languages displayed as removable chips/pills with X button on each chip
-- Clicking "+ Add Language" opens dropdown with all available languages from FR-026
+- Clicking "+ Add Language" opens dropdown with all available languages from FR-021
 - Selected languages immediately appear as chips; removing a chip removes it from selection
 - At least 1 language must be selected (validation prevents removing last language)
 - Changes saved automatically when language added/removed, or via "Save" button
@@ -887,7 +887,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Each language chip displays language name (e.g., "English", "Turkish", "Spanish")
 - Chips support drag-and-drop reordering to prioritize languages (most important first)
 - Visual feedback: chip highlights on hover; removal requires confirmation if it's the last language
-- Language list consumed from FR-026 (centrally managed with country list)
+- Language list consumed from FR-021; FR-026 may surface the list through the broader settings shell but does not own provider language-capacity semantics.
 
 ---
 
@@ -1648,7 +1648,7 @@ Each message in the thread displays:
 **Editable by Admin (via A-09: System Settings & Configuration and FR-033: Help Centre Content Management)**:
 
 - Help Centre content (FAQs, tutorial guides, troubleshooting tips, resource library, video tutorials, policy information)
-- System language options available in profile language selection (centrally managed with country list in FR-026)
+- System language options available in profile language selection (owned by FR-021 and surfaced through settings)
 - Country calling codes available in phone number selection (FR-026)
 - Timezone options available in account settings (FR-026)
 - Password policy parameters (configurable: max login attempts, lockout duration, OTP expiry, resend cooldown; FIXED in codebase: password complexity rules) (FR-026)
@@ -1718,9 +1718,9 @@ Each message in the thread displays:
   - **Why needed**: Provider notification preferences must be enforced when S-03 sends notifications (quote alerts, schedule reminders, review notifications)
   - **Integration point**: When provider saves notification preferences, system updates S-03 preference rules; S-03 checks preferences before sending each notification
 
-- **FR-026 / A-09: App Settings & Security Policies**: Language options for profile (centrally managed with country list)
-  - **Why needed**: Profile language selection must display available system languages
-  - **Integration point**: Profile language dropdown consumes centrally managed language list from FR-026 system configuration (same as country list management)
+- **FR-021 / A-09: Multi-Language & Localization**: Language options for provider profile capacity
+  - **Why needed**: Profile language selection must display centrally managed languages without conflating spoken-language capacity with Provider Dashboard UI language preference
+  - **Integration point**: Profile language dropdown consumes the FR-021 language/locale catalog. FR-026 may surface the selector through the broader App Settings shell, but FR-021 remains the canonical owner of language semantics.
 
 - **FR-026 / A-09: App Settings & Security Policies**: Country codes, timezone options, password policy
   - **Why needed**: Account settings require worldwide country calling codes, timezone list, and password validation rules
@@ -1760,9 +1760,9 @@ Each message in the thread displays:
   - **Why needed**: Settings module requires existing provider account with clinic name, email, and role information
   - **Source**: Provider onboarding module (A-02: Provider Management & Onboarding creates provider account; PR-01 manages team members)
 
-- **Entity 2: System Configuration Data (from A-09: System Settings & Configuration / FR-026)**: Language list (centrally managed with country list), country codes, timezone list, password policy
+- **Entity 2: System Configuration Data (from A-09: System Settings & Configuration / FR-026 and FR-021)**: FR-021 language/locale catalog for provider spoken-language capacity, plus FR-026 country codes, timezone list, and password policy
   - **Why needed**: Account settings and profile require system-wide configuration data
-  - **Source**: FR-026 provides centrally managed language and country lists consumed by settings module
+  - **Source**: FR-021 provides canonical language/locale options for provider spoken-language chips; FR-026 provides country codes, timezone options, and security policy data consumed by settings module
 
 - **Entity 3: Help Centre Content (from FR-033: Help Centre Content Management)**: FAQs, guides, videos, resources
   - **Why needed**: Help Centre displays admin-managed content
