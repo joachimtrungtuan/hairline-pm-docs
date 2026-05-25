@@ -8,7 +8,7 @@
 
 ## Summary
 
-Three coordinated changes applied to the Hairline Platform Launch Plan: (1) the entire timeline shifted one week later to account for an operational delay that prevented Sprint 1 from starting on the originally planned May 14 date; (2) all aftercare modules moved from Sprint 1 to Sprint 2 to group them with the configuration and template setup they depend on; (3) user stories added to all four sprint sections as a business-level testing and alignment aid.
+Five coordinated patch groups applied to the Hairline Platform Launch Plan: (1) the entire timeline shifted one week later to account for an operational delay that prevented Sprint 1 from starting on the originally planned May 14 date; (2) all aftercare modules moved from Sprint 1 to Sprint 2 to group them with the configuration and template setup they depend on; (3) user stories added to all four sprint sections as a business-level testing and alignment aid; (4) implementation-readiness corrections applied after PRD cross-check; (5) a lightweight Sprint Zero prep window and earlier Sprint 1 start were added to reflect the current preparation cadence.
 
 ---
 
@@ -101,6 +101,22 @@ Three coordinated changes applied to the Hairline Platform Launch Plan: (1) the 
 - Expanded FR-031, FR-021, and FR-023 DoD coverage for RBAC safeguards, localization shared-service dependencies, provider compliance visibility, DSR notifications, compliance exports, and patient DSR status handling.
 - Moved patient-side i18n/privacy/DSR surfaces into Sprint 3 so mobile-code work lands before the June 16 RC freeze; patient language switching uses seeded launch translation bundles until Sprint 4 admin authoring/publish/rollback controls are delivered.
 - Added integrated launch user stories covering end-to-end inquiry/payment/treatment/aftercare, zero-quote intervention, cancellation/refund, support/messaging boundaries, affiliate attribution-to-payout, compliance/i18n/search, and store-fallback readiness.
+
+---
+
+## Patch 5 — Sprint Zero Added; Sprint 1 Start Advanced
+
+**Reason:** A lightweight preparation window is needed before delivery work begins so the team can finish soft-launch planning and task setup. Sprint 1 planning therefore moves to May 18, and Sprint 1 development starts on May 19 while the rest of the launch schedule remains unchanged.
+
+**Changes:**
+- Added **Sprint Zero** to the launch-plan overview and Sprint Calendar: **May 11–15, 2026**
+- Added a short preparation note clarifying Sprint Zero is for soft-launch planning and task setup only
+- Updated the Master Timeline Mermaid block to include a **Sprint Zero · Preparation** section
+- Moved Sprint 1 PM planning from **May 20 → May 18**
+- Moved Sprint 1 development start from **May 21 → May 19**
+- Moved Sprint 1 kickoff from **May 22 → May 20** to preserve the kickoff-after-start cadence
+- Updated the Sprint 1 heading, internal Gantt, App Store account-setup start date, and day-by-day schedule to match the new Sprint 1 opening dates
+- Clarified the general sprint-planning cadence note so Sprint 1 is explicitly documented as the post-Sprint-Zero exception
 
 ---
 

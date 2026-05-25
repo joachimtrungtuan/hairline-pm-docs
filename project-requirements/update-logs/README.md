@@ -6,11 +6,23 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-05-25/ (1 file)
+
+#### **FR-021 Machine Translation and Language Catalog Alignment**
+
+- `FR021_MACHINE_TRANSLATION_AND_LANGUAGE_CATALOG_ALIGNMENT_2026-05-25.md` — FR-021 v1.2 follow-up: added Admin machine-translation provider/API-key management, notable provider options, missing-key prefill and full non-English language replacement draft-generation modes, machine-translation alternative flow, review-needed/audit/credential-security requirements, FR-029 currency ownership alignment, and FR-032 language-catalog cleanup so provider spoken-language capacity consumes FR-021 language options surfaced through settings rather than treating FR-026 as owner.
+
+### 2026-05-21/ (1 file)
+
+#### **FR-019 Design Layout Verification**
+
+- `FR019_DESIGN_LAYOUT_VERIFICATION_2026-05-21.md` — Full FR-019 design-layout verification against current `layout-temp/` JPGs. Same-day revisions narrowed the final report to Screens 1-10 only, corrected provider mappings, then rechecked Admin Screen 6 and Provider Screen 10 after new full-table files were added. Overall verdict remains `🔴 BLOCKED`: admin Screens 3/4 and provider Screen 9 still fail the FR contract; Screen 6 improves to `🟡 PARTIAL`, and Screen 10 improves to `🟢 COMPLETE`.
+
 ### 2026-05-20/ (2 files)
 
 #### **Launch Plan Patch — Timeline Shift, Aftercare Reorganisation & User Stories**
 
-- `LAUNCH_PLAN_PATCH_2026-05-20.md` — Four coordinated patch groups: (1) entire timeline shifted +7 days due to operational delay — Sprint 1 now May 21–29 (Kickoff May 22 Fri), launch June 22–23; (2) aftercare modules P-05 / PR-04 / A-03 moved from Sprint 1 → Sprint 2 to group them with the template and config setup (A-09b, A-09c) they depend on; (3) user stories added to all four sprint sections; (4) implementation-readiness correction pass after PRD cross-check — soft-launch/store fallback clarified, FR-036 excluded as future placeholder, Sprint 1/2 notification timing corrected, A-01/FR-026/FR-007/FR-008/FR-019 mappings fixed, FR-021/023/031/035 DoDs expanded, patient i18n/privacy/DSR moved before RC freeze, and integrated launch user stories added.
+- `LAUNCH_PLAN_PATCH_2026-05-20.md` — Five coordinated patch groups: (1) entire timeline shifted +7 days due to operational delay; (2) aftercare modules P-05 / PR-04 / A-03 moved from Sprint 1 → Sprint 2 to group them with the template and config setup (A-09b, A-09c) they depend on; (3) user stories added to all four sprint sections; (4) implementation-readiness correction pass after PRD cross-check — soft-launch/store fallback clarified, FR-036 excluded as future placeholder, Sprint 1/2 notification timing corrected, A-01/FR-026/FR-007/FR-008/FR-019 mappings fixed, FR-021/023/031/035 DoDs expanded, patient i18n/privacy/DSR moved before RC freeze, and integrated launch user stories added; (5) Sprint Zero added as a May 11–15 soft-launch preparation window, with Sprint 1 planning moved to May 18 and Sprint 1 development moved to May 19.
 
 #### **Launch Plan Review & Coverage Rework**
 
@@ -570,6 +582,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
+- **2026-05-21**: `FR019_DESIGN_LAYOUT_VERIFICATION_2026-05-21.md` - Full FR-019 design-layout verification; all three platform flows are `🔴 BLOCKED`, with missing provider/patient layouts plus admin governance and redemption-log gaps documented.
 - **2025-10-23**: `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification
 - **2025-10-23**: `REQUIREMENTS_VERIFICATION_2025-10-23.md` - Requirements verification
 - **2026-03-23**: `FR025_DESIGN_LAYOUT_VERIFICATION_2026-03-23.md` - FR-025 admin dashboard layout verification; 3 flows blocked due to missing or divergent designs
@@ -621,6 +634,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-14**: `FR013_REVIEW_FLOW_SCOPE_EXPANSION_2026-05-14.md` - FR-013 v1.4-v1.10 scope and verification alignment: admin insert/edit reviews moved in-phase, takedown request approval workflow added, completed-treatment prerequisite clarified, review publication aligned to immediate publish with post-publication admin flagging/removal, module/dependency traceability expanded for provider/settings/notification/search/media ownership, and backend-aligned review status vocabulary set to Published/Removed with admin-internal Flagged
 - **2026-05-14**: `FR013_VERIFICATION_FIXES_ROUND_4_2026-05-14.md` - FR-013 v1.15 round-4/5 verification fixes and status closeout: split 7y/10y retention windows, structured `source_metadata` provenance schema for admin-seeded reviews, 3-month review eligibility confirmed as product-owner requirement, REQ-013-018a per-treatment aggregation contract for FR-014, patient-edit safeguards, canonical reviewer alias algorithm, FR-022 master reference sync (Screens 5 & 7), provider response wording clarified, FR-020/FR-030 review notification catalog aligned, takedown requests changed to require patient reason, and PRD marked `✅ Verified & Approved` with template-aligned approvals
 - **2026-05-19**: `FR021_LOCALIZATION_MANAGEMENT_REVISION_2026-05-19.md` - FR-021 localization-management overhaul: canonical translation registry, tenant-specific language selectors, Admin locale/registry/key/import/export/publish/coverage screens, draft-to-publish versioned bundles, rollback, English source protection, JSON validation, fallback rules, and expanded requirements/entities.
+- **2026-05-25**: `FR021_MACHINE_TRANSLATION_AND_LANGUAGE_CATALOG_ALIGNMENT_2026-05-25.md` - FR-021 machine-translation provider/API-key screen, missing-key and full-language draft generation modes, FR-029 currency ownership alignment, and FR-032 provider spoken-language catalog cleanup.
 - **2026-03-03**: `IMPLEMENTATION_TASKS_P05_UXUI_2026-03-03.md` - P-05 mobile UX/UI implementation task breakdowns (P05.1–P05.3)
 - **2026-03-06**: `IMPLEMENTATION_TASKS_P06_P08_UXUI_2026-03-06.md` - P-06 and P-08 mobile UX/UI implementation task breakdowns (P06.1, P08.1), one task per screen for Mr. Khue
 - **2026-03-09**: `IMPLEMENTATION_TASKS_FR034_2026-03-09.md` - FR-034 support-center implementation task breakdowns with FE split by screens 1-7 and BE grouped into larger capability tasks for Joachim Trung
@@ -763,4 +777,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 20, 2026 (Launch plan: follow-up correction pass for timeline consistency, RC store-submission/code-freeze, FR/module mapping, DoD coverage, FR-036 topline placeholder, and expanded launch smoke tests)
+**Last Updated**: May 25, 2026 (FR-021 machine-translation provider/API-key workflow, whole-language draft generation modes, FR-029 currency ownership alignment, and FR-032 language-catalog ownership cleanup)

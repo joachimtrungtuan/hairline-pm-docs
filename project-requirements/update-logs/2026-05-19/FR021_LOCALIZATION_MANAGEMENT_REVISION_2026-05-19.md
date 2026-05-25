@@ -29,19 +29,33 @@ The revised FR keeps the client-backed multilingual requirement as the anchor, w
   - Patient Platform
   - Provider Platform
   - Admin Platform
-- Expanded Admin Platform screens instead of cramming all localization controls into one screen:
-  - Supported Locales
-  - Translation Registry
-  - Translation Key Detail Editor
-  - JSON Import
-  - JSON Export
-  - Publish & Version History
-  - Coverage & Missing Translations
+- Restructured Admin Platform localization screens around the working hierarchy:
+  - Localization Dashboard & Language Management as the overall landing screen
+  - Language Detail for one selected language
+  - Translation Key Inventory as the key-list entry point with Patient / Provider / Admin sub-screens
+  - Translation Key Detail Editor as the downstream key-level editing screen
+  - JSON Import Modal/Screen as a separate package-import route
+  - Language Version History & Rollback for publish/version/rollback management
+- Added baseline key-group inventories for the three tenants while explicitly keeping the live implementation registry flexible for future key additions/removals.
 - Added explicit draft/publish behavior:
   - inline edits and imports save draft changes only
   - runtime clients consume published bundles only
   - publish creates a versioned bundle
   - rollback creates a new version restoring a prior bundle
+- Updated the Main Flow diagram to show both translation update modes:
+  - individual text patching through Translation Key Inventory -> Translation Key Detail Editor
+  - JSON package import for a selected locale, tenant/surface, and group
+  - both modes converge into draft validation, pending publish, version creation, cache invalidation, and runtime bundle delivery
+- Consolidated admin update subflows into the Main Flow conditional gates instead of leaving them as standalone alternatives:
+  - individual text patching
+  - JSON import validation and row-level error handling
+  - English source edit protection
+  - import-as-draft vs import-and-publish decision
+  - rollback from a prior published version
+- Refined JSON import as a package workflow:
+  - Import as Draft remains the default safe path
+  - Import and Publish Version is available only after full validation preview, required publish summary, and required authorization
+  - successful Import and Publish creates both an import record and immutable published version
 - Added source-locale protection:
   - English remains the initial source/default locale
   - English edits require elevated authorization, reason capture, and audit logging
@@ -58,7 +72,7 @@ The revised FR keeps the client-backed multilingual requirement as the anchor, w
   - FR-027 owns legal content versioning
   - FR-024 registers treatment/package translatable content
   - FR-032 uses language catalog for provider spoken languages, separate from UI language preference
-- Expanded Functional Requirements Summary from 7 requirements to 20 requirements.
+- Expanded Functional Requirements Summary from 7 requirements to 25 requirements.
 - Expanded Key Entities to include `TranslationKey`, `TranslationValue`, `TranslationImport`, `TranslationVersion`, `TranslationBundle`, and `TranslationAuditLog`.
 - Normalized Markdown table separator syntax to `| --- | --- |` style.
 
