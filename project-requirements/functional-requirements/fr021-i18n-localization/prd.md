@@ -3,7 +3,7 @@
 **Module**: P-01: Patient Account & Settings | PR-06: Profile & Settings Management | A-09: System Settings & Configuration | S-02: Payment Processing Service | S-03: Notification Service
 **Feature Branch**: `fr021-i18n-localization`
 **Created**: 2025-11-11
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-021 from `local-docs/project-requirements/system-prd.md`; client transcriptions; product-defined localization operations
 
 ---
@@ -244,6 +244,7 @@ flowchart TD
 - If the selected locale has missing keys, the app displays fallback text from the configured fallback chain.
 - If a locale is deactivated, patients who previously selected it are moved to fallback behavior without deleting their historical preference.
 - The language selector must not include inactive locales.
+- When timezone preference is null or unset, the Patient App uses the device/browser-detected timezone; if unavailable, it falls back to UTC and displays a visible timezone indicator so the patient knows which timezone is in use.
 
 **Notes**:
 
@@ -339,6 +340,7 @@ flowchart TD
 - Hard deletion of a language is not allowed once translation history or published versions exist; use inactive/archived state instead.
 - English (`en`) is the initial default/source locale unless changed through approved governance.
 - New languages should start in Preparation state until required tenant bundles are ready.
+- Only Active locales appear in user-facing language selectors; Inactive and Preparation locales are hidden from all patient, provider, and admin language selector controls.
 - Selecting a language row opens Screen 5: Admin - Language Detail.
 
 **Notes**:
@@ -535,7 +537,7 @@ flowchart TD
 | Tenant/surface | select | Yes | Target translation surface | Patient App, Provider Dashboard, Admin Platform, Shared/Notification |
 | Group/namespace | select | Yes | Target key group | Must exist or be authorized for creation |
 | File | upload | Yes | JSON translation file/package | Valid JSON; size limit configured by platform |
-| Import mode | radio/select | Yes | Overwrite draft values, only add missing, or preview only | Must be selected before confirmation |
+| Import mode | radio/select | Yes | Overwrite draft values or only add missing | Must be selected before confirmation |
 | Validation preview | read-only panel | Yes | Shows created, updated, unchanged, skipped, row warnings, and errors | Required before import confirmation |
 | Import decision | radio/select | Yes | Import as Draft or Import and Publish Version | Import and Publish disabled if validation errors exist or approval is required |
 | Publish summary | textarea | Conditional | Required when choosing Import and Publish Version | Required before publish confirmation |
@@ -653,6 +655,7 @@ flowchart TD
 - **Rule 10**: Locale direction metadata must be stored so future RTL support is not blocked.
 - **Rule 11**: Machine-generated translations save as draft only, must be marked Review Needed, and cannot be served to runtime clients until published.
 - **Rule 12**: Machine translation generation can target a whole non-English language by missing keys or full-language replacement scope; English/source locale is never replaced by machine translation.
+- **Rule 13**: Clients MUST revalidate translation bundles against version metadata (ETag/hash or equivalent) on each fetch cycle. After a publish or rollback, the maximum acceptable stale window is a platform-configurable interval, recommended at 5 minutes or less, ensuring clients do not serve outdated bundles for an indeterminate period after a version change.
 
 ### Data & Privacy Rules
 
@@ -690,10 +693,12 @@ flowchart TD
 - Machine translation full-language replacement requires explicit confirmation because it can overwrite many target-language draft values.
 - Historical versions and audit records cannot be deleted through normal admin controls.
 
+**Elevated Authorization Definition**: For the purposes of FR-021, "elevated authorization" means the **Super Admin** role as defined in FR-031 (Admin Access Control & Permissions). Only Super Admin role holders may edit English source values, change the default locale, publish translation versions, and perform rollback operations. The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time.
+
 ### Payment & Billing Rules
 
 - **Currency Rule 1**: Currency display must use configured country/locale/currency rules without storing currency settings inside translation JSON files.
-- **Currency Rule 2**: Currency conversion source, refresh cadence, markup, rate locking, and payment-collection fallback are owned by FR-029 / S-02 and consumed by FR-021 for localized display.
+- **Currency Rule 2**: Currency conversion source, refresh cadence, markup, rate locking, and payment-collection fallback are owned by FR-029 / S-02 and consumed by FR-021 for localized display. Locale-aware number formatting (decimal separator, symbol position, digit grouping, and RTL currency rendering) is owned by S-02 as a shared service capability and consumed by FR-021; neither FR-021 nor FR-029 duplicates this formatting logic.
 - **Currency Rule 3**: User-selected language does not automatically override timezone or currency unless product rules explicitly map country/locale defaults.
 
 ---
@@ -703,7 +708,7 @@ flowchart TD
 ### Patient Experience Metrics
 
 - **SC-001**: 99% of active Patient App UI strings load from the selected published locale bundle or configured fallback for supported locales.
-- **SC-002**: Patient language switching completes within 2 seconds for 95th percentile interactions when the published bundle is already cached or reachable.
+- **SC-002**: Patient language switching completes in < 2 seconds for 95th percentile interactions when the published bundle is already cached or reachable.
 - **SC-003**: Patient App remains usable when selected-locale translations are missing because fallback text is displayed per key.
 
 ### Provider Efficiency Metrics
@@ -767,6 +772,10 @@ flowchart TD
 - **FR-029 / S-02 Payment System Configuration**:
   - **Why needed**: FR-029 owns enabled currencies, currency pairs, conversion sources, markup, rate locking, and fallback-to-USD behavior.
   - **Integration point**: FR-021 consumes FR-029/S-02 currency display and formatting outputs; it does not own payment conversion configuration.
+
+- **FR-031 / Admin Access Control & Permissions**:
+  - **Why needed**: FR-021 defines "elevated authorization" as the Super Admin role governed by FR-031. Protected operations — English source value editing, default locale changes, translation version publishing, and rollback — are restricted to Super Admin role holders.
+  - **Integration point**: FR-031 owns role definitions and the permission matrix; FR-021's four protected operations must be registered as Super Admin-only permissions in the FR-031 permission matrix at implementation time. The exact per-operation permission scope must be aligned with FR-031 configuration before release.
 
 ### External Dependencies (APIs, Services)
 
@@ -867,7 +876,7 @@ flowchart TD
 - **Admin Platform localization management**:
   - **Data format**: Registry rows, draft values, import/export JSON, version metadata, and coverage summaries.
   - **Authentication**: Admin-authenticated access with elevated authorization for protected source/default changes.
-  - **Error handling**: Block publish on validation failures; preserve draft state for correction.
+  - **Error handling**: Block publish on validation failures; preserve draft state for correction. Protected endpoints (publish, rollback, English source edit, default locale change) must return HTTP 403 with the platform-standard error format when called by a non-Super-Admin role.
 
 - **Notification Service**:
   - **Data format**: Recipient locale preference and fallback order.
@@ -1125,6 +1134,9 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 | 2025-11-11 | 1.0 | Initial PRD creation | AI |
 | 2026-05-19 | 1.1 | Major localization-management revision: aligned to `prd-template.md`; added canonical translation registry, tenant-specific language selectors, admin locale/key/import/export/publish/rollback/coverage screens, draft-to-publish versioning, rollback, source-locale protection, JSON workflows, fallback rules, and expanded requirements/entities. | AI |
 | 2026-05-25 | 1.2 | Added machine-translation provider/API-key management, whole-language draft generation modes for missing keys and full non-English replacement, machine-translation job/audit requirements, FR-029 currency ownership alignment, and clarified FR-026 surfacing vs FR-021 language-catalog ownership. | Codex |
+| 2026-05-25 | 1.3 | Verification fixes: defined "elevated authorization" as Super Admin role (FR-031); assigned locale-aware number formatting ownership to S-02 shared service in Currency Rule 2; added timezone fallback rule to Screen 1 (device/browser-detected → UTC); added Rule 13 for max cache stale window after publish/rollback (≤5 min recommended); added rule to Screen 4 excluding Inactive and Preparation locales from user-facing selectors. | AI |
+| 2026-05-25 | 1.4 | Verification fixes: added FR-031 as formal internal dependency with integration point description; removed "preview only" from Screen 8 Import mode options (redundant with auto-generated validation preview); corrected SC-002 wording from "within 2 seconds" to "< 2 seconds" to match constitution Principle IV; added HTTP 403 error-handling requirement to Admin Platform localization management integration point. | AI |
+| 2026-05-25 | 1.5 | Verification passed (verify-fr): no critical, medium, or minor issues found. Status updated to Verified & Approved. | AI |
 
 ---
 
@@ -1132,6 +1144,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 
 | Role | Name | Date | Signature/Approval |
 | --- | --- | --- | --- |
+| Product Owner | Joachim | 2026-05-25 | ✅ Approved |
 | Product Owner |  |  |  |
 | Technical Lead |  |  |  |
 | Stakeholder |  |  |  |

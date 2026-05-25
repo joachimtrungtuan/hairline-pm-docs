@@ -854,6 +854,10 @@ The module delivers value by:
   - **Why needed**: Provider identity and profile context supports provider-scoped deposit overrides and payout alignment
   - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
 
+- **FR-021 / Module A-09 + S-02**: Multi-Language & Localization
+  - **Why needed**: FR-021 consumes S-02 currency conversion outputs for localized price display. S-02 also owns locale-aware number formatting (decimal separator, symbol position, digit grouping, and RTL currency rendering) as a shared service capability consumed by FR-021.
+  - **Integration point**: S-02 exposes currency conversion rates, markup, and locale-aware formatting rules; FR-021 reads these to render prices in user locale/currency context without duplicating conversion or formatting logic.
+
 ### External Dependencies (APIs, Services)
 
 - **External Service 1**: Stripe Payment API
