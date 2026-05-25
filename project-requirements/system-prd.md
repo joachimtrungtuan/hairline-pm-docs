@@ -1173,7 +1173,7 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 ### FR-021: Multi-Language & Localization
 
 **Priority**: P2 (Enhanced)  
-**Module(s)**: A-09: System Settings & Configuration | S-02: Payment Processing Service
+**Module(s)**: P-01: Patient Account & Settings | PR-06: Profile & Settings Management | A-09: System Settings & Configuration | S-02: Payment Processing Service | S-03: Notification Service
 
 **Requirements**:
 
