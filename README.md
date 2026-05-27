@@ -1,7 +1,7 @@
 # Hairline Platform Documentation
 
 **Version**: 1.0.0  
-**Last Updated**: 2025-10-30  
+**Last Updated**: 2026-05-27  
 **Status**: ✅ Active Development
 
 ## Overview
@@ -40,9 +40,13 @@ project-requirements/
 ### Supporting Documentation
 
 ```sh
-plane-config/                    # 🔧 Project management configuration
+product-plans/                   # 🗺️ Roadmaps and initiative planning docs
+progress-tracking/               # 📌 Ongoing execution and status trackers
+project-notes/                   # 🧾 Ad hoc notes and decisions
 reports/                         # 📈 Development progress reports
-task-prompt/                     # 📝 Task generation templates
+testing-plans/                   # 🧪 Test planning and validation docs
+website-works/                   # 🌐 Website requirements and public website content
+project-automation/task-prompt/  # 📝 Task generation templates
 ```
 
 ## 🎯 Key Documents by Role
