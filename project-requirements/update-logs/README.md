@@ -327,7 +327,7 @@ This folder contains documentation update reports and verification logs for the 
 
 #### **Legal Static Content Creation**
 
-- `LEGAL_STATIC_CONTENT_2026-03-11.md` - Created first publishable draft set of public legal/support pages for Privacy Policy, Terms of Use, Contact Support, and Account Deletion under `local-docs/project-static-content/legal-content/`, aligned to current Hairline support, deletion, retention, and medical-data handling requirements
+- `LEGAL_STATIC_CONTENT_2026-03-11.md` - Created first publishable draft set of public legal/support pages for Privacy Policy, Terms of Use, Contact Support, and Account Deletion under `local-docs/website-works/project-static-content/legal-content/`, aligned to current Hairline support, deletion, retention, and medical-data handling requirements
 
 ### 2026-03-18/ (1 file)
 
@@ -777,4 +777,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 25, 2026 (FR-021 v1.4 verification fixes: FR-031 formal dependency, Screen 8 import mode cleanup, SC-002 wording, HTTP 403 on protected endpoints)
+**Last Updated**: May 27, 2026 (documentation maintenance: website-works path references corrected and the local-docs overview updated to include website-works)

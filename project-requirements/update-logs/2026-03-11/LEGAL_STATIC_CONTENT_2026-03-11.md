@@ -2,14 +2,14 @@
 
 ## Summary
 
-Created the first publishable draft set of public legal and support pages for Hairline under `local-docs/project-static-content/legal-content/`, aligned to the current project requirements, support workflows, deletion workflow, and retention model.
+Created the first publishable draft set of public legal and support pages for Hairline under `local-docs/website-works/project-static-content/legal-content/`, aligned to the current project requirements, support workflows, deletion workflow, and retention model.
 
 ## Files Added
 
-- `local-docs/project-static-content/legal-content/privacy-policy.md`
-- `local-docs/project-static-content/legal-content/terms-of-use.md`
-- `local-docs/project-static-content/legal-content/contact-support.md`
-- `local-docs/project-static-content/legal-content/account-deletion.md`
+- `local-docs/website-works/project-static-content/legal-content/privacy-policy.md`
+- `local-docs/website-works/project-static-content/legal-content/terms-of-use.md`
+- `local-docs/website-works/project-static-content/legal-content/contact-support.md`
+- `local-docs/website-works/project-static-content/legal-content/account-deletion.md`
 
 ## What Was Added
 
@@ -76,3 +76,7 @@ The new pages were written from existing repository requirements and implementat
   - any registered address or jurisdictional wording required by counsel;
   - whether a second support channel (phone or form) should be published in addition to email; and
   - whether the public account-deletion page should eventually be backed by a web form instead of email-only initiation outside the app.
+
+## Follow-up Maintenance
+
+- 2026-05-27: Updated this log's file paths to match the current repository structure under `local-docs/website-works/project-static-content/legal-content/`.
