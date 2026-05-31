@@ -6,6 +6,26 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-05-29/ (3 files)
+
+#### **Sprint 1 Readiness Fix Backlog**
+
+- `SPRINT_1_READINESS_FIX_BACKLOG_2026-05-29.md` - Created `local-docs/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md`, a Sprint 1 readiness and fix-backlog report based on the current launch plan. The report anchors Sprint 1 scope to Core: Inquiry, Quote & Treatment, captures modules, stories, deferrals, Sprint-level readiness blockers, and module-level evidence gaps, and explicitly distinguishes readiness gaps from confirmed product defects because no staging/product review was performed in this pass.
+
+#### **Sprint Readiness Fix Backlog Template**
+
+- `SPRINT_READINESS_FIX_BACKLOG_TEMPLATE_2026-05-29.md` - Created `local-docs/product-plans/template/sprint-readiness-fix-backlog-template.md`, a reusable template for sprint-start product review against the launch plan. The template anchors sprint scope to the launch plan, captures sprint-level blockers and module-level remaining fixes with reproduction steps, actual/expected outcomes, and evidence links, explicitly keeps Plane ticket creation outside this document, and was revised the same day to remove the Sprint Readiness Summary section and merge Document Control with Sprint Summary.
+
+#### **Client Sprint Review Report Template**
+
+- `CLIENT_SPRINT_REVIEW_REPORT_TEMPLATE_2026-05-29.md` - Created `local-docs/product-plans/template/client-sprint-review-report-template.md`, a concise business-facing post-sprint report template. The template uses an executive summary, Mermaid launch progress track plus readiness gauge, compact sprint outcomes table, and combined open-items / risks / next-sprint direction section for client review.
+
+### 2026-05-27/ (1 file)
+
+#### **FR-013 Provider/Admin Design Layout Verification**
+
+- `FR013_PROVIDER_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-05-27.md` — Created FR-013 Screens 5-10 design-layout verification report against current `layout-temp/` JPGs. All six requested Provider/Admin screens have layout coverage; Screens 6, 8, and 9 are `🔴 FAIL` due to critical composer validation, consent-attestation, reviewer-display-name, and takedown-decision/removal-reason gaps; Screens 5 and 7 are `🟡 PARTIAL`; Screen 10 is `🟢 COMPLETE`.
+
 ### 2026-05-25/ (1 file)
 
 #### **FR-021 Machine Translation and Language Catalog Alignment + Verification Fixes**
@@ -571,6 +591,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-14**: `LAUNCH_PLAN_PATCH_2026-05-14.md` - Seven coordinated patches to the launch plan: pulled P-01/PR-01/A-02 into Sprint 1, moved P-03b payment sub-features to Sprint 2, App Store schedule cleanup with final build moved to June 9, Sprint Planning relocated to Fridays (no weekend work), regression load split between Sprint 3 and Sprint 4, soft-launch reframing with minimal safeguards (DB backup, deployment artifact tag, Go/No-Go decision point), and `:done` marker cleanup.
 - **2026-05-20**: `LAUNCH_PLAN_PATCH_2026-05-20.md` - Three patches: (1) full +7-day timeline shift (Sprint 1 now May 21–29, launch June 22–23) due to operational delay; (2) aftercare modules P-05/PR-04/A-03 moved from Sprint 1 → Sprint 2 to group with A-09b/A-09c configuration they depend on; (3) user stories added to all four sprint sections (36 stories total, grouped by role: Patient / Provider / Admin / Platform Foundations).
 - **2026-05-20**: `LAUNCH_PLAN_REVIEW_2026-05-20.md` - Three-track review plus follow-up correction pass: PRD/FR cross-check, sprint DoD/story rework, module table restructure, timeline fixes now including RC store-submission/code-freeze and store-review fallback, FR/module corrections for travel, support, promotions, payment, payout, search, compliance, affiliate, and FR-036 topline placeholder, plus expanded launch smoke tests.
+- **2026-05-29**: `SPRINT_1_READINESS_FIX_BACKLOG_2026-05-29.md` - Created Sprint 1 readiness and fix-backlog report from `launch-plan.md`, with Sprint 1 scope, modules, stories, deferrals, readiness blockers, and module-level evidence gaps for later staging/product review.
 - **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
@@ -582,6 +603,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
+- **2026-05-27**: `FR013_PROVIDER_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-05-27.md` - FR-013 Provider/Admin Screens 5-10 design-layout verification; all six screens have layout coverage, with Screens 6, 8, and 9 failing on critical validation/control gaps.
 - **2026-05-21**: `FR019_DESIGN_LAYOUT_VERIFICATION_2026-05-21.md` - Full FR-019 design-layout verification; all three platform flows are `🔴 BLOCKED`, with missing provider/patient layouts plus admin governance and redemption-log gaps documented.
 - **2025-10-23**: `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification
 - **2025-10-23**: `REQUIREMENTS_VERIFICATION_2025-10-23.md` - Requirements verification
@@ -777,4 +799,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 27, 2026 (documentation maintenance: website-works path references corrected and the local-docs overview updated to include website-works)
+**Last Updated**: May 29, 2026 (Sprint 1 readiness fix backlog and sprint report templates logged)
