@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-06-04/ (1 file)
+
+#### **FR-021 Provider/Admin Design Layout Verification**
+
+- `FR021_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-06-04.md` - Created FR-021 Provider/Admin Web Screens 2-10 design-layout verification report against current `layout-temp/` JPGs, expanded in place from the original Screens 3-10 report. All 9 requested screens have layout coverage; overall verdict is `🔴 FAIL` because Screen 9 appears to allow publishing without a required change summary and Screen 8 also has a critical publish-summary control issue. Follow-up review moved Screen 4 and Screen 6 to `🟢 GOOD`; Screen 7 remains `🟡 PARTIAL` for active-language coverage gaps.
+
 ### 2026-05-29/ (3 files)
 
 #### **Sprint 1 Readiness Fix Backlog**
@@ -603,6 +609,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
+- **2026-06-04**: `FR021_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-06-04.md` - FR-021 Provider/Admin Web Screens 2-10 design-layout verification; all 9 screens have layout coverage, with overall verdict `🔴 FAIL` due to publish-without-summary control issues in Screens 8-9.
 - **2026-05-27**: `FR013_PROVIDER_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-05-27.md` - FR-013 Provider/Admin Screens 5-10 design-layout verification; all six screens have layout coverage, with Screens 6, 8, and 9 failing on critical validation/control gaps.
 - **2026-05-21**: `FR019_DESIGN_LAYOUT_VERIFICATION_2026-05-21.md` - Full FR-019 design-layout verification; all three platform flows are `🔴 BLOCKED`, with missing provider/patient layouts plus admin governance and redemption-log gaps documented.
 - **2025-10-23**: `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification
@@ -799,4 +806,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: May 29, 2026 (Sprint 1 readiness fix backlog and sprint report templates logged)
+**Last Updated**: June 4, 2026 (FR-021 Provider/Admin Screens 2-10 design-layout verification logged)
