@@ -33,6 +33,7 @@
 - Section 2 is the working fix backlog. Capture issues found from real product review in enough detail that the dev team can reproduce and fix them quickly.
 - Section 3 is for findings that should not distract the current sprint. Use it to prevent out-of-scope issues from being treated as sprint commitments.
 - Do not include Plane ticket IDs, assignees, estimates, or ownership fields. Those belong to the later Plane-ticket creation workflow.
+- Screenshot evidence must use persistent uploaded URLs that can be revisited later. Do not use local file paths, clipboard-only image references, or temporary file links in `Evidence Link`. If a screenshot is needed but no uploaded URL is available, ask the reviewer to upload it and use `TBD` until the raw URL is provided.
 
 ### Priority Scale
 
@@ -100,10 +101,13 @@
 ## 2.1 Sprint-Level Blockers
 
 > Fill-in guidance: Use this section only for issues that block the sprint Definition of Done, affect multiple modules, prevent reliable testing, or break a required cross-module journey. Do not duplicate module-specific issues here unless they are true sprint blockers.
+> Fill-in guidance: Add `Task Status` so future reviewers can see whether the item is still only recorded or has already been converted into a Plane task. Use a short value such as `Recorded only` or `Task created`.
+> Fill-in guidance: For long table cells, especially `Steps to Reproduce`, `Actual Outcome`, `Expected Outcome`, and `Notes`, use `<br>` line breaks inside the cell. Keep reproduction steps as numbered lines such as `1. Open...<br>2. Click...<br>3. Verify...` so the table remains readable in Markdown preview.
+> Fill-in guidance: `Evidence Link` must be a persistent uploaded URL, API/log reference, or stable report path. Do not paste local screenshot paths or clipboard-only file links. If the issue needs a screenshot and the reviewer has not uploaded one yet, ask for the uploaded URL and leave `TBD` temporarily.
 
-| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Notes |
-|---|---|---|---|---|---|---|---|
-| P0/P1/P2/P3 | [Cross-module area or journey] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What the product currently does] | [What must happen for sprint DoD] | [Screenshot / video / log / report link] | [Environment, build, tenant, account, uncertainty, or related context] |
+| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+|---|---|---|---|---|---|---|---|---|
+| P0/P1/P2/P3 | [Cross-module area or journey] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What the product currently does] | [What must happen for sprint DoD] | [Screenshot / video / log / report link] | [Recorded only / Task created] | [Environment, build, tenant, account, uncertainty, or related context] |
 
 ## 2.2 Module Fix Backlog
 
@@ -122,10 +126,13 @@
 ### Remaining Fixes
 
 > Fill-in guidance: Each row should be independently understandable by a developer. Use direct product language. Avoid assigning cause unless it was verified. Evidence Link may point to a screenshot, screen recording, API response, console log, or another local report.
+> Fill-in guidance: Add `Task Status` so later Plane work can distinguish items that are only captured in the report from items already turned into tasks. Use a short value such as `Recorded only` or `Task created`.
+> Fill-in guidance: For long table cells, especially `Steps to Reproduce`, `Actual Outcome`, `Expected Outcome`, and `Notes`, use `<br>` line breaks inside the cell. Keep reproduction steps as numbered lines such as `1. Open...<br>2. Click...<br>3. Verify...` so the table remains readable in Markdown preview.
+> Fill-in guidance: `Evidence Link` must be a persistent uploaded URL, API/log reference, or stable report path. Do not paste local screenshot paths or clipboard-only file links. If the issue needs a screenshot and the reviewer has not uploaded one yet, ask for the uploaded URL and leave `TBD` temporarily.
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Notes |
-|---|---|---|---|---|---|---|---|
-| P0/P1/P2/P3 | [Affected flow or launch-plan user story] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What happened in the product] | [What should happen based on launch plan / DoD / PRD] | [Screenshot / video / log / report link] | [Environment, account, data fixture, edge case, uncertainty, or follow-up note] |
+| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+|---|---|---|---|---|---|---|---|---|
+| P0/P1/P2/P3 | [Affected flow or launch-plan user story] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What happened in the product] | [What should happen based on launch plan / DoD / PRD] | [Screenshot / video / log / report link] | [Recorded only / Task created] | [Environment, account, data fixture, edge case, uncertainty, or follow-up note] |
 
 ---
 
