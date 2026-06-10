@@ -74,3 +74,4 @@ The review confirms only partial A-02 progress: a new provider (`Hairline Test C
 ## Minor Tracking Updates
 
 - Updated `local-docs/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md` Task Status values from `Task created` to `Task drafted` for 25 PR-01, PR-06, and A-02 bug rows after creating the Plane-ready draft bug task artifact `local-docs/project-automation/task-creation/2026-06-08/implementation-tasks-2026-06-08-001.md`.
+- Created the corresponding 25 Plane work items for those PR-01, PR-06, and A-02 bug rows and wrote back HAIRL-1299 through HAIRL-1323 to the draft task artifact; the backlog rows were then updated from `Task drafted` to `Task created (HAIRL-xxxx)` in row order.

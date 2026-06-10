@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-06-09/ (1 file)
+
+#### **Sprint Readiness Reporting Skill**
+
+- `SPRINT_READINESS_REPORTING_SKILL_2026-06-09.md` - Created `local-docs/project-automation/skills-engineering/sprint-readiness-reporting/`, a new skill for Hairline sprint readiness-report operations. The skill standardizes context resolution for the active readiness-report file and launch-plan file, scaffold creation from a bundled backlog template, basic vs advanced update routing, evidence/status writing rules, and blocked-follow-up re-test handling after earlier blockers are fixed.
+
 ### 2026-06-08/ (1 file)
 
 #### **Sprint 1 Provider Onboarding Review**
@@ -605,6 +611,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-20**: `LAUNCH_PLAN_REVIEW_2026-05-20.md` - Three-track review plus follow-up correction pass: PRD/FR cross-check, sprint DoD/story rework, module table restructure, timeline fixes now including RC store-submission/code-freeze and store-review fallback, FR/module corrections for travel, support, promotions, payment, payout, search, compliance, affiliate, and FR-036 topline placeholder, plus expanded launch smoke tests.
 - **2026-05-29**: `SPRINT_1_READINESS_FIX_BACKLOG_2026-05-29.md` - Created Sprint 1 readiness and fix-backlog report from `launch-plan.md`, with Sprint 1 scope, modules, stories, deferrals, readiness blockers, and module-level evidence gaps for later staging/product review.
 - **2026-06-08**: `SPRINT_1_PROVIDER_ONBOARDING_REVIEW_2026-06-08.md` - Updated Sprint 1 provider onboarding backlog rows after Admin wizard screenshot review: provider creation is partial-pass, activation/Owner login remains open, and A-02/PR-06 follow-up bugs are logged for notification deep-linking, phone country-code UX, phone formatting, and document preview.
+- **2026-06-09**: `SPRINT_READINESS_REPORTING_SKILL_2026-06-09.md` - Created the `sprint-readiness-reporting` skill for Hairline readiness-report context resolution, scaffold creation, basic vs advanced update routing, evidence/status rules, and blocked-follow-up re-test handling.
 - **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
@@ -813,4 +820,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 8, 2026 (Sprint 1 provider onboarding review findings logged)
+**Last Updated**: June 9, 2026 (Sprint readiness reporting skill logged)
