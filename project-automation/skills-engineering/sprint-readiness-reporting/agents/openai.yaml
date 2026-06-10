@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sprint Readiness Reporting"
+  short_description: "Run Hairline sprint readiness report workflows."
+  default_prompt: "Use $sprint-readiness-reporting to create or update a Hairline sprint readiness report with the correct report path, launch plan, and evidence rules."
