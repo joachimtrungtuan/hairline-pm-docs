@@ -47,6 +47,8 @@ When the user says the blocker is fixed:
    - rewrite or remove outdated blocked wording
    - convert the checkpoint into a confirmed issue if a new problem is found
    - or replace it with pass coverage in `Review Notes` if the re-test now works
+   - update the original blocker row to `Resolved - pending re-test` only when the implementation/task side reports a fix but the product path has not been re-tested yet
+   - update the original blocker row to `Resolved - verified YYYY-MM-DD` only after the affected path has been re-tested and evidence is recorded
 
 ## Wording Rules
 

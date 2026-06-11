@@ -58,14 +58,18 @@ Use only these `Task Status` values in the readiness backlog:
 - `Review pending`
 - `Recorded only`
 - `Task created (HAIRL-123)`
+- `Resolved - pending re-test`
+- `Resolved - verified YYYY-MM-DD`
 
 Interpretation:
 
 - `Review pending` = placeholder, evidence gap, or blocked re-test checkpoint
 - `Recorded only` = confirmed issue from real review evidence, but not yet turned into a Plane task
 - `Task created (HAIRL-123)` = implementation task exists and the Plane key is known
+- `Resolved - pending re-test` = implementation side reports the issue fixed, but readiness validation has not re-tested the affected product path yet
+- `Resolved - verified YYYY-MM-DD` = the affected product path was re-tested on the stated date and the blocker/fix row no longer blocks sprint readiness
 
-Do not invent extra status labels inside this report.
+Do not mark an item as `Resolved - verified YYYY-MM-DD` without adding enough re-test evidence in `Review Notes`, `Evidence Link`, or `Notes` for a future reviewer to understand what was checked. Do not invent extra status labels inside this report.
 
 ## Evidence Rules
 
