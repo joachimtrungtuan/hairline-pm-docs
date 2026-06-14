@@ -6,6 +6,32 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-06-14/ (1 file)
+
+#### **Sprint 2–5 Readiness Scaffolds**
+
+- `SPRINT_2_TO_5_READINESS_SCAFFOLDS_2026-06-14.md` - Created sprint readiness & fix-backlog scaffolds for all remaining sprints from the launch plan: Sprint 2 (`2026-06-05`), Sprint 3 (`2026-06-12`), Sprint 4 (`2026-06-19`), and Sprint 5 — Launch (`2026-06-22`). Folder dates anchor on the May 29 Sprint 1 milestone and step one week forward (matching the launch-plan Sprint 2–4 Review dates), with Sprint 5 using its real June 22 launch date. Each scaffold mirrors the Sprint 1 report structure with launch-plan-anchored scope, modules, stories, and deferrals, plus `Review pending` evidence-gap rows; the Sprint 5 scaffold is adapted for a launch event using go-live activities and the eight critical smoke-test flows instead of modules.
+
+### 2026-06-12/ (3 files)
+
+#### **Create Bug Tasks Skill**
+
+- `CREATE_BUG_TASKS_SKILL_2026-06-12.md` - Created the project-local `create-bug-tasks` skill for converting confirmed bug reports and `Recorded only` sprint readiness backlog rows into Plane-ready `[BUG]` task artifacts. The skill includes self-contained references for task format, source-row mapping, label/priority/cycle/parent rules, PRD/document/design reference placement, Plane dry-run/live creation, and optional backlog status updates.
+
+#### **Sprint 1 A-09a Questionnaire Create Bug**
+
+- `SPRINT_1_A09A_QUESTIONNAIRE_CREATE_BUG_2026-06-12.md` - Updated the Sprint 1 readiness backlog with a confirmed A-09a defect showing that `Create New Questionnaire Set` currently does not persist a new draft set. The report now captures direct admin UI evidence, mock-driven frontend catalog behavior, and live API route-not-found verification against the expected FR-025 questionnaire-set endpoints.
+
+#### **Sprint 1 PR-06 Provider Treatment Pricing Review**
+
+- `SPRINT_1_PR06_PROVIDER_TREATMENT_PRICING_REVIEW_2026-06-12.md` - Updated the Sprint 1 readiness backlog with confirmed PR-06 provider-treatment findings. The report now records hidden detail navigation on treatment cards, wrong provider detail routing, provider-pricing structure/status mismatches against FR-024, stale list pricing after successful save, hardcoded currency handling, and an unwired deactivate action.
+
+### 2026-06-11/ (1 file)
+
+#### **Sprint Readiness Resolution Status**
+
+- `SPRINT_READINESS_RESOLUTION_STATUS_2026-06-11.md` - Updated the `sprint-readiness-reporting` skill contract and bundled backlog template to add resolution lifecycle statuses after Plane task creation. Readiness rows can now distinguish `Resolved - pending re-test` from `Resolved - verified YYYY-MM-DD`, with re-test evidence required before a blocker is treated as verified and no longer blocking sprint readiness.
+
 ### 2026-06-09/ (1 file)
 
 #### **Sprint Readiness Reporting Skill**
@@ -612,6 +638,9 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-29**: `SPRINT_1_READINESS_FIX_BACKLOG_2026-05-29.md` - Created Sprint 1 readiness and fix-backlog report from `launch-plan.md`, with Sprint 1 scope, modules, stories, deferrals, readiness blockers, and module-level evidence gaps for later staging/product review.
 - **2026-06-08**: `SPRINT_1_PROVIDER_ONBOARDING_REVIEW_2026-06-08.md` - Updated Sprint 1 provider onboarding backlog rows after Admin wizard screenshot review: provider creation is partial-pass, activation/Owner login remains open, and A-02/PR-06 follow-up bugs are logged for notification deep-linking, phone country-code UX, phone formatting, and document preview.
 - **2026-06-09**: `SPRINT_READINESS_REPORTING_SKILL_2026-06-09.md` - Created the `sprint-readiness-reporting` skill for Hairline readiness-report context resolution, scaffold creation, basic vs advanced update routing, evidence/status rules, and blocked-follow-up re-test handling.
+- **2026-06-11**: `SPRINT_READINESS_RESOLUTION_STATUS_2026-06-11.md` - Added resolution lifecycle statuses to the sprint-readiness reporting workflow so fix rows can distinguish implementation-reported fixes from reviewer-verified re-test closure.
+- **2026-06-12**: `CREATE_BUG_TASKS_SKILL_2026-06-12.md` - Created the `create-bug-tasks` skill for turning confirmed bug reports and `Recorded only` readiness backlog rows into Plane-ready `[BUG]` tasks with module/FR traceability, explicit labels, early PRD/document/design references, and optional post-create backlog status updates.
+- **2026-06-14**: `SPRINT_2_TO_5_READINESS_SCAFFOLDS_2026-06-14.md` - Created Sprint 2–5 readiness & fix-backlog scaffolds from `launch-plan.md`, dated `2026-06-05` / `2026-06-12` / `2026-06-19` / `2026-06-22` (one-week-spaced from the May 29 Sprint 1 milestone; Sprint 5 on its real launch date), each with launch-plan-anchored scope, modules, stories, deferrals, and `Review pending` evidence gaps.
 - **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
@@ -820,4 +849,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 9, 2026 (Sprint readiness reporting skill logged)
+**Last Updated**: June 14, 2026 (Sprint 2–5 readiness scaffolds logged)

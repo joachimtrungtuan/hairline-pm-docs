@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Bug Tasks"
+  short_description: "Draft Plane-ready bug fix tasks"
+  default_prompt: "Use $create-bug-tasks to create Plane-ready bug fix tasks from a backlog or bug report."
