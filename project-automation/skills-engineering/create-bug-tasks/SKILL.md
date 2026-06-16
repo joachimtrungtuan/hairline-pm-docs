@@ -37,7 +37,8 @@ If source rows lack enough information to identify one bug, steps, actual outcom
 - Do not edit Plane live before running and reviewing a dry-run with `plane-api-commands`.
 - When updating sprint readiness backlog statuses, follow `sprint-readiness-reporting` status rules.
 - Do not copy tracking-only columns such as `Task Status` into task descriptions.
-- Keep bug tasks single-minded: one task should represent one fixable bug.
+- Keep bug tasks single-minded: one task should represent one fixable bug on one side of the system.
+- Never produce a combined FE + BE task. A bug that spans both sides must be split into one FE task and one BE task (see Step 6).
 
 ## References To Load
 
@@ -56,11 +57,12 @@ Before starting, create a checklist for:
 1. Resolve source and date
 2. Extract eligible bugs
 3. Resolve PRD/document/design references
-4. Resolve Plane metadata
-5. Draft task file
-6. Validate task file
-7. Optional Plane dry-run and live creation
-8. Optional source backlog status update
+4. Classify each bug as FE / BE / Both and split Both into two tasks
+5. Resolve Plane metadata
+6. Draft task file
+7. Validate task file
+8. Optional Plane dry-run and live creation
+9. Optional source backlog status update
 
 Mark steps in progress and complete as work proceeds.
 
@@ -106,7 +108,23 @@ For each bug:
 
 Use GitHub links, not local file paths, in task descriptions. Convert `local-docs/...` to `https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/...` by stripping the `local-docs/` prefix.
 
-### 5. Resolve Plane Metadata
+### 5. Classify Side And Split
+
+Determine which side of the system each bug belongs to before drafting. Load `references/plane-and-backlog-rules.md` "Label Selection" for the FE/BE signal table.
+
+1. Classify each bug as one of:
+   - **FE-only** — UI behavior, route/view mismatch, visual state, client-side validation/copy/UX, local state, user interaction.
+   - **BE-only** — persistence, API route availability, server validation, returned data shape, auth/permission enforcement, data not saved or not fetched from the authoritative source.
+   - **Both** — the bug spans UI and backend/data contract, persistence, API route, or server validation at the same time.
+2. For FE-only or BE-only bugs, produce **one** task with the single matching side label.
+3. For **Both** bugs, **split into two separate tasks** — one FE, one BE. Never emit a combined FE + BE task.
+   - Each task must restate the bug faithfully from the source report: the same `Current Status`, `Steps to Reproduce`, `Evidence`, and `Notes` carry to both tasks.
+   - Each task's `Expectation (Suggestion)` states **only that side's** expected behavior.
+   - Each task adds a `Scope Boundary` section (see `references/bug-task-format.md`) declaring the side it covers, the counterpart task name, and the shared contract/handoff between the two sides.
+   - The two tasks cross-link each other by task name in `Scope Boundary > Counterpart task`.
+4. If evidence is insufficient to decide the side, do not split. Emit one task labeled `Bugs` only and note that technical ownership needs triage.
+
+### 6. Resolve Plane Metadata
 
 1. Refresh Plane values with `plane-api-commands` `refresh-values`, or use `plane-values.json` only if refreshed in the current turn.
 2. If the user gives a deadline, convert relative date to an exact date and choose the Plane cycle whose date range covers it.
@@ -116,14 +134,14 @@ Use GitHub links, not local file paths, in task descriptions. Convert `local-doc
    - Patient/mobile bugs -> matching mobile module if present; otherwise leave blank.
 4. Apply parent task mapping supplied by the user. Do not invent parent keys.
 
-### 6. Draft Task File
+### 7. Draft Task File
 
 1. Ensure `local-docs/project-automation/task-creation/${CURRENT_DATE}/` exists.
 2. Scan both patterns:
    - `implementation-tasks-${CURRENT_DATE}-*.md`
    - `verification-report-${CURRENT_DATE}-*.md`
 3. Use the next 3-digit suffix and create `implementation-tasks-${CURRENT_DATE}-${SEQ}.md`.
-4. Add one `[BUG]` task per eligible bug.
+4. Add one task per side per bug: one task for each FE-only or BE-only bug, and two tasks (FE + BE) for each Both bug.
 5. Include a summary with:
    - Module/FR categorization
    - Source priority distribution
@@ -133,18 +151,27 @@ Use GitHub links, not local file paths, in task descriptions. Convert `local-doc
 
 ## Task Naming
 
-Task names must include traceability after `[BUG]`.
+Task names must carry a side marker and traceability after `[BUG]`.
 
-Use one of these formats:
+Every task gets a side prefix:
 
-- `[BUG] MODULE_CODE - Short bug title`
-- `[BUG] MODULE_CODE / FR-### - Short bug title`
-- `[BUG] FR-### - Short bug title` only when module is unknown
+- `[BUG][FE]` for frontend tasks
+- `[BUG][BE]` for backend tasks
+- `[BUG]` only when the side is untriageable (evidence insufficient; labeled `Bugs` only)
+
+Then append traceability using one of these formats:
+
+- `[BUG][FE] MODULE_CODE - Short bug title`
+- `[BUG][BE] MODULE_CODE / FR-### - Short bug title`
+- `[BUG][FE] FR-### - Short bug title` only when module is unknown
+
+For a split (Both) bug, the FE and BE tasks share the same module/FR/title and differ only by the side prefix.
 
 Examples:
 
-- `[BUG] PR-06 - Provider treatment card primary detail access`
-- `[BUG] A-09a / FR-025 - Questionnaire set create does not persist`
+- `[BUG][FE] PR-06 - Provider treatment card primary detail access`
+- `[BUG][BE] A-09a / FR-025 - Questionnaire set create does not persist`
+- Split pair: `[BUG][FE] A-09a / FR-025 - Questionnaire set create does not persist` and `[BUG][BE] A-09a / FR-025 - Questionnaire set create does not persist`
 
 Do not use vague names such as `[BUG] Fix questionnaire issue`.
 
@@ -156,7 +183,7 @@ When the user asks to create tasks on Plane:
 2. Confirm per-task labels, priority, module, cycle, and parent.
 3. Run live creation only after dry-run is clean and user intent is clear.
 4. Let the script write `Plane Task ID` and `Plane Task Key` back into the task file.
-5. If the user asks to update a sprint readiness backlog, update only the matching source rows from `Recorded only` to `Task created (HAIRL-1234)`.
+5. If the user asks to update a sprint readiness backlog, update only the matching source rows from `Recorded only` to `Task created (...)` with side-labeled Plane key(s): `Task created (FE: HAIRL-1234)` / `Task created (BE: HAIRL-1234)` for one side, or `Task created (FE: HAIRL-1234; BE: HAIRL-1235)` when the bug was split into FE and BE tasks. Keep one backlog row per source bug and record both keys in its single `Task Status` cell.
 6. Add or append an update log when the source backlog is significantly changed.
 
 Do not remove assignees or set deadlines unless the user explicitly asks for that post-create action.

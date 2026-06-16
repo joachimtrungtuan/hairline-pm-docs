@@ -8,19 +8,32 @@ Always use `[BUG]` for bug fix tasks created by this skill.
 
 ## Task Name Traceability
 
-Task names must include module and/or FR immediately after `[BUG]`.
+Task names must carry a side prefix, then module and/or FR, immediately after `[BUG]`.
+
+Side prefix:
+
+- `[BUG][FE]` for frontend tasks
+- `[BUG][BE]` for backend tasks
+- `[BUG]` only when the side is untriageable (labeled `Bugs` only)
 
 Preferred formats:
 
-- `[BUG] PR-06 - Provider treatment card primary detail access`
-- `[BUG] A-09a / FR-025 - Questionnaire set create does not persist`
-- `[BUG] FR-024 - Treatment creation submit blocked`
+- `[BUG][FE] PR-06 - Provider treatment card primary detail access`
+- `[BUG][BE] A-09a / FR-025 - Questionnaire set create does not persist`
+- `[BUG][BE] FR-024 - Treatment creation submit blocked`
 
 Use `MODULE_CODE / FR-###` when both are known and materially useful.
 
+## Side Classification And Splitting
+
+Every bug belongs to exactly one side per task. There is **no combined FE + BE task**.
+
+- **FE-only** or **BE-only** bug -> one task with the matching side prefix and single side label.
+- **Both** (spans UI and backend/data contract, persistence, API route, or server validation) -> split into **two** tasks: one `[BUG][FE]` and one `[BUG][BE]`. Each task restates the bug faithfully from the source and adds a `Scope Boundary` section (see `bug-task-format.md`).
+
 ## Label Selection
 
-Set labels deliberately in every task.
+Set labels deliberately in every task. Each task carries exactly one side label (or none if untriageable).
 
 | Label | Required when |
 |---|---|
@@ -29,13 +42,13 @@ Set labels deliberately in every task.
 | `BE Task` | Persistence, API route availability, server validation, backend lifecycle, returned data shape, auth/permission enforcement, data not saved or not fetched from authoritative source |
 | `UX/UI` | Only when the task is design/wireframe/interaction-pattern work without confirmed implementation bug |
 
-Use combinations:
+Allowed label sets:
 
-- `Bugs, FE Task` for frontend-only interaction/display bugs.
-- `Bugs, BE Task` for backend-only failures with no UI change expected.
-- `Bugs, FE Task, BE Task` when the bug spans UI and backend/data contract, persistence, API route, or validation mismatch.
+- `Bugs, FE Task` for a frontend task (FE-only bug, or the FE half of a split bug).
+- `Bugs, BE Task` for a backend task (BE-only bug, or the BE half of a split bug).
+- `Bugs` alone only when evidence is insufficient to choose a side; add a note that technical ownership needs triage.
 
-If evidence is insufficient to choose FE/BE, use `Bugs` only and add a note that technical ownership needs triage.
+Never apply both `FE Task` and `BE Task` to a single task. A bug touching both sides must be split into two tasks (see "Side Classification And Splitting"), each carrying its own single side label.
 
 ## Plane Metadata
 
@@ -98,15 +111,20 @@ Follow `plane-api-commands`:
 
 Update source backlog status only when user asks.
 
-For sprint readiness backlogs, use only approved `Task Status` values:
+For sprint readiness backlogs, use only approved `Task Status` values (defined by the `sprint-readiness-reporting` skill):
 
 - `Review pending`
 - `Recorded only`
-- `Task created (HAIRL-123)`
+- `Task created (FE: HAIRL-123)` / `Task created (BE: HAIRL-123)` / `Task created (FE: HAIRL-123; BE: HAIRL-124)`
 - `Resolved - pending re-test`
 - `Resolved - verified YYYY-MM-DD`
 
-After Plane creation, update each matching source row from `Recorded only` to `Task created (HAIRL-1234)`.
+After Plane creation, update each matching source row from `Recorded only` to `Task created (...)` with the created Plane key(s), side-labeled:
+
+- A bug that produced one side's task -> `Task created (FE: HAIRL-1234)` or `Task created (BE: HAIRL-1234)`.
+- A bug that was split into FE and BE tasks -> write **both** keys in the one cell, FE first then BE: `Task created (FE: HAIRL-1234; BE: HAIRL-1235)`.
+
+When a single source bug row produced two tasks (FE + BE), keep it as one backlog row and record both keys in its `Task Status` cell. Do not duplicate the row or add extra columns.
 
 Do not add Plane assignee, due date, or ownership columns to readiness backlog files.
 

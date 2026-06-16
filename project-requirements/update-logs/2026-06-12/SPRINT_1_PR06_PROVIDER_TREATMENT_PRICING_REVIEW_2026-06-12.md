@@ -56,3 +56,23 @@ Recorded confirmed PR-06 provider-treatment issues covering treatment card inter
 ## Follow-up Task Creation
 
 - Created Plane work items for all six PR-06 provider treatment-pricing rows and updated their readiness backlog `Task Status` values from `Recorded only` to `Task created`: `HAIRL-1325`, `HAIRL-1326`, `HAIRL-1327`, `HAIRL-1328`, `HAIRL-1329`, and `HAIRL-1330`.
+
+## 2026-06-15 Follow-up
+
+- Extended the same `PR-06 - Profile & Settings Management` readiness section with direct Provider `Settings -> Account Information` findings from live product review.
+- Added a `Review Notes` update confirming that account-settings behavior is now directly tested, not only left as a generic evidence gap.
+- Recorded new `Recorded only` PR-06 rows for:
+  - Owner `Account name` sync using the wrong provider field and falling back to personal first name
+  - Provider-side phone country-code re-parse corruption after save/reload (`+44` becoming `+4477`)
+  - Generic `Unauthenticated.` password-error messaging on invalid password input
+  - Password change failure even when all visible requirements are met
+  - Missing first/last-name validation for digits and special characters
+  - Divergent display-name mappings across Account Information, Provider Profile staff cards, and the top navbar identity
+- Captured supporting code evidence that the Owner account-name path reads `$provider->name` while provider profile uses `provider_name`, the phone parser uses a greedy `+\\d{1,4}` split, and navbar identity comes from stale Redux auth user data instead of refreshed account-settings state.
+- Refined the remaining `Provider clinic profile and package catalog` `Review pending` row so it no longer treats `Account Information` as an untouched evidence gap after direct testing already covered that tab.
+- Added PR-06 pass coverage notes that provider account timezone save, `Cancel` reset behavior, and single-field / multi-field account-info saves appear to work normally; the remaining account-settings defects stay focused on mapping, validation, and password behavior.
+- Extended the same PR-06 section with direct `Notification Preferences` coverage notes confirming basic toggle persistence, `Enable All`, `Disable All` warning, and save/reload behavior.
+- Recorded new `Recorded only` PR-06 rows for:
+  - notification-type expand/collapse disclosure being under-signaled and interactionally ambiguous relative to the row toggle
+  - missing unsaved-changes indicator parity between `Notification Preferences` and `Account Information`
+- Narrowed the remaining `Provider clinic profile and package catalog` `Review pending` row again so it now tracks only the PR-06 areas still unreviewed after direct `Notification Preferences` coverage.

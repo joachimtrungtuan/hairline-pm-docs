@@ -4,7 +4,7 @@ Use this exact block structure for every task.
 
 ```markdown
 ## TASK_NAME_START
-[BUG] MODULE_CODE / FR-### - Descriptive bug title
+[BUG][FE] MODULE_CODE / FR-### - Descriptive bug title
 ## TASK_NAME_END
 
 **Status**: Drafted
@@ -12,7 +12,7 @@ Use this exact block structure for every task.
 **Plane Task Key**:
 **FR**: FR-###
 **Product Module**: MODULE_CODE
-**Labels**: Bugs, FE Task, BE Task
+**Labels**: Bugs, FE Task
 **Priority**: High
 **Plane Module**: [2] Dashboard > Admin
 **Cycle**: 2026_Jun_C3
@@ -26,6 +26,12 @@ Use this exact block structure for every task.
 <li>FR PRD: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md</a></li>
 <li>Source backlog: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md</a></li>
 <li>Figma: <a href="https://figma.com/example">https://figma.com/example</a></li>
+</ul>
+<h2>Scope Boundary</h2>
+<ul>
+<li><strong>This task covers:</strong> FE side only.</li>
+<li><strong>Counterpart task:</strong> [BUG][BE] MODULE_CODE / FR-### - Descriptive bug title</li>
+<li><strong>Contract/handoff:</strong> the shared API shape or data contract both sides depend on, stated in business/behavioral terms.</li>
 </ul>
 <h2>Current Status</h2>
 <ul>
@@ -58,8 +64,20 @@ Use this exact block structure for every task.
 ## Ordering Rules
 
 - `Reference` must appear immediately after `Overview`, near the top of the description.
+- `Scope Boundary` (split tasks only) appears immediately after `Reference`, before `Current Status`.
 - Do not move references below `Current Status`, `Evidence`, or `Notes`.
 - Include FR PRD/document/design links before details so developers can quickly recall the source requirement.
+
+## Scope Boundary Rules (FE/BE Split)
+
+- Include the `Scope Boundary` section only for tasks created by splitting a bug that spans both sides. Omit it entirely for FE-only and BE-only tasks.
+- The section has exactly three fields:
+  - **This task covers**: `FE side only.` or `BE side only.`
+  - **Counterpart task**: the full name of the sibling task, using the opposite side prefix (`[BUG][BE] ...` on the FE task, `[BUG][FE] ...` on the BE task). Plane keys are unknown at draft time, so reference by name.
+  - **Contract/handoff**: the shared API shape or data contract both sides depend on, stated in business/behavioral terms (not implementation detail).
+- Both split tasks restate the same `Current Status`, `Steps to Reproduce`, `Evidence`, and `Notes` faithfully from the source.
+- Each split task's `Expectation (Suggestion)` describes only that side's expected behavior.
+- Labels follow the single-side rule: FE task uses `Bugs, FE Task`; BE task uses `Bugs, BE Task`. Never `Bugs, FE Task, BE Task`.
 
 ## Description Rules
 

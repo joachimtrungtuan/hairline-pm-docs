@@ -57,7 +57,7 @@ Use only these `Task Status` values in the readiness backlog:
 
 - `Review pending`
 - `Recorded only`
-- `Task created (HAIRL-123)`
+- `Task created (FE: HAIRL-123)` / `Task created (BE: HAIRL-123)` / `Task created (FE: HAIRL-123; BE: HAIRL-124)`
 - `Resolved - pending re-test`
 - `Resolved - verified YYYY-MM-DD`
 
@@ -65,11 +65,13 @@ Interpretation:
 
 - `Review pending` = placeholder, evidence gap, or blocked re-test checkpoint
 - `Recorded only` = confirmed issue from real review evidence, but not yet turned into a Plane task
-- `Task created (HAIRL-123)` = implementation task exists and the Plane key is known
+- `Task created (...)` = one or more implementation tasks exist and their Plane keys are known. Each key is side-labeled because a single bug may be split into separate FE and BE tasks (see the `create-bug-tasks` skill):
+  - One side only: `Task created (FE: HAIRL-123)` or `Task created (BE: HAIRL-123)`
+  - Split bug (both sides): `Task created (FE: HAIRL-123; BE: HAIRL-124)` — list FE first, then BE, separated by `; `
 - `Resolved - pending re-test` = implementation side reports the issue fixed, but readiness validation has not re-tested the affected product path yet
 - `Resolved - verified YYYY-MM-DD` = the affected product path was re-tested on the stated date and the blocker/fix row no longer blocks sprint readiness
 
-Do not mark an item as `Resolved - verified YYYY-MM-DD` without adding enough re-test evidence in `Review Notes`, `Evidence Link`, or `Notes` for a future reviewer to understand what was checked. Do not invent extra status labels inside this report.
+A split bug stays in `Task created (...)` until both its FE and BE keys are present in the cell. Do not drop a row to `Resolved` until every listed task is resolved. Do not mark an item as `Resolved - verified YYYY-MM-DD` without adding enough re-test evidence in `Review Notes`, `Evidence Link`, or `Notes` for a future reviewer to understand what was checked. Do not invent extra status labels inside this report.
 
 ## Evidence Rules
 
