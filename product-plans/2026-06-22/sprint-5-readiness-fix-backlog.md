@@ -102,14 +102,14 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ## 2.1 Launch-Level Blockers (Go / No-Go Gates)
 
-| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Production deployment | Launch cannot proceed from this report alone because no production backup/migration/zero-downtime-deployment evidence is attached. | 1. Take production DB backup and tag the rollback artifact.<br>2. Run migrations.<br>3. Execute zero-downtime deployment.<br>4. Attach evidence. | No production deployment was performed in this pass. | Backup taken, artifact tagged, migrations run, and deployment executed with evidence. | TBD | Review pending | Go/no-go gate; not a confirmed product defect. |
-| P0 | Production smoke test | All eight critical smoke-test flows must pass on production before the go/no-go decision; not yet evidenced. | 1. Run each of the 8 smoke flows on production.<br>2. Capture pass/fail evidence per flow. | No production smoke test was run in this pass. | All 8 flows pass on production with attached evidence. | TBD | Review pending | Direct input to the go/no-go decision. |
-| P0 | Go / No-Go decision | Explicit go/no-go call must be made (and recorded) before public store trigger or beta fallback. | 1. Review smoke-test results.<br>2. Record the explicit go/no-go decision. | Decision not made in this pass. | A recorded go/no-go decision exists before release trigger. | TBD | Review pending | PM-owned decision point. |
-| P0 | Store release / fallback | Public store release trigger (or TestFlight/Google internal-track fallback) must be confirmed depending on approval status. | 1. Confirm both store approval statuses.<br>2. Trigger public release, or confirm beta/internal fallback. | Release status not confirmed in this pass. | Public release triggered, or beta/internal fallback confirmed. | TBD | Review pending | Approvals or fallback due by June 21 evening. |
-| P0 | Website go-live | Website DNS cutover and go-live confirmation are not yet evidenced. | 1. Execute DNS cutover.<br>2. Confirm website is live. | DNS cutover not performed in this pass. | Website live and confirmed post-cutover. | TBD | Review pending | DNS pre-check was a Sprint 4 milestone (June 18). |
-| P1 | Monitoring activation | All monitoring dashboards (errors, payments, signups, API health) must be active at go-live; not yet evidenced. | 1. Confirm each monitoring dashboard is active and receiving data. | Monitoring status not checked in this pass. | All dashboards active and reporting at launch. | TBD | Review pending | Required for post-launch review on June 23. |
+| Bug ID | Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Production deployment | Launch cannot proceed from this report alone because no production backup/migration/zero-downtime-deployment evidence is attached. | 1. Take production DB backup and tag the rollback artifact.<br>2. Run migrations.<br>3. Execute zero-downtime deployment.<br>4. Attach evidence. | No production deployment was performed in this pass. | Backup taken, artifact tagged, migrations run, and deployment executed with evidence. | TBD | Review pending | Go/no-go gate; not a confirmed product defect. |
+|  | P0 | Production smoke test | All eight critical smoke-test flows must pass on production before the go/no-go decision; not yet evidenced. | 1. Run each of the 8 smoke flows on production.<br>2. Capture pass/fail evidence per flow. | No production smoke test was run in this pass. | All 8 flows pass on production with attached evidence. | TBD | Review pending | Direct input to the go/no-go decision. |
+|  | P0 | Go / No-Go decision | Explicit go/no-go call must be made (and recorded) before public store trigger or beta fallback. | 1. Review smoke-test results.<br>2. Record the explicit go/no-go decision. | Decision not made in this pass. | A recorded go/no-go decision exists before release trigger. | TBD | Review pending | PM-owned decision point. |
+|  | P0 | Store release / fallback | Public store release trigger (or TestFlight/Google internal-track fallback) must be confirmed depending on approval status. | 1. Confirm both store approval statuses.<br>2. Trigger public release, or confirm beta/internal fallback. | Release status not confirmed in this pass. | Public release triggered, or beta/internal fallback confirmed. | TBD | Review pending | Approvals or fallback due by June 21 evening. |
+|  | P0 | Website go-live | Website DNS cutover and go-live confirmation are not yet evidenced. | 1. Execute DNS cutover.<br>2. Confirm website is live. | DNS cutover not performed in this pass. | Website live and confirmed post-cutover. | TBD | Review pending | DNS pre-check was a Sprint 4 milestone (June 18). |
+|  | P1 | Monitoring activation | All monitoring dashboards (errors, payments, signups, API health) must be active at go-live; not yet evidenced. | 1. Confirm each monitoring dashboard is active and receiving data. | Monitoring status not checked in this pass. | All dashboards active and reporting at launch. | TBD | Review pending | Required for post-launch review on June 23. |
 
 ## 2.2 Critical Flow Readiness Backlog
 
@@ -125,9 +125,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Core commercial journey | Evidence gap: Flow 1 has not been verified on production for this report. | Run the full inquiry-to-deposit journey on production across patient/provider/admin. | Not reviewed in this pass. | Quote/slot statuses update, admin can inspect context, payment/audit records created, expired/rejected quotes handled cleanly. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Core commercial journey | Evidence gap: Flow 1 has not been verified on production for this report. | Run the full inquiry-to-deposit journey on production across patient/provider/admin. | Not reviewed in this pass. | Quote/slot statuses update, admin can inspect context, payment/audit records created, expired/rejected quotes handled cleanly. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 2 - Final Balance → Check-In → Treatment
 
@@ -139,9 +139,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Final balance & check-in | Evidence gap: Flow 2 has not been verified on production for this report. | Clear final balance, verify fully-paid booking, and check in the patient on production. | Not reviewed in this pass. | Final-balance blocking works; check-in is provider-owned; states stay synchronized. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Final balance & check-in | Evidence gap: Flow 2 has not been verified on production for this report. | Clear final balance, verify fully-paid booking, and check in the patient on production. | Not reviewed in this pass. | Final-balance blocking works; check-in is provider-owned; states stay synchronized. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 3 - Travel Path A/B Coordination
 
@@ -153,9 +153,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Travel coordination | Evidence gap: Flow 3 has not been verified on production for this report. | Trigger travel from a confirmed booking, submit Path A/B, provider reviews/enters records, admin reviews status/exceptions. | Not reviewed in this pass. | Travel records flow through one shared record with correlation IDs across tenants. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Travel coordination | Evidence gap: Flow 3 has not been verified on production for this report. | Trigger travel from a confirmed booking, submit Path A/B, provider reviews/enters records, admin reviews status/exceptions. | Not reviewed in this pass. | Travel records flow through one shared record with correlation IDs across tenants. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 4 - Treatment Completion → Aftercare Activation
 
@@ -167,9 +167,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Aftercare activation | Evidence gap: Flow 4 has not been verified on production for this report. | Complete treatment, activate aftercare, submit a milestone scan, provider reviews, admin monitors. | Not reviewed in this pass. | Aftercare plan, milestones, check-ins, escalation, and monitoring work as one connected flow. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Aftercare activation | Evidence gap: Flow 4 has not been verified on production for this report. | Complete treatment, activate aftercare, submit a milestone scan, provider reviews, admin monitors. | Not reviewed in this pass. | Aftercare plan, milestones, check-ins, escalation, and monitoring work as one connected flow. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 5 - Messaging & Video Call with Admin Auditability
 
@@ -181,9 +181,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Secure communication | Evidence gap: Flow 5 has not been verified on production for this report. | Patient sends a message/call request, provider responds and initiates a video call, admin monitoring/intervention path verified. | Not reviewed in this pass. | Messaging/calls stay in FR-012 boundary; admin intervention remains auditable. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Secure communication | Evidence gap: Flow 5 has not been verified on production for this report. | Patient sends a message/call request, provider responds and initiates a video call, admin monitoring/intervention path verified. | Not reviewed in this pass. | Messaging/calls stay in FR-012 boundary; admin intervention remains auditable. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 6 - Support Ticket Lifecycle
 
@@ -195,9 +195,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Support lifecycle | Evidence gap: Flow 6 has not been verified on production for this report. | Submit a patient/provider ticket, admin replies, user follows up, reopen/close, and confirm audit trail. | Not reviewed in this pass. | Full support lifecycle works within FR-034/FR-035 boundary with audit trail. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Support lifecycle | Evidence gap: Flow 6 has not been verified on production for this report. | Submit a patient/provider ticket, admin replies, user follows up, reopen/close, and confirm audit trail. | Not reviewed in this pass. | Full support lifecycle works within FR-034/FR-035 boundary with audit trail. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 7 - Promotion / Affiliate Attribution
 
@@ -209,9 +209,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Promotion & affiliate | Evidence gap: Flow 7 has not been verified on production for this report. | Admin creates a campaign, provider accepts/self-creates, patient applies one code at checkout, confirm affiliate attribution and payout reconciliation. | Not reviewed in this pass. | A-06/A-07/AF-01/A-05 agree on attribution and amounts; single-code enforcement holds. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Promotion & affiliate | Evidence gap: Flow 7 has not been verified on production for this report. | Admin creates a campaign, provider accepts/self-creates, patient applies one code at checkout, confirm affiliate attribution and payout reconciliation. | Not reviewed in this pass. | A-06/A-07/AF-01/A-05 agree on attribution and amounts; single-code enforcement holds. | TBD | Review pending | Add production defects here during launch. |
 
 ## Flow 8 - Compliance / i18n / Search Smoke
 
@@ -223,9 +223,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Compliance/i18n/search | Evidence gap: Flow 8 has not been verified on production for this report. | Confirm patient/provider/admin language persistence, DSR erasure queue, and quote/help/support + major admin/provider list filters. | Not reviewed in this pass. | Locale persistence, DSR queue, and P1 search/filter work; no P2 scope pulled in. | TBD | Review pending | Add production defects here during launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Compliance/i18n/search | Evidence gap: Flow 8 has not been verified on production for this report. | Confirm patient/provider/admin language persistence, DSR erasure queue, and quote/help/support + major admin/provider list filters. | Not reviewed in this pass. | Locale persistence, DSR queue, and P1 search/filter work; no P2 scope pulled in. | TBD | Review pending | Add production defects here during launch. |
 
 ---
 

@@ -118,13 +118,13 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ## 2.1 Sprint-Level Blockers
 
-| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Sprint QA evidence | Sprint 2 cannot be closed from this report alone because no staging QA evidence is attached for all Sprint 2 modules. | 1. Open this report.<br>2. Review Document Control and module sections.<br>3. Check for staging/build evidence links. | No product environment was checked in this pass. | Each Sprint 2 module has staging QA evidence and clear pass/fail status. | TBD | Review pending | Readiness blocker, not a confirmed product defect. |
-| P0 | Cumulative regression (Sprint 1) | Cumulative regression over the Sprint 1 core journey (inquiry → consultation → quote → booking → deposit) is still required and not yet evidenced. | 1. Re-run the Sprint 1 core journey on staging.<br>2. Capture pass/fail evidence for each stage. | No regression evidence is attached in this report. | Sprint 1 core journey still passes alongside Sprint 2 additions. | TBD | Review pending | Direct Sprint 2 DoD gate. |
-| P1 | Financial audit logging | All financial flows must produce immutable audit log entries (actor, before/after value, timestamp, IP) per FR-029; this is not yet verified. | 1. Execute commission/deposit/installment/refund changes on staging.<br>2. Inspect audit log entries for required fields. | Audit completeness was not checked in this pass. | Every financial mutation writes an immutable audit entry with all required fields. | TBD | Review pending | FR-029 audit requirement; cross-cuts payment modules. |
-| P1 | A-09c Part 1 dependency risk | Payment/regional configuration (A-09c Part 1) gates correct behavior of P-03b installments, deposit display, multi-currency, and destination pricing; readiness not yet evidenced. | 1. Review A-09c Part 1 staging screens/API.<br>2. Configure deposit, installment, Stripe, FX, and regional rules.<br>3. Validate downstream P-03b consumption. | No A-09c Part 1 product evidence is attached. | Config layer is ready enough that payment sub-features and pricing consume it correctly. | TBD | Review pending | Config-before-feature dependency; high risk if config slips. |
-| P1 | Website & App Store milestones | Sprint 2 non-dev milestones (website brief/sitemap/content sign-off by June 3, design/dev kickoff June 4–5; App Store metadata/screenshots/preview video) are not yet evidenced. | 1. Confirm website brief/sitemap/content sign-off.<br>2. Confirm App Store metadata, screenshots, and preview video status. | Milestone status was not checked in this pass. | Website and App Store deliverables meet the launch-plan Sprint 2 deadlines. | TBD | Review pending | Non-dev Sprint 2 milestones in the launch plan. |
+| Bug ID | Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Sprint QA evidence | Sprint 2 cannot be closed from this report alone because no staging QA evidence is attached for all Sprint 2 modules. | 1. Open this report.<br>2. Review Document Control and module sections.<br>3. Check for staging/build evidence links. | No product environment was checked in this pass. | Each Sprint 2 module has staging QA evidence and clear pass/fail status. | TBD | Review pending | Readiness blocker, not a confirmed product defect. |
+|  | P0 | Cumulative regression (Sprint 1) | Cumulative regression over the Sprint 1 core journey (inquiry → consultation → quote → booking → deposit) is still required and not yet evidenced. | 1. Re-run the Sprint 1 core journey on staging.<br>2. Capture pass/fail evidence for each stage. | No regression evidence is attached in this report. | Sprint 1 core journey still passes alongside Sprint 2 additions. | TBD | Review pending | Direct Sprint 2 DoD gate. |
+|  | P1 | Financial audit logging | All financial flows must produce immutable audit log entries (actor, before/after value, timestamp, IP) per FR-029; this is not yet verified. | 1. Execute commission/deposit/installment/refund changes on staging.<br>2. Inspect audit log entries for required fields. | Audit completeness was not checked in this pass. | Every financial mutation writes an immutable audit entry with all required fields. | TBD | Review pending | FR-029 audit requirement; cross-cuts payment modules. |
+|  | P1 | A-09c Part 1 dependency risk | Payment/regional configuration (A-09c Part 1) gates correct behavior of P-03b installments, deposit display, multi-currency, and destination pricing; readiness not yet evidenced. | 1. Review A-09c Part 1 staging screens/API.<br>2. Configure deposit, installment, Stripe, FX, and regional rules.<br>3. Validate downstream P-03b consumption. | No A-09c Part 1 product evidence is attached. | Config layer is ready enough that payment sub-features and pricing consume it correctly. | TBD | Review pending | Config-before-feature dependency; high risk if config slips. |
+|  | P1 | Website & App Store milestones | Sprint 2 non-dev milestones (website brief/sitemap/content sign-off by June 3, design/dev kickoff June 4–5; App Store metadata/screenshots/preview video) are not yet evidenced. | 1. Confirm website brief/sitemap/content sign-off.<br>2. Confirm App Store metadata, screenshots, and preview video status. | Milestone status was not checked in this pass. | Website and App Store deliverables meet the launch-plan Sprint 2 deadlines. | TBD | Review pending | Non-dev Sprint 2 milestones in the launch plan. |
 
 ## 2.2 Module Fix Backlog
 
@@ -138,10 +138,10 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Installments & final balance | Evidence gap: installment enrollment, auto-charge/retry/grace, and final-balance-before-check-in have not been verified in staging for this report. | Enrol in an installment plan against A-09c rules, trigger a failed charge and retry/grace, then clear the final balance and confirm check-in unblocks. | Not reviewed in this pass. | Installment flow, retry/grace model, and final-balance gating work end-to-end per FR-007b. | TBD | Review pending | Add confirmed defects here after product review. |
-| P1 | Multi-currency, receipt & refund | Evidence gap: multi-currency display, payment confirmation/receipt, and refund request flow have not been verified in staging. | Open payment screen in a non-base currency (check FX rate + timestamp), confirm email receipt + in-app reference, then submit a refund request and track tier/decision. | Not reviewed in this pass. | Local-currency display, receipt/confirmation, and tier-based refund flow work per FR-007. | TBD | Review pending | Full in-app invoice archive is out of launch scope. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Installments & final balance | Evidence gap: installment enrollment, auto-charge/retry/grace, and final-balance-before-check-in have not been verified in staging for this report. | Enrol in an installment plan against A-09c rules, trigger a failed charge and retry/grace, then clear the final balance and confirm check-in unblocks. | Not reviewed in this pass. | Installment flow, retry/grace model, and final-balance gating work end-to-end per FR-007b. | TBD | Review pending | Add confirmed defects here after product review. |
+|  | P1 | Multi-currency, receipt & refund | Evidence gap: multi-currency display, payment confirmation/receipt, and refund request flow have not been verified in staging. | Open payment screen in a non-base currency (check FX rate + timestamp), confirm email receipt + in-app reference, then submit a refund request and track tier/decision. | Not reviewed in this pass. | Local-currency display, receipt/confirmation, and tier-based refund flow work per FR-007. | TBD | Review pending | Full in-app invoice archive is out of launch scope. |
 
 ## P-04 - Travel & Logistics (patient-side)
 
@@ -153,9 +153,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Patient travel submission | Evidence gap: patient-side Path A/Path B travel submission and status tracking have not been verified in staging. | Submit passport details (Path A) and self-booked flight/hotel details (Path B); confirm status tracker (Submitted → Acknowledged → Confirmed) and edge-case handling. | Not reviewed in this pass. | Both travel paths submit correctly, store with correlation ID, and surface accurate status with edge-case warnings. | TBD | Review pending | Admin-side travel oversight is Sprint 4 (A-04). |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Patient travel submission | Evidence gap: patient-side Path A/Path B travel submission and status tracking have not been verified in staging. | Submit passport details (Path A) and self-booked flight/hotel details (Path B); confirm status tracker (Submitted → Acknowledged → Confirmed) and edge-case handling. | Not reviewed in this pass. | Both travel paths submit correctly, store with correlation ID, and surface accurate status with edge-case warnings. | TBD | Review pending | Admin-side travel oversight is Sprint 4 (A-04). |
 
 ## P-05 - Aftercare & Progress Monitoring (patient-side)
 
@@ -167,9 +167,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Patient aftercare journey | Evidence gap: patient aftercare plan view, check-ins, standalone purchase, and 48-hour escalation have not been verified in staging. | View active aftercare plan, submit a milestone check-in, purchase a standalone aftercare plan via Stripe, and trigger the 48-hour escalation rule. | Not reviewed in this pass. | Plan view, check-ins, standalone purchase activation, escalation flag, and status board all work per FR-011. | TBD | Review pending | Full delivery-channel verification of escalation events is Sprint 3 (S-03). |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Patient aftercare journey | Evidence gap: patient aftercare plan view, check-ins, standalone purchase, and 48-hour escalation have not been verified in staging. | View active aftercare plan, submit a milestone check-in, purchase a standalone aftercare plan via Stripe, and trigger the 48-hour escalation rule. | Not reviewed in this pass. | Plan view, check-ins, standalone purchase activation, escalation flag, and status board all work per FR-011. | TBD | Review pending | Full delivery-channel verification of escalation events is Sprint 3 (S-03). |
 
 ## PR-04 - Booking Detail Travel Coordination (provider-side)
 
@@ -181,9 +181,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Provider travel coordination | Evidence gap: provider-side travel coordination from booking detail has not been verified in staging. | From a confirmed booking detail, view travel status indicators, review submitted passport details, enter confirmed flight/hotel records, and acknowledge a self-booked travel record. | Not reviewed in this pass. | Provider travel actions update the patient tracker and are visible to admin with correlation ID. | TBD | Review pending | Tightly coupled to P-04 and S-04. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Provider travel coordination | Evidence gap: provider-side travel coordination from booking detail has not been verified in staging. | From a confirmed booking detail, view travel status indicators, review submitted passport details, enter confirmed flight/hotel records, and acknowledge a self-booked travel record. | Not reviewed in this pass. | Provider travel actions update the patient tracker and are visible to admin with correlation ID. | TBD | Review pending | Tightly coupled to P-04 and S-04. |
 
 ## PR-04 - Aftercare Participation (provider-side)
 
@@ -195,9 +195,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Provider aftercare setup & monitoring | Evidence gap: provider aftercare plan setup, customisation, and case monitoring have not been verified in staging. | Mark a treatment complete, configure an aftercare plan from an admin template, customise milestones/medications/instructions, activate, then monitor the case and submit a follow-up. | Not reviewed in this pass. | Plan setup, activation events, case monitoring, and follow-up submission work per FR-011. | TBD | Review pending | Provider-submitted reusable template variants are deferred. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Provider aftercare setup & monitoring | Evidence gap: provider aftercare plan setup, customisation, and case monitoring have not been verified in staging. | Mark a treatment complete, configure an aftercare plan from an admin template, customise milestones/medications/instructions, activate, then monitor the case and submit a follow-up. | Not reviewed in this pass. | Plan setup, activation events, case monitoring, and follow-up submission work per FR-011. | TBD | Review pending | Provider-submitted reusable template variants are deferred. |
 
 ## A-03 - Aftercare Team Management
 
@@ -209,9 +209,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Aftercare team management | Evidence gap: aftercare staff assignment, case override, and team configuration have not been verified in staging. | Assign aftercare staff to a case, reassign with a logged reason, and configure team roles/on-call/capacity. | Not reviewed in this pass. | Assignment, override-with-reason, and team configuration work with audit trail per FR-011. | TBD | Review pending | Add confirmed defects here after product review. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Aftercare team management | Evidence gap: aftercare staff assignment, case override, and team configuration have not been verified in staging. | Assign aftercare staff to a case, reassign with a logged reason, and configure team roles/on-call/capacity. | Not reviewed in this pass. | Assignment, override-with-reason, and team configuration work with audit trail per FR-011. | TBD | Review pending | Add confirmed defects here after product review. |
 
 ## A-09b - Aftercare Template Configuration
 
@@ -223,9 +223,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Aftercare template authority | Evidence gap: aftercare template create/edit/version/activate/price has not been verified in staging. | Create, edit, version, and activate/deactivate an aftercare template; price it for standalone purchase; confirm deactivated templates stay on active cases but cannot be selected for new ones. | Not reviewed in this pass. | Template authority, pricing, tagging, and deactivation semantics work per FR-011. | TBD | Review pending | Feeds P-05 standalone purchase and PR-04 provider setup. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Aftercare template authority | Evidence gap: aftercare template create/edit/version/activate/price has not been verified in staging. | Create, edit, version, and activate/deactivate an aftercare template; price it for standalone purchase; confirm deactivated templates stay on active cases but cannot be selected for new ones. | Not reviewed in this pass. | Template authority, pricing, tagging, and deactivation semantics work per FR-011. | TBD | Review pending | Feeds P-05 standalone purchase and PR-04 provider setup. |
 
 ## A-09c - System Settings & Payment Rules (Part 1)
 
@@ -237,9 +237,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Payment & regional configuration | Evidence gap: A-09c Part 1 payment and regional configuration has not been verified in staging. | Configure global/per-provider commission, deposit rate (20–30%), installment rules (2–9, cutoff, grace 0–14), Stripe keys with pre-save API test, currency pairs in dependency order, FX cadence, regional groupings, and destination pricing. | Not reviewed in this pass. | All config controls save with audit trail and are correctly consumed by patient payment and pricing surfaces. | TBD | Review pending | Gating dependency for P-03b and FR-028/FR-029 behavior. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Payment & regional configuration | Evidence gap: A-09c Part 1 payment and regional configuration has not been verified in staging. | Configure global/per-provider commission, deposit rate (20–30%), installment rules (2–9, cutoff, grace 0–14), Stripe keys with pre-save API test, currency pairs in dependency order, FX cadence, regional groupings, and destination pricing. | Not reviewed in this pass. | All config controls save with audit trail and are correctly consumed by patient payment and pricing surfaces. | TBD | Review pending | Gating dependency for P-03b and FR-028/FR-029 behavior. |
 
 ## S-04 - Travel API Gateway
 
@@ -251,9 +251,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Shared travel gateway | Evidence gap: travel gateway routing and correlation-ID logging have not been verified in staging. | Submit patient-side and provider-side travel data and confirm both flow through one shared travel record with correlation IDs and event dispatch. | Not reviewed in this pass. | Gateway routes both sides into one record with correlation IDs; no external travel API required for launch. | TBD | Review pending | Underpins P-04 and PR-04 travel coordination. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Shared travel gateway | Evidence gap: travel gateway routing and correlation-ID logging have not been verified in staging. | Submit patient-side and provider-side travel data and confirm both flow through one shared travel record with correlation IDs and event dispatch. | Not reviewed in this pass. | Gateway routes both sides into one record with correlation IDs; no external travel API required for launch. | TBD | Review pending | Underpins P-04 and PR-04 travel coordination. |
 
 ---
 

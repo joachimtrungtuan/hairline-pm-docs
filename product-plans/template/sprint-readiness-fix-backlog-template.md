@@ -1,6 +1,6 @@
 # Sprint [N] Readiness & Fix Backlog
 
-> Fill-in guidance: Duplicate this template at the beginning of a sprint. Use it to anchor sprint scope to the launch plan, review the real product, and list the remaining fixes needed to reach that sprint's Definition of Done. This is not a full Plane ticket tracker. Do not add separate Plane-ID columns, assignees, estimates, or implementation ownership here. If a Plane task is later created for a backlog row, record the created key inline in `Task Status` using a short format such as `Task created (HAIRL-123)`.
+> Fill-in guidance: Duplicate this template at the beginning of a sprint. Use it to anchor sprint scope to the launch plan, review the real product, and list the remaining fixes needed to reach that sprint's Definition of Done. This is not a full Plane ticket tracker. Do not add separate Plane-ID columns, assignees, estimates, or implementation ownership here. Track lifecycle in `Task Status` and use `Bug ID` only as a stable source-row traceback key for confirmed bugs.
 
 ---
 
@@ -32,10 +32,11 @@
 - Section 1 must mirror the launch plan. Copy or summarize only what the launch plan already says. Do not add new scope, reinterpret the sprint, or silently move work between sprints.
 - Section 2 is the working fix backlog. Capture issues found from real product review in enough detail that the dev team can reproduce and fix them quickly.
 - Section 3 is for findings that should not distract the current sprint. Use it to prevent out-of-scope issues from being treated as sprint commitments.
-- Do not add separate Plane ticket ID, assignee, estimate, or ownership fields. Those belong to the later Plane-ticket creation workflow. After a task is created, update only the existing `Task Status` cell with a short value such as `Task created (HAIRL-123)`.
+- Do not add separate Plane ticket ID, assignee, estimate, or ownership fields. Those belong to the later Plane-ticket creation workflow. After a task is created, update only the existing `Task Status` cell with a short value such as `Task created (FE: HAIRL-123)`.
 - Use `Review pending` for scaffold/default placeholder rows or evidence-gap reminders that still need real product review before they count as a confirmed finding.
+- Use `Scout flagged` when PRD/code/API scouting finds a concrete risk signal worth prioritizing for manual product testing, but the row is not yet confirmed from product review.
 - Use `Recorded only` for issues already confirmed from real review evidence but not yet converted into a Plane task.
-- Use `Task created (HAIRL-123)` after the implementation-task and Plane creation workflow has produced the actual issue key.
+- Use `Task created (...)` after the implementation-task and Plane creation workflow has produced the actual issue key(s). Side-label every key, e.g. `Task created (FE: HAIRL-123)` or `Task created (FE: HAIRL-123; BE: HAIRL-124)`.
 - Screenshot evidence must use persistent uploaded URLs that can be revisited later. Do not use local file paths, clipboard-only image references, or temporary file links in `Evidence Link`. If a screenshot is needed but no uploaded URL is available, ask the reviewer to upload it and use `TBD` until the raw URL is provided.
 
 ### Priority Scale
@@ -104,13 +105,14 @@
 ## 2.1 Sprint-Level Blockers
 
 > Fill-in guidance: Use this section only for issues that block the sprint Definition of Done, affect multiple modules, prevent reliable testing, or break a required cross-module journey. Do not duplicate module-specific issues here unless they are true sprint blockers.
-> Fill-in guidance: Add `Task Status` so future reviewers can see whether the row is still a placeholder for later review, is a confirmed issue that is only documented here, or has already been converted into a Plane task. Use short values such as `Review pending`, `Recorded only`, or `Task created (HAIRL-123)`. When the create-implementation-task and Plane task-creation workflow finishes, write the resulting Plane key back into this same cell instead of adding a new tracking column.
+> Fill-in guidance: Add `Bug ID` as the first column and `Task Status` near the end. Assign `Bug ID` only when the row is a confirmed bug with status `Recorded only`, `Task created (...)`, `Resolved - pending re-test`, or `Resolved - verified YYYY-MM-DD`; leave it blank for `Review pending` and `Scout flagged`. Use module-code IDs such as `PR-01-001`, and never renumber an assigned ID.
+> Fill-in guidance: Add `Task Status` so future reviewers can see whether the row is still a placeholder for later review, has been flagged by scouting for priority manual test, is a confirmed issue that is only documented here, or has already been converted into a Plane task. Use short values such as `Review pending`, `Scout flagged`, `Recorded only`, or `Task created (FE: HAIRL-123)`. When the create-implementation-task and Plane task-creation workflow finishes, write the resulting Plane key back into this same cell instead of adding a new tracking column.
 > Fill-in guidance: For long table cells, especially `Steps to Reproduce`, `Actual Outcome`, `Expected Outcome`, and `Notes`, use `<br>` line breaks inside the cell. Keep reproduction steps as numbered lines such as `1. Open...<br>2. Click...<br>3. Verify...` so the table remains readable in Markdown preview.
 > Fill-in guidance: `Evidence Link` must be a persistent uploaded URL, API/log reference, or stable report path. Do not paste local screenshot paths or clipboard-only file links. If the issue needs a screenshot and the reviewer has not uploaded one yet, ask for the uploaded URL and leave `TBD` temporarily.
 
-| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0/P1/P2/P3 | [Cross-module area or journey] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What the product currently does] | [What must happen for sprint DoD] | [Screenshot / video / log / report link] | [Review pending / Recorded only / Task created (HAIRL-123)] | [Environment, build, tenant, account, uncertainty, or related context] |
+| Bug ID | Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| [Blank until confirmed, then SPRINT-###] | P0/P1/P2/P3 | [Cross-module area or journey] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What the product currently does] | [What must happen for sprint DoD] | [Screenshot / video / log / report link] | [Review pending / Scout flagged / Recorded only / Task created (FE: HAIRL-123) / Task created (BE: HAIRL-123) / Task created (FE: HAIRL-123; BE: HAIRL-124) / Resolved - pending re-test / Resolved - verified YYYY-MM-DD] | [Environment, build, tenant, account, uncertainty, or related context] |
 
 ## 2.2 Module Fix Backlog
 
@@ -129,13 +131,14 @@
 ### Remaining Fixes
 
 > Fill-in guidance: Each row should be independently understandable by a developer. Use direct product language. Avoid assigning cause unless it was verified. Evidence Link may point to a screenshot, screen recording, API response, console log, or another local report.
-> Fill-in guidance: Add `Task Status` so later Plane work can distinguish rows that are still placeholders for later verification, confirmed issues that are only captured in the report, and items already turned into Plane tasks. Use a short value such as `Review pending`, `Recorded only`, or `Task created (HAIRL-123)`. When a Plane task exists, record the exact created key in this cell so the sprint report stays traceable without becoming a separate ticket tracker.
+> Fill-in guidance: Add `Bug ID` as the first column and `Task Status` near the end. Assign `Bug ID` only when the row is a confirmed bug with status `Recorded only`, `Task created (...)`, `Resolved - pending re-test`, or `Resolved - verified YYYY-MM-DD`; leave it blank for `Review pending` and `Scout flagged`. Use module-code IDs such as `PR-01-001`, and never renumber an assigned ID.
+> Fill-in guidance: Add `Task Status` so later Plane work can distinguish rows that are still placeholders for later verification, flagged by scouting for priority manual test, confirmed issues that are only captured in the report, and items already turned into Plane tasks. Use a short value such as `Review pending`, `Scout flagged`, `Recorded only`, or `Task created (FE: HAIRL-123)`. When a Plane task exists, record the exact created key in this cell so the sprint report stays traceable without becoming a separate ticket tracker.
 > Fill-in guidance: For long table cells, especially `Steps to Reproduce`, `Actual Outcome`, `Expected Outcome`, and `Notes`, use `<br>` line breaks inside the cell. Keep reproduction steps as numbered lines such as `1. Open...<br>2. Click...<br>3. Verify...` so the table remains readable in Markdown preview.
 > Fill-in guidance: `Evidence Link` must be a persistent uploaded URL, API/log reference, or stable report path. Do not paste local screenshot paths or clipboard-only file links. If the issue needs a screenshot and the reviewer has not uploaded one yet, ask for the uploaded URL and leave `TBD` temporarily.
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0/P1/P2/P3 | [Affected flow or launch-plan user story] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What happened in the product] | [What should happen based on launch plan / DoD / PRD] | [Screenshot / video / log / report link] | [Review pending / Recorded only / Task created (HAIRL-123)] | [Environment, account, data fixture, edge case, uncertainty, or follow-up note] |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| [Blank until confirmed, then MODULE_CODE-###] | P0/P1/P2/P3 | [Affected flow or launch-plan user story] | [Short problem statement] | [Numbered steps or concise reproduction path] | [What happened in the product] | [What should happen based on launch plan / DoD / PRD] | [Screenshot / video / log / report link] | [Review pending / Scout flagged / Recorded only / Task created (FE: HAIRL-123) / Task created (BE: HAIRL-123) / Task created (FE: HAIRL-123; BE: HAIRL-124) / Resolved - pending re-test / Resolved - verified YYYY-MM-DD] | [Environment, account, data fixture, edge case, uncertainty, or follow-up note] |
 
 ---
 

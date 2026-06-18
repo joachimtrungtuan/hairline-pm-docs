@@ -118,13 +118,13 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ## 2.1 Sprint-Level Blockers
 
-| Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Sprint QA evidence | Sprint 4 cannot be closed from this report alone because no staging QA evidence is attached for all Sprint 4 modules. | 1. Open this report.<br>2. Review Document Control and module sections.<br>3. Check for staging/build evidence links. | No product environment was checked in this pass. | Each Sprint 4 module has staging QA evidence and clear pass/fail status. | TBD | Review pending | Readiness blocker, not a confirmed product defect. |
-| P0 | Final integration regression | Final integration regression across Sprint 3 + Sprint 4 modules and cross-tenant flows must pass with no open critical bugs; not yet evidenced. | 1. Run the final integration regression suite on staging.<br>2. Capture pass/fail evidence for each cross-tenant flow. | No final regression evidence is attached in this report. | Final regression is green across Sprint 3 + Sprint 4 + cross-tenant journeys. | TBD | Review pending | Direct Sprint 4 DoD gate; gates the launch decision. |
-| P0 | Client UAT sign-off | Client UAT must be completed and sign-off received; not yet evidenced. | 1. Run client UAT (June 17–18).<br>2. Capture sign-off record. | UAT status was not checked in this pass. | Client UAT completed with recorded sign-off. | TBD | Review pending | Non-dev Sprint 4 milestone (sign-off June 18). |
-| P0 | Production readiness | Production environment must be fully provisioned and validated, and production Stripe verified (carry-forward from Sprint 3); not yet evidenced. | 1. Validate production provisioning with DevOps.<br>2. Confirm production Stripe verification.<br>3. Run pre-launch staging smoke test. | Production readiness was not checked in this pass. | Production fully provisioned/validated; Stripe verified; pre-launch smoke passes. | TBD | Review pending | Required before June 22 go-live. |
-| P1 | RC App Store submission & website staging | RC App Store builds (June 16, mobile binary frozen after) and website finalized/QA/deployed to staging are not yet evidenced. | 1. Confirm RC submission to Apple + Google on June 16.<br>2. Confirm no post-freeze app-store-affecting code.<br>3. Confirm website deployed to staging + DNS pre-check. | Submission and website status were not checked in this pass. | RC builds submitted; mobile binary frozen; website on staging with DNS pre-check complete. | TBD | Review pending | Non-dev Sprint 4 milestones (June 16/18). |
+| Bug ID | Priority | Area | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Sprint QA evidence | Sprint 4 cannot be closed from this report alone because no staging QA evidence is attached for all Sprint 4 modules. | 1. Open this report.<br>2. Review Document Control and module sections.<br>3. Check for staging/build evidence links. | No product environment was checked in this pass. | Each Sprint 4 module has staging QA evidence and clear pass/fail status. | TBD | Review pending | Readiness blocker, not a confirmed product defect. |
+|  | P0 | Final integration regression | Final integration regression across Sprint 3 + Sprint 4 modules and cross-tenant flows must pass with no open critical bugs; not yet evidenced. | 1. Run the final integration regression suite on staging.<br>2. Capture pass/fail evidence for each cross-tenant flow. | No final regression evidence is attached in this report. | Final regression is green across Sprint 3 + Sprint 4 + cross-tenant journeys. | TBD | Review pending | Direct Sprint 4 DoD gate; gates the launch decision. |
+|  | P0 | Client UAT sign-off | Client UAT must be completed and sign-off received; not yet evidenced. | 1. Run client UAT (June 17–18).<br>2. Capture sign-off record. | UAT status was not checked in this pass. | Client UAT completed with recorded sign-off. | TBD | Review pending | Non-dev Sprint 4 milestone (sign-off June 18). |
+|  | P0 | Production readiness | Production environment must be fully provisioned and validated, and production Stripe verified (carry-forward from Sprint 3); not yet evidenced. | 1. Validate production provisioning with DevOps.<br>2. Confirm production Stripe verification.<br>3. Run pre-launch staging smoke test. | Production readiness was not checked in this pass. | Production fully provisioned/validated; Stripe verified; pre-launch smoke passes. | TBD | Review pending | Required before June 22 go-live. |
+|  | P1 | RC App Store submission & website staging | RC App Store builds (June 16, mobile binary frozen after) and website finalized/QA/deployed to staging are not yet evidenced. | 1. Confirm RC submission to Apple + Google on June 16.<br>2. Confirm no post-freeze app-store-affecting code.<br>3. Confirm website deployed to staging + DNS pre-check. | Submission and website status were not checked in this pass. | RC builds submitted; mobile binary frozen; website on staging with DNS pre-check complete. | TBD | Review pending | Non-dev Sprint 4 milestones (June 16/18). |
 
 ## 2.2 Module Fix Backlog
 
@@ -138,9 +138,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Provider financial reporting | Evidence gap: PR-05 cockpit, analytics, payouts, and exports have not been verified in staging. | Open the cockpit, conversion funnel, and anonymised patient analytics; review payout schedule (3-day buffer) and history; check pricing benchmarks; export CSV/PDF and confirm scheduled-export 7-day re-download. | Not reviewed in this pass. | All PR-05 surfaces show correct live data with anonymization and working exports per FR-014/FR-017. | TBD | Review pending | A-05b provider payouts flagged as high-risk (20% at sprint start). |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Provider financial reporting | Evidence gap: PR-05 cockpit, analytics, payouts, and exports have not been verified in staging. | Open the cockpit, conversion funnel, and anonymised patient analytics; review payout schedule (3-day buffer) and history; check pricing benchmarks; export CSV/PDF and confirm scheduled-export 7-day re-download. | Not reviewed in this pass. | All PR-05 surfaces show correct live data with anonymization and working exports per FR-014/FR-017. | TBD | Review pending | A-05b provider payouts flagged as high-risk (20% at sprint start). |
 
 ## PR-06 - Provider i18n & Compliance Visibility
 
@@ -152,9 +152,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Provider i18n & compliance | Evidence gap: provider language selector and compliance visibility have not been verified in staging. | Switch dashboard language and confirm persistence + runtime re-render with fallback; view privacy/retention content and read-only audit/retention visibility. | Not reviewed in this pass. | Language switch and read-only compliance visibility work per FR-021/FR-023 without granting admin compliance privileges. | TBD | Review pending | Added to Sprint 4 scope. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Provider i18n & compliance | Evidence gap: provider language selector and compliance visibility have not been verified in staging. | Switch dashboard language and confirm persistence + runtime re-render with fallback; view privacy/retention content and read-only audit/retention visibility. | Not reviewed in this pass. | Language switch and read-only compliance visibility work per FR-021/FR-023 without granting admin compliance privileges. | TBD | Review pending | Added to Sprint 4 scope. |
 
 ## A-04 - Travel Oversight (admin-side)
 
@@ -166,9 +166,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Admin travel oversight | Evidence gap: admin embedded travel oversight has not been verified in staging. | From booking/inquiry detail, review provider-entered and patient-submitted travel records, resolve an exception with reason, add coordination notes, and confirm correlation-ID audit linking to S-04. | Not reviewed in this pass. | Embedded oversight, exception handling, status summary, and audit work per FR-008 admin-side. | TBD | Review pending | No standalone travel dashboard; dispatch ops out of MVP. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Admin travel oversight | Evidence gap: admin embedded travel oversight has not been verified in staging. | From booking/inquiry detail, review provider-entered and patient-submitted travel records, resolve an exception with reason, add coordination notes, and confirm correlation-ID audit linking to S-04. | Not reviewed in this pass. | Embedded oversight, exception handling, status summary, and audit work per FR-008 admin-side. | TBD | Review pending | No standalone travel dashboard; dispatch ops out of MVP. |
 
 ## A-05 - Billing & Financial Reconciliation
 
@@ -180,9 +180,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Billing & reconciliation | Evidence gap: A-05 billing, payout buffer/cron, and reconciliation have not been verified in staging. | Inspect patient ledger; generate pending payout statements; approve within the 3-day buffer; run payout-day cron on approved statements only; reconcile discounts vs A-06; check FX-rate alerts and financial reporting. | Not reviewed in this pass. | All A-05 surfaces operate on live data with correct buffer/approval/cron behavior per FR-017. | TBD | Review pending | A-05b provider payouts flagged high-risk in the launch plan. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Billing & reconciliation | Evidence gap: A-05 billing, payout buffer/cron, and reconciliation have not been verified in staging. | Inspect patient ledger; generate pending payout statements; approve within the 3-day buffer; run payout-day cron on approved statements only; reconcile discounts vs A-06; check FX-rate alerts and financial reporting. | Not reviewed in this pass. | All A-05 surfaces operate on live data with correct buffer/approval/cron behavior per FR-017. | TBD | Review pending | A-05b provider payouts flagged high-risk in the launch plan. |
 
 ## A-07 - Affiliate Program Management
 
@@ -194,9 +194,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Affiliate program management | Evidence gap: affiliate CRUD, commission, and payout rules have not been verified in staging. | Create/edit/suspend an affiliate, link A-06 discount codes, complete a booking to trigger commission, and confirm monthly-on-7th payout with £50 threshold + roll-over. | Not reviewed in this pass. | Affiliate CRUD, attribution, commission, and payout rules work per FR-018. | TBD | Review pending | Feeds AF-01 dashboard and A-05c affiliate billing. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Affiliate program management | Evidence gap: affiliate CRUD, commission, and payout rules have not been verified in staging. | Create/edit/suspend an affiliate, link A-06 discount codes, complete a booking to trigger commission, and confirm monthly-on-7th payout with £50 threshold + roll-over. | Not reviewed in this pass. | Affiliate CRUD, attribution, commission, and payout rules work per FR-018. | TBD | Review pending | Feeds AF-01 dashboard and A-05c affiliate billing. |
 
 ## AF-01 - Affiliate Dashboard
 
@@ -208,9 +208,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Affiliate dashboard | Evidence gap: affiliate-facing dashboard has not been verified in staging. | Log in as an affiliate and confirm read-only visibility of assigned codes, attributed bookings, commission earned, payout status, and history. | Not reviewed in this pass. | Affiliate dashboard shows correct read-only data per FR-018; admin retains CRUD/payout authority. | TBD | Review pending | First affiliate/partner-facing surface in the launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Affiliate dashboard | Evidence gap: affiliate-facing dashboard has not been verified in staging. | Log in as an affiliate and confirm read-only visibility of assigned codes, attributed bookings, commission earned, payout status, and history. | Not reviewed in this pass. | Affiliate dashboard shows correct read-only data per FR-018; admin retains CRUD/payout authority. | TBD | Review pending | First affiliate/partner-facing surface in the launch. |
 
 ## A-08 - Analytics & Reporting
 
@@ -222,9 +222,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Admin analytics | Evidence gap: A-08 analytics dashboards have not been verified in staging. | Open platform overview, provider performance (with anonymization), acquisition funnel, geographic/pricing intelligence, treatment outcomes, and financial health; confirm all are on real data. | Not reviewed in this pass. | All A-08 screens show correct real data with anonymization per FR-014; no mocks. | TBD | Review pending | Add confirmed defects here after product review. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Admin analytics | Evidence gap: A-08 analytics dashboards have not been verified in staging. | Open platform overview, provider performance (with anonymization), acquisition funnel, geographic/pricing intelligence, treatment outcomes, and financial health; confirm all are on real data. | Not reviewed in this pass. | All A-08 screens show correct real data with anonymization per FR-014; no mocks. | TBD | Review pending | Add confirmed defects here after product review. |
 
 ## A-09c - System Settings & Payment Rules (Part 3 — i18n & Compliance)
 
@@ -236,9 +236,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | i18n authoring & compliance | Evidence gap: A-09c Part 3 i18n authoring and compliance workflows have not been verified in staging. | Switch admin language; edit translation keys; JSON import/export; publish with versioned rollback; review coverage/missing-key alerts; configure retention (7-year medical/financial); run a GDPR DSR with SLA timer + retention override; generate a tamper-evident compliance export. | Not reviewed in this pass. | i18n authoring, retention, DSR workflow, and compliance exports work per FR-021/FR-023. | TBD | Review pending | Patient data export beyond DSR is out of scope. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | i18n authoring & compliance | Evidence gap: A-09c Part 3 i18n authoring and compliance workflows have not been verified in staging. | Switch admin language; edit translation keys; JSON import/export; publish with versioned rollback; review coverage/missing-key alerts; configure retention (7-year medical/financial); run a GDPR DSR with SLA timer + retention override; generate a tamper-evident compliance export. | Not reviewed in this pass. | i18n authoring, retention, DSR workflow, and compliance exports work per FR-021/FR-023. | TBD | Review pending | Patient data export beyond DSR is out of scope. |
 
 ## A-01 - Patient i18n + Compliance Surfaces
 
@@ -250,9 +250,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Patient DSR actioning | Evidence gap: admin-side patient i18n/DSR handling has not been verified in staging. | From a patient A-01 record, view language preference/locale activity, action a DSR ticket (erasure approved/denied, retention override), and confirm status history + audit with reason and legal-basis tag. | Not reviewed in this pass. | Patient locale visibility and DSR actioning work per FR-021/FR-023 with full audit. | TBD | Review pending | Completes the DSR loop opened by P-01 in Sprint 3. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Patient DSR actioning | Evidence gap: admin-side patient i18n/DSR handling has not been verified in staging. | From a patient A-01 record, view language preference/locale activity, action a DSR ticket (erasure approved/denied, retention override), and confirm status history + audit with reason and legal-basis tag. | Not reviewed in this pass. | Patient locale visibility and DSR actioning work per FR-021/FR-023 with full audit. | TBD | Review pending | Completes the DSR loop opened by P-01 in Sprint 3. |
 
 ## Cross-cutting - Search & Filtering (FR-022)
 
@@ -264,9 +264,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Search & filtering | Evidence gap: FR-022 P1 search/filter surfaces have not been verified in staging. | Exercise search/filter on provider (PR-01/02/03/04/05/06) and admin (A-01/02/03/05/06/07/09/10) list views, plus patient quote-comparison/help/ticket filters; confirm chips persist across pagination/session and URL-shareable state. | Not reviewed in this pass. | All P1 MVP search/filter surfaces work with persistence per FR-022; patient provider-discovery remains P2. | TBD | Review pending | Patient provider-discovery search is explicitly P2 post-MVP. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Search & filtering | Evidence gap: FR-022 P1 search/filter surfaces have not been verified in staging. | Exercise search/filter on provider (PR-01/02/03/04/05/06) and admin (A-01/02/03/05/06/07/09/10) list views, plus patient quote-comparison/help/ticket filters; confirm chips persist across pagination/session and URL-shareable state. | Not reviewed in this pass. | All P1 MVP search/filter surfaces work with persistence per FR-022; patient provider-discovery remains P2. | TBD | Review pending | Patient provider-discovery search is explicitly P2 post-MVP. |
 
 ## S-02 / S-03 - Localization Support
 
@@ -278,9 +278,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P1 | Localization support | Evidence gap: shared localization support has not been verified in staging. | Confirm localized currency display with rate/timestamp, timezone-aware date/time across tenants, and notification-template language routing with fallback to default locale. | Not reviewed in this pass. | Currency, timezone, and notification locale routing/fallback work per FR-021 shared dependencies. | TBD | Review pending | Notification delivery rules already delivered in Sprint 3. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P1 | Localization support | Evidence gap: shared localization support has not been verified in staging. | Confirm localized currency display with rate/timestamp, timezone-aware date/time across tenants, and notification-template language routing with fallback to default locale. | Not reviewed in this pass. | Currency, timezone, and notification locale routing/fallback work per FR-021 shared dependencies. | TBD | Review pending | Notification delivery rules already delivered in Sprint 3. |
 
 ## S-06 - Audit Log Service
 
@@ -292,9 +292,9 @@ AI agent guidance: Keep this guidance hidden from Markdown preview. It exists on
 
 ### Remaining Fixes
 
-| Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
-|---|---|---|---|---|---|---|---|---|
-| P0 | Audit log service | Evidence gap: immutable audit capture, retention, and export have not been verified in staging. | Trigger admin/financial/DSR/aftercare/moderation/role actions; confirm immutable append-only capture, category retention (7-year medical/financial), and a tamper-evident filtered export (hash + timestamp). | Not reviewed in this pass. | Audit capture, retention, and tamper-evident export work per FR-023/FR-031 with no UPDATE/DELETE from app layer. | TBD | Review pending | Underpins compliance gates across the launch. |
+| Bug ID | Priority | Flow / Story | Issue | Steps to Reproduce | Actual Outcome | Expected Outcome | Evidence Link | Task Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | P0 | Audit log service | Evidence gap: immutable audit capture, retention, and export have not been verified in staging. | Trigger admin/financial/DSR/aftercare/moderation/role actions; confirm immutable append-only capture, category retention (7-year medical/financial), and a tamper-evident filtered export (hash + timestamp). | Not reviewed in this pass. | Audit capture, retention, and tamper-evident export work per FR-023/FR-031 with no UPDATE/DELETE from app layer. | TBD | Review pending | Underpins compliance gates across the launch. |
 
 ---
 
