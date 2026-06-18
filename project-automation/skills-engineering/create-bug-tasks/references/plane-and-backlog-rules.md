@@ -114,6 +114,7 @@ Update source backlog status only when user asks.
 For sprint readiness backlogs, use only approved `Task Status` values (defined by the `sprint-readiness-reporting` skill):
 
 - `Review pending`
+- `Scout flagged`
 - `Recorded only`
 - `Task created (FE: HAIRL-123)` / `Task created (BE: HAIRL-123)` / `Task created (FE: HAIRL-123; BE: HAIRL-124)`
 - `Resolved - pending re-test`
@@ -124,7 +125,7 @@ After Plane creation, update each matching source row from `Recorded only` to `T
 - A bug that produced one side's task -> `Task created (FE: HAIRL-1234)` or `Task created (BE: HAIRL-1234)`.
 - A bug that was split into FE and BE tasks -> write **both** keys in the one cell, FE first then BE: `Task created (FE: HAIRL-1234; BE: HAIRL-1235)`.
 
-When a single source bug row produced two tasks (FE + BE), keep it as one backlog row and record both keys in its `Task Status` cell. Do not duplicate the row or add extra columns.
+When a single source bug row produced two tasks (FE + BE), keep it as one backlog row and record both keys in its `Task Status` cell. Preserve the row's `Bug ID` and copy the same value into both tasks as `Source Bug ID`; do not duplicate the row or add extra Plane-tracking columns.
 
 Do not add Plane assignee, due date, or ownership columns to readiness backlog files.
 

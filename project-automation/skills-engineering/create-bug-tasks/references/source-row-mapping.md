@@ -8,6 +8,7 @@ Expected columns:
 
 | Source column | Task usage |
 |---|---|
+| `Bug ID` | Stable source traceback key; copy to `Source Bug ID` metadata and preserve in task description |
 | `Priority` | Source priority and Plane priority mapping |
 | `Flow / Story` or `Area` | Task title traceability and reproduction context |
 | `Issue` | Overview and task title basis |
@@ -20,9 +21,12 @@ Expected columns:
 
 For `Recorded only` mode, select only rows whose `Task Status` cell is exactly `Recorded only`.
 
+`Bug ID` is optional for older or unconfirmed rows, but required for current confirmed sprint-readiness bug rows. If a row is already confirmed (`Recorded only`, `Task created (...)`, `Resolved - pending re-test`, or `Resolved - verified YYYY-MM-DD`) and lacks `Bug ID`, preserve the blank value in the task artifact and flag the missing source ID in the summary instead of inventing one during task conversion.
+
 Do not convert rows marked:
 
 - `Review pending`
+- `Scout flagged`
 - `Task created (...)`
 - `Resolved - pending re-test`
 - `Resolved - verified YYYY-MM-DD`

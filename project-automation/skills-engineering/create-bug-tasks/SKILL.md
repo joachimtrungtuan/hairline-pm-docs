@@ -79,6 +79,7 @@ Mark steps in progress and complete as work proceeds.
 For each bug, capture:
 
 - Priority from source, such as `P0`, `P1`, `P2`, `P3`
+- Bug ID from source when present, such as `PR-01-001` or `A-09A-003`
 - Flow / Story or Area
 - Issue
 - Steps to Reproduce
@@ -87,6 +88,8 @@ For each bug, capture:
 - Evidence Link
 - Notes
 - FR code and Product Module when available or inferable from the section/module
+
+If a sprint readiness row has a `Bug ID`, preserve it exactly as `Source Bug ID` in the drafted task. Do not invent a source bug ID for rows that do not have one; instead leave the task field blank and note unresolved traceability only if it affects task creation.
 
 Preserve source wording closely when the source is a structured backlog row. Rewrite only for clarity and Plane format.
 
@@ -174,6 +177,15 @@ Examples:
 - Split pair: `[BUG][FE] A-09a / FR-025 - Questionnaire set create does not persist` and `[BUG][BE] A-09a / FR-025 - Questionnaire set create does not persist`
 
 Do not use vague names such as `[BUG] Fix questionnaire issue`.
+
+## Source Bug ID Traceability
+
+When the source row includes `Bug ID`, every generated task from that row must include:
+
+- `**Source Bug ID**: MODULE_CODE-###` in the metadata block.
+- The same source bug ID in the `Reference` or `Notes` section so it survives when the task description is copied into Plane.
+
+For a split FE + BE bug, both tasks use the same `Source Bug ID` because they come from one confirmed source bug row.
 
 ## Live Plane Creation And Backlog Updates
 

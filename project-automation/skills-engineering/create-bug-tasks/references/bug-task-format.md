@@ -10,6 +10,7 @@ Use this exact block structure for every task.
 **Status**: Drafted
 **Plane Task ID**:
 **Plane Task Key**:
+**Source Bug ID**: MODULE_CODE-###
 **FR**: FR-###
 **Product Module**: MODULE_CODE
 **Labels**: Bugs, FE Task
@@ -23,6 +24,7 @@ Use this exact block structure for every task.
 <p>One concise paragraph describing the observed bug and why it blocks or degrades the intended product behavior.</p>
 <h2>Reference</h2>
 <ul>
+<li>Source Bug ID: MODULE_CODE-###</li>
 <li>FR PRD: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md</a></li>
 <li>Source backlog: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md</a></li>
 <li>Figma: <a href="https://figma.com/example">https://figma.com/example</a></li>
