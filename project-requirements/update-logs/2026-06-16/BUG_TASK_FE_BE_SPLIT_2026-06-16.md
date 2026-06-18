@@ -34,3 +34,4 @@ FE and BE work for the same bug is owned by different people. Cramming both into
 ## Notes
 
 - Both edited skills live under `skills-engineering/` (FROZEN); changes were made under explicit user request for these specific files.
+- Follow-up backlog write-back: updated the PR-06 `Recorded only` rows in `local-docs/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md` with side-labeled Plane task keys `HAIRL-1339` through `HAIRL-1353`.

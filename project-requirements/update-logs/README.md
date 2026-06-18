@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-06-18/ (1 file)
+
+#### **Sprint Readiness Bug ID & Scout Status**
+
+- `SPRINT_READINESS_BUG_ID_AND_SCOUT_STATUS_2026-06-18.md` - Updated the sprint readiness workflow with a stable `Bug ID` column for confirmed bugs and a new `Scout flagged` status for code/PRD/API scouting leads that should be prioritized for manual testing but are not yet confirmed defects. The Sprint 1-5 readiness reports and templates now include `Bug ID`; IDs are assigned only from `Recorded only` onward and remain blank for `Review pending` / `Scout flagged`. `create-bug-tasks` now preserves the source row as `Source Bug ID` in generated bug task artifacts.
+
 ### 2026-06-16/ (1 file)
 
 #### **Bug Task FE/BE Split & Side-Labeled Task Status**
@@ -648,6 +654,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-06-12**: `CREATE_BUG_TASKS_SKILL_2026-06-12.md` - Created the `create-bug-tasks` skill for turning confirmed bug reports and `Recorded only` readiness backlog rows into Plane-ready `[BUG]` tasks with module/FR traceability, explicit labels, early PRD/document/design references, and optional post-create backlog status updates.
 - **2026-06-14**: `SPRINT_2_TO_5_READINESS_SCAFFOLDS_2026-06-14.md` - Created Sprint 2–5 readiness & fix-backlog scaffolds from `launch-plan.md`, dated `2026-06-05` / `2026-06-12` / `2026-06-19` / `2026-06-22` (one-week-spaced from the May 29 Sprint 1 milestone; Sprint 5 on its real launch date), each with launch-plan-anchored scope, modules, stories, deferrals, and `Review pending` evidence gaps.
 - **2026-06-16**: `BUG_TASK_FE_BE_SPLIT_2026-06-16.md` - Updated `create-bug-tasks` to split FE+BE bugs into separate `[BUG][FE]`/`[BUG][BE]` tasks (single side label each, new `Scope Boundary` description section, `Bugs, FE Task, BE Task` combination removed), and updated `sprint-readiness-reporting` so the `Task Status` column stores side-labeled Plane key(s) — `Task created (FE: HAIRL-123; BE: HAIRL-124)` for a split bug — in one cell per source row.
+- **2026-06-18**: `SPRINT_READINESS_BUG_ID_AND_SCOUT_STATUS_2026-06-18.md` - Added stable `Bug ID` traceback to sprint readiness backlog tables, introduced `Scout flagged` for code/PRD/API scouting leads that need prioritized manual testing, and updated `create-bug-tasks` to preserve source rows as `Source Bug ID`.
 - **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
@@ -856,4 +863,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 16, 2026 (bug task FE/BE split & side-labeled Task Status logged)
+**Last Updated**: June 18, 2026 (sprint readiness Bug ID and Scout flagged workflow logged)

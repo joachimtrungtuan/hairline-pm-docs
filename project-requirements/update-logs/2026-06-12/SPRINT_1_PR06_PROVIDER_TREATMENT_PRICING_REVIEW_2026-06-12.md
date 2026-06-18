@@ -76,3 +76,10 @@ Recorded confirmed PR-06 provider-treatment issues covering treatment card inter
   - notification-type expand/collapse disclosure being under-signaled and interactionally ambiguous relative to the row toggle
   - missing unsaved-changes indicator parity between `Notification Preferences` and `Account Information`
 - Narrowed the remaining `Provider clinic profile and package catalog` `Review pending` row again so it now tracks only the PR-06 areas still unreviewed after direct `Notification Preferences` coverage.
+- Extended the same PR-06 section with direct `Billing` coverage notes confirming Dataset A create/save/reload works, existing bank details can be edited and persisted, `Cancel` resets to last saved data, and the visible 200-character caps on account-holder and bank-name fields are enforced.
+- Recorded new `Recorded only` PR-06 rows for:
+  - missing unsaved-changes indicator / leave-warning parity between `Billing` and `Notification Preferences`
+  - missing `Account Holder Name` validation against the PRD's alphabetic-and-spaces rule
+  - inconsistent validation timing / visual feedback across billing fields (`Routing/SWIFT`, `IBAN`, and field-length feedback)
+- Narrowed the remaining `Provider clinic profile and package catalog` `Review pending` row again so it now tracks only the PR-06 areas still unreviewed after direct `Billing` coverage.
+- Cleaned a markdown-table parsing defect in the Sprint 1 readiness backlog by removing a literal `|` from table-cell prose, and mirrored the new no-literal-pipe-in-table-cells rule into the root guidance files `CLAUDE.md` and `AGENTS.md`.
