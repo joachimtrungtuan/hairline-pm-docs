@@ -62,6 +62,7 @@ Out of Scope:
 - Stacking multiple discounts on a single booking (explicitly disallowed).
 - Loyalty points and referral rewards (covered elsewhere).
 - Tax/VAT calculation changes (handled by billing/finance rules).
+- Affiliate-specific promo code generation, bulk assignment to affiliates, affiliate dashboard display, and affiliate payout attribution are owned by FR-018 / A-07. FR-019 owns the shared promotion engine: validation, active windows, usage limits, single-discount conflict behavior, applied/completed redemption state, and financial-impact logging.
 
 ### Entry Points
 
@@ -123,12 +124,12 @@ Steps:
 
 - Trigger: Two auto-applied discounts become simultaneously eligible for the same quote (e.g., a Hairline-funded auto-applied program activates while a provider's auto-applied program is already on the quote).
 - Steps: System silently resolves the conflict using priority order: patient-entered code > provider discount > affiliate discount. Lower-priority discount is not applied; no user prompt is shown.
-- Outcome: Exactly one discount per booking; audit records which program was applied and which was superseded.
+- Outcome: Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority.
 
 **C1: Hairline-Funded / Direct-Issued Code Redemption**:
 
 - Trigger: Admin issues a Hairline-funded code (open code, segment-bound, or affiliate-distributed) and patient enters it at quote/booking.
-- Steps: System validates the code against issuance binding (open vs recipient-bound), records the redemption against the issuing channel (e.g., affiliate id), and attributes the financial impact to Hairline's share only.
+- Steps: System validates the code against issuance binding (open vs recipient-bound), records the redemption against the issuing channel (e.g., affiliate id), and attributes the financial impact to Hairline's share only. For affiliate-bound codes, code generation and affiliate assignment are initiated from FR-018; FR-019 receives the registered code and manages redemption lifecycle.
 - Outcome: Patient receives discount; provider's settlement is unaffected; affiliate (if applicable) accrues the configured incentive (see FR-018).
 
 ---
@@ -396,14 +397,14 @@ All three program types share a single `PromotionProgram` entity (see Key Entiti
 **Business Rules**:
 
 - Open codes have one code that any eligible patient may use until the total usage limit is reached.
-- Affiliate-bound codes integrate with FR-018; redemptions accrue incentive to the linked affiliate.
+- Affiliate-bound codes integrate with FR-018; FR-018 owns generation and one-affiliate-per-code assignment, while FR-019 owns validation and redemption state. Redemptions accrue incentive to the linked affiliate.
 - Segment-bound codes validate the patient against the segment definition at entry time.
 - Individually-issued codes are single-use and bound to a specific patient identifier.
 - Revoking a code already in `In-Progress` state cancels the in-progress quote application and notifies the patient.
 
 **Acceptance Criteria**:
 
-1. Given the admin selects a Hairline-Funded program with channel = Affiliate-bound and triggers Bulk Generate for 50 codes, when generation completes, then 50 unique codes are created, all bound to the affiliate, and each appears in the table with status = Unused.
+1. Given the admin selects a Hairline-Funded program with channel = Affiliate-bound and triggers Bulk Generate for 50 selected affiliates, when generation completes, then 50 unique codes are created, each code is bound to exactly one affiliate, and each appears in the table with status = Unused.
 2. Given a patient enters an Affiliate-bound code at booking, when redemption completes, then the corresponding row updates to Redeemed and the affiliate's incentive accrual (per FR-018) is triggered.
 
 ---
@@ -868,6 +869,8 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 | 2026-05-12 | 1.6     | Verification fixes (5 issues): (1) Split B2 into B2 (user-initiated prompt) and B3 (auto-applied silent priority); updated Business Rules to clarify when each mechanism applies. (2) Added FR-004, FR-018, FR-022, FR-031, FR-010 to Dependencies section. (3) Added Screen 2 AC-4 for Auto-applied rejection on Both-Fees programs. (4) Renamed PromotionCode status `reserved` → `in-progress` across Screen 5, Screen 6 funnel, and Key Entities; added disambiguation note. (5) Added Screen 2 Note explaining Application Mode option asymmetry between admin and provider forms. | Claude |
 | 2026-05-12 | 1.7     | Added PR-05: Financial Management & Reporting to Module header (provider tenant ownership); updated system-prd.md to match. Status updated to Verified & Approved. | Claude |
 | 2026-05-14 | 1.8     | Approval metadata cleanup: completed Technical Lead and Stakeholder approvals. | Codex |
+| 2026-06-22 | 1.9     | Added explicit ownership note that FR-018 owns affiliate-specific promo code generation, bulk affiliate assignment, dashboard display, and payout attribution; FR-019 remains the shared validation/redemption engine for affiliate-bound codes. | Codex |
+| 2026-06-23 | 2.0     | FR-018 dependency cleanup: corrected affiliate-bound bulk-generation acceptance wording to one unique code per selected affiliate, and clarified that price-discount priority does not erase valid affiliate attribution metadata needed by FR-018. | Codex |
 
 ---
 
@@ -883,4 +886,4 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-05-14
+**Last Updated**: 2026-06-22

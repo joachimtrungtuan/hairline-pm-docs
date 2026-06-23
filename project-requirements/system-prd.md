@@ -1100,7 +1100,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Admins MUST be able to onboard affiliate partners
 - System MUST generate unique affiliate codes for each partner
 - System MUST track patient sign-ups and bookings via affiliate codes
-- System MUST calculate affiliate commission (% of platform commission or fixed amount)
+- System MUST calculate affiliate commission (% of booking revenue or fixed amount), funded from Hairline's commission (not the provider payout)
 - Affiliates MUST have access to dashboard showing referral count, revenue, commissions
 - System MUST expose affiliate commission data and payout status to FR-017 / A-05 for monthly billing and payout execution
 - System MUST generate affiliate performance reports

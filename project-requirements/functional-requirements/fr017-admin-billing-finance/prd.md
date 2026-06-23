@@ -1671,10 +1671,11 @@ A patient requests refund due to cancellation, admin reviews request against can
   - Admin reviews and approves rate OR contacts patient to confirm acceptable rate
 
 - **What happens when** affiliate discount code and provider discount code both applied?
-  - Patient enters both "AFFILIATE10" (10% affiliate code) AND "PROVIDER15" (15% provider code) at checkout
-  - System applies discount priority rule: Patient code > Provider code > Affiliate code (only ONE discount per booking)
-  - System displays: "AFFILIATE10 discount applied (10%). PROVIDER15 not applicable (only one discount per booking)."
-  - System attributes booking to affiliate for commission calculation
+  - Patient enters or arrives through "AFFILIATE10" (affiliate-bound code/link), and a provider-side promotion "PROVIDER15" is also eligible or applied during checkout
+  - System applies the single-discount priority rule to the patient's final price: Patient code > Provider code > Affiliate code
+  - If the provider promotion wins the price discount, the patient-facing price breakdown uses "PROVIDER15"; the affiliate discount line is not double-applied
+  - System preserves the valid "AFFILIATE10" affiliate referral attribution separately because the provider-side promotion is outside the patient's knowledge
+  - When the booking completes with payment confirmation, FR-017 processes affiliate payout execution using the FR-018 commission output for the preserved affiliate attribution
 
 - **What happens when** a patient is refunded after the provider has already been paid out?
   - Patient cancels booking 10 days before treatment; provider was paid out 3 weeks ago (Stripe transfer complete)
@@ -1789,6 +1790,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-04-02 | 2.3 | Screen renumbering alignment: moved the admin investigation/audit tools into contiguous admin numbering as Screens 7–8, shifted provider read-only payout screens to 9–10, updated cross-references and FR-032 shell dependency text, and normalized active-alert links to the new Currency Alert modal number. Historical changelog entries before v2.3 retain the pre-v2.3 labels used at that time | Codex |
 | 2026-04-02 | 2.4 | Status updated from Draft to ✅ Verified & Approved and approval metadata aligned to the verified-template pattern used by other approved FRs | Codex |
 | 2026-04-02 | 2.5 | Commission-source model realigned to implemented admin design: FR-029 again exposes provider-specific commission scope management alongside the global default, FR-015 remains the single-provider commission + payout-frequency surface, and all payout/reporting references now point to the shared effective commission configuration instead of the prior FR-015-only provider-specific split | Codex |
+| 2026-06-23 | 2.6 | FR-018 attribution alignment: corrected the affiliate-vs-provider discount edge case so the single-discount priority controls only the patient's final price. A valid captured affiliate-bound code/link remains preserved as affiliate referral attribution and still feeds FR-018 commission output consumed by FR-017 for payout execution after payment-confirmed booking completion. | Codex |
 
 ---
 
@@ -1805,4 +1807,4 @@ A patient requests refund due to cancellation, admin reviews request against can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-04-02
+**Last Updated**: 2026-06-23

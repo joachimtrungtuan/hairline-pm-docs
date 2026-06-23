@@ -61,7 +61,7 @@ The feature spans all three tenants:
 - **Aftercare Team Management (A-03)**: Search and filter aftercare cases by patient, milestone status, risk level, specialist assignment, completion rate
 - **Billing & Financial Reconciliation (A-05)**: Search and filter transactions, payouts, invoices by date range, amount, provider, status, currency; filter discount codes by usage, ROI, status
 - **Discount & Promotion Management (A-06)**: Search and filter discount codes by code, provider participation, status, usage, date range, ROI
-- **Affiliate Program Management (A-07)**: Search and filter affiliates by name, code, referral count, commission amount, payout status, performance metrics
+- **Affiliate Program Management (A-07)**: Search and filter affiliates by name, email, country/region, affiliate type, status, campaign eligibility, payout setup completeness, code, referral count, commission amount, payout status, and performance metrics
 - ~~**Analytics & Reporting (A-08)**~~: _Deferred — no admin analytics FR exists yet. Remove from FR-022 scope until an Admin Analytics FR is created and can define the screen-level search/filter spec. TODO: revisit when FR for Admin Analytics is authored._
 - **System Settings & Configuration (A-09)**: Search and filter settings by category, version, change history, admin user; filter configurations by module, status, effective date
 - **Communication Monitoring & Support (A-10)**: Search and filter conversations by participant, tag, severity, date range, agent assignment, status
@@ -362,7 +362,7 @@ The table below maps every platform screen that requires search and/or filter fu
 | Admin | A-05 | FR-017 | Patient Billing Invoices | `FR-017 / Screen 4` | ✓ | ✓ | P1 |
 | Admin | A-05 | FR-017 | Transaction Search | `FR-017 / Screen 7 / Tab 1` | ✓ | ✓ | P1 |
 | Admin | A-05 | FR-017 | Billing Audit Log | `FR-017 / Screen 7 / Tab 2` | — | ✓ | P1 |
-| Admin | A-05 | FR-018 | Affiliate Payout History | `FR-018 / Screen 5` | ✓ | ✓ | P1 |
+| Admin | A-05 | FR-018 | Affiliate Payout Status & History | `FR-018 / Screen 7` | ✓ | ✓ | P1 |
 | Admin | A-06 | FR-019 | Promotion Program Hub | `FR-019 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-07 | FR-018 | Affiliate Management List | `FR-018 / Screen 1` | ✓ | ✓ | P1 |
 | Admin | A-09 | FR-024 | Admin Treatment Catalog | `FR-024 / Screen 1` | ✓ | ✓ | P1 |
@@ -1317,7 +1317,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-018 / Screen 5: Affiliate Payout History [P1 — MVP]
+###### FR-018 / Screen 7: Affiliate Payout Status & History [P1 — MVP]
 
 **Purpose**: Admin searches for and filters affiliate payout records.
 
@@ -1397,6 +1397,12 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
 | Status | Multi-select | Active, Suspended, Inactive | All | OR (within field) |
+| Country / Region | Multi-select | Supported affiliate countries/regions | All | OR (within field) |
+| Affiliate Type | Multi-select | Influencer, Clinic Partner, Organization, Other | All | OR (within field) |
+| Language | Multi-select | Supported affiliate communication languages | All | OR (within field) |
+| Performance Tier | Multi-select | Admin-defined performance tiers | All | OR (within field) |
+| Campaign Eligibility | Multi-select | Eligible, Ineligible | All | OR (within field) |
+| Payout Setup | Multi-select | Complete, Incomplete | All | OR (within field) |
 
 ---
 
@@ -1920,7 +1926,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
   | Admin (A-03) | FR-011 | Screen 13 (Admin Aftercare Cases List) |
   | Admin (A-05) | FR-007b | Screen 5 (Installment Plans List) |
   | Admin (A-05) | FR-017 | Screens 4, 7/Tab 1, 7/Tab 2 (Patient Billing Invoices, Transaction Search, Billing Audit Log) |
-  | Admin (A-05/A-07) | FR-018 | Screens 1, 5 (Affiliate Management List, Affiliate Payout History) |
+  | Admin (A-05/A-07) | FR-018 | Screens 1, 7 (Affiliate Management List, Affiliate Payout Status & History) |
   | Admin (A-06) | FR-019 | Screen 1 (Promotion Program Hub) |
   | Admin (A-09) | FR-024 | Screen 1 (Admin Treatment Catalog) |
   | Admin (A-09) | FR-025 | Screen 1 (Questionnaire Catalog) |
@@ -2240,6 +2246,8 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 | 2026-04-13 | 2.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer metadata to match `prd-template.md`. | Documentation governance (2026-04-13) |
 | 2026-05-14 | 2.9 | FR-019 follow-up alignment: updated A-06 search/filter mapping from stale `FR-019 / Screen 4: Discount Code Catalog` to current `FR-019 / Screen 1: Promotion Program Hub`; added Program Type, Scope, and Funding Model filters to match FR-019 v1.7. | Codex |
 | 2026-05-14 | 2.10 | Corrected stale FR-013 screen reference: updated all three occurrences of `FR-013 / Screen 2 (Review Management Dashboard)` to `FR-013 / Screen 7` following FR-013 v1.8 screen renumbering. | Verification alignment (2026-05-14) |
+| 2026-06-22 | 2.11 | Synced A-07 Affiliate Management filters with FR-018 v1.1 bulk affiliate code generation: added country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup filters so admins can select affiliate cohorts before generating one unique code per affiliate. | Codex |
+| 2026-06-23 | 2.12 | FR-018 screen-reference cleanup: updated affiliate payout search/filter mappings from the stale FR-018 Screen 5 reference to current FR-018 Screen 7 Affiliate Payout Status & History. | Codex |
 
 ---
 
@@ -2256,4 +2264,4 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-022 from system-prd.md
-**Last Updated**: 2026-04-13
+**Last Updated**: 2026-06-23

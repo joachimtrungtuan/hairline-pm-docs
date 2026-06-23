@@ -32,3 +32,4 @@ Issue titles were too weak as the only connection between sprint readiness rows,
 
 - Skill files under `skills-engineering/` were edited under explicit user approval for this workflow change.
 - The current ID assignment intentionally affects only confirmed Sprint 1 bug rows. Sprint 2-5 remain unassigned because their current rows are evidence gaps with `Review pending` status.
+- The Sprint 1 backlog was then annotated using the new `Scout flagged` status for provider-first risk scouting, including cross-tenant questionnaire source-of-truth risk, deposit-state synchronization risk, media-access-control risk, Admin patient-oversight mock surfaces, and Provider team reassignment risk.
