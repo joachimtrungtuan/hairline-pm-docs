@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-06-26/ (3 files)
+### 2026-06-26/ (4 files)
+
+#### **sprint-readiness-reporting — Token-Governance Alignment**
+
+- `SPRINT_READINESS_SKILL_TOKEN_ALIGNMENT_2026-06-26.md` - Audited the skill and applied three token-alignment edits (with approval, frozen skill): source-code lookup now routes through the code maps (`INDEX.md` §D, "locator not evidence") before opening `main/`; PRD lookup points to `INDEX.md` §C section maps; and update-log interaction is made **write-only** (do not read `update-logs/` for context when updating a backlog — `ls` the date folder, never scan/grep history) in both `SKILL.md` and `references/reporting-rules.md`.
 
 #### **gen-code-map Skill + Semantic Code Maps**
 
@@ -19,6 +23,10 @@ This folder contains documentation update reports and verification logs for the 
 #### **Phase 2 — Code Maps + Capped Search Wrapper**
 
 - `PHASE2_CODE_MAP_AND_SEARCH_WRAPPER_2026-06-26.md` - Added `local-docs/project-automation/scripts/search.sh`, a capped ripgrep wrapper that refuses to dump more than 50 matches (prints a count + "refine your query" and exits non-zero) to enforce token governance. Generated three structure-only repomix code maps under `project-notes/` (`code-map-backend.md` ~1677 lines, `code-map-frontend.md` ~1591, `code-map-app.md` ~542) using `--no-files` (directory tree, no file bodies) scoped to source dirs — chosen over `--compress` because full signature dumps were too large (backend ~50k / frontend ~70k lines) to read whole; signatures are now fetched on demand per subdir. Updated INDEX.md §D with the working commands and confirmed map paths (removed the "pending" caveat) and added a §B Tools note pointing to `search.sh`.
+
+#### **Sprint 1 PR-06 Country / City Dropdown Bug**
+
+- `SPRINT_1_PR06_COUNTRY_CITY_DROPDOWN_BUG_2026-06-26.md` - Updated the Sprint 1 readiness backlog after direct Provider-dashboard evidence from the clinic profile edit flow. Added confirmed bug row `PR-06-030` for the dependent `Country` / `City` dropdown: after deep scrolling inside a long city list, the city options begin repeating and later country changes stop refreshing the city list until the page is reloaded. The row stays `Recorded only` because the product symptom is confirmed, while FE/BE ownership is still unverified.
 
 ### 2026-06-25/ (1 file)
 
@@ -719,12 +727,14 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-06-14**: `SPRINT_2_TO_5_READINESS_SCAFFOLDS_2026-06-14.md` - Created Sprint 2–5 readiness & fix-backlog scaffolds from `launch-plan.md`, dated `2026-06-05` / `2026-06-12` / `2026-06-19` / `2026-06-22` (one-week-spaced from the May 29 Sprint 1 milestone; Sprint 5 on its real launch date), each with launch-plan-anchored scope, modules, stories, deferrals, and `Review pending` evidence gaps.
 - **2026-06-16**: `BUG_TASK_FE_BE_SPLIT_2026-06-16.md` - Updated `create-bug-tasks` to split FE+BE bugs into separate `[BUG][FE]`/`[BUG][BE]` tasks (single side label each, new `Scope Boundary` description section, `Bugs, FE Task, BE Task` combination removed), and updated `sprint-readiness-reporting` so the `Task Status` column stores side-labeled Plane key(s) — `Task created (FE: HAIRL-123; BE: HAIRL-124)` for a split bug — in one cell per source row.
 - **2026-06-18**: `SPRINT_READINESS_BUG_ID_AND_SCOUT_STATUS_2026-06-18.md` - Added stable `Bug ID` traceback to sprint readiness backlog tables, introduced `Scout flagged` for code/PRD/API scouting leads that need prioritized manual testing, and updated `create-bug-tasks` to preserve source rows as `Source Bug ID`.
+- **2026-06-26**: `SPRINT_1_PR06_COUNTRY_CITY_DROPDOWN_BUG_2026-06-26.md` - Sprint 1 PR-06 clinic profile update: added confirmed backlog row `PR-06-030` for the provider `Country` / `City` dependent dropdown breaking after deep scroll in long city lists, causing repeated items and blocking later country-driven refresh until reload.
 - **2026-06-22**: `FR018_AFFILIATE_CODE_GENERATION_ALIGNMENT_2026-06-22.md` - FR-018 affiliate-code ownership alignment: bulk generation now creates one distinct code per selected/filter-matched affiliate, shared affiliate payout codes are explicitly unsupported, generated codes appear in affiliate dashboards, FR-019 points readers back to FR-018 for affiliate-bound code generation, and FR-022 A-07 filters are synced for affiliate cohort selection.
 - **2026-06-23**: `FR018_ATTRIBUTION_AND_DEPENDENCY_ALIGNMENT_2026-06-23.md` - FR-018 attribution follow-up: final price-discount priority is now separate from affiliate referral attribution, so provider-side promotions do not erase valid captured AFF commission credit; FR-017, FR-019, and FR-022 dependency references were aligned.
 - **2026-06-22**: `SPRINT_1_A09A_QUESTIONNAIRE_RETRIAGE_2026-06-22.md` - Sprint 1 A-09a questionnaire re-triage: create/list/detail/version/audit are now confirmed live, historical questionnaire rows were kept open pending task cross-check, and the current questionnaire blocker is narrowed to Screen 2 access failures plus the missing post-create transition into question authoring.
 - **2026-05-15**: `AGENT_GUIDELINES_SLIMDOWN_2026-05-15.md` - Slimmed `CLAUDE.md` and `AGENTS.md` to 101 lines each (from 284/277); deleted redundant skill catalog / deployment / generic enforcement sections, consolidated six scattered file/folder governance sections into a single `## File & Folder Rules` permission table, retained `local-docs/` directory tree and project-specific BLOCKING skills.
 - **2026-06-26**: `AGENT_GUIDELINES_INDEX_TOKEN_GOVERNANCE_2026-06-26.md` - Added `local-docs/INDEX.md` wayfinder and a Navigation & Token Governance regime in `CLAUDE.md`/`AGENTS.md` to curb token burn (locate-before-read, read-by-section, capped search, phase budgets, fresh threads); switched skills to user-triggered; added history-restraint rule for update-logs and `git diff`; moved the `File Structure` listing into INDEX.
 - **2026-06-26**: `GEN_CODE_MAP_SKILL_AND_SEMANTIC_MAPS_2026-06-26.md` - Replaced tree-dump code maps with curated folder-group semantic maps (purpose + module/FR bindings + entry points); added the user-triggered `gen-code-map` skill with a bundled deterministic drift-detector script; cleaned up superseded scripts; updated INDEX §A.2/§B/§D.
+- **2026-06-26**: `SPRINT_READINESS_SKILL_TOKEN_ALIGNMENT_2026-06-26.md` - Aligned the `sprint-readiness-reporting` skill to token governance: source/PRD lookups route through the code maps (§D) and PRD section maps (§C); update-log interaction made write-only (no reading `update-logs/` for context when updating a backlog).
 - **2026-05-06**: `PROGRESS_UPDATE_REPORT_2026-05-06.md` - Created a refreshed progress update report based on the January 27 milestone report structure, with fill-in sections for later PRD/FR checklist consolidation and fresh Provider/Admin code verification.
 - **2026-04-18**: `FR014_BACKEND_ALIGNMENT_2026-04-18.md` - FR-014 follow-up alignment after verification: backend cross-check confirmed canonical patient-country provenance is `patients.location_id -> countries.id/name`; FR-014 now documents legacy `patients.location` only as a temporary fallback, removes unsupported IP-geolocation fallback wording, aligns the system PRD SLA parameter to a platform-wide target, and adds Screen 6 service dependencies (`S-03`, `S-05`)
 - **2026-04-18**: `FR014_VERIFICATION_FIXES_V35_2026-04-18.md` - FR-014 PRD v3.4 → v3.5 verification fixes: Screen 6 PDF branding narrowed to `providers.profile_image` only; Rule 10 FX fallback capped at 48 hours; Assumption 8 added to record provider-side analytics widgets as PRD-derived by design (future passes must not re-flag as transcription discrepancies); Assumptions 9–10 added for FX freshness cap and legacy location UI indicator
@@ -937,4 +947,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 26, 2026 (gen-code-map skill + curated folder-group semantic code maps replacing the earlier tree dumps; superseded scripts cleaned up)
+**Last Updated**: June 26, 2026 (sprint-readiness-reporting skill aligned to token governance — code-map/PRD-section-map lookups + write-only update-log handling)

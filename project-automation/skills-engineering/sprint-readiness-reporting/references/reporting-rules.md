@@ -133,6 +133,11 @@ After significant edits in `local-docs/`:
 - otherwise append a concise bullet to the same-day relevant log
 - update `local-docs/project-requirements/update-logs/README.md` when a new log file is created
 
+This step is **write-only**:
+
+- do not read existing update-log entries to gather context for a backlog update — the readiness report and launch plan are the source of truth
+- to find the same-day log, `ls` the date folder (`update-logs/YYYY-MM-DD/`); do not open or grep other entries, and never scan the update-logs folder for history
+
 ## Anti-Patterns
 
 - Do not overclaim a confirmed bug when only an evidence gap exists

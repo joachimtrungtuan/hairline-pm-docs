@@ -32,7 +32,7 @@ Load these files only when needed:
 - If a screenshot would materially help but no persistent URL exists yet, leave `Evidence Link` as `TBD` and ask the user for the uploaded raw URL
 - Read PRDs, source code, and APIs only as needed to clarify expected behavior or gather stronger evidence; do not modify product code
 - When reporting code or API evidence, point to the smallest relevant surface instead of dumping wide code scans
-- After significant edits in `local-docs/`, update the project update log according to `references/reporting-rules.md`
+- After significant edits in `local-docs/`, update the project update log per `references/reporting-rules.md` — this is **write-only**: do not read past update-log entries for context (the live readiness report and launch plan are the source of truth), and use `ls` on the date folder to find the same-day log rather than reading or grepping the update-logs folder
 
 ## Workflow Decision
 
@@ -118,10 +118,10 @@ Follow `references/flow-basic-vs-advanced.md`, `references/reporting-rules.md`, 
    - sprint/module
    - tenant/surface
    - feature or FR
-3. Read the minimum PRD context needed to define expected behavior.
+3. Read the minimum PRD context needed to define expected behavior — use `INDEX.md` §C section maps to jump to the exact PRD section instead of scanning the file.
 4. If product behavior still needs clarification, do targeted source-code review:
-   - open only the relevant frontend/backend files
-   - identify likely data source, route, controller, component, or state path
+   - locate the right files via the code maps (`INDEX.md` §D → `code-map-{backend,frontend,app}.md`) before opening anything — the maps are a locator, not evidence
+   - open only the files the map names (data source, route, controller, component, or state path), then confirm the finding in that source
    - do not modify code
 5. If data contract or runtime state must be verified, run targeted API checks using approved workflows or direct endpoint inspection.
 6. Distill the result into one of these outcomes:
