@@ -6,7 +6,19 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-06-23/ (3 files)
+### 2026-06-25/ (1 file)
+
+#### **Sprint 1 PR-06 Awards Review**
+
+- `SPRINT_1_PR06_AWARDS_REVIEW_2026-06-25.md` - Updated the Sprint 1 readiness backlog after direct Provider-dashboard review of the `Profile Setting -> Awards` tab. Recorded positive coverage for add/delete persistence after save and reload; added confirmed PR-06 bug rows for the false success toast on modal open, optional-field validation mismatch, and duplicate award creation when saving twice without reload; and narrowed the remaining PR-06 evidence-gap row so `Awards` is no longer tracked as untested.
+
+### 2026-06-24/ (1 file)
+
+#### **Sprint 1 PR-06 Language Navigation Review**
+
+- `SPRINT_1_PR06_LANGUAGE_NAV_REVIEW_2026-06-24.md` - Updated the Sprint 1 readiness backlog after direct Provider-dashboard review of the `Profile Setting -> Languages` tab. Recorded positive coverage for language search, add/remove, and persistence after reload; added a confirmed PR-06 bug row for the `Cancel` path routing providers into admin-only provider-management screens and exposing the `Add New Provider` wizard; and narrowed the remaining PR-06 evidence-gap row so `Languages` is no longer tracked as untested.
+
+### 2026-06-23/ (4 files)
 
 #### **FR-018 PRD Verified & Approved**
 
@@ -19,6 +31,10 @@ This folder contains documentation update reports and verification logs for the 
 #### **FR-018 Verification Fixes (v1.7 → v1.8 → v1.9 → v2.0)**
 
 - `FR018_VERIFICATION_FIXES_2026-06-23.md` - Applied three `verify-fr` passes. **Pass 1 (v1.8)**: set the **audit trail to 10-year retention** per constitution (financial records stay 7-year min); redefined the percentage **commission base as % of booking revenue** (not % of Hairline commission) per Product Owner decision — added Rule 14, corrected the Screen 2 preview and User Story 3/5 worked examples ($150), and aligned the `system-prd.md` FR-018 requirement line; **tightened commission bounds** to 5-25% / fixed min $50 (warning at 20%); **defined Performance Tier bands and Campaign Eligibility criteria** (new Affiliate Segmentation Rules subsection); standardized **bank-account masking** wording to "last 4 digits"; and **fixed the payout schedule at monthly-on-the-7th** per the client transcription. **Pass 2 (v1.9)**: reconciled the **initial affiliate Status = "Pending"** on create across Screen 2 / Screen 10 / Screen 10.1 (was contradictorily "Active"); added a **per-booking Hairline-funded cost ceiling** (Rule 15, Screen 4 Margin Guard + AC-6, REQ-018-041 — discount + commission may not exceed Hairline's commission on a booking; resolves the v1.8 Finance follow-up); and added a **Currency Rule note** that client GBP figures are illustrative vs USD base literals. **Pass 3 (v2.0)**: moved affiliate payout execution out of FR-018 so FR-017 / A-05 owns approval, retry, and Stripe transfers; corrected Screen 3 links to Screen 6 and Screen 8; and added read-only affiliate access to externally hosted marketing materials (REQ-018-042).
+
+#### **Sprint 1 A-09a Live Backend Verification**
+
+- `SPRINT_1_A09A_LIVE_BACKEND_VERIFICATION_2026-06-23.md` - Updated the Sprint 1 readiness backlog after live backend verification of the questionnaire module. Confirmed that questionnaire-set list/detail, categories, context types, versions, and audit logs are now served by real backend endpoints; strengthened the Screen 2 blocker row with exact live set-ID evidence; and reclassified the audit/history concern as a real-data fidelity follow-up rather than a generic mock-data suspicion.
 
 ### 2026-06-22/ (4 files)
 
@@ -207,6 +223,7 @@ This folder contains documentation update reports and verification logs for the 
 ### 2025-10-23/ (7 files)
 
 #### **Major Documentation Updates & Verification**
+
 
 - `DOCUMENTATION_UPDATES_2025-10-23.md` - Complete changelog of all system documentation updates
 - `VERIFICATION_REPORT_2025-10-23.md` - Comprehensive verification report confirming consistency
@@ -903,4 +920,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 23, 2026 (FR-018 PRD marked Verified & Approved after final verification cleanup)
+**Last Updated**: June 25, 2026 (Sprint 1 PR-06 awards review added to the readiness-report update log)
