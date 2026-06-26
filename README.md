@@ -1,8 +1,10 @@
 # Hairline Platform Documentation
 
 **Version**: 1.0.0  
-**Last Updated**: 2026-05-27  
+**Last Updated**: 2026-06-26  
 **Status**: ✅ Active Development
+
+> **🤖 AI agents:** start at **[`INDEX.md`](INDEX.md)** — the wayfinder that maps task → area → file → section, lists the skill directory, and carries every doc's scaffold. Locate there first; do not scan the tree or read long files whole. This README is human onboarding.
 
 ## Overview
 
