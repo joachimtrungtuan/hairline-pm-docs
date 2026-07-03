@@ -6,6 +6,18 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-07-03/ (1 file)
+
+#### **Sprint 1 P-02 Quote Notification Bugs**
+
+- `SPRINT_1_P02_QUOTE_NOTIFICATION_BUGS_2026-07-03.md` - Updated the Sprint 1 readiness backlog after patient-side quote-notification review during provider quote-submission testing. Replaced the old P-02 "not checked" note with partial coverage for quote-ready notification delivery, and added confirmed bug rows `P-02-001` through `P-02-004` for duplicated patient quote-ready emails, backend-hosted email CTA URLs, duplicated in-app `New quote` notifications, and incorrect relative timestamps on freshly submitted quote notifications.
+
+### 2026-07-02/ (1 file)
+
+#### **Sprint 1 PR-02 Provider Notification Bugs**
+
+- `SPRINT_1_PR02_PROVIDER_NOTIFICATION_BUGS_2026-07-02.md` - Updated the Sprint 1 readiness backlog after direct Provider-dashboard review of inquiry notifications. Replaced the old PR-02 "not checked" note with partial provider coverage for accounts 1-3, added confirmed bug row `PR-02-001` for duplicated `New inquiry` notifications, and added confirmed bug row `PR-02-002` for notification clicks routing to `/provider/inquiries/{id}` and landing on a 404 instead of the live inquiry detail route.
+
 ### 2026-06-26/ (4 files)
 
 #### **sprint-readiness-reporting — Token-Governance Alignment**
@@ -699,6 +711,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-07-03**: `SPRINT_1_P02_QUOTE_NOTIFICATION_BUGS_2026-07-03.md` - Sprint 1 readiness backlog update for patient-side quote notifications: partial P-02 coverage added, plus four confirmed bugs covering duplicated emails, invalid backend email CTA URLs, duplicated in-app notifications, and wrong relative timestamps on fresh quote events.
 - **2025-10-23**: `DOCUMENTATION_UPDATES_2025-10-23.md` - Complete changelog
 - **2025-10-27**: `CROSS_REFERENCE_UPDATES_2025-10-27.md` - Cross-reference fixes
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Module structure changes
@@ -721,6 +734,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-05-20**: `LAUNCH_PLAN_REVIEW_2026-05-20.md` - Three-track review plus follow-up correction pass: PRD/FR cross-check, sprint DoD/story rework, module table restructure, timeline fixes now including RC store-submission/code-freeze and store-review fallback, FR/module corrections for travel, support, promotions, payment, payout, search, compliance, affiliate, and FR-036 topline placeholder, plus expanded launch smoke tests.
 - **2026-05-29**: `SPRINT_1_READINESS_FIX_BACKLOG_2026-05-29.md` - Created Sprint 1 readiness and fix-backlog report from `launch-plan.md`, with Sprint 1 scope, modules, stories, deferrals, readiness blockers, and module-level evidence gaps for later staging/product review.
 - **2026-06-08**: `SPRINT_1_PROVIDER_ONBOARDING_REVIEW_2026-06-08.md` - Updated Sprint 1 provider onboarding backlog rows after Admin wizard screenshot review: provider creation is partial-pass, activation/Owner login remains open, and A-02/PR-06 follow-up bugs are logged for notification deep-linking, phone country-code UX, phone formatting, and document preview.
+- **2026-07-02**: `SPRINT_1_PR02_PROVIDER_NOTIFICATION_BUGS_2026-07-02.md` - Updated the Sprint 1 readiness backlog after direct Provider-dashboard review of inquiry notifications: PR-02 partial coverage is now recorded for providers 1-3, with confirmed bug rows for duplicated `New inquiry` alerts and a 404-causing notification deep link to `/provider/inquiries/{id}` instead of the live `/inquiries/{id}` route.
 - **2026-06-09**: `SPRINT_READINESS_REPORTING_SKILL_2026-06-09.md` - Created the `sprint-readiness-reporting` skill for Hairline readiness-report context resolution, scaffold creation, basic vs advanced update routing, evidence/status rules, and blocked-follow-up re-test handling.
 - **2026-06-11**: `SPRINT_READINESS_RESOLUTION_STATUS_2026-06-11.md` - Added resolution lifecycle statuses to the sprint-readiness reporting workflow so fix rows can distinguish implementation-reported fixes from reviewer-verified re-test closure.
 - **2026-06-12**: `CREATE_BUG_TASKS_SKILL_2026-06-12.md` - Created the `create-bug-tasks` skill for turning confirmed bug reports and `Recorded only` readiness backlog rows into Plane-ready `[BUG]` tasks with module/FR traceability, explicit labels, early PRD/document/design references, and optional post-create backlog status updates.
@@ -947,4 +961,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: June 26, 2026 (sprint-readiness-reporting skill aligned to token governance — code-map/PRD-section-map lookups + write-only update-log handling)
+**Last Updated**: July 3, 2026 (Sprint 1 P-02 patient quote-notification defects recorded in readiness backlog and update logs)

@@ -1,0 +1,11 @@
+# Sprint 1 PR-02 Provider Notification Bugs
+
+- Updated `local-docs/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md` under `PR-02 - Inquiry, Quote & Booking Management` after direct Provider-dashboard review evidence from provider accounts 1-3.
+- Replaced the old PR-02 "product behavior not checked" note with partial coverage notes: provider inquiry receipt and notification behavior are now partially reviewed for providers 1-3, provider 4 remains unverified, and quote or booking lifecycle coverage is still pending.
+- Added confirmed bug row `PR-02-001` for duplicate provider inquiry notifications: provider dashboards 1-3 each showed duplicated `New inquiry` alerts for the same inquiry-creation pass, contradicting FR-020 anti-spam and throttling expectations.
+- Added confirmed bug row `PR-02-002` for provider notification deep-link failure: clicking a `New inquiry` notification routes to `/provider/inquiries/{id}` and lands on a `404 | Page Not Found` screen, while the live inquiry detail route is `/inquiries/{id}`.
+- Captured evidence with persistent uploaded screenshot URLs only and noted the supporting route mismatch from targeted backend and frontend code review without modifying product code.
+- Same-day follow-up: provider account 4 was later checked and matched the remaining expected distribution pattern (`DS5` and `DS7` present; no visible `DS1` hit), so the country-based provider distribution sub-check is now closed for all 4 providers while the two notification defects remain open.
+- Same-day follow-up: provider inquiry detail review via the table `View` action now has positive coverage for pre-payment anonymization and core inquiry-data rendering (masked identity, chosen countries, requested date ranges, problem details, questionnaire answers with follow-up text).
+- Added confirmed bug row `PR-02-003` for the broken V1 head-scan viewer: the provider modal opens but cannot load the submitted scan media and shows the built-in 404-style fallback message instead of the inquiry’s multi-angle image set.
+- Added confirmed bug row `PR-02-004` for medical-alert under-flagging: the questionnaire screen can show `YES` answers while the alert badge remains `None`, and source review shows the alert calculation path uses a narrower field set than the broader medical-alert service.
