@@ -1,0 +1,22 @@
+# Sprint 1 Recorded Bug Task Creation
+
+- Updated `local-docs/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md` after creating Plane work items for all 16 Sprint 1 `Recorded only` bug rows converted into implementation tasks on 2026-07-03.
+- Changed `Task Status` from `Recorded only` to side-labeled `Task created (...)` values for `P-02-001` through `P-02-004`, `PR-02-001` through `PR-02-011`, and `PR-06-030`.
+- Wrote split-task Plane keys back into the backlog where one source bug produced separate frontend and backend tasks:
+  - `PR-02-002` -> `Task created (FE: HAIRL-1399; BE: HAIRL-1400)`
+  - `PR-02-003` -> `Task created (FE: HAIRL-1401; BE: HAIRL-1402)`
+  - `PR-02-007` -> `Task created (FE: HAIRL-1406; BE: HAIRL-1407)`
+  - `PR-02-010` -> `Task created (FE: HAIRL-1410; BE: HAIRL-1411)`
+- Wrote single-side Plane keys back into the backlog for:
+  - `P-02-001` -> `BE: HAIRL-1394`
+  - `P-02-002` -> `BE: HAIRL-1395`
+  - `P-02-003` -> `BE: HAIRL-1396`
+  - `P-02-004` -> `FE: HAIRL-1397`
+  - `PR-02-001` -> `BE: HAIRL-1398`
+  - `PR-02-004` -> `BE: HAIRL-1403`
+  - `PR-02-005` -> `FE: HAIRL-1404`
+  - `PR-02-006` -> `FE: HAIRL-1405`
+  - `PR-02-008` -> `FE: HAIRL-1408`
+  - `PR-02-009` -> `FE: HAIRL-1409`
+  - `PR-02-011` -> `FE: HAIRL-1412`
+  - `PR-06-030` -> `FE: HAIRL-1413`

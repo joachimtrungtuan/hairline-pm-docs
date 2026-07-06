@@ -6,11 +6,15 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-07-03/ (1 file)
+### 2026-07-03/ (2 files)
 
 #### **Sprint 1 P-02 Quote Notification Bugs**
 
 - `SPRINT_1_P02_QUOTE_NOTIFICATION_BUGS_2026-07-03.md` - Updated the Sprint 1 readiness backlog after patient-side quote-notification review during provider quote-submission testing. Replaced the old P-02 "not checked" note with partial coverage for quote-ready notification delivery, and added confirmed bug rows `P-02-001` through `P-02-004` for duplicated patient quote-ready emails, backend-hosted email CTA URLs, duplicated in-app `New quote` notifications, and incorrect relative timestamps on freshly submitted quote notifications.
+
+#### **Sprint 1 Recorded Bug Task Creation**
+
+- `SPRINT_1_RECORDED_BUG_TASK_CREATION_2026-07-03.md` - Updated the Sprint 1 readiness backlog after creating Plane work items for all 16 `Recorded only` bug rows. Changed `Task Status` to side-labeled `Task created (...)` values and wrote the created Plane keys back into `P-02`, `PR-02`, and `PR-06` bug rows, including split FE/BE keys where one source bug produced two implementation tasks.
 
 ### 2026-07-02/ (1 file)
 
@@ -723,6 +727,7 @@ This folder contains documentation update reports and verification logs for the 
 - **2026-03-19**: `MISSING_MOBILE_FLOWS_BACKEND_API_AUDIT_2026-03-19.md` - Backend endpoint readiness audit for all 15 missing patient mobile flows against `main/hairline-backend`
 - **2026-04-07**: `MOBILE_APP_TESTING_REPORT_PROGRESS_UPDATE_2026-04-07.md` - April 6 patient mobile testing artifacts updated for notification coverage: bottom-nav entry point, empty state, visible search/filter/bulk actions recorded, while swipe/deep-link/data-driven behavior remains blocked pending Firebase registration and backend delivery
 - **2026-06-26**: `PHASE2_CODE_MAP_AND_SEARCH_WRAPPER_2026-06-26.md` - Added the `search.sh` capped ripgrep wrapper and three structure-only repomix code maps (`project-notes/code-map-{backend,frontend,app}.md`); wired both into INDEX.md (§D Code Map commands + §B Tools note)
+- **2026-07-03**: `SPRINT_1_RECORDED_BUG_TASK_CREATION_2026-07-03.md` - Sprint 1 readiness backlog status update after creating Plane work items for all `Recorded only` bug rows across `P-02`, `PR-02`, and `PR-06`, including side-labeled FE/BE task keys
 - **2026-04-15**: `HAIRLINE_MOBILE_APRIL_2026_POSTMAN_COLLECTION_TEST_2026-04-15.md` - Live API sweep of the Hairline Mobile April 2026 collection routes; 44 original endpoints were tested in the initial sweep, 29 are confirmed meaningful after follow-up validation, 7 return successful but sparse payloads pending product confirmation, 8 remain unresolved failures, and 25 follow-up validations were run separately to clear ambiguity. Follow-up checks verified that `GET /localization/get-cities/CAN` returns `200` when the country input is the ISO alpha-3 code, that quote-bearing inquiries return meaningful `quote/get-quotes` payloads, that `POST /settings/update-provider-profile` and `POST /treatment/update-treatment` succeed with the required IDs/payloads, and that the report now includes an endpoint-correction retry guide for resolved reruns, including the `quote_amount` decimal-precision rule
 - **2026-04-23**: `BUG_REPORT_SKELETON_2026-04-23.md` - Created a concise mobile bug report table skeleton starting from `HL61`
 - **2026-04-24**: `PROVIDER_ADMIN_MILESTONE_REPORT_2026-04-24.md` - Created Provider/Admin milestone status report with verified module completion estimates, risks, dependencies, and remaining effort; Mobile App deferred
@@ -961,4 +966,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 3, 2026 (Sprint 1 P-02 patient quote-notification defects recorded in readiness backlog and update logs)
+**Last Updated**: July 3, 2026 (Sprint 1 recorded bug rows updated to Task created statuses with Plane keys)
