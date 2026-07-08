@@ -17,7 +17,7 @@ from typing import Any
 
 
 DEFAULT_BASE_URL = "https://api.plane.so/api/v1"
-DEFAULT_WORKSPACE_SLUG = "samasu-digital"
+DEFAULT_WORKSPACE_SLUG = "samasu-group"
 PRIORITIES = {"none", "low", "medium", "high", "urgent"}
 UUID_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",

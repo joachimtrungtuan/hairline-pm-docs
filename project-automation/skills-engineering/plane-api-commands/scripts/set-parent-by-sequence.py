@@ -140,7 +140,7 @@ def main() -> None:
 
     config = {
         "PLANE_API_KEY": api_key,
-        "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-digital"),
+        "WORKSPACE_SLUG": env_vars.get("WORKSPACE_SLUG", "samasu-group"),
         "BASE_URL": env_vars.get("BASE_URL", "https://api.plane.so/api/v1"),
         "PROJECT_ID": env_vars.get("PROJECT_ID", ""),
     }

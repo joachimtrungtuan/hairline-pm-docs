@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-07-08/ (1 file)
+
+#### **Plane Workspace Alias Update**
+
+- `PLANE_WORKSPACE_ALIAS_UPDATE_2026-07-08.md` - Updated Plane automation configuration, cached values, reusable scripts, and Plane command/workflow prompt references after the Plane workspace slug changed from `samasu-digital` to `samasu-group`.
+
 ### 2026-07-03/ (2 files)
 
 #### **Sprint 1 P-02 Quote Notification Bugs**
@@ -715,6 +721,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-07-08**: `PLANE_WORKSPACE_ALIAS_UPDATE_2026-07-08.md` - Plane automation workspace alias update from `samasu-digital` to `samasu-group`, covering reusable scripts, task-creation config/cache files, and Plane command/workflow prompt references.
 - **2026-07-03**: `SPRINT_1_P02_QUOTE_NOTIFICATION_BUGS_2026-07-03.md` - Sprint 1 readiness backlog update for patient-side quote notifications: partial P-02 coverage added, plus four confirmed bugs covering duplicated emails, invalid backend email CTA URLs, duplicated in-app notifications, and wrong relative timestamps on fresh quote events.
 - **2025-10-23**: `DOCUMENTATION_UPDATES_2025-10-23.md` - Complete changelog
 - **2025-10-27**: `CROSS_REFERENCE_UPDATES_2025-10-27.md` - Cross-reference fixes
@@ -966,4 +973,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 3, 2026 (Sprint 1 recorded bug rows updated to Task created statuses with Plane keys)
+**Last Updated**: July 8, 2026 (Plane automation workspace alias updated to `samasu-group`)

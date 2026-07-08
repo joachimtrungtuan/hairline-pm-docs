@@ -26,7 +26,7 @@ These values are used when creating tasks (from `samasu-system-variables.md`):
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
-| `WORKSPACE_SLUG` | `samasu-digital` | Workspace identifier |
+| `WORKSPACE_SLUG` | `samasu-group` | Workspace identifier |
 | `PROJECT_ID` | `ff2d96b2-0ab2-438b-b879-fbdaa078dbd6` | Default project UUID |
 | `ASSIGNEE_ID` | `c5bb905a-57bc-4f08-aee0-32d69f8fec78` | Default assignee UUID |
 | `STAGE_ID` | `b189d1d2-0d1d-40f9-9a22-7e4ea5f5976f` | Default state (Drafted) |
@@ -113,7 +113,7 @@ file_path = "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairli
 
 # API Configuration (from .env and samasu-system-variables.md)
 PLANE_API_KEY = os.environ.get("PLANE_API_KEY", "")  # Load from .env — NEVER hardcode
-WORKSPACE_SLUG = "samasu-digital"
+WORKSPACE_SLUG = "samasu-group"
 BASE_URL = "https://api.plane.so/api/v1"
 PROJECT_ID = "ff2d96b2-0ab2-438b-b879-fbdaa078dbd6"
 ASSIGNEE_ID = "c5bb905a-57bc-4f08-aee0-32d69f8fec78"
@@ -283,7 +283,7 @@ DEFAULT_ASSIGNEE_ID="c5bb905a-57bc-4f08-aee0-32d69f8fec78"
 DEFAULT_STAGE_ID="b189d1d2-0d1d-40f9-9a22-7e4ea5f5976f"
 DEFAULT_PRIORITY="medium"
 DEFAULT_ISSUE_TYPE_ID="ee71055e-0962-4d04-bab7-e434c1347d8d"
-DEFAULT_WORKSPACE_SLUG="samasu-digital"
+DEFAULT_WORKSPACE_SLUG="samasu-group"
 ```
 
 ---

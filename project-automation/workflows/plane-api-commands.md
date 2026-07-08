@@ -25,7 +25,7 @@ Ask user to choose if not specified: `list-users`, `list-projects`, `list-module
 
 ## Default Configuration
 
-Load IDs from `samasu-system-variables.md`. Defaults: `WORKSPACE_SLUG=samasu-digital`, `BASE_URL=https://api.plane.so/api/v1`. For project/assignee/stage/priority/issue type IDs: always reference config file, never hardcode UUIDs.
+Load IDs from `samasu-system-variables.md`. Defaults: `WORKSPACE_SLUG=samasu-group`, `BASE_URL=https://api.plane.so/api/v1`. For project/assignee/stage/priority/issue type IDs: always reference config file, never hardcode UUIDs.
 
 ## Task File Contract
 
@@ -66,7 +66,7 @@ with open(env_path) as f:
 api_key = env_vars.get("PLANE_API_KEY", "")
 ```
 
-3. For **list operations**: run curl against `https://api.plane.so/api/v1/workspaces/samasu-digital/...` with API key header. Display formatted results.
+3. For **list operations**: run curl against `https://api.plane.so/api/v1/workspaces/samasu-group/...` with API key header. Display formatted results.
 
 4. For **create-work-item** or **update-work-item**: 
 

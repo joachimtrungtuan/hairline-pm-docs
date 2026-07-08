@@ -42,7 +42,7 @@ Load all IDs from `local-docs/project-automation/task-creation/plane-api/samasu-
 
 | Parameter | Default |
 |-----------|---------|
-| `WORKSPACE_SLUG` | `samasu-digital` |
+| `WORKSPACE_SLUG` | `samasu-group` |
 | `BASE_URL` | `https://api.plane.so/api/v1` |
 
 For project, assignee, stage, priority, and issue type IDs: always reference `samasu-system-variables.md` for current values. Do not hardcode UUIDs in generated scripts.
