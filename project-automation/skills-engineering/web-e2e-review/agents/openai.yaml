@@ -1,0 +1,6 @@
+interface:
+  display_name: "Web E2E Review"
+  short_description: "Review deterministic web E2E findings safely"
+  default_prompt: "Use $web-e2e-review to inspect pending Hairline web E2E results for human classification."
+policy:
+  allow_implicit_invocation: false

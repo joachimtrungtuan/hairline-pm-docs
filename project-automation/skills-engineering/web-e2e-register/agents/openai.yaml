@@ -1,0 +1,6 @@
+interface:
+  display_name: "Web E2E Register"
+  short_description: "Register and revise deterministic web E2E cases"
+  default_prompt: "Use $web-e2e-register to scout and register a Hairline web E2E function or flow."
+policy:
+  allow_implicit_invocation: false

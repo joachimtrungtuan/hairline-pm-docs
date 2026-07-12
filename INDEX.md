@@ -32,6 +32,7 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Sprint readiness / client review report | run `sprint-readiness-reporting` skill; `product-plans/` | date folder |
 | Status reports / analyses | `reports/YYYY-MM-DD/` | locate by date |
 | Test plans / QA | `testing-plans/YYYY-MM-DD/` | — |
+| Automated web E2E architecture, registry, execution framework, and results | `testing-automation/` | start at `ARCHITECTURE.md`; constitution follows after approval |
 | Website / public content | `website-works/` | — |
 | Recent doc changes / audit trail | `project-requirements/update-logs/` | read its README first |
 | Read / review / analyze main/ source code (only when invited) | see §D Code Map | map first → open only the named files |
@@ -64,6 +65,8 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 | `android-emulator-qa` | Test a SINGLE screen of the Flutter Android app on emulator/device (UI, validation, bug repro, layout). |
 | `android-flow-test` | Run a named multi-screen Android app journey end-to-end on emulator/device. |
 | `android-flow-register` | Interactively record/update a multi-screen Android testing flow via a live guided session. |
+| `web-e2e-register` | Scout, propose, register, revise, or activate deterministic dashboard Playwright functions/flows and approved frontend changes. |
+| `web-e2e-review` | Inspect SQLite web E2E findings, assemble evidence, obtain human classification, and coordinate approved re-tests or follow-up. |
 | `gen-code-map` | Generate/refresh the three semantic code maps for `main/` (backend/frontend/app) and check folder drift. |
 
 > **Governance note (pending your decision):** CLAUDE.md currently marks skills as
@@ -101,6 +104,7 @@ local-docs/
 ├── project-notes/                Ad-hoc notes, decisions, dev-related-issues/
 ├── reports/YYYY-MM-DD/           Status reports & analyses
 ├── testing-plans/YYYY-MM-DD/     Test plans; testing-credentials/
+├── testing-automation/           Living web E2E architecture, registry, framework & results
 └── website-works/                website-requirements/, project-static-content/
 ```
 

@@ -6,6 +6,18 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-07-12/ (1 file)
+
+#### **Testing Automation Registration Gate and SQLite Foundation**
+
+- `TESTING_AUTOMATION_REGISTRATION_GATE_AND_SQLITE_FOUNDATION_2026-07-12.md` - Completed the MVP global-Playwright E2E setup with retry evidence, SQLite result/review storage, explicit human review, and registration/review skills. After proof, removed all PR-02 pilot cases, datasets, database records, and placeholders; the product registry is clean while 23 framework tests remain available.
+
+### 2026-07-11/ (1 file)
+
+#### **Automated E2E Testing Architecture**
+
+- `AUTOMATED_E2E_TESTING_ARCHITECTURE_2026-07-11.md` - Created the permanent testing-automation architecture and constitution, confirmed Playwright MCP access, approved the PR-02 sent-quote-edit pilot, created its draft registry, and implemented the first TDD foundation for IDs, retries/outcomes, review routing, and evidence policy with 9/9 unit tests passing. Quote withdrawal remains an unconfirmed review lead; no database, Playwright case, API mutation, reporter, or skill exists yet.
+
 ### 2026-07-08/ (1 file)
 
 #### **Plane Workspace Alias Update**
@@ -973,4 +985,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 8, 2026 (Plane automation workspace alias updated to `samasu-group`)
+**Last Updated**: July 12, 2026 (Testing automation MVP setup completed and reset for clean registration)
