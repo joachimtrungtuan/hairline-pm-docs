@@ -6,6 +6,18 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-07-15/ (1 file)
+
+#### **E2E Complete Case Coverage and Provider Login Suite**
+
+- `E2E_COMPLETE_CASE_COVERAGE_AND_LOGIN_SUITE_2026-07-15.md` - Promoted Testing Constitution v1.2, activated the six-case PR-01 Provider login suite, documented four governed coverage gaps, and added a centralized registry-driven `./test.sh` console for token-free selection and execution.
+
+### 2026-07-14/ (1 file)
+
+#### **Provider Login E2E First Case Registration**
+
+- `PROVIDER_LOGIN_E2E_FIRST_CASE_REGISTRATION_2026-07-14.md` - Registered the first real PR-01 Provider login E2E case, dataset recipe, and executable Playwright flow as `DRAFT`; the controlled run passed on its initial attempt, and `OPERATIONS.md` now provides the complete manual terminal runbook.
+
 ### 2026-07-12/ (1 file)
 
 #### **Testing Automation Registration Gate and SQLite Foundation**
@@ -733,6 +745,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-07-15**: `E2E_COMPLETE_CASE_COVERAGE_AND_LOGIN_SUITE_2026-07-15.md` - Changed the E2E registration gate to happy-path approval plus delegated PRD-derived coverage, activated six Provider login cases, preserved four governed gaps, and added the registry-driven `./test.sh` interactive console.
+- **2026-07-14**: `PROVIDER_LOGIN_E2E_FIRST_CASE_REGISTRATION_2026-07-14.md` - Registered and controlled-validated the first deterministic PR-01 Provider login Playwright case, and documented the complete manual terminal execution/review workflow; status remains `DRAFT` pending explicit activation approval.
 - **2026-07-08**: `PLANE_WORKSPACE_ALIAS_UPDATE_2026-07-08.md` - Plane automation workspace alias update from `samasu-digital` to `samasu-group`, covering reusable scripts, task-creation config/cache files, and Plane command/workflow prompt references.
 - **2026-07-03**: `SPRINT_1_P02_QUOTE_NOTIFICATION_BUGS_2026-07-03.md` - Sprint 1 readiness backlog update for patient-side quote notifications: partial P-02 coverage added, plus four confirmed bugs covering duplicated emails, invalid backend email CTA URLs, duplicated in-app notifications, and wrong relative timestamps on fresh quote events.
 - **2025-10-23**: `DOCUMENTATION_UPDATES_2025-10-23.md` - Complete changelog
@@ -985,4 +999,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 12, 2026 (Testing automation MVP setup completed and reset for clean registration)
+**Last Updated**: July 15, 2026 (Complete-case registration, active Provider login suite, and centralized E2E test console)

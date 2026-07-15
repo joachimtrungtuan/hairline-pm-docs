@@ -1,58 +1,141 @@
-# Web E2E Operations
+# Web E2E Manual Operations Runbook
 
-**Status:** MVP setup complete; product test registry intentionally empty
+**Status:** MVP setup complete; six-case Provider login suite active
 **Runtime:** Existing global `@playwright/mcp` package plus installed system Chrome
 **Package manager:** pnpm only
 
-## 1. Non-Negotiable Boundaries
+This is the manual runbook for executing registered Hairline web E2E cases and reviewing their results without AI assistance. Run every command below from `local-docs/testing-automation/`.
 
-- Do not install Playwright or browsers from this project.
+## 1. Prerequisites and Boundaries
+
+- Use Node.js 22 or later and pnpm. The project declares pnpm `11.11.0`.
+- Use the existing global `@playwright/mcp` runtime and installed system Chrome.
+- Do not install Playwright, its browsers, or another browser from this project.
+- Confirm the development dashboard and backend are reachable.
+- The runner resolves registered V1, P1, and S1 accounts from `local-docs/testing-plans/testing-credentials/` by default. Environment variables may select another registered account or override runtime credentials.
+- Never place credentials in commands, source files, results, review notes, or a committed environment file. See `.env.example` for optional variable names and export values only in the shell when needed.
 - Do not read from, import from, write to, or otherwise depend on `main/`.
 - Use live PRDs as requirement authority and the development UI/API as implementation evidence.
-- Every non-pass enters `NEEDS_HUMAN_REVIEW`; no AI or runner confirms bugs.
 - Retain generated development records.
 
-## 2. Runtime Inputs
+## 2. Registry Statuses
 
-The runner resolves V1, P1, and S1 from `local-docs/testing-plans/testing-credentials/` by default. Environment variables may select another registered account or override credentials without copying them into source or results.
+- `ACTIVE` means the case has activation approval and can run normally.
+- `DRAFT` means the case is registered but not activated. Normal execution rejects it.
+- Use `--allow-draft` only for an explicitly approved controlled validation. The flag does not activate, approve, or change the registry entry.
 
-See `.env.example` for optional settings. Export values in the shell; do not commit a populated environment file.
+## 3. Start the Interactive Test Console
 
-## 3. Commands
-
-From `local-docs/testing-automation/`:
+From `local-docs/testing-automation/`, start the centralized deterministic console:
 
 ```bash
-pnpm test:unit
-pnpm test:preflight
-pnpm test:function <module-id> <function-id>
-pnpm test:function <module-id> <function-id> --case <case-id>
-pnpm test:review-queue
-pnpm test:review <execution-id> --classification <human-decision> --reviewer <name-or-role> --notes <text> [--retest-required]
+./test.sh
 ```
 
-Before the first registration, function selection intentionally reports `Unknown function`. Ordinary execution rejects draft cases. During a human-approved implementation proof only, append `--allow-draft`; this does not activate or approve the registry entry.
+The console reads the machine-readable registry and lets you:
 
-`HAIRLINE_HEADLESS=true` enables headless execution. The default is visible browser execution.
+- browse registered modules, then functions or flows;
+- run every active case in one selected function or flow;
+- run one active case for diagnosis;
+- run all active registered tests;
+- choose visible or headless Chrome;
+- inspect the pending human-review queue;
+- view the latest SQLite run summary;
+- run preflight independently.
 
-## 4. Result Interpretation
+The normal menu never offers `DRAFT` cases or `--allow-draft`. Before browser execution it shows the selected scope, active-case count, governed coverage-gap count, browser mode, and confirmation prompt. It runs preflight automatically and then delegates to the existing pnpm runner. No AI agent participates.
 
-- `PASSED`: initial attempt passed; no screenshot retained.
-- `FLAKY_OR_TRANSIENT`: a retry passed; latest failed and passing screenshots retained; human review required.
-- `POTENTIAL_ISSUE`: four equivalent failures, at least five seconds apart; only the rolling final screenshot retained; human review required.
-- `INCONSISTENT_FAILURE`: four failures with different signatures; final screenshot retained; human review required.
-- `BLOCKED`: preflight or API dataset preparation prevented browser execution; no UI screenshot is fabricated; human review required.
+Direct pnpm commands remain supported for troubleshooting, controlled draft validation, and external automation.
 
-Canonical results are stored in `results/test-results.sqlite`. Screenshots are stored beneath `results/artifacts/<run-id>/<module>/<case-id>/` and are excluded from source control.
+## 4. Run a Registered Function Suite Directly
 
-The review command is intentionally explicit and human-controlled. It appends the decision and changes the queue status to `REVIEWED`; it never changes the original automated outcome.
+1. Open Terminal.
 
-## 5. MVP Boundary
+2. Change to the testing automation directory:
 
-The initial setup supports function-level execution, retained datasets, screenshots/traces, SQLite review data, and human decisions. Add module, cross-module flow, regression selectors, and PRD section hashing when the first registered cases require them; they are not setup blockers.
+   ```bash
+   cd "/Users/joachimtrungtuan/My Documents/Vân Tay Media/Products/Hairline/local-docs/testing-automation"
+   ```
 
-## 6. Registration and Frontend Changes
+3. Run preflight before browser execution:
 
-Registration always begins with a narrow scout of the live PRD's module scope and overall workflows. The agent returns only a concise outline and stops for Product Owner approval and operational corrections. Detailed UI/API scouting and case creation begin only after approval.
+   ```bash
+   pnpm test:preflight
+   ```
 
-A UI discrepancy never causes automatic test rewriting. The execution enters human review. After a human confirms an intentional frontend change, the registration workflow updates selectors/actions, records a new case revision, and re-runs affected regression tests.
+   Continue only after Terminal reports `Preflight passed` and identifies the dashboard, Playwright package, and browser. Fix any reported runtime or connectivity problem without installing Playwright or browsers.
+
+4. Locate registered module, function, and case IDs and confirm each status:
+
+   ```bash
+   rg -n -m 50 'Registry status|Function ID|TC-[0-9]+' registry/*/*/module.md registry/*/*/functions/*/test-cases.md
+   ```
+
+   Start with `registry/README.md`, then read the matching module's `module.md` and function's `test-cases.md`. Do not assume a case is `ACTIVE` from its presence in the registry.
+
+5. Run every `ACTIVE` case registered for a function in the default visible browser:
+
+   ```bash
+   pnpm test:function <module-id> <function-id>
+   ```
+
+   The active Provider login suite command is:
+
+   ```bash
+   pnpm test:function PR-01 PR-01-FN-001
+   ```
+
+   This runs all six active login cases. Use `--case <case-id>` only for diagnosis, targeted re-verification, or an explicitly selected review item. Use `--allow-draft` only for a separately approved controlled validation of draft coverage; the flag never activates a case.
+
+6. Optionally run headless by setting the runtime variable for the same command:
+
+   ```bash
+   HAIRLINE_HEADLESS=true pnpm test:function <module-id> <function-id>
+   ```
+
+## 5. Read and Inspect Results
+
+1. Read the Terminal output. For each case, the runner prints the case ID, automated outcome, and review status. It then prints the run ID, outcome counts, pending-review count, and SQLite result path.
+
+2. Treat a non-success shell result as a signal to inspect the outcome, not as confirmation of a product bug. The runner returns non-success when human review is required; preflight, configuration, selection, and usage failures can also stop execution. Do not infer a confirmed bug from the shell result alone.
+
+3. Inspect the human-review queue:
+
+   ```bash
+   pnpm test:review-queue
+   ```
+
+   The queue shows the `executionId`, case ID, automated outcome, review status, and start time. Keep the `executionId` for the review command.
+
+4. Locate persistent evidence relative to this directory:
+
+   - Canonical SQLite data: `results/test-results.sqlite`
+   - Retained screenshots and traces: `results/artifacts/<run-id>/<module>/<case-id>/`
+
+   Artifact folders exist only when the constitutional retention rules keep evidence; a clean initial pass intentionally retains no screenshot or trace.
+
+5. After a human has inspected the terminal result, queue entry, and retained evidence, record the decision:
+
+   ```bash
+   pnpm test:review <execution-id> --classification <human-decision> --reviewer <name-or-role> --notes "<text>"
+   ```
+
+   Append `--retest-required` when the human decision requires another run. The command records the decision and changes the queue status to `REVIEWED`; it never changes the original automated outcome. Do not put credentials or personal data in review notes.
+
+6. After an approved product fix or approved test revision, run preflight and repeat the function command. Use a case selector first only when the human review scope is deliberately limited; finish with the complete affected function suite when the fix could affect sibling cases.
+
+## 6. Screenshot, Retry, and Human-Review Rules
+
+- `PASSED`: the initial attempt passed; no screenshot or trace is retained.
+- `FLAKY_OR_TRANSIENT`: a retry passed; the latest failed and passing screenshots are retained; human review is required.
+- `POTENTIAL_ISSUE`: four equivalent failures occurred at least five seconds apart; only the rolling final screenshot is retained; human review is required.
+- `INCONSISTENT_FAILURE`: four failures produced different signatures; the final screenshot is retained; human review is required.
+- `BLOCKED`: preflight or API dataset preparation prevented browser execution; no UI screenshot is fabricated; human review is required.
+
+Every non-pass enters `NEEDS_HUMAN_REVIEW`. Neither the runner nor AI confirms a bug. One initial attempt plus up to three retries is allowed, with at least five seconds between failures.
+
+## 7. Registration and Frontend Changes
+
+Registration begins with a narrow scout of the live PRD's module scope and overall workflows, followed by Product Owner correction and approval of the function boundary and canonical happy path. Testing Constitution v1.2 then delegates derivation of the remaining unambiguous PRD cases without case-by-case approval. The registration must map every applicable requirement to an executable case or a governed gap and record why each standard category is covered, not applicable, or blocked.
+
+A UI discrepancy never causes automatic test rewriting. Route the execution to human review. After a human confirms an intentional frontend change, update the approved selectors/actions and case revision through the registration workflow, then re-run the affected tests.

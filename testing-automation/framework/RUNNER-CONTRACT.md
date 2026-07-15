@@ -1,6 +1,6 @@
 # Deterministic Runner and Reporter Contract
 
-**Status:** Function runner and review queue implemented; module/flow/regression selectors remain pending
+**Status:** Function runner, interactive registry selector, and review queue implemented; dedicated module/flow/regression commands remain pending
 **Governed by:** `local-docs/testing-automation/TESTING-CONSTITUTION.md`
 
 ## 1. Boundary
@@ -25,6 +25,7 @@ Provider and Admin use the same dashboard origin. Credentials must be resolved s
 The initial interface is:
 
 ```bash
+./test.sh
 pnpm test:function <module-id> <function-id> [--case <case-id>]
 pnpm test:module <module-id>
 pnpm test:flow <flow-id>
@@ -34,6 +35,8 @@ pnpm test:regression module <module-id>
 pnpm test:regression full
 pnpm test:review-queue [filters]
 ```
+
+`./test.sh` is the primary human interface. It reads active module/function/flow metadata from the same TypeScript registry used by the runner, runs preflight before browser execution, and delegates to the deterministic pnpm commands. It must not duplicate case definitions, expose draft execution, or change runner outcomes and review rules.
 
 Every command must support a help mode and return a non-zero exit code for invalid selection, environment failure, writer failure, or any result requiring human review. Exact exit-code numbers will be specified with failing contract tests before implementation.
 
