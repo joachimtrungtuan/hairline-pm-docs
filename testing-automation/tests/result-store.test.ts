@@ -47,6 +47,51 @@ test("formats a terminal summary with pending human reviews", async () => {
   }
 });
 
+test("returns the latest persisted run summary", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "hairline-latest-summary-"));
+  try {
+    const store = createResultStore(join(directory, "results.sqlite"));
+    store.writeEnvelope(envelope);
+    const laterEnvelope = {
+      ...envelope,
+      run: {
+        ...envelope.run,
+        id: "RUN-20260712T020304Z-b2c3d4e5",
+        startedAt: "2026-07-12T02:03:04.000Z",
+      },
+      execution: {
+        ...envelope.execution,
+        id: "019f1234-1111-7111-8111-111111111111",
+        outcome: "PASSED",
+        reviewStatus: "REVIEW_NOT_REQUIRED",
+        startedAt: "2026-07-12T02:03:04.000Z",
+        finishedAt: "2026-07-12T02:03:05.000Z",
+      },
+      attempts: [{
+        id: "019f1234-2222-7222-8222-222222222222",
+        number: 1,
+        status: "passed",
+      }],
+    };
+    store.writeEnvelope(laterEnvelope);
+
+    assert.deepEqual(store.getLatestRunSummary(), {
+      runId: "RUN-20260712T020304Z-b2c3d4e5",
+      passed: 1,
+      flaky: 0,
+      potentialIssues: 0,
+      inconsistent: 0,
+      blocked: 0,
+      sourceReview: 0,
+      unknown: 0,
+      pendingReview: 0,
+    });
+    store.close();
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("stores dataset and artifact metadata and accepts explicit human review", async () => {
   const directory = await mkdtemp(join(tmpdir(), "hairline-review-"));
   try {

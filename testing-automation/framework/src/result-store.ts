@@ -308,6 +308,16 @@ export const createResultStore = (path: string) => {
     };
   };
 
+  const getLatestRunSummary = (): RunSummary | null => {
+    const row = database.prepare(`
+      SELECT id
+      FROM test_runs
+      ORDER BY started_at DESC, id DESC
+      LIMIT 1
+    `).get() as { id?: string } | undefined;
+    return row?.id ? getRunSummary(row.id) : null;
+  };
+
   return {
     writeEnvelope,
     listReviewQueue,
@@ -315,6 +325,7 @@ export const createResultStore = (path: string) => {
     countArtifacts,
     reviewExecution,
     getRunSummary,
+    getLatestRunSummary,
     close: () => database.close(),
   };
 };
