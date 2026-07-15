@@ -1,7 +1,7 @@
 # Hairline Web E2E Testing Architecture
 
 **Document type:** Testing architecture and operating contract
-**Status:** Approved design; constitution v1.1 approved; SQLite/review foundation integration-tested
+**Status:** Approved design; constitution v1.2 approved; first complete function suite active
 **Date:** 2026-07-11
 **Initial scope:** Provider Dashboard and Admin Dashboard in the development environment
 **Primary tools:** Playwright, TypeScript, pnpm, SQLite
@@ -23,7 +23,7 @@ The design supports:
 - regression testing after bug fixes, blocker removal, requirement changes, or frontend changes;
 - evidence detailed enough to support later human review and optional AI-assisted investigation.
 
-This document defines the architecture. The constitution, contracts, reusable framework, registration/review skills, and contract-tested result foundation exist beside it. The product registry and canonical result database are intentionally empty until the first approved registration.
+This document defines the architecture. The constitution, contracts, reusable framework, registration/review skills, and contract-tested result foundation exist beside it. The Provider login function is active with six executable PRD-derived cases and four governed fixture/isolation gaps.
 
 ## 2. Design Principles
 
@@ -528,12 +528,13 @@ Its responsibilities include:
 
 - locating source documents through `local-docs/INDEX.md`;
 - first reading only the PRD module scope and overall business workflows;
-- returning a concise flow outline and stopping for Product Owner corrections and approval;
-- beginning detailed UI/API/dataset/case discovery only after that flow approval;
+- returning a concise flow outline and stopping for Product Owner corrections and happy-path/function-boundary approval;
+- beginning detailed UI/API/dataset/case discovery only after that approval;
 - inspecting the implemented dashboard UI;
 - inspecting relevant APIs for deterministic setup;
-- proposing case and dataset coverage;
-- waiting for human approval before changes;
+- deriving complete applicable case and dataset coverage from the PRDs;
+- recording unsafe, unavailable, ambiguous, or non-deterministic coverage as governed gaps;
+- stopping for human direction only when delegated authority does not apply under Testing Constitution v1.2;
 - creating or updating registry Markdown, datasets, and Playwright scripts;
 - recording source references and case revisions;
 - running targeted validation after approved changes.
@@ -659,6 +660,6 @@ These choices must be documented before or during the pilot and added to the con
 
 ## 19. Approval and Next Gate
 
-This architecture captures the approved design and its evidence-driven amendments. `TESTING-CONSTITUTION.md` version 1.1 is the active baseline. The runtime foundation now covers IDs, retries/outcomes, evidence decisions, envelopes, redaction, transactional/idempotent SQLite writes, review queues, and summaries through TDD; Playwright and live API mutation remain pending.
+This architecture captures the approved design and its evidence-driven amendments. `TESTING-CONSTITUTION.md` version 1.2 is the active baseline. The runtime foundation covers IDs, retries/outcomes, evidence decisions, envelopes, redaction, transactional/idempotent SQLite writes, review queues, and summaries through TDD. The first complete function suite has passed deterministic browser validation.
 
-The MVP framework is implemented without a project Playwright installation. Pilot records and controlled proof data were removed after validating the mechanism. The next gate is a clean `web-e2e-register` run for the first Product Owner-approved flow.
+The MVP framework is implemented without a project Playwright installation. The next gate is to add the missing dedicated account states and throttling isolation controls, then continue registering functions module by module under the Constitution v1.2 approval model.

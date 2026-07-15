@@ -26,6 +26,8 @@ if (!moduleId || !functionId || rest.includes("--help")) {
 const config = loadRuntimeConfig();
 const runtimeEnvironment = {
   ...process.env,
+  HAIRLINE_BASE_URL: config.baseUrl,
+  HAIRLINE_API_URL: config.apiUrl,
   HAIRLINE_PROVIDER_EMAIL: config.provider.email,
   HAIRLINE_PROVIDER_PASSWORD: config.provider.password,
   HAIRLINE_PATIENT_EMAIL: config.patient.email,

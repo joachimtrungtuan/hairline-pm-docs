@@ -1,6 +1,6 @@
 # Hairline Web E2E Testing Constitution
 
-**Version:** 1.1
+**Version:** 1.2
 **Status:** Approved; subject to evidence-driven amendment
 **Created:** 2026-07-11
 **Governed scope:** Provider Dashboard and Admin Dashboard web E2E testing
@@ -27,7 +27,7 @@ This constitution is the active governance baseline. It is expected to improve t
 Only a human reviewer may:
 
 - confirm that a result is a product bug;
-- approve a test-case creation or revision;
+- approve the owning function or flow, its operational boundaries, and its canonical happy path;
 - approve a changed expected outcome;
 - accept a frontend discrepancy against a requirement;
 - classify a result as requiring a test update;
@@ -37,7 +37,23 @@ Only a human reviewer may:
 
 The deterministic runner and AI agents may collect evidence, assign objective preliminary labels, and make proposals. Their outputs are advisory and never final product decisions.
 
-### 1.2 Initial governed surfaces
+### 1.2 Delegated PRD-derived case authority
+
+Once a human approves a function or flow and its canonical happy path, that approval delegates registration authority for the complete set of non-happy cases that are directly and unambiguously derived from the governing PRDs. The registration agent may create, revise, controlled-validate, and activate those derived cases without requesting separate approval for every case.
+
+Delegated authority applies only when the expected behavior follows directly from an approved source requirement, business rule, validation rule, permission rule, state transition, or documented alternative flow. It does not permit the agent to invent product behavior or resolve product ambiguity.
+
+The agent must stop for human direction when:
+
+- authoritative sources conflict or leave the expected outcome ambiguous;
+- the live UI/API diverges from the source and choosing a new baseline requires product judgment;
+- a required account state or synthetic-data mutation is destructive, externally consequential, or lacks prior authority;
+- a case cannot be executed safely or deterministically;
+- a proposed case changes the approved happy-path boundary rather than testing it.
+
+Human authority over issue classification, bug confirmation, intentional frontend discrepancies, changed expected outcomes, case retirement, and external work-item creation remains unchanged.
+
+### 1.3 Initial governed surfaces
 
 This constitution initially governs:
 
@@ -51,7 +67,7 @@ This constitution initially governs:
 
 Mobile automation, load testing, backend unit testing, and API contract testing remain outside this initial scope.
 
-### 1.3 Change control
+### 1.4 Change control
 
 Changes to this constitution require explicit human approval and a recorded revision. No test run, AI recommendation, frontend change, or source-document change may silently alter its rules.
 
@@ -205,10 +221,25 @@ Only `ACTIVE` cases are included in ordinary selection by default. Review-requir
 Test registration must separate high-level flow alignment from detailed case work:
 
 1. **PRD flow scout:** locate the relevant PRD through `local-docs/INDEX.md`, read only the module scope and overall business-flow sections needed to understand the journey, and return a concise flow outline, boundaries, and unresolved questions.
-2. **Human flow approval:** stop and wait for the Product Owner to correct, supplement, and approve how the flow actually proceeds.
-3. **Detailed registration:** only after approval may the workflow inspect detailed screen requirements, live UI behavior, APIs, roles, datasets, edge cases, and automation design.
+2. **Human happy-path approval:** stop and wait for the Product Owner to correct, supplement, and approve the function/flow boundary and canonical happy path.
+3. **Complete derived-suite registration:** after happy-path approval, inspect detailed requirements, screens, live UI/API behavior, roles, datasets, alternatives, validations, boundaries, permissions, and state transitions. Derive and register the complete applicable suite without separate per-case approval when Article 1.2 applies.
+4. **Coverage and execution proof:** document requirement-to-case coverage, controlled-validate every case, and activate unambiguous PRD-derived cases whose execution reaches a meaningful pass/fail assertion. Route every non-clean outcome to human review.
 
-The PRD flow scout must not generate a full case matrix, inspect broad implementation surfaces, or design datasets before human approval. This gate exists to prevent token expenditure on a misunderstood flow.
+The PRD flow scout must not generate a full case matrix, inspect broad implementation surfaces, or design datasets before happy-path approval. This gate exists to prevent token expenditure on a misunderstood flow without forcing the Product Owner to approve every derived detail.
+
+### 4.6 Complete coverage contract
+
+Registration is incomplete until the owning function or flow documents a coverage matrix that:
+
+- maps every applicable normative PRD requirement, business rule, validation, alternative flow, permission rule, and state transition to at least one executable case;
+- considers happy path, negative/validation, boundary/edge, permission/role, state transition, idempotency, concurrency-sensitive, and data-consistency categories;
+- marks a category `Not applicable` with a concise reason when it does not apply;
+- records any unautomatable or unsafe requirement as an explicit coverage gap requiring human review;
+- gives every case deterministic data, observable UI actions, assertions, source references, and a regression tier.
+
+A negative or edge case passes when the system correctly rejects, constrains, or handles the tested condition. Registered cases are not intentionally failing checks.
+
+The function-level command must execute all active cases registered under that function. Case-level selection exists for targeted diagnosis and re-testing, not as the normal completeness path.
 
 ## Article 5 — Deterministic Test Data
 
@@ -262,6 +293,8 @@ The runner must support:
 - affected-scope regression;
 - module regression;
 - full active-suite regression.
+
+Focused function execution runs every active registered case for that function by default. Selecting one case is an explicit diagnostic or targeted re-test action.
 
 ### 6.3 Standard run lifecycle
 
@@ -463,7 +496,7 @@ The proposed `web-e2e-register` skill may support:
 - `retire`;
 - `revalidate`.
 
-It must inspect live sources and the implemented UI, propose changes, and wait for human approval before modifying registered cases or scripts.
+It must obtain human approval of the function/flow boundary and canonical happy path, then derive and register the complete applicable PRD-based suite under Articles 1.2, 4.5, and 4.6. It must not require per-case approval for unambiguous derived cases, but it must stop when an Article 1.2 exception applies.
 
 ### 12.3 Review responsibility
 
@@ -471,10 +504,12 @@ The proposed `web-e2e-review` skill may load a human-selected pending result, su
 
 ### 12.4 Prohibited autonomous actions
 
-No AI agent may automatically:
+No AI agent may:
 
-- change locators, steps, datasets, or assertions;
-- change an expected outcome;
+- invent an expected behavior that is not directly grounded in an approved source;
+- resolve conflicting or ambiguous product intent without human direction;
+- change locators, steps, datasets, or assertions of an existing approved case outside the maintenance lifecycle in Article 11;
+- change an approved expected outcome;
 - approve a discrepancy;
 - confirm a bug;
 - suppress, discard, or close a result;
@@ -517,7 +552,7 @@ Every approved amendment must record:
 
 ### 14.2 Approval state
 
-Version `1.1` is the approved governing baseline. Testing evidence may justify later amendments, but test runs and AI recommendations cannot change this document automatically.
+Version `1.2` is the approved governing baseline. Testing evidence may justify later amendments, but test runs and AI recommendations cannot change this document automatically.
 
 ### 14.3 Next gate
 
@@ -537,3 +572,4 @@ Runtime code must follow test-driven development from its first behavior.
 | 0.1-draft | 2026-07-11 | Superseded | Initial constitution derived from the approved E2E architecture | Pending at creation |
 | 1.0 | 2026-07-11 | Approved | Initial governance baseline approved for iterative improvement through testing evidence | Product Owner |
 | 1.1 | 2026-07-12 | Approved | Added the PRD flow scout and mandatory Product Owner flow-approval gate before detailed registration | Product Owner |
+| 1.2 | 2026-07-15 | Approved | Changed registration approval from per-case review to happy-path approval plus delegated, requirement-complete PRD-derived suite registration; preserved mandatory human issue decisions | Product Owner |
