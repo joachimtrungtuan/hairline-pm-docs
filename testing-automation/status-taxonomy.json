@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "enums": {
+    "registryStatus": {
+      "active": [
+        "DRAFT",
+        "ACTIVE",
+        "SOURCE_REVIEW_REQUIRED",
+        "UI_REVIEW_REQUIRED",
+        "UPDATE_APPROVED",
+        "SUPERSEDED",
+        "RETIRED"
+      ],
+      "inactive": []
+    },
+    "preliminaryOutcome": {
+      "active": [
+        "PASSED",
+        "FLAKY_OR_TRANSIENT",
+        "POTENTIAL_ISSUE",
+        "INCONSISTENT_FAILURE",
+        "BLOCKED",
+        "SOURCE_REVIEW_REQUIRED",
+        "UNKNOWN"
+      ],
+      "inactive": []
+    },
+    "reviewStatus": {
+      "active": [
+        "REVIEW_NOT_REQUIRED",
+        "NEEDS_HUMAN_REVIEW",
+        "UNDER_REVIEW",
+        "REVIEWED",
+        "RETEST_REQUIRED",
+        "VERIFIED",
+        "REOPENED"
+      ],
+      "inactive": []
+    },
+    "humanClassification": {
+      "active": [
+        "BUG_CONFIRMED",
+        "TEST_UPDATE_NEEDED",
+        "POSSIBLE_UI_DISCREPANCY",
+        "ENVIRONMENT_ISSUE",
+        "DEFERRED",
+        "DUPLICATE",
+        "INSUFFICIENT_EVIDENCE",
+        "NOT_REPRODUCIBLE",
+        "CLOSED_NO_CHANGE"
+      ],
+      "inactive": []
+    },
+    "attemptStatus": {
+      "active": ["passed", "failed", "blocked"],
+      "inactive": []
+    },
+    "datasetSetupStatus": {
+      "active": ["pending", "passed", "failed"],
+      "inactive": []
+    },
+    "artifactType": {
+      "active": [
+        "trace",
+        "final-failure-screenshot",
+        "flaky-failure-screenshot",
+        "flaky-pass-screenshot"
+      ],
+      "inactive": []
+    },
+    "tenant": {
+      "active": ["Provider", "Admin"],
+      "inactive": []
+    },
+    "scopeKind": {
+      "active": ["FUNCTION", "FLOW"],
+      "inactive": []
+    },
+    "runnerScript": {
+      "active": ["test:function", "test:flow"],
+      "inactive": []
+    },
+    "writerStatus": {
+      "active": ["written", "duplicate"],
+      "inactive": []
+    }
+  },
+  "databaseBindings": [
+    {
+      "table": "case_executions",
+      "column": "registry_status_snapshot",
+      "enum": "registryStatus",
+      "nullable": false
+    },
+    {
+      "table": "case_executions",
+      "column": "preliminary_outcome",
+      "enum": "preliminaryOutcome",
+      "nullable": false
+    },
+    {
+      "table": "case_executions",
+      "column": "review_status",
+      "enum": "reviewStatus",
+      "nullable": false
+    },
+    {
+      "table": "attempts",
+      "column": "status",
+      "enum": "attemptStatus",
+      "nullable": false
+    },
+    {
+      "table": "execution_datasets",
+      "column": "setup_status",
+      "enum": "datasetSetupStatus",
+      "nullable": false
+    },
+    {
+      "table": "artifacts",
+      "column": "artifact_type",
+      "enum": "artifactType",
+      "nullable": false
+    },
+    {
+      "table": "review_events",
+      "column": "previous_status",
+      "enum": "reviewStatus",
+      "nullable": true
+    },
+    {
+      "table": "review_events",
+      "column": "new_status",
+      "enum": "reviewStatus",
+      "nullable": false
+    },
+    {
+      "table": "review_events",
+      "column": "classification",
+      "enum": "humanClassification",
+      "nullable": true
+    }
+  ]
+}

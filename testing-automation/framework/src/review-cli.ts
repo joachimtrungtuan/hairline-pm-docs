@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { createResultStore } from "./result-store.ts";
+import { assertEnumValue } from "./status-taxonomy.ts";
 
 const args = process.argv.slice(2);
 const value = (flag: string): string | undefined => {
@@ -19,6 +20,7 @@ if (args.includes("--help")) {
   console.log("Usage: pnpm test:review <execution-id> --classification <human-decision> --reviewer <name-or-role> --notes <text> [--retest-required]");
   process.exitCode = 2;
 } else {
+  assertEnumValue("humanClassification", classification);
   const databasePath = resolve(import.meta.dirname, "../../results/test-results.sqlite");
   if (!existsSync(databasePath)) throw new Error("No runtime result database exists yet");
   const store = createResultStore(databasePath);

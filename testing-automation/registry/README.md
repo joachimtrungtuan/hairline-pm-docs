@@ -1,6 +1,6 @@
 # Test Case Registry
 
-**Status:** Provider login suite active with PRD-derived coverage and governed gaps
+**Status:** Provider login suite active; first Team directory and invitation-management suite registered as draft
 **Governing document:** `local-docs/testing-automation/TESTING-CONSTITUTION.md`
 **Manual execution:** `local-docs/testing-automation/OPERATIONS.md`
 
@@ -31,7 +31,7 @@ Cross-module flows will have one primary owning module and explicit participatin
 
 ## Registered Modules
 
-- `provider/PR-01-auth-team-management/` — Provider authentication and team-management functions; the six-case Provider login suite is active, with four governed account-state/security coverage gaps documented in the function registry.
+- `provider/PR-01-auth-team-management/` — Six Provider login cases are active. Eighteen Team directory and invitation-management cases are registered as draft, including matching/empty search and individual/combined filter coverage, with governed fixture and isolation gaps documented in their function registry.
 
 Contracts:
 

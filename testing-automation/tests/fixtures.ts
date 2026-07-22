@@ -1,11 +1,13 @@
 export const resultEnvelopeFixture = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   run: {
     id: "RUN-20260712T010203Z-a1b2c3d4",
     command: "pnpm test:function P-99 P-99-FN-001",
     environment: "development",
     baseUrl: "https://admin.hairline.app",
     startedAt: "2026-07-12T01:02:03.000Z",
+    finishedAt: "2026-07-12T01:02:24.000Z",
+    durationMs: 21000,
   },
   execution: {
     id: "execution-1",
@@ -27,6 +29,9 @@ export const resultEnvelopeFixture = {
       id: "attempt-1",
       number: 1,
       status: "failed",
+      startedAt: "2026-07-12T01:02:04.000Z",
+      finishedAt: "2026-07-12T01:02:24.000Z",
+      durationMs: 20000,
       errorMessage: "assertion failed",
     },
   ],

@@ -7,6 +7,8 @@ import {
   validateEnvelope,
   type ResultEnvelope,
 } from "./envelope.ts";
+import { migrateStatusTaxonomyAndTimestamps } from "./migrations/v2-status-taxonomy-and-timestamps.ts";
+import { assertEnumValue } from "./status-taxonomy.ts";
 
 type ReviewQueueItem = {
   executionId: string;
@@ -105,13 +107,14 @@ const migrate = (database: DatabaseSync): void => {
     INSERT OR IGNORE INTO schema_migrations(version, applied_at, checksum)
     VALUES (1, ?, ?)
   `).run(new Date().toISOString(), "initial-result-store-v1");
+  migrateStatusTaxonomyAndTimestamps(database);
 };
 
 export const createResultStore = (path: string) => {
   const database = new DatabaseSync(path);
   migrate(database);
 
-  const writeEnvelope = (input: unknown): { status: "written" | "duplicate" } => {
+  const writeEnvelope = (input: unknown): { status: string } => {
     const redacted = redactSecrets(input);
     const envelope = validateEnvelope(redacted);
     const checksum = checksumEnvelope(envelope);
@@ -125,20 +128,26 @@ export const createResultStore = (path: string) => {
       if (existing.checksum !== checksum) {
         throw new Error("execution ID already exists with a different checksum");
       }
-      return { status: "duplicate" };
+      return { status: assertEnumValue("writerStatus", "duplicate") };
     }
 
     database.exec("BEGIN IMMEDIATE");
     try {
       database.prepare(`
-        INSERT OR IGNORE INTO test_runs(id, command, environment, base_url, started_at)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO test_runs(
+          id, command, environment, base_url, started_at, finished_at, duration_ms
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          finished_at = excluded.finished_at,
+          duration_ms = excluded.duration_ms
       `).run(
         envelope.run.id,
         envelope.run.command,
         envelope.run.environment,
         envelope.run.baseUrl,
         envelope.run.startedAt,
+        envelope.run.finishedAt,
+        envelope.run.durationMs,
       );
 
       database.prepare(`
@@ -168,8 +177,9 @@ export const createResultStore = (path: string) => {
 
       const insertAttempt = database.prepare(`
         INSERT INTO attempts(
-          id, case_execution_id, attempt_number, status, error_message
-        ) VALUES (?, ?, ?, ?, ?)
+          id, case_execution_id, attempt_number, status, error_message,
+          started_at, finished_at, duration_ms
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
       for (const attempt of envelope.attempts) {
         insertAttempt.run(
@@ -178,18 +188,25 @@ export const createResultStore = (path: string) => {
           attempt.number,
           attempt.status,
           attempt.errorMessage ?? null,
+          attempt.startedAt,
+          attempt.finishedAt,
+          attempt.durationMs,
         );
       }
 
       if (envelope.dataset) {
         database.prepare(`
           INSERT INTO execution_datasets(
-            id, case_execution_id, dataset_id, dataset_revision, setup_status, correlation_key
-          ) VALUES (?, ?, ?, ?, ?, ?)
+            id, case_execution_id, dataset_id, dataset_revision, setup_status,
+            correlation_key, started_at, finished_at, duration_ms
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).run(
           randomUUID(), envelope.execution.id, envelope.dataset.id,
           envelope.dataset.revision, envelope.dataset.setupStatus,
           envelope.dataset.correlationKey ?? null,
+          envelope.dataset.startedAt,
+          envelope.dataset.finishedAt,
+          envelope.dataset.durationMs,
         );
       }
 
@@ -220,7 +237,7 @@ export const createResultStore = (path: string) => {
         );
       }
       database.exec("COMMIT");
-      return { status: "written" };
+      return { status: assertEnumValue("writerStatus", "written") };
     } catch (error) {
       database.exec("ROLLBACK");
       throw error;
@@ -258,22 +275,25 @@ export const createResultStore = (path: string) => {
     executionId: string,
     decision: { classification: string; reviewer: string; notes: string; retestRequired: boolean },
   ): void => {
+    assertEnumValue("humanClassification", decision.classification);
+    const reviewedStatus = assertEnumValue("reviewStatus", "REVIEWED");
     const current = database.prepare(
       "SELECT review_status AS status FROM case_executions WHERE id = ?",
     ).get(executionId) as { status?: string } | undefined;
     if (!current?.status) throw new Error(`Unknown execution: ${executionId}`);
+    assertEnumValue("reviewStatus", current.status);
     database.exec("BEGIN IMMEDIATE");
     try {
       database.prepare(
-        "UPDATE case_executions SET review_status = 'REVIEWED' WHERE id = ?",
-      ).run(executionId);
+        "UPDATE case_executions SET review_status = ? WHERE id = ?",
+      ).run(reviewedStatus, executionId);
       database.prepare(`
         INSERT INTO review_events(
           id, case_execution_id, previous_status, new_status,
           classification, reviewer, notes, created_at, retest_required
-        ) VALUES (?, ?, ?, 'REVIEWED', ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
-        randomUUID(), executionId, current.status, decision.classification,
+        randomUUID(), executionId, current.status, reviewedStatus, decision.classification,
         decision.reviewer, decision.notes, new Date().toISOString(),
         decision.retestRequired ? 1 : 0,
       );

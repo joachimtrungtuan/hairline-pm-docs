@@ -73,3 +73,5 @@ Console validation completed with:
 - latest-run summary correctly returned that run;
 - pending human-review queue remained at 0;
 - no screenshot or trace was retained for the clean pass.
+
+- 2026-07-21: Added verified patient fixture account `joachimtrungtuan.work+05@gmail.com` to `testing-plans/testing-credentials/patient-accounts.md` for Provider inquiry-flow testing.

@@ -6,11 +6,21 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-07-15/ (1 file)
+### 2026-07-16/ (1 file)
+
+#### **E2E Status Taxonomy and Timestamp Integrity**
+
+- `E2E_STATUS_TAXONOMY_AND_TIMESTAMP_INTEGRITY_2026-07-16.md` - Centralized all testing-package enums, activated the governed possible-UI-discrepancy classification, added runtime and SQLite validation, migrated result storage to schema version 2, and added future run/attempt/dataset timing without fabricating historical timestamps.
+
+### 2026-07-15/ (2 files)
 
 #### **E2E Complete Case Coverage and Provider Login Suite**
 
 - `E2E_COMPLETE_CASE_COVERAGE_AND_LOGIN_SUITE_2026-07-15.md` - Promoted Testing Constitution v1.2, activated the six-case PR-01 Provider login suite, documented four governed coverage gaps, and added a centralized registry-driven `./test.sh` console for token-free selection and execution.
+
+#### **PR-01 Team Directory and Invitation E2E Registration**
+
+- `PR01_TEAM_DIRECTORY_INVITATION_E2E_REGISTRATION_2026-07-15.md` - Registered eighteen draft cases for the grouped Team directory, invite-team-member, and invitation-management function, including matching/empty search and individual/combined filters; added deterministic Maildrop datasets with a public-inbox safety gate and retained all non-clean runs for human review.
 
 ### 2026-07-14/ (1 file)
 
@@ -29,6 +39,16 @@ This folder contains documentation update reports and verification logs for the 
 #### **Automated E2E Testing Architecture**
 
 - `AUTOMATED_E2E_TESTING_ARCHITECTURE_2026-07-11.md` - Created the permanent testing-automation architecture and constitution, confirmed Playwright MCP access, approved the PR-02 sent-quote-edit pilot, created its draft registry, and implemented the first TDD foundation for IDs, retries/outcomes, review routing, and evidence policy with 9/9 unit tests passing. Quote withdrawal remains an unconfirmed review lead; no database, Playwright case, API mutation, reporter, or skill exists yet.
+
+### 2026-07-09/ (2 files)
+
+#### **FR-018 Admin Design Layout Verification**
+
+- `DESIGN_LAYOUT_VERIFICATION_FR018_ADMIN_2026-07-09.md` - Completed FR-018 Affiliate Management Admin Web design-layout verification against current `layout-temp/` assets. All 12 admin screens have mapped layouts; overall verdict is `🔴 BLOCKED` with 5 FAIL, 4 PARTIAL, and 3 GOOD screens. Main blockers are missing commission-edit routing, destructive/terminal modal submit gates, missing Screen 4 Application Method, and incomplete failed-state transaction detail parity.
+
+#### **FR-018 Affiliate Design Layout Verification**
+
+- `DESIGN_LAYOUT_VERIFICATION_FR018_AFF_2026-07-09.md` - Completed FR-018 Affiliate Management AFF-side design-layout verification in the existing Admin + Affiliate report. All 9 AFF screens have mapped layouts; AFF verdict is `🟡 PARTIAL` with 0 FAIL screens. Main AFF gaps are missing Overview monthly toggle/countdown/refresh affordance, missing Payouts below-$50 rollover note, missing Profile immutable-email note, missing activation email evidence, and minor `Referal` copy issues.
 
 ### 2026-07-08/ (1 file)
 
@@ -745,6 +765,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-07-16**: `E2E_STATUS_TAXONOMY_AND_TIMESTAMP_INTEGRITY_2026-07-16.md` - Centralized the web E2E status taxonomy, enforced it in the CLI and SQLite, and added schema-v2 action timestamps while preserving legacy history.
+- **2026-07-15**: `PR01_TEAM_DIRECTORY_INVITATION_E2E_REGISTRATION_2026-07-15.md` - Registered the eighteen-case draft PR-01 Team directory and invitation-management suite with positive/empty search and individual/combined filter coverage, documented nine governed gaps, and added an explicit safety gate for public Maildrop invitation links.
 - **2026-07-15**: `E2E_COMPLETE_CASE_COVERAGE_AND_LOGIN_SUITE_2026-07-15.md` - Changed the E2E registration gate to happy-path approval plus delegated PRD-derived coverage, activated six Provider login cases, preserved four governed gaps, and added the registry-driven `./test.sh` interactive console.
 - **2026-07-14**: `PROVIDER_LOGIN_E2E_FIRST_CASE_REGISTRATION_2026-07-14.md` - Registered and controlled-validated the first deterministic PR-01 Provider login Playwright case, and documented the complete manual terminal execution/review workflow; status remains `DRAFT` pending explicit activation approval.
 - **2026-07-08**: `PLANE_WORKSPACE_ALIAS_UPDATE_2026-07-08.md` - Plane automation workspace alias update from `samasu-digital` to `samasu-group`, covering reusable scripts, task-creation config/cache files, and Plane command/workflow prompt references.
@@ -797,6 +819,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
+- **2026-07-09**: `DESIGN_LAYOUT_VERIFICATION_FR018_AFF_2026-07-09.md` - FR-018 Affiliate Platform / AFF-side design-layout verification appended to the Admin + Affiliate report; all 9 AFF screens have layout coverage, with AFF verdict `🟡 PARTIAL` and no FAIL screens.
+- **2026-07-09**: `DESIGN_LAYOUT_VERIFICATION_FR018_ADMIN_2026-07-09.md` - FR-018 Admin Web design-layout verification; all 12 admin screens have layout coverage, with overall verdict `🔴 BLOCKED` due to critical action routing, confirmation-gate, missing-field, and failed-state parity gaps.
 - **2026-06-04**: `FR021_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-06-04.md` - FR-021 Provider/Admin Web Screens 2-10 design-layout verification; all 9 screens have layout coverage, with overall verdict `🔴 FAIL` due to publish-without-summary control issues in Screens 8-9.
 - **2026-05-27**: `FR013_PROVIDER_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-05-27.md` - FR-013 Provider/Admin Screens 5-10 design-layout verification; all six screens have layout coverage, with Screens 6, 8, and 9 failing on critical validation/control gaps.
 - **2026-05-21**: `FR019_DESIGN_LAYOUT_VERIFICATION_2026-05-21.md` - Full FR-019 design-layout verification; all three platform flows are `🔴 BLOCKED`, with missing provider/patient layouts plus admin governance and redemption-log gaps documented.
@@ -999,4 +1023,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 15, 2026 (Complete-case registration, active Provider login suite, and centralized E2E test console)
+**Last Updated**: July 16, 2026 (E2E status taxonomy and timestamp integrity)

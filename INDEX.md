@@ -32,7 +32,7 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Sprint readiness / client review report | run `sprint-readiness-reporting` skill; `product-plans/` | date folder |
 | Status reports / analyses | `reports/YYYY-MM-DD/` | locate by date |
 | Test plans / QA | `testing-plans/YYYY-MM-DD/` | — |
-| Automated web E2E architecture, registry, execution framework, and results | `testing-automation/` | start at `ARCHITECTURE.md`; constitution follows after approval |
+| Automated web E2E architecture, registry, execution framework, statuses, and results | `testing-automation/` | start at `ARCHITECTURE.md`; use `TESTING-CONSTITUTION.md` for governance, `status-taxonomy.json` for all enums, and `OPERATIONS.md` for commands |
 | Website / public content | `website-works/` | — |
 | Recent doc changes / audit trail | `project-requirements/update-logs/` | read its README first |
 | Read / review / analyze main/ source code (only when invited) | see §D Code Map | map first → open only the named files |

@@ -1,6 +1,6 @@
 # Hairline Web E2E Testing Constitution
 
-**Version:** 1.2
+**Version:** 1.3
 **Status:** Approved; subject to evidence-driven amendment
 **Created:** 2026-07-11
 **Governed scope:** Provider Dashboard and Admin Dashboard web E2E testing
@@ -158,6 +158,12 @@ source references
   → related bug/fix/re-test, when applicable
 ```
 
+### 3.5 Central status taxonomy
+
+`local-docs/testing-automation/status-taxonomy.json` is the sole machine-readable authority for every status, outcome, classification, and other persisted or CLI-visible enum used by this package. Runtime components must load values from that file rather than maintaining independent enum lists. SQLite must synchronize its enum catalog from the same file and reject unknown or inactive values at the persistence boundary.
+
+Documentation may explain enum meaning and lifecycle behavior, but it must not create an additional operational source of allowed values. A taxonomy change requires human approval, an incremented taxonomy version when its structure changes, runtime validation, SQLite synchronization, and focused contract tests.
+
 ## Article 4 — Registered Case Contract
 
 ### 4.1 Required case content
@@ -204,7 +210,7 @@ Cases may be classified as:
 
 ### 4.4 Registry lifecycle
 
-The minimum registry statuses are:
+The governed `registryStatus` values are managed centrally in `status-taxonomy.json`. They currently cover:
 
 - `DRAFT`;
 - `ACTIVE`;
@@ -370,6 +376,7 @@ Where available and safe, evidence must record:
 - expected and observed values;
 - browser and viewport;
 - environment and duration;
+- run, dataset-setup, and individual-attempt start/finish timestamps and durations;
 - attempt number;
 - console errors;
 - relevant failed network requests;
@@ -408,6 +415,12 @@ The review queue must support filtering and prioritization by:
 - case ID;
 - review status.
 
+### 9.5 Enum and timestamp integrity
+
+Every persisted enum field must be validated twice: by the runtime loader before a write and by SQLite against a synchronized enum catalog populated from `status-taxonomy.json`. The review CLI must reject any human classification not active in that taxonomy.
+
+Every newly created run, case execution, attempt, dataset execution, review event, artifact, taxonomy synchronization, and schema migration must record an applicable UTC ISO-8601 timestamp. Repeatable or duration-bearing actions must record `started_at`, `finished_at`, and `duration_ms`. Historical rows created before a timestamp field existed must be preserved without fabricated values; unavailable historical timestamps remain `NULL`.
+
 ## Article 10 — Human Review
 
 ### 10.1 Preliminary technical labels
@@ -434,7 +447,8 @@ The supported human-review lifecycle is:
 ```text
 NEEDS_HUMAN_REVIEW
   → UNDER_REVIEW
-  → BUG_CONFIRMED / TEST_UPDATE_NEEDED / ENVIRONMENT_ISSUE /
+  → BUG_CONFIRMED / TEST_UPDATE_NEEDED / POSSIBLE_UI_DISCREPANCY /
+    ENVIRONMENT_ISSUE /
     DEFERRED / DUPLICATE / INSUFFICIENT_EVIDENCE /
     NOT_REPRODUCIBLE / CLOSED_NO_CHANGE
   → RETEST_REQUIRED, when applicable
@@ -552,7 +566,7 @@ Every approved amendment must record:
 
 ### 14.2 Approval state
 
-Version `1.2` is the approved governing baseline. Testing evidence may justify later amendments, but test runs and AI recommendations cannot change this document automatically.
+Version `1.3` is the approved governing baseline. Testing evidence may justify later amendments, but test runs and AI recommendations cannot change this document automatically.
 
 ### 14.3 Next gate
 
@@ -573,3 +587,4 @@ Runtime code must follow test-driven development from its first behavior.
 | 1.0 | 2026-07-11 | Approved | Initial governance baseline approved for iterative improvement through testing evidence | Product Owner |
 | 1.1 | 2026-07-12 | Approved | Added the PRD flow scout and mandatory Product Owner flow-approval gate before detailed registration | Product Owner |
 | 1.2 | 2026-07-15 | Approved | Changed registration approval from per-case review to happy-path approval plus delegated, requirement-complete PRD-derived suite registration; preserved mandatory human issue decisions | Product Owner |
+| 1.3 | 2026-07-16 | Approved | Centralized all package enums in one machine-readable taxonomy, made possible UI discrepancy an active human classification, required runtime and SQLite enum validation, and added complete future action timestamps without fabricating legacy times | Product Owner |

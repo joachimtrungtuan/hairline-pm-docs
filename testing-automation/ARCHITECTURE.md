@@ -105,11 +105,14 @@ The implementation should use the permanent `local-docs/testing-automation/` are
 ```text
 testing-automation/
 ├── TESTING-CONSTITUTION.md
+├── status-taxonomy.json
 ├── registry/
 ├── framework/
 ├── pilot-plans/
 └── results/
 ```
+
+`status-taxonomy.json` is the sole machine-readable enum authority. The registry, runner, review CLI, envelope validator, and SQLite enum catalog all load or synchronize from it; no component may maintain a competing operational value list.
 
 ### 4.1 `TESTING-CONSTITUTION.md`
 
@@ -322,7 +325,7 @@ Every command must:
 6. Execute Playwright assertions.
 7. Apply the retry policy.
 8. Capture evidence according to the final result.
-9. Write run, attempt, data, artifact, and review-queue records to SQLite.
+9. Write timestamped run, attempt, data, artifact, and review-queue records to SQLite.
 10. Print the run ID, totals, result summary, and pending human-review count.
 
 ## 8. Retry Policy
@@ -339,7 +342,7 @@ Attempt 3
 Attempt 4
 ```
 
-All attempts are stored in SQLite. A later attempt never erases the historical result of an earlier attempt.
+All attempts are stored in SQLite with UTC start/finish timestamps and duration. A later attempt never erases the historical result of an earlier attempt.
 
 The default five-second separation is a minimum, not a fixed wait strategy inside the test. Tests must still use event-based Playwright waits rather than arbitrary sleep calls for normal UI synchronization.
 
@@ -385,7 +388,8 @@ NEEDS_HUMAN_REVIEW
         ↓
 UNDER_REVIEW
         ↓
-BUG_CONFIRMED / TEST_UPDATE_NEEDED / ENVIRONMENT_ISSUE /
+BUG_CONFIRMED / TEST_UPDATE_NEEDED / POSSIBLE_UI_DISCREPANCY /
+ENVIRONMENT_ISSUE /
 DEFERRED / DUPLICATE / INSUFFICIENT_EVIDENCE /
 NOT_REPRODUCIBLE / CLOSED_NO_CHANGE
         ↓
@@ -460,6 +464,8 @@ The schema should include at least:
 - `review_events` — append-only review-status transitions;
 - `related_items` — bug IDs, Plane keys, fix references, or re-test links;
 - `module_relationships` — primary and participating module mappings.
+- `enum_values` — the synchronized active/inactive SQLite mirror of `status-taxonomy.json`;
+- `enum_taxonomy_syncs` — timestamped taxonomy checksums applied to the result store.
 
 ### 11.2 Concurrency
 
@@ -469,7 +475,9 @@ Playwright workers should not perform uncontrolled concurrent writes to SQLite. 
 
 - Schema migrations must be version-controlled.
 - Runtime startup must verify schema compatibility.
+- Runtime startup must verify the taxonomy checksum, synchronize enum values, and install database validation for every bound enum column.
 - Migrations must preserve historical result and review records.
+- New repeatable actions must record exact timestamps and durations; migrations must not fabricate unavailable legacy times.
 - Direct manual edits to the result database should be avoided in favor of controlled commands.
 
 SQLite should be reconsidered only if Hairline later requires centralized multi-machine execution with sustained concurrent writers or shared remote review. PostgreSQL would then be the likely migration target. DuckDB may complement analytics but should not replace the canonical transactional store in the initial design.
@@ -647,6 +655,9 @@ The pilot module should be important enough to exercise meaningful state transit
 | Let `web-e2e-register` maintain approved UI changes | Manual unstructured edits | Traceable, source-aware test maintenance |
 | Reuse global Playwright MCP and system Chrome | Project-local Playwright dependency | Avoids duplicate installation and keeps the test workspace independent from application source |
 | Prohibit runtime or documentation dependency on `main/` | Read-only source mapping | Keeps automation based on PRDs, live UI, and live API behavior only |
+| Manage every package enum in `status-taxonomy.json` | Independent TypeScript, CLI, documentation, and SQLite lists | Prevents ad-hoc classifications and cross-layer status drift |
+| Validate enums in runtime and SQLite | Application-only validation | Rejects invalid values even when writes bypass the normal CLI |
+| Timestamp every new repeatable result action | Execution-level timing only | Preserves retry, setup, review, and migration chronology without inventing legacy times |
 
 ## 18. Open Implementation Questions
 
@@ -660,6 +671,6 @@ These choices must be documented before or during the pilot and added to the con
 
 ## 19. Approval and Next Gate
 
-This architecture captures the approved design and its evidence-driven amendments. `TESTING-CONSTITUTION.md` version 1.2 is the active baseline. The runtime foundation covers IDs, retries/outcomes, evidence decisions, envelopes, redaction, transactional/idempotent SQLite writes, review queues, and summaries through TDD. The first complete function suite has passed deterministic browser validation.
+This architecture captures the approved design and its evidence-driven amendments. `TESTING-CONSTITUTION.md` version 1.3 is the active baseline. The runtime foundation covers centralized enums, IDs, retries/outcomes, evidence decisions, timestamped version-2 envelopes, redaction, transactional/idempotent SQLite writes, review queues, and summaries through TDD. The first complete function suite has passed deterministic browser validation.
 
-The MVP framework is implemented without a project Playwright installation. The next gate is to add the missing dedicated account states and throttling isolation controls, then continue registering functions module by module under the Constitution v1.2 approval model.
+The MVP framework is implemented without a project Playwright installation. The next gate is to add the missing dedicated account states and throttling isolation controls, then continue registering functions module by module under the Constitution v1.3 approval model.

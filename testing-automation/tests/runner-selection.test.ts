@@ -4,7 +4,9 @@ import test from "node:test";
 import { listRegisteredCases, selectCases } from "../framework/src/case-registry.ts";
 
 test("the Provider login registry contains the active happy path and derived suite", () => {
-  assert.deepEqual(listRegisteredCases().map(({ id, datasetId, status }) => ({ id, datasetId, status })), [
+  assert.deepEqual(listRegisteredCases()
+    .filter(({ functionId }) => functionId === "PR-01-FN-001")
+    .map(({ id, datasetId, status }) => ({ id, datasetId, status })), [
     { id: "PR-01-TC-0001", datasetId: "PR-01-DS-0001", status: "ACTIVE" },
     { id: "PR-01-TC-0002", datasetId: "PR-01-DS-0002", status: "ACTIVE" },
     { id: "PR-01-TC-0003", datasetId: "PR-01-DS-0003", status: "ACTIVE" },
@@ -12,6 +14,15 @@ test("the Provider login registry contains the active happy path and derived sui
     { id: "PR-01-TC-0005", datasetId: "PR-01-DS-0005", status: "ACTIVE" },
     { id: "PR-01-TC-0006", datasetId: "PR-01-DS-0006", status: "ACTIVE" },
   ]);
+});
+
+test("the Team and Invitation registry contains the complete draft suite", () => {
+  assert.deepEqual(selectCases("PR-01", "PR-01-FN-002").map(({ id, datasetId, status }) => ({ id, datasetId, status })),
+    Array.from({ length: 18 }, (_, index) => {
+      const sequence = index + 7;
+      const suffix = String(sequence).padStart(4, "0");
+      return { id: `PR-01-TC-${suffix}`, datasetId: `PR-01-DS-${suffix}`, status: "DRAFT" };
+    }));
 });
 
 test("selection resolves the registered Provider login function", () => {

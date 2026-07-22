@@ -1,17 +1,12 @@
+import { assertEnumValue } from "./status-taxonomy.ts";
+
 export type Attempt = {
-  status: "passed" | "failed";
+  status: string;
   signature?: string;
 };
 
-export type PreliminaryOutcome =
-  | "PASSED"
-  | "FLAKY_OR_TRANSIENT"
-  | "POTENTIAL_ISSUE"
-  | "INCONSISTENT_FAILURE";
-
-export type ReviewStatus =
-  | "REVIEW_NOT_REQUIRED"
-  | "NEEDS_HUMAN_REVIEW";
+export type PreliminaryOutcome = string;
+export type ReviewStatus = string;
 
 export type OutcomeResult = {
   outcome: PreliminaryOutcome;
@@ -24,6 +19,7 @@ const errorSignature = (error: unknown): string => {
 };
 
 export const deriveOutcome = (attempts: Attempt[]): OutcomeResult => {
+  for (const attempt of attempts) assertEnumValue("attemptStatus", attempt.status);
   const passedIndex = attempts.findIndex((attempt) => attempt.status === "passed");
 
   if (passedIndex === 0) {

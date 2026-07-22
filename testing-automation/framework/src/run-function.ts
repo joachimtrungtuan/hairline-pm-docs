@@ -37,9 +37,10 @@ const runtimeEnvironment = {
 };
 const selected = selectCases(moduleId, functionId, caseId);
 if (selected.some((item) => item.status !== "ACTIVE") && !rest.includes("--allow-draft")) {
-  throw new Error("Selection contains DRAFT cases; human activation is required (use --allow-draft only for controlled validation)");
+  throw new Error("Selection contains non-ACTIVE cases; human activation is required (use --allow-draft only for controlled validation)");
 }
 const id = runId();
+const runStarted = new Date();
 await mkdir(resolve(root, "results"), { recursive: true });
 const store = createResultStore(databasePath);
 let requiresReview = false;
@@ -51,19 +52,52 @@ for (const testCase of selected) {
   };
   const executionId = randomUUID();
   const started = new Date();
+  const datasetStarted = new Date();
   const attempts: Attempt[] = [];
-  const attemptRows: Array<{ id: string; number: number; status: string; errorMessage?: string }> = [];
+  const attemptRows: Array<{
+    id: string;
+    number: number;
+    status: string;
+    startedAt: string;
+    finishedAt: string;
+    durationMs: number;
+    errorMessage?: string;
+  }> = [];
   const artifacts = createArtifactManager(artifactRoot, id, testCase.moduleId, testCase.id);
-  let datasetMetadata: { id: string; revision: string; setupStatus: string; correlationKey?: string } = {
-    id: testCase.datasetId, revision: "v1", setupStatus: "pending",
+  let datasetMetadata: {
+    id: string;
+    revision: string;
+    setupStatus: string;
+    startedAt: string;
+    finishedAt: string;
+    durationMs: number;
+    correlationKey?: string;
+  } = {
+    id: testCase.datasetId,
+    revision: "v1",
+    setupStatus: "pending",
+    startedAt: datasetStarted.toISOString(),
+    finishedAt: datasetStarted.toISOString(),
+    durationMs: 0,
   };
   let retainedArtifactPaths: string[] = [];
   let outcome = "BLOCKED";
   let reviewStatus = "NEEDS_HUMAN_REVIEW";
+  let activeAttemptStarted: Date | undefined;
   try {
     const dataset = await automation.setupDataset(testCase, runtimeEnvironment, id);
-    datasetMetadata = { id: testCase.datasetId, revision: "v1", setupStatus: "passed", correlationKey: dataset.marker };
+    const datasetFinished = new Date();
+    datasetMetadata = {
+      id: testCase.datasetId,
+      revision: "v1",
+      setupStatus: "passed",
+      startedAt: datasetStarted.toISOString(),
+      finishedAt: datasetFinished.toISOString(),
+      durationMs: datasetFinished.getTime() - datasetStarted.getTime(),
+      correlationKey: dataset.marker,
+    };
     for (let number = 1; number <= 4; number += 1) {
+      activeAttemptStarted = new Date();
       const { chromium } = loadExistingPlaywright();
       const browser = await chromium.launch({ headless: config.headless, executablePath: config.browserExecutable });
       const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
@@ -72,7 +106,6 @@ for (const testCase of selected) {
       try {
         await automation.executeBrowserCase(testCase, page, dataset, runtimeEnvironment);
         attempts.push({ status: "passed" });
-        attemptRows.push({ id: randomUUID(), number, status: "passed" });
         if (number > 1) {
           await artifacts.capturePass((path) => page.screenshot({ path, fullPage: true }));
           await artifacts.captureTrace((path) => context.tracing.stop({ path }));
@@ -80,29 +113,81 @@ for (const testCase of selected) {
           await context.tracing.stop();
         }
         await browser.close();
+        const attemptFinished = new Date();
+        attemptRows.push({
+          id: randomUUID(),
+          number,
+          status: "passed",
+          startedAt: activeAttemptStarted.toISOString(),
+          finishedAt: attemptFinished.toISOString(),
+          durationMs: attemptFinished.getTime() - activeAttemptStarted.getTime(),
+        });
+        activeAttemptStarted = undefined;
         break;
       } catch (error) {
         const message = error instanceof Error ? `${error.name}:${error.message}` : String(error);
         attempts.push({ status: "failed", signature: message });
-        attemptRows.push({ id: randomUUID(), number, status: "failed", errorMessage: message });
         await artifacts.captureFailure((path) => page.screenshot({ path, fullPage: true }));
         await artifacts.captureTrace((path) => context.tracing.stop({ path }));
         await browser.close();
+        const attemptFinished = new Date();
+        attemptRows.push({
+          id: randomUUID(),
+          number,
+          status: "failed",
+          errorMessage: message,
+          startedAt: activeAttemptStarted.toISOString(),
+          finishedAt: attemptFinished.toISOString(),
+          durationMs: attemptFinished.getTime() - activeAttemptStarted.getTime(),
+        });
+        activeAttemptStarted = undefined;
         if (number < 4) await wait(5000);
       }
     }
     ({ outcome, reviewStatus } = deriveOutcome(attempts));
     retainedArtifactPaths = await artifacts.finalize(outcome as any);
   } catch (error) {
-    if (datasetMetadata.setupStatus === "pending") datasetMetadata.setupStatus = "failed";
+    const failureFinished = new Date();
+    if (datasetMetadata.setupStatus === "pending") {
+      datasetMetadata.setupStatus = "failed";
+      datasetMetadata.finishedAt = failureFinished.toISOString();
+      datasetMetadata.durationMs = failureFinished.getTime() - datasetStarted.getTime();
+    }
     const message = error instanceof Error ? `${error.name}:${error.message}` : String(error);
-    attemptRows.push({ id: randomUUID(), number: 1, status: "blocked", errorMessage: message });
+    const finalAttempt = attemptRows.at(-1);
+    if (!finalAttempt) {
+      const blockedStarted = activeAttemptStarted ?? datasetStarted;
+      attemptRows.push({
+        id: randomUUID(),
+        number: 1,
+        status: "blocked",
+        errorMessage: message,
+        startedAt: blockedStarted.toISOString(),
+        finishedAt: failureFinished.toISOString(),
+        durationMs: failureFinished.getTime() - blockedStarted.getTime(),
+      });
+    } else {
+      finalAttempt.status = "blocked";
+      finalAttempt.finishedAt = failureFinished.toISOString();
+      finalAttempt.durationMs = failureFinished.getTime() - Date.parse(finalAttempt.startedAt);
+      finalAttempt.errorMessage = finalAttempt.errorMessage
+        ? `${finalAttempt.errorMessage}\nRunner failure: ${message}`
+        : message;
+    }
   }
 
   const finished = new Date();
   store.writeEnvelope({
-    schemaVersion: 1,
-    run: { id, command: `pnpm test:function ${moduleId} ${functionId}`, environment: "development", baseUrl: config.baseUrl, startedAt: started.toISOString() },
+    schemaVersion: 2,
+    run: {
+      id,
+      command: `pnpm test:function ${moduleId} ${functionId}`,
+      environment: "development",
+      baseUrl: config.baseUrl,
+      startedAt: runStarted.toISOString(),
+      finishedAt: finished.toISOString(),
+      durationMs: finished.getTime() - runStarted.getTime(),
+    },
     execution: {
       id: executionId, caseId: testCase.id, caseRevision: testCase.revision,
       functionOrFlowId: testCase.functionId, primaryModuleId: testCase.moduleId,

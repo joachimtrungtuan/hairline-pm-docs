@@ -1,8 +1,6 @@
 import { mkdir, rename, rm } from "node:fs/promises";
 import { join } from "node:path";
 
-import type { PreliminaryOutcome } from "./retry-outcome.ts";
-
 type Capture = (path: string) => Promise<void>;
 
 export const createArtifactManager = (root: string, runId: string, moduleId: string, caseId: string) => {
@@ -34,7 +32,7 @@ export const createArtifactManager = (root: string, runId: string, moduleId: str
       await ensureDirectory();
       await capture(rollingTrace);
     },
-    finalize: async (outcome: PreliminaryOutcome): Promise<string[]> => {
+    finalize: async (outcome: string): Promise<string[]> => {
       await ensureDirectory();
       if (outcome === "PASSED") {
         await rm(directory, { recursive: true, force: true });

@@ -64,6 +64,7 @@ Validate:
 - required account references without printing secrets;
 - writable result and artifact locations;
 - compatible SQLite schema version;
+- synchronized status-taxonomy checksum and enum bindings;
 - unique run ID allocation.
 
 ### 3.2 Selection
@@ -87,6 +88,7 @@ Execute registered TypeScript dataset recipes with a recorded seed. API calls pr
 - Run up to three retries.
 - Stop immediately after a passing attempt.
 - Preserve every attempt record.
+- Record the UTC start, finish, and duration of every attempt.
 - Treat recovered execution as `FLAKY_OR_TRANSIENT`, never a clean pass.
 
 ### 3.6 Evidence finalization
@@ -98,12 +100,13 @@ Execute registered TypeScript dataset recipes with a recorded seed. API calls pr
 
 ## 4. Worker Result Envelope
 
-Workers must emit a validated, versioned JSON envelope containing:
+Workers must emit a validated version-2 JSON envelope containing:
 
 - schema version;
 - run and execution IDs;
 - case/function/flow/module identity;
 - case and dataset revisions;
+- run, case-execution, dataset-setup, and attempt timestamps and durations;
 - source hash results;
 - attempt observations;
 - preliminary labels and outcome;
@@ -119,13 +122,14 @@ The envelope contains no final human classification and no secrets. It is a reco
 The single reporter/writer must:
 
 1. validate envelope version and checksum;
-2. redact again at the persistence boundary;
-3. verify referenced artifact paths and checksums;
-4. commit the case execution atomically;
-5. create `NEEDS_HUMAN_REVIEW` where constitutionally required;
-6. preserve idempotency during envelope replay;
-7. close the run with derived totals;
-8. print a concise terminal summary.
+2. validate all enum values against `status-taxonomy.json`;
+3. redact again at the persistence boundary;
+4. verify referenced artifact paths and checksums;
+5. commit the case execution atomically;
+6. create `NEEDS_HUMAN_REVIEW` where constitutionally required;
+7. preserve idempotency during envelope replay;
+8. close the run with derived totals and timestamps;
+9. print a concise terminal summary.
 
 ## 6. Terminal Summary
 

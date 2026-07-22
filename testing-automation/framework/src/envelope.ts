@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { isFunctionId, isTestCaseId } from "./identifiers.ts";
+import { assertEnumValue } from "./status-taxonomy.ts";
 
 const RUN_ID = /^RUN-\d{8}T\d{6}Z-[a-f0-9]{8}$/;
 const REVISION = /^v[1-9]\d*$/;
@@ -10,13 +11,15 @@ const SECRET_KEY = /(authorization|cookie|token|password|secret|api[_-]?key)/i;
 type JsonObject = Record<string, unknown>;
 
 export type ResultEnvelope = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   run: {
     id: string;
     command: string;
     environment: string;
     baseUrl: string;
     startedAt: string;
+    finishedAt: string;
+    durationMs: number;
   };
   execution: {
     id: string;
@@ -37,12 +40,18 @@ export type ResultEnvelope = {
     id: string;
     number: number;
     status: string;
+    startedAt: string;
+    finishedAt: string;
+    durationMs: number;
     errorMessage?: string;
   }>;
   dataset?: {
     id: string;
     revision: string;
     setupStatus: string;
+    startedAt: string;
+    finishedAt: string;
+    durationMs: number;
     correlationKey?: string;
   };
   artifacts?: Array<{
@@ -67,13 +76,27 @@ const requireString = (value: unknown, name: string): string => {
   return value;
 };
 
+const requireTimestamp = (value: unknown, name: string): string => {
+  const timestamp = requireString(value, name);
+  if (Number.isNaN(Date.parse(timestamp))) throw new Error(`${name} must be an ISO timestamp`);
+  return timestamp;
+};
+
+const requireDuration = (value: unknown, name: string): number => {
+  if (!Number.isInteger(value) || Number(value) < 0) throw new Error(`${name} must be a non-negative integer`);
+  return Number(value);
+};
+
 export const validateEnvelope = (value: unknown): ResultEnvelope => {
   const root = requireObject(value, "envelope");
-  if (root.schemaVersion !== 1) throw new Error("schemaVersion must be 1");
+  if (root.schemaVersion !== 2) throw new Error("schemaVersion must be 2");
 
   const run = requireObject(root.run, "run");
   const runId = requireString(run.id, "run.id");
   if (!RUN_ID.test(runId)) throw new Error("run.id is invalid");
+  requireTimestamp(run.startedAt, "run.startedAt");
+  requireTimestamp(run.finishedAt, "run.finishedAt");
+  requireDuration(run.durationMs, "run.durationMs");
 
   const execution = requireObject(root.execution, "execution");
   const caseId = requireString(execution.caseId, "execution.caseId");
@@ -99,6 +122,12 @@ export const validateEnvelope = (value: unknown): ResultEnvelope => {
   if (!REVISION.test(revision)) {
     throw new Error("execution.caseRevision is invalid");
   }
+  assertEnumValue("registryStatus", execution.registryStatus);
+  assertEnumValue("preliminaryOutcome", execution.outcome);
+  assertEnumValue("reviewStatus", execution.reviewStatus);
+  requireTimestamp(execution.startedAt, "execution.startedAt");
+  requireTimestamp(execution.finishedAt, "execution.finishedAt");
+  requireDuration(execution.durationMs, "execution.durationMs");
   if (!Array.isArray(root.attempts) || root.attempts.length === 0) {
     throw new Error("attempts must be a non-empty array");
   }
@@ -108,6 +137,26 @@ export const validateEnvelope = (value: unknown): ResultEnvelope => {
     const number = attempt.number;
     if (!Number.isInteger(number) || Number(number) < 1 || Number(number) > 4) {
       throw new Error(`attempts[${index}].number is invalid`);
+    }
+    assertEnumValue("attemptStatus", attempt.status);
+    requireTimestamp(attempt.startedAt, `attempts[${index}].startedAt`);
+    requireTimestamp(attempt.finishedAt, `attempts[${index}].finishedAt`);
+    requireDuration(attempt.durationMs, `attempts[${index}].durationMs`);
+  }
+
+  if (root.dataset !== undefined) {
+    const dataset = requireObject(root.dataset, "dataset");
+    assertEnumValue("datasetSetupStatus", dataset.setupStatus);
+    requireTimestamp(dataset.startedAt, "dataset.startedAt");
+    requireTimestamp(dataset.finishedAt, "dataset.finishedAt");
+    requireDuration(dataset.durationMs, "dataset.durationMs");
+  }
+
+  if (root.artifacts !== undefined) {
+    if (!Array.isArray(root.artifacts)) throw new Error("artifacts must be an array");
+    for (const [index, item] of root.artifacts.entries()) {
+      const artifact = requireObject(item, `artifacts[${index}]`);
+      assertEnumValue("artifactType", artifact.type);
     }
   }
 

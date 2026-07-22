@@ -1,6 +1,6 @@
 # Web E2E Manual Operations Runbook
 
-**Status:** MVP setup complete; six-case Provider login suite active
+**Status:** MVP setup complete; six-case Provider login suite active; Team directory and invitation-management suite draft
 **Runtime:** Existing global `@playwright/mcp` package plus installed system Chrome
 **Package manager:** pnpm only
 
@@ -17,11 +17,14 @@ This is the manual runbook for executing registered Hairline web E2E cases and r
 - Do not read from, import from, write to, or otherwise depend on `main/`.
 - Use live PRDs as requirement authority and the development UI/API as implementation evidence.
 - Retain generated development records.
+- Maildrop inboxes are public. Draft invitation-mutation cases stop before sending unless a human has accepted that the generated invitation link can be publicly readable and explicitly exports `HAIRLINE_ALLOW_PUBLIC_INVITE_MAILBOX=true`. Prefer a private controlled test mailbox when available.
 
 ## 2. Registry Statuses
 
+- `status-taxonomy.json` is the centralized source for every registry status, outcome, review status, human classification, attempt/dataset status, artifact type, and CLI-visible scope enum.
 - `ACTIVE` means the case has activation approval and can run normally.
 - `DRAFT` means the case is registered but not activated. Normal execution rejects it.
+- Other governed registry statuses remain non-active unless the taxonomy and Constitution explicitly say otherwise.
 - Use `--allow-draft` only for an explicitly approved controlled validation. The flag does not activate, approve, or change the registry entry.
 
 ## 3. Start the Interactive Test Console
@@ -87,6 +90,14 @@ Direct pnpm commands remain supported for troubleshooting, controlled draft vali
 
    This runs all six active login cases. Use `--case <case-id>` only for diagnosis, targeted re-verification, or an explicitly selected review item. Use `--allow-draft` only for a separately approved controlled validation of draft coverage; the flag never activates a case.
 
+   The first Team function is registered as `PR-01-FN-002` but remains absent from the interactive console while its cases are `DRAFT`. An explicitly approved controlled validation can run all eighteen cases with:
+
+   ```bash
+   pnpm test:function PR-01 PR-01-FN-002 --allow-draft
+   ```
+
+   The Maildrop mutation cases additionally require the explicit safety acknowledgement described in Section 1. Without it, they produce a reviewable `BLOCKED` result before browser execution.
+
 6. Optionally run headless by setting the runtime variable for the same command:
 
    ```bash
@@ -112,7 +123,7 @@ Direct pnpm commands remain supported for troubleshooting, controlled draft vali
    - Canonical SQLite data: `results/test-results.sqlite`
    - Retained screenshots and traces: `results/artifacts/<run-id>/<module>/<case-id>/`
 
-   Artifact folders exist only when the constitutional retention rules keep evidence; a clean initial pass intentionally retains no screenshot or trace.
+   Artifact folders exist only when the constitutional retention rules keep evidence; a clean initial pass intentionally retains no screenshot or trace. New runs, attempts, dataset setup actions, review events, artifacts, taxonomy synchronizations, and migrations retain UTC timestamps. Legacy fields that predate timestamp capture remain `NULL` rather than receiving invented times.
 
 5. After a human has inspected the terminal result, queue entry, and retained evidence, record the decision:
 
@@ -120,7 +131,7 @@ Direct pnpm commands remain supported for troubleshooting, controlled draft vali
    pnpm test:review <execution-id> --classification <human-decision> --reviewer <name-or-role> --notes "<text>"
    ```
 
-   Append `--retest-required` when the human decision requires another run. The command records the decision and changes the queue status to `REVIEWED`; it never changes the original automated outcome. Do not put credentials or personal data in review notes.
+   The classification must be active under `humanClassification` in `status-taxonomy.json`; both the CLI and SQLite reject unknown values. `POSSIBLE_UI_DISCREPANCY` is the governed classification for functioning UI whose visible contract may differ from an approved requirement. Append `--retest-required` when the human decision requires another run. The command records the decision and changes the queue status to `REVIEWED`; it never changes the original automated outcome. Do not put credentials or personal data in review notes.
 
 6. After an approved product fix or approved test revision, run preflight and repeat the function command. Use a case selector first only when the human review scope is deliberately limited; finish with the complete affected function suite when the fix could affect sibling cases.
 
@@ -136,6 +147,6 @@ Every non-pass enters `NEEDS_HUMAN_REVIEW`. Neither the runner nor AI confirms a
 
 ## 7. Registration and Frontend Changes
 
-Registration begins with a narrow scout of the live PRD's module scope and overall workflows, followed by Product Owner correction and approval of the function boundary and canonical happy path. Testing Constitution v1.2 then delegates derivation of the remaining unambiguous PRD cases without case-by-case approval. The registration must map every applicable requirement to an executable case or a governed gap and record why each standard category is covered, not applicable, or blocked.
+Registration begins with a narrow scout of the live PRD's module scope and overall workflows, followed by Product Owner correction and approval of the function boundary and canonical happy path. Testing Constitution v1.3 then delegates derivation of the remaining unambiguous PRD cases without case-by-case approval. The registration must map every applicable requirement to an executable case or a governed gap and record why each standard category is covered, not applicable, or blocked.
 
 A UI discrepancy never causes automatic test rewriting. Route the execution to human review. After a human confirms an intentional frontend change, update the approved selectors/actions and case revision through the registration workflow, then re-run the affected tests.
