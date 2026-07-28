@@ -28,3 +28,7 @@ SQLite schema migration version 2 added a synchronized enum catalog, taxonomy-sy
 - Live timestamp schema audit: the new test-run, attempt, and execution-dataset timing columns are present.
 - Team search cases no longer inspect URL or API request parameters. Their contract is limited to the visible matching, restored, or empty-state result required by the PRD.
 - Corrected TC0019 validation waited for the Team directory to load and produced one consistent `POTENTIAL_ISSUE / NEEDS_HUMAN_REVIEW` execution across four timestamped attempts. Only the final-attempt screenshot and trace were retained under `RUN-20260716T050857Z-7cfbba33`.
+
+## Minor Follow-up Updates
+
+- 2026-07-28: Added `joachimtrungtuan.work+10@gmail.com` as patient test account `P6` in `local-docs/testing-plans/testing-credentials/patient-accounts.md`.
