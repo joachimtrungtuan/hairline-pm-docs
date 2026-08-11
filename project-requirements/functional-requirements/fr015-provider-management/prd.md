@@ -215,7 +215,7 @@ The Provider Management module enables administrators to onboard and manage hair
 - **Status Badge Colors**: Active (green), Suspended (yellow), Deactivated (red)
 - **Featured Badge**: Gold star icon displayed next to provider name if featured = true
 - **Documents Status Column**: Shows "Complete" (all required documents uploaded) or "Incomplete" (some required documents missing)
-- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Suspend" (if active), "Activate" (if suspended), "Deactivate" (if active/suspended)
+- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Set Featured" (if active and not featured), "Unset Featured" (if featured), "Suspend" (if active), "Activate" (if suspended), "Deactivate" (if active/suspended)
 - **Sorting**: Table columns sortable by name (alphabetical), created date (chronological), commission rate (numerical)
 - **Pagination**: Display 50 providers per page, with page navigation controls
 
@@ -344,7 +344,7 @@ The Provider Management module enables administrators to onboard and manage hair
 | Seat Limit | number | No | Maximum team members (staff) capacity | Integer, range 1-500, default 100 | Admin only |
 | Commission Model | radio | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only |
 | Commission Value | number | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) | Admin only |
-| Featured Provider | toggle | No | Highlight in patient search | Boolean, default: Off | Admin only |
+| Featured Provider | toggle | No | Admin-only control, positioned at the bottom of Basic Information, to highlight in patient search | Boolean, default: Off; maximum 10 featured providers | Admin only |
 | Status | badge/display | Yes | Provider account status | Enum: Active, Suspended, Deactivated | Admin only |
 | Total Bookings | display | No | Count of completed procedures | Read-only, calculated | Read-only |
 | Average Rating | display | No | Average rating from patient reviews | Read-only, format: X.X/5.0 stars | Read-only |
@@ -514,7 +514,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 | Commission Value | number (display/edit) | Yes | % or Fixed Currency Amount | 0-100 (if %) or >0 (if Flat) | Admin only (edit) |
 | Payout Frequency | radio (display/edit) | Yes | How often this provider receives payouts. Period definitions: **Weekly** = Monday to Sunday; **2x a Month** = 1st–15th then 16th–last day of month; **Monthly** = full calendar month | One of: "Weekly", "2x a Month", "Monthly" | Admin only (edit) |
 | Commission Start Date | date (display/edit) | Yes | Date from which commission and payout cycle tracking begins for this provider; payout cycle offset is expressed as number of days from end of last cycle | Format: DD-MM-YYYY | Admin only (set on creation; editable with justification) |
-| Featured Provider | toggle (display/edit) | No | Marks this provider as featured in patient-facing listings | Default: Off | Admin only (edit) |
+| Featured Provider | display | N/A | Current featured status; managed from the Provider-list quick action or the Basic Information toggle | Read-only | Display only |
 | Current Configuration | display | N/A | Summary of active commission and payout settings | Display format: "15% per transaction · Paid Weekly (Mon–Sun)" | Display only |
 | Commission History | list | No | Audit log of past commission and payout setting changes | Each entry: date, admin user, old value, new value, reason | Display only |
 
@@ -618,6 +618,7 @@ See FR-009 Screen 10 for complete field specifications, business rules, and team
 - **Rule 5**: Commission rates apply to all transactions processed after rate configuration.
 - **Rule 6**: Featured provider designation only available for providers with status = "Active".
 - **Rule 7**: Seat limit (maximum team members) defaults to 100 and can be adjusted by admin (range 1-500). Providers can request seat limit increases through support, which must be approved by admin. Seat limit blocks staff invitations when reached (enforced by FR-009).
+- **Rule 8**: At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first. This limit must be enforced server-side for every write path.
 
 ### Data & Privacy Rules
 
@@ -999,6 +1000,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2026-04-02 | 1.4 | Clarified ownership split with FR-029 and FR-017: FR-029 / A-09 remains owner of the global platform commission default and booking-time snapshot policy, while FR-015 / A-02 owns provider-specific commission overrides and payout frequency consumed by FR-017 payout workflows | Codex |
 | 2026-04-02 | 1.5 | Restored dual management for provider-specific commission settings: FR-015 remains the single-provider commission and payout-frequency screen, while FR-029 Screen 5 now also manages provider-specific commission scopes centrally; the two admin surfaces are documented as synchronized for the same provider commission data | Codex |
 | 2026-04-12 | 1.6 | Cross-FR cleanup: corrected Screen 1 Provider Management Dashboard commission filter from stale "Tier-based" to "Flat Rate" so the list filter matches the module-wide Percentage/Flat Rate commission model and FR-022 search/filter alignment | Codex |
+| 2026-08-11 | 1.7 | Aligned featured-provider management with the Sprint 1 A-02 readiness finding: added `Set Featured` / `Unset Featured` Provider-list quick actions, made the Basic Information toggle the existing-provider edit control, changed Commission & Financials to read-only featured-status display, and added the maximum-10 featured-provider rule with required rejection feedback and server-side enforcement | Vân Tay Media |
 
 ---
 
