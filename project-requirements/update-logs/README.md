@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-08-11/ (1 file)
+
+#### **Sprint 1 A-02 Featured Provider Management**
+
+- `SPRINT_1_A02_FEATURED_PROVIDER_MANAGEMENT_2026-08-11.md` - Added Sprint 1 A-02 backlog rows for featured-provider controls and filter composition; aligned FR-015 with the two featured-status controls and the maximum-10 enforcement rule.
+
 ### 2026-07-16/ (1 file)
 
 #### **E2E Status Taxonomy and Timestamp Integrity**
@@ -765,6 +771,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-08-11**: `SPRINT_1_A02_FEATURED_PROVIDER_MANAGEMENT_2026-08-11.md` - Added Sprint 1 A-02 backlog rows for featured-provider controls and filter composition; aligned FR-015 with the two featured-status controls and the maximum-10 enforcement rule.
 - **2026-07-16**: `E2E_STATUS_TAXONOMY_AND_TIMESTAMP_INTEGRITY_2026-07-16.md` - Centralized the web E2E status taxonomy, enforced it in the CLI and SQLite, and added schema-v2 action timestamps while preserving legacy history.
 - **2026-07-15**: `PR01_TEAM_DIRECTORY_INVITATION_E2E_REGISTRATION_2026-07-15.md` - Registered the eighteen-case draft PR-01 Team directory and invitation-management suite with positive/empty search and individual/combined filter coverage, documented nine governed gaps, and added an explicit safety gate for public Maildrop invitation links.
 - **2026-07-15**: `E2E_COMPLETE_CASE_COVERAGE_AND_LOGIN_SUITE_2026-07-15.md` - Changed the E2E registration gate to happy-path approval plus delegated PRD-derived coverage, activated six Provider login cases, preserved four governed gaps, and added the registry-driven `./test.sh` interactive console.
@@ -1023,4 +1030,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: July 16, 2026 (E2E status taxonomy and timestamp integrity)
+**Last Updated**: August 11, 2026 (Sprint 1 A-02 featured provider management)

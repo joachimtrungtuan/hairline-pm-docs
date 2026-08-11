@@ -10,3 +10,4 @@ Use these accounts to test patient-facing flows (registration, login, booking, p
 | P4 | hello@joachimtrung.uk | 1234567890@Abc | |
 | P5 | joachimtrungtuan.work+05@gmail.com | 1234567890@Abc | Provider inquiry-flow fixture account; API login verified 2026-07-21. |
 | P6 | joachimtrungtuan.work+10@gmail.com | 1234567890@Abc | |
+| P7 | joachimtrungtuan.work+15@gmail.com | 1234567890@Abc | |
