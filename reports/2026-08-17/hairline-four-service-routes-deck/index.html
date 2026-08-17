@@ -1,0 +1,4468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Standalone presentation of Hairline's four mobile-app service entry routes and their cross-tenant operating models."
+    />
+    <title>Hairline — Four Service Routes</title>
+    <style>
+      :root {
+        --canvas: #f4f8f4;
+        --paper: #fbfdfb;
+        --ink: #10231b;
+        --muted: #62746b;
+        --line: #cbdcd2;
+        --green-950: #0b3426;
+        --green-800: #116044;
+        --green-600: #159a63;
+        --green-500: #24b875;
+        --green-300: #8ed5b0;
+        --green-150: #d9f1e4;
+        --green-075: #edf8f1;
+        --lime: #a7db54;
+        --warning: #d39b31;
+        --shadow: 0 28px 80px rgba(11, 52, 38, 0.14);
+        --radius-xl: 34px;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --font: "Avenir Next", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #dce9e0;
+        color: var(--ink);
+        font-family: var(--font);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      #viewport {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 14% 18%, rgba(142, 213, 176, 0.28), transparent 30%),
+          radial-gradient(circle at 86% 74%, rgba(167, 219, 84, 0.18), transparent 26%),
+          #dce9e0;
+      }
+
+      /* The stage is a fixed 1920x1080 canvas centred on its own anchor point,
+         then uniformly scaled to fit whatever viewport it is shown in. Centring
+         via translate(-50%, -50%) keeps it optically centred at every scale, in
+         both windowed and fullscreen presentation. */
+      #stage {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1920px;
+        height: 1080px;
+        transform: translate(-50%, -50%) scale(1);
+        transform-origin: center center;
+        overflow: hidden;
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        background: var(--canvas);
+        will-change: transform;
+      }
+
+      :fullscreen #stage,
+      :-webkit-full-screen #stage {
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        padding: 72px 88px 76px;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 80% 20%, rgba(142, 213, 176, 0.16), transparent 26%),
+          var(--canvas);
+        transition: opacity 320ms ease;
+      }
+
+      .slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.38;
+        background-image: radial-gradient(rgba(17, 96, 68, 0.18) 1.2px, transparent 1.2px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(to right, transparent, black 22%, black 78%, transparent);
+      }
+
+      .slide::after {
+        content: "";
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        right: -220px;
+        top: -250px;
+        border: 46px solid rgba(21, 154, 99, 0.08);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .slide.is-active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        z-index: 2;
+      }
+
+      .slide-inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 38px;
+        margin-bottom: 34px;
+      }
+
+      .eyebrow,
+      .route-tag,
+      .lane-label,
+      .micro-label {
+        font-size: 19px;
+        line-height: 1;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .eyebrow {
+        color: var(--green-800);
+      }
+
+      .deck-mark {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .deck-mark::before {
+        content: "";
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--green-600);
+        box-shadow: 0 0 0 6px rgba(21, 154, 99, 0.12);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2 {
+        max-width: 1540px;
+        color: var(--green-950);
+        letter-spacing: -0.045em;
+      }
+
+      h1 {
+        font-size: 100px;
+        line-height: 0.98;
+        font-weight: 700;
+      }
+
+      h2 {
+        font-size: 72px;
+        line-height: 1.04;
+        font-weight: 700;
+      }
+
+      h3 {
+        font-size: 30px;
+        line-height: 1.16;
+        font-weight: 700;
+        color: var(--green-950);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      .lede {
+        max-width: 1260px;
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 33px;
+        line-height: 1.38;
+        font-weight: 500;
+      }
+
+      .em {
+        color: var(--green-600);
+      }
+
+      .soft {
+        color: var(--muted);
+      }
+
+      .panel {
+        position: relative;
+        background: rgba(251, 253, 251, 0.92);
+        border: 2px solid var(--line);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 16px 46px rgba(11, 52, 38, 0.07);
+      }
+
+      .panel.dark {
+        background: var(--green-950);
+        border-color: var(--green-950);
+        color: var(--paper);
+      }
+
+      .panel.mint {
+        background: var(--green-075);
+        border-color: var(--green-300);
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 10px 17px;
+        border: 1.5px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--green-800);
+        font-size: 19px;
+        font-weight: 600;
+      }
+
+      .pill.strong {
+        border-color: var(--green-600);
+        background: var(--green-150);
+      }
+
+      .tenant-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .tenant-pill::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+        background: var(--green-600);
+      }
+
+      .tenant-pill.provider::before {
+        background: var(--green-800);
+      }
+
+      .tenant-pill.admin::before {
+        background: var(--lime);
+      }
+
+      .meta-note {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.45;
+      }
+
+      .route-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+        margin-top: 64px;
+      }
+
+      .route-card {
+        min-height: 374px;
+        padding: 30px 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+
+      .route-card.emphasis {
+        border-color: var(--green-300);
+        background: rgba(237, 248, 241, 0.96);
+      }
+
+      .route-card.baseline {
+        background: var(--green-950);
+        border-color: var(--green-950);
+        color: var(--paper);
+      }
+
+      .route-number {
+        display: grid;
+        place-items: center;
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: var(--green-150);
+        color: var(--green-800);
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .baseline .route-number {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--paper);
+      }
+
+      .route-card h3 {
+        margin-top: 32px;
+        font-size: 34px;
+      }
+
+      .baseline h3 {
+        color: var(--paper);
+      }
+
+      .route-card p {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 23px;
+        line-height: 1.38;
+      }
+
+      .baseline p {
+        color: rgba(251, 253, 251, 0.72);
+      }
+
+      .route-status {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 28px;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--green-800);
+      }
+
+      .route-status::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--green-600);
+        box-shadow: 0 0 0 5px rgba(21, 154, 99, 0.12);
+      }
+
+      .baseline .route-status {
+        color: var(--green-300);
+      }
+
+      .hero-layout {
+        display: grid;
+        grid-template-columns: 1.13fr 0.87fr;
+        gap: 72px;
+        align-items: center;
+        flex: 1;
+      }
+
+      .hero-copy {
+        align-self: center;
+      }
+
+      .hero-routes {
+        display: grid;
+        gap: 15px;
+      }
+
+      .hero-route {
+        display: grid;
+        grid-template-columns: 62px 1fr auto;
+        gap: 18px;
+        align-items: center;
+        padding: 20px 22px;
+        border-radius: 20px;
+        border: 2px solid var(--line);
+        background: rgba(251, 253, 251, 0.9);
+      }
+
+      .hero-route:nth-child(n + 2) {
+        border-color: var(--green-300);
+        background: var(--green-075);
+      }
+
+      .hero-route .route-number {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        font-size: 20px;
+      }
+
+      .hero-route strong {
+        font-size: 25px;
+        color: var(--green-950);
+      }
+
+      .hero-route span:last-child {
+        color: var(--muted);
+        font-size: 17px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .tenant-flow {
+        display: grid;
+        grid-template-columns: 1fr 120px 1fr 120px 1fr;
+        gap: 14px;
+        align-items: center;
+        margin-top: 66px;
+      }
+
+      .tenant-card {
+        min-height: 278px;
+        padding: 28px;
+      }
+
+      .tenant-card h3 {
+        margin-top: 22px;
+        font-size: 31px;
+      }
+
+      .tenant-card p {
+        margin-top: 17px;
+        color: var(--muted);
+        font-size: 22px;
+        line-height: 1.42;
+      }
+
+      .flow-arrow {
+        position: relative;
+        height: 4px;
+        border-radius: 999px;
+        overflow: visible;
+        background: linear-gradient(
+          90deg,
+          var(--green-300) 0 38%,
+          var(--green-500) 50%,
+          var(--green-300) 62% 100%
+        );
+        background-size: 260% 100%;
+        background-position: 100% 0;
+      }
+
+      .slide.is-active .flow-arrow {
+        animation: line-flow 3.2s linear infinite;
+      }
+
+      .flow-arrow::after {
+        content: "";
+        position: absolute;
+        right: -2px;
+        top: -7px;
+        width: 16px;
+        height: 16px;
+        border-top: 4px solid var(--green-600);
+        border-right: 4px solid var(--green-600);
+        transform: rotate(45deg);
+      }
+
+      .slide.is-active .flow-arrow::before {
+        content: "";
+        position: absolute;
+        top: -7px;
+        left: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--green-600);
+        box-shadow: 0 0 0 7px rgba(21, 154, 99, 0.12);
+        animation: arrow-travel 3.2s linear infinite;
+      }
+
+      .split-layout {
+        display: grid;
+        grid-template-columns: 0.86fr 1.14fr;
+        gap: 34px;
+        margin-top: 42px;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .choice-stack,
+      .logic-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .choice-card {
+        padding: 27px 28px;
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .choice-card .choice-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: var(--green-150);
+        color: var(--green-800);
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .choice-card p,
+      .logic-card p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 21px;
+        line-height: 1.4;
+      }
+
+      .logic-card {
+        padding: 24px 28px;
+      }
+
+      .logic-card strong {
+        display: block;
+        color: var(--green-950);
+        font-size: 24px;
+      }
+
+      .lock-note {
+        padding: 22px 26px;
+        border-radius: 20px;
+        background: var(--green-950);
+        color: var(--paper);
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .lock-note .lock {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 23px;
+      }
+
+      .lock-note strong {
+        font-size: 22px;
+      }
+
+      .flow-board {
+        position: relative;
+        min-height: 600px;
+        margin-top: 30px;
+        border: 2px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: rgba(251, 253, 251, 0.84);
+        overflow: hidden;
+      }
+
+      .flow-board::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(142, 213, 176, 0.2), transparent 38%),
+          linear-gradient(rgba(17, 96, 68, 0.045) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(17, 96, 68, 0.045) 2px, transparent 2px);
+        background-size: auto, 42px 42px, 42px 42px;
+      }
+
+      .flow-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .flow-path {
+        fill: none;
+        stroke: var(--green-300);
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 12 14;
+      }
+
+      /* Offset by exactly one dash period so the loop repeats without a seam. */
+      .slide.is-active .flow-path {
+        animation: dash-flow 1.6s linear infinite;
+      }
+
+      @keyframes dash-flow {
+        to {
+          stroke-dashoffset: -26;
+        }
+      }
+
+      .flow-node {
+        position: absolute;
+        width: 330px;
+        min-height: 170px;
+        padding: 22px 24px;
+        border-radius: 24px;
+        border: 2px solid var(--line);
+        background: rgba(251, 253, 251, 0.98);
+        box-shadow: 0 18px 40px rgba(11, 52, 38, 0.08);
+      }
+
+      .flow-node h3 {
+        margin-top: 15px;
+        font-size: 27px;
+      }
+
+      .flow-node p {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.35;
+      }
+
+      .flow-node.patient {
+        left: 90px;
+        top: 92px;
+      }
+
+      .flow-node.admin {
+        left: 704px;
+        top: 50px;
+      }
+
+      .flow-node.provider {
+        right: 90px;
+        top: 92px;
+      }
+
+      .flow-node.return {
+        left: 704px;
+        bottom: 50px;
+      }
+
+      .conversion-card {
+        position: absolute;
+        left: 88px;
+        bottom: 52px;
+        width: 470px;
+        padding: 23px 26px;
+        background: var(--green-950);
+        border-radius: 24px;
+        color: var(--paper);
+      }
+
+      .conversion-card strong {
+        display: block;
+        font-size: 25px;
+      }
+
+      .conversion-card p {
+        margin-top: 9px;
+        color: rgba(251, 253, 251, 0.74);
+        font-size: 19px;
+        line-height: 1.35;
+      }
+
+      .plain-lane {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 36px;
+        margin-top: 40px;
+        flex: 1;
+      }
+
+      .tracking-panel,
+      .boundary-panel {
+        padding: 34px;
+      }
+
+      .tracking-panel {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      .calendar-mock {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 12px;
+        align-content: center;
+        margin: 28px 0;
+      }
+
+      .day {
+        aspect-ratio: 1;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        background: var(--green-075);
+        color: var(--muted);
+        font-size: 18px;
+        font-weight: 600;
+        border: 1.5px solid transparent;
+      }
+
+      .day.logged {
+        background: var(--green-150);
+        color: var(--green-800);
+        border-color: var(--green-300);
+      }
+
+      .slide.is-active .day.logged:nth-child(3n + 1) {
+        animation: day-pulse 2.8s ease-in-out infinite;
+      }
+
+      .boundary-panel {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .boundary-off {
+        margin-top: 26px;
+        padding: 28px;
+        border: 2px dashed #b8c8bf;
+        border-radius: 24px;
+        background: #eef2ef;
+        color: #75847c;
+      }
+
+      .boundary-off .off-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 27px;
+        font-weight: 700;
+      }
+
+      .boundary-off .off-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #dfe6e2;
+      }
+
+      .boundary-list {
+        display: grid;
+        gap: 15px;
+        margin-top: 26px;
+      }
+
+      .boundary-item {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 22px;
+        line-height: 1.35;
+      }
+
+      .boundary-item::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        margin-top: 8px;
+        border-radius: 50%;
+        background: var(--green-600);
+      }
+
+      .aftercare-path {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        margin-top: 54px;
+        position: relative;
+      }
+
+      .aftercare-path::before {
+        content: "";
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        top: 54px;
+        height: 5px;
+        border-radius: 999px;
+        z-index: 0;
+        background: linear-gradient(
+          90deg,
+          var(--green-300) 0 40%,
+          var(--green-500) 50%,
+          var(--green-300) 60% 100%
+        );
+        background-size: 240% 100%;
+        background-position: 100% 0;
+      }
+
+      .slide.is-active .aftercare-path::before {
+        animation: line-flow 4s linear infinite;
+      }
+
+      .aftercare-step {
+        position: relative;
+        z-index: 1;
+        min-height: 308px;
+        padding: 26px 22px;
+        border-radius: 24px;
+        border: 2px solid var(--line);
+        background: rgba(251, 253, 251, 0.97);
+      }
+
+      .aftercare-step .step-dot {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 26px;
+        border-radius: 50%;
+        background: var(--green-600);
+        color: white;
+        font-size: 22px;
+        font-weight: 700;
+        box-shadow: 0 0 0 10px var(--canvas);
+      }
+
+      /* The eyebrow row is a pill on some cards and plain text on others, so it
+         is given one height to keep every title on the same baseline. */
+      .aftercare-step .tenant-pill,
+      .aftercare-step .micro-label {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+      }
+
+      .aftercare-step h3 {
+        margin-top: 14px;
+        font-size: 26px;
+      }
+
+      .aftercare-step p {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.4;
+      }
+
+      /* A ring that only ever expands outward, each dot starting as the
+         connector wave reaches it. */
+      .aftercare-step .step-dot::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 3px solid var(--green-600);
+        opacity: 0;
+      }
+
+      .slide.is-active .aftercare-step .step-dot::after {
+        animation: dot-expand 2.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+      }
+
+      .slide.is-active .aftercare-step:nth-child(2) .step-dot::after {
+        animation-delay: 0.56s;
+      }
+
+      .slide.is-active .aftercare-step:nth-child(3) .step-dot::after {
+        animation-delay: 1.12s;
+      }
+
+      .slide.is-active .aftercare-step:nth-child(4) .step-dot::after {
+        animation-delay: 1.68s;
+      }
+
+      .slide.is-active .aftercare-step:nth-child(5) .step-dot::after {
+        animation-delay: 2.24s;
+      }
+
+      .aftercare-step:nth-child(5) .step-dot {
+        animation-delay: 3.2s;
+      }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: 260px repeat(4, 1fr);
+        margin-top: 44px;
+        border: 2px solid var(--line);
+        border-radius: 26px;
+        overflow: hidden;
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .matrix-cell {
+        min-height: 116px;
+        padding: 18px 20px;
+        border-right: 1.5px solid var(--line);
+        border-bottom: 1.5px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 20px;
+        line-height: 1.34;
+        color: var(--muted);
+      }
+
+      .matrix-cell:nth-child(5n) {
+        border-right: none;
+      }
+
+      .matrix-cell:nth-last-child(-n + 5) {
+        border-bottom: none;
+      }
+
+      .matrix-cell.header {
+        min-height: 126px;
+        color: var(--green-950);
+        font-weight: 600;
+        font-size: 22px;
+        background: var(--green-075);
+      }
+
+      .matrix-cell.row-label {
+        color: var(--green-800);
+        font-weight: 600;
+        background: #f0f6f2;
+      }
+
+      .matrix-cell.baseline-col {
+        background: rgba(11, 52, 38, 0.04);
+      }
+
+      .matrix-cell.focus-col {
+        background: rgba(217, 241, 228, 0.58);
+      }
+
+      .matrix-cell strong {
+        color: var(--green-950);
+      }
+
+      .matrix-check {
+        display: inline-grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: var(--green-600);
+        color: white;
+        font-weight: 700;
+      }
+
+      /* ---- Actor swimlanes (route mechanics slides) ------------------------
+         Every lane shares one 4-phase column grid, so a vertical slice of the
+         board reads as "what each actor is doing at the same moment". */
+      .mechanics h2 {
+        font-size: 50px;
+      }
+
+      .mechanics .lane-board {
+        margin-top: 18px;
+        gap: 10px;
+      }
+
+      .mechanics .lane-track {
+        padding: 11px 18px;
+      }
+
+      .mechanics .footer-note {
+        padding-top: 16px;
+      }
+
+      .lane-board {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .lane-phases,
+      .lane-track {
+        display: grid;
+        grid-template-columns: 236px 1fr;
+        gap: 18px;
+      }
+
+      .lane-phases {
+        align-items: center;
+        padding: 0 18px;
+      }
+
+      .phase-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .phase {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--green-800);
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .phase::before {
+        content: "";
+        width: 22px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--green-300);
+      }
+
+      .lane-track {
+        align-items: center;
+        padding: 13px 18px;
+        border: 2px solid var(--line);
+        border-radius: 20px;
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .lane-track.system {
+        background: var(--green-075);
+        border-color: var(--green-300);
+      }
+
+      .lane-track.absent {
+        border-style: dashed;
+        border-color: #b8c8bf;
+        background: #eef2ef;
+      }
+
+      .lane-head {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 7px;
+      }
+
+      .lane-role {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.3;
+      }
+
+      .lane-steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .lane-step {
+        position: relative;
+        padding: 12px 14px;
+        border: 1.5px solid var(--line);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.74);
+      }
+
+      .lane-track.system .lane-step {
+        border-color: var(--green-300);
+        background: rgba(255, 255, 255, 0.66);
+      }
+
+      .lane-step strong {
+        display: block;
+        color: var(--green-950);
+        font-size: 19px;
+        line-height: 1.2;
+      }
+
+      .lane-step p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.34;
+      }
+
+      .lane-step.muted strong {
+        color: #75847c;
+      }
+
+      .lane-step + .lane-step::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        width: 9px;
+        height: 9px;
+        border-top: 2.5px solid var(--green-300);
+        border-right: 2.5px solid var(--green-300);
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .lane-note {
+        padding: 12px 16px;
+        color: #75847c;
+        font-size: 17px;
+        line-height: 1.35;
+      }
+
+      .lane-note strong {
+        color: #5f6f67;
+      }
+
+      .data-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .data-chip {
+        padding: 13px 16px;
+        border: 1.5px dashed var(--green-300);
+        border-radius: 16px;
+        background: rgba(237, 248, 241, 0.72);
+      }
+
+      .data-chip .data-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--green-800);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .data-chip .data-label::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: var(--green-600);
+      }
+
+      .data-chip p {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.34;
+      }
+
+
+      /* --- Route 02/03/04 human framing: three patients, three problems --- */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 26px;
+        margin-top: 36px;
+        margin-bottom: 28px;
+        flex: 1;
+      }
+
+      .problem-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 30px 32px 26px;
+        border: 2px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .problem-quote {
+        color: var(--green-950);
+        font-size: 28px;
+        line-height: 1.26;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+
+      .problem-need {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.38;
+      }
+
+      .problem-answer {
+        margin-top: auto;
+        padding-top: 18px;
+        border-top: 1.5px dashed var(--green-300);
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        color: var(--green-800);
+        font-size: 21px;
+        font-weight: 600;
+      }
+
+      .problem-answer span {
+        color: var(--green-600);
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      /* --- Vocabulary and case-state legend --- */
+      .glossary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 26px;
+        flex: 1;
+        align-content: center;
+      }
+
+      .term {
+        padding: 15px 18px;
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        background: rgba(251, 253, 251, 0.9);
+      }
+
+      .term strong {
+        display: block;
+        color: var(--green-950);
+        font-size: 21px;
+        line-height: 1.16;
+        font-weight: 700;
+      }
+
+      .term p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.32;
+      }
+
+      .state-rail {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+        padding: 20px 24px;
+        border: 1.5px solid var(--green-300);
+        border-radius: 20px;
+        background: var(--green-075);
+      }
+
+      .state-rail .micro-label {
+        color: var(--green-800);
+        margin-right: 6px;
+      }
+
+      .state-badge {
+        padding: 9px 17px;
+        border: 1.5px solid var(--green-300);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--green-800);
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .state-badge.warn {
+        border-color: var(--warning);
+        color: var(--warning);
+      }
+
+      .state-badge.end {
+        border-color: var(--green-950);
+        background: var(--green-950);
+        color: #e6f4ec;
+      }
+
+      .state-arrow {
+        color: var(--green-300);
+        font-size: 21px;
+      }
+
+      /* --- Patient story timelines --- */
+      .story-line {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+        margin-top: 34px;
+        margin-bottom: 26px;
+        flex: 1;
+        align-content: center;
+      }
+
+      .story-step {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        padding-top: 40px;
+      }
+
+      .story-step::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 8px;
+        right: -18px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--green-150);
+      }
+
+      .story-step:last-child::before {
+        right: 50%;
+      }
+
+      .story-step::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: var(--green-600);
+        box-shadow: 0 0 0 6px rgba(21, 154, 99, 0.14);
+      }
+
+      .story-when {
+        color: var(--green-800);
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .story-does {
+        padding: 16px 18px;
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .story-does strong {
+        display: block;
+        color: var(--green-950);
+        font-size: 21px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .story-does p {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.32;
+      }
+
+      .story-sys {
+        padding: 14px 18px;
+        border: 1.5px dashed var(--green-300);
+        border-radius: 16px;
+        background: rgba(237, 248, 241, 0.72);
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.34;
+      }
+
+      .story-sys span {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--green-600);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      /* --- Screens to be designed --- */
+      .screen-table {
+        display: grid;
+        grid-template-columns: 190px repeat(3, 1fr);
+        gap: 13px;
+        margin-top: 26px;
+        margin-bottom: 26px;
+        flex: 1;
+        align-content: center;
+      }
+
+      .screen-head {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 6px 4px;
+        color: var(--green-950);
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .screen-head span {
+        color: var(--muted);
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .screen-row-label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 4px;
+        color: var(--green-950);
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .screen-row-label span {
+        color: var(--muted);
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .screen-cell {
+        padding: 15px 17px;
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        background: rgba(251, 253, 251, 0.9);
+      }
+
+      .screen-cell.none {
+        border-style: dashed;
+        border-color: #b8c8bf;
+        background: #eef2ef;
+      }
+
+      .screen-count {
+        color: var(--green-800);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .screen-cell.none .screen-count {
+        color: #7d8c84;
+      }
+
+      .screen-cell p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.4;
+      }
+
+      /* --- Edge and empty states --- */
+      .edge-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 26px;
+        margin-bottom: 26px;
+        flex: 1;
+      }
+
+      .edge-card {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        padding: 18px 20px 16px;
+        border: 1.5px solid var(--line);
+        border-radius: 18px;
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .edge-when {
+        color: var(--warning);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .edge-card strong {
+        color: var(--green-950);
+        font-size: 21px;
+        line-height: 1.18;
+        font-weight: 700;
+      }
+
+      .edge-card p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.34;
+      }
+
+      .edge-need {
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1.5px dashed var(--green-300);
+        color: var(--green-800);
+        font-size: 17px;
+        line-height: 1.3;
+        font-weight: 600;
+      }
+
+      /* --- Route 03 handoff: two case lanes joined by a payload bridge.
+         Prefixed xfer- because .lane-* belongs to the mechanics swimlanes. --- */
+      .xfer-board {
+        flex: 1;
+        align-content: center;
+        display: grid;
+        grid-template-columns: 296px 1fr;
+        column-gap: 24px;
+        row-gap: 13px;
+        margin-top: 24px;
+      }
+
+      .xfer-id {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 7px;
+        padding: 16px 20px;
+        border-radius: 20px;
+        border: 2px solid var(--line);
+        background: rgba(251, 253, 251, 0.94);
+      }
+
+      .xfer-id strong {
+        color: var(--green-950);
+        font-size: 24px;
+        line-height: 1.14;
+        font-weight: 700;
+      }
+
+      .xfer-id p {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.3;
+      }
+
+      .xfer-tag {
+        align-self: flex-start;
+        padding: 5px 13px;
+        border-radius: 999px;
+        background: var(--green-150);
+        color: var(--green-800);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .xfer-id.target {
+        border-color: var(--green-600);
+        background: var(--green-075);
+      }
+
+      .xfer-id.target .xfer-tag {
+        background: var(--green-600);
+        color: #fff;
+      }
+
+      /* Lane A: four beats, with the flow continuing past the last one so the
+         monitoring case is visibly not consumed by the conversion. */
+      .xfer-beats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr) 178px;
+        align-items: stretch;
+        gap: 11px;
+        padding: 15px 17px;
+        border-radius: 20px;
+        border: 2px solid var(--line);
+        background: var(--green-075);
+      }
+
+      .xfer-beat {
+        padding: 12px 14px;
+        border-radius: 15px;
+        border: 1.5px solid var(--line);
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .xfer-beat-no {
+        display: inline-grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        margin-bottom: 8px;
+        border-radius: 9px;
+        background: var(--green-600);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .xfer-beat strong {
+        display: block;
+        color: var(--green-950);
+        font-size: 19px;
+        line-height: 1.14;
+        font-weight: 700;
+      }
+
+      .xfer-beat p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.26;
+      }
+
+      .xfer-beat.exit {
+        position: relative;
+        border-color: var(--green-600);
+        background: #fff;
+      }
+
+      .xfer-exit-tag {
+        position: absolute;
+        top: 13px;
+        right: 13px;
+        color: var(--green-600);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .xfer-onward {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        padding: 12px 14px;
+        border-radius: 15px;
+        border: 1.5px dashed var(--green-300);
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.24;
+      }
+
+      .xfer-onward b {
+        display: block;
+        color: var(--green-800);
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .xfer-onward-rail {
+        display: block;
+        height: 4px;
+        margin-top: 4px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--green-300) 0 38%,
+          var(--green-500) 50%,
+          var(--green-300) 62% 100%
+        );
+        background-size: 260% 100%;
+        background-position: 100% 0;
+      }
+
+      .slide.is-active .xfer-onward-rail {
+        animation: line-flow 3.2s linear infinite;
+      }
+
+      /* The bridge: a descending rail under the lane label, the reviewed
+         payload beside it. What crosses is named; what cannot is named too. */
+      .xfer-bridge {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 296px 1fr;
+        column-gap: 24px;
+        align-items: stretch;
+      }
+
+      .xfer-drop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 4px 0;
+      }
+
+      .xfer-rail {
+        position: relative;
+        width: 30px;
+        flex: 1;
+        min-height: 62px;
+      }
+
+      .xfer-rail::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 12px;
+        width: 4px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--green-300), var(--green-600));
+      }
+
+      .xfer-rail::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 13px;
+        height: 13px;
+        transform: translateX(-50%) rotate(45deg);
+        border-right: 4px solid var(--green-600);
+        border-bottom: 4px solid var(--green-600);
+      }
+
+      .xfer-packet {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 15px;
+        height: 15px;
+        margin-left: -7.5px;
+        border-radius: 50%;
+        background: var(--green-600);
+        box-shadow: 0 0 0 6px rgba(21, 154, 99, 0.16);
+        opacity: 0;
+      }
+
+      .slide.is-active .xfer-packet {
+        animation: payload-descend 4.4s ease-in-out infinite;
+      }
+
+      .xfer-drop em {
+        color: var(--green-800);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .xfer-payload {
+        padding: 14px 19px 13px;
+        border-radius: 20px;
+        border: 2px solid var(--green-300);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .xfer-payload-head b {
+        color: var(--green-600);
+      }
+
+      .xfer-payload-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 18px;
+        color: var(--green-950);
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .xfer-payload-head em {
+        color: var(--muted);
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+
+      .xfer-chips {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 9px;
+        margin-top: 10px;
+      }
+
+      .xfer-chip {
+        padding: 9px 12px;
+        border-radius: 13px;
+        border: 1.5px solid var(--line);
+        background: var(--paper);
+      }
+
+      .xfer-chip b {
+        display: block;
+        color: var(--green-950);
+        font-size: 16px;
+        line-height: 1.18;
+        font-weight: 700;
+      }
+
+      .xfer-chip i {
+        display: block;
+        margin-top: 4px;
+        color: var(--green-600);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      /* Each field lights as the packet passes, then settles back. */
+      .slide.is-active .xfer-chip {
+        animation: chip-receive 4.4s ease-in-out infinite;
+      }
+
+      .slide.is-active .xfer-chip:nth-child(2) {
+        animation-delay: 0.12s;
+      }
+
+      .slide.is-active .xfer-chip:nth-child(3) {
+        animation-delay: 0.24s;
+      }
+
+      .slide.is-active .xfer-chip:nth-child(4) {
+        animation-delay: 0.36s;
+      }
+
+      .slide.is-active .xfer-chip:nth-child(5) {
+        animation-delay: 0.48s;
+      }
+
+      .xfer-blocked {
+        margin-top: 10px;
+        padding-top: 9px;
+        border-top: 1.5px dashed var(--line);
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.28;
+      }
+
+      .xfer-blocked b {
+        color: var(--warning);
+        font-weight: 700;
+      }
+
+      /* Lane B: the four gates FR-011 owns, arming in sequence once the
+         payload lands. */
+      .xfer-gates {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        align-items: stretch;
+        gap: 11px;
+        padding: 15px 17px;
+        border-radius: 20px;
+        border: 2px solid var(--green-600);
+        background: var(--green-075);
+      }
+
+      .xfer-gate {
+        padding: 11px 14px;
+        border-radius: 15px;
+        border: 1.5px solid var(--green-300);
+        background: rgba(255, 255, 255, 0.94);
+        color: var(--green-950);
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .xfer-gate span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .slide.is-active .xfer-gate {
+        animation: gate-arm 4.4s ease-in-out infinite;
+      }
+
+      .slide.is-active .xfer-gate:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      .slide.is-active .xfer-gate:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .slide.is-active .xfer-gate:nth-child(4) {
+        animation-delay: 0.45s;
+      }
+
+      .xfer-fallback {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 10px 20px;
+        border-radius: 16px;
+        border: 1.5px dashed var(--green-300);
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.28;
+      }
+
+      .xfer-fallback b {
+        color: var(--green-800);
+        font-weight: 700;
+      }
+
+      .xfer-fallback span:first-child {
+        flex: none;
+        color: var(--green-600);
+        font-size: 21px;
+        font-weight: 700;
+      }
+
+      @keyframes payload-descend {
+        0% {
+          top: 0;
+          transform: scale(0.4);
+          opacity: 0;
+        }
+        10% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        56% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        70%,
+        100% {
+          top: calc(100% - 20px);
+          transform: scale(0.4);
+          opacity: 0;
+        }
+      }
+
+      @keyframes chip-receive {
+        0%,
+        20% {
+          border-color: var(--line);
+          background: var(--paper);
+        }
+        32%,
+        60% {
+          border-color: var(--green-600);
+          background: #fff;
+        }
+        76%,
+        100% {
+          border-color: var(--line);
+          background: var(--paper);
+        }
+      }
+
+      @keyframes gate-arm {
+        0%,
+        60% {
+          border-color: var(--green-300);
+          box-shadow: none;
+        }
+        74%,
+        90% {
+          border-color: var(--green-600);
+          box-shadow: 0 6px 18px rgba(21, 154, 99, 0.16);
+        }
+        100% {
+          border-color: var(--green-300);
+          box-shadow: none;
+        }
+      }
+
+      /* --- Closing recap --- */
+      .recap-grid {
+        flex: 1;
+        align-content: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 17px;
+        margin-top: 26px;
+      }
+
+      .recap-card {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 15px;
+        padding: 18px 20px 17px;
+        border: 1.5px solid var(--line);
+        border-radius: 18px;
+        background: rgba(251, 253, 251, 0.92);
+      }
+
+      .recap-no {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--green-600);
+        color: #fff;
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .recap-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--green-950);
+        font-size: 21px;
+        line-height: 1.16;
+        font-weight: 700;
+      }
+
+      .recap-card p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.34;
+      }
+
+      .recap-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-top: 20px;
+        padding: 18px 22px;
+        border: 1.5px solid var(--green-300);
+        border-radius: 20px;
+        background: var(--green-075);
+      }
+
+      .recap-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .recap-stat b {
+        color: var(--green-800);
+        font-size: 30px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      .recap-stat span {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.28;
+      }
+
+      .recap-stat.open b {
+        color: var(--warning);
+      }
+
+      /* --- Route section dividers --- */
+      .slide.divider {
+        background:
+          radial-gradient(circle at 78% 22%, rgba(36, 184, 117, 0.22), transparent 34%),
+          linear-gradient(135deg, #0b3426 0%, #124b35 100%);
+      }
+
+      .slide.divider::before {
+        opacity: 0.22;
+        background-image: radial-gradient(rgba(142, 213, 176, 0.32) 1.2px, transparent 1.2px);
+      }
+
+      .slide.divider::after {
+        border-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .slide.divider .eyebrow {
+        color: var(--green-300);
+      }
+
+      .slide.divider .deck-mark {
+        color: rgba(226, 244, 235, 0.62);
+      }
+
+      .slide.divider .deck-mark::before {
+        background: var(--green-300);
+        box-shadow: 0 0 0 6px rgba(142, 213, 176, 0.14);
+      }
+
+      .divider-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .divider-num {
+        color: rgba(255, 255, 255, 0.15);
+        font-size: 210px;
+        line-height: 0.8;
+        font-weight: 700;
+        letter-spacing: -0.06em;
+      }
+
+      .slide.divider h2 {
+        color: #f2fbf6;
+      }
+
+      .slide.divider .em {
+        color: var(--green-300);
+      }
+
+      .divider-lede {
+        max-width: 1180px;
+        margin-top: 26px;
+        color: rgba(226, 244, 235, 0.74);
+        font-size: 32px;
+        line-height: 1.36;
+        font-weight: 500;
+      }
+
+      .divider-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 40px;
+      }
+
+      .divider-chip {
+        padding: 13px 24px;
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        color: #d7efe2;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .slide.divider .footer-note {
+        color: rgba(226, 244, 235, 0.55);
+      }
+
+      .slide.divider .footer-note strong {
+        color: var(--green-300);
+      }
+
+      /* Subgrid keeps every column of a story timeline on the same baselines, so
+         the cards line up both across the row and down the column. */
+      @supports (grid-template-rows: subgrid) {
+        .story-line {
+          grid-template-rows: auto auto auto;
+          row-gap: 13px;
+        }
+
+        .story-step {
+          display: grid;
+          grid-row: span 3;
+          grid-template-rows: subgrid;
+        }
+      }
+
+      .footer-note {
+        margin-top: auto;
+        padding-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: 17px;
+        font-weight: 600;
+      }
+
+      .footer-note strong {
+        color: var(--green-800);
+      }
+
+      .slide.is-active [data-enter] {
+        animation: enter-up 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: var(--delay, 0ms);
+      }
+
+      .slide.is-active [data-enter="left"] {
+        animation-name: enter-left;
+      }
+
+      .slide.is-active [data-enter="right"] {
+        animation-name: enter-right;
+      }
+
+      .slide.is-active [data-enter="scale"] {
+        animation-name: enter-scale;
+      }
+
+      .ambient-orb {
+        position: absolute;
+        width: 310px;
+        height: 310px;
+        left: -130px;
+        bottom: -170px;
+        border-radius: 50%;
+        border: 38px solid rgba(21, 154, 99, 0.08);
+      }
+
+      .slide.is-active .ambient-orb {
+        animation: orb-breathe 5.5s ease-in-out infinite;
+      }
+
+      #controls {
+        position: fixed;
+        z-index: 20;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        background: rgba(11, 52, 38, 0.93);
+        box-shadow: 0 14px 36px rgba(11, 52, 38, 0.28);
+        backdrop-filter: blur(14px);
+        transition: opacity 400ms ease, transform 400ms ease;
+      }
+
+      /* Controls step out of the way while the audience is reading, and return
+         on any pointer or key activity. */
+      #controls.idle {
+        opacity: 0;
+        transform: translateX(-50%) translateY(18px);
+        pointer-events: none;
+      }
+
+      .control-button {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        cursor: pointer;
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .control-button:hover,
+      .control-button:focus-visible {
+        background: rgba(255, 255, 255, 0.18);
+        outline: 2px solid var(--green-300);
+        outline-offset: 2px;
+      }
+
+      #counter {
+        min-width: 78px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+      }
+
+      #progress {
+        position: fixed;
+        z-index: 20;
+        top: 22px;
+        left: 50%;
+        width: min(680px, 60vw);
+        height: 5px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(11, 52, 38, 0.16);
+      }
+
+      #progress-fill {
+        width: 4.348%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--green-600);
+        transition: width 300ms ease;
+      }
+
+      @keyframes enter-up {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes enter-left {
+        from {
+          opacity: 0;
+          transform: translateX(-44px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes enter-right {
+        from {
+          opacity: 0;
+          transform: translateX(44px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes enter-scale {
+        from {
+          opacity: 0;
+          transform: scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Travel animations are expressed in percentages of their own track so the
+         dot always starts and ends exactly on the connector, whatever the
+         column width is. */
+      @keyframes line-flow {
+        from {
+          background-position: 100% 0;
+        }
+        to {
+          background-position: 0 0;
+        }
+      }
+
+      @keyframes arrow-travel {
+        0% {
+          left: 0;
+          transform: scale(0.55);
+          opacity: 0;
+        }
+        14% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        80% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          left: calc(100% - 18px);
+          transform: scale(0.55);
+          opacity: 0;
+        }
+      }
+
+      @keyframes dot-expand {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(2.15);
+          opacity: 0;
+        }
+      }
+
+      @keyframes day-pulse {
+        0%,
+        100% {
+          transform: translateY(0);
+          box-shadow: none;
+        }
+        50% {
+          transform: translateY(-6px);
+          box-shadow: 0 10px 22px rgba(21, 154, 99, 0.16);
+        }
+      }
+
+      @keyframes orb-breathe {
+        0%,
+        100% {
+          transform: scale(0.94) rotate(0deg);
+        }
+        50% {
+          transform: scale(1.08) rotate(12deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script type="application/hyperframes-slideshow+json">
+      {
+        "slides": [
+          {
+            "sceneId": "four-routes",
+            "notes": "Open with the operating-model distinction: the app has four entry routes, but only one is the traditional inquiry path."
+          },
+          {
+            "sceneId": "patient-problems",
+            "notes": "Anchor the whole deck in three real people. None of them wants surgery today; all three currently land in a treatment inquiry."
+          },
+          {
+            "sceneId": "vocabulary",
+            "notes": "Define the nine terms before any mechanics slide. Point at the case-state rail and note that patient logging stays open in every state."
+          },
+          {
+            "sceneId": "gateway-map",
+            "notes": "Emphasize that the gateway routes intent into four different commitments and tenant workloads."
+          },
+          {
+            "sceneId": "treatment-baseline",
+            "notes": "Keep the current treatment route concise. It is the baseline against which the three newer routes are compared."
+          },
+          {
+            "sceneId": "route-02-divider",
+            "notes": "Pause here. Name the section, then say the one thing that defines route 02: the patient chooses at creation whether a provider is involved at all."
+          },
+          {
+            "sceneId": "hair-loss-choice",
+            "notes": "The critical product decision happens at creation: self-monitoring or provider advice. The choice is locked for the active case."
+          },
+          {
+            "sceneId": "hair-loss-story",
+            "notes": "Tell route 02 as one person's case, phase by phase. The columns are gates, not dates \u2014 nothing here runs on a calendar. Each column pairs what the patient does with what the system does underneath."
+          },
+          {
+            "sceneId": "hair-loss-loop",
+            "notes": "Walk clockwise through the animated loop. Patient logging never stops while assignment or reassignment is pending."
+          },
+          {
+            "sceneId": "hair-loss-mechanics",
+            "notes": "Read the board vertically: at every phase, patient logging continues while System, Admin, and Provider do their part. Call out the data inputs strip at the bottom."
+          },
+          {
+            "sceneId": "route-03-divider",
+            "notes": "Pause here. Route 03 reuses everything from route 02 except the provider. Set that expectation before the boundary slide."
+          },
+          {
+            "sceneId": "transplant-boundary",
+            "notes": "Stress the negative space: no provider advice, no required cadence, no managed-aftercare promise."
+          },
+          {
+            "sceneId": "transplant-story",
+            "notes": "Same narrative shape as route 02, with the provider removed. Stress that conversion to paid aftercare is the patient's own choice."
+          },
+          {
+            "sceneId": "transplant-mechanics",
+            "notes": "Only two lanes actually move. Show that the empty provider lane is intentional, and that the logging inputs match route 02."
+          },
+          {
+            "sceneId": "transplant-handoff",
+            "notes": "Walk the two lanes. The monitoring case on top stays open \u2014 conversion does not consume it. The aftercare request below is a new record, joined only by provenance. Then read the bridge: five reviewed fields cross, and price, payment, assignment and activation deliberately do not."
+          },
+          {
+            "sceneId": "route-04-divider",
+            "notes": "Pause here. Route 04 is the only paid, managed route. Four gates, four different hands, and nothing runs until all four have acted."
+          },
+          {
+            "sceneId": "aftercare-managed",
+            "notes": "Managed aftercare begins only after the appropriate activation path: treatment completion or standalone purchase and assignment."
+          },
+          {
+            "sceneId": "aftercare-story",
+            "notes": "Four gates, four different hands. Nothing is scheduled until Admin assigns and the provider activates the plan."
+          },
+          {
+            "sceneId": "aftercare-mechanics",
+            "notes": "Four gates in sequence: patient payment, admin assignment, provider activation, then the running plan. Each phase names the data that unlocks the next."
+          },
+          {
+            "sceneId": "screens-inventory",
+            "notes": "The design brief in one board: 39 screens, 21 of them patient-side, and one deliberately empty cell for route 03 providers."
+          },
+          {
+            "sceneId": "edge-cases",
+            "notes": "Walk the six unhappy paths. Each is a designed state with a way forward, not an error message."
+          },
+          {
+            "sceneId": "operating-matrix",
+            "notes": "Close on the principle: entry route determines promise, workload, cadence, and the permitted data handoff."
+          },
+          {
+            "sceneId": "deck-recap",
+            "notes": "Close by recapping the whole deck in six lines, then read the strip. The four open decisions, each needing an owner before design starts: (1) how much a patient should know about provider response cadence before assignment; (2) whether the FR-011 scan-upload flow is reused as-is for monitoring or redesigned; (3) whether the patient sees only the latest advice or the full record across a case; (4) whether a completed case stays browsable in the app or survives only as the exported PDF."
+          }
+        ],
+        "slideSequences": []
+      }
+    </script>
+
+    <main id="viewport" aria-label="Hairline four service routes presentation">
+      <div id="stage">
+        <section
+          class="slide scene-frame clip is-active"
+          data-composition-id="four-routes"
+          data-start="0"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="false"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Hairline service architecture</span>
+              <span class="deck-mark">Product route briefing</span>
+            </div>
+            <div class="hero-layout">
+              <div class="hero-copy">
+                <h1 data-enter="left" style="--delay: 170ms">
+                  Four entry routes. <span class="em">Three different operating models.</span>
+                </h1>
+                <p class="lede" data-enter style="--delay: 260ms">
+                  The app no longer routes every patient into a treatment inquiry. It must distinguish tracking,
+                  advice, and managed aftercare from the first tap.
+                </p>
+                <div class="pill-row" data-enter style="--delay: 360ms; margin-top: 34px">
+                  <span class="pill">Patient intent</span>
+                  <span class="pill strong">Tenant ownership</span>
+                  <span class="pill">Reusable data</span>
+                </div>
+              </div>
+              <div class="hero-routes" data-enter="right" style="--delay: 230ms">
+                <div class="hero-route">
+                  <span class="route-number">01</span>
+                  <strong>Get a Hair Transplant</strong>
+                  <span>Inquiry</span>
+                </div>
+                <div class="hero-route">
+                  <span class="route-number">02</span>
+                  <strong>Monitor Your Hair Loss</strong>
+                  <span>New focus</span>
+                </div>
+                <div class="hero-route">
+                  <span class="route-number">03</span>
+                  <strong>Monitor Transplant Progress</strong>
+                  <span>New focus</span>
+                </div>
+                <div class="hero-route">
+                  <span class="route-number">04</span>
+                  <strong>Request Aftercare</strong>
+                  <span>New focus</span>
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-003, FR-011, FR-037, FR-038</span>
+              <strong>Focus: routes 02–04</strong>
+            </div>
+            <div class="ambient-orb"></div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="patient-problems"
+          data-start="8"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Why these routes exist</span>
+              <span class="deck-mark">Three patients the app cannot serve today</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Not everyone opening this app <span class="em">wants surgery.</span>
+            </h2>
+            <p class="lede" data-enter style="--delay: 240ms">
+              Today every route ends in a treatment inquiry. These three people need something else first.
+            </p>
+            <div class="problem-grid">
+              <article class="problem-card" data-enter="scale" style="--delay: 320ms">
+                <p class="problem-quote">
+                  &ldquo;My hair is thinning. I don&rsquo;t know if it&rsquo;s getting worse, and I&rsquo;m nowhere near
+                  ready to talk about surgery.&rdquo;
+                </p>
+                <p class="problem-need">
+                  Needs a record of what is actually happening over months &mdash; and, if they choose it, a
+                  professional opinion without committing to a treatment.
+                </p>
+                <p class="problem-answer"><span>02</span> Monitor Hair Loss</p>
+              </article>
+              <article class="problem-card" data-enter="scale" style="--delay: 390ms">
+                <p class="problem-quote">
+                  &ldquo;I had my transplant. Now I&rsquo;m on my own, and every week looks the same to me.&rdquo;
+                </p>
+                <p class="problem-need">
+                  Needs a private recovery log with no obligation, no clinician to wait for, and a way to compare
+                  month one against month four.
+                </p>
+                <p class="problem-answer"><span>03</span> Monitor Transplant Progress</p>
+              </article>
+              <article class="problem-card" data-enter="scale" style="--delay: 460ms">
+                <p class="problem-quote">
+                  &ldquo;I want someone to actually guide my recovery &mdash; tell me what to do and when.&rdquo;
+                </p>
+                <p class="problem-need">
+                  Needs a paid, managed plan: a named provider, milestones, medication reminders and scheduled
+                  check-ins.
+                </p>
+                <p class="problem-answer"><span>04</span> Request Aftercare</p>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Same app, three different promises</span>
+              <strong>Only one of the three ends in a sale</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="vocabulary"
+          data-start="16"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">How to read this deck</span>
+              <span class="deck-mark">Nine words that carry the whole model</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              The vocabulary, <span class="em">in plain language.</span>
+            </h2>
+            <div class="glossary-grid">
+              <div class="term" data-enter="scale" style="--delay: 240ms">
+                <strong>Platform</strong>
+                <p>
+                  Three separate workspaces: Patient app, Provider portal, Admin console.
+                  &ldquo;Cross-platform&rdquo; means an action in one changes what another sees.
+                </p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 280ms">
+                <strong>Case</strong>
+                <p>
+                  One open episode of a service, with its own timeline, data and status. A patient may hold only one
+                  active case per route.
+                </p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 320ms">
+                <strong>Daily log</strong>
+                <p>One dated entry made by the patient: severity 1&ndash;10, free notes, optional photos.</p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 360ms">
+                <strong>Scan set</strong>
+                <p>
+                  A fixed group of head photos taken from prescribed angles, so two different months can actually be
+                  compared.
+                </p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 400ms">
+                <strong>Advice gate</strong>
+                <p>
+                  The medical questionnaire a patient must complete before any provider is allowed to advise them.
+                  No questionnaire, no advice.
+                </p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 440ms">
+                <strong>Cadence</strong>
+                <p>How often the assigned provider is expected to respond &mdash; weekly or twice-monthly.</p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 480ms">
+                <strong>Assignment</strong>
+                <p>Admin choosing the provider who will serve a case. Nothing provider-side exists until this happens.</p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 520ms">
+                <strong>Conversion</strong>
+                <p>
+                  Carrying a monitoring case into a paid path &mdash; a treatment inquiry or an aftercare package
+                  &mdash; without the patient re-typing anything.
+                </p>
+              </div>
+              <div class="term" data-enter="scale" style="--delay: 560ms">
+                <strong>FR-0xx</strong>
+                <p>
+                  The requirement document a screen comes from: 037 hair loss, 038 transplant progress, 011 aftercare,
+                  003 inquiry, 025 questionnaire.
+                </p>
+              </div>
+            </div>
+            <div class="state-rail" data-enter style="--delay: 620ms">
+              <span class="micro-label">Case states</span>
+              <span class="state-badge">Active</span>
+              <span class="state-arrow">&rarr;</span>
+              <span class="state-badge warn">Pending assignment</span>
+              <span class="state-arrow">&rarr;</span>
+              <span class="state-badge">Advice active</span>
+              <span class="state-arrow">&rarr;</span>
+              <span class="state-badge warn">Pending reassignment</span>
+              <span class="state-arrow">&rarr;</span>
+              <span class="state-badge end">Completed</span>
+              <span class="state-arrow">&rarr;</span>
+              <span class="state-badge end">Converted</span>
+            </div>
+            <div class="footer-note">
+              <span>Every badge on this rail is a screen someone has to design</span>
+              <strong>Patient logging stays open in all of them</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="gateway-map"
+          data-start="24"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">The gateway decision</span>
+              <span class="deck-mark">One entry screen · four contracts</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              One gateway must route <span class="em">intent</span>—not just treatment demand.
+            </h2>
+            <div class="route-grid">
+              <article class="route-card panel baseline" data-enter="scale" style="--delay: 220ms">
+                <div>
+                  <span class="route-number">01</span>
+                  <h3>Get a Hair Transplant</h3>
+                  <p>A full inquiry assembled for provider assessment, quote creation, and eventual treatment.</p>
+                </div>
+                <span class="route-status">Existing baseline</span>
+              </article>
+              <article class="route-card panel emphasis" data-enter="scale" style="--delay: 290ms">
+                <div>
+                  <span class="route-number">02</span>
+                  <h3>Monitor Hair Loss</h3>
+                  <p>Longitudinal tracking with an upfront choice: self-monitor or receive limited provider advice.</p>
+                </div>
+                <span class="route-status">Case-based utility</span>
+              </article>
+              <article class="route-card panel emphasis" data-enter="scale" style="--delay: 360ms">
+                <div>
+                  <span class="route-number">03</span>
+                  <h3>Monitor Transplant Progress</h3>
+                  <p>Self-service recovery tracking outside a purchased aftercare package—with no provider access.</p>
+                </div>
+                <span class="route-status">Self-service only</span>
+              </article>
+              <article class="route-card panel emphasis" data-enter="scale" style="--delay: 430ms">
+                <div>
+                  <span class="route-number">04</span>
+                  <h3>Request Aftercare</h3>
+                  <p>A managed service activated through treatment completion or standalone purchase and assignment.</p>
+                </div>
+                <span class="route-status">Managed service</span>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Shared gateway, separate case lifecycles</span>
+              <strong>The first choice controls downstream work</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="treatment-baseline"
+          data-start="32"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 01 · Existing baseline</span>
+              <span class="deck-mark">FR-003 → FR-004</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Get a Hair Transplant remains the <span class="em">full inquiry-to-quote path.</span>
+            </h2>
+            <p class="lede" data-enter style="--delay: 250ms">
+              The patient assembles treatment intent, medical context, scans, dates, destinations, and provider
+              preferences for commercial assessment.
+            </p>
+            <div class="tenant-flow">
+              <article class="tenant-card panel" data-enter="scale" style="--delay: 280ms">
+                <span class="tenant-pill">Patient app</span>
+                <h3>Build the inquiry</h3>
+                <p>Concern details, media, V1 scan photo set, preferred dates, medical questionnaire, and providers.</p>
+              </article>
+              <div class="flow-arrow" aria-hidden="true"></div>
+              <article class="tenant-card panel mint" data-enter="scale" style="--delay: 350ms">
+                <span class="tenant-pill provider">Provider dashboard</span>
+                <h3>Assess and quote</h3>
+                <p>Eligible providers receive anonymized inquiry data, review it, and continue into quote creation.</p>
+              </article>
+              <div class="flow-arrow" aria-hidden="true"></div>
+              <article class="tenant-card panel" data-enter="scale" style="--delay: 420ms">
+                <span class="tenant-pill admin">Admin dashboard</span>
+                <h3>Oversee distribution</h3>
+                <p>Admin can inspect, correct, reassign, override, and audit the inquiry lifecycle.</p>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Commercial intent is explicit from the start</span>
+              <strong>The next three routes are not shortcuts into this flow</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip divider"
+          data-composition-id="route-02-divider"
+          data-start="40"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Section one of three</span>
+              <span class="deck-mark">Route 02 of 04</span>
+            </div>
+            <div class="divider-body">
+              <span class="divider-num" data-enter="left" style="--delay: 170ms">02</span>
+              <h2 data-enter="left" style="--delay: 240ms">Monitor <span class="em">Hair Loss</span></h2>
+              <p class="divider-lede" data-enter style="--delay: 320ms">Longitudinal tracking with a single decision at the start: watch it alone, or let a provider watch it with you.</p>
+              <div class="divider-chips" data-enter style="--delay: 400ms">
+                <span class="divider-chip">The choice</span>
+                <span class="divider-chip">The cross-platform loop</span>
+                <span class="divider-chip">One patient, one case</span>
+                <span class="divider-chip">How the actors work together</span>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-037 &middot; Monitor Hair Loss</span>
+              <strong>Four slides</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="hair-loss-choice"
+          data-start="48"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 02 · Monitor Your Hair Loss</span>
+              <span class="deck-mark">FR-037</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Hair-loss monitoring forks once: <span class="em">self-monitor or request limited advice.</span>
+            </h2>
+            <div class="split-layout">
+              <div class="choice-stack">
+                <article class="choice-card panel mint" data-enter="left" style="--delay: 240ms">
+                  <span class="choice-icon">S</span>
+                  <div>
+                    <h3>Self-monitoring</h3>
+                    <p>Patient logs severity, notes, photos, and scans at their own pace. No provider joins the case.</p>
+                  </div>
+                </article>
+                <article class="choice-card panel" data-enter="left" style="--delay: 320ms">
+                  <span class="choice-icon">A</span>
+                  <div>
+                    <h3>Provider-advice mode</h3>
+                    <p>Patient completes the Inquiry medical questionnaire, then waits for Admin assignment while logging continues.</p>
+                  </div>
+                </article>
+                <div class="lock-note" data-enter="left" style="--delay: 400ms">
+                  <span class="lock">↳</span>
+                  <strong>The mode is locked for the active case. Changing it requires completing the case first.</strong>
+                </div>
+              </div>
+              <div class="logic-stack">
+                <article class="logic-card panel" data-enter="right" style="--delay: 260ms">
+                  <strong>One active hair-loss case</strong>
+                  <p>The patient can resume the existing case but cannot start a duplicate of the same monitoring type.</p>
+                </article>
+                <article class="logic-card panel" data-enter="right" style="--delay: 340ms">
+                  <strong>Irregular logging is valid</strong>
+                  <p>There is no missed-day or overdue state. The calendar represents observations, not compliance.</p>
+                </article>
+                <article class="logic-card panel" data-enter="right" style="--delay: 420ms">
+                  <strong>Two terminal routes</strong>
+                  <p>Complete and export the monitoring report—or convert the active case into a distinct FR-003 inquiry.</p>
+                </article>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Patient Platform: Screens 1–7</span>
+              <strong>Provider work exists only when advice mode was chosen upfront</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="hair-loss-story"
+          data-start="56"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 02 &middot; one patient, one case</span>
+              <span class="deck-mark">What it feels like from the inside</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Nothing in the patient&rsquo;s week <span class="em">waits for a clinician.</span>
+            </h2>
+            <div class="story-line">
+              <div class="story-step" data-enter style="--delay: 250ms">
+                <span class="story-when">At creation</span>
+                <div class="story-does">
+                  <strong>Chooses to be watched &mdash; or not</strong>
+                  <p>Picks Monitor Hair Loss, then self-monitor or ask for provider advice. Asking opens the medical questionnaire.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Opens the case, blocks a second active one, and queues it for Admin if advice was chosen.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 320ms">
+                <span class="story-when">From the first log</span>
+                <div class="story-does">
+                  <strong>Logs what he sees</strong>
+                  <p>Severity 1&ndash;10, a short note, a photo. Then a first scan set from the standard angles.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Builds the calendar. There is no overdue state and no streak to lose.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 390ms">
+                <span class="story-when">Once assigned</span>
+                <div class="story-does">
+                  <strong>A provider appears</strong>
+                  <p>He is told who was assigned and how often they will respond &mdash; weekly or twice-monthly. He never chose the wait.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Grants that provider read access to this case only, at the agreed cadence.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 460ms">
+                <span class="story-when">Every advice cycle</span>
+                <div class="story-does">
+                  <strong>Advice arrives</strong>
+                  <p>A written assessment attached to the case. Not a chat, not a consultation, not a diagnosis.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Timestamps it against the logs the provider read. Logging never pauses.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 530ms">
+                <span class="story-when">Whenever he decides</span>
+                <div class="story-does">
+                  <strong>Decides</strong>
+                  <p>Ends the case and keeps a PDF summary &mdash; or converts it into a treatment inquiry.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Pre-fills the inquiry from his own logs and scans; the case closes as converted.
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-037 &middot; unified case lifecycle</span>
+              <strong>The advice choice is made once, at creation</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="hair-loss-loop"
+          data-start="64"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 02 · Cross-tenant loop</span>
+              <span class="deck-mark">Advice without full consultation</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Advice mode adds a <span class="em">controlled human loop</span> without stopping patient tracking.
+            </h2>
+            <div class="flow-board" data-enter="scale" style="--delay: 260ms">
+              <svg class="flow-svg" viewBox="0 0 1744 600" aria-hidden="true">
+                <path id="hair-path-a" class="flow-path" d="M420 175 C560 58 630 58 704 145" />
+                <path id="hair-path-b" class="flow-path" d="M1034 145 C1142 58 1280 72 1324 175" />
+                <path id="hair-path-c" class="flow-path" d="M1324 270 C1250 444 1082 500 1034 458" />
+                <path
+                  id="hair-path-d"
+                  class="flow-path"
+                  d="M704 458 C700 384 642 330 560 308 C452 280 330 268 258 276"
+                />
+                <!-- One packet circulates the loop: each segment runs for a
+                     quarter of the 7.2s cycle, then parks invisibly at its end
+                     point while the next segment carries the packet onward. -->
+                <circle r="10" fill="#159a63" opacity="0">
+                  <animateMotion
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="0s"
+                    keyTimes="0;0.25;1"
+                    keyPoints="0;1;1"
+                    calcMode="linear"
+                  >
+                    <mpath href="#hair-path-a" />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="0s"
+                    keyTimes="0;0.03;0.22;0.25;1"
+                    values="0;1;1;0;0"
+                  />
+                </circle>
+                <circle r="10" fill="#159a63" opacity="0">
+                  <animateMotion
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-5.4s"
+                    keyTimes="0;0.25;1"
+                    keyPoints="0;1;1"
+                    calcMode="linear"
+                  >
+                    <mpath href="#hair-path-b" />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-5.4s"
+                    keyTimes="0;0.03;0.22;0.25;1"
+                    values="0;1;1;0;0"
+                  />
+                </circle>
+                <circle r="10" fill="#159a63" opacity="0">
+                  <animateMotion
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-3.6s"
+                    keyTimes="0;0.25;1"
+                    keyPoints="0;1;1"
+                    calcMode="linear"
+                  >
+                    <mpath href="#hair-path-c" />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-3.6s"
+                    keyTimes="0;0.03;0.22;0.25;1"
+                    values="0;1;1;0;0"
+                  />
+                </circle>
+                <circle r="10" fill="#159a63" opacity="0">
+                  <animateMotion
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-1.8s"
+                    keyTimes="0;0.25;1"
+                    keyPoints="0;1;1"
+                    calcMode="linear"
+                  >
+                    <mpath href="#hair-path-d" />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    dur="7.2s"
+                    repeatCount="indefinite"
+                    begin="-1.8s"
+                    keyTimes="0;0.03;0.22;0.25;1"
+                    values="0;1;1;0;0"
+                  />
+                </circle>
+              </svg>
+              <article class="flow-node patient">
+                <span class="tenant-pill">Patient app</span>
+                <h3>Logs continue</h3>
+                <p>Severity, notes, photos, and V1 scan photo sets—even while assignment is pending.</p>
+              </article>
+              <article class="flow-node admin">
+                <span class="tenant-pill admin">Admin dashboard</span>
+                <h3>Assign or reassign</h3>
+                <p>Admin selects the provider, handles withdrawal, and configures weekly or twice-monthly advice.</p>
+              </article>
+              <article class="flow-node provider">
+                <span class="tenant-pill provider">Provider dashboard</span>
+                <h3>Review and advise</h3>
+                <p>Assigned provider reviews the longitudinal case and posts one concise paragraph per open window.</p>
+              </article>
+              <article class="flow-node return">
+                <span class="micro-label em">Feedback loop</span>
+                <h3>Advice returns to the case</h3>
+                <p>Provider may withdraw; patient keeps tracking while Admin reassigns.</p>
+              </article>
+              <aside class="conversion-card">
+                <strong>Convert to treatment inquiry</strong>
+                <p>All compatible data stays editable. Latest scan is selected by default. The monitoring PDF follows the case into FR-003.</p>
+              </aside>
+            </div>
+            <div class="footer-note">
+              <span>Provider Screens 8–10 · Admin Screens 11–12</span>
+              <strong>Assigned adviser gets the initial quote opportunity; otherwise FR-003 distributes normally</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip mechanics"
+          data-composition-id="hair-loss-mechanics"
+          data-start="72"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 02 · How the actors work together</span>
+              <span class="deck-mark">FR-037 · processing flow and data inputs</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 160ms">
+              Four actors, one case: <span class="em">tracking never waits for the humans.</span>
+            </h2>
+            <div class="lane-board">
+              <div class="lane-phases" data-enter style="--delay: 200ms">
+                <span></span>
+                <div class="phase-row">
+                  <span class="phase">1 · Create &amp; choose</span>
+                  <span class="phase">2 · Activate &amp; assign</span>
+                  <span class="phase">3 · Track &amp; advise</span>
+                  <span class="phase">4 · Close or convert</span>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 250ms">
+                <div class="lane-head">
+                  <span class="tenant-pill">Patient app</span>
+                  <span class="lane-role">Owns the case and its cadence</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Starts the case</strong>
+                    <p>Concern intake, then picks self-monitoring or provider advice.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Clears the advice gate</strong>
+                    <p>Advice mode only: completes the active FR-025 medical questionnaire.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Logs at will</strong>
+                    <p>Any date, any frequency — logging stays open while assignment is pending.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Ends or converts</strong>
+                    <p>End Monitoring for the PDF, or Request Treatment to open FR-003.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track system" data-enter="left" style="--delay: 300ms">
+                <div class="lane-head">
+                  <span class="micro-label em">System</span>
+                  <span class="lane-role">Guards state and moves data</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Enforces uniqueness</strong>
+                    <p>One active hair-loss case; a second attempt reopens the existing one.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Sets the state</strong>
+                    <p>Self → Active. Advice → Pending Assignment, and Admin is notified.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Rebuilds the record</strong>
+                    <p>Each entry updates timeline, scan history, logged-day count, severity trend.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Packages the case</strong>
+                    <p>Date-to-date PDF, then an idempotent copy of compatible fields into FR-003.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 350ms">
+                <div class="lane-head">
+                  <span class="tenant-pill admin">Admin dashboard</span>
+                  <span class="lane-role">Routes the human capacity</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step muted">
+                    <strong>No work yet</strong>
+                    <p>Self-monitoring cases never reach the admin queue.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Assigns and configures</strong>
+                    <p>Picks an eligible provider and sets the cadence: weekly or twice monthly.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Reassigns and corrects</strong>
+                    <p>Replaces a withdrawn provider; every edit carries actor, reason, before and after.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Oversees the close</strong>
+                    <p>Completion ends the advice assignment; the audit history stays.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 400ms">
+                <div class="lane-head">
+                  <span class="tenant-pill provider">Provider dashboard</span>
+                  <span class="lane-role">Advice mode only</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step muted">
+                    <strong>No visibility</strong>
+                    <p>The case is invisible to providers until Admin assigns one.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Receives the case</strong>
+                    <p>Sees only cases assigned to them, with intake and medical answers.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Reviews, then advises</strong>
+                    <p>One concise paragraph per open window; posting is blocked outside it.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>May withdraw</strong>
+                    <p>Mandatory reason ends access and sends the case to Pending Reassignment.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="data-strip" data-enter style="--delay: 450ms">
+              <div class="data-chip">
+                <span class="data-label">Case intake</span>
+                <p>Concern description and history, monitoring mode, start date. Mode is locked for the case.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Advice gate</span>
+                <p>Active FR-025 inquiry medical questionnaire — validated before any provider access.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Daily entry</span>
+                <p>Date, severity 1–10, notes, photos, optional V1 head-scan photo set.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Cross-tenant inputs</span>
+                <p>Admin: provider and cadence. Provider: advice paragraph, withdrawal reason.</p>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              <span>Patient Screens 1–7 · Provider Screens 8–10 · Admin Screens 11–12</span>
+              <strong>No state on this board can block patient logging</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip divider"
+          data-composition-id="route-03-divider"
+          data-start="80"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Section two of three</span>
+              <span class="deck-mark">Route 03 of 04</span>
+            </div>
+            <div class="divider-body">
+              <span class="divider-num" data-enter="left" style="--delay: 170ms">03</span>
+              <h2 data-enter="left" style="--delay: 240ms">Monitor <span class="em">Transplant Progress</span></h2>
+              <p class="divider-lede" data-enter style="--delay: 320ms">The same tracking pattern with the provider deliberately removed &mdash; and a paid exit if the patient decides they want one.</p>
+              <div class="divider-chips" data-enter style="--delay: 400ms">
+                <span class="divider-chip">The boundary</span>
+                <span class="divider-chip">One patient, post-surgery</span>
+                <span class="divider-chip">How the actors work together</span>
+                <span class="divider-chip">The handoff to aftercare</span>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-038 &middot; Monitor Transplant Progress</span>
+              <strong>Four slides</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="transplant-boundary"
+          data-start="88"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 03 · Monitor Transplant Progress</span>
+              <span class="deck-mark">FR-038</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Transplant-progress monitoring is deliberately <span class="em">self-service—not aftercare.</span>
+            </h2>
+            <div class="plain-lane">
+              <article class="tracking-panel panel mint" data-enter="left" style="--delay: 250ms">
+                <div>
+                  <span class="tenant-pill">Patient app</span>
+                  <h3 style="margin-top: 20px; font-size: 36px">Track at your own pace</h3>
+                  <p class="meta-note" style="margin-top: 12px">External treatment details, optional daily logs, severity, notes, photos, and scans.</p>
+                </div>
+                <div class="calendar-mock" aria-label="Illustrative self-paced monitoring calendar">
+                  <span class="day">1</span><span class="day">2</span><span class="day logged">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">7</span>
+                  <span class="day">8</span><span class="day logged">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day logged">14</span>
+                  <span class="day">15</span><span class="day">16</span><span class="day">17</span><span class="day logged">18</span><span class="day">19</span><span class="day">20</span><span class="day">21</span>
+                </div>
+                <div class="pill-row">
+                  <span class="pill strong">No required cadence</span>
+                  <span class="pill">No overdue state</span>
+                </div>
+              </article>
+              <article class="boundary-panel panel" data-enter="right" style="--delay: 320ms">
+                <span class="tenant-pill admin">Admin dashboard</span>
+                <h3 style="margin-top: 20px; font-size: 36px">Support visibility—not clinical management</h3>
+                <div class="boundary-list">
+                  <div class="boundary-item">Admin can inspect and correct case information with full audit history.</div>
+                  <div class="boundary-item">Admin cannot assign a provider directly to this monitoring case.</div>
+                  <div class="boundary-item">One active transplant-progress case is allowed independently from hair-loss monitoring.</div>
+                </div>
+                <div class="boundary-off">
+                  <div class="off-title"><span class="off-icon">×</span> Provider Dashboard</div>
+                  <p class="meta-note" style="margin-top: 15px">No list, detail, advice, assignment, chat, or media-access surface exists in FR-038.</p>
+                </div>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Patient Screens 1–7 · No Provider screens · Admin Screens 8–9</span>
+              <strong>The absence of provider work is a product boundary</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="transplant-story"
+          data-start="96"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 03 &middot; one patient, post-surgery</span>
+              <span class="deck-mark">The same shape, minus the provider</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              A recovery diary that <span class="em">nobody else reads.</span>
+            </h2>
+            <div class="story-line">
+              <div class="story-step" data-enter style="--delay: 250ms">
+                <span class="story-when">At creation</span>
+                <div class="story-does">
+                  <strong>Starts after surgery</strong>
+                  <p>Records where and when the transplant happened &mdash; including surgery done outside Hairline.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Opens the case and states plainly that no provider will review it.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 320ms">
+                <span class="story-when">Through recovery</span>
+                <div class="story-does">
+                  <strong>Logs the messy part</strong>
+                  <p>Shedding, itching, redness, severity 1&ndash;10, notes and photos, on the days she feels like it.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Same log and calendar as route 02. One pattern, two routes.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 390ms">
+                <span class="story-when">After two scan sets</span>
+                <div class="story-does">
+                  <strong>Sees change for the first time</strong>
+                  <p>Two scan sets from the same angles, side by side, six weeks apart.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Keeps the scan history comparable; nothing is scored or interpreted for her.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 460ms">
+                <span class="story-when">At any point</span>
+                <div class="story-does">
+                  <strong>Decides she wants a human</strong>
+                  <p>Switches to a paid aftercare package and reviews everything carried across before paying.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Generates the summary PDF, pre-fills the aftercare request, defaults to her latest valid scan.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 530ms">
+                <span class="story-when">Whenever she decides</span>
+                <div class="story-does">
+                  <strong>Ends it</strong>
+                  <p>Ends monitoring with a PDF of the whole period &mdash; or the case completes by conversion.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>If conversion fails or is abandoned, the monitoring case simply stays active.
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-038 &middot; main and alternative flows</span>
+              <strong>Two actors only: patient and system</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip mechanics"
+          data-composition-id="transplant-mechanics"
+          data-start="104"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 03 · How the actors work together</span>
+              <span class="deck-mark">FR-038 · processing flow and data inputs</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 160ms">
+              A two-actor loop: <span class="em">patient and system</span>, with Admin only as support.
+            </h2>
+            <div class="lane-board">
+              <div class="lane-phases" data-enter style="--delay: 200ms">
+                <span></span>
+                <div class="phase-row">
+                  <span class="phase">1 · Intake &amp; consent</span>
+                  <span class="phase">2 · Self-paced logging</span>
+                  <span class="phase">3 · Summarize</span>
+                  <span class="phase">4 · Convert or close</span>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 250ms">
+                <div class="lane-head">
+                  <span class="tenant-pill">Patient app</span>
+                  <span class="lane-role">Sole operator of the case</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Declares the treatment</strong>
+                    <p>External treatment details, then consents that this is self-tracking, not aftercare.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Logs recovery</strong>
+                    <p>Optional dated entries; calendar, scan history, and trend are always visible.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Ends monitoring</strong>
+                    <p>Reviews range, logged-day count, scan count, and trend before confirming.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Switches to a package</strong>
+                    <p>Edits the pre-filled intake, picks the scan, selects an aftercare package.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track system" data-enter="left" style="--delay: 300ms">
+                <div class="lane-head">
+                  <span class="micro-label em">System</span>
+                  <span class="lane-role">Records, summarizes, hands off</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Blocks duplicates</strong>
+                    <p>One active transplant-progress case; offers resume or end instead.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Keeps no schedule</strong>
+                    <p>Updates timeline, scans, and severity trend — and never marks a day missed.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Builds the PDF</strong>
+                    <p>Date-to-date summary generated asynchronously, with an export-ready notice.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Transfers idempotently</strong>
+                    <p>Fields, selected scan, and PDF move into FR-011; a failed attempt changes nothing.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 350ms">
+                <div class="lane-head">
+                  <span class="tenant-pill admin">Admin dashboard</span>
+                  <span class="lane-role">Support, not clinical control</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Sees every case</strong>
+                    <p>Opens Monitoring Cases filtered to Type = Transplant Progress.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Corrects with audit</strong>
+                    <p>Any edit stores actor, timestamp, reason, before value, and after value.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Fixes source data</strong>
+                    <p>Corrections change what the summary reports; Admin never authors clinical content.</p>
+                  </div>
+                  <div class="lane-step muted">
+                    <strong>Cannot promote the case</strong>
+                    <p>No provider assignment here — FR-011 is the only managed-aftercare route.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track absent" data-enter="left" style="--delay: 400ms">
+                <div class="lane-head">
+                  <span class="tenant-pill provider">Provider dashboard</span>
+                  <span class="lane-role">Deliberately empty</span>
+                </div>
+                <div class="lane-note">
+                  <strong>No queue, case detail, advice, assignment, chat, or media access exists in FR-038.</strong>
+                  Provider involvement starts only once a converted FR-011 request is purchased, assigned, and activated.
+                </div>
+              </div>
+            </div>
+
+            <div class="data-strip" data-enter style="--delay: 450ms">
+              <div class="data-chip">
+                <span class="data-label">Treatment intake</span>
+                <p>Treatment date, treatment type, treating clinic, current concerns, optional documents.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Consent flag</span>
+                <p>Explicit acknowledgment that this is a personal record, not a managed service.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Daily entry</span>
+                <p>Date, recovery severity 1–10, notes, photos, optional V1 head-scan photo set.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Handoff payload</span>
+                <p>Compatible fields, one selected scan, and the summary PDF into an FR-011 request.</p>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              <span>Patient Screens 1–7 · No Provider screens · Admin Screens 8–9</span>
+              <strong>Same logging inputs as route 02 — a different promise around them</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="transplant-handoff"
+          data-start="112"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 03 · Data handoff</span>
+              <span class="deck-mark">FR-038 → FR-011</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Progress data can <span class="em">graduate into aftercare</span> without being entered again.
+            </h2>
+            <div class="xfer-board">
+              <div class="xfer-id" data-enter="left" style="--delay: 240ms">
+                <span class="xfer-tag">FR-038</span>
+                <strong>Monitoring case</strong>
+                <p>Unpaid, no provider &mdash; and it stays open</p>
+              </div>
+              <div class="xfer-beats" data-enter="right" style="--delay: 280ms">
+                <article class="xfer-beat">
+                  <span class="xfer-beat-no">1</span>
+                  <strong>Track</strong>
+                  <p>Dated logs, severity, notes, photos and scan history accumulate in the case.</p>
+                </article>
+                <article class="xfer-beat">
+                  <span class="xfer-beat-no">2</span>
+                  <strong>Summarize</strong>
+                  <p>A date-to-date PDF: logged-day count, severity trend, scan photos.</p>
+                </article>
+                <article class="xfer-beat">
+                  <span class="xfer-beat-no">3</span>
+                  <strong>Review</strong>
+                  <p>The patient edits every copied field, and may swap or retake the scan.</p>
+                </article>
+                <article class="xfer-beat exit">
+                  <span class="xfer-beat-no">4</span>
+                  <em class="xfer-exit-tag">Exit point</em>
+                  <strong>Convert</strong>
+                  <p>A distinct request is created &mdash; only after successful validation.</p>
+                </article>
+                <div class="xfer-onward">
+                  <b>Still active</b>
+                  The conversion does not consume it
+                  <span class="xfer-onward-rail" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="xfer-bridge">
+                <div class="xfer-drop" data-enter style="--delay: 380ms">
+                  <span class="xfer-rail" aria-hidden="true"><span class="xfer-packet"></span></span>
+                  <em>Ownership transfers</em>
+                </div>
+                <div class="xfer-payload" data-enter="right" style="--delay: 420ms">
+                  <div class="xfer-payload-head">
+                    <span>At <b>Convert</b>, only what the patient reviewed in the draft crosses</span>
+                    <em>FR-038 &rarr; FR-011</em>
+                  </div>
+                  <div class="xfer-chips">
+                    <span class="xfer-chip"><b>External treatment details</b><i>Editable</i></span>
+                    <span class="xfer-chip"><b>Selected head scan</b><i>Swappable</i></span>
+                    <span class="xfer-chip"><b>Treatment documentation</b><i>Replaceable</i></span>
+                    <span class="xfer-chip"><b>Current concerns</b><i>Editable</i></span>
+                    <span class="xfer-chip"><b>Monitoring summary PDF</b><i>Generated</i></span>
+                  </div>
+                  <div class="xfer-blocked">
+                    <b>Does not cross:</b> price, payment, provider assignment, activation &mdash; FR-038 performs none of these.
+                  </div>
+                </div>
+              </div>
+              <div class="xfer-id target" data-enter="left" style="--delay: 500ms">
+                <span class="xfer-tag">FR-011</span>
+                <strong>Aftercare request</strong>
+                <p>A new, distinct record &mdash; joined only by conversion provenance</p>
+              </div>
+              <div class="xfer-gates" data-enter="right" style="--delay: 540ms">
+                <div class="xfer-gate">Package<span>chosen in FR-011</span></div>
+                <div class="xfer-gate">Payment<span>priced and taken there</span></div>
+                <div class="xfer-gate">Assignment<span>Admin picks the provider</span></div>
+                <div class="xfer-gate">Activation<span>managed cadence begins</span></div>
+              </div>
+              <div class="xfer-fallback" data-enter style="--delay: 600ms">
+                <span aria-hidden="true">&uarr;</span>
+                <span>Abandoned, or validation fails? Nothing is orphaned and nothing is lost &mdash; <b>the monitoring case simply stays active</b> in the lane above.</span>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-038 &middot; Screen 6 and Integration Points</span>
+              <strong>Two records, one provenance link &mdash; never a migration</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip divider"
+          data-composition-id="route-04-divider"
+          data-start="120"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Section three of three</span>
+              <span class="deck-mark">Route 04 of 04</span>
+            </div>
+            <div class="divider-body">
+              <span class="divider-num" data-enter="left" style="--delay: 170ms">04</span>
+              <h2 data-enter="left" style="--delay: 240ms">Request <span class="em">Aftercare</span></h2>
+              <p class="divider-lede" data-enter style="--delay: 320ms">A paid, managed plan. Four gates &mdash; buy, assign, activate, run &mdash; each one held by a different person.</p>
+              <div class="divider-chips" data-enter style="--delay: 400ms">
+                <span class="divider-chip">Two activation paths</span>
+                <span class="divider-chip">Four gates</span>
+                <span class="divider-chip">How the actors work together</span>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-011 &middot; Aftercare and Recovery Management</span>
+              <strong>Three slides</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="aftercare-managed"
+          data-start="128"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 04 · Request Aftercare</span>
+              <span class="deck-mark">FR-011</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Aftercare becomes managed only after <span class="em">purchase, assignment, and activation.</span>
+            </h2>
+            <p class="lede" data-enter style="--delay: 240ms">
+              Hairline treatment can trigger aftercare at completion. External-treatment patients can purchase it as a standalone service.
+            </p>
+            <div class="aftercare-path">
+              <article class="aftercare-step" data-enter="scale" style="--delay: 260ms">
+                <span class="step-dot">1</span>
+                <span class="tenant-pill">Patient app</span>
+                <h3>Request or transition</h3>
+                <p>Enter treatment details, choose an aftercare package, and complete checkout when standalone.</p>
+              </article>
+              <article class="aftercare-step" data-enter="scale" style="--delay: 320ms">
+                <span class="step-dot">2</span>
+                <span class="micro-label em">System</span>
+                <h3>Pending assignment</h3>
+                <p>Successful payment or treatment-completion handoff creates the managed-service request state.</p>
+              </article>
+              <article class="aftercare-step" data-enter="scale" style="--delay: 380ms">
+                <span class="step-dot">3</span>
+                <span class="tenant-pill admin">Admin dashboard</span>
+                <h3>Assign and oversee</h3>
+                <p>Admin reviews the request, assigns a suitable provider, and handles reassignment or escalation.</p>
+              </article>
+              <article class="aftercare-step" data-enter="scale" style="--delay: 440ms">
+                <span class="step-dot">4</span>
+                <span class="tenant-pill provider">Provider dashboard</span>
+                <h3>Configure and activate</h3>
+                <p>Provider selects or adapts the template, medications, instructions, and milestone schedule.</p>
+              </article>
+              <article class="aftercare-step" data-enter="scale" style="--delay: 500ms">
+                <span class="step-dot">5</span>
+                <span class="tenant-pill">Patient app</span>
+                <h3>Follow managed recovery</h3>
+                <p>Milestones, scheduled scans, questionnaires, medication tracking, reminders, and support.</p>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Treatment-linked or standalone acquisition</span>
+              <strong>Managed cadence begins only after activation</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="aftercare-story"
+          data-start="136"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 04 &middot; one case, four hands</span>
+              <span class="deck-mark">Four gates before day one of the plan</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Managed aftercare only starts when <span class="em">four people have acted.</span>
+            </h2>
+            <div class="story-line">
+              <div class="story-step" data-enter style="--delay: 250ms">
+                <span class="story-when">Gate 1 &middot; buy</span>
+                <div class="story-does">
+                  <strong>Patient acquires the service</strong>
+                  <p>Either a completed treatment includes it, or the patient buys a standalone package and checks out.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>On payment, the request becomes pending assignment and Admin is notified.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 320ms">
+                <span class="story-when">Gate 2 &middot; assign</span>
+                <div class="story-does">
+                  <strong>Admin picks the provider</strong>
+                  <p>Reviews the request, checks capacity, assigns a clinic. Nothing is scheduled before this.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Opens the case in that provider&rsquo;s portal and nowhere else.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 390ms">
+                <span class="story-when">Gate 3 &middot; activate</span>
+                <div class="story-does">
+                  <strong>Provider builds the plan</strong>
+                  <p>Milestones, medication schedule, scan dates and questionnaire dates &mdash; from a template or by hand.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Turns the plan into dated tasks and reminders on the patient&rsquo;s dashboard.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 460ms">
+                <span class="story-when">Gate 4 &middot; run</span>
+                <div class="story-does">
+                  <strong>Patient works the plan</strong>
+                  <p>Ticks tasks, uploads scans, answers questionnaires, reads the resources attached to each stage.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Shows progress to provider and Admin, and flags what is overdue.
+                </div>
+              </div>
+              <div class="story-step" data-enter style="--delay: 530ms">
+                <span class="story-when">Complete</span>
+                <div class="story-does">
+                  <strong>The plan closes out</strong>
+                  <p>Milestones finish, the provider confirms, and the record stays available to the patient.</p>
+                </div>
+                <div class="story-sys">
+                  <span>System</span>Keeps the full history for Admin audit and provider performance reporting.
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Source: FR-011 &middot; workflows 1, 2 and 3</span>
+              <strong>A stalled gate is a visible state, not a silence</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip mechanics"
+          data-composition-id="aftercare-mechanics"
+          data-start="144"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Route 04 · How the actors work together</span>
+              <span class="deck-mark">FR-011 · processing flow and data inputs</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 160ms">
+              Every actor holds one gate: <span class="em">buy, assign, activate, then run.</span>
+            </h2>
+            <div class="lane-board">
+              <div class="lane-phases" data-enter style="--delay: 200ms">
+                <span></span>
+                <div class="phase-row">
+                  <span class="phase">1 · Acquire</span>
+                  <span class="phase">2 · Assign</span>
+                  <span class="phase">3 · Activate</span>
+                  <span class="phase">4 · Run the plan</span>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 250ms">
+                <div class="lane-head">
+                  <span class="tenant-pill">Patient app</span>
+                  <span class="lane-role">Buys in, then follows the plan</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Requests or transitions</strong>
+                    <p>Standalone: treatment details, package, checkout. Hairline treatment: aftercare follows completion.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Waits, informed</strong>
+                    <p>Request sits in Pending Assignment; the patient is notified at each state change.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Gets the dashboard</strong>
+                    <p>Activation opens milestones, schedules, and the aftercare team contact route.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Performs the tasks</strong>
+                    <p>Scheduled scans, questionnaires, medication tracking, and symptom reports.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track system" data-enter="left" style="--delay: 300ms">
+                <div class="lane-head">
+                  <span class="micro-label em">System</span>
+                  <span class="lane-role">Payment, state, and cadence</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Settles payment</strong>
+                    <p>FR-007 charges the package; failure keeps a retry open, then the request expires.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Queues the request</strong>
+                    <p>Moves it to Pending Assignment with patient and treatment context for Admin.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Generates the plan</strong>
+                    <p>Builds milestones and dashboard from the provider's configuration, then notifies.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Keeps the schedule</strong>
+                    <p>Computes progress, flags overdue tasks, and escalates concerning answers.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 350ms">
+                <div class="lane-head">
+                  <span class="tenant-pill admin">Admin dashboard</span>
+                  <span class="lane-role">Owns supply and suitability</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Publishes packages</strong>
+                    <p>Maintains templates and pricing marked available for purchase.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Assigns the provider</strong>
+                    <p>Reviews the request, assigns a suitable provider, or marks it unsuitable and refunds.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Watches activation</strong>
+                    <p>Can override the plan or reassign when a provider stalls or is unavailable.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Handles escalation</strong>
+                    <p>Global oversight of active cases, reassignment, and urgent flags.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-track" data-enter="left" style="--delay: 400ms">
+                <div class="lane-head">
+                  <span class="tenant-pill provider">Provider dashboard</span>
+                  <span class="lane-role">Owns the clinical content</span>
+                </div>
+                <div class="lane-steps">
+                  <div class="lane-step">
+                    <strong>Triggers the linked path</strong>
+                    <p>Marking treatment complete moves the patient into aftercare setup.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Accepts the case</strong>
+                    <p>Reviews patient history, treatment details, and prior monitoring data.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Configures and activates</strong>
+                    <p>Template, milestone durations, medications, restrictions, and instructions.</p>
+                  </div>
+                  <div class="lane-step">
+                    <strong>Runs the recovery</strong>
+                    <p>Reviews scans and questionnaires, reschedules, and answers escalations.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="data-strip" data-enter style="--delay: 450ms">
+              <div class="data-chip">
+                <span class="data-label">Acquisition input</span>
+                <p>Treatment date, type, clinic (standalone), chosen package and pricing, payment and billing details.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Assignment input</span>
+                <p>Admin's provider choice, suitability decision, and any reassignment reason.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Plan configuration</span>
+                <p>Template, milestone durations, scan and questionnaire schedule, medications with dosage and frequency.</p>
+              </div>
+              <div class="data-chip">
+                <span class="data-label">Ongoing patient data</span>
+                <p>Scheduled head-scan sets, questionnaire answers, medication adherence — feeding progress and alerts.</p>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              <span>Patient P-05 · Provider PR-04 · Admin A-03</span>
+              <strong>Nothing is managed until a provider activates the plan</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="screens-inventory"
+          data-start="152"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">The design surface</span>
+              <span class="deck-mark">39 screens &middot; three platforms</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              What actually has to be <span class="em">drawn.</span>
+            </h2>
+            <div class="screen-table">
+              <div></div>
+              <div class="screen-head" data-enter style="--delay: 220ms">Monitor hair loss<span>Route 02 &middot; FR-037</span></div>
+              <div class="screen-head" data-enter style="--delay: 250ms">Monitor transplant<span>Route 03 &middot; FR-038</span></div>
+              <div class="screen-head" data-enter style="--delay: 280ms">Request aftercare<span>Route 04 &middot; FR-011</span></div>
+
+              <div class="screen-row-label" data-enter style="--delay: 310ms">Patient<span>Mobile app</span></div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 330ms">
+                <span class="screen-count">7 screens</span>
+                <p>Intake and mode choice &middot; Dashboard and calendar &middot; Daily log &middot; Scan capture and history &middot; Complete or convert &middot; Summary and PDF &middot; Convert to inquiry</p>
+              </div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 360ms">
+                <span class="screen-count">7 screens</span>
+                <p>Intake &middot; Dashboard and calendar &middot; Daily log &middot; Scan capture and history &middot; Complete or convert &middot; Convert to aftercare &middot; Summary and PDF</p>
+              </div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 390ms">
+                <span class="screen-count">7 screens</span>
+                <p>Aftercare dashboard &middot; Scan upload &middot; Questionnaire &middot; Medication schedule &middot; Educational resources &middot; Package purchase &middot; Payment and checkout</p>
+              </div>
+
+              <div class="screen-row-label" data-enter style="--delay: 420ms">Provider<span>Clinic portal</span></div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 440ms">
+                <span class="screen-count">3 screens</span>
+                <p>Advice queue &middot; Case review and advice &middot; Withdrawal confirmation</p>
+              </div>
+              <div class="screen-cell none" data-enter="scale" style="--delay: 470ms">
+                <span class="screen-count">None &mdash; by design</span>
+                <p>No provider ever sees a route 03 case. The absence is the product decision.</p>
+              </div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 500ms">
+                <span class="screen-count">5 screens</span>
+                <p>Cases list &middot; Patient detail &middot; Aftercare setup, multi-step &middot; Plan edit &middot; Progress tracking</p>
+              </div>
+
+              <div class="screen-row-label" data-enter style="--delay: 530ms">Admin<span>Console</span></div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 550ms">
+                <span class="screen-count">2 screens</span>
+                <p>Cases and assignment queue &middot; Case detail and configuration</p>
+              </div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 580ms">
+                <span class="screen-count">2 screens</span>
+                <p>Case list &middot; Case detail and audit</p>
+              </div>
+              <div class="screen-cell" data-enter="scale" style="--delay: 610ms">
+                <span class="screen-count">6 screens</span>
+                <p>Cases list &middot; Case details, tabbed &middot; Standalone requests &middot; Milestone templates &middot; Provider performance &middot; Progress tracking</p>
+              </div>
+            </div>
+            <div class="footer-note">
+              <span>Counts taken from the screen specifications in each FR</span>
+              <strong>21 of the 39 belong to the patient</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="edge-cases"
+          data-start="160"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">The states that get forgotten</span>
+              <span class="deck-mark">Six screens nobody remembers to brief</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              Most of the design risk is in the <span class="em">unhappy paths.</span>
+            </h2>
+            <div class="edge-grid">
+              <article class="edge-card" data-enter="scale" style="--delay: 240ms">
+                <span class="edge-when">Duplicate case</span>
+                <strong>A second case on the same route</strong>
+                <p>Only one active case per route is allowed, so the system blocks creation instead of opening a new one.</p>
+                <p class="edge-need">Needs a real screen offering &ldquo;resume monitoring&rdquo; or &ldquo;end the existing case&rdquo; &mdash; not an error toast.</p>
+              </article>
+              <article class="edge-card" data-enter="scale" style="--delay: 290ms">
+                <span class="edge-when">Conversion abandoned</span>
+                <strong>The patient leaves mid-conversion</strong>
+                <p>Nothing is half-created. The monitoring case stays active and the conversion draft is preserved.</p>
+                <p class="edge-need">Needs a resumable draft that is obviously not yet a purchase.</p>
+              </article>
+              <article class="edge-card" data-enter="scale" style="--delay: 340ms">
+                <span class="edge-when">Provider withdraws</span>
+                <strong>The assigned clinician steps away</strong>
+                <p>Access is revoked, the case is marked pending reassignment, and both Admin and patient are told.</p>
+                <p class="edge-need">Needs a patient-facing waiting state where logging visibly still works.</p>
+              </article>
+              <article class="edge-card" data-enter="scale" style="--delay: 390ms">
+                <span class="edge-when">Not yet assigned</span>
+                <strong>Advice requested, nobody assigned</strong>
+                <p>The gap between choosing advice and Admin assigning a provider can last days.</p>
+                <p class="edge-need">The dashboard must be genuinely useful with the advice panel empty.</p>
+              </article>
+              <article class="edge-card" data-enter="scale" style="--delay: 440ms">
+                <span class="edge-when">Payment incomplete</span>
+                <strong>Aftercare checkout fails or expires</strong>
+                <p>No payment means no request, no assignment and no plan &mdash; but the intake work was real.</p>
+                <p class="edge-need">Needs a recovery path back to purchase that keeps everything already entered.</p>
+              </article>
+              <article class="edge-card" data-enter="scale" style="--delay: 490ms">
+                <span class="edge-when">Admin correction</span>
+                <strong>A value is edited after the fact</strong>
+                <p>Admin may correct permitted fields with a reason; the original is kept as an immutable audit event.</p>
+                <p class="edge-need">Needs a way to show the corrected value without hiding that it was corrected.</p>
+              </article>
+            </div>
+            <div class="footer-note">
+              <span>Drawn from the alternative and exception flows of FR-011, FR-037 and FR-038</span>
+              <strong>Each one is a state, not an error</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="operating-matrix"
+          data-start="168"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">Operating model summary</span>
+              <span class="deck-mark">Four routes · clear promises</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              The entry route determines <span class="em">who works, what is promised, and where data can go.</span>
+            </h2>
+            <div class="matrix" data-enter="scale" style="--delay: 260ms">
+              <div class="matrix-cell header row-label">Operating question</div>
+              <div class="matrix-cell header baseline-col">Get a Hair Transplant</div>
+              <div class="matrix-cell header focus-col">Monitor Hair Loss</div>
+              <div class="matrix-cell header focus-col">Monitor Transplant Progress</div>
+              <div class="matrix-cell header focus-col">Request Aftercare</div>
+
+              <div class="matrix-cell row-label">Primary promise</div>
+              <div class="matrix-cell baseline-col"><strong>Commercial assessment</strong> and quotes</div>
+              <div class="matrix-cell focus-col"><strong>Longitudinal tracking</strong> with optional advice</div>
+              <div class="matrix-cell focus-col"><strong>Personal recovery record</strong> only</div>
+              <div class="matrix-cell focus-col"><strong>Managed recovery service</strong></div>
+
+              <div class="matrix-cell row-label">Provider role</div>
+              <div class="matrix-cell baseline-col">Assess inquiry and quote</div>
+              <div class="matrix-cell focus-col">Advice mode only; cadence-limited</div>
+              <div class="matrix-cell focus-col"><strong>None in FR-038</strong></div>
+              <div class="matrix-cell focus-col">Configure, activate, and monitor</div>
+
+              <div class="matrix-cell row-label">Patient cadence</div>
+              <div class="matrix-cell baseline-col">Complete inquiry once</div>
+              <div class="matrix-cell focus-col">Self-paced logs</div>
+              <div class="matrix-cell focus-col">Self-paced logs</div>
+              <div class="matrix-cell focus-col">Milestone and task schedule</div>
+
+              <div class="matrix-cell row-label">Exit or conversion</div>
+              <div class="matrix-cell baseline-col">Continue into quote and treatment</div>
+              <div class="matrix-cell focus-col">Export PDF or convert to FR-003</div>
+              <div class="matrix-cell focus-col">Export PDF or convert to FR-011</div>
+              <div class="matrix-cell focus-col">Complete managed aftercare plan</div>
+            </div>
+            <div class="footer-note">
+              <span>One active monitoring case per type</span>
+              <strong>Separate cases · deliberate handoffs · reusable patient data</strong>
+            </div>
+          </div>
+        </section>
+        <section
+          class="slide scene-frame clip"
+          data-composition-id="deck-recap"
+          data-start="176"
+          data-duration="8"
+          data-width="1920"
+          data-height="1080"
+          aria-hidden="true"
+        >
+          <div class="slide-inner">
+            <div class="topline" data-enter style="--delay: 100ms">
+              <span class="eyebrow">In summary</span>
+              <span class="deck-mark">The whole deck on one slide</span>
+            </div>
+            <h2 data-enter="left" style="--delay: 170ms">
+              If you remember six things, <span class="em">remember these.</span>
+            </h2>
+            <div class="recap-grid">
+              <div class="recap-card" data-enter style="--delay: 250ms">
+                <span class="recap-no">1</span>
+                <div>
+                  <strong>Four doors, one gateway</strong>
+                  <p>The entry screen sorts intent, not treatment demand. No wrong door, and no route disguised as another.</p>
+                </div>
+              </div>
+              <div class="recap-card" data-enter style="--delay: 305ms">
+                <span class="recap-no">2</span>
+                <div>
+                  <strong>Route 02 &middot; Monitor hair loss</strong>
+                  <p>Longitudinal tracking with one decision made at creation: watch it alone, or let an assigned provider advise on a fixed cadence.</p>
+                </div>
+              </div>
+              <div class="recap-card" data-enter style="--delay: 360ms">
+                <span class="recap-no">3</span>
+                <div>
+                  <strong>Route 03 &middot; Monitor transplant progress</strong>
+                  <p>The same pattern with the provider deliberately removed. Two actors only &mdash; patient and system.</p>
+                </div>
+              </div>
+              <div class="recap-card" data-enter style="--delay: 415ms">
+                <span class="recap-no">4</span>
+                <div>
+                  <strong>Route 04 &middot; Request aftercare</strong>
+                  <p>The only paid, managed route. Four gates &mdash; buy, assign, activate, run &mdash; each one held by a different person.</p>
+                </div>
+              </div>
+              <div class="recap-card" data-enter style="--delay: 470ms">
+                <span class="recap-no">5</span>
+                <div>
+                  <strong>Tracking never waits for a human</strong>
+                  <p>Logging, calendar and scans stay open in every assignment state. No overdue, no streak, no blocked screen.</p>
+                </div>
+              </div>
+              <div class="recap-card" data-enter style="--delay: 525ms">
+                <span class="recap-no">6</span>
+                <div>
+                  <strong>Conversion carries data, not promises</strong>
+                  <p>A converted case pre-fills a new, distinct case from the patient&rsquo;s own logs and scans. The original closes as converted.</p>
+                </div>
+              </div>
+            </div>
+            <div class="recap-strip" data-enter style="--delay: 600ms">
+                <div class="recap-stat">
+                  <b>39</b>
+                  <span>screens to design &mdash; 21 patient, 8 provider, 10 admin</span>
+                </div>
+                <div class="recap-stat">
+                  <b>3</b>
+                  <span>new routes sharing one monitoring pattern</span>
+                </div>
+                <div class="recap-stat">
+                  <b>6</b>
+                  <span>unhappy paths that need a drawn state</span>
+                </div>
+                <div class="recap-stat open">
+                  <b>4</b>
+                  <span>product decisions still open, still unowned</span>
+                </div>
+            </div>
+            <div class="footer-note">
+              <span>FR-037 &middot; FR-038 &middot; FR-011</span>
+              <strong>Design review starts with the gateway</strong>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <div id="progress" aria-hidden="true"><div id="progress-fill"></div></div>
+    <nav id="controls" aria-label="Presentation controls">
+      <button id="prev" class="control-button" type="button" aria-label="Previous slide">←</button>
+      <span id="counter" aria-live="polite">1 / 23</span>
+      <button id="next" class="control-button" type="button" aria-label="Next slide">→</button>
+      <button id="fullscreen" class="control-button" type="button" aria-label="Toggle fullscreen">⛶</button>
+    </nav>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var stage = document.getElementById("stage");
+        var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+        var counter = document.getElementById("counter");
+        var progressFill = document.getElementById("progress-fill");
+        var current = 0;
+        var touchStartX = null;
+
+        function scaleStage() {
+          var viewport = document.getElementById("viewport");
+          var width = viewport.clientWidth || window.innerWidth;
+          var height = viewport.clientHeight || window.innerHeight;
+          // Leave breathing room around the stage in windowed mode; fill edge to
+          // edge once the deck is presented fullscreen.
+          var fit = document.fullscreenElement ? 1 : 0.94;
+          var scale = Math.min(width / 1920, height / 1080) * fit;
+          stage.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+        }
+
+        function restartSlideAnimations(slide) {
+          var animated = slide.querySelectorAll("[data-enter]");
+          for (var i = 0; i < animated.length; i += 1) {
+            animated[i].style.animation = "none";
+          }
+          void slide.offsetWidth;
+          for (var j = 0; j < animated.length; j += 1) {
+            animated[j].style.animation = "";
+          }
+        }
+
+        function showSlide(index) {
+          current = Math.max(0, Math.min(slides.length - 1, index));
+          for (var i = 0; i < slides.length; i += 1) {
+            var active = i === current;
+            slides[i].classList.toggle("is-active", active);
+            slides[i].setAttribute("aria-hidden", active ? "false" : "true");
+          }
+          restartSlideAnimations(slides[current]);
+          counter.textContent = current + 1 + " / " + slides.length;
+          progressFill.style.width = ((current + 1) / slides.length) * 100 + "%";
+          document.title = "Hairline — " + slides[current].getAttribute("data-composition-id").replace(/-/g, " ");
+        }
+
+        function next() {
+          showSlide(current + 1);
+        }
+
+        function previous() {
+          showSlide(current - 1);
+        }
+
+        document.getElementById("next").addEventListener("click", next);
+        document.getElementById("prev").addEventListener("click", previous);
+        document.getElementById("fullscreen").addEventListener("click", function () {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(function () {});
+          } else {
+            document.exitFullscreen().catch(function () {});
+          }
+        });
+
+        window.addEventListener("keydown", function (event) {
+          if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+            event.preventDefault();
+            next();
+          } else if (event.key === "ArrowLeft" || event.key === "PageUp" || event.key === "Backspace") {
+            event.preventDefault();
+            previous();
+          } else if (event.key === "Home") {
+            showSlide(0);
+          } else if (event.key === "End") {
+            showSlide(slides.length - 1);
+          } else if (event.key.toLowerCase() === "f") {
+            document.getElementById("fullscreen").click();
+          }
+        });
+
+        window.addEventListener("touchstart", function (event) {
+          touchStartX = event.changedTouches[0].clientX;
+        }, { passive: true });
+
+        window.addEventListener("touchend", function (event) {
+          if (touchStartX === null) return;
+          var delta = event.changedTouches[0].clientX - touchStartX;
+          if (Math.abs(delta) > 60) {
+            if (delta < 0) next();
+            else previous();
+          }
+          touchStartX = null;
+        }, { passive: true });
+
+        var controls = document.getElementById("controls");
+        var idleTimer = null;
+
+        function wakeControls() {
+          controls.classList.remove("idle");
+          window.clearTimeout(idleTimer);
+          idleTimer = window.setTimeout(function () {
+            controls.classList.add("idle");
+          }, 2600);
+        }
+
+        ["mousemove", "mousedown", "keydown", "touchstart", "wheel"].forEach(function (type) {
+          window.addEventListener(type, wakeControls, { passive: true });
+        });
+        wakeControls();
+
+        window.addEventListener("resize", scaleStage);
+        window.addEventListener("orientationchange", scaleStage);
+        document.addEventListener("fullscreenchange", scaleStage);
+        document.addEventListener("webkitfullscreenchange", scaleStage);
+        if (window.ResizeObserver) {
+          new ResizeObserver(scaleStage).observe(document.getElementById("viewport"));
+        }
+        window.addEventListener("hashchange", function () {
+          var parsed = Number(location.hash.replace("#", ""));
+          if (Number.isFinite(parsed) && parsed >= 1 && parsed <= slides.length) showSlide(parsed - 1);
+        });
+
+        scaleStage();
+        var initial = Number(location.hash.replace("#", ""));
+        showSlide(Number.isFinite(initial) && initial >= 1 ? initial - 1 : 0);
+      })();
+    </script>
+  </body>
+</html>

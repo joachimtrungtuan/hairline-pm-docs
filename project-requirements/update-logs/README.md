@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-17/ (1 file)
+### 2026-08-17/ (2 files)
+
+#### **Four Service Routes Deck Revision**
+
+- `SERVICE_ROUTES_DECK_REVISION_2026-08-17.md` - Expanded the four-service-routes presentation deck from 12 to 23 slides for a first-time audience: human problem framing, plain-language vocabulary and case-state rail, three route section dividers, one patient-story timeline per new route, a 39-screen design inventory, six unhappy-path states, and a closing design brief with four open product questions; also fixed windowed/fullscreen stage centring, normalized font weights to a 500/600/700 scale, and reworked the data-flow animations.
 
 #### **FR-037 and FR-038 Monitoring Flows**
 
@@ -777,6 +781,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-08-17**: `SERVICE_ROUTES_DECK_REVISION_2026-08-17.md` - Four-service-routes deck rebuilt for a mixed stakeholder and design audience: 23 slides across three named route sections, with vocabulary, patient stories, a 39-screen inventory, unhappy-path states, and a closing design ask.
 - **2026-08-11**: `SPRINT_1_A02_FEATURED_PROVIDER_MANAGEMENT_2026-08-11.md` - Added Sprint 1 A-02 backlog rows for featured-provider controls and filter composition; aligned FR-015 with the two featured-status controls and the maximum-10 enforcement rule.
 - **2026-07-16**: `E2E_STATUS_TAXONOMY_AND_TIMESTAMP_INTEGRITY_2026-07-16.md` - Centralized the web E2E status taxonomy, enforced it in the CLI and SQLite, and added schema-v2 action timestamps while preserving legacy history.
 - **2026-07-15**: `PR01_TEAM_DIRECTORY_INVITATION_E2E_REGISTRATION_2026-07-15.md` - Registered the eighteen-case draft PR-01 Team directory and invitation-management suite with positive/empty search and individual/combined filter coverage, documented nine governed gaps, and added an explicit safety gate for public Maildrop invitation links.
@@ -1037,4 +1042,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 17, 2026 (FR-037 and FR-038 monitoring flows)
+**Last Updated**: August 17, 2026 (four service routes deck revision)
