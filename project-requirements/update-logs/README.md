@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-08-17/ (1 file)
+
+#### **FR-037 and FR-038 Monitoring Flows**
+
+- `FR037_FR038_MONITORING_FLOWS_2026-08-17.md` - Created Spec Kit-aligned PRDs for hair-loss monitoring and transplant-progress monitoring, including self/advice modes, assignment and withdrawal, longitudinal logs, PDF exports, and conversion into FR-003 inquiry or FR-011 standalone aftercare.
+
 ### 2026-08-11/ (1 file)
 
 #### **Sprint 1 A-02 Featured Provider Management**
@@ -864,6 +870,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-17**: `FR037_FR038_MONITORING_FLOWS_2026-08-17.md` - Created FR-037 hair-loss monitoring and FR-038 transplant-progress monitoring PRDs and aligned the system PRD and documentation index.
 - **2025-10-23**: `REQUIREMENTS_IMPLEMENTATION_2025-10-23.md` - Implementation summary
 - **2025-10-27**: `FR025_PRD_CREATION_2025-10-27.md` - FR-025 PRD creation
 - **2025-10-28**: `FR001_PRD_CREATION_2025-10-28.md` - FR-001 PRD creation
@@ -1030,4 +1037,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 11, 2026 (Sprint 1 A-02 featured provider management)
+**Last Updated**: August 17, 2026 (FR-037 and FR-038 monitoring flows)

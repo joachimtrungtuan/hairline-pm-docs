@@ -4,7 +4,7 @@
 any file, use this index to map **task → area → file → section**, then read **only the
 section you need**. Do not scan the tree. Do not read long files whole.
 
-**Last Updated**: 2026-06-26
+**Last Updated**: 2026-08-17
 
 > Behavior rules (locator-first, phase budgets, no full-file reads) live in
 > `CLAUDE.md` / `AGENTS.md` → *Navigation & Token Governance*. This file is **where to
@@ -84,10 +84,10 @@ local-docs/
 ├── INDEX.md                      ← THIS FILE (agent routing)
 ├── project-requirements/
 │   ├── constitution-summary.md   Project principles & scope
-│   ├── system-prd.md             System PRD — 33 FRs, personas, workflows  ⚠️ ~2000 lines
+│   ├── system-prd.md             System PRD — 38 FRs, personas, workflows  ⚠️ ~2000 lines
 │   ├── system-technical-spec.md  Architecture, APIs, deploy               ⚠️ ~2070 lines
 │   ├── system-data-schema.md     97 tables, relationships                 ⚠️ ~2027 lines
-│   ├── functional-requirements/  frNNN-slug/prd.md  (36 FRs; many ⚠️ >1000 lines)
+│   ├── functional-requirements/  frNNN-slug/prd.md  (38 FRs; many ⚠️ >1000 lines)
 │   ├── transcriptions/           Client requirements, verbatim
 │   └── update-logs/              Change history (has its own README index)
 ├── project-automation/
@@ -163,7 +163,7 @@ For each doc type: where its structure is **defined** (template/source) and the 
 > `tasks-template.md`, `checklist-template.md`, `agent-file-template.md`. Use
 > `fr022-search-filtering/prd.md` as a complete filled exemplar.
 
-### C.1 — FR PRD scaffold (identical across all 36 FRs)
+### C.1 — FR PRD scaffold (identical across all 38 FRs)
 
 ```md
 ## Executive Summary
