@@ -6,6 +6,12 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-08-20/ (1 file)
+
+#### **FR-037 Advice, Preview, and Dashboard Revision (v1.3 → v1.4)**
+
+- `FR037_ADVICE_PREVIEW_AND_DASHBOARD_REVISION_2026-08-20.md` - Separated provider advice from patient logs as its own editable calendar record; defined open-until-submitted windows with expiry only on supersession; added Admin-selected expiring pre-assignment previews without embedded chat; and expanded Provider/Admin search, filtering, list data, and patient-parity case detail.
+
 ### 2026-08-17/ (2 files)
 
 #### **Four Service Routes Deck Revision**
@@ -15,6 +21,10 @@ This folder contains documentation update reports and verification logs for the 
 #### **FR-037 and FR-038 Monitoring Flows**
 
 - `FR037_FR038_MONITORING_FLOWS_2026-08-17.md` - Created Spec Kit-aligned PRDs for hair-loss monitoring and transplant-progress monitoring, including self/advice modes, assignment and withdrawal, longitudinal logs, PDF exports, and conversion into FR-003 inquiry or FR-011 standalone aftercare.
+
+#### **FR-037 Verification Fixes (v1.2 → v1.3)**
+
+- `FR037_VERIFICATION_FIXES_2026-08-17.md` - Applied product-owner decisions from the FR-037 verification pass: added the NON-NEGOTIABLE self-service vs aftercare-package service boundary (no reminders, cadence, milestones, or compliance state), aligned raw scan media retention to 7 years, bound the Duration field to the FR-003 enum, split conversion into a read-only Step A summary and Step B review before the FR-003 handoff, and made advice cadence global and snapshotted at case creation.
 
 ### 2026-08-11/ (1 file)
 
@@ -875,7 +885,9 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_ADVICE_PREVIEW_AND_DASHBOARD_REVISION_2026-08-20.md` - FR-037 v1.4: separate editable provider-advice calendar records, supersession-only window expiry, expiring pre-assignment previews without embedded chat, and expanded Provider/Admin listing and detail screens.
 - **2026-08-17**: `FR037_FR038_MONITORING_FLOWS_2026-08-17.md` - Created FR-037 hair-loss monitoring and FR-038 transplant-progress monitoring PRDs and aligned the system PRD and documentation index.
+- **2026-08-17**: `FR037_VERIFICATION_FIXES_2026-08-17.md` - FR-037 v1.3: self-service vs aftercare service boundary, 7-year raw scan retention, FR-003 Duration enum binding, two-step conversion summary flow, and creation-time cadence snapshot.
 - **2025-10-23**: `REQUIREMENTS_IMPLEMENTATION_2025-10-23.md` - Implementation summary
 - **2025-10-27**: `FR025_PRD_CREATION_2025-10-27.md` - FR-025 PRD creation
 - **2025-10-28**: `FR001_PRD_CREATION_2025-10-28.md` - FR-001 PRD creation
@@ -1042,4 +1054,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 17, 2026 (four service routes deck revision)
+**Last Updated**: August 20, 2026 (FR-037 advice, preview, and dashboard revision v1.4)
