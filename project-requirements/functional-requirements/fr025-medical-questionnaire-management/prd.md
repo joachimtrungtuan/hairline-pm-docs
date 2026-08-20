@@ -29,7 +29,8 @@ The Medical Questionnaire Management module enables administrators to manage a c
 1. **Admin-Initiated**: Primary flow through the Questionnaire Catalog (Screen 1)
 2. **System-Triggered (Inquiry)**: The admin-designated active Inquiry-context questionnaire set is delivered automatically during patient inquiry submission (FR-003). The active set is selected explicitly by the admin via the "Set as Active for Inquiry" toggle on the Questionnaire Catalog — publishing alone does not activate a set for the inquiry flow
 3. **System-Triggered (Aftercare)**: Questionnaire set assigned to a milestone delivered according to the milestone schedule (FR-011)
-4. **Provider-Viewed**: Inquiry alert summaries and aftercare response data displayed in provider platform
+4. **System-Triggered (Monitoring Advice)**: The same admin-designated active Inquiry-context questionnaire set is delivered when a patient activates provider-advice mode on a hair-loss monitoring case (FR-037), gating provider access rather than inquiry submission. No separate context type or admin toggle is introduced; FR-037 reuses the existing active Inquiry-context set as-is
+5. **Provider-Viewed**: Inquiry alert summaries and aftercare response data displayed in provider platform
 
 ### Questionnaire Context Types
 
@@ -614,6 +615,7 @@ flowchart TD
 - **FR-003**: Inquiry Submission & Distribution (consumes active Inquiry-context questionnaire set)
 - **FR-011**: Aftercare & Recovery Management (milestones assign individual Aftercare-context questionnaire sets per milestone)
 - **FR-001**: Patient Authentication & Profile Management (admin access control)
+- **FR-037**: Monitor Your Hair Loss (consumes the same active Inquiry-context questionnaire set to gate provider-advice mode access, outside the FR-003 inquiry-submission trigger)
 
 ### External Dependencies
 
@@ -682,6 +684,7 @@ flowchart TD
 | 2026-02-24 | 2.0 | Restructured to two-level model (Questionnaire Sets → Questions); updated screens, workflows, and FR-011 integration rule; decoupled publishing from inquiry activation (explicit "Set as Active for Inquiry" toggle) | AI |
 | 2026-02-25 | 2.1 | Post-verification fixes: Inquiry question type constraint changed to soft warning (Yes/No recommended, other types allowed after admin confirms warning); replaced Visual Scale 1–5 with Visual Scale 1–10 as sole visual scale type; removed FR-002 as dependency (no data flow); added FR-020 alert event integration note; system PRD updated to defer Bulk Operations and Question Templates to V2, and align question grouping to set-level categorisation | AI |
 | 2026-02-25 | 2.2 | Decision update: Enforced MVP Inquiry/Multi-Context question type constraint (Yes/No only) with future typed-answer extension; removed medical-alert notification integration into FR-020 (in-portal indicators only) | AI |
+| 2026-08-20 | 2.3 | Cross-FR sync: added FR-037 as a dependency and a "System-Triggered (Monitoring Advice)" entry point — FR-037 reuses the active Inquiry-context questionnaire set to gate provider-advice mode access, outside the FR-003 inquiry-submission trigger | Product Team |
 
 ---
 

@@ -671,6 +671,7 @@ flowchart TD
 - **FR-025**: Active Inquiry-context medical questionnaire for advice mode and conversion reconfirmation.
 - **FR-026**: Privacy, security, consent, timezone, and file configuration.
 - **FR-028**: Country and currency configuration for inquiry-only conversion fields.
+- **FR-038**: Sibling monitoring-type case; an active FR-038 case does not block an active FR-037 case, and both reuse shared monitoring entities discriminated by case type.
 
 ### External Dependencies (APIs, Services)
 
@@ -865,6 +866,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
+| 1.8 | 2026-08-20 | Cross-FR sync (verification follow-up): added FR-003 exclusive-provider distribution override and FR-004 restricted-recipient quote mode for monitoring conversions (REQ-037-029/Business Rule 7); added FR-025 System-Triggered (Monitoring Advice) entry point; added `monitoring.*` events to the FR-020/FR-030 notification catalogs; added FR-038 as a dependency for symmetry | Product Team |
 | 1.7 | 2026-08-20 | Verification fixes: provider view anonymized for the entire case lifetime (no payment trigger exists in FR-037); renamed the twice-monthly cadence to bi-weekly to match the 14-day interval; relabelled Step B inquiry-only fields as a read-only FR-003 handoff target; made the latest submission timestamp authoritative when one date holds several entries; synchronized the preview-link, advice-window, anonymization, and S-03/S-05 additions into system-prd.md | Product Team |
 | 1.6 | 2026-08-20 | Enforced anonymized patient identifiers on Provider monitoring screens until payment confirmation; aligned Admin daily-note validation to the patient 3000-character contract; corrected the S-05 module name and synchronized document metadata | Product Team |
 | 1.5 | 2026-08-20 | Split Provider single-case work into Screen 9 overview, Screen 10A daily-log detail, and Screen 10B advice detail; moved Provider withdrawal to Screen 11; renumbered the Admin list and overview to Screens 12-13; added corresponding Admin Screen 14A daily-log detail and Screen 14B advice detail | Product Team |
@@ -887,7 +889,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 ---
 
-**Document Version**: 1.7
+**Document Version**: 1.8
 **Template Version**: 2.0.0
 **Last Updated**: 2026-08-20
 **Next Review**: Before implementation planning

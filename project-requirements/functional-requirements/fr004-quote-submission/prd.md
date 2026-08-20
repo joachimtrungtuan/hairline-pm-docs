@@ -72,6 +72,7 @@ The Quote Submission & Management module empowers providers to receive distribut
 
 - Provider receives inquiry and opens details
 - System verifies parent inquiry status is not Cancelled before allowing quote creation. If inquiry is cancelled, system blocks with error: "Inquiry no longer active — this inquiry was cancelled by the patient."
+- **Restricted recipient check**: If the inquiry carries an exclusive assigned provider from an FR-037/FR-038 monitoring conversion, system verifies the opening provider is the assigned provider; any other provider is blocked with error "This inquiry is restricted to its assigned provider." (see Business Rules)
 - Provider fills required quote fields (treatment, pricing, scheduling, packages)
 - Provider submits quote (system validates required/optional fields; re-validates inquiry is still active at submission time)
 - System delivers quote to patient and logs audit entry
@@ -380,6 +381,7 @@ Notes:
 - Patient information remains censored at this stage until payment confirmation; only anonymized identifiers and allowed fields are visible to providers.
 - Providers must select from patient-requested date ranges and may choose a subset; each selected date must have a specific price.
 - System MUST verify parent inquiry is not in Cancelled status before accepting quote creation or submission. If inquiry is cancelled mid-draft (race condition), system rejects submission with error "Inquiry no longer active" and locks the draft with "Inquiry Cancelled" banner. See FR-003 Workflow 5 edge case.
+- **Restricted recipient mode**: If the inquiry was created via an FR-037/FR-038 monitoring-case conversion with an active exclusive provider assignment (REQ-037-029, Business Rule 7; see FR-003 Workflow 2 Alternative Flow B3), only that assigned provider may create the initial quote for the inquiry. Any other provider attempting to open the inquiry for quote creation is blocked with error "This inquiry is restricted to its assigned provider." The restriction applies only to initial quote creation and does not affect subsequent workflows (editing, expiry, withdrawal, admin oversight) once a quote exists.
 
 ## Success Criteria
 
@@ -442,6 +444,7 @@ Notes:
 - FR-020: Notifications & Alerts (quote distribution/updates)
 - Admin-managed treatment catalog/package definitions (A-09)
 - FR-019: Promotions & Discount Management (A-06)
+- FR-037 / FR-038: Monitor Your Hair Loss / Monitor Your Transplant Progress (monitoring-case conversion inquiries carry an exclusive assigned provider that restricts initial quote creation — see Business Rules)
 
 ### External Dependencies (APIs, Services)
 
@@ -593,6 +596,7 @@ Acceptance Scenarios:
 | 2026-02-25 | 1.6 | Removed `travel_path` as a manual select field. Travel path is now automatically derived from `included_services`: if flight or hotel is included → Path A (provider_included), otherwise → Path B (patient_self_booked). Simplified `included_services` to a standalone checklist without cross-field conditional gating. | AI |
 | 2026-03-03 | 1.7 | Clarified Treatment Plan (per-day) schema: defined per-day entry fields (dayNumber/date/description) and documented `plan` structure used downstream by FR-010 In Progress day descriptions. | AI |
 | 2026-05-12 | 1.8 | FR-019 alignment: Promotion field on Screen 1 retyped from `select/text` to `select-or-create` requiring resolution to a structured `PromotionProgram` (FR-019 Screen 9 Mode 1 list-selection OR Mode 2 inline create with `scope = AD_HOC_QUOTE_BOUND`). Screen 3 and Screen 5 Promotion fields retyped to `reference` (read-only resolution of `promotionId`). Screen 7 Admin Inline Edit Promotion field documented for admin override with inline-create permitted. Quote entity `promotionNote` free-text field **removed** — every applied discount must correspond to a structured PromotionProgram record. | Claude |
+| 2026-08-20 | 1.9 | Cross-FR sync (FR-037 verification): Added restricted recipient mode — for monitoring-case conversion inquiries with an active exclusive provider assignment (REQ-037-029, Business Rule 7), only the assigned provider may create the initial quote. Added restricted-recipient check to Workflow 1, corresponding Business Rule, and FR-037/FR-038 as dependencies. | Verification alignment (2026-08-20) |
 
 ## Appendix: Approvals
 

@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (4 files)
+### 2026-08-20/ (5 files)
+
+#### **FR-037 Cross-FR Verification Sync (v1.7 → v1.8)**
+
+- `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - Documented the FR-037 monitoring-conversion exclusive-provider override in FR-003 (Workflow 2 override branch + Alternative Flow B3) and FR-004 (restricted-recipient quote mode); added a "System-Triggered (Monitoring Advice)" entry point to FR-025; synced FR-037's 8 `monitoring.*` events into the FR-020/FR-030 notification catalogs; added a reciprocal FR-038 dependency to FR-037.
 
 #### **FR-037 Verification Fixes (v1.6 → v1.7)**
 
@@ -897,6 +901,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - FR-037 v1.8 cross-FR sync: FR-003 exclusive-provider distribution override, FR-004 restricted-recipient quote mode, FR-025 Monitoring Advice entry point, FR-020/FR-030 `monitoring.*` event catalog rows, and FR-037→FR-038 reciprocal dependency.
 - **2026-08-20**: `FR037_VERIFICATION_FIXES_V17_2026-08-20.md` - FR-037 v1.7: lifetime provider anonymization, bi-weekly cadence rename, Step B handoff-target relabel, same-date severity tie-break, and system-prd.md synchronization.
 - **2026-08-20**: `FR037_VERIFICATION_CORRECTIONS_2026-08-20.md` - FR-037 v1.6: anonymized provider-facing identity, aligned daily-note validation, and corrected module/version metadata.
 - **2026-08-20**: `FR037_PROVIDER_ADMIN_DETAIL_SCREEN_RESTRUCTURE_2026-08-20.md` - FR-037 v1.5: dedicated Provider/Admin case overviews, daily-log details, and provider-advice details, with withdrawal and Admin screens renumbered accordingly.
@@ -1069,4 +1074,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 verification fixes v1.7)
+**Last Updated**: August 20, 2026 (FR-037 cross-FR verification sync v1.8)

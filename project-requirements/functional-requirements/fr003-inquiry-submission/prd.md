@@ -191,13 +191,16 @@ flowchart TD
     Validate -->|No| Invalid["Do not distribute; return errors / flag for fix"]
     Validate -->|Yes| Identify["Generate inquiry ID (HPID) + timestamps"]
 
-    Identify --> Match["Match providers by selected countries + explicit selections"]
+    Identify --> Exclusive{"Monitoring conversion with exclusive<br/>assigned provider? (FR-037/FR-038)"}
+    Exclusive -->|Yes| ExclusiveRoute["Route only to the assigned provider;<br/>skip country/selection matching and the 10-provider cap"]
+    Exclusive -->|No| Match["Match providers by selected countries + explicit selections"]
     Match --> Cap{"Matched providers &gt; 10?"}
     Cap -->|Yes| Select10["Select up to 10 providers (ensure explicitly selected providers included; remaining per matching rules)"]
     Cap -->|No| Matched["Use matched provider list"]
 
     Select10 --> Views["Create provider-specific inquiry views (anonymized)"]
     Matched --> Views
+    ExclusiveRoute --> Views
 
     Views --> Found{"Any providers to distribute to?"}
     Found -->|No| Manual["Notify admin: unmatched inquiry + manual assignment"]
@@ -239,6 +242,21 @@ flowchart TD
     Gate -->|Yes| Advisory["Capacity checks are advisory in MVP;<br/>do NOT block inquiry distribution"]
     Gate -->|No| Continue["Proceed with normal distribution"]
     Advisory --> Continue
+```
+
+**B3: Inquiry originates from a monitoring-case conversion with an exclusive assigned provider**:
+
+- **Trigger**: Inquiry is created via FR-037 (Monitor Your Hair Loss) or FR-038 (Monitor Your Transplant Progress) conversion, and the source monitoring case has an active provider assignment at the time of conversion (REQ-037-029, Business Rule 7)
+- **Outcome**: Normal country/selection matching and the 10-provider distribution cap are bypassed; the inquiry is distributed exclusively to the assigned provider. Standard anonymization, notification timing, and dashboard behavior are unchanged
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+    Start["Inquiry created via FR-037/FR-038 conversion"] --> Check{"Source monitoring case has<br/>an active provider assignment?"}
+    Check -->|No| Normal["Proceed with normal distribution (Workflow 2 main flow)"]
+    Check -->|Yes| Exclusive["Distribute exclusively to the assigned provider;<br/>skip matching + 10-provider cap"]
+    Exclusive --> Views["Create provider-specific inquiry view (anonymized)"]
+    Views --> Notify["Send provider notification (within 5 minutes)"]
 ```
 
 ---
@@ -1012,7 +1030,7 @@ flowchart TD
 
 1. **Data Retention**
    - Inquiry data retained for 7 years minimum
-  - Head scan media retained for 2 years after inquiry completion (photo sets in V1; 3D scans in V2)
+   - Head scan media retained for 2 years after inquiry completion (photo sets in V1; 3D scans in V2)
    - Medical questionnaire responses retained for 7 years
    - All data encrypted at rest and in transit
    - Cancelled inquiries are subject to the same retention policy as completed inquiries; cancellation does not accelerate data deletion timelines
@@ -1025,7 +1043,7 @@ flowchart TD
 
 3. **Data Security**
    - All inquiry data encrypted at rest and in transit
-  - Head scan media stored securely with access controls
+   - Head scan media stored securely with access controls
    - Access attempts logged and monitored
    - Soft deletes only (no hard deletes allowed)
 
@@ -1089,7 +1107,7 @@ flowchart TD
    - Date ranges cannot overlap
    - Provider capacity validation
    - Medical questionnaire completeness validation
-  - Head scan media quality validation
+   - Head scan media quality validation
    - Inquiry uniqueness validation
 
 ## Success Criteria
@@ -1198,6 +1216,7 @@ flowchart TD
 - **FR-004**: Quote Submission & Management (provider quote creation)
 - **FR-020**: Notifications & Alerts (inquiry notifications)
 - **FR-025**: Medical Questionnaire Management (centralized settings)
+- **FR-037 / FR-038**: Monitor Your Hair Loss / Monitor Your Transplant Progress (monitoring-case conversion may create an inquiry with an exclusive assigned provider, overriding normal distribution matching — see Workflow 2 Alternative Flow B3)
 - **Future FR**: Provider Capacity Management (provider availability)
 
 ### External Dependencies
@@ -1350,6 +1369,7 @@ Acceptance Scenarios:
 | 2026-02-10 | 1.7 | Verification fixes: Added Screen 7a (Provider Selection) with full field table and business rules — resolves orphaned provider selection from Workflow 1. Updated Workflow 1 to separate provider selection (step 7) from review/submission (step 8). Aligned provider response time from 48h to 72h to match system PRD. | AI |
 | 2026-02-11 | 1.8 | Workflow 5 (Patient-Initiated Inquiry Cancellation): Updated trigger and Step 1 to include intermediary inquiry detail view before Cancel Inquiry action, aligning with P02.2 design complement flow. Patient now navigates: Dashboard → Inquiry Detail → Cancel Inquiry (action menu) instead of Dashboard → Cancel Inquiry (direct). | AI |
 | 2026-03-03 | 1.9 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated Workflow 1 terminology and Screen 4 accordingly. | AI |
+| 2026-08-20 | 2.0 | Cross-FR sync (FR-037 verification): Added Workflow 2 exclusive-provider override branch and Alternative Flow B3 for monitoring-case conversion inquiries with an active provider assignment (REQ-037-029, Business Rule 7); added FR-037/FR-038 as dependencies | Verification alignment (2026-08-20) |
 
 ## Appendix: Approvals
 

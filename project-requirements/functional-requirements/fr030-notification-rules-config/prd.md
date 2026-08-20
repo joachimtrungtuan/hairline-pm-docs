@@ -159,6 +159,14 @@ Notes:
 | Aftercare | Questionnaire Due / Missed Questionnaire Reminder | `aftercare.questionnaire_due` / `aftercare.questionnaire_missed` | Patient | “Questionnaire due” + reminder if missed |
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
+| Monitoring | Monitoring Case Pending Assignment | `monitoring.assignment_pending` | Admin | Advice-mode hair-loss/transplant-progress monitoring case activated and awaiting provider assignment (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Assigned | `monitoring.provider_assigned` | Patient, Provider | Initial assignment or reassignment; assignment type distinguished in payload (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Withdrawn | `monitoring.provider_withdrawn` | Admin, Patient | Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Reassigned | `monitoring.provider_reassigned` | Patient, Provider | Replacement provider assigned after withdrawal; replacement receives history and next eligible advice date (FR-037/FR-038) |
+| Monitoring | Monitoring Advice Posted | `monitoring.advice_posted` | Patient | Provider submits or edits the one advice-window paragraph for the current window (FR-037/FR-038) |
+| Monitoring | Monitoring Case Completed | `monitoring.completed` | Patient | Patient completes the active monitoring case (FR-037/FR-038) |
+| Monitoring | Monitoring PDF Export Ready | `monitoring.export_ready` | Patient | Date-to-date summary PDF has finished generating and is downloadable (FR-037/FR-038) |
+| Monitoring | Monitoring Converted to Inquiry | `monitoring.converted` | Patient | Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038) |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
 | Reviews | Review Published / New Review Posted | `review.published` | Provider | Notifies provider when a new published review appears on their profile; subject to provider Review Notifications preference in FR-032 |
 | Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
@@ -592,6 +600,10 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Why needed**: Aftercare events trigger notifications (milestone due, scan reminder, questionnaire reminder, escalation alert)
   - **Integration point**: P-05 publishes aftercare events to S-03 Notification Service for notification triggering
 
+- **FR-037 / FR-038 / Module P-05**: Monitor Your Hair Loss / Monitor Your Transplant Progress
+  - **Why needed**: Monitoring case events trigger notifications (assignment pending, provider assigned, provider withdrawn, provider reassigned, advice posted, completed, export ready, converted)
+  - **Integration point**: P-05 publishes `monitoring.*` events to S-03 Notification Service for notification triggering
+
 ### External Dependencies (APIs, Services)
 
 - **External Service 1**: SMTP Email Service (e.g., SendGrid, Amazon SES, Mailgun)
@@ -889,6 +901,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-02-05 | 1.2 | Cancel Inquiry flow (FR-003 Workflow 5): Updated `inquiry.cancelled` event notes; added `quote.cancelled_inquiry` event with mandatory provider receipt (admin cannot disable); cancellation reason is patient-private | AI     |
 | 2026-02-09 | 1.3 | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (source-of-truth alignment with FR-003 Workflow 5). Formalized `quote.cancelled_inquiry` in Non-Disableable by Default section. Added template variable guidance per recipient with privacy-aware field exclusions. Expanded Screen 1 Event Category filter to enumerate all 14 categories from event catalog. Fixed Last Updated date. | AI     |
 | 2026-05-14 | 1.4 | Added review notification events required by FR-013 / FR-020 alignment: `review.published` for provider new-review notifications, plus `review.response_posted`, `review.removed_by_admin`, and `review.takedown_decided` for patient review status notifications. | Verification alignment (2026-05-14) |
+| 2026-08-20 | 1.5 | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the source-of-truth event catalog and FR-037/FR-038 as dependencies. | Verification alignment (2026-08-20) |
 
 ---
 

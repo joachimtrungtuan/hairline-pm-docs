@@ -78,6 +78,14 @@ In Scope:
 | Aftercare | Questionnaire Due / Missed Questionnaire Reminder | `aftercare.questionnaire_due` / `aftercare.questionnaire_missed` | Patient | “Questionnaire due” + reminder if missed |
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Critical; escalation recipients configurable |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation |
+| Monitoring | Monitoring Case Pending Assignment | `monitoring.assignment_pending` | Admin | Advice-mode hair-loss/transplant-progress monitoring case activated and awaiting provider assignment (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Assigned | `monitoring.provider_assigned` | Patient, Provider | Initial assignment or reassignment; assignment type distinguished in payload (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Withdrawn | `monitoring.provider_withdrawn` | Admin, Patient | Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037/FR-038) |
+| Monitoring | Monitoring Provider Reassigned | `monitoring.provider_reassigned` | Patient, Provider | Replacement provider assigned after withdrawal; replacement receives history and next eligible advice date (FR-037/FR-038) |
+| Monitoring | Monitoring Advice Posted | `monitoring.advice_posted` | Patient | Provider submits or edits the one advice-window paragraph for the current window (FR-037/FR-038) |
+| Monitoring | Monitoring Case Completed | `monitoring.completed` | Patient | Patient completes the active monitoring case (FR-037/FR-038) |
+| Monitoring | Monitoring PDF Export Ready | `monitoring.export_ready` | Patient | Date-to-date summary PDF has finished generating and is downloadable (FR-037/FR-038) |
+| Monitoring | Monitoring Converted to Inquiry | `monitoring.converted` | Patient | Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038) |
 | Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
 | Reviews | Review Published / New Review Posted | `review.published` | Provider | Notifies provider when a new published review appears on their profile; subject to provider Review Notifications preference in FR-032 |
 | Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
@@ -298,6 +306,7 @@ Configurable with Restrictions:
 - **FR-026**: App Settings & Security Policies (OTP email templates for verification and password reset).
 - **FR-030**: Notification Rules & Configuration (notification template management, template editor, notification rule configuration).
 - **FR-032**: Provider Dashboard Settings & Profile Management (PR-06; provider notification preferences UI).
+- **FR-037**/**FR-038**: Monitor Your Hair Loss / Monitor Your Transplant Progress (monitoring assignment, advice, withdrawal, reassignment, completion, export, and conversion events).
 - P-02/P-03/P-05 events for inquiry/quote/booking/aftercare milestones.
 - S-03 Notification Service; Email/Push/SMS providers via configured adapters.
 
@@ -416,6 +425,7 @@ Acceptance Scenarios:
 | 2026-02-10 | 1.7     | FR-003 verification fixes: Updated stale "Screen 11a" reference to "Screen 8b" in `inquiry.cancelled` event notes (FR-003 v1.6 renumbering). Aligned cancellation notification SLA from "within 2 seconds" to "within 5 minutes" to match FR-003 Workflow 5 step 4. | AI     |
 | 2026-05-14 | 1.8     | Added three missing review notification events to the event catalog: `review.response_posted` (patient notified when provider responds), `review.removed_by_admin` (patient notified when admin removes review), `review.takedown_decided` (patient notified of takedown approve/reject decision). Required by FR-013 REQ-013-016. | Verification alignment (2026-05-14) |
 | 2026-05-14 | 1.9     | Added provider-facing `review.published` event for new published reviews and aligned provider notification preference wording/entity with FR-032 Review Notifications. | Verification alignment (2026-05-14) |
+| 2026-08-20 | 2.0     | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the event catalog and FR-037/FR-038 as dependencies, mirroring FR-030's source-of-truth catalog. | Verification alignment (2026-08-20) |
 
 ---
 
