@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (8 files)
+### 2026-08-20/ (9 files)
+
+#### **FR-037 Verification and Approval (v1.9 → v2.0)**
+
+- `FR037_VERIFICATION_APPROVAL_2026-08-20.md` - Moved FR-037 from Draft to Verified & Approved after the verification findings and v1.8/v1.9 follow-ups were resolved; recorded Product Owner approval without inferring Technical Lead or Stakeholder approval.
 
 #### **Template Ownership Relocation**
 
@@ -876,6 +880,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
+- **2026-08-20**: `FR037_VERIFICATION_APPROVAL_2026-08-20.md` - FR-037 v2.0 verification completion and Product Owner approval; Technical Lead and Stakeholder approvals remain explicitly unrecorded.
 - **2026-07-09**: `DESIGN_LAYOUT_VERIFICATION_FR018_AFF_2026-07-09.md` - FR-018 Affiliate Platform / AFF-side design-layout verification appended to the Admin + Affiliate report; all 9 AFF screens have layout coverage, with AFF verdict `🟡 PARTIAL` and no FAIL screens.
 - **2026-07-09**: `DESIGN_LAYOUT_VERIFICATION_FR018_ADMIN_2026-07-09.md` - FR-018 Admin Web design-layout verification; all 12 admin screens have layout coverage, with overall verdict `🔴 BLOCKED` due to critical action routing, confirmation-gate, missing-field, and failed-state parity gaps.
 - **2026-06-04**: `FR021_ADMIN_DESIGN_LAYOUT_VERIFICATION_2026-06-04.md` - FR-021 Provider/Admin Web Screens 2-10 design-layout verification; all 9 screens have layout coverage, with overall verdict `🔴 FAIL` due to publish-without-summary control issues in Screens 8-9.
@@ -914,6 +919,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_VERIFICATION_APPROVAL_2026-08-20.md` - FR-037 v2.0: changed the PRD from Draft to Verified & Approved and recorded Joachim Trung Tuan's Product Owner approval.
 - **2026-08-20**: `FR_CHANGE_REQUEST_FRAMEWORK_2026-08-20.md` - Established major-event FR Change Requests with project-owned template, FR-local traceability, before/after contracts, and separate implementation-reconciliation status; backfilled the FR-037 v1.8/v1.9 affected FRs.
 - **2026-08-20**: `FR037_PROVIDER_DECLINE_FALLBACK_2026-08-20.md` - FR-037 v1.9 and FR-003 v2.1: explicit exclusive-provider decline before quote creation now removes the restriction and returns the inquiry to normal FR-003 distribution exactly once; expiry behavior is unchanged.
 - **2026-08-20**: `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - FR-037 v1.8 cross-FR sync: FR-003 exclusive-provider distribution override, FR-004 restricted-recipient quote mode, FR-025 Monitoring Advice entry point, FR-020/FR-030 `monitoring.*` event catalog rows, and FR-037→FR-038 reciprocal dependency.
@@ -1089,4 +1095,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (template ownership relocation)
+**Last Updated**: August 20, 2026 (FR-037 verification and approval)

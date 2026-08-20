@@ -3,7 +3,7 @@
 **Module**: P-05: Aftercare & Progress Monitoring | P-07: 3D Scan Capture & Viewing | PR-07: Communication & Messaging | A-01: Patient Management & Oversight | A-09: System Settings & Configuration | S-03: Notification Service | S-05: Media Storage Service
 **Feature Branch**: `fr037-monitor-hair-loss`
 **Created**: 2026-08-17
-**Status**: Draft
+**Status**: ✅ Verified & Approved
 **Source**: FR-037 from system-prd.md; product-owner requirements confirmed 2026-08-17 and clarified 2026-08-20; reuses compatible contracts from FR-002, FR-003, FR-020, and FR-025
 
 ---
@@ -868,6 +868,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
+| 2.0 | 2026-08-20 | Verification completed after resolving the FR-037 review findings and cross-FR integration follow-ups through v1.9; Product Owner approved the resulting requirement scope and the document moved from Draft to Verified & Approved. | Product Team |
 | 1.8 | 2026-08-20 | Cross-FR sync (verification follow-up): added FR-003 exclusive-provider distribution override and FR-004 restricted-recipient quote mode for monitoring conversions (REQ-037-029/Business Rule 7); added FR-025 System-Triggered (Monitoring Advice) entry point; added `monitoring.*` events to the FR-020/FR-030 notification catalogs; added FR-038 as a dependency for symmetry. See [Change Request](./change-request-2026-08-20-cross-fr-integration.md) | Product Team |
 | 1.9 | 2026-08-20 | Clarified the monitoring-conversion fallback: an explicit exclusive-provider decline before quote creation automatically and idempotently returns the inquiry to normal FR-003 distribution; removed the patient-release requirement and kept expiry on existing FR-003/FR-004 rules. See [Change Request](./change-request-2026-08-20-cross-fr-integration.md) | Product Team |
 | 1.7 | 2026-08-20 | Verification fixes: provider view anonymized for the entire case lifetime (no payment trigger exists in FR-037); renamed the twice-monthly cadence to bi-weekly to match the 14-day interval; relabelled Step B inquiry-only fields as a read-only FR-003 handoff target; made the latest submission timestamp authoritative when one date holds several entries; synchronized the preview-link, advice-window, anonymization, and S-03/S-05 additions into system-prd.md | Product Team |
@@ -883,16 +884,15 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 ## Appendix: Approvals
 
-| Role | Name | Status | Date |
+| Role | Name | Date | Signature/Approval |
 | --- | --- | --- | --- |
-| Product Owner | Pending | Pending Review | — |
-| Technical Lead | Pending | Pending Review | — |
-| Design Lead | Pending | Pending Review | — |
-| Compliance Officer | Pending | Pending Review | — |
+| Product Owner | Joachim Trung Tuan | 2026-08-20 | ✅ Approved |
+| Technical Lead | Not recorded | — | Not recorded |
+| Stakeholder | Not recorded | — | Not recorded |
 
 ---
 
-**Document Version**: 1.9
+**Document Version**: 2.0
 **Template Version**: 2.0.0
 **Last Updated**: 2026-08-20
-**Next Review**: Before implementation planning
+**Next Review**: Upon a major requirement change
