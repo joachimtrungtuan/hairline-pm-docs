@@ -684,7 +684,7 @@ flowchart TD
 | 2026-02-24 | 2.0 | Restructured to two-level model (Questionnaire Sets → Questions); updated screens, workflows, and FR-011 integration rule; decoupled publishing from inquiry activation (explicit "Set as Active for Inquiry" toggle) | AI |
 | 2026-02-25 | 2.1 | Post-verification fixes: Inquiry question type constraint changed to soft warning (Yes/No recommended, other types allowed after admin confirms warning); replaced Visual Scale 1–5 with Visual Scale 1–10 as sole visual scale type; removed FR-002 as dependency (no data flow); added FR-020 alert event integration note; system PRD updated to defer Bulk Operations and Question Templates to V2, and align question grouping to set-level categorisation | AI |
 | 2026-02-25 | 2.2 | Decision update: Enforced MVP Inquiry/Multi-Context question type constraint (Yes/No only) with future typed-answer extension; removed medical-alert notification integration into FR-020 (in-portal indicators only) | AI |
-| 2026-08-20 | 2.3 | Cross-FR sync: added FR-037 as a dependency and a "System-Triggered (Monitoring Advice)" entry point — FR-037 reuses the active Inquiry-context questionnaire set to gate provider-advice mode access, outside the FR-003 inquiry-submission trigger | Product Team |
+| 2026-08-20 | 2.3 | Cross-FR sync: added FR-037 as a dependency and a "System-Triggered (Monitoring Advice)" entry point — FR-037 reuses the active Inquiry-context questionnaire set to gate provider-advice mode access, outside the FR-003 inquiry-submission trigger. See [Change Request](./change-request-2026-08-20-fr037-monitoring-advice-questionnaire.md) | Product Team |
 
 ---
 

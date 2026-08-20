@@ -425,7 +425,7 @@ Acceptance Scenarios:
 | 2026-02-10 | 1.7     | FR-003 verification fixes: Updated stale "Screen 11a" reference to "Screen 8b" in `inquiry.cancelled` event notes (FR-003 v1.6 renumbering). Aligned cancellation notification SLA from "within 2 seconds" to "within 5 minutes" to match FR-003 Workflow 5 step 4. | AI     |
 | 2026-05-14 | 1.8     | Added three missing review notification events to the event catalog: `review.response_posted` (patient notified when provider responds), `review.removed_by_admin` (patient notified when admin removes review), `review.takedown_decided` (patient notified of takedown approve/reject decision). Required by FR-013 REQ-013-016. | Verification alignment (2026-05-14) |
 | 2026-05-14 | 1.9     | Added provider-facing `review.published` event for new published reviews and aligned provider notification preference wording/entity with FR-032 Review Notifications. | Verification alignment (2026-05-14) |
-| 2026-08-20 | 2.0     | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the event catalog and FR-037/FR-038 as dependencies, mirroring FR-030's source-of-truth catalog. | Verification alignment (2026-08-20) |
+| 2026-08-20 | 2.0     | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the event catalog and FR-037/FR-038 as dependencies, mirroring FR-030's source-of-truth catalog. See [Change Request](./change-request-2026-08-20-fr037-monitoring-events.md) | Verification alignment (2026-08-20) |
 
 ---
 

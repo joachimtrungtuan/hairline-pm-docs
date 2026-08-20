@@ -147,6 +147,7 @@ For each doc type: where its structure is **defined** (template/source) and the 
 | Doc type | Authoritative scaffold source | Reusable template file | Section map |
 |---|---|---|---|
 | FR PRD (`frNNN/prd.md`) | **`.specify/templates/prd-template.md`** (canonical); `verify-fr/SKILL.md` section contract | `.specify/templates/prd-template.md` | §C.1 |
+| Major FR Change Request (`frNNN/change-request-*.md`) | `project-requirements/templates/change-request-template.md` | `project-requirements/templates/change-request-template.md` | Template headings |
 | System PRD | `system-prd.md` itself | — | §C.2 |
 | Data schema | `system-data-schema.md` itself | — | §C.3 |
 | Technical spec | `system-technical-spec.md` itself | — | §C.4 |
@@ -162,6 +163,8 @@ For each doc type: where its structure is **defined** (template/source) and the 
 > `prd-template.md` (canonical FR PRD scaffold — matches §C.1), plus `plan-template.md`,
 > `tasks-template.md`, `checklist-template.md`, `agent-file-template.md`. Use
 > `fr022-search-filtering/prd.md` as a complete filled exemplar.
+
+> **Change Requests** are project-owned supplements, not Spec Kit inputs. Create one beside each affected FR PRD only for a major event: a new or materially revised FR changes a verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Small corrections remain in the PRD change log and normal update log. A Change Request records the approved documentation delta separately from implementation reconciliation; it never proves that the deployed system already matches the new contract.
 
 ### C.1 — FR PRD scaffold (identical across all 38 FRs)
 

@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (6 files)
+### 2026-08-20/ (7 files)
+
+#### **FR Change Request Framework**
+
+- `FR_CHANGE_REQUEST_FRAMEWORK_2026-08-20.md` - Added the major-event Change Request template and one FR-local before/after record for each FR affected by the FR-037 v1.8/v1.9 cross-FR changes; implementation reconciliation remains explicitly separate from documentation approval.
 
 #### **FR-037 Provider-Decline Distribution Fallback (v1.8 → v1.9)**
 
@@ -905,6 +909,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR_CHANGE_REQUEST_FRAMEWORK_2026-08-20.md` - Established major-event FR Change Requests with project-owned template, FR-local traceability, before/after contracts, and separate implementation-reconciliation status; backfilled the FR-037 v1.8/v1.9 affected FRs.
 - **2026-08-20**: `FR037_PROVIDER_DECLINE_FALLBACK_2026-08-20.md` - FR-037 v1.9 and FR-003 v2.1: explicit exclusive-provider decline before quote creation now removes the restriction and returns the inquiry to normal FR-003 distribution exactly once; expiry behavior is unchanged.
 - **2026-08-20**: `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - FR-037 v1.8 cross-FR sync: FR-003 exclusive-provider distribution override, FR-004 restricted-recipient quote mode, FR-025 Monitoring Advice entry point, FR-020/FR-030 `monitoring.*` event catalog rows, and FR-037→FR-038 reciprocal dependency.
 - **2026-08-20**: `FR037_VERIFICATION_FIXES_V17_2026-08-20.md` - FR-037 v1.7: lifetime provider anonymization, bi-weekly cadence rename, Step B handoff-target relabel, same-date severity tie-break, and system-prd.md synchronization.
@@ -1079,4 +1084,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 provider-decline distribution fallback v1.9)
+**Last Updated**: August 20, 2026 (FR Change Request framework and FR-037 backfill)
