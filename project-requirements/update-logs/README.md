@@ -6,7 +6,15 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (1 file)
+### 2026-08-20/ (3 files)
+
+#### **FR-037 Verification Corrections (v1.5 → v1.6)**
+
+- `FR037_VERIFICATION_CORRECTIONS_2026-08-20.md` - Enforced anonymized provider-facing patient identifiers until payment confirmation, aligned patient/Admin daily-note limits at 3,000 characters, and synchronized the S-05 label and document metadata.
+
+#### **FR-037 Provider and Admin Detail-Screen Restructure (v1.4 → v1.5)**
+
+- `FR037_PROVIDER_ADMIN_DETAIL_SCREEN_RESTRUCTURE_2026-08-20.md` - Split Provider Screen 9 overview from Screen 10A daily-log detail and Screen 10B advice detail; moved withdrawal to Screen 11; renumbered the Admin list/overview to Screens 12-13; and added corresponding Admin Screens 14A-14B.
 
 #### **FR-037 Advice, Preview, and Dashboard Revision (v1.3 → v1.4)**
 
@@ -885,6 +893,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_VERIFICATION_CORRECTIONS_2026-08-20.md` - FR-037 v1.6: anonymized provider-facing identity, aligned daily-note validation, and corrected module/version metadata.
+- **2026-08-20**: `FR037_PROVIDER_ADMIN_DETAIL_SCREEN_RESTRUCTURE_2026-08-20.md` - FR-037 v1.5: dedicated Provider/Admin case overviews, daily-log details, and provider-advice details, with withdrawal and Admin screens renumbered accordingly.
 - **2026-08-20**: `FR037_ADVICE_PREVIEW_AND_DASHBOARD_REVISION_2026-08-20.md` - FR-037 v1.4: separate editable provider-advice calendar records, supersession-only window expiry, expiring pre-assignment previews without embedded chat, and expanded Provider/Admin listing and detail screens.
 - **2026-08-17**: `FR037_FR038_MONITORING_FLOWS_2026-08-17.md` - Created FR-037 hair-loss monitoring and FR-038 transplant-progress monitoring PRDs and aligned the system PRD and documentation index.
 - **2026-08-17**: `FR037_VERIFICATION_FIXES_2026-08-17.md` - FR-037 v1.3: self-service vs aftercare service boundary, 7-year raw scan retention, FR-003 Duration enum binding, two-step conversion summary flow, and creation-time cadence snapshot.
@@ -1054,4 +1064,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 advice, preview, and dashboard revision v1.4)
+**Last Updated**: August 20, 2026 (FR-037 verification corrections v1.6)

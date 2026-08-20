@@ -1,6 +1,6 @@
 # FR-037 - Monitor Your Hair Loss
 
-**Module**: P-05: Aftercare & Progress Monitoring | P-07: 3D Scan Capture & Viewing | PR-07: Communication & Messaging | A-01: Patient Management & Oversight | A-09: System Settings & Configuration | S-03: Notification Service | S-05: Media Processing Service
+**Module**: P-05: Aftercare & Progress Monitoring | P-07: 3D Scan Capture & Viewing | PR-07: Communication & Messaging | A-01: Patient Management & Oversight | A-09: System Settings & Configuration | S-03: Notification Service | S-05: Media Storage Service
 **Feature Branch**: `fr037-monitor-hair-loss`
 **Created**: 2026-08-17
 **Status**: Draft
@@ -208,8 +208,8 @@ flowchart TD
 > **Tenant screen ownership**:
 >
 > - **Patient App / Patient Platform (P-05, P-07)**: Screens 1-7 cover intake and mode selection, the active monitoring calendar, daily logs, scan capture/history, completion, PDF export, and conversion into FR-003.
-> - **Provider Dashboard / Provider Platform (PR-07)**: Screens 8-10 exist only for provider-advice cases and cover the assigned advice queue, longitudinal review/advice, and provider withdrawal.
-> - **Admin Dashboard / Admin Platform (A-01, A-09)**: Screens 11-12 cover monitoring oversight, initial assignment/reassignment, audited case correction, and advice-cadence configuration.
+> - **Provider Dashboard / Provider Platform (PR-07)**: Screens 8, 9, 10A, 10B, and 11 exist only for provider-advice cases and separate the assigned-case queue, single-case overview, daily-log detail, provider-advice detail, and withdrawal confirmation.
+> - **Admin Dashboard / Admin Platform (A-01, A-09)**: Screens 12, 13, 14A, and 14B separate the system-wide case list, single-case overview, daily-log detail, and provider-advice detail, including assignment, audited correction, and advice-cadence controls.
 
 ### Patient Platform Screens
 
@@ -387,11 +387,11 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
 | Assigned Cases | list | Yes | Active advice-mode cases | Assigned provider only |
-| Search | text input | No | Finds cases by patient name or case ID | Debounced; scoped to assigned cases |
+| Search | text input | No | Finds cases by anonymized patient ID or case ID | Debounced; scoped to assigned cases |
 | Status Filter | multi-select | No | Filters by active assignment and case status | Valid values only |
 | Advice Filter | select | No | All, advice available, awaiting future window, or submitted for current window | Derived from window state |
 | Assignment Filter | select | No | All, initial assignment, or reassignment | Valid values only |
-| Sort | select | No | Last patient log, advice availability, assignment date, or patient name | Valid values only |
+| Sort | select | No | Last patient log, advice availability, assignment date, or anonymized patient ID | Valid values only |
 | Last Patient Log | datetime | Yes | Most recent entry | Derived |
 | Advice Availability | status | Yes | Available now or next date | Config-derived |
 | Assignment Type | badge | Yes | Initial or reassignment | Derived |
@@ -402,33 +402,66 @@ flowchart TD
 - Search, filters, sorting, and pagination compose without exposing cases assigned to another provider.
 - Withdrawing removes the case from this queue immediately after confirmation.
 
-#### Screen 9: Provider Monitoring Review and Advice
+#### Screen 9: Provider Monitoring Case Overview
 
-**Purpose**: Mirrors the patient’s full monitoring view for the assigned provider and adds a separate, cadence-controlled provider advice area.
+**Purpose**: Gives the assigned provider the overall view of one monitoring case and routes each calendar record into its dedicated detail screen.
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Case Header | component | Yes | Patient, case ID, mode, status, start date, assignment type, and assignment date | Read-only |
+| Case Header | component | Yes | Anonymized patient ID, case ID, mode, status, start date, assignment type, and assignment date | Read-only; no patient full name or contact details before payment confirmation |
 | Monitoring Dashboard | component | Yes | Same summary, trend, logged-day count, scan history, and status information visible to the patient | Read-only provider parity |
-| Monitoring Calendar | calendar | Yes | Same dated calendar and event indicators visible to the patient | Read-only; any date may be opened |
-| Daily Log Detail | detail panel | Conditional | Full patient-visible severity, notes, photos, scans, and entry version state for the selected date | Read-only |
+| Monitoring Calendar | calendar | Yes | Same dated calendar and event indicators visible to the patient | Read-only; patient-log events open Screen 10A and provider-advice events open Screen 10B |
 | Medical Questionnaire | component | Yes | Required advice-mode medical answers | Read-only |
-| Advice Window Stack | list | Yes | Current window plus the immediately superseded unsubmitted window when applicable, showing start date and available, submitted, or expired state | New window expires the prior unsubmitted window; only current available window is actionable |
-| Provider Advice Area | component | Yes | Provider-only submission area separate from every patient log record | Enabled only for the current available window |
-| Advice Paragraph | textarea | Conditional | One advice entry for the current available window | Maximum 1500 characters; stays enabled from window start until submitted or superseded |
-| Advice History | list | Yes | Provider-authored calendar entries with original submission time, edited state, latest-edit time, and version history | Chronological; never attached to patient logs |
-| Edit Advice | action | Conditional | Edits a submitted advice entry | Active assignment; audited; edited cue and latest-edit time required |
-| Withdraw | action | No | Opens withdrawal confirmation | Active assignment only |
+| Advice Window Summary | component | Yes | Current window plus the immediately superseded unsubmitted window when applicable, showing start date and available, submitted, or expired state | New window expires the prior unsubmitted window; current available window opens Screen 10B |
+| Advice History | list | Yes | Provider-authored advice entries with submission time, edited state, and latest-edit time | Chronological; each entry opens Screen 10B; never attached to patient logs |
+| Withdraw | action | No | Opens Screen 11 | Active assignment only |
+
+**Business Rules**:
+
+- Screen 9 is an overview only; it does not expand a complete daily log or edit advice inline.
+- Patient-log and provider-advice calendar events remain visually distinct and route to Screen 10A and Screen 10B respectively.
+
+#### Screen 10A: Provider Daily Log Detail
+
+**Purpose**: Shows the complete patient-authored record for one selected calendar day without mixing provider advice into that record.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Case and Date Context | header | Yes | Patient, case ID, selected date, and navigation back to Screen 9 | Read-only |
+| Severity | value | Yes | Patient severity for the selected log | Integer 1 to 10; read-only |
+| Notes | text | No | Patient-authored observation | Read-only |
+| Photos | gallery | No | Images attached to the selected daily log | Authorized media only; read-only |
+| Head Scan | component | No | V1 head scan photo set linked to the selected log | Authorized media only; read-only |
+| Record Metadata | component | Yes | Author, created time, latest update time, and version state | Read-only |
+| Previous / Next Log | navigation | No | Moves between patient-authored daily logs in the case | Assigned case only |
+
+**Business Rules**:
+
+- Screen 10A displays one patient-authored daily log and its media; provider advice from the same date remains a separate calendar event and is never rendered as part of this record.
+- The provider cannot edit patient-authored monitoring data.
+
+#### Screen 10B: Provider Advice Detail
+
+**Purpose**: Provides the dedicated surface for viewing, submitting, or editing one provider-advice record or the current available advice window.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Case and Window Context | header | Yes | Patient, case ID, advice-window start date, state, and navigation back to Screen 9 | Assigned case only |
+| Advice Window Stack | list | Yes | Current window and immediately superseded unsubmitted window when applicable | Only current available window is actionable |
+| Advice Paragraph | textarea | Conditional | New or edited advice for the selected actionable/submitted record | Maximum 1500 characters; active assignment required for write actions |
+| Submit Advice | action | Conditional | Creates the single advice record for the current available window | Window available and no advice submitted |
+| Edit Advice | action | Conditional | Saves a new version of submitted advice | Submitted record; active assignment; audited |
+| Advice Metadata | component | Conditional | Author, original submission time, edited cue, latest-edit time, and version state | Submitted advice only |
 
 **Business Rules**:
 
 - Advice is informational and must not be represented as diagnosis or prescription.
 - Each window opens on its calculated start date and has no normal deadline. It remains available until its single advice entry is submitted.
-- If the next calculated window opens while the prior window remains unsubmitted, the prior window alone expires and the new window becomes the sole actionable window. The two windows remain visibly stacked so the provider can see the superseded missed opportunity and the current opportunity.
-- Submission creates a new provider-authored case-calendar entry. It must not mutate, annotate, or attach to a patient-authored daily log.
-- A submitted advice entry may be edited; the patient, provider, and Admin views show that it was edited and when the latest edit occurred, while audit history preserves prior content.
+- If the next calculated window opens while the prior window remains unsubmitted, the prior window alone expires and the new window becomes the sole actionable window. Both remain visible with distinct states.
+- Submission creates a separate provider-authored case-calendar record and never mutates, annotates, or attaches to a patient-authored daily log.
+- Editing preserves prior versions; patient, Provider, and Admin views show an edited cue and latest-edit timestamp.
 
-#### Screen 10: Provider Withdrawal Confirmation
+#### Screen 11: Provider Withdrawal Confirmation
 
 **Purpose**: Ends a provider assignment safely.
 
@@ -444,7 +477,7 @@ flowchart TD
 
 ### Admin Platform Screens
 
-#### Screen 11: Admin Monitoring Cases and Assignment Queue
+#### Screen 12: Admin Monitoring Cases and Assignment Queue
 
 **Purpose**: Gives Admin a system-wide operational picture of monitoring cases and supports oversight, pre-assignment sharing, first assignment, and reassignment.
 
@@ -476,21 +509,19 @@ flowchart TD
 - FR-037 does not embed a chat surface. Admin shares the preview link through an existing communication channel and records the eventual assignment decision in this screen.
 - Assignment eligibility and Admin permissions are validated before save.
 
-#### Screen 12: Admin Monitoring Case Detail and Configuration
+#### Screen 13: Admin Monitoring Case Overview and Configuration
 
-**Purpose**: Gives Admin a patient-parity full case view plus complete audited operational control and configuration.
+**Purpose**: Gives Admin the overall view and operational controls for one case, routing individual patient logs and provider advice into dedicated detail screens.
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
 | Case Header | component | Yes | Case ID, patient identity and contact summary, mode, status, dates, completion/conversion state, and linked inquiry | Permission controlled |
 | Intake and Medical Data | component | Yes | All intake answers and the advice-mode medical questionnaire visible in the patient case experience | Permission controlled; questionnaire conditional by mode |
 | Monitoring Dashboard | component | Yes | Patient-parity summary, severity trend, logged-day count, scan history, and case status | Permission controlled |
-| Monitoring Calendar | calendar | Yes | Full day-by-day patient calendar plus separate provider-advice entries | Any date/event may be opened; author type must be distinguishable |
-| Daily Log Detail | editable detail panel | Conditional | Severity, notes, photos, scans, timestamps, author, and version state for a selected patient log | Permission controlled; audited edit reason required |
-| Provider Advice Detail | editable detail panel | Conditional | Separate advice record, window, author, submission time, edited state, latest-edit time, and version history | Never attached to patient log; audited edit reason required |
+| Monitoring Calendar | calendar | Yes | Full day-by-day patient calendar plus separate provider-advice entries | Patient logs open Screen 14A; provider advice opens Screen 14B; author type must be distinguishable |
 | Assignment History | timeline | Conditional | Provider assignment lifecycle | Immutable events |
 | Assignment Controls | component | Conditional | Candidate preview sharing, expiry/revocation, assignment, reassignment, and provider withdrawal context | Advice mode only; permission controlled |
-| Advice Window History | list | Conditional | Window start, submitted/available/expired state, linked advice record, and supersession relationship | Advice mode only; versioned |
+| Advice Window History | list | Conditional | Window start, submitted/available/expired state, linked advice record, and supersession relationship | Advice mode only; linked advice opens Screen 14B |
 | Export and Conversion | component | Yes | PDF versions, export state, conversion summary, linked FR-003 inquiry, and provenance | Permission controlled |
 | Edit Reason | textarea | Conditional | Reason for Admin mutation | Required before save |
 | Advice Cadence | select | Yes | Weekly or twice monthly | Global active configuration; applies to cases created after the change only |
@@ -501,8 +532,47 @@ flowchart TD
 - Admin may edit any case information, but no edit may erase historical values or provenance.
 - Admin sees every field and dated record available in the patient case view, with additional assignment, advice-window, audit, preview-sharing, export, and conversion controls according to permission.
 - Patient logs and provider advice remain separate record types and separate calendar entries even when they occur on the same date.
+- Screen 13 is the overall case screen; full daily-log and advice-record fields are presented only on Screens 14A and 14B.
 - Cadence changes apply prospectively to newly created cases only. Cases already created keep the cadence captured at their creation, so no in-flight advice window is shortened, extended, or recomputed, and no advice entry is retroactively created or removed.
 - The cadence selector is a single global setting; Admin cannot set a case-specific cadence.
+
+#### Screen 14A: Admin Daily Log Detail
+
+**Purpose**: Gives Admin the complete patient-authored record for one selected calendar day and the audited correction controls for that record.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Case and Date Context | header | Yes | Patient, case ID, selected date, and navigation back to Screen 13 | Permission controlled |
+| Severity | editable value | Yes | Patient severity for the selected log | Integer 1 to 10; edit reason required on change |
+| Notes | editable text | No | Patient-authored observation | Maximum 3000 characters; edit reason required on change |
+| Photos | editable gallery | No | Images attached to the selected daily log | Authorized media; changes audited |
+| Head Scan | editable component | No | V1 head scan photo set linked to the selected log | Authorized media; changes audited |
+| Record Metadata | component | Yes | Author, created time, latest update time, and current version | Read-only |
+| Edit Reason | textarea | Conditional | Reason for correcting the selected log | Required before any save |
+| Version History | timeline | Yes | Before/after values, Admin actor, reason, and timestamp | Read-only; immutable |
+
+**Business Rules**:
+
+- Screen 14A edits only the selected patient-authored daily-log record. Provider advice remains a separate record even when it shares the date.
+- Admin correction must preserve original values and provenance.
+
+#### Screen 14B: Admin Provider Advice Detail
+
+**Purpose**: Gives Admin the complete provider-advice record, its advice-window context, and audited correction history without attaching it to a patient log.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Case and Window Context | header | Yes | Patient, case ID, advice-window start date/state, and navigation back to Screen 13 | Permission controlled |
+| Advice Paragraph | editable text | Conditional | Submitted provider advice | Maximum 1500 characters; edit reason required on Admin change |
+| Advice Window Detail | component | Yes | Available/submitted/expired state, supersession relationship, and linked advice identity | Read-only window history |
+| Advice Metadata | component | Conditional | Provider author, original submission time, edited cue, latest-edit time, and current version | Submitted advice only |
+| Edit Reason | textarea | Conditional | Reason for correcting submitted advice | Required before any Admin save |
+| Version History | timeline | Conditional | Original and edited content, actor, reason, and timestamp | Submitted advice only; read-only; immutable |
+
+**Business Rules**:
+
+- Screen 14B owns advice-record detail; advice never appears as a field or annotation inside Screen 14A.
+- Admin edits preserve the provider as original author, retain every prior version, and surface the edited cue and latest-edit timestamp.
 
 ---
 
@@ -738,7 +808,7 @@ flowchart TD
 - **REQ-037-024**: Submitted provider advice MUST create a separate provider-authored case-calendar record and MUST NOT attach to or modify any patient log record.
 - **REQ-037-025**: Provider MUST be able to edit submitted advice while the system preserves immutable versions and displays an edited cue plus latest-edit timestamp to patient, provider, and Admin users.
 - **REQ-037-026**: Provider and Admin listing screens MUST support scoped search, filters, sorting, and pagination; the Admin list MUST provide separate All Cases, Self-Monitoring, and Provider Intervention tabs with operational case, activity, and assignment summaries.
-- **REQ-037-027**: Provider and Admin case-detail screens MUST include the full patient-visible monitoring dashboard, calendar, and day-level records, plus role-authorized advice and assignment controls.
+- **REQ-037-027**: Provider and Admin case overviews MUST include the full patient-visible monitoring dashboard and calendar, while each patient daily log and provider-advice record MUST open in its dedicated role-specific detail screen with the authorized fields and actions defined in Screens 10A, 10B, 14A, and 14B.
 - **REQ-037-028**: Admin MUST be able to generate and revoke a read-only pre-assignment case-preview link for a candidate provider, MUST select its expiry at share time, and preview access MUST NOT create an assignment or ongoing case access.
 - **REQ-037-029**: FR-037 MUST NOT add an embedded chat screen for pre-assignment communication; the preview link is shared through an existing external communication channel.
 - **REQ-037-021**: Conversion MUST present a read-only summary step showing the monitoring recap, all carried-over data, the summary PDF, and remaining inquiry-only items before any editable inquiry form is opened, and leaving that step MUST NOT alter the monitoring case.
@@ -789,6 +859,8 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
+| 1.6 | 2026-08-20 | Enforced anonymized patient identifiers on Provider monitoring screens until payment confirmation; aligned Admin daily-note validation to the patient 3000-character contract; corrected the S-05 module name and synchronized document metadata | Product Team |
+| 1.5 | 2026-08-20 | Split Provider single-case work into Screen 9 overview, Screen 10A daily-log detail, and Screen 10B advice detail; moved Provider withdrawal to Screen 11; renumbered the Admin list and overview to Screens 12-13; added corresponding Admin Screen 14A daily-log detail and Screen 14B advice detail | Product Team |
 | 1.4 | 2026-08-20 | Separated provider advice from patient log records; defined open-until-submitted advice windows, supersession expiry, and visible advice edits; added expiring pre-assignment provider previews without embedded chat; expanded provider search/filtering and patient-parity review; expanded Admin mode tabs, list fields, and full-detail controls | Product Team |
 | 1.3 | 2026-08-17 | Added the self-service vs aftercare service boundary (no reminders, cadence, milestones, or compliance state); aligned raw scan media retention to 7 years; bound the Duration field to the FR-003 enum; split conversion into Screen 7 Step A summary and Step B review with FR-003 handoff; made advice cadence global and snapshotted at case creation | Product Team |
 | 1.2 | 2026-08-17 | Grouped Screens 1-12 under explicit Patient Platform, Provider Platform, and Admin Platform ownership sections following verified multi-tenant FR conventions | Product Team |
@@ -808,7 +880,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 ---
 
-**Document Version**: 1.3
+**Document Version**: 1.6
 **Template Version**: 2.0.0
-**Last Updated**: 2026-08-17
+**Last Updated**: 2026-08-20
 **Next Review**: Before implementation planning
