@@ -1,7 +1,7 @@
 # Hairline Platform Documentation
 
-**Version**: 1.0.0  
-**Last Updated**: 2026-06-26  
+**Version**: 1.1.0
+**Last Updated**: 2026-08-20
 **Status**: ✅ Active Development
 
 > **🤖 AI agents:** start at **[`INDEX.md`](INDEX.md)** — the wayfinder that maps task → area → file → section, lists the skill directory, and carries every doc's scaffold. Locate there first; do not scan the tree or read long files whole. This README is human onboarding.
@@ -23,6 +23,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 - **Database Design**: [`project-requirements/system-data-schema.md`](project-requirements/system-data-schema.md)
 - **Module Mapping**: Each FR in `system-prd.md` includes module codes (P-01, PR-01, A-01, S-01)
 - **Functional Requirements**: Individual PRDs in `functional-requirements/` folder
+- **Templates**: Canonical project and Spec Kit-compatible templates in [`project-requirements/templates/`](project-requirements/templates/)
 - **Update History**: [`project-requirements/update-logs/`](project-requirements/update-logs/) for change tracking
 
 ## 📁 Documentation Structure
@@ -32,12 +33,18 @@ This repository contains comprehensive documentation for the **Hairline Platform
 ```sh
 project-requirements/
 ├── constitution-summary.md      # 🎯 START HERE - Project overview & principles
-├── system-prd.md                # 📋 Functional requirements (33 FRs with module mapping)
+├── system-prd.md                # 📋 Functional requirements with module mapping
 ├── system-technical-spec.md     # ⚙️ Technical architecture & implementation
-├── system-data-schema.md        # 🗄️ Database design (97 tables)
+├── system-data-schema.md        # 🗄️ Database design and relationships
+├── functional-requirements/     # 🧩 Individual FR PRDs and major-event Change Requests
+├── templates/                   # 📝 Canonical project and Spec Kit-compatible templates
 ├── transcriptions/              # 📝 Original requirement sources
 └── update-logs/                 # 📊 Documentation change history
 ```
+
+The project owns all templates in `project-requirements/templates/`. The workspace-root
+`.specify/templates` path is only a compatibility symlink so existing Spec Kit scripts can
+continue resolving their expected paths; do not maintain independent template copies there.
 
 ### Supporting Documentation
 
@@ -90,12 +97,22 @@ project-automation/task-prompt/  # 📝 Task generation templates
 
 ## 📋 Functional Requirements
 
-The system includes **33 Functional Requirements** (FR-001 through FR-033) covering:
+Functional Requirements are maintained as individual PRDs under
+[`project-requirements/functional-requirements/`](project-requirements/functional-requirements/) and cover:
 
 - **Patient Journey**: Registration → Inquiry → Quote Comparison → Booking → Payment → Treatment → Aftercare
 - **Provider Operations**: Team management, quote submission, appointment scheduling, treatment execution
 - **Admin Functions**: Provider onboarding, financial management, aftercare coordination, system configuration
 - **Shared Services**: Payment processing, notifications, 3D scan processing, media storage
+
+### Major Requirement Changes
+
+When a new or materially revised FR changes an already verified or implemented FR, create one
+Change Request beside each affected FR PRD using
+[`change-request-template.md`](project-requirements/templates/change-request-template.md).
+The Change Request records the before/after contract and reason for the approved documentation
+change; implementation reconciliation remains a separate status. Small corrections stay in the
+PRD change log and normal update log without creating a Change Request file.
 
 ## 🔄 Documentation Updates
 
@@ -104,6 +121,7 @@ All documentation changes are tracked in [`project-requirements/update-logs/`](p
 - **Change History**: Complete audit trail of modifications
 - **Verification Reports**: Cross-document consistency checks
 - **Implementation Notes**: Resolution of requirement gaps
+- **Major Change Requests**: FR-local before/after records for major requirement events
 
 ## 🎯 Getting Started Checklist
 

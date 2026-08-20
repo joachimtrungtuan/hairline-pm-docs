@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (9 files)
+### 2026-08-20/ (10 files)
+
+#### **Governance Alignment for Template Ownership**
+
+- `GOVERNANCE_TEMPLATE_OWNERSHIP_2026-08-20.md` - Kept root governance limited to CLAUDE.md/AGENTS.md, retained documentation authority under local-docs, and documented the canonical template directory, Spec Kit compatibility symlink, and major-event Change Request policy.
 
 #### **FR-037 Verification and Approval (v1.9 → v2.0)**
 
@@ -920,6 +924,7 @@ This folder contains documentation update reports and verification logs for the 
 ### Functional Requirements
 
 - **2026-08-20**: `FR037_VERIFICATION_APPROVAL_2026-08-20.md` - FR-037 v2.0: changed the PRD from Draft to Verified & Approved and recorded Joachim Trung Tuan's Product Owner approval.
+- **2026-08-20**: `GOVERNANCE_TEMPLATE_OWNERSHIP_2026-08-20.md` - Aligned governance and human onboarding with project-owned templates, the Spec Kit compatibility link, and FR-local Change Requests for major requirement events.
 - **2026-08-20**: `FR_CHANGE_REQUEST_FRAMEWORK_2026-08-20.md` - Established major-event FR Change Requests with project-owned template, FR-local traceability, before/after contracts, and separate implementation-reconciliation status; backfilled the FR-037 v1.8/v1.9 affected FRs.
 - **2026-08-20**: `FR037_PROVIDER_DECLINE_FALLBACK_2026-08-20.md` - FR-037 v1.9 and FR-003 v2.1: explicit exclusive-provider decline before quote creation now removes the restriction and returns the inquiry to normal FR-003 distribution exactly once; expiry behavior is unchanged.
 - **2026-08-20**: `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - FR-037 v1.8 cross-FR sync: FR-003 exclusive-provider distribution override, FR-004 restricted-recipient quote mode, FR-025 Monitoring Advice entry point, FR-020/FR-030 `monitoring.*` event catalog rows, and FR-037→FR-038 reciprocal dependency.
@@ -1095,4 +1100,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 verification and approval)
+**Last Updated**: August 20, 2026 (governance alignment for template ownership)
