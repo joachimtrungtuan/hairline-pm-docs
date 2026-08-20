@@ -377,7 +377,7 @@ flowchart TD
 - The monitoring case and inquiry remain distinct records linked by immutable conversion provenance.
 - If an assigned advice provider exists at conversion, that provider is the only initial quote recipient. If none exists, FR-003 normal distribution applies.
 - Completing Step B hands the patient into the standard FR-003 inquiry screens for the inquiry-only information. FR-037 does not duplicate those screens; it supplies pre-filled values and the summary PDF to them.
-- Business Rule 7 release to normal FR-003 distribution is exercised **after** conversion, from the resulting FR-003 inquiry, not from Steps A or B. FR-003 owns that action and its confirmation.
+- If the exclusive provider declines after conversion and before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs its normal distribution workflow. This transition occurs on the resulting inquiry, not on Steps A or B. Expiry continues to follow FR-003/FR-004's existing configured rules.
 
 ### Provider Platform Screens
 
@@ -592,7 +592,7 @@ flowchart TD
 - **Rule 5c**: Provider advice is a separate provider-authored case-calendar record, never an attachment or annotation on a patient log. Submitted advice may be edited with immutable version history; patient, provider, and Admin views must show an edited cue and latest-edit timestamp.
 - **Rule 5d**: Before assignment or reassignment, Admin may generate a read-only case-preview link for a candidate provider. Admin must select its expiry at share time. Preview access is audited, revocable, scoped to acceptance-decision information, and grants neither assignment nor ongoing case access. No FR-037 chat screen is created for this interaction.
 - **Rule 6**: Completion and conversion are terminal case outcomes; a converted monitoring case remains distinct from the inquiry.
-- **Rule 7**: If the exclusive assigned provider declines or lets the quote opportunity expire, distribution does not widen automatically. The patient may explicitly release the inquiry to normal FR-003 distribution.
+- **Rule 7**: If the exclusive assigned provider explicitly declines the converted inquiry before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs normal distribution exactly once. This decline fallback requires no patient release action. Inquiry or quote expiry remains governed by FR-003/FR-004 and does not trigger this rule.
 - **Rule 8**: Monitoring has no required daily frequency and no overdue state. It also has no logging cadence, no milestones, and no patient reminders; those are aftercare-package mechanics excluded by the Service Boundary in Module Scope. The only cadence in this FR is the provider advice window in Rule 5, which limits the provider, not the patient.
 - **Rule 9**: Every monitoring entry carries a submission timestamp. Where a date holds more than one entry, the latest-timestamped entry on that date is authoritative for that date's severity in the trend, latest-severity, and PDF summary calculations. Superseded entries remain stored, visible, and auditable.
 
@@ -779,6 +779,7 @@ flowchart TD
 2. Given multiple scans, when conversion opens, then the latest is selected by default and another scan or retake is available.
 3. Given successful inquiry submission, then the monitoring case becomes converted, the inquiry remains distinct, and the PDF plus provenance link are attached.
 4. Given an assigned advice provider, then only that provider initially receives quote access; given none, normal FR-003 distribution applies.
+5. Given the exclusive provider declines before creating a quote, then FR-003 records the reason, removes exclusive routing, and distributes the inquiry through its normal workflow exactly once.
 
 ### Edge Cases
 
@@ -793,6 +794,7 @@ flowchart TD
 - PDF generation fails after case completion and succeeds on retry.
 - Conversion is retried after a network timeout without creating duplicate inquiries.
 - Patient starts conversion but exits before submission; monitoring remains active.
+- Exclusive provider declines the converted inquiry before quote creation; normal FR-003 distribution runs once, while expiry without a decline remains on the existing expiry path.
 - Admin corrects a severity value after PDF generation; the PDF is versioned and regenerated.
 
 ---
@@ -838,7 +840,7 @@ flowchart TD
 
 ### Integration Requirements
 
-- **REQ-037-029**: If an assigned advice provider exists at conversion, only that provider MUST initially be selected to quote; otherwise FR-003 normal distribution MUST apply.
+- **REQ-037-029**: If an assigned advice provider exists at conversion, only that provider MUST initially be selected to quote. If that provider explicitly declines before quote creation, FR-003 MUST audit the reason, remove exclusive routing, and execute normal distribution exactly once. If no provider is assigned at conversion, FR-003 normal distribution MUST apply immediately. Expiry MUST remain governed by FR-003/FR-004 rather than this decline fallback.
 - **REQ-037-030**: Monitoring MUST remain active if FR-003 submission fails and MUST terminate only after successful conversion commit or explicit completion.
 - **REQ-037-031**: Conversion MUST be idempotent and MUST NOT create duplicate inquiries.
 
@@ -867,6 +869,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
 | 1.8 | 2026-08-20 | Cross-FR sync (verification follow-up): added FR-003 exclusive-provider distribution override and FR-004 restricted-recipient quote mode for monitoring conversions (REQ-037-029/Business Rule 7); added FR-025 System-Triggered (Monitoring Advice) entry point; added `monitoring.*` events to the FR-020/FR-030 notification catalogs; added FR-038 as a dependency for symmetry | Product Team |
+| 1.9 | 2026-08-20 | Clarified the monitoring-conversion fallback: an explicit exclusive-provider decline before quote creation automatically and idempotently returns the inquiry to normal FR-003 distribution; removed the patient-release requirement and kept expiry on existing FR-003/FR-004 rules | Product Team |
 | 1.7 | 2026-08-20 | Verification fixes: provider view anonymized for the entire case lifetime (no payment trigger exists in FR-037); renamed the twice-monthly cadence to bi-weekly to match the 14-day interval; relabelled Step B inquiry-only fields as a read-only FR-003 handoff target; made the latest submission timestamp authoritative when one date holds several entries; synchronized the preview-link, advice-window, anonymization, and S-03/S-05 additions into system-prd.md | Product Team |
 | 1.6 | 2026-08-20 | Enforced anonymized patient identifiers on Provider monitoring screens until payment confirmation; aligned Admin daily-note validation to the patient 3000-character contract; corrected the S-05 module name and synchronized document metadata | Product Team |
 | 1.5 | 2026-08-20 | Split Provider single-case work into Screen 9 overview, Screen 10A daily-log detail, and Screen 10B advice detail; moved Provider withdrawal to Screen 11; renumbered the Admin list and overview to Screens 12-13; added corresponding Admin Screen 14A daily-log detail and Screen 14B advice detail | Product Team |
@@ -889,7 +892,7 @@ No unresolved product requirements remain for Draft creation. Implementation mus
 
 ---
 
-**Document Version**: 1.8
+**Document Version**: 1.9
 **Template Version**: 2.0.0
 **Last Updated**: 2026-08-20
 **Next Review**: Before implementation planning

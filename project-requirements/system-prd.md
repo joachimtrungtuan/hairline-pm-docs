@@ -1731,6 +1731,7 @@ Total Quote:                           £3,000
 - Patient MUST be able to convert an active monitoring case into a distinct FR-003 inquiry. Conversion MUST pre-fill compatible information, allow every copied field to be edited, select the latest scan by default while allowing another scan or retake, require medical-answer review/reconfirmation, and attach the monitoring-summary PDF.
 - Previous monitoring history MUST NOT be attached to a newly created monitoring case. Full history linkage applies only when that source monitoring case converts into an FR-003 inquiry.
 - If an assigned advice provider exists at conversion, that provider MUST be the only initial provider selected to quote. If no provider is assigned, FR-003 normal distribution MUST apply.
+- If that exclusive provider explicitly declines before creating a quote, FR-003 MUST audit the decline reason, remove the exclusive-provider restriction, and execute normal distribution exactly once. Inquiry or quote expiry MUST continue to follow FR-003/FR-004's existing configured rules and MUST NOT invoke this decline fallback.
 - Admin MUST be able to edit all monitoring information with immutable actor, reason, timestamp, before-value, and after-value history.
 
 **Integration Points**:

@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (5 files)
+### 2026-08-20/ (6 files)
+
+#### **FR-037 Provider-Decline Distribution Fallback (v1.8 → v1.9)**
+
+- `FR037_PROVIDER_DECLINE_FALLBACK_2026-08-20.md` - Replaced the patient-release rule with an automatic, audited, idempotent return to normal FR-003 distribution when the exclusive provider explicitly declines before quote creation; expiry remains on existing FR-003/FR-004 rules.
 
 #### **FR-037 Cross-FR Verification Sync (v1.7 → v1.8)**
 
@@ -901,6 +905,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_PROVIDER_DECLINE_FALLBACK_2026-08-20.md` - FR-037 v1.9 and FR-003 v2.1: explicit exclusive-provider decline before quote creation now removes the restriction and returns the inquiry to normal FR-003 distribution exactly once; expiry behavior is unchanged.
 - **2026-08-20**: `FR037_CROSS_FR_VERIFICATION_SYNC_2026-08-20.md` - FR-037 v1.8 cross-FR sync: FR-003 exclusive-provider distribution override, FR-004 restricted-recipient quote mode, FR-025 Monitoring Advice entry point, FR-020/FR-030 `monitoring.*` event catalog rows, and FR-037→FR-038 reciprocal dependency.
 - **2026-08-20**: `FR037_VERIFICATION_FIXES_V17_2026-08-20.md` - FR-037 v1.7: lifetime provider anonymization, bi-weekly cadence rename, Step B handoff-target relabel, same-date severity tie-break, and system-prd.md synchronization.
 - **2026-08-20**: `FR037_VERIFICATION_CORRECTIONS_2026-08-20.md` - FR-037 v1.6: anonymized provider-facing identity, aligned daily-note validation, and corrected module/version metadata.
@@ -1074,4 +1079,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 cross-FR verification sync v1.8)
+**Last Updated**: August 20, 2026 (FR-037 provider-decline distribution fallback v1.9)

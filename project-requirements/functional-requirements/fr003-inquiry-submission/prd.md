@@ -276,6 +276,10 @@ flowchart TD
     Review --> Action{"Provider action"}
 
     Action -->|Proceed to quote| Quote["Continue to FR-004 (Quote creation flow)"]
+    Action -->|Decline exclusive inquiry| DeclineGate{"Monitoring conversion routed<br/>exclusively to this provider?"}
+    DeclineGate -->|No| DeclineBlocked["Use the ordinary inquiry-management rules"]
+    DeclineGate -->|Yes| Decline["Provider confirms decline with a reason"]
+    Decline --> Release["System audits the decline, removes the exclusive-provider restriction,<br/>and runs Workflow 2 normal matching and distribution"]
     Action -->|Need clarification| RequestInfo["Provider requests clarification via admin"]
     RequestInfo --> AdminHelp["Admin facilitates communication"]
     AdminHelp --> Stay["Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
@@ -297,6 +301,12 @@ flowchart TD
     Admin --> Stay["Inquiry remains in &quot;Inquiry&quot; stage until resolved"]
     Need -->|No| Continue["Proceed toward quote creation (FR-004)"]
 ```
+
+**C2: Exclusive monitoring-conversion provider declines the inquiry**:
+
+- **Trigger**: The sole provider receiving an FR-037/FR-038 monitoring-conversion inquiry declines before creating a quote
+- **Outcome**: The system records the provider and reason, removes the exclusive-provider restriction, and immediately reruns Workflow 2 through normal country, patient-selection, matching, and provider-cap rules. Repeated decline requests MUST NOT distribute the inquiry more than once
+- **Expiry boundary**: This automatic fallback is triggered by an explicit provider decline only. Inquiry or quote expiry continues to follow its existing configured rules
 
 ---
 
@@ -831,6 +841,7 @@ flowchart TD
 | Date Ranges | list | Yes | All selected date ranges | Non-overlapping |
 | Medical Questionnaire | group | Yes | Full Q&A responses | Completed |
 | Medical Alerts | chips | Yes | Tiered alert indicators | Critical/Standard/None |
+| Decline Exclusive Inquiry | action | Conditional | Declines an FR-037/FR-038 monitoring-conversion inquiry before quote creation | Exclusive assigned provider only; confirmation and reason required |
 
 **Notes**:
 
@@ -880,6 +891,7 @@ flowchart TD
 - Head scan requires viewer (photo set gallery in V1; interactive 3D in V2)
 - All data editable by admin
 - Provider can review inquiry details
+- When the exclusive provider declines before quote creation, the system must audit the reason, clear the exclusive routing restriction, and invoke normal Workflow 2 distribution exactly once.
 - **Note**: Quote creation functionality handled in FR-004
 
 ### Admin Platform Screens
@@ -988,6 +1000,7 @@ flowchart TD
    - Admin can manually assign inquiries
    - Patient can select maximum 5 preferred providers
    - Provider suggestions based on positive reviews and admin curation
+   - An FR-037/FR-038 monitoring-conversion inquiry is initially restricted to its assigned provider. If that provider explicitly declines before quote creation, the system removes the restriction and immediately reruns normal distribution. Expiry does not use this decline fallback
 
 3. **Data Access Rules**
    - Patient direct identifiers (name, phone number, email) anonymized until payment confirmation
@@ -1171,6 +1184,7 @@ flowchart TD
 
 - **REQ-003-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
 - **REQ-003-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
+- **REQ-003-016**: When the exclusive provider explicitly declines an FR-037/FR-038 monitoring-conversion inquiry before quote creation, the system MUST audit the decline reason, remove exclusive routing, and execute normal inquiry distribution exactly once.
 
 ### Cancellation Requirements
 
@@ -1325,6 +1339,7 @@ Acceptance Scenarios:
 1. Given distributed inquiry, When provider opens it, Then anonymized patient and medical alerts are visible
 2. Given head scan media and media, When provider views, Then performance and policy constraints are respected
 3. Given pre-quote stage, When provider attempts to modify patient data, Then system blocks and logs read-only access
+4. Given an FR-037/FR-038 inquiry routed exclusively to the provider, When the provider confirms decline with a reason before creating a quote, Then the system removes the restriction and distributes the inquiry through normal Workflow 2 exactly once
 
 ### User Story 4 - Patient Cancels Inquiry (Priority: P2)
 
@@ -1347,6 +1362,8 @@ Acceptance Scenarios:
 - Missing questionnaire details for "Yes" answers: system requires completion before submission
 - Patient cancels inquiry while provider is drafting a quote: provider's draft is locked with "Inquiry Cancelled" banner upon next save/refresh
 - Patient cancels inquiry during simultaneous provider quote submission: system processes cancellation first (inquiry status is source of truth); incoming quote submission rejected with "Inquiry no longer active" error. **Cross-FR note**: FR-004 must implement corresponding rejection handling for this edge case.
+- Exclusive provider submits duplicate decline requests: the first accepted request releases the inquiry to normal distribution; later duplicates return the committed result without creating duplicate provider views or notifications.
+- Exclusive inquiry reaches its configured expiry without an explicit provider decline: existing expiry rules apply and the decline-triggered redistribution path does not run.
 
 ---
 
@@ -1370,6 +1387,7 @@ Acceptance Scenarios:
 | 2026-02-11 | 1.8 | Workflow 5 (Patient-Initiated Inquiry Cancellation): Updated trigger and Step 1 to include intermediary inquiry detail view before Cancel Inquiry action, aligning with P02.2 design complement flow. Patient now navigates: Dashboard → Inquiry Detail → Cancel Inquiry (action menu) instead of Dashboard → Cancel Inquiry (direct). | AI |
 | 2026-03-03 | 1.9 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated Workflow 1 terminology and Screen 4 accordingly. | AI |
 | 2026-08-20 | 2.0 | Cross-FR sync (FR-037 verification): Added Workflow 2 exclusive-provider override branch and Alternative Flow B3 for monitoring-case conversion inquiries with an active provider assignment (REQ-037-029, Business Rule 7); added FR-037/FR-038 as dependencies | Verification alignment (2026-08-20) |
+| 2026-08-20 | 2.1 | Added explicit-provider-decline fallback for FR-037/FR-038 monitoring conversions: provider confirmation and reason, audited removal of exclusive routing, idempotent return to normal Workflow 2 distribution, and an explicit boundary preserving existing expiry behavior | Product Team |
 
 ## Appendix: Approvals
 
