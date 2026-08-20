@@ -1710,7 +1710,7 @@ Total Quote:                           £3,000
 ### FR-037: Monitor Your Hair Loss
 
 **Priority**: P1 (Next Phase)
-**Module(s)**: P-05: Aftercare & Progress Monitoring, P-07: 3D Scan Capture & Viewing, PR-07: Communication & Messaging, A-01: Patient Management & Oversight, A-09: System Settings & Configuration
+**Module(s)**: P-05: Aftercare & Progress Monitoring, P-07: 3D Scan Capture & Viewing, PR-07: Communication & Messaging, A-01: Patient Management & Oversight, A-09: System Settings & Configuration, S-03: Notification Service, S-05: Media Storage Service
 
 **Goal**: Enable patients to monitor hair loss longitudinally through self-monitoring or limited provider-advice mode, then complete/export the case or convert it into a treatment inquiry without re-entering existing information.
 
@@ -1721,7 +1721,11 @@ Total Quote:                           £3,000
 - Patient MUST be able to submit optional dated logs containing severity from 1 to 10, notes, photos, and standardized V1 head scan photo sets without a required logging frequency.
 - Advice-mode cases MUST wait for Admin provider assignment while patient logging remains available.
 - Advice mode MUST require the active FR-025 Inquiry medical questionnaire before the assigned provider can access the case.
-- Assigned provider MUST be able to post one limited advice paragraph per Admin-configurable weekly or twice-monthly window.
+- Assigned provider MUST be able to post one limited advice paragraph per Admin-configurable weekly or bi-weekly window. The cadence is a single global setting captured on each case at creation; a change applies only to cases created afterwards.
+- Each advice window MUST open on its calculated start date and remain actionable with no ordinary deadline until its single advice is submitted. When a successor window opens first, only the older unsubmitted window MUST expire, and the successor MUST become the sole actionable window.
+- Submitted advice MUST be a separate provider-authored case-calendar record, MUST NOT attach to or modify any patient log, and MUST be editable with immutable version history plus a visible edited cue and latest-edit timestamp.
+- Before assignment or reassignment, Admin MUST be able to generate and revoke an expiring, read-only, audited case-preview link for a candidate provider, selecting its expiry at share time. Preview access MUST NOT create an assignment or ongoing case access, and FR-037 MUST NOT add an embedded chat surface for this exchange.
+- Provider-facing FR-037 screens MUST show an anonymized patient identifier for the entire case lifetime.
 - Assigned provider MUST be able to withdraw with a reason; withdrawal MUST remove provider access and return the case to Admin as a clearly identified reassignment case while patient logging continues.
 - Patient MUST be able to complete the case and export a date-to-date PDF containing all logs, scan photos, logged-day count, and severity summary/trend.
 - Patient MUST be able to convert an active monitoring case into a distinct FR-003 inquiry. Conversion MUST pre-fill compatible information, allow every copied field to be edited, select the latest scan by default while allowing another scan or retake, require medical-answer review/reconfirmation, and attach the monitoring-summary PDF.

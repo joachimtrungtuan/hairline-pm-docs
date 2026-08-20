@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (3 files)
+### 2026-08-20/ (4 files)
+
+#### **FR-037 Verification Fixes (v1.6 → v1.7)**
+
+- `FR037_VERIFICATION_FIXES_V17_2026-08-20.md` - Fixed the undefined provider de-anonymization trigger by anonymizing for the whole case lifetime, renamed the twice-monthly cadence to bi-weekly, relabelled the Step B inquiry-only fields as an FR-003 handoff target, made the latest submission timestamp authoritative for same-date entries, and synchronized preview-link, advice-window, anonymization, and S-03/S-05 additions into system-prd.md.
 
 #### **FR-037 Verification Corrections (v1.5 → v1.6)**
 
@@ -893,6 +897,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-08-20**: `FR037_VERIFICATION_FIXES_V17_2026-08-20.md` - FR-037 v1.7: lifetime provider anonymization, bi-weekly cadence rename, Step B handoff-target relabel, same-date severity tie-break, and system-prd.md synchronization.
 - **2026-08-20**: `FR037_VERIFICATION_CORRECTIONS_2026-08-20.md` - FR-037 v1.6: anonymized provider-facing identity, aligned daily-note validation, and corrected module/version metadata.
 - **2026-08-20**: `FR037_PROVIDER_ADMIN_DETAIL_SCREEN_RESTRUCTURE_2026-08-20.md` - FR-037 v1.5: dedicated Provider/Admin case overviews, daily-log details, and provider-advice details, with withdrawal and Admin screens renumbered accordingly.
 - **2026-08-20**: `FR037_ADVICE_PREVIEW_AND_DASHBOARD_REVISION_2026-08-20.md` - FR-037 v1.4: separate editable provider-advice calendar records, supersession-only window expiry, expiring pre-assignment previews without embedded chat, and expanded Provider/Admin listing and detail screens.
@@ -1064,4 +1069,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR-037 verification corrections v1.6)
+**Last Updated**: August 20, 2026 (FR-037 verification fixes v1.7)
