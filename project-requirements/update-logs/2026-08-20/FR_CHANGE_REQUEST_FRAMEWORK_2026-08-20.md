@@ -18,7 +18,7 @@
 - Each affected FR receives its own immutable Change Request file beside `prd.md`.
 - The PRD remains the current approved contract. The Change Request preserves the baseline, approved delta, rationale, affected contracts, and implementation-reconciliation status.
 - Documentation approval and implementation verification are separate statuses. A Change Request must not imply that deployed behavior already matches the revised PRD.
-- Project-owned Change Request templates live under `project-requirements/templates/`. Spec Kit templates remain in `.specify/templates/` because its scripts resolve those paths directly.
+- Project-owned Change Request templates live under `project-requirements/templates/`. This location decision was expanded later the same day so all templates are physically project-owned there; `.specify/templates/` is now only the Spec Kit compatibility symlink. See `TEMPLATE_OWNERSHIP_RELOCATION_2026-08-20.md`.
 
 ## FR-037 Event Coverage
 

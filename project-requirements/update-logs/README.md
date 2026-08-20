@@ -6,7 +6,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-08-20/ (7 files)
+### 2026-08-20/ (8 files)
+
+#### **Template Ownership Relocation**
+
+- `TEMPLATE_OWNERSHIP_RELOCATION_2026-08-20.md` - Moved every Spec Kit-compatible template into the tracked project-requirements template directory and replaced `.specify/templates/` with a compatibility symlink so existing scripts keep their paths.
 
 #### **FR Change Request Framework**
 
@@ -815,6 +819,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-08-20**: `TEMPLATE_OWNERSHIP_RELOCATION_2026-08-20.md` - Centralized all project and Spec Kit-compatible templates under `project-requirements/templates/`; `.specify/templates/` now resolves there through a compatibility symlink.
 - **2026-08-17**: `SERVICE_ROUTES_DECK_REVISION_2026-08-17.md` - Four-service-routes deck rebuilt for a mixed stakeholder and design audience: 23 slides across three named route sections, with vocabulary, patient stories, a 39-screen inventory, unhappy-path states, and a closing design ask.
 - **2026-08-11**: `SPRINT_1_A02_FEATURED_PROVIDER_MANAGEMENT_2026-08-11.md` - Added Sprint 1 A-02 backlog rows for featured-provider controls and filter composition; aligned FR-015 with the two featured-status controls and the maximum-10 enforcement rule.
 - **2026-07-16**: `E2E_STATUS_TAXONOMY_AND_TIMESTAMP_INTEGRITY_2026-07-16.md` - Centralized the web E2E status taxonomy, enforced it in the CLI and SQLite, and added schema-v2 action timestamps while preserving legacy history.
@@ -1084,4 +1089,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: August 20, 2026 (FR Change Request framework and FR-037 backfill)
+**Last Updated**: August 20, 2026 (template ownership relocation)

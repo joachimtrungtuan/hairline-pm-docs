@@ -146,8 +146,9 @@ For each doc type: where its structure is **defined** (template/source) and the 
 
 | Doc type | Authoritative scaffold source | Reusable template file | Section map |
 |---|---|---|---|
-| FR PRD (`frNNN/prd.md`) | **`.specify/templates/prd-template.md`** (canonical); `verify-fr/SKILL.md` section contract | `.specify/templates/prd-template.md` | §C.1 |
+| FR PRD (`frNNN/prd.md`) | **`project-requirements/templates/prd-template.md`** (canonical); `verify-fr/SKILL.md` section contract | `project-requirements/templates/prd-template.md` | §C.1 |
 | Major FR Change Request (`frNNN/change-request-*.md`) | `project-requirements/templates/change-request-template.md` | `project-requirements/templates/change-request-template.md` | Template headings |
+| Spec Kit plan, task, checklist, and agent files | `project-requirements/templates/` | `project-requirements/templates/{plan-template,tasks-template,checklist-template,agent-file-template}.md` | Template headings |
 | System PRD | `system-prd.md` itself | — | §C.2 |
 | Data schema | `system-data-schema.md` itself | — | §C.3 |
 | Technical spec | `system-technical-spec.md` itself | — | §C.4 |
@@ -159,10 +160,13 @@ For each doc type: where its structure is **defined** (template/source) and the 
 | Design-layout review report | `verify-design-layout/SKILL.md` | `verify-design-layout/assets/report-template.md` | run skill |
 | Update-log entry | CLAUDE.md → Update Log Protocol | dated exemplars in `update-logs/` | — |
 
-> **Speckit templates** live in `.specify/templates/` (project root, read-only reference):
-> `prd-template.md` (canonical FR PRD scaffold — matches §C.1), plus `plan-template.md`,
-> `tasks-template.md`, `checklist-template.md`, `agent-file-template.md`. Use
-> `fr022-search-filtering/prd.md` as a complete filled exemplar.
+> **Template ownership**: All project and Spec Kit templates are physically owned in
+> `project-requirements/templates/`. The project-root `.specify/templates` path is a
+> compatibility symlink to that directory because existing Spec Kit scripts resolve the
+> `.specify/templates/*` paths directly. Use `fr022-search-filtering/prd.md` as a complete
+> filled FR PRD exemplar. The canonical templates are versioned by the nested `local-docs`
+> repository; the workspace-root symlink is provisioning state outside that repository and
+> must be recreated whenever the external `.specify` tooling is provisioned in a new workspace.
 
 > **Change Requests** are project-owned supplements, not Spec Kit inputs. Create one beside each affected FR PRD only for a major event: a new or materially revised FR changes a verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Small corrections remain in the PRD change log and normal update log. A Change Request records the approved documentation delta separately from implementation reconciliation; it never proves that the deployed system already matches the new contract.
 
@@ -188,7 +192,8 @@ For each doc type: where its structure is **defined** (template/source) and the 
 ## Appendix: Approvals
 ```
 
-Matches `.specify/templates/prd-template.md` (canonical). Confirm live anchors with
+Matches `project-requirements/templates/prd-template.md` (canonical; also available through the
+`.specify/templates/prd-template.md` compatibility path). Confirm live anchors with
 `rg -n "^## " <prd.md>` — a few early FRs may omit the trailing appendices.
 
 ### C.2 — system-prd.md
