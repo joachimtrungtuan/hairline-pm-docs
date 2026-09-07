@@ -191,7 +191,7 @@ flowchart TD
     Validate -->|No| Invalid["Do not distribute; return errors / flag for fix"]
     Validate -->|Yes| Identify["Generate inquiry ID (HPID) + timestamps"]
 
-    Identify --> Exclusive{"Monitoring conversion with exclusive<br/>assigned provider? (FR-037/FR-038)"}
+    Identify --> Exclusive{"FR-037 monitoring conversion with exclusive<br/>assigned provider?"}
     Exclusive -->|Yes| ExclusiveRoute["Route only to the assigned provider;<br/>skip country/selection matching and the 10-provider cap"]
     Exclusive -->|No| Match["Match providers by selected countries + explicit selections"]
     Match --> Cap{"Matched providers &gt; 10?"}
@@ -246,13 +246,13 @@ flowchart TD
 
 **B3: Inquiry originates from a monitoring-case conversion with an exclusive assigned provider**:
 
-- **Trigger**: Inquiry is created via FR-037 (Monitor Your Hair Loss) or FR-038 (Monitor Your Transplant Progress) conversion, and the source monitoring case has an active provider assignment at the time of conversion (REQ-037-029, Business Rule 7)
+- **Trigger**: Inquiry is created via FR-037 (Monitor Your Hair Loss) conversion, and the source monitoring case has an active provider assignment at the time of conversion (REQ-037-029, Business Rule 7)
 - **Outcome**: Normal country/selection matching and the 10-provider distribution cap are bypassed; the inquiry is distributed exclusively to the assigned provider. Standard anonymization, notification timing, and dashboard behavior are unchanged
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-    Start["Inquiry created via FR-037/FR-038 conversion"] --> Check{"Source monitoring case has<br/>an active provider assignment?"}
+    Start["Inquiry created via FR-037 conversion"] --> Check{"Source monitoring case has<br/>an active provider assignment?"}
     Check -->|No| Normal["Proceed with normal distribution (Workflow 2 main flow)"]
     Check -->|Yes| Exclusive["Distribute exclusively to the assigned provider;<br/>skip matching + 10-provider cap"]
     Exclusive --> Views["Create provider-specific inquiry view (anonymized)"]
@@ -304,7 +304,7 @@ flowchart TD
 
 **C2: Exclusive monitoring-conversion provider declines the inquiry**:
 
-- **Trigger**: The sole provider receiving an FR-037/FR-038 monitoring-conversion inquiry declines before creating a quote
+- **Trigger**: The sole provider receiving an FR-037 monitoring-conversion inquiry declines before creating a quote
 - **Outcome**: The system records the provider and reason, removes the exclusive-provider restriction, and immediately reruns Workflow 2 through normal country, patient-selection, matching, and provider-cap rules. Repeated decline requests MUST NOT distribute the inquiry more than once
 - **Expiry boundary**: This automatic fallback is triggered by an explicit provider decline only. Inquiry or quote expiry continues to follow its existing configured rules
 
@@ -843,7 +843,7 @@ flowchart TD
 | Date Ranges | list | Yes | All selected date ranges | Non-overlapping |
 | Medical Questionnaire | group | Yes | Full Q&A responses | Completed |
 | Medical Alerts | chips | Yes | Tiered alert indicators | Critical/Standard/None |
-| Decline Exclusive Inquiry | action | Conditional | Declines an FR-037/FR-038 monitoring-conversion inquiry before quote creation | Exclusive assigned provider only; confirmation and reason required |
+| Decline Exclusive Inquiry | action | Conditional | Declines an FR-037 monitoring-conversion inquiry before quote creation | Exclusive assigned provider only; confirmation and reason required |
 
 **Notes**:
 
@@ -1002,7 +1002,7 @@ flowchart TD
    - Admin can manually assign inquiries
    - Patient can select maximum 5 preferred providers
    - Provider suggestions based on positive reviews and admin curation
-   - An FR-037/FR-038 monitoring-conversion inquiry is initially restricted to its assigned provider. If that provider explicitly declines before quote creation, the system removes the restriction and immediately reruns normal distribution. Expiry does not use this decline fallback
+   - An FR-037 monitoring-conversion inquiry is initially restricted to its assigned provider. If that provider explicitly declines before quote creation, the system removes the restriction and immediately reruns normal distribution. Expiry does not use this decline fallback
 
 3. **Data Access Rules**
    - Patient direct identifiers (name, phone number, email) anonymized until payment confirmation
@@ -1350,7 +1350,7 @@ Acceptance Scenarios:
 1. Given distributed inquiry, When provider opens it, Then anonymized patient and medical alerts are visible
 2. Given head scan media and media, When provider views, Then performance and policy constraints are respected
 3. Given pre-quote stage, When provider attempts to modify patient data, Then system blocks and logs read-only access
-4. Given an FR-037/FR-038 inquiry routed exclusively to the provider, When the provider confirms decline with a reason before creating a quote, Then the system removes the restriction and distributes the inquiry through normal Workflow 2 exactly once
+4. Given an FR-037 inquiry routed exclusively to the provider, When the provider confirms decline with a reason before creating a quote, Then the system removes the restriction and distributes the inquiry through normal Workflow 2 exactly once
 
 ### User Story 4 - Patient Cancels Inquiry (Priority: P2)
 
