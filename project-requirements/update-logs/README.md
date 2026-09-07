@@ -827,6 +827,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-09-04**: `INQUIRY_CONFIGURATION_CHANGE_REQUEST_2026-09-04.md` - Approved FR-003 v2.5 and FR-026 v1.6 for Admin-managed inquiry treatment-area choices with display assets and a configurable minimum inquiry lead time, defaulting to 3 days; recorded two Sprint 1 P-02 backlog items without creating tasks.
+
 - **2026-08-20**: `TEMPLATE_OWNERSHIP_RELOCATION_2026-08-20.md` - Centralized all project and Spec Kit-compatible templates under `project-requirements/templates/`; `.specify/templates/` now resolves there through a compatibility symlink.
 - **2026-08-17**: `SERVICE_ROUTES_DECK_REVISION_2026-08-17.md` - Four-service-routes deck rebuilt for a mixed stakeholder and design audience: 23 slides across three named route sections, with vocabulary, patient stories, a 39-screen inventory, unhappy-path states, and a closing design ask.
 - **2026-08-11**: `SPRINT_1_A02_FEATURED_PROVIDER_MANAGEMENT_2026-08-11.md` - Added Sprint 1 A-02 backlog rows for featured-provider controls and filter composition; aligned FR-015 with the two featured-status controls and the maximum-10 enforcement rule.

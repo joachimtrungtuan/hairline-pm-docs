@@ -77,7 +77,7 @@ In V1, "3D head scan" capture is implemented as a standardized head scan photo s
 
 ```mermaid
 flowchart TD
-    Start["Service Selection"] --> Service["Patient opens mobile app and selects &quot;Get a Hair Transplant&quot;<br/>Patient chooses treatment type (Hair, Beard, Both)<br/>System validates patient eligibility"]
+    Start["Service Selection"] --> Service["Patient opens mobile app and selects &quot;Get a Hair Transplant&quot;<br/>System retrieves the active treatment-area catalog<br/>Patient selects one active treatment-area option<br/>System validates patient eligibility"]
     Service --> Eligible{"Eligibility valid?"}
     Eligible -->|No| EligibleErr["Show eligibility error + block progression"]
     Eligible -->|Yes| Dest["Destination Selection<br/>Patient selects preferred countries/locations (max 10 countries)<br/>System displays starting prices for each location<br/>Patient can select multiple destinations<br/>System suggests nearest countries to patient's location first"]
@@ -436,7 +436,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
 | Service Option | select (single) | Yes | Primary service selection | Must select one |
-| Treatment Type | checkbox (multi) | Yes | Hair/Beard/Both | At least one selected |
+| Treatment Area | select | Yes | One active, Admin-managed treatment-area option | Must select one active option returned by the Inquiry Configuration API |
 
 **Notes**:
 
@@ -445,14 +445,15 @@ flowchart TD
   - "Monitor Hair Loss" (secondary - different workflow)
   - "Aftercare: Monitor Transplant Progress" (secondary - different workflow)
   - "Aftercare for Transplant" (secondary - different workflow)
-- Treatment Type Selection:
-  - Hair (checkbox)
-  - Beard (checkbox)
-  - Both (checkbox)
+- Treatment Area Selection:
+  - The active, ordered catalog is retrieved from the Inquiry Configuration API.
+  - Each option contains a stable identifier, patient-facing label, and image/icon URL.
+  - Hair, Beard, and Both remain the default seeded options; they are not a fixed client-side enum.
 
 **Business Rules**:
 
-- Patient must select at least one treatment type
+- Patient must select one active treatment-area option
+- The selected option must be active when the inquiry is created; inactive options remain readable on historical inquiries through their saved snapshot.
 - Primary focus on "Get a Hair Transplant" option
 - Other services are secondary features
 
@@ -564,7 +565,7 @@ flowchart TD
   - Non-overlapping validation
 - Date Constraints:
   - Max 2 years in future
-  - Min 30 days from inquiry date
+- Minimum lead time from inquiry date is the active Admin-configured blocked window (default: 3 days)
   - Consider provider availability
 
 **Business Rules**:
@@ -573,6 +574,7 @@ flowchart TD
 - Date ranges cannot overlap
 - Dates limited to 2 years in future
 - System validates provider availability
+- Calendar eligibility and submission validation must use the same configured minimum lead-time value.
 
 #### Screen 6: Medical Questionnaire
 
@@ -1022,6 +1024,12 @@ flowchart TD
    - Admin has oversight visibility of patient-initiated cancellations but cannot block or reverse them
    - Cancellation event is logged in immutable audit trail with: patient ID, inquiry ID, timestamp, reason, optional feedback
 
+5. **Inquiry Configuration Rules**
+   - Admin-managed treatment-area options control the choices presented at inquiry creation. Each active option has a stable ID, label, display order, and image/icon URL.
+   - A treatment-area option used by an existing inquiry cannot be deleted. It may be deactivated for future inquiries while historical inquiry display retains the saved label and asset reference.
+   - Admin configures the minimum inquiry lead time as a whole number of blocked days. The default is 3; the permitted value is 0 through 730, consistent with the existing two-year date horizon.
+   - The patient platform retrieves the current catalog and lead-time setting from the backend. A client release is not required for ordinary option or lead-time changes only after implementation verifies compatibility with this dynamic response.
+
 ### Medical Data Rules
 
 1. **Medical Alert System**
@@ -1184,7 +1192,9 @@ flowchart TD
 
 - **REQ-003-010**: System MUST integrate with Shared Services for notifications and media/scan handling.
 - **REQ-003-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
-- **REQ-003-016**: When the exclusive provider explicitly declines an FR-037/FR-038 monitoring-conversion inquiry before quote creation, the system MUST audit the decline reason, remove exclusive routing, and execute normal inquiry distribution exactly once.
+- **REQ-003-017**: System MUST expose an active, ordered treatment-area catalog for inquiry creation, including a stable option identifier, label, and image/icon URL; Admin manages the catalog under FR-026.
+- **REQ-003-018**: System MUST enforce the Admin-configured minimum inquiry lead time consistently in the patient date picker and at submission. The default blocked window is 3 days and does not change the existing two-year, non-overlap, or availability rules.
+- **REQ-003-016**: When the exclusive provider explicitly declines an FR-037 monitoring-conversion inquiry before quote creation, the system MUST audit the decline reason, remove exclusive routing, and execute normal inquiry distribution exactly once.
 
 ### Cancellation Requirements
 
@@ -1198,7 +1208,7 @@ flowchart TD
 
 ## Key Entities
 
-- **Inquiry**: patientId, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
+- **Inquiry**: patientId, treatmentAreaId, treatmentAreaSnapshot, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
   - Status enum: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, **Cancelled**
   - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
 - **ProviderInquiry**: inquiryId, providerId, distributionAt, viewedAt, status
@@ -1230,7 +1240,8 @@ flowchart TD
 - **FR-004**: Quote Submission & Management (provider quote creation)
 - **FR-020**: Notifications & Alerts (inquiry notifications)
 - **FR-025**: Medical Questionnaire Management (centralized settings)
-- **FR-037 / FR-038**: Monitor Your Hair Loss / Monitor Your Transplant Progress (monitoring-case conversion may create an inquiry with an exclusive assigned provider, overriding normal distribution matching — see Workflow 2 Alternative Flow B3)
+- **FR-026**: App Settings & Security Policies (owns the treatment-area catalog and minimum inquiry lead-time configuration consumed by FR-003)
+- **FR-037**: Monitor Your Hair Loss (advice-mode monitoring conversion may create an inquiry with an exclusive assigned provider, overriding normal distribution matching — see Workflow 2 Alternative Flow B3)
 - **Future FR**: Provider Capacity Management (provider availability)
 
 ### External Dependencies
@@ -1388,6 +1399,10 @@ Acceptance Scenarios:
 | 2026-03-03 | 1.9 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated Workflow 1 terminology and Screen 4 accordingly. | AI |
 | 2026-08-20 | 2.0 | Cross-FR sync (FR-037 verification): Added Workflow 2 exclusive-provider override branch and Alternative Flow B3 for monitoring-case conversion inquiries with an active provider assignment (REQ-037-029, Business Rule 7); added FR-037/FR-038 as dependencies. See [Change Request](./change-request-2026-08-20-fr037-monitoring-conversion-alignment.md) | Verification alignment (2026-08-20) |
 | 2026-08-20 | 2.1 | Added explicit-provider-decline fallback for FR-037/FR-038 monitoring conversions: provider confirmation and reason, audited removal of exclusive routing, idempotent return to normal Workflow 2 distribution, and an explicit boundary preserving existing expiry behavior. See [Change Request](./change-request-2026-08-20-fr037-monitoring-conversion-alignment.md) | Product Team |
+| 2026-09-04 | 2.2 | Replaced the fixed Hair/Beard/Both inquiry choice with an Admin-managed treatment-area catalog that carries image/icon metadata, and replaced the fixed 30-day date lead time with an Admin-configured blocked window (default 30 days). Added dynamic API, historical-snapshot, and validation requirements. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
+| 2026-09-04 | 2.3 | Corrected the approved default inquiry lead time from 30 days to 3 days; the configurable range and all other date constraints are unchanged. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
+| 2026-09-04 | 2.4 | Verification correction: limited exclusive-provider conversion and decline fallback to FR-037, and declared FR-026 as the owner of the inquiry-configuration dependency. | Product Owner |
+| 2026-09-04 | 2.5 | Verification correction: aligned Workflow 1's service-selection step with the Admin-managed treatment-area catalog rather than a fixed Hair/Beard/Both enum. | Product Owner |
 
 ## Appendix: Approvals
 

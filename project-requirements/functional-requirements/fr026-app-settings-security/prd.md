@@ -90,7 +90,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Admin-Initiated**:
 
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
-- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, or account deletion reasons
+- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, or inquiry configuration
 - Admin navigates to Settings → Notifications to edit OTP email templates
 
 **System-Triggered**:
@@ -221,6 +221,20 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 - **Outcome**: Patients see updated account deletion reason options when requesting account deletion
 
+**A6: Admin Configures Inquiry Treatment Areas and Lead Time**:
+
+- **Trigger**: Product team needs to add or retire an inquiry treatment-area choice, change its image/icon, or adjust how many days patients must wait before a preferred treatment date.
+- **Steps**:
+  1. Admin navigates to Settings → App Data → Inquiry Configuration.
+  2. Admin adds, edits, reorders, activates, or deactivates a treatment-area option. Each option has a label and an image/icon asset.
+  3. Admin sets Minimum Inquiry Lead Time in whole days. The current default is 3 days.
+  4. Admin clicks Save and supplies the required change reason.
+  5. System validates that active option labels are unique, an image/icon asset is present, and lead time is between 0 and 730 days.
+  6. System versions and audits the change, invalidates configuration caches, and exposes the active catalog and lead-time value through the patient configuration API.
+  7. New inquiry sessions receive the new configuration within one minute; submitted inquiries retain their historical treatment-area snapshot.
+
+- **Outcome**: Admin can change future inquiry options and the date blocked window without a code change. Implementation must confirm the patient client consumes the dynamic response before treating ordinary configuration changes as release-free.
+
 **B1: Admin Attempts Invalid Configuration**:
 
 - **Trigger**: Admin enters out-of-range value for authentication throttling
@@ -287,6 +301,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Discovery Questions (answer options, order, active)
   - Inquiry Cancellation Reasons (reason label, order, requires_explanation, active)
   - Account Deletion Reasons (reason label, requires_explanation, display order, active)
+  - Inquiry Configuration (treatment-area options with image/icon assets, and minimum inquiry lead time)
 - Notifications
   - OTP Email Templates
     - Verification Email
@@ -528,6 +543,29 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ---
 
+### Screen 5c: Inquiry Configuration Manager
+
+**Purpose**: Allow Admin to manage treatment-area options displayed at inquiry creation and the blocked window before a patient may select a preferred treatment date.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Treatment Area Label | text | Yes | Patient-facing option label | Unique among active options; max 100 chars |
+| Image/Icon Asset | media URL | Yes | Image or icon returned with the option | Must resolve to an approved S-05-managed asset |
+| Display Order | number | Yes | Display sequence in the inquiry form | Unique integer order; drag-and-drop supported |
+| Active | checkbox | Yes | Whether the option is selectable for new inquiries | Default true; cannot deactivate the final active option; deactivation preserves historical records |
+| Minimum Inquiry Lead Time | number | Yes | Whole days blocked before a patient may select a preferred range | Integer 0-730; default 3 |
+
+**Business Rules**:
+
+- Admin may create, edit, reorder, activate, or deactivate treatment-area options. Options referenced by an inquiry cannot be deleted.
+- System MUST retain at least one active treatment-area option. A deactivation that would leave no active option is rejected.
+- The patient configuration API returns active options in display order with `id`, `label`, and `image_or_icon_url`, plus `minimum_inquiry_lead_days`.
+- The API must not return inactive options for new inquiries. Historical inquiry views use the saved option snapshot.
+- Minimum Inquiry Lead Time applies to both the calendar's disabled-date calculation and backend inquiry submission validation.
+- Saving either setting requires a change reason, version increment, immutable audit entry, and immediate cache invalidation.
+
+---
+
 ### Screen 6: OTP Email Template Editor
 
 **Purpose**: Edit email templates for OTP verification and password reset emails
@@ -626,6 +664,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Discovery questions: add, edit, deactivate answer options
 - Inquiry cancellation reasons: add, edit, reorder, deactivate reason options (FR-003 consumer)
 - Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
+- Inquiry configuration: add, edit, reorder, activate, or deactivate treatment-area options and set the minimum inquiry lead time (FR-003 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
 **Fixed in Codebase (Not Editable)**:
@@ -695,8 +734,8 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Integration point**: P-01 polls Settings API every 60 seconds to retrieve latest configurations; applies to login flows, OTP verification, profile forms
 
 - **FR-003 / Module P-02: Quote Request & Management**
-  - **Why needed**: P-02 consumes inquiry cancellation reason options for the patient cancellation modal (Screen 11)
-  - **Integration point**: P-02 polls Settings API to retrieve active cancellation reasons; applies to inquiry cancellation flow (Workflow 5)
+  - **Why needed**: P-02 consumes inquiry cancellation reason options for the patient cancellation modal (Screen 8a), plus active inquiry treatment-area options and the minimum inquiry lead time for inquiry creation.
+  - **Integration point**: P-02 retrieves active cancellation reasons for Workflow 5 and retrieves the active ordered treatment-area catalog with `minimum_inquiry_lead_days` for Screen 1, Screen 5, and backend submission validation. Submitted inquiries retain their treatment-area snapshot.
 
 - **FR-009 / Module PR-01: Auth & Team Management**
   - **Why needed**: PR-01 consumes authentication throttling and OTP configuration for provider login and email verification
@@ -707,8 +746,8 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 1 minute
 
 - **Module S-05: Media Storage Service**
-  - **Why needed**: S-05 stores country flag assets (SVG/PNG) uploaded via Country Manager UI
-  - **Integration point**: Settings UI uploads flag file to S-05 API, receives URL, and stores URL in country settings
+  - **Why needed**: S-05 stores country flag assets and treatment-area image/icon assets uploaded through the Settings UI.
+  - **Integration point**: Settings UI uploads an approved asset to the S-05 API, receives its URL, and stores that URL in the applicable country or inquiry treatment-area configuration.
 
 - **Admin Authentication & Authorization Module**
   - **Why needed**: Cannot restrict access to Settings Management UI without authentication and role-based permissions
@@ -985,6 +1024,24 @@ Compliance officer requests complete audit trail of all authentication policy ch
 
 ---
 
+### User Story 7 - Manage Inquiry Configuration (Priority: P1)
+
+Admin needs to manage the treatment-area choices and minimum inquiry lead time without a code deployment, while keeping the patient inquiry flow and submission validation aligned.
+
+**Why this priority**: Inquiry creation depends on this configuration; the patient calendar and backend validation must use the same current value.
+
+**Independent Test**: Can be fully tested by: (1) Admin creates or updates a treatment-area option with an approved S-05 asset, sets the lead time, and submits the change reason; (2) Verify versioning, audit entry, and cache invalidation; (3) Retrieve the active configuration as a patient; (4) submit an inactive option and an early date; (5) confirm both are rejected and historical inquiries retain their saved snapshot.
+
+**Acceptance Scenarios**:
+
+1. **Given** admin is logged in with the Settings Manager role, **When** admin opens Settings → App Data → Inquiry Configuration, **Then** the system displays treatment-area options in display order and the current minimum inquiry lead time.
+2. **Given** admin enters a unique label, approved S-05 image/icon URL, display order, active state, and a whole-day lead time from 0 through 730, **When** admin saves with a change reason, **Then** the system versions and audits the update and invalidates the configuration cache.
+3. **Given** the configuration change was saved, **When** the patient client retrieves its configuration, **Then** it receives only active ordered options with IDs, labels, image/icon URLs, and `minimum_inquiry_lead_days` together.
+4. **Given** an option has become inactive or a selected date is earlier than the configured threshold, **When** the patient submits an inquiry, **Then** backend validation rejects the submission.
+5. **Given** an inquiry was submitted with an active treatment-area option, **When** that option is later changed or deactivated, **Then** the historical inquiry retains its original treatment-area snapshot.
+
+---
+
 ### Edge Cases
 
 - What happens when **admin attempts to deactivate one of the last 2 active discovery question options**? System prevents deactivation and displays error: "At least 2 active options required. Cannot deactivate this option."
@@ -1020,6 +1077,9 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
 - **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 8a.
 - **REQ-026-012b**: System MUST store centrally managed account deletion reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-001 Screen 16.
+- **REQ-026-012c**: System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.
+- **REQ-026-012d**: System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.
+- **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -1038,6 +1098,7 @@ Compliance officer requests complete audit trail of all authentication policy ch
 - **REQ-026-022**: Settings API MUST return JSON response with version number, setting values, and last modified timestamp
 - **REQ-026-023**: Settings API MUST support OAuth 2.0 authentication with "read:settings" or "write:settings" scopes
 - **REQ-026-024**: System MUST NOT expose a rollback API.
+- **REQ-026-025**: The patient configuration response MUST return active ordered treatment-area options and `minimum_inquiry_lead_days` together so the client calendar and backend validator use one configuration source.
 
 ---
 
@@ -1075,6 +1136,14 @@ Compliance officer requests complete audit trail of all authentication policy ch
   - **Key attributes**: template_id, template_name, subject_line, html_body, plain_text_body, version_number, required_variables (JSON), created_at, updated_at
   - **Relationships**: One Template has many Versions; Consumed by Notification Service (S-03)
 
+- **Entity 9 - Inquiry Treatment Area Option**: Centrally managed treatment-area option for inquiry creation (FR-003 Screen 1)
+  - **Key attributes**: option_id, label, image_or_icon_url, display_order, active, created_at, updated_at
+  - **Relationships**: Referenced by the Inquiry treatment-area snapshot; cannot be deleted while referenced
+
+- **Entity 10 - Inquiry Scheduling Policy**: Versioned configuration for inquiry date eligibility
+  - **Key attributes**: policy_id, minimum_inquiry_lead_days, version_number, change_reason, created_at, updated_at
+  - **Relationships**: Consumed by FR-003 patient calendar and backend submission validation
+
 ---
 
 ## Appendix: Change Log
@@ -1086,6 +1155,9 @@ Compliance officer requests complete audit trail of all authentication policy ch
 | 2026-02-08 | 1.2     | Added "Inquiry Cancellation Reasons" as new App Data list (Screen 5a) with field table, workflow A4, seeding data (7 initial reasons), Entity 6, REQ-026-012a, User Story 5, edge cases, dependency on FR-003. Consumer: FR-003 Screen 8a cancellation modal. | AI |
 | 2026-03-28 | 1.3     | Added "Account Deletion Reasons" as new App Data list (Screen 5b) with field table, workflow A5, seeding data (9 initial reasons), Entity 7, REQ-026-012b, edge case. Email Template entity renumbered to Entity 8. Consumer: FR-001 Screen 16 deletion request screen. | AI |
 | 2026-03-28 | 1.4     | Verification fixes: removed duplicate MFA bullet from Implementation Notes (deferred to FR-031 per REQ-026-017); added flag_url to Entity 4 and REQ-026-011; added IP/device-level rate limiting as fixed-in-codebase to Business Rules and Security Considerations; corrected stale "FR-003 Screen 11" → "Screen 8a" (6 occurrences); fixed propagation test scenarios from "30 seconds ago" to "1 minute ago"; moved FR-024/FR-011 from Internal Dependencies to new Downstream Consumers section; standardised "Friend Referral" in seeding data; corrected FR-003 module name to "P-02: Quote Request & Management". | AI |
+| 2026-09-04 | 1.5 | Added Inquiry Configuration as an Admin-managed App Data setting group: treatment-area catalog with image/icon assets and an active ordered API response, plus configurable minimum inquiry lead time (default 30 days). Added workflow A6, Screen 5c, editable-rule, integration, requirement, and entity contracts. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
+| 2026-09-04 | 1.6 | Corrected the approved default minimum inquiry lead time from 30 days to 3 days; the configurable range, audit, and propagation contracts are unchanged. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
+| 2026-09-04 | 1.7 | Verification follow-up: added the invariant that at least one inquiry treatment-area option must remain active, including Screen 5c validation and REQ-026-012e. | Product Owner |
 
 ---
 

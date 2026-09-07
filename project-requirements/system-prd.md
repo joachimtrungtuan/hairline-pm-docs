@@ -424,6 +424,8 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 - Patients MUST be able to select multiple countries/cities for treatment (max 10 countries)
 - Patients MUST indicate preferred treatment dates (max 10 date ranges, up to 2 years in future)
+- Patients MUST select one active treatment-area option from the Admin-managed FR-026 catalog; the client receives the option ID, label, and image/icon URL from the backend.
+- The earliest selectable treatment date MUST use the Admin-configured inquiry lead time in days (default 3), consistently in the patient calendar and backend submission validation.
 - Patients MUST select preferred providers (max 5 providers) based on reviews and admin curation
 - Patients can only have one active inquiry at a time
 - System MUST distribute inquiry to providers in selected locations OR explicitly selected by patient
@@ -437,6 +439,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Business Rules**:
 
 - Inquiry MUST include: patient scan, medical history, destinations, treatment date ranges, and selected providers
+- Inquiry MUST retain a snapshot of its selected treatment-area option so later catalog changes do not alter historical inquiry display.
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
 - System MUST allow patients to search/filter providers by country, rating, and specialty, then explicitly select providers for inquiry distribution (see FR-022 / FR-003 / Screen 7a for full search/filter criteria)
 - Provider suggestions MUST be based on: positive reviews, admin curation
@@ -1361,6 +1364,7 @@ Total Quote:                           £3,000
 - App Data (Centrally Managed Lists)
   - Discovery question options ("How did you find out about us?") MUST be centrally managed
   - Country list and country calling codes MUST be centrally managed
+  - Inquiry treatment-area options with display assets and the minimum inquiry lead time MUST be centrally managed for FR-003
   - Changes MUST propagate to dependent UIs within 1 minute
 
 - Notifications
