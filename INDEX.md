@@ -4,7 +4,7 @@
 any file, use this index to map **task → area → file → section**, then read **only the
 section you need**. Do not scan the tree. Do not read long files whole.
 
-**Last Updated**: 2026-08-17
+**Last Updated**: 2026-09-09
 
 > Behavior rules (locator-first, phase budgets, no full-file reads) live in
 > `CLAUDE.md` / `AGENTS.md` → *Navigation & Token Governance*. This file is **where to
@@ -24,6 +24,7 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Architecture, APIs, integrations, deployment | `project-requirements/system-technical-spec.md` | §C.4 |
 | Project principles / scope / vision | `project-requirements/constitution-summary.md` | read top-to-mid only |
 | Original client requirements (verbatim) | `project-requirements/transcriptions/` | locate file first |
+| Subsequent stakeholder meetings, files, and extracted decisions | `project-requirements/sources/source-register.md` | read the register, then one normalized source record; raw files are evidence only |
 | Verifying an FR is built correctly | run the `verify-fr` skill | skill is authoritative |
 | Breaking a PRD into implementation tasks | run `create-implementation-tasks` skill | — |
 | Logging bugs as tasks | run `create-bug-tasks` skill | — |
@@ -90,6 +91,7 @@ local-docs/
 │   ├── functional-requirements/  frNNN-slug/prd.md  (38 FRs; many ⚠️ >1000 lines)
 │   ├── templates/                Canonical FR, Change Request, and Spec Kit templates
 │   ├── transcriptions/           Client requirements, verbatim
+│   ├── sources/                  Later stakeholder evidence, meeting extractions, and source register
 │   └── update-logs/              Change history (has its own README index)
 ├── project-automation/
 │   ├── skills-engineering/       FROZEN — source-of-truth SKILL.md defs
