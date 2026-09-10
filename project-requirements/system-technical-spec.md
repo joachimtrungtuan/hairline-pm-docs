@@ -4,7 +4,7 @@
 **Document Type**: System-Level Technical Specification  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-03-03
+**Last Updated**: 2026-09-09
 
 ---
 
@@ -136,8 +136,8 @@ Inquiry → Quote → Accepted → Confirmed → In Progress → Aftercare → C
 **Status Definitions**:
 
 - `inquiry`: Patient inquiry submitted, waiting for provider quotes
-- `quote`: Quote submitted by provider with pre-scheduled appointment times (expires in 48 hours by default)
-- `accepted`: Patient accepted quote → appointment auto-scheduled (no manual provider confirmation)
+- `quote`: Quote submitted by provider carrying one to five ordered Quote Options, each with a pre-scheduled appointment time per applicable option/date combination (expires in 48 hours by default)
+- `accepted`: Patient accepted exactly one option/date combination within one quote → appointment auto-scheduled (no manual provider confirmation)
 - `confirmed`: Payment completed → patient details revealed to provider (anonymization lifted)
 - `inprogress`: Patient arrives at clinic, treatment in progress (provider can update real-time progress)
 - `aftercare`: Treatment completed, aftercare phase active (6-12 months recovery)
@@ -150,6 +150,8 @@ Inquiry → Quote → Accepted → Confirmed → In Progress → Aftercare → C
    - Before `confirmed`: Provider sees "Mark P. - PAT-00123" (anonymized)
    - After payment (`confirmed`): Provider sees full name, contact details, passport information
 3. **Quote Expiration**: Configurable per admin settings (default 48 hours)
+4. **Quote Option Aggregate (FR-004 v2.2)**: The quote is the parent aggregate; the acceptance unit is one `quote_option_date_prices` row, not the quote itself. Until acceptance a quote has a price range rather than an amount, so quote-amount analytics MUST read the accepted option/date price only and MUST count an unaccepted quote in volume and conversion metrics only. Quote Options are never counted as separate provider responses.
+5. **Multiple Quotes per Inquiry**: One provider may submit several parent quotes for the same inquiry, each with an independent lifecycle, expiry, version, and audit history. `(inquiry_id, provider_id)` MUST NOT be treated as unique.
 
 ### Payment Processing Architecture
 
@@ -498,7 +500,17 @@ CREATE INDEX idx_inquiries_created_at ON inquiries(created_at);
 -- Composite indexes
 CREATE INDEX idx_quotes_provider_status ON quotes(provider_id, status);
 CREATE INDEX idx_quotes_inquiry_provider ON quotes(inquiry_id, provider_id);
+
+-- Quote option aggregate (FR-004 v2.2)
+CREATE INDEX idx_quote_options_quote_id ON quote_options(quote_id);
+CREATE UNIQUE INDEX idx_quote_options_order ON quote_options(quote_id, display_order);
+CREATE INDEX idx_quote_option_items_option ON quote_option_items(quote_option_id);
+CREATE INDEX idx_qodp_option ON quote_option_date_prices(quote_option_id);
+CREATE UNIQUE INDEX idx_qodp_option_range ON quote_option_date_prices(quote_option_id, source_inquiry_date_range_id);
+CREATE UNIQUE INDEX idx_qopd_option_day ON quote_option_plan_days(quote_option_id, day_number);
 ```
+
+**Note**: `idx_quotes_inquiry_provider` is a lookup index only — it MUST NOT be made unique, because one provider may submit multiple parent quotes for the same inquiry.
 
 #### Database Migrations
 
@@ -537,6 +549,8 @@ Schema::create('quotes', function (Blueprint $table) {
 });
 ```
 
+**Quote aggregate migration (FR-004 v2.2)**: The option model is additive. New migrations create `quote_options`, `quote_option_items`, `quote_option_date_prices`, and `quote_option_plan_days` (see `system-data-schema.md` §7A-§7D). A data migration converts each existing quote into a one-option quote seeded from `quotes.package_id`, `quotes.treatment_date`, and `quotes.quote_amount`. Those three columns are deprecated and stay readable through a compatibility adapter until every consumer moves to the option contract (CR-FR004-20260909-01); they are not dropped in the same release.
+
 ### Business Logic Layer
 
 #### Service Classes
@@ -566,17 +580,23 @@ class QuoteService
         $pricing = $this->calculateQuotePricing($data);
         
         // Create quote
+        // Create parent quote. NOTE (FR-004 v2.2): `quote_amount` is deprecated —
+        // price lives on each option/date combination and an accepted amount only
+        // exists after FR-005 selection. Currency is snapshotted from system
+        // configuration, never provider input.
         $quote = Quote::create([
             'inquiry_id' => $inquiry->id,
             'provider_id' => $provider->id,
-            'quote_amount' => $pricing['total'],
+            'quote_amount' => $pricing['total'], // deprecated, compatibility only
             'commission' => $pricing['commission'],
             'status' => 'quote',
             ...
         ]);
         
-        // Attach package items
-        $this->attachPackageItems($quote, $data['package_items']);
+        // Attach one to five quote options, each a quote-local package snapshot
+        // (never writes back to the FR-024 package library), with its option/date
+        // price matrix and relative-day plan
+        $this->attachQuoteOptions($quote, $data['options']);
         
         // Send notification to patient
         event(new QuoteSubmitted($quote));

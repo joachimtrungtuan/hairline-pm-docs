@@ -4,7 +4,7 @@
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2025-10-23
+**Last Updated**: 2026-09-10
 
 ---
 
@@ -364,15 +364,21 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | id | UUID | PRIMARY KEY | Unique quote identifier |
 | inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
-| treatment_id | UUID | FOREIGN KEY, NOT NULL | References treatments.id (package template) |
-| package_id | UUID | FOREIGN KEY, NULLABLE | References packages.id |
-| treatment_date | JSON | NOT NULL | Proposed treatment dates |
-| discount_id | UUID | FOREIGN KEY, NULLABLE | References discounts.id |
+| treatment_id | UUID | FOREIGN KEY, NOT NULL | References `treatments.id` for the exact immutable Treatment selected under FR-024 |
+| treatment_version | INTEGER | NOT NULL | Version metadata for the immutable record referenced by `treatment_id`; technique and other Treatment-owned data are loaded through this relationship rather than copied onto `quotes` |
+| package_id | UUID | FOREIGN KEY, NULLABLE | References packages.id. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_options.source_package_id`; retained until every consumer migrates |
+| treatment_date | JSON | NOT NULL | Proposed treatment dates. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_option_date_prices`; retained until every consumer migrates |
+| discount_id | UUID | FOREIGN KEY, NULLABLE | References discounts.id. **DEPRECATED (FR-004 v2.6)** — structured promotions are now attached through `quote_option_date_prices.promotion_id`; retained until every consumer migrates |
 | commission | INTEGER | NOT NULL | Platform commission percentage |
-| quote_amount | DECIMAL(10,2) | NOT NULL | Total quote amount |
-| currency | VARCHAR(255) | NOT NULL | Currency code (USD, EUR, GBP, TRY, etc.) |
-| note | TEXT | NULLABLE | Additional notes from provider |
-| status | VARCHAR(255) | NOT NULL | Quote status (inquiry, quote, accepted, confirmed, inprogress, aftercare, completed, rejected, cancelled) |
+| quote_amount | DECIMAL(10,2) | NOT NULL | Total quote amount. **DEPRECATED (FR-004 v2.2)** — a quote has a price range derived from `quote_option_date_prices` until acceptance, then the accepted option/date price; retained until every consumer migrates |
+| currency | VARCHAR(255) | NOT NULL | Currency code (USD, EUR, GBP, TRY, etc.), snapshotted from active system configuration; never provider input (FR-004 REQ-004-025) |
+| note | TEXT | NULLABLE | Additional notes from provider, shared by every quote option |
+| estimated_grafts | INTEGER | NOT NULL | Graft estimate shared by every quote option (FR-004 REQ-004-020) |
+| graft_description | TEXT | NULLABLE | System-generated from the approved template and `estimated_grafts`; read-only to providers (FR-004 REQ-004-028) |
+| graft_visual_plan_url | VARCHAR(500) | NULLABLE | Uploaded graft visual plan image shared by every quote option (FR-004 Screen 1 Tab 3) |
+| treatment_plan_validated | BOOLEAN | DEFAULT false | Set once every option's treatment plan passes validation at submit (FR-004 Screen 7) |
+| expiry_calculated_at | TIMESTAMP | NULLABLE | When `expires_at` was last derived from `expiration_hours` |
+| status | VARCHAR(255) | NOT NULL | Quote lifecycle status — see Status Values below. Stored as `sent` in the database but exposed as `quote` through the API (see API Divergence note). Distinct from the treatment case lifecycle, which lives on `inquiries.status` |
 | expires_at | TIMESTAMP | NULLABLE | Quote expiration date |
 | expiration_hours | INTEGER | DEFAULT 48 | Hours until quote expires (customizable, default 48) |
 | auto_accepted | BOOLEAN | DEFAULT false | Whether quote was auto-accepted with pre-scheduled appointment |
@@ -388,38 +394,245 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - INDEX: `inquiry_id`, `provider_id`, `status`, `created_at`
 - COMPOSITE: `(provider_id, status)`, `(inquiry_id, provider_id)`
 
+**Note (FR-004 v2.2)**: `(inquiry_id, provider_id)` MUST NOT be unique — the same provider may submit multiple parent quotes for one inquiry, each with an independent lifecycle, expiry, version, and audit history.
+
+**Spec Gap (FR-004 v2.3)**: REQ-004-020 requires a quote-level **common requirements** field shared by every option. No `common_requirements` column exists on `quotes` today and none is present in the implementation, so this is an open schema item, not a documented-but-missing column. It MUST be added as `common_requirements TEXT NULLABLE` before REQ-004-020 can be marked implemented.
+
 **Relationships**:
 
 - `belongsTo` → `Inquiry`
 - `belongsTo` → `Provider`
-- `belongsTo` → `Treatment`
-- `belongsTo` → `Package`
-- `belongsTo` → `Discount`
+- `belongsTo` → exact immutable `Treatment` version; `treatment_id` is the record reference and `treatment_version` retains its version metadata
+- `belongsTo` → `Package` *(deprecated; package provenance now held per option)*
+- `hasMany` → `QuoteOption` (one to five, ordered)
+- `belongsToMany` → `Clinician` (one or more shared clinicians, FR-004 REQ-004-027)
+- Promotion relationships are owned by `QuoteOptionDatePrice.promotion_id`; the parent Quote has no new direct Promotion relationship
 - `hasOne` → `Schedule`
 - `hasOne` → `Treatment` (actual treatment execution record)
 - `hasMany` → `Payment`
 - `hasMany` → `Review`
 
-**Status Values**:
+**Status Values** (FR-004 v2.5 quote lifecycle):
 
-- `inquiry`: Patient inquiry submitted, waiting for provider quotes
-- `quote`: Quote submitted by provider, waiting for patient response
-- `accepted`: Patient accepted quote and appointment scheduled (merged accepted + scheduled)
-- `confirmed`: Payment completed, booking confirmed
-- `inprogress`: Patient arrives at clinic, treatment in progress (provider can update real-time progress)
-- `aftercare`: Treatment completed, in aftercare phase (6-12 months recovery)
-- `completed`: Final review and rating submitted by patient
-- `rejected`: Patient rejected quote
-- `cancelled`: Quote/booking cancelled
+- `draft`: Provider is still composing the quote; not visible to the patient
+- `sent`: Quote submitted to the patient and awaiting a response (exposed to clients as `quote`)
+- `expired`: Expiry window elapsed with no patient response
+- `withdrawn`: Provider retracted the quote before the patient responded
+- `archived`: Retained for audit only; excluded from active provider and patient lists
+- `accepted`: Patient accepted this quote, selecting one option and one date
+- `cancelled_other_accepted`: Auto-cancelled because the patient accepted a different quote for the same inquiry
+- `cancelled_inquiry_cancelled`: Auto-cancelled because the patient cancelled the underlying inquiry
+- `confirmed`: Deposit paid; retained as the FR-006 payment bridge, set after acceptance
 
 **Status Triggers**:
 
-- `inquiry` → `quote`: Provider submits quote
-- `quote` → `accepted`: Patient accepts quote (auto-schedules appointment)
-- `accepted` → `confirmed`: Patient completes payment
-- `confirmed` → `inprogress`: Patient arrives at clinic
-- `inprogress` → `aftercare`: Treatment completed
-- `aftercare` → `completed`: Final review submitted
+- `draft` → `sent`: Provider submits the quote (sets `sent_at`)
+- `sent` → `expired`: Expiry job runs after `expires_at`
+- `sent` → `withdrawn`: Provider retracts before a patient response
+- `sent` → `accepted`: Patient accepts one option and one date (sets `accepted_at`)
+- `sent` → `cancelled_other_accepted`: Patient accepts a sibling quote on the same inquiry
+- `sent` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry
+- `accepted` → `confirmed`: Patient completes the deposit payment (FR-006)
+- any terminal state → `archived`: Retention job or provider archive action
+
+**API Divergence (verified in source)**: the database column stores `sent`, while `Quote::getStatusAttribute()` maps it to `quote` on read and the matching mutator maps `quote` back to `sent` on write. Clients therefore see `quote` where the schema stores `sent`. Historical rows were converted by the `align_quote_statuses_with_prd` migration, which also split the legacy single `cancelled` value into `cancelled_other_accepted` and `cancelled_inquiry_cancelled`.
+
+**Case lifecycle is separate**: `requested`, `offers`, `accepted`, `scheduled`, `confirmed`, `in_progress`, `completed`, and `cancelled` are **treatment case statuses** stored on `inquiries.status`, not quote statuses. A quote status change drives a case status change through the inquiry status map; the two enums MUST NOT be merged.
+
+---
+
+### 7A. Quote Options
+
+**Table**: `quote_options`
+**Description**: One to five ordered package-based options within a parent quote (FR-004 v2.2). Each option is a quote-local snapshot; inline customization never writes back to the FR-024 package library.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique quote option identifier; recorded by FR-005 acceptance |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| source_package_id | UUID | FOREIGN KEY, NOT NULL | References packages.id for provenance only |
+| source_package_version | INTEGER | NOT NULL | Package library version captured at selection |
+| display_order | SMALLINT | NOT NULL | Patient-facing comparison order; consecutive within the quote |
+| package_name_snapshot | VARCHAR(255) | NOT NULL | Package name copied at selection |
+| package_description_snapshot | TEXT | NULLABLE | Package description copied at selection |
+| standard_price_snapshot | DECIMAL(10,2) | NOT NULL | Library price copied at selection; prefills offered prices |
+| included_services | JSON | NULLABLE | Travel services included in this option (flight, hotel, transport, other); consumed by FR-008 |
+| is_customized | BOOLEAN | DEFAULT false | Whether the snapshot differs from its source package |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `source_package_id`
+- UNIQUE: `(quote_id, display_order)`
+
+**Constraints**:
+
+- A quote MUST have between one and five options; enforced in request validation and the quote domain service.
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+- `belongsTo` → `Package` (provenance only)
+- `hasMany` → `QuoteOptionItem`
+- `hasMany` → `QuoteOptionDatePrice`
+- `hasMany` → `QuoteOptionPlanDay`
+
+---
+
+### 7B. Quote Option Items
+
+**Table**: `quote_option_items`
+**Description**: Quote-local inclusion snapshot for one option, including services created inline for this patient.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique item identifier |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| source_package_item_id | UUID | FOREIGN KEY, NULLABLE | References the library item copied; NULL when created inside the quote |
+| item_type | VARCHAR(255) | NOT NULL | Controlled service type (medical, travel, accommodation, transport, flight, other) |
+| name | VARCHAR(255) | NOT NULL | Patient-facing service name |
+| description | TEXT | NULLABLE | Patient-facing service details |
+| price | DECIMAL(10,2) | NULLABLE | Optional component price; does not replace the offered option/date price |
+| is_included | BOOLEAN | NOT NULL | Explicit included or excluded state |
+| display_order | SMALLINT | NOT NULL | Patient-facing order within the option |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_option_id`
+- UNIQUE: `(quote_option_id, display_order)`
+
+**Relationships**:
+
+- `belongsTo` → `QuoteOption`
+
+---
+
+### 7C. Quote Option Date Prices
+
+**Table**: `quote_option_date_prices`
+**Description**: One row per applicable option/date combination. This is the acceptance unit FR-005 selects and the only source of an accepted quote amount.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Stable identifier recorded by FR-005 acceptance |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| source_inquiry_date_range_id | UUID | FOREIGN KEY, NOT NULL | Must reference a patient-requested FR-003 date range |
+| start_date | DATE | NOT NULL | Copied from the selected inquiry range |
+| end_date | DATE | NOT NULL | Copied from the selected inquiry range |
+| appointment_at | TIMESTAMP | NOT NULL | Pre-scheduled appointment start; must fall inside the range |
+| appointment_timezone | VARCHAR(64) | NOT NULL | IANA timezone for the appointment |
+| price | DECIMAL(10,2) | NOT NULL | Offered price in the quote's snapshotted currency; non-negative |
+| promotion_id | UUID | FOREIGN KEY, NULLABLE | References a structured promotion program (FR-019) |
+| is_accepted | BOOLEAN | DEFAULT false | Set by FR-005; at most one true row per inquiry |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_option_id`, `promotion_id`
+- UNIQUE: `(quote_option_id, source_inquiry_date_range_id)`
+
+**Relationships**:
+
+- `belongsTo` → `QuoteOption`
+- `belongsTo` → `PromotionProgram`
+
+---
+
+### 7D. Quote Option Plan Days
+
+**Table**: `quote_option_plan_days`
+**Description**: Per-option day-to-day treatment plan. Day numbers stay relative for the life of the record and are never persisted as calendar dates.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique plan day identifier |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| day_number | SMALLINT | NOT NULL | Relative day index; starts at 1, consecutive with no gaps |
+| description | TEXT | NOT NULL | What happens on that relative treatment day |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_option_id`
+- UNIQUE: `(quote_option_id, day_number)`
+
+**Relationships**:
+
+- `belongsTo` → `QuoteOption`
+
+**Migration Note (FR-004 v2.2)**: The option tables are additive. Existing single-package quotes migrate to a one-option quote whose snapshot is taken from `quotes.package_id`, whose single date-price row is taken from `quotes.treatment_date` and `quotes.quote_amount`, and the deprecated `quotes` columns stay readable through a compatibility adapter until every consumer moves to the option contract (CR-FR004-20260909-01).
+
+---
+
+### 7E. Quote Clinicians
+
+**Table**: `quote_clinicians`
+**Description**: Junction table assigning one or more clinicians to a parent quote. Clinicians are shared by every option of that quote (FR-004 REQ-004-027).
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique assignment identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| provider_user_id | UUID | FOREIGN KEY, NOT NULL | References provider_users.id (the clinician) |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `provider_user_id`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+- `belongsTo` → `ProviderUser`
+
+---
+
+### 7F. Quote Documents
+
+**Table**: `quote_documents`
+**Description**: Attachments uploaded against a parent quote (treatment plans, consent forms, supporting images). Shared by every option of that quote.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique document identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id, cascade delete |
+| document_type | VARCHAR(255) | NOT NULL | Attachment category |
+| file_name | VARCHAR(255) | NOT NULL | Original file name |
+| file_path | VARCHAR(500) | NOT NULL | Stored file path |
+| file_type | VARCHAR(255) | NOT NULL | MIME type |
+| file_size | INTEGER | NOT NULL | Size in bytes |
+| uploaded_by | UUID | NOT NULL | Uploader identifier |
+| uploaded_by_type | VARCHAR(255) | NOT NULL | Uploader actor type (provider, admin) |
+| description | TEXT | NULLABLE | Optional description |
+| deleted_at | TIMESTAMP | NULLABLE | Soft delete timestamp |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
 
 ---
 
@@ -439,6 +652,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | treatment_name | VARCHAR(255) | NOT NULL | Treatment name (e.g., "FUE - Follicular Unit Extraction") |
 | treatment_type | VARCHAR(255) | NOT NULL | Type code (FUE, FUT, DHI, SAPPHIRE_FUE, ROBOTIC) |
 | treatment_description | TEXT | NOT NULL | Detailed treatment description |
+| technique_specifications | TEXT | NULLABLE | Standardized technique details loaded read-only by related quotes when documented |
+| version | INTEGER | NOT NULL, DEFAULT 1 | Immutable version number; FR-024 treatment edits create a new version instead of changing a version referenced by a quote |
 | thumbnail | VARCHAR(255) | NOT NULL | S3 path to thumbnail image |
 | video | VARCHAR(255) | NULLABLE | S3 path to educational video |
 | status | VARCHAR(255) | DEFAULT 'active' | Treatment status (active, inactive) |
@@ -463,6 +678,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - ONLY admins can create treatments
 - Providers can ONLY select from this list (cannot create custom treatments)
 - Providers set their own pricing for each treatment
+- Once a Treatment version is referenced by a quote, edits create a new immutable Treatment record/version; the historical quote continues resolving Treatment-owned data through its original relationship
 
 ---
 
@@ -1929,6 +2145,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 16. medical_histories
 17. quotes
 18. quote_clinicians
+18a. quote_documents
 19. treatments
 20. packages
 21. package_items

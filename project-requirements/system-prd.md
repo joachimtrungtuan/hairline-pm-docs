@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-08-17
+**Last Updated**: 2026-09-10
 
 ---
 
@@ -458,13 +458,15 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 **Requirements**:
 
-- Providers MUST select treatment from admin-created list (FUE, FUT, DHI, etc.) - ensures consistency
-- Providers MUST be able to select from their own package list (hotels, transport, flights, medications, PRP) - provider-specific
-- Providers MUST pre-schedule appointment times as part of quote submission
-- Quotes MUST include: selected treatment, graft count, technique, optional packages, pricing breakdown, timeline, pre-scheduled appointment slots
-- Quotes MUST support multiple currencies with real-time exchange rates
+- Providers MUST select treatment from the admin-created list (FUE, FUT, DHI, etc.). The quote MUST retain the exact immutable Treatment ID/version relationship so treatment name, type, and technique details can be loaded without duplicating treatment-owned data on the Quote.
+- Providers MUST offer one to five package-based Quote Options per quote, each starting from their own package library (hotels, transport, flights, medications, PRP) - provider-specific
+- Providers MUST be able to customize a selected package inline for the current quote; the customization is a quote-local snapshot and MUST NOT create or update a reusable package-library record
+- A provider MAY submit multiple parent quotes for the same inquiry, each with an independent lifecycle, expiry, version history, and audit history
+- Providers MUST pre-schedule an appointment time for every applicable option/date combination as part of quote submission
+- Quotes MUST include: the exact selected Treatment version, its related read-only technique details when documented in FR-024, graft count, one to five package options, per-option pricing, timeline, and a pre-scheduled appointment slot for every applicable option/date combination. Technique details are loaded through the Treatment relationship and are not separate provider input or duplicated Quote data.
+- Quote currency MUST be loaded from active system configuration and snapshotted on the quote; it is never provider input. The platform supports multiple currencies across quotes, and exchange conversion is applied at acceptance rather than entered per quote
 - Providers MUST be able to attach before/after photos, credentials, facility images
-- System MUST calculate total quote amount: treatment price + package prices + fees
+- Providers MUST set an offered price for every applicable option/date combination; that price covers the treatment and the option's inclusions. System MUST derive the quote's price range from the complete option/date matrix, and the accepted total only after the patient selects one option/date combination
 - System MUST apply applicable discounts (provider promotions, affiliate codes)
 - Providers MUST submit quotes within 72 hours of inquiry receipt
 - System MUST validate quote completeness before submission
@@ -481,19 +483,23 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 
 **1. Treatment (Required - Admin-Created)**:
 
-- Treatment type (FUE, FUT, DHI, etc.) - selected from admin list
+- Treatment type (FUE, FUT, DHI, etc.) - selected from admin list and retained as an exact immutable Treatment-version relationship
 - Graft count estimation
-- Technique specifications
+- Technique specifications - loaded read-only through the related Treatment version; not stored as a duplicate Quote field
 - Treatment pricing (set by provider)
 
-**2. Packages (Optional - Provider-Created)**:
+**2. Quote Options (Required - One to Five, Provider-Created)**:
+
+Each option is a package snapshot the patient can compare. Options share the parent quote's treatment, graft facts, visual plan, clinicians, and common notes; they differ by inclusions, applicable date ranges, prices, promotions, and day-to-day plan.
 
 - Hotel packages (4-star, 5-star, etc.)
 - Transport packages (airport pickup, transfers)
 - Flight assistance packages
 - Medication packages (post-op medications)
 - Additional services (PRP therapy, specialized treatments)
-- Package pricing (set by provider)
+- Package pricing (set by provider, per applicable option/date combination)
+- Option-local custom services added for this patient only
+- A separate relative day-to-day treatment plan per option
 
 **3. Other Components**:
 
@@ -504,6 +510,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Pricing Rules**:
 
 - Quote MUST lock exchange rate at time of patient acceptance
+- Quote-amount analytics MUST use the accepted option/date price only; an unaccepted quote has a price range, not an amount
 - Quote MUST clearly separate provider fees from Hairline platform fees
 - Quote MUST show original price and discount if applicable
 
