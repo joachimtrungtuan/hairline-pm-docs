@@ -49,4 +49,4 @@ Source records move through `captured`, `extracted`, `stakeholder-validated`, `i
 
 ## Review Boundary
 
-The records currently in this directory are source extractions only. They do not authorize PRD, schema, implementation, design, legal, commercial, or roadmap changes.
+Unvalidated or unincorporated source items do not authorize PRD, schema, implementation, design, legal, commercial, or roadmap changes. Once a specific item is approved and incorporated, the resulting approved PRD and Change Request become the actionable authority; the source record remains provenance rather than a second requirements contract.

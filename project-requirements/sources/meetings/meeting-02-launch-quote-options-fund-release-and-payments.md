@@ -3,8 +3,8 @@ source_id: SRC-MTG-002
 source_type: stakeholder-meeting
 meeting_date: not-provided
 captured_on: 2026-09-09
-validation_status: pending-review
-incorporation_status: not-incorporated
+validation_status: partially-validated
+incorporation_status: partially-incorporated
 ---
 
 # Meeting 02: Launch, Quote Options, Fund Release, and Payments
@@ -100,6 +100,21 @@ These statements describe what participants believed existed during the meeting.
 
 The exact parent quote, option, package, date-price, acceptance, expiration, editing, and audit model remains to be specified.
 
+#### Product Owner clarification and incorporation (2026-09-09)
+
+The Product Owner approved the FR-004 quote-option model with these refinements:
+
+- An inquiry may contain multiple parent quotes, including multiple quotes from the same provider. Each parent quote has an independent lifecycle, expiry, version history, and audit history.
+- Each parent quote contains one to five ordered package-based Quote Options. These are the "sub-quotes" discussed in the meeting.
+- Treatment is selected once on the parent quote; estimated grafts, graft description, visual treatment plan, clinicians, common notes, and common requirements are also shared parent fields. This supersedes the earlier wording in MTG-002-D03 that treatment type may differ by option.
+- Each option starts from a provider package-library preset. Inline customization creates only a quote-owned snapshot and must not update or create reusable library records.
+- Each option owns its included/custom services, applicable patient-requested date ranges, option/date prices and promotions, and a separate relative day-to-day treatment plan.
+- Provider Quote Creation/Edit uses an ordered tabbed flow: Treatment Service; Package Options with a quote-local Inline Package Editor; Grafts & Visual Plan; combined Dates & Pricing; Option Treatment Plans; Clinical Details & Notes; and Review & Submit.
+- The FR-004 data contract uses a canonical ownership matrix so every parent, option, item, date-price, plan, and system-derived field has one editing surface or an explicit read-only owner. Currency is loaded from system configuration, snapshotted for historical prices, and never entered by the provider.
+- Parent quote metrics and Quote Option metrics remain distinct.
+
+This clarification resolves MTG-002-O01 for the FR-004 creation and aggregate data contract. FR-005 acceptance and FR-006 booking reconciliation remain separate later changes.
+
 ### MTG-002-O02: Confirmation deadline
 
 Choose one default patient-confirmation window and define how disputes pause or replace automatic release.
@@ -126,7 +141,7 @@ Direct booking against provider availability and possible automated quotes were 
 |---|---|---|
 | MTG-002-D01, P01, P02 | Product launch plan and provider onboarding | Record only |
 | MTG-002-D02 | Provider management and catalog contracts | Record only |
-| MTG-002-D03-D06, O01 | FR-004 and data contracts | Material reconciliation required later |
+| MTG-002-D03-D06, O01 | FR-004 and data contracts | Incorporated into FR-004 v2.0–v2.2 through CR-FR004-20260909-01; implementation reconciliation required |
 | MTG-002-D07 | Localization and shared presentation rules | Record only |
 | MTG-002-D08-D10, O02-O04 | FR-007, FR-017, and FR-029 | Material reconciliation required later |
 | MTG-002-D11, O05 | FR-006, FR-007, and legal/commercial terms | Material reconciliation required later |
@@ -136,5 +151,5 @@ Direct booking against provider availability and possible automated quotes were 
 
 - Confirm the meeting date, participant names, and stakeholder roles.
 - Confirm whether 20 to 30 providers is an approved cohort or an illustrative range.
-- Confirm the one-quote/multiple-option model before any data-contract change.
+- Reconcile FR-005 acceptance and FR-006 booking against the approved parent-quote, option, and option/date-price identifiers in later controlled phases.
 - Use the written payments brief as the more detailed source for fund-release and payment questions, while preserving its unresolved status.
