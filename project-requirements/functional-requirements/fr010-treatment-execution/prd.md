@@ -20,8 +20,8 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-05)**: Receives real-time day-based progress updates during treatment execution (current treatment day and day status based on the accepted quote’s Treatment Plan (per-day)); receives completion notifications and post-op instructions after treatment finishes; NOT involved in detailed clinical documentation
-- **Provider Platform (PR-03)**: PRIMARY tenant - providers document treatment progress day-by-day in real-time: update each day’s status and add provider-only day notes against the accepted quote’s Treatment Plan (day descriptions are read-only); day statuses are synced to patient/admin platforms; detailed clinical observations remain provider-only
+- **Patient Platform (P-05)**: Receives real-time day-based progress updates during treatment execution (current treatment day and day status based on the accepted Quote Option's relative day plan); receives completion notifications and post-op instructions after treatment finishes; NOT involved in detailed clinical documentation
+- **Provider Platform (PR-03)**: PRIMARY tenant - providers document treatment progress day-by-day in real-time: update each day’s status and add provider-only day notes against the accepted Quote Option's relative day plan (day descriptions are read-only); day statuses are synced to patient/admin platforms; detailed clinical observations remain provider-only
 - **Admin Platform (A-01)**: Real-time oversight and full editorial access — admins monitor all active treatments, can view and edit any treatment record, can manually intervene in case status, and audit completed documentation
 - **Shared Services (S-05)**: Media Storage Service handles head scan photo sets (V1) and treatment documentation uploads; Real-time sync service (WebSocket/SSE) propagates day-based status updates to patient and admin platforms
 
@@ -30,7 +30,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **Patient Platform (P-05)**:
 
 - Receives real-time status updates (booking moved to "In Progress" when patient arrives)
-- **Views current treatment day progress in real-time** (e.g., "Day 1 of 4: Consultation & Scans" or "Day 2 of 4: Hair Transplant Procedure") based on the accepted quote’s Treatment Plan (per-day)
+- **Views current treatment day progress in real-time** (e.g., "Day 1 of 4: Consultation & Scans" or "Day 2 of 4: Hair Transplant Procedure") based on the accepted Quote Option's relative day plan
 - Receives treatment completion notification with post-op instructions
 - Views provider-authored treatment summary note after completion (high-level outcome, final graft count, treatment type)
 - Accesses before/after photos uploaded by provider (after completion)
@@ -39,7 +39,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **Provider Platform (PR-03)**:
 
 - **Check In** patient to trigger "In Progress" status
-- **Update each treatment day's status** (Not started / In progress / Finished / Need caution/attention / Cancelled/Deferred) per the accepted quote’s Treatment Plan (per-day) — synced to patient app and admin
+- **Update each treatment day's status** (Not started / In progress / Finished / Need caution/attention / Cancelled/Deferred) per the accepted Quote Option's relative day plan — synced to patient app and admin
 - Add **day notes** for each day (provider-only clinical observations — not visible to patient)
 - Add a **beginning-of-treatment note** and upload head scan photo sets at key stages *(V1; true 3D scan in V2)*
 - Document actual graft count, conclusion notes, prescription, advice, and medication at end of treatment
@@ -62,7 +62,7 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 **In Scope**:
 
 - System-generated status notifications to patient (booking moved to "In Progress", treatment completed)
-- **Real-time treatment day progress updates to patient app** (current day number, day description from the quote Treatment Plan, and day status - NOT detailed clinical data)
+- **Real-time treatment day progress updates to patient app** (current day number, day description from the accepted Quote Option's relative day plan, and day status - NOT detailed clinical data)
 - Post-op instruction delivery to patient via email/in-app notification
 - Provider-to-patient medication prescription delivery
 - Admin notification of treatment completion for billing purposes
@@ -220,8 +220,8 @@ flowchart TD
 | Case Status Badge | status badge | Yes (read-only) | "In Progress" badge displayed prominently | Display only |
 | Provider / Clinic Name | text | Yes (read-only) | Name of treating provider and clinic | Display only |
 | Treatment | text | Yes (read-only) | Treatment name from admin-curated catalog via quote's treatmentId (e.g., "FUE - Follicular Unit Extraction") — defines the procedure type | Display only |
-| Package | text | No (read-only) | Optional add-on package from provider via quote's packageId (e.g., "5-Star Hotel Package") — shown only if a package was included in the quote | Hidden if no package selected |
-| Assigned Clinician | text | Yes (read-only) | Clinician assigned to the patient's case from the accepted quote | Display only |
+| Accepted Quote Option | group | Yes (read-only) | The exact FR-004 Quote Option selected by the patient, including its package snapshot and option-local inclusions | Loaded by the stable accepted Quote Option ID; never inferred from a singular quote package |
+| Assigned Clinicians | list | Yes (read-only) | One or more clinicians assigned to the patient's case from the accepted quote | Display only |
 | Procedure Date | date | Yes (read-only) | Scheduled date(s) of treatment | Display only |
 | Estimated Graft Count | number | Yes (read-only) | Graft estimate from accepted quote — for patient reference | Display only |
 | Beginning Note | text area | No (read-only) | Provider's note at treatment start — visible to patient if entered | Hidden if provider has not entered it; no placeholder shown |
@@ -248,7 +248,7 @@ flowchart TD
 |------------|------|----------|-------------|------------------|
 | Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only |
 | Scheduled Date | date | Yes (read-only) | Calendar date for this treatment day (e.g., "15 Mar 2026") | Display only |
-| Day Description | text | Yes (read-only) | Description from the accepted quote’s Treatment Plan (per-day) (e.g., "Hair Transplant Procedure") | Display only |
+| Day Description | text | Yes (read-only) | Description from the accepted Quote Option's relative day plan (e.g., "Hair Transplant Procedure") | Display only |
 | Status | status badge | Yes (read-only) | Current status for this day — synced from provider in real-time | Display only |
 | Close | button | — | Dismisses the popup | — |
 
@@ -272,11 +272,11 @@ flowchart TD
 |------------|------|----------|-------------|------------------|
 | Search Bar | text input | No | Search by patient ID, name, or booking reference | Real-time filter |
 | Filter: Date Range | date range picker | No | Filter by treatment start date | Default: current month |
-| Filter: Clinician | dropdown | No | Filter by assigned clinician | Dropdown of clinic's active clinicians |
+| Filter: Clinician | dropdown | No | Filter by any assigned clinician | Dropdown of clinic's active clinicians |
 | Patient ID | text | Yes (read-only) | Unique patient identifier (e.g., HP202401) | Clickable — opens case detail (Screen 4) |
 | Patient Name | text | Yes (read-only) | Patient's full name | Display only |
 | Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only |
-| Assigned Clinician | text | Yes (read-only) | Clinician assigned at quote stage | Display only |
+| Assigned Clinicians | list | Yes (read-only) | One or more clinicians assigned at quote stage | Display only |
 | Procedure Date | date | Yes (read-only) | Scheduled start date of procedure | Display only |
 | Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only |
 | Current Day Status | status badge | Yes (read-only) | Status of the most recent active day | Display only |
@@ -312,9 +312,9 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Day Rows | list | Yes | One row per treatment day from the accepted quote’s Treatment Plan (per-day); discrete independent records, never consolidated | — |
+| Day Rows | list | Yes | One row per treatment day from the accepted Quote Option's relative day plan; discrete independent records, never consolidated | — |
 | Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc., with calendar icon | Display only |
-| Day Description | text | Yes (read-only) | Pre-populated from the accepted quote’s Treatment Plan (per-day) (e.g., "Consultation & Scans") | Read-only |
+| Day Description | text | Yes (read-only) | Pre-populated from the accepted Quote Option's relative day plan (e.g., "Consultation & Scans") | Read-only |
 | Status Badge (per day) | status badge | Yes | Current status for this day; click row or Edit icon to open Day Edit modal (Screen 5) | Valid: Not started \| In progress \| Finished \| Need caution/attention \| Cancelled/Deferred |
 | Note Preview (per day) | text | No | First line of saved day note; "+ Add note" if empty | Display only |
 | Edit icon | icon button | — | Opens Day Edit modal (Screen 5) | — |
@@ -332,7 +332,7 @@ flowchart TD
 - **Tab activation**: The In Progress tab becomes the active workspace as the case transitions from Confirmed to In Progress at Check In. Other tabs remain accessible for reference.
 - **Day independence**: Each day record is a discrete, independent document. Day records are NEVER consolidated into a single multi-day record.
 - **Day status constraint**: Valid day statuses are: Not started | In progress | Finished | Need caution/attention | Cancelled/Deferred. "Pause" is NOT a valid status.
-- **Treatment plan lock**: Treatment Plan (per-day) day descriptions and assigned clinician (singular, from quote) are locked at Check In. No plan or clinician changes are possible from this screen once In Progress.
+- **Treatment plan lock**: Treatment Plan (per-day) day descriptions and the assigned clinician set (one or more, from quote `clinicianIds[]`) are locked at Check In. No plan or clinician changes are possible from this screen once In Progress.
 - **End Treatment gate**: The "End Treatment" button is enabled only when ALL day records are in a terminal status (Finished, Need caution/attention, or Cancelled/Deferred). Days remaining in "Not started" or "In progress" block the button.
 - **Auto-save**: Beginning note auto-saved every 2 minutes.
 - **Day status sync**: Day status updates are synced to the patient app and admin dashboard in real-time. Provider clinical notes are NOT shared with the patient.
@@ -349,7 +349,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only |
-| Day Description | text | Yes (read-only) | Description from the accepted quote’s Treatment Plan (per-day) | Display only |
+| Day Description | text | Yes (read-only) | Description from the accepted Quote Option's relative day plan | Display only |
 | Status | select | Yes | Status for this day | Options: Not started \| In progress \| Finished \| Need caution/attention \| Cancelled/Deferred |
 | Note | text area | No | Provider's clinical notes for this day — not visible to the patient | Max 2000 characters |
 | Cancel | button | — | Discard changes and close modal | — |
@@ -407,12 +407,12 @@ flowchart TD
 | Search Bar | text input | No | Search by patient ID, name, booking reference, or provider name | Real-time filter |
 | Filter: Provider / Clinic | dropdown | No | Filter by provider or clinic | All providers in the platform |
 | Filter: Date Range | date range picker | No | Filter by procedure start date | Default: current month |
-| Filter: Clinician | dropdown | No | Filter by assigned clinician | — |
+| Filter: Clinician | dropdown | No | Filter by any assigned clinician | — |
 | Patient ID | text | Yes (read-only) | Unique patient identifier | Clickable — opens admin case detail (Screen 8) |
 | Patient Name | text | Yes (read-only) | Patient's full name | Display only |
 | Provider / Clinic | text | Yes (read-only) | Treating provider and clinic name | Display only |
 | Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only |
-| Assigned Clinician | text | Yes (read-only) | Clinician from quote | Display only |
+| Assigned Clinicians | list | Yes (read-only) | Clinicians from quote | Display only |
 | Procedure Date | date | Yes (read-only) | Scheduled procedure date | Display only |
 | Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only |
 | Action | button | — | Edit / View case | Opens Screen 8 |
@@ -436,7 +436,7 @@ flowchart TD
 | Case Status | editable badge | Yes | Current case status — admin can manually trigger status transitions | Options: Confirmed \| In Progress \| Aftercare \| Completed; all transitions logged; reason required |
 | Patient ID | text | Yes (read-only) | Patient identifier | Display only |
 | Provider / Clinic | text | Yes (editable) | Treating provider and clinic — admin can reassign | Edit logged in audit trail |
-| Assigned Clinician | text | Yes (editable) | Clinician — admin can update even after Check In (singular clinicianId) | Edit logged; reason required |
+| Assigned Clinicians | multiselect | Yes (editable) | Clinicians — admin can add or remove even after Check In (quote `clinicianIds[]`) | At least one must remain; edit logged; reason required |
 | Procedure Date | date | Yes (editable) | Editable for operational corrections | Edit logged |
 | Estimated Graft Count | number | Yes (read-only) | From quote | Display only |
 | Beginning Note | text area | No (editable) | Provider's beginning-of-treatment note — admin can edit | Max 2000 characters; edit logged |
@@ -472,7 +472,7 @@ flowchart TD
 - **Rule 5**: All timestamps (check-in, end of treatment) MUST be recorded in UTC and displayed in provider's local timezone
 - **Rule 6**: Treatment documentation MUST be completed within 24 hours of Check In (system sends reminder notifications)
 - **Rule 7**: Maximum one treatment can be "In Progress" per patient at any time (prevents duplicate documentation)
-- **Rule 8**: Treatment Plan (per-day) day descriptions and assigned clinician are LOCKED for providers once Check In is performed — providers cannot modify them mid-procedure. Admin may override when required for operational exceptions, but MUST provide a reason and the override MUST be captured in the audit trail (previous values preserved).
+- **Rule 8**: Treatment Plan (per-day) day descriptions and the assigned clinician set are LOCKED for providers once Check In is performed — providers cannot modify them mid-procedure. Admin may override when required for operational exceptions, but MUST provide a reason and the override MUST be captured in the audit trail (previous values preserved).
 - **Rule 9**: Each treatment day is a discrete record — day records are NEVER consolidated into a single multi-day record
 - **Rule 10**: Valid day statuses are: **Not started** | **In progress** | **Finished** | **Need caution/attention** | **Cancelled/Deferred**. No other statuses are permitted.
 - **Rule 11**: Cancel / Close Case action does NOT auto-transition status or trigger financial actions — admin handles all case closure steps manually
@@ -567,8 +567,8 @@ flowchart TD
 ### Internal Dependencies (Other FRs/Modules)
 
 - **FR-004 / Module PR-02: Inquiry & Quote Management**
-  - **Why needed**: Treatment documentation requires access to quote details (estimated graft count, treatment, package, assigned clinician)
-  - **Integration point**: Provider views quote details in pre-procedure review screen; quote data pre-fills treatment documentation fields
+  - **Why needed**: Treatment documentation requires parent-quote details plus the exact accepted Quote Option and its relative day plan
+  - **Integration point**: The accepted Quote Option ID and option/date-price ID select the package snapshot and appointment choice; parent Quote data supplies treatment, estimated graft count, and assigned clinicians
 
 - **FR-006 + FR-007 / Module P-03: Booking & Payment**
   - **Why needed**: Treatment can only be documented for "Confirmed" bookings (deposit paid) with no outstanding balance (full payment complete per billing rules)
@@ -579,7 +579,7 @@ flowchart TD
   - **Integration point**: FR-010 Save (Complete Treatment) triggers FR-011 workflow; FR-011 presents aftercare template selection, generates milestones, activates aftercare plan, and transitions booking status to "Aftercare"
 
 - **FR-009 / Module PR-01: Auth & Team Management**
-  - **Why needed**: Treatment documentation requires authenticated provider with appropriate role (Owner, Manager, or Clinical Staff); assigned clinician originates from provider clinic staff list (selected at quote stage)
+  - **Why needed**: Treatment documentation requires authenticated provider with appropriate role (Owner, Manager, or Clinical Staff); assigned clinicians originate from the provider clinic staff list (selected at quote stage)
   - **Integration point**: System validates provider role before enabling treatment documentation; clinic staff list powers clinician assignment upstream in FR-004
 
 - **FR-020 / Module S-03: Notification Service**
@@ -599,8 +599,8 @@ flowchart TD
   - **Why needed**: Treatment documentation can only be initiated for bookings with status = "Confirmed" (deposit paid) and no outstanding balance (full payment completed)
   - **Source**: P-03: Booking & Payment module; booking is confirmed on deposit payment and becomes fully paid when remaining balance is settled
 
-- **Entity 2: Quote Details (Treatment, Package, Graft Estimate, Assigned Clinician)**
-  - **Why needed**: Quote details pre-fill treatment documentation fields; treatment (via treatmentId) defines the procedure type; package (via packageId, optional) defines add-on services; provider reviews estimated graft count vs. actual graft count and the assigned clinician
+- **Entity 2: Accepted Quote Aggregate (Treatment, Quote Option, Graft Estimate, Assigned Clinicians)**
+  - **Why needed**: Parent Quote data supplies the immutable Treatment-version relationship, estimated graft count, and assigned clinicians; the accepted Quote Option ID supplies the package snapshot, inclusions, and relative day plan used for this treatment
   - **Source**: PR-02: Inquiry & Quote Management module; quote accepted by patient during booking
 
 - **Entity 3: Aftercare Templates** *(owned by FR-011; referenced by FR-010 as a downstream dependency)*
@@ -653,7 +653,7 @@ flowchart TD
 ### Integration Points
 
 - **Integration 1: Provider Platform → Patient Platform & Admin Platform (Real-Time Day-Based Progress Sync)**
-  - **Data format**: JSON payload with treatment ID, current treatment day number, day description (from accepted quote `plan` / Treatment Plan (per-day)), day status
+  - **Data format**: JSON payload with treatment ID, accepted Quote Option ID, current treatment day number, day description from the accepted option's `QuoteOptionPlanDay`, and day status
   - **Technology**: WebSocket connections or server-sent events (SSE) for real-time updates; fallback to 30-second polling if WebSocket unavailable
   - **Authentication**: OAuth 2.0 bearer token with treatment record access validation
   - **Error handling**: If real-time sync fails, queue update for retry; patient/admin see last known day status with "last updated [time] ago" indicator
@@ -821,7 +821,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 - **REQ-010-004**: System MUST require minimum documentation before allowing treatment completion: conclusion notes, prescription, advice, medication (min 1), actual graft count, final head scan photo set (V1)
 - **REQ-010-006**: System MUST signal treatment completion to FR-011 upon provider saving the End of Treatment modal. FR-011 owns the status transition to "Aftercare" and aftercare plan activation
 - **REQ-010-007**: System MUST send real-time status notifications to patient mobile app when treatment starts ("In Progress") and when treatment completes ("Aftercare")
-- **REQ-010-007A**: System MUST sync day-based treatment progress (current treatment day number, day description from accepted quote `plan` / Treatment Plan (per-day), and day status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress *(day statuses only — clinical notes are provider-only)*
+- **REQ-010-007A**: System MUST sync day-based treatment progress (accepted Quote Option ID, current treatment day number, day description from that option's `QuoteOptionPlanDay`, and day status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress *(day statuses only — clinical notes are provider-only)*
 - **REQ-010-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
 - **REQ-010-009**: System MUST signal treatment completion data (conclusion, prescription, advice, medication, graft count) to FR-011 for aftercare setup. FR-011 owns aftercare template selection, plan activation, milestone generation, scan schedules, and questionnaire cadence
 - **REQ-010-010**: System MUST enforce treatment documentation completion within 24 hours of Check In; send reminder notifications at 12 and 24 hours if incomplete
@@ -854,8 +854,8 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 ## Key Entities
 
 - **Entity 1 - Treatment Record**
-  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, assigned clinician ID (singular, from quote — provider-locked after Check In; admin-overridable with reason + audit history), **treatment plan reference** (foreign key to quote `plan` from FR-004), **day records** (one per day: day number, day description, day status, day note, last updated timestamp), beginning note, conclusion notes, prescription, advice, medication instructions (free-text), estimated graft count (from quote — read-only reference), actual graft count (entered at end of treatment), status ("In Progress", "Completed"), check-in timestamp, completion timestamp
-  - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record references one Treatment Plan (per-day) (from quote `plan`); one treatment record has one assigned clinician (from quote, singular clinicianId); one treatment record has multiple treatment photos / head scan photo sets (V1); **one treatment record tracks day-based progress changes over time for patient/admin visibility**
+  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, accepted Quote Option ID (foreign key), assigned clinician IDs (one or more, from quote `clinicianIds[]` — provider-locked after Check In; admin-overridable with reason + audit history, at least one must remain), **option plan reference** (the accepted option's `QuoteOptionPlanDay` records from FR-004), **day records** (one per day: day number, day description, day status, day note, last updated timestamp), beginning note, conclusion notes, prescription, advice, medication instructions (free-text), estimated graft count (from quote — read-only reference), actual graft count (entered at end of treatment), status ("In Progress", "Completed"), check-in timestamp, completion timestamp
+  - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record references the accepted FR-004 Quote Option and its relative plan days; one treatment record has one or more assigned clinicians (from quote `clinicianIds[]`); one treatment record has multiple treatment photos / head scan photo sets (V1); **one treatment record tracks day-based progress changes over time for patient/admin visibility**
 
 - **Entity 2 - Treatment Photo / Head Scan Photo Set**
   - **Key attributes**: Treatment record ID (foreign key), media type ("head_scan_before", "head_scan_after", "treatment_photo"), file URL (encrypted storage path), original file name, file size, upload timestamp, uploaded by (provider user ID)
@@ -883,6 +883,8 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 | 2026-03-03 | 1.6 | Alignment + cleanup updates: (1) **Head scan capture clarified for V1** — head scan documented as a standardized photo set (V1), with true 3D scan deferred to V2; updated all screens/workflows/requirements accordingly; (2) **Deprecated media policy removed** — removed optional media-policy notes from the PRD; (3) **Consistency sweep** — replaced P-XX with P-05, normalized upload limits (10MB), fixed RBAC wording and file-type rules, and refreshed dependency wording. | Product alignment (2026-03-03) |
 | 2026-03-03 | 1.7 | Alignment updates: (1) **In Progress day model clarified** — day-level status + quote-provided day description + provider day notes; removed “activity status” semantics and removed `activity_status_updated` event type; (2) **Admin override policy clarified** — provider locks after Check In remain, but admin can override with mandatory reason + audit history; (3) **Delete/remove semantics clarified** — all “remove” actions are archive/soft-delete only (no hard delete) for treatment documentation and media. | Product alignment (2026-03-03) |
 | 2026-03-03 | 1.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer to match `prd-template.md`. | Documentation governance (2026-03-03) |
+| 2026-09-09 | 1.9 | **Clinician cardinality aligned to FR-004 v2.2**: the quote now carries `clinicianIds[]` (one or more clinicians shared by every Quote Option, REQ-004-027), superseding the singular clinician model adopted in v1.4. Updated Patient Screen 3, Provider Screens 1 and 3, Admin Screen 2, the Check In lock rule, Business Rule 8, dependency notes, and Entity 1 attributes/relationships. Admin reassignment may add or remove clinicians provided at least one remains, with reason + audit. See [FR-004 Change Request](../fr004-quote-submission/change-request-2026-09-09-quote-options-model.md) and [FR-010 Change Request](./change-request-2026-09-09-clinician-cardinality-alignment.md). | Verification alignment (2026-09-09) |
+| 2026-09-10 | 2.0 | **Accepted Quote Option consumer alignment**: replaced singular `packageId` and quote-level `plan` dependencies with the stable accepted Quote Option relationship, its package snapshot, and its relative `QuoteOptionPlanDay` records. Parent Quote data remains the source for the immutable Treatment relationship, graft estimate, and clinician assignments. See [Change Request](./change-request-2026-09-10-quote-option-consumer-alignment.md). | Product Owner / Verification alignment (2026-09-10) |
 
 ---
 
@@ -890,7 +892,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | — | 2026-03-03 | ✅ Approved |
+| Product Owner | — | 2026-09-10 | ✅ Approved FR-010 v2.0 quote-option consumer alignment |
 | Technical Lead | — | 2026-03-03 | ✅ Approved |
 | Stakeholder | — | 2026-03-03 | ✅ Approved |
 
@@ -899,4 +901,4 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-010 from system-prd.md (Lines 682-705)
-**Last Updated**: 2026-03-03
+**Last Updated**: 2026-09-10
