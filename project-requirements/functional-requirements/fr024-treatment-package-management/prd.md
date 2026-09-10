@@ -655,7 +655,7 @@ Before production release, implementation must ensure all treatment- and package
 
 - **FR-004 / Module PR-02**: Inquiry & Quote Management
   - **Why needed**: Providers select treatments and packages from this module when creating quotes
-  - **Integration point**: Quote creation workflow calls treatment/package APIs to fetch available options and pricing
+  - **Integration point**: Quote creation calls treatment/package APIs, retains the exact Treatment ID/version on the parent Quote, and captures each selected Package ID/version as provenance on an FR-004 Quote Option snapshot. Quote-local customization never writes back to this package library.
 
 - **FR-001 / Module P-01**: Auth & Profile Management
   - **Why needed**: Provider authentication required to access package management features
@@ -845,7 +845,7 @@ Provider creates a quote by selecting one treatment and multiple packages, syste
 
 1. **Given** provider is creating quote for patient inquiry, **When** provider selects treatment (FUE) and enters graft count (3,000), **Then** system displays treatment base price (£2,500) + graft price (3,000 × £2.00 = £6,000) = subtotal £8,500
 2. **Given** provider adds packages (hotel: £300, transport: £50, medications: £100), **When** packages are selected, **Then** system updates total to £8,950 (treatment + packages)
-3. **Given** provider reviews quote with treatment and packages, **When** provider submits quote, **Then** system locks treatment and package versions, creates quote record, and notifies patient
+3. **Given** provider reviews a quote with treatment and package options, **When** provider submits the quote, **Then** system retains the exact Treatment ID/version on the parent Quote, captures each Package ID/version on its Quote Option snapshot, and notifies the patient
 
 ---
 
@@ -914,7 +914,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 - **REQ-024-009**: System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes
 - **REQ-024-010**: System MUST allow providers to select one treatment and zero or more packages when creating quotes
 - **REQ-024-011**: System MUST calculate quote total dynamically based on selected treatment, graft count, and packages
-- **REQ-024-012**: System MUST lock treatment and package versions in quotes to prevent retroactive price changes
+- **REQ-024-012**: System MUST retain the exact Treatment ID/version on the parent Quote and each selected Package ID/version as provenance on its Quote Option snapshot to prevent retroactive changes
 
 ### Data Requirements
 
@@ -923,7 +923,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 - **REQ-024-015**: System MUST store media files (videos, images) in S3-compatible object storage with CDN delivery
 - **REQ-024-016**: System MUST track which providers offer which treatments (provider-treatment pricing configuration)
 - **REQ-024-017**: System MUST link packages to provider accounts (package ownership)
-- **REQ-024-018**: System MUST preserve treatment and package versions used in historical quotes and bookings
+- **REQ-024-018**: System MUST preserve the exact Treatment version and Quote Option package snapshots used in historical quotes and bookings
 
 ### Security & Privacy Requirements
 
@@ -948,7 +948,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 - **Entity 1 - Treatment**
   - **Key attributes**: treatment_id (UUID), name (string), type (enum), description (text), video_url (string), image_urls (array), technique_specifications (text), recovery_time (string), duration_hours (float), status (enum: active/inactive), version (integer), created_at (timestamp), updated_at (timestamp), created_by_admin_id (UUID)
-  - **Relationships**: One treatment can have many provider pricing configurations (one-to-many). One treatment version can be referenced by many quotes (one-to-many).
+  - **Relationships**: One treatment can have many provider pricing configurations (one-to-many). One treatment version can be referenced by many parent Quotes (one-to-many).
 
 - **Entity 2 - TreatmentPricingConfiguration**
   - **Key attributes**: pricing_id (UUID), provider_id (UUID), treatment_id (UUID), base_price (decimal), price_per_graft (decimal), currency (string), min_graft_count (integer), max_graft_count (integer), status (enum: offered/not_offered), created_at (timestamp), updated_at (timestamp)
@@ -956,15 +956,15 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 - **Entity 3 - Package**
   - **Key attributes**: package_id (UUID), provider_id (UUID), name (string), type (enum: hotel/transport/flights/medication/prp/consultation/custom), description (text), duration (string), price (decimal), currency (string), image_urls (array), terms_conditions (text), status (enum: available/unavailable), version (integer), created_at (timestamp), updated_at (timestamp)
-  - **Relationships**: Belongs to one provider (many-to-one). One package version can be referenced by many quotes (one-to-many).
+  - **Relationships**: Belongs to one provider (many-to-one). One package version can be the provenance source for many FR-004 Quote Options (one-to-many); quote-local option snapshots remain independent from later package edits.
 
 - **Entity 4 - QuoteTreatment** (linking entity)
   - **Key attributes**: quote_treatment_id (UUID), quote_id (UUID), treatment_id (UUID), treatment_version (integer), graft_count (integer), treatment_price (decimal), graft_price (decimal), total_treatment_cost (decimal)
   - **Relationships**: Belongs to one quote (many-to-one). References one treatment version (many-to-one, versioned).
 
-- **Entity 5 - QuotePackage** (linking entity)
+- **Entity 5 - QuotePackage** (legacy compatibility link; deprecated)
   - **Key attributes**: quote_package_id (UUID), quote_id (UUID), package_id (UUID), package_version (integer), package_price (decimal)
-  - **Relationships**: Belongs to one quote (many-to-one). References one package version (many-to-one, versioned).
+  - **Relationships**: Retained only while legacy single-package consumers migrate. New and migrated quotes use FR-004 `QuoteOption.sourcePackageId` and `sourcePackageVersion`; FR-004 owns the quote-local snapshot and its option items.
 
 ---
 
@@ -974,6 +974,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 |------|---------|---------|--------|
 | 2025-11-12 | 1.0 | Initial PRD creation for FR-024 Treatment & Package Management | AI Assistant |
 | 2025-11-28 | 1.1 | Updated navigation paths, localization scope, and marked PRD as verified | AI Assistant |
+| 2026-09-10 | 1.2 | FR-004 v2.6 reconciliation: package versions now provide provenance to Quote Option snapshots rather than a direct reusable-package relationship on new parent Quotes; the legacy QuotePackage link is explicitly deprecated. See [Change Request](./change-request-2026-09-10-quote-option-provenance-alignment.md). | Product Owner / Documentation |
 
 ---
 
@@ -990,4 +991,4 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-28
+**Last Updated**: 2026-09-10
