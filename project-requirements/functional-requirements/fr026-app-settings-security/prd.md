@@ -31,7 +31,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options
-- **Provider Platform (PR-06)**: Indirectly consumes centrally managed lists for profile settings
+- **Provider Platform (PR-06 and PR-02)**: Consumes centrally managed profile lists and the versioned quote currency/expiry configuration
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
 - **Shared Services (S-03)**: Notification Service consumes OTP email templates for delivery
 
@@ -45,11 +45,12 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Discovery questions ("How did you find us?") display options from centralized list
 - Changes to settings propagate to patient app within 1 minute
 
-**Provider Platform (PR-06 & PR-01)**:
+**Provider Platform (PR-06, PR-01 & PR-02)**:
 
 - Provider staff management (PR-06) indirectly uses centrally managed lists
 - Authentication throttling (PR-01) applies to provider login attempts
 - OTP parameters (PR-01) apply to provider email verification flows
+- Quote creation (PR-02) consumes the active currency and expiry policy from one configuration version
 
 **Admin Platform (A-09)**:
 
@@ -90,7 +91,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Admin-Initiated**:
 
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
-- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, or inquiry configuration
+- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, inquiry configuration, or quote configuration
 - Admin navigates to Settings → Notifications to edit OTP email templates
 
 **System-Triggered**:
@@ -234,6 +235,17 @@ The App Settings & Security Policies module provides a centralized, audited, and
   7. New inquiry sessions receive the new configuration within one minute; submitted inquiries retain their historical treatment-area snapshot.
 
 - **Outcome**: Admin can change future inquiry options and the date blocked window without a code change. Implementation must confirm the patient client consumes the dynamic response before treating ordinary configuration changes as release-free.
+
+**A7: Admin Configures Quote Currency and Expiry**:
+
+- **Trigger**: Product team needs to change the currency used by newly created quotes or the default quote response window.
+- **Steps**:
+  1. Admin navigates to Settings → App Data → Quote Configuration.
+  2. Admin selects one enabled ISO 4217 quote currency and enters a positive whole-number expiry window in hours; default is 48.
+  3. Admin saves with a mandatory change reason.
+  4. System versions and audits the change, invalidates the configuration cache, and exposes the active values through the authenticated Settings API.
+  5. FR-004 snapshots the currency and computes expiry when a new parent Quote is created. Existing quotes retain their saved currency and expiry.
+- **Outcome**: New FR-004 quotes use one auditable configuration source without retroactively changing historical quote prices or deadlines.
 
 **B1: Admin Attempts Invalid Configuration**:
 
@@ -566,6 +578,24 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ---
 
+### Screen 5d: Quote Configuration Manager
+
+**Purpose**: Own the active currency snapshot and default expiry policy consumed by FR-004 when a parent Quote is created.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| Active Quote Currency | select | Yes | ISO 4217 currency snapshotted onto each new parent Quote | Exactly one enabled currency; never provider-editable |
+| Default Quote Expiry | number | Yes | Whole hours used to compute a new Quote's expiry timestamp | Positive integer; default 48 hours |
+
+**Business Rules**:
+
+- Changes apply only to parent Quotes created after the new configuration version becomes active.
+- Existing quotes retain their currency snapshot and computed expiry.
+- Saving requires a change reason, version increment, immutable audit entry, and immediate cache invalidation.
+- Currency conversion and exchange-rate locking remain owned by FR-029 and occur at acceptance; this screen does not manage conversion rates.
+
+---
+
 ### Screen 6: OTP Email Template Editor
 
 **Purpose**: Edit email templates for OTP verification and password reset emails
@@ -665,6 +695,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Inquiry cancellation reasons: add, edit, reorder, deactivate reason options (FR-003 consumer)
 - Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
 - Inquiry configuration: add, edit, reorder, activate, or deactivate treatment-area options and set the minimum inquiry lead time (FR-003 consumer)
+- Quote configuration: select the active ISO 4217 quote currency and set the positive whole-number default expiry window (FR-004 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
 **Fixed in Codebase (Not Editable)**:
@@ -736,6 +767,10 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **FR-003 / Module P-02: Quote Request & Management**
   - **Why needed**: P-02 consumes inquiry cancellation reason options for the patient cancellation modal (Screen 8a), plus active inquiry treatment-area options and the minimum inquiry lead time for inquiry creation.
   - **Integration point**: P-02 retrieves active cancellation reasons for Workflow 5 and retrieves the active ordered treatment-area catalog with `minimum_inquiry_lead_days` for Screen 1, Screen 5, and backend submission validation. Submitted inquiries retain their treatment-area snapshot.
+
+- **FR-004 / Module PR-02: Inquiry & Quote Management**
+  - **Why needed**: FR-004 consumes the active quote currency and default expiry window when creating a parent Quote.
+  - **Integration point**: Quote creation retrieves one versioned configuration response, snapshots the ISO 4217 currency, and computes `expiresAt`; existing quotes do not change when configuration is updated.
 
 - **FR-009 / Module PR-01: Auth & Team Management**
   - **Why needed**: PR-01 consumes authentication throttling and OTP configuration for provider login and email verification
@@ -1042,6 +1077,20 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 
 ---
 
+### User Story 8 - Manage Quote Configuration (Priority: P1)
+
+Admin needs one versioned source for the currency and expiry policy used by newly created FR-004 quotes.
+
+**Independent Test**: Change the active quote currency and expiry window with a reason; verify version/audit records and cache invalidation; create a new quote and confirm its snapshot/deadline; confirm an older quote is unchanged.
+
+**Acceptance Scenarios**:
+
+1. **Given** an enabled ISO 4217 currency and a positive whole-number expiry window, **When** Admin saves with a reason, **Then** the system versions and audits the configuration and invalidates its cache.
+2. **Given** the new configuration is active, **When** FR-004 creates a parent Quote, **Then** it snapshots that currency and computes expiry from the configured hours.
+3. **Given** an existing quote predates the change, **When** configuration changes, **Then** its currency snapshot and expiry remain unchanged.
+
+---
+
 ### Edge Cases
 
 - What happens when **admin attempts to deactivate one of the last 2 active discovery question options**? System prevents deactivation and displays error: "At least 2 active options required. Cannot deactivate this option."
@@ -1080,6 +1129,7 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 - **REQ-026-012c**: System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.
 - **REQ-026-012d**: System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.
 - **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
+- **REQ-026-012f**: System MUST store one versioned Quote Configuration containing an enabled ISO 4217 currency and a positive whole-number default expiry window, default 48 hours. Consumer: FR-004 quote creation.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -1099,6 +1149,8 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 - **REQ-026-023**: Settings API MUST support OAuth 2.0 authentication with "read:settings" or "write:settings" scopes
 - **REQ-026-024**: System MUST NOT expose a rollback API.
 - **REQ-026-025**: The patient configuration response MUST return active ordered treatment-area options and `minimum_inquiry_lead_days` together so the client calendar and backend validator use one configuration source.
+- **REQ-026-026**: The authenticated Settings API MUST return the active quote currency, default expiry hours, configuration version, and last-modified timestamp together so FR-004 creates each parent Quote from one consistent configuration version.
+- **REQ-026-027**: Quote Configuration changes MUST affect only quotes created after activation; existing quote currency snapshots and computed expiry timestamps MUST remain unchanged.
 
 ---
 
@@ -1144,6 +1196,10 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
   - **Key attributes**: policy_id, minimum_inquiry_lead_days, version_number, change_reason, created_at, updated_at
   - **Relationships**: Consumed by FR-003 patient calendar and backend submission validation
 
+- **Entity 11 - Quote Configuration**: Versioned configuration used when FR-004 creates a parent Quote
+  - **Key attributes**: configuration_id, active_currency_code (ISO 4217), default_expiry_hours (positive integer, default 48), version_number, change_reason, created_at, updated_at
+  - **Relationships**: Consumed by FR-004; values are snapshotted/derived onto new Quote records and never retroactively applied
+
 ---
 
 ## Appendix: Change Log
@@ -1158,6 +1214,7 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 | 2026-09-04 | 1.5 | Added Inquiry Configuration as an Admin-managed App Data setting group: treatment-area catalog with image/icon assets and an active ordered API response, plus configurable minimum inquiry lead time (default 30 days). Added workflow A6, Screen 5c, editable-rule, integration, requirement, and entity contracts. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
 | 2026-09-04 | 1.6 | Corrected the approved default minimum inquiry lead time from 30 days to 3 days; the configurable range, audit, and propagation contracts are unchanged. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
 | 2026-09-04 | 1.7 | Verification follow-up: added the invariant that at least one inquiry treatment-area option must remain active, including Screen 5c validation and REQ-026-012e. | Product Owner |
+| 2026-09-10 | 1.8 | FR-004 v2.6 reconciliation: added versioned Quote Configuration ownership for the active ISO 4217 currency and default 48-hour expiry window, including workflow, Screen 5d, dependency, API, entity, and non-retroactivity contracts. See [Change Request](./change-request-2026-09-10-quote-configuration-ownership.md). | Product Owner / Documentation |
 
 ---
 
@@ -1174,4 +1231,4 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-03-28
+**Last Updated**: 2026-09-10
