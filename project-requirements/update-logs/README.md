@@ -6,7 +6,29 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-09-09/ (1 file)
+### 2026-09-10/ (3 files)
+
+#### **FR-004 Dependency and Verification Fixes**
+
+- `FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md` - Applied all three selected FR-004 v2.5 verification resolutions: made Admin audit access explicitly immutable; aligned FR-019 promotion attachment, FR-024 package provenance, and FR-026 quote currency/expiry ownership; completed validation limits, source references, and approval metadata; preserved FR-005/FR-006/FR-008/FR-014/FR-015 as deferred.
+
+#### **FR-004 and FR-010 Verification Resolution**
+
+- `FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md` - Applied the four Product Owner-selected FR-004 verification resolutions: technique remains Treatment-owned through an exact immutable version relationship; FR-038 was removed from restricted quote routing; FR-010 now consumes the accepted Quote Option and its relative plan; lifecycle terms are normalized to `accepted` and `withdrawn`; and the Constitution-required verification matrix is explicit. FR-005/FR-006/FR-008/FR-014/FR-015 remain deferred.
+
+#### **FR-004 System Integrity Verification Fixes**
+
+- `FR004_SYSTEM_INTEGRITY_FIXES_2026-09-10.md` - Second FR-004 verification pass after the quote-options restructure: corrected the stale quote status enum in the data schema (those values are treatment case statuses on `inquiries.status`), documented the `sent`/`quote` API divergence, added the `quote_clinicians` and `quote_documents` tables plus three missing `quotes` columns, flagged `common_requirements` as a real spec gap, deprecated `quotes.discount_id`, aligned Screen 7 admin option-item editing with Sub-screen 2A validation, and reconciled CR-FR004-20260909-01 metadata to FR-004 v2.4. FR-005/FR-008 reconciliation deferred by decision.
+
+### 2026-09-09/ (3 files)
+
+#### **FR-004 Parent Quote and Package Options Model**
+
+- `FR004_QUOTE_OPTIONS_MODEL_2026-09-09.md` - Approved FR-004 v2.0 and CR-FR004-20260909-01; refined Screen 1 into seven tabs in v2.1; and added complete provider/system field ownership, attachments, option-item fields, multiple clinicians, generated graft description, and configured currency snapshot in v2.2. Implementation reconciliation remains required.
+
+#### **FR-004 Verification Fixes and Upstream Reconciliation**
+
+- `FR004_VERIFICATION_FIXES_2026-09-09.md` - Resolved the FR-004 v2.2 re-verification findings: confirmed that relative plan days are never resolved to calendar dates, fixed quote-amount analytics to the accepted option/date price, documented `included_services` ownership, aligned FR-010 to multiple clinicians, and reconciled the system PRD, data schema, and technical spec to the quote-option aggregate. FR-005, FR-006, and FR-008 reconciliation remains open and unscheduled.
 
 #### **Subsequent Stakeholder Source Registry**
 
@@ -855,6 +877,16 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-09-10**: `FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md` - Completed FR-004 v2.6 verification and aligned FR-019 v2.1, FR-024 v1.2, and FR-026 v1.8 to the parent-quote/Quote Option contract, with three approved Change Requests and the five explicitly deferred FRs preserved.
+
+- **2026-09-10**: `FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md` - Reconciled FR-004 v2.5 and FR-010 v2.0 around Treatment-owned technique data, accepted-option package/plan consumption, canonical Quote lifecycle terms, and mandatory verification layers; recorded the new FR-010 Change Request and preserved the five explicitly deferred FRs.
+
+- **2026-09-10**: `FR004_SYSTEM_INTEGRITY_FIXES_2026-09-10.md` - Reconciled the documents around FR-004 to the v2.4 quote-option aggregate: quote status enum, undocumented quote tables and columns, discount ownership, Screen 7 admin validation, and Change Request metadata; recorded `common_requirements` and the graft-description template owner as open items.
+
+- **2026-09-09**: `FR004_QUOTE_OPTIONS_MODEL_2026-09-09.md` - Approved the FR-004 parent-quote/one-to-five-option aggregate, seven-tab editor, and complete data-ownership matrix. Currency is system-configured rather than quote input; implementation and downstream FR reconciliation remain pending.
+
+- **2026-09-09**: `FR004_VERIFICATION_FIXES_2026-09-09.md` - Applied the FR-004 re-verification decisions across FR-004 v2.3, FR-010 v1.9, and all three system documents; relative plan days stay relative, amount analytics use the accepted price only, and FR-005/FR-006/FR-008 reconciliation stays open.
+
 - **2026-09-09**: `SUBSEQUENT_STAKEHOLDER_SOURCE_REGISTRY_2026-09-09.md` - Added source governance, a source register, two meeting extractions, and a normalized fund-release/payments brief while preserving the PRD boundary.
 
 - **2026-09-07**: `SPRINT_1_CREATED_TASK_TRACEABILITY_2026-09-07.md` - Recorded the FE/BE Plane task keys for four Sprint 1 P-02 and A-02 backlog rows after task creation.
@@ -960,6 +992,10 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Provider Platform modules
 
 ### Functional Requirements
+
+- **2026-09-10**: `FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md` - FR-004 v2.6, FR-019 v2.1, FR-024 v1.2, and FR-026 v1.8 approved alignment for immutable audit access, option/date promotions, Quote Option package provenance, quote configuration, and verification metadata.
+
+- **2026-09-10**: `FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md` - FR-004 v2.5 and FR-010 v2.0 approved alignment for immutable Treatment relationships, accepted Quote Option consumption, canonical lifecycle terms, and mandatory verification coverage.
 
 - **2026-08-20**: `FR037_VERIFICATION_APPROVAL_2026-08-20.md` - FR-037 v2.0: changed the PRD from Draft to Verified & Approved and recorded Joachim Trung Tuan's Product Owner approval.
 - **2026-08-20**: `GOVERNANCE_TEMPLATE_OWNERSHIP_2026-08-20.md` - Aligned governance and human onboarding with project-owned templates, the Spec Kit compatibility link, and FR-local Change Requests for major requirement events.
@@ -1138,4 +1174,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: September 9, 2026 (subsequent stakeholder source registry)
+**Last Updated**: September 10, 2026 (FR-004 dependency and verification fixes)
