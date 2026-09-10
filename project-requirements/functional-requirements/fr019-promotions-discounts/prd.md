@@ -99,8 +99,8 @@ Steps:
 **A1b: Provider‑Only Discount (Inline — On-the-Spot from Quote)**:
 
 - Trigger: Provider opens the inline promotion creator from within FR-004 Screen 1 during quote drafting.
-- Steps: Provider enters name, type, value, applies-to, and optional code in a mini-form; system creates a new `PromotionProgram` with `scope = AD_HOC_QUOTE_BOUND` and `bound_quote_id` set to the current quote. Provider may toggle "Save as reusable program for future quotes" to promote the record to `scope = REUSABLE`.
-- Outcome: Discount is attached to the originating quote (`quote.promotionId` set) and is governed by the same caps, validation, and admin-override rules as A1a. Ad-hoc records appear in FR-019 Screen 1 Hub (filterable by `scope`) and Screen 4 Portfolio.
+- Steps: Provider enters name, type, value, applies-to, and optional code in a mini-form for one FR-004 option/date-price row; system creates a new `PromotionProgram` with `scope = AD_HOC_QUOTE_BOUND`, `bound_quote_id` set to the parent quote, and `bound_quote_option_date_price_id` set to that row. Provider may toggle "Save as reusable program for future quotes" to promote the record to `scope = REUSABLE`.
+- Outcome: Discount is attached through `QuoteOptionDatePrice.promotionId` and is governed by the same caps, validation, and admin-override rules as A1a. Ad-hoc records appear in FR-019 Screen 1 Hub (filterable by `scope`) and Screen 4 Portfolio.
 
 **A2: Hairline‑Only Discount**:
 
@@ -532,7 +532,7 @@ One row per redemption event with the full state lifecycle preserved.
 **Purpose**: Form for the provider to create or edit a self-created promotion. The screen is reachable through **two entry modes**, which together cover both of the patterns described in FR-004 Screen 1 (Quote Creation):
 
 - **Mode 1 — Standalone (from PR-02 / PR-05 navigation):** Provider creates a reusable promotion ahead of time. `scope = REUSABLE`. The promotion is selectable from the list on FR-004 Screen 1 (Promotion field) for any future quote.
-- **Mode 2 — Inline (modal opened from FR-004 Screen 1 during quote drafting):** Provider creates an on-the-spot promotion attached to the current quote. `scope = AD_HOC_QUOTE_BOUND` with `bound_quote_id` set. A "Save as reusable program for future quotes" toggle, when enabled, promotes the record to `scope = REUSABLE` on submit.
+- **Mode 2 — Inline (modal opened from FR-004 Screen 1 during quote drafting):** Provider creates an on-the-spot promotion for one option/date-price row. `scope = AD_HOC_QUOTE_BOUND`, with `bound_quote_id` retaining parent-quote containment and `bound_quote_option_date_price_id` identifying the only row that may apply it. A "Save as reusable program for future quotes" toggle, when enabled, promotes the record to `scope = REUSABLE` on submit and clears both bindings.
 
 Both modes use the same form schema below; mode-specific behaviour is noted in the rules.
 
@@ -564,7 +564,7 @@ Both modes use the same form schema below; mode-specific behaviour is noted in t
 
 1. Given the provider saves a Mode 1 (standalone) promotion with no Code and Application Mode = List-selection, then the promotion is available for list-selection during FR-004 Screen 1 quote creation within its active window.
 2. Given the provider saves a Mode 1 promotion with a Code and Application Mode = Code-only, then the promotion is not shown in the quote-creation selection list but is redeemable when the patient enters the code at quote/booking.
-3. Given the provider opens the inline modal from FR-004 Screen 1 (Mode 2) and saves an ad-hoc promotion without enabling "Save as reusable", then a new `PromotionProgram` with `scope = AD_HOC_QUOTE_BOUND` is created, `bound_quote_id` is set, `quote.promotionId` is set, and the record is not offered on any other quote's selection list.
+3. Given the provider opens the inline modal for an FR-004 option/date-price row and saves an ad-hoc promotion without enabling "Save as reusable", then a new `PromotionProgram` with `scope = AD_HOC_QUOTE_BOUND` is created, both binding IDs are set, that row's `promotionId` is set, and the record is not offered on any other option/date-price row's selection list.
 4. Given the provider saves a Mode 2 ad-hoc promotion with "Save as reusable" enabled, then `scope = REUSABLE` is recorded and the promotion becomes selectable on future quotes within its active window.
 
 **Notes — Scope Note**:
@@ -711,7 +711,7 @@ Configurable with Restrictions:
 - A-05: Billing & Financial Reconciliation – reflect Hairline vs provider shares.
 - S-03: Notification Service – provider approvals and status updates.
 - S-02: Payment/Financial Service – price calculation and settlement.
-- FR-004: Quote Submission & Management – Screen 9 Mode 1/Mode 2 entry points live within FR-004 Screen 1; `quote.promotionId` field and removal of legacy `promotionNote` are co-owned changes (FR-004 v1.8).
+- FR-004: Quote Submission & Management – Screen 9 Mode 1/Mode 2 entry points live within FR-004 Screen 1; `QuoteOptionDatePrice.promotionId`, parent/row binding provenance, and removal of legacy `promotionNote` are co-owned contracts.
 - FR-018: Affiliate Management – Affiliate-bound code redemptions accrue incentive to the linked affiliate; FR-019 triggers the incentive event consumed by FR-018.
 - FR-022: Search & Filtering – Screen 1 search/filter controls are co-owned with FR-022; any field change must be updated in both FRs.
 - FR-031: Admin Access Control & Permissions – all admin create/approve/override actions are RBAC-gated per FR-031 role definitions.
@@ -848,10 +848,10 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 
 ## Key Entities
 
-- **PromotionProgram**: id, program_type (`ADMIN_VIA_PROVIDER` | `PROVIDER_SELF` | `HAIRLINE_FUNDED_DIRECT_ISSUED`), scope (`REUSABLE` | `AD_HOC_QUOTE_BOUND` — applies to `PROVIDER_SELF` only; other program types are always `REUSABLE`), bound_quote_id (nullable; set when scope = `AD_HOC_QUOTE_BOUND`), owner (admin user id or provider id), name, description, discount_type, value, applies_to (whole price / treatment / travel / other), application_mode (auto / code-only / list-selection / either), funding_model (derived), active window, total usage limit, per-user usage limit, targeting, issuance_channel (for Hairline-Funded), lifecycle_state, audit timestamps.
+- **PromotionProgram**: id, program_type (`ADMIN_VIA_PROVIDER` | `PROVIDER_SELF` | `HAIRLINE_FUNDED_DIRECT_ISSUED`), scope (`REUSABLE` | `AD_HOC_QUOTE_BOUND` — applies to `PROVIDER_SELF` only; other program types are always `REUSABLE`), bound_quote_id (nullable parent containment), bound_quote_option_date_price_id (nullable application target; both bindings set only for `AD_HOC_QUOTE_BOUND`), owner (admin user id or provider id), name, description, discount_type, value, applies_to (whole price / treatment / travel / other), application_mode (auto / code-only / list-selection / either), funding_model (derived), active window, total usage limit, per-user usage limit, targeting, issuance_channel (for Hairline-Funded), lifecycle_state, audit timestamps.
 - **PromotionCode**: id, program_id, code text, recipient_binding (open / affiliate id / segment id / patient id), issued_at, issued_by, status (unused / in-progress / redeemed / revoked / expired). Note: `in-progress` = code entered at quote stage but booking not yet confirmed; distinct from `Application.state = APPLIED` which is the redemption-level view of the same moment.
 - **Adoption**: id, program_id, provider_id, status (pending / accepted / declined / auto_declined / revoked_by_provider / revoked_by_admin), decided_at, decided_by, comment.
-- **Application** (Redemption): id, program_id, code_id (nullable), quote_id, booking_id (nullable until completed), patient_id, provider_id (nullable for Hairline-Funded), state (`APPLIED` at checkout / `COMPLETED` after payment), status (active / reversed / refunded / voided), discount_value, funding_split (hairline_portion, provider_portion), applied_at, completed_at, audit context.
+- **Application** (Redemption): id, program_id, code_id (nullable), quote_id, quote_option_date_price_id, booking_id (nullable until completed), patient_id, provider_id (nullable for Hairline-Funded), state (`APPLIED` at checkout / `COMPLETED` after payment), status (active / reversed / refunded / voided), discount_value, funding_split (hairline_portion, provider_portion), applied_at, completed_at, audit context.
 - **ReportSnapshot** (optional): aggregated usage and impact metrics for exports.
 
 ---
@@ -871,6 +871,7 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 | 2026-05-14 | 1.8     | Approval metadata cleanup: completed Technical Lead and Stakeholder approvals. | Codex |
 | 2026-06-22 | 1.9     | Added explicit ownership note that FR-018 owns affiliate-specific promo code generation, bulk affiliate assignment, dashboard display, and payout attribution; FR-019 remains the shared validation/redemption engine for affiliate-bound codes. | Codex |
 | 2026-06-23 | 2.0     | FR-018 dependency cleanup: corrected affiliate-bound bulk-generation acceptance wording to one unique code per selected affiliate, and clarified that price-discount priority does not erase valid affiliate attribution metadata needed by FR-018. | Codex |
+| 2026-09-10 | 2.1     | FR-004 v2.6 reconciliation: moved promotion attachment from the parent Quote to `QuoteOptionDatePrice.promotionId`; added the option/date binding for ad-hoc quote-bound programs while retaining parent-quote containment; and updated redemption provenance. See [Change Request](./change-request-2026-09-10-option-date-promotion-alignment.md). | Product Owner / Documentation |
 
 ---
 
@@ -886,4 +887,4 @@ No unresolved clarifications remain for V1; loyalty/referral programs and stacki
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-06-22
+**Last Updated**: 2026-09-10
