@@ -113,7 +113,30 @@ The Product Owner approved the FR-004 quote-option model with these refinements:
 - The FR-004 data contract uses a canonical ownership matrix so every parent, option, item, date-price, plan, and system-derived field has one editing surface or an explicit read-only owner. Currency is loaded from system configuration, snapshotted for historical prices, and never entered by the provider.
 - Parent quote metrics and Quote Option metrics remain distinct.
 
-This clarification resolves MTG-002-O01 for the FR-004 creation and aggregate data contract. FR-005 acceptance and FR-006 booking reconciliation remain separate later changes.
+This clarification resolves MTG-002-O01 for the FR-004 creation and aggregate data contract. FR-005 acceptance and FR-006 booking were handled through the later controlled clarifications below.
+
+#### Product Owner acceptance clarification and incorporation (2026-09-15)
+
+The Product Owner approved the FR-005 patient-selection model:
+
+- A patient may receive parent quotes from multiple providers, and one provider may submit multiple parent quotes for the same inquiry.
+- Each parent quote may contain multiple subquotes.
+- The subquote is the lowest-level complete commercial choice and the atomic unit the patient views, compares, and accepts.
+- Each subquote contains its selected package, date range, appointment details, and price, while inheriting provider and shared quote information from its parent quote. In FR-004 record terms, FR-005 resolves one Quote Option plus one applicable Option/date-price record into this single patient-visible subquote.
+- The patient accepts exactly one subquote per inquiry. The parent quote and inherited upper-level records are context, not separate acceptance targets.
+
+This clarification resolves MTG-002-O01 for FR-005 comparison and acceptance through `CR-FR005-20260915-01`.
+
+#### Product Owner booking-handoff incorporation (2026-09-16)
+
+FR-006 now consumes the accepted FR-005 subquote as its complete booking input:
+
+- Booking receives the immutable AcceptanceEvent, accepted parent/subquote identifiers, the aggregate version, and the full accepted snapshot.
+- The accepted package, date range, appointment, price, promotion, currency/exchange-rate context, treatment plan, and inherited parent context remain read-only; FR-006 does not ask the patient to select them again.
+- Acceptance fixes the subquote's appointment choice and reserves its slot for the payment window. Successful payment confirms the booking and blocks the selected provider slot. Payment failure or slot conflict does not reopen or rewrite the accepted parent quote/subquote.
+- If the configured payment hold expires, the pending booking becomes `Payment Window Expired`, its slot is released, and payment against that accepted selection is blocked while the AcceptanceEvent remains immutable.
+
+This incorporates the FR-006 booking handoff through `CR-FR006-20260915-01` and FR-006 v2.3. Payment-rail, installment-economics, fund-release, and cancellation-economics questions remain unresolved under their separate source items.
 
 ### MTG-002-O02: Confirmation deadline
 
@@ -141,7 +164,7 @@ Direct booking against provider availability and possible automated quotes were 
 |---|---|---|
 | MTG-002-D01, P01, P02 | Product launch plan and provider onboarding | Record only |
 | MTG-002-D02 | Provider management and catalog contracts | Record only |
-| MTG-002-D03-D06, O01 | FR-004 and data contracts | Incorporated into FR-004 v2.0–v2.2 through CR-FR004-20260909-01; implementation reconciliation required |
+| MTG-002-D03-D06, O01 | FR-004, FR-005, FR-006, and data contracts | Incorporated into FR-004 through CR-FR004-20260909-01, FR-005 through CR-FR005-20260915-01, and FR-006 v2.3 through CR-FR006-20260915-01; implementation reconciliation required |
 | MTG-002-D07 | Localization and shared presentation rules | Record only |
 | MTG-002-D08-D10, O02-O04 | FR-007, FR-017, and FR-029 | Material reconciliation required later |
 | MTG-002-D11, O05 | FR-006, FR-007, and legal/commercial terms | Material reconciliation required later |
@@ -151,5 +174,5 @@ Direct booking against provider availability and possible automated quotes were 
 
 - Confirm the meeting date, participant names, and stakeholder roles.
 - Confirm whether 20 to 30 providers is an approved cohort or an illustrative range.
-- Reconcile FR-005 acceptance and FR-006 booking against the approved parent-quote, option, and option/date-price identifiers in later controlled phases.
+- Reconcile the remaining payment, payout, confirmation-window, and cancellation-economics items in later controlled phases; the FR-006 accepted-subquote booking handoff is incorporated.
 - Use the written payments brief as the more detailed source for fund-release and payment questions, while preserving its unresolved status.

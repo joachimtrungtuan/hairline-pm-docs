@@ -6,6 +6,26 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-09-16/ (2 files)
+
+#### **FR-006 Slot Exclusivity and System Contract Alignment**
+
+- `FR006_SLOT_EXCLUSIVITY_AND_SYSTEM_CONTRACT_2026-09-16.md` - Moved appointment conflict prevention to atomic FR-005 acceptance-time slot reservation; removed FR-006 first-payment-wins behavior; and completed the system PRD's AcceptanceEvent linkage, terminal payment-expiry, and pending Booking lifecycle contract.
+
+#### **FR-005 Dependency Reconciliation**
+
+- `FR005_DEPENDENCY_RECONCILIATION_2026-09-16.md` - Added the canonical Parent Quote → Quote Option → Option/Date-Price hierarchy; reconciled acceptance, payment-window expiry, notification privacy, and subquote filtering; aligned FR-005 quote questions with FR-012 Patient ↔ Provider messaging; and made the accepted-slot hold configurable with a 48-hour default.
+
+### 2026-09-15/ (2 files)
+
+#### **FR-006 Accepted Subquote Booking Handoff**
+
+- `FR006_ACCEPTED_SUBQUOTE_HANDOFF_2026-09-15.md` - Reconciled FR-006 v2.3 and the system PRD so Booking consumes one immutable accepted subquote and inherited parent context; aligned aggregate version provenance, separated appointment reservation from payment confirmation, prohibited commercial reselection, and made `Payment Window Expired` terminal without reopening prior quote records through CR-FR006-20260915-01. Implementation reconciliation and consolidated verification remain pending.
+
+#### **FR-005 Subquote Comparison and Acceptance Model**
+
+- `FR005_SUBQUOTE_ACCEPTANCE_MODEL_2026-09-15.md` - Revised FR-005 to make the complete subquote the atomic patient comparison and acceptance unit across multiple providers and parent quotes; added exact acceptance snapshots, sibling/competing outcomes, and the FR-006 handoff contract through CR-FR005-20260915-01. Consolidated verification and implementation reconciliation remain pending.
+
 ### 2026-09-10/ (3 files)
 
 #### **FR-004 Dependency and Verification Fixes**
@@ -877,6 +897,14 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-09-16**: `FR006_SLOT_EXCLUSIVITY_AND_SYSTEM_CONTRACT_2026-09-16.md` - Resolved the FR-006 verification findings by enforcing one exclusive slot hold at acceptance and reconciling the system-level booking linkage, terminal payment window, immutable no-reopen behavior, and Booking lifecycle terminology.
+
+- **2026-09-16**: `FR005_DEPENDENCY_RECONCILIATION_2026-09-16.md` - Reconciled the FR-005 subquote model across its dependencies, including the quote hierarchy, terminal payment-window expiry, recipient-scoped outcomes, subquote filtering, Patient ↔ Provider quote messaging, and configurable slot-hold duration.
+
+- **2026-09-15**: `FR006_ACCEPTED_SUBQUOTE_HANDOFF_2026-09-15.md` - Reconciled FR-006 v2.3 and the system PRD around one immutable accepted-subquote handoff, shared aggregate version provenance, appointment reservation before payment confirmation, no commercial reselection, and terminal payment-window expiry that preserves the AcceptanceEvent.
+
+- **2026-09-15**: `FR005_SUBQUOTE_ACCEPTANCE_MODEL_2026-09-15.md` - Made the complete subquote the FR-005 comparison and acceptance unit, with inherited parent context, immutable selection snapshots, distinct sibling/competing outcomes, and an explicit FR-006 handoff boundary.
+
 - **2026-09-10**: `FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md` - Completed FR-004 v2.6 verification and aligned FR-019 v2.1, FR-024 v1.2, and FR-026 v1.8 to the parent-quote/Quote Option contract, with three approved Change Requests and the five explicitly deferred FRs preserved.
 
 - **2026-09-10**: `FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md` - Reconciled FR-004 v2.5 and FR-010 v2.0 around Treatment-owned technique data, accepted-option package/plan consumption, canonical Quote lifecycle terms, and mandatory verification layers; recorded the new FR-010 Change Request and preserved the five explicitly deferred FRs.
@@ -992,6 +1020,8 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Provider Platform modules
 
 ### Functional Requirements
+
+- **2026-09-16**: `FR005_DEPENDENCY_RECONCILIATION_2026-09-16.md` - FR-005 v2.2 dependency alignment for the Parent Quote hierarchy, atomic subquote acceptance, payment-window expiry, outcome privacy, subquote filtering, Patient ↔ Provider quote messaging, and configurable slot-hold duration.
 
 - **2026-09-10**: `FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md` - FR-004 v2.6, FR-019 v2.1, FR-024 v1.2, and FR-026 v1.8 approved alignment for immutable audit access, option/date promotions, Quote Option package provenance, quote configuration, and verification metadata.
 
@@ -1174,4 +1204,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: September 10, 2026 (FR-004 dependency and verification fixes)
+**Last Updated**: September 16, 2026 (FR-006 slot exclusivity and system contract alignment)

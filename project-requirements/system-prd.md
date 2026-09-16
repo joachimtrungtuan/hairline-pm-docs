@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-09-10
+**Last Updated**: 2026-09-16
 
 ---
 
@@ -29,7 +29,7 @@ To become the world's leading platform for medical hair restoration by creating 
 - **Conversion Rate**: 25% of inquiries to booked procedures
 - **Platform NPS**: > 60
 - **Provider Response Time**: < 24 hours for quote submission
-- **Booking Completion**: 85% of accepted quotes to scheduled procedures
+- **Booking Completion**: 85% of accepted subquotes to scheduled procedures
 - **Aftercare Engagement**: 70% of patients actively using aftercare features
 
 ---
@@ -205,16 +205,17 @@ The Hairline Platform consists of four distinct applications serving different u
    - Submits inquiry to matching providers
    - System distributes inquiry to providers in selected locations
 
-3. **Quote Comparison**
-   - Receives quotes from multiple providers (24-72 hours)
-   - Compares pricing, reviews, credentials, package details
+3. **Subquote Comparison**
+   - Receives parent quotes from multiple providers, including multiple parent quotes from one provider (24-72 hours)
+   - Compares complete subquotes across parent quotes by package, date range, appointment, price, reviews, credentials, and inherited clinical context
    - Asks clarifying questions through chat
    - Reviews before/after photos and provider credentials
 
-4. **Quote Acceptance & Scheduling**
-   - Accepts preferred quote (auto-schedules with pre-selected appointment time)
+4. **Subquote Acceptance & Scheduling**
+   - Accepts exactly one preferred subquote per inquiry; acceptance atomically acquires the appointment slot's exclusive payment-window hold and rejects a competing acceptance before creating an AcceptanceEvent or booking handoff
    - Provider must pre-schedule appointment times in quote submission
-   - Quote acceptance automatically moves to "Accepted" status
+   - Accepted subquote and its inherited parent context are snapshotted; its parent quote and inquiry move to "Accepted"
+   - Sibling subquotes become "Not Selected" and competing parent quotes auto-cancel
    - Receives preliminary booking details
 
 5. **Payment & Confirmation**
@@ -287,10 +288,10 @@ The Hairline Platform consists of four distinct applications serving different u
    - May adjust quote based on patient feedback
    - Provides additional information or credentials
 
-5. **Quote Acceptance (Auto-Scheduled)**
-   - Receives notification of quote acceptance
-   - Appointment is AUTOMATICALLY confirmed (patient selected pre-scheduled time)
-   - No manual confirmation needed - moves directly to "Accepted" status
+5. **Subquote Acceptance (Auto-Scheduled)**
+   - Receives notification when one of the provider's subquotes is accepted or its parent quote is auto-cancelled
+   - Appointment is AUTOMATICALLY selected from the accepted subquote's Option/date-price record
+   - No manual confirmation needed - the selected subquote and parent quote move directly to "Accepted" status
    - Patient proceeds to payment
 
 6. **Pre-Procedure Preparation**
@@ -315,7 +316,7 @@ The Hairline Platform consists of four distinct applications serving different u
 
 2. **Transaction Monitoring**
    - Monitors all quotes, bookings, and payments
-   - Tracks quote acceptance rates by provider
+   - Tracks parent quote response rates and subquote selection rates separately by provider
    - Identifies stuck inquiries or delayed quotes
    - Intervenes in patient-provider disputes
 
@@ -472,11 +473,11 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - System MUST validate quote completeness before submission
 - Quotes MUST have customizable expiration period (default: 48 hours, admin-configurable)
 
-**Auto-Accept Workflow**:
+**Subquote Acceptance Handoff**:
 
-- When patient accepts quote, appointment is automatically scheduled (no manual provider confirmation needed)
-- System immediately moves status from "Quote" to "Accepted"
-- Provider receives notification of acceptance with pre-scheduled appointment details
+- When the patient accepts a subquote, its exact appointment is selected and the system atomically acquires the slot's exclusive payment-window hold; if another pending or confirmed booking already holds or blocks that slot, acceptance is rejected before any AcceptanceEvent, quote/inquiry state change, or booking handoff is created
+- System immediately moves the inquiry and selected parent quote to "Accepted" and creates the pending booking handoff; the booking is not Confirmed until successful deposit or first-installment payment
+- Provider receives notification of the accepted subquote and reserved appointment details
 - Patient proceeds directly to payment screen
 
 **Quote Components**:
@@ -519,22 +520,25 @@ Each option is a package snapshot the patient can compare. Options share the par
 ### FR-005: Quote Comparison & Acceptance
 
 **Priority**: P1 (MVP)  
-**Module(s)**: P-02: Quote Request & Management | A-01: Patient Management & Oversight
+**Module(s)**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 
 **Requirements**:
 
-- Patients MUST be able to view all received quotes in comparison dashboard
-- System MUST display key differentiators: price, graft count, reviews, credentials
-- Patients MUST be able to filter and sort quotes by criteria (see FR-022 / FR-005 / Screen 1 for full filter criteria)
+- Patients MUST be able to view all received parent quotes grouped by provider and expose each eligible child subquote as a complete selectable choice
+- System MUST display subquote-owned package, date-range, appointment, price, promotion, and treatment-plan details together with inherited graft, review, credential, provider, and clinical context
+- Patients MUST be able to filter and sort subquotes using both subquote-owned and inherited criteria (see FR-022 / FR-005 / Screen 1 for full filter criteria)
 - Patients MUST be able to ask questions about quotes through secure messaging (see FR-012; MVP channel: Patient ↔ Provider)
 - System MUST notify providers of patient questions within 5 minutes (via real-time messaging notifications)
-- Patients MUST be able to accept one quote at a time
-- System MUST mark other quotes as "cancelled (other accepted)" when one is accepted
-- System MUST notify patient and provider immediately upon quote acceptance
+- Patients MUST be able to accept exactly one current subquote per inquiry; parent quotes and upper-level records MUST NOT be direct acceptance targets
+- Acceptance MUST atomically acquire an exclusive hold on the selected appointment slot and reject a second acceptance for a held or blocked slot before creating an AcceptanceEvent or booking handoff
+- System MUST snapshot the accepted subquote identifier/version, parent quote identifier/version, complete commercial terms, and inherited context; the subquote version MUST equal the owning parent aggregate `QuoteVersion`
+- System MUST mark sibling subquotes in the accepted parent quote "Not Selected" and auto-cancel competing parent quotes with reason "Other subquote accepted"
+- System MUST notify the patient and affected providers immediately without exposing the selected provider or accepted price to non-selected providers
+- Parent quote response metrics and subquote comparison/selection metrics MUST remain distinct
 
 **Comparison Features**:
 
-- Side-by-side comparison view (up to 3 quotes)
+- Side-by-side comparison view (up to 3 subquotes across any parent/provider grouping)
 - Price per graft calculation
 - Review rating and count
 - Provider credentials summary
@@ -550,7 +554,10 @@ Each option is a package snapshot the patient can compare. Options share the par
 
 **Requirements**:
 
-- Booking uses an **auto-scheduled** model: provider pre-schedules an appointment slot during quote creation (FR-004); patient accepts that specific slot in FR-005 and proceeds directly to payment in FR-006 (no slot picker in FR-006).
+- Booking uses an **auto-scheduled** model: provider pre-schedules appointment slots on FR-004 Option/date-price records; patient accepts one complete subquote in FR-005, and FR-006 consumes that accepted subquote plus its immutable inherited parent context without package, date, appointment, or price reselection.
+- Every pending or confirmed Booking MUST link to exactly one FR-005 AcceptanceEvent, accepted parent quote identifier/version, accepted subquote identifier/version, immutable acceptance snapshot, and provider calendar slot; accepted parent and subquote versions MUST identify the same FR-004 aggregate `QuoteVersion`.
+- FR-006 MUST verify that the AcceptanceEvent owns the slot's valid exclusive hold before payment initiation. Successful deposit or first-installment payment converts that hold into the confirmed calendar block.
+- If the payment window expires, the Booking MUST transition to terminal `Payment Window Expired`, release the slot, permanently block payment against that accepted selection, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote.
 - System MUST integrate with provider's calendar to validate availability at quote creation time and to block the slot upon payment-confirmed booking
 - Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of total, configured via FR-029)
 - System MUST generate booking confirmation with reference number
@@ -1855,9 +1862,10 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 - System MUST retry payment up to 3 times
 - System MUST notify patient of payment failure with clear error message
-- System MUST hold the accepted quote + reserved slot for **48 hours** (admin-configurable) to allow patient to retry payment
+- System MUST hold the accepted subquote's reserved slot for **48 hours** (admin-configurable) to allow patient to retry payment
 - System MUST release the reservation if payment not completed within the hold window
 - System MUST notify provider and patient of slot release
+- System MUST transition the pending booking to terminal `Payment Window Expired`, permanently block payment against that accepted selection, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote
 
 ### EC-002: Provider Cancellation
 
@@ -1913,7 +1921,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 **Handling**:
 
-- System MUST lock exchange rate at time of quote acceptance
+- System MUST lock exchange rate at time of subquote acceptance
 - Patient MUST pay based on locked rate, regardless of current market rate
 - Provider MUST receive payout based on locked rate
 - Platform bears currency risk during escrow period
@@ -2002,8 +2010,8 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 ### SC-010: Booking Completion Rate
 
-- **Target**: 85% of accepted quotes lead to confirmed bookings
-- **Measurement**: (Confirmed bookings / Accepted quotes) x 100
+- **Target**: 85% of accepted subquotes lead to confirmed bookings
+- **Measurement**: (Confirmed bookings / Accepted subquotes) x 100
 - **Timeframe**: Measured monthly
 
 ---
@@ -2063,8 +2071,9 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 - **Patient**: End-user seeking hair transplant procedure
 - **Provider**: Clinic or hospital offering hair transplant services
 - **Inquiry**: Patient's request for treatment quotes
-- **Quote**: Provider's offer with pricing and treatment details
-- **Booking**: Confirmed appointment for procedure after quote acceptance
+- **Parent Quote**: Provider response that owns shared provider, treatment, clinical, lifecycle, version, and audit context and groups one or more Quote Options
+- **Subquote**: Complete patient-visible choice resolving one Quote Option plus one applicable Option/date-price record; the atomic comparison and acceptance unit
+- **Booking**: Pending or confirmed booking record derived from exactly one AcceptanceEvent, accepted subquote, and immutable inherited parent context. `Accepted` awaits initial payment under an exclusive slot hold; successful payment moves it to `Confirmed`; hold expiry moves it to terminal `Payment Window Expired`.
 - **Graft**: Unit of hair follicles transplanted (typically 1-4 hairs per graft)
 - **FUE**: Follicular Unit Extraction (hair transplant technique)
 - **FUT**: Follicular Unit Transplantation (hair transplant technique)
