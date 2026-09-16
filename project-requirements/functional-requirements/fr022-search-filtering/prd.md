@@ -440,7 +440,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-005 / Screen 1: Quote Comparison List [P1 — MVP]
 
-**Purpose**: Patient sorts and filters received quotes for comparison before acceptance.
+**Purpose**: Patient sorts and filters complete subquotes across received parent quotes before accepting one subquote.
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -450,8 +450,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Sort By | Dropdown | Price (Low–High), Price (High–Low), Graft Count, Rating, Quote Date | Quote Date (most recent) | Single selection |
-| Date Range | Filter chips | Patient's submitted date ranges | All | Narrows to quotes covering that range |
+| Sort By | Dropdown | Price (Low–High), Price (High–Low), Graft Count, Rating, Appointment Date, Quote Date | Quote Date (most recent) | Single selection; evaluates subquote-owned values and inherited parent/provider values |
+| Date Range | Filter chips | Patient's submitted date ranges | All | Narrows to subquotes whose selected Option/Date-Price Record uses that range |
 
 ---
 
@@ -2166,6 +2166,7 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 - **REQ-022-051**: System MUST allow patients to search help center content with full-text search and auto-suggest
 - **REQ-022-052**: System MUST allow patients to filter help center by content type (FAQs, Articles, Resources, Videos)
 - **REQ-022-053**: System MUST allow patients to filter their support tickets by status
+- **REQ-022-057**: System MUST allow patients to sort FR-005 subquotes by price, inherited graft count, inherited provider rating, appointment date, or parent quote date and to filter them by the patient-submitted date range selected by each subquote.
 
 #### Shared Behavior Rules
 
@@ -2248,6 +2249,7 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 | 2026-05-14 | 2.10 | Corrected stale FR-013 screen reference: updated all three occurrences of `FR-013 / Screen 2 (Review Management Dashboard)` to `FR-013 / Screen 7` following FR-013 v1.8 screen renumbering. | Verification alignment (2026-05-14) |
 | 2026-06-22 | 2.11 | Synced A-07 Affiliate Management filters with FR-018 v1.1 bulk affiliate code generation: added country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup filters so admins can select affiliate cohorts before generating one unique code per affiliate. | Codex |
 | 2026-06-23 | 2.12 | FR-018 screen-reference cleanup: updated affiliate payout search/filter mappings from the stale FR-018 Screen 5 reference to current FR-018 Screen 7 Affiliate Payout Status & History. | Codex |
+| 2026-09-16 | 2.13 | Reconciled FR-005 Screen 1 with the accepted subquote model: changed the filter target from flat quotes to complete subquotes, added Appointment Date sorting, documented inherited sort values, and bound Date Range filtering to the subquote's selected Option/Date-Price Record. | Product Owner / Verification alignment |
 
 ---
 
@@ -2258,6 +2260,7 @@ A patient from the UK wants to find providers in Turkey for a hair transplant. T
 | Product Owner | — | 2026-04-13 | ✅ Approved |
 | Technical Lead | — | 2026-04-13 | ✅ Approved |
 | Stakeholder | — | 2026-04-13 | ✅ Approved |
+| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 subquote sort/filter alignment through v2.13 |
 
 ---
 

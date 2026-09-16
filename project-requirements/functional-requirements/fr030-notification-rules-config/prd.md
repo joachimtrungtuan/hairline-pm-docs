@@ -103,6 +103,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 - The list of notification events that appear in **`Settings → Alerts & Notifications`** is a **preset backend event catalog**.
 - Admins can **only configure events that appear in this catalog UI** (enable/disable, channels, timing, templates, retries, escalation).
 - **If an event does not appear in the catalog UI, it cannot be configured** (it is either not implemented, not enabled for the current environment, or intentionally not exposed).
+- Event payloads are recipient-scoped. Configurable templates may reference only the allowlisted variables exposed for that event, outcome, and recipient type.
 
 ### MVP: Admin-Configurable Event Types (Shown in UI)
 
@@ -124,8 +125,8 @@ Notes:
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
-| Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
-| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
+| Quote | Quote Accepted / Subquote Outcomes | `quote.accepted` | Provider, Patient, Admin (optional) | FR-005 uses the existing event with `outcome` = `selected_subquote_accepted`, `sibling_subquote_not_selected`, or `competing_parent_cancelled_other_subquote_accepted`. Patient and selected-provider templates may use accepted-subquote details. Non-selected-provider templates are restricted to that provider's own parent quote/subquote references, outcome, and reason; selected provider identity and accepted price are unavailable. |
+| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Reserved for an explicit governed decline flow; FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event. |
 | Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push** (subject to provider notification preference toggles in FR-032). Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. |
 | Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
@@ -902,6 +903,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-02-09 | 1.3 | Cancellation integrity fixes: Promoted Patient from optional to primary recipient on `inquiry.cancelled` (source-of-truth alignment with FR-003 Workflow 5). Formalized `quote.cancelled_inquiry` in Non-Disableable by Default section. Added template variable guidance per recipient with privacy-aware field exclusions. Expanded Screen 1 Event Category filter to enumerate all 14 categories from event catalog. Fixed Last Updated date. | AI     |
 | 2026-05-14 | 1.4 | Added review notification events required by FR-013 / FR-020 alignment: `review.published` for provider new-review notifications, plus `review.response_posted`, `review.removed_by_admin`, and `review.takedown_decided` for patient review status notifications. | Verification alignment (2026-05-14) |
 | 2026-08-20 | 1.5 | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the source-of-truth event catalog and FR-037/FR-038 as dependencies. See [Change Request](./change-request-2026-08-20-fr037-monitoring-events.md) | Verification alignment (2026-08-20) |
+| 2026-09-16 | 1.6 | Extended the source-of-truth `quote.accepted` catalog entry with FR-005 outcome codes and recipient-specific template-variable allowlists; clarified that `quote.declined` does not represent system-generated sibling or competing-parent outcomes. | Product Owner / Verification alignment |
 
 ---
 
@@ -912,6 +914,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | Product Owner | TBD | 2025-12-22 | ✅ Verified & Approved |
 | Technical Lead | TBD | 2025-12-22 | ✅ Verified & Approved |
 | Stakeholder | TBD | 2025-12-22 | ✅ Verified & Approved |
+| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 quote-outcome and recipient-privacy alignment through v1.6 |
 
 ---
 

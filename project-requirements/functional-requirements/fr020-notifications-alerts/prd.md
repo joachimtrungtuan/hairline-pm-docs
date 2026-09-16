@@ -43,8 +43,8 @@ In Scope:
 | Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
-| Quote | Quote Accepted | `quote.accepted` | Provider, Patient, Admin (optional) | Provider receives acceptance details |
-| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Useful for provider follow-up / analytics |
+| Quote | Quote Accepted / Subquote Outcomes | `quote.accepted` | Provider, Patient, Admin (optional) | FR-005 emits recipient-scoped outcomes through the existing event: `selected_subquote_accepted`, `sibling_subquote_not_selected`, or `competing_parent_cancelled_other_subquote_accepted`. Patient and selected-provider payloads may include the accepted subquote details. A non-selected provider receives only its own parent quote/subquote references, its outcome, and reason; selected provider identity and accepted price are excluded. |
+| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Reserved for an explicit governed decline flow; FR-005 sibling Not Selected and competing-parent cancellation outcomes MUST NOT use this event. |
 | Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Sent to each provider whose quote is auto-cancelled due to patient inquiry cancellation (FR-003 Workflow 5). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push** (subject to provider notification preference toggles in FR-032). |
 | Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
@@ -276,6 +276,7 @@ Notification policy, throttling, and delivery monitoring UI live in `FR-030: Not
 - **Patient Preferences**: Global Email/Push toggles available to patients in MVP (managed in FR-001: Patient Authentication & Profile Management, Settings → Notifications); category preferences deferred to V2.
 - **Provider Preferences**: Providers can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications) via notification preferences settings (managed in FR-032: Provider Dashboard Settings & Profile Management, Settings → Notifications section).
 - **Admin Notifications**: Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020).
+- **FR-005 Quote Outcome Privacy**: `quote.accepted` carries an explicit outcome code and recipient scope. Payload rendering MUST use an allowlist per recipient; non-selected providers MUST NOT receive the selected provider identity, accepted price, or another provider's quote/subquote identifiers.
 - One notification record per attempt with channel, provider, status, and timestamp.
 - Throttling and suppression policies are transparent in audit logs.
 - **Notification Content Management**: Notification content (titles, messages, templates) is managed in FR-030: Notification Rules & Configuration via the Notification Template Editor.
@@ -303,6 +304,7 @@ Configurable with Restrictions:
 
 - **FR-001**: Patient Authentication & Profile Management (patient notification preferences UI in Settings → Notifications).
 - **FR-012**: Messaging (message received events).
+- **FR-005**: Quote Comparison & Acceptance (accepted subquote, sibling Not Selected, and competing-parent cancellation outcome/privacy contract).
 - **FR-026**: App Settings & Security Policies (OTP email templates for verification and password reset).
 - **FR-030**: Notification Rules & Configuration (notification template management, template editor, notification rule configuration).
 - **FR-032**: Provider Dashboard Settings & Profile Management (PR-06; provider notification preferences UI).
@@ -398,12 +400,13 @@ Acceptance Scenarios:
 - REQ-020-009: System MUST provide notification dropdown in provider dashboard header with infinite scroll (loads 20 notifications per batch, no separate listing screen).
 - REQ-020-010: System MUST provide notification dropdown in admin dashboard header with infinite scroll (loads 20 notifications per batch, no separate listing screen).
 - REQ-020-011: System MUST send notifications to admins for any enabled FR-030 event types where Admin is a primary or optional recipient (per rule configuration).
+- REQ-020-012: System MUST route FR-005 acceptance outcomes through `quote.accepted` with an explicit outcome code and recipient-scoped payload. Non-selected providers MUST receive only their own outcome context and MUST NOT receive the selected provider identity or accepted price; `quote.declined` MUST NOT represent FR-005 system-generated sibling or competing-parent outcomes.
 
 ---
 
 ## Key Entities
 
-- **NotificationEvent**: type, subject, recipient, payload metadata, createdAt.
+- **NotificationEvent**: type, subject, recipient, outcomeCode, recipientScope, payloadMetadata, createdAt. FR-005 `quote.accepted` events use recipient-scoped allowlists for selected and non-selected outcomes.
 - **NotificationAttempt**: channel, provider, status, timestamp, error, correlationId.
 - **PatientPreference**: userId, emailEnabled, pushEnabled, updatedAt (MVP scope; managed in FR-001).
 - **ProviderPreference**: providerId, quoteNotification, scheduleNotification, startTreatmentNotification, afterCareNotification, reviewNotification, promotionDiscountNotification, updatedAt (allows providers to choose which notification types to receive).
@@ -426,6 +429,7 @@ Acceptance Scenarios:
 | 2026-05-14 | 1.8     | Added three missing review notification events to the event catalog: `review.response_posted` (patient notified when provider responds), `review.removed_by_admin` (patient notified when admin removes review), `review.takedown_decided` (patient notified of takedown approve/reject decision). Required by FR-013 REQ-013-016. | Verification alignment (2026-05-14) |
 | 2026-05-14 | 1.9     | Added provider-facing `review.published` event for new published reviews and aligned provider notification preference wording/entity with FR-032 Review Notifications. | Verification alignment (2026-05-14) |
 | 2026-08-20 | 2.0     | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the event catalog and FR-037/FR-038 as dependencies, mirroring FR-030's source-of-truth catalog. See [Change Request](./change-request-2026-08-20-fr037-monitoring-events.md) | Verification alignment (2026-08-20) |
+| 2026-09-16 | 2.1     | Extended the existing `quote.accepted` event with FR-005 recipient-scoped outcome codes and privacy allowlists; reserved `quote.declined` for explicit decline flows so sibling Not Selected and competing-parent cancellation remain distinct. Aligned with FR-030 v1.6. | Product Owner / Verification alignment |
 
 ---
 
@@ -434,6 +438,7 @@ Acceptance Scenarios:
 | Role           | Name | Date | Signature/Approval |
 |----------------|------|------|--------------------|
 | Product Owner  |      |      |                    |
+| Product Owner  | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 quote-outcome and recipient-privacy alignment through v2.1 |
 | Technical Lead |      |      |                    |
 | Stakeholder    |      |      |                    |
 
