@@ -4,13 +4,28 @@
 **Feature Branch**: `fr004-quote-submission-management`
 **Created**: 2025-10-30
 **Status**: ✅ Verified & Approved
-**Source**: FR-004 from system-prd.md; SRC-MTG-002 (MTG-002-D03 through D06 and O01); Product Owner clarifications dated 2026-09-09 and 2026-09-10
+**Source**: FR-004 from system-prd.md; SRC-MTG-002 (MTG-002-D03 through D06 and O01); FR-005 v2.1; Product Owner clarifications dated 2026-09-09, 2026-09-10, and 2026-09-16
 
 ## Executive Summary
 
 The Quote Submission & Management module enables providers to create, edit, submit, and manage detailed quote responses for distributed patient inquiries. An inquiry may receive multiple quotes, including multiple quotes from the same provider. Each quote is one auditable parent response containing one to five package-based Quote Options that the patient can compare. Treatment facts shared across the options remain on the parent quote, while package inclusions, package-specific day plans, applicable date ranges, and prices belong to the individual options.
 
 Package options begin from provider-owned package-library presets. Providers may customize each selected package inline for the current quote, but those changes are quote-local snapshots and never update or create reusable package-library records.
+
+### Quote Hierarchy
+
+```text
+Parent Quote
+└── Quote Option
+    └── Option/Date-Price Record
+```
+
+- **Parent Quote**: One provider response and the aggregate/version boundary. It owns the provider, treatment, graft facts, visual plan, clinicians, shared notes/requirements, attachments, currency, expiry, lifecycle, and audit history.
+- **Quote Option**: One package alternative inside the parent quote. It owns the package snapshot, included/custom services, and relative day-to-day treatment plan.
+- **Option/Date-Price Record**: One applicable patient-requested date range for that option, with its pre-scheduled appointment, offered price, and optional promotion.
+- **Subquote (FR-005 patient view)**: One Quote Option plus one applicable Option/Date-Price Record, combined with inherited Parent Quote context. This is the complete item the patient views, compares, and accepts. Parent Quotes, Quote Options, and Option/Date-Price Records are not accepted independently.
+
+The Parent Quote is versioned as one aggregate. Every derived subquote uses that aggregate `QuoteVersion`; Quote Options and Option/Date-Price Records retain stable identifiers but do not have independent revision counters.
 
 ## Module Scope
 
@@ -24,7 +39,7 @@ Package options begin from provider-owned package-library presets. Providers may
 
 **Patient Platform (P-02)**:
 
-- View quotes per inquiry; accept/decline; see expiry timers and status
+- View parent quotes and their derived subquotes per inquiry; compare and accept exactly one eligible subquote; see expiry timers and status
 - Receive notifications for quote creation/updates/expiry
 
 **Provider Platform (PR-02)**:
@@ -61,7 +76,7 @@ Package options begin from provider-owned package-library presets. Providers may
 1. Provider receives auto-distributed inquiry from FR-003
 2. Provider opens Quote Management dashboard (new, draft, sent, history, archive bins)
 3. Provider creates and edits a quote by selecting the shared treatment, then configuring one to five package options
-4. Patient receives and views quote(s) in patient app
+4. Patient receives parent quote(s) and views their complete subquotes in the patient app
 5. Admin can access, search, or override quote status from admin platform
 
 ## Business Workflows
@@ -106,14 +121,14 @@ Package options begin from provider-owned package-library presets. Providers may
 
 **Actors**: System, Provider, Patient, Admin (observer)
 
-**Trigger**: Time-based expiry reached; patient accepts a quote; provider initiates withdrawal/archive; or patient cancels parent inquiry (FR-003 Workflow 5)
+**Trigger**: Time-based expiry reached; patient accepts a subquote through FR-005; provider initiates withdrawal/archive; or patient cancels parent inquiry (FR-003 Workflow 5)
 
 **Outcome**: Quote transitions to correct status; notifications sent; audit recorded
 
 - Each quote has an explicit expiry date (admin-controlled). Default expiry window is 48 hours; providers cannot modify this window and only see the computed expiry timestamp.
-- Upon expiry, system updates quote to "expired" status; quote can no longer be accepted
+- Upon expiry, system updates the parent quote to `expired`; every child subquote becomes ineligible for acceptance
 - Provider may withdraw or archive quotes pre-acceptance
-- Patient acceptance moves the quote to `accepted`; booking and payment stages remain downstream concerns
+- FR-005 subquote acceptance moves the selected subquote and its parent quote to `accepted`, marks sibling subquotes `not_selected`, and moves every competing parent quote for the inquiry to `cancelled_other_accepted`; the parent quote, Quote Option, and Option/Date-Price Record are never direct acceptance targets
 - **Patient cancels parent inquiry**: All quotes for that inquiry transition to "Cancelled (Inquiry Cancelled)" regardless of current state (draft, sent, expired). This is a system-initiated cascade, not a provider or patient action on the quote itself. Providers are notified via `quote.cancelled_inquiry` event (FR-020).
 - All state transitions are logged and result in notifications as appropriate
 
@@ -578,7 +593,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 - **SC-001**: 100% of distributed inquiries receiving valid quotes from ≥1 provider within 72h
 - **SC-002**: 100% of quote edits and deletions reflected in version/audit history
-- **SC-003**: 95% of patient decisions (accept/decline) are processed with correct quote status update and notification
+- **SC-003**: 95% of subquote acceptance actions complete with the correct selected-parent, sibling, and competing-parent status updates and notifications
 - **SC-004**: <5% of provider quote rejections due to missing/invalid fields
 - **SC-005**: 0 hard deletes of quotes; 100% retrievable from archive for ≥7 years
 - **SC-006**: 100% of submitted quotes contain one to five complete options, with no quote-local customization written into the reusable package library
@@ -626,7 +641,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - **REQ-004-019**: Each Quote Option MUST own a separate ordered day-to-day treatment plan using consecutive relative day numbers.
 - **REQ-004-020**: Estimated grafts, graft description, visual treatment plan, clinicians, common notes, and common requirements MUST remain shared parent-quote fields.
 - **REQ-004-021**: Quote version and audit records MUST capture the complete parent-and-options aggregate atomically, including option additions/removals, package snapshots, inclusion changes, date-price changes, and option plan changes.
-- **REQ-004-022**: FR-004 MUST expose stable identifiers for the parent quote, Quote Option, and option/date price so FR-005 can record exactly one accepted option/date combination.
+- **REQ-004-022**: FR-004 MUST expose stable identifiers for the parent quote, Quote Option, and option/date price so FR-005 can record exactly one accepted option/date combination. FR-004 versions the complete parent quote aggregate atomically; therefore, the FR-005 `subquoteVersion` MUST equal the owning parent quote's current `QuoteVersion`. Quote Options and option/date-price records do not have independent revision counters.
 - **REQ-004-023**: Provider Quote Creation/Edit MUST use the ordered seven-tab flow defined in Screen 1, including Sub-screen 2A for quote-local package editing and one combined Dates & Pricing tab driven by the selected package options.
 - **REQ-004-024**: Every Quote, Quote Option, option item, option/date price, and option plan-day field MUST follow the Screen 1 Quote Data Ownership Matrix, with exactly one provider-editing surface or an explicit read-only/system-derived owner.
 - **REQ-004-025**: Quote currency MUST come from active system configuration, MUST NOT be provider input, and MUST be snapshotted on the quote so historical prices retain their original currency.
@@ -653,6 +668,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
   - Day numbers remain relative for the life of the record and are never persisted as calendar dates. The selected plan seeds FR-010's In Progress day descriptions by day number.
 - **QuoteVersion**: quoteId, version, changeset, createdAt, createdBy
   - Snapshot includes the full Quote aggregate and all option-owned children.
+  - This aggregate version is the version source for every FR-005 subquote derived from the Quote: `subquoteVersion = QuoteVersion.version`.
   - Relationships: belongsTo Quote
 - **QuoteAudit**: quoteId, action, actorId, reason, before, after, createdAt
   - Relationships: belongsTo Quote
@@ -662,7 +678,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 ### Internal Dependencies
 
 - FR-003: Inquiry Submission (quote distribution and reference)
-- FR-005: Quote Comparison & Acceptance (accepted option/date handoff)
+- FR-005: Quote Comparison & Acceptance (combines one Quote Option and one Option/Date-Price Record into the complete accepted subquote and owns sibling/competing outcomes)
 - FR-008: Travel & Logistics Coordination (accepted-option inclusion routing)
 - FR-010: Treatment Progress Management (accepted-option plan handoff)
 - FR-024: Treatment Package Management (provider package presets and source versions)
@@ -686,7 +702,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 ### User Behavior Assumptions
 
 - Providers are trained and will use the quote management UI in compliance with platform audit rules
-- Patients will review quotes and act (accept/decline) within configured timeframes
+- Patients will review parent quotes and their subquotes, then accept one eligible subquote, cancel the inquiry, or allow the parent quotes to expire
 
 ### Technology Assumptions
 
@@ -878,11 +894,13 @@ Acceptance Scenarios:
 | 2026-09-10 | 2.4 | Second verification pass (system-integrity focus): (1) Screen 7 admin inline edit renamed Custom Services to Option Items and aligned its required fields with Sub-screen 2A (Item Name, Item Type, Included flag, Item Order, chargeable Cost) so admins cannot create option items that fail option-snapshot validation; (2) documented that adjusting Estimated Grafts on Screen 7 regenerates Graft Description from the approved template; (3) Quote Data Ownership Matrix Commission row restated as a read-only rate (percentage) to match the integer percentage stored in the schema. See [Change Request](./change-request-2026-09-09-quote-options-model.md). | Verification issue resolution (2026-09-10) |
 | 2026-09-10 | 2.5 | Third verification pass: technique details now load read-only through the exact immutable Treatment ID/version relationship without duplicating treatment-owned data on Quote; restricted-recipient wording now applies only to FR-037; quote lifecycle terminology is normalized to `accepted` and `withdrawn`; and the mandatory unit, integration, contract, end-to-end, security, and performance verification matrix is defined. FR-010 v2.0 aligns its downstream package and plan consumers to the accepted Quote Option. See [Change Request](./change-request-2026-09-09-quote-options-model.md). | Product Owner / Verification alignment (2026-09-10) |
 | 2026-09-10 | 2.6 | Fourth verification pass: removed the erroneous implication that Admin can edit immutable audit history; completed text and attachment validation limits; moved corrected source evidence into References; completed approval metadata; and reconciled FR-019 promotion attachment, FR-024 package provenance, and FR-026 quote-configuration ownership through their approved Change Requests. | Product Owner / Verification alignment (2026-09-10) |
+| 2026-09-16 | 2.7 | Post-verification clarification: defined the parent aggregate `QuoteVersion` as the sole revision source for FR-005 subquotes. `subquoteVersion` equals the owning parent quote version; Quote Options and option/date-price records retain stable IDs without independent revision counters. | Product Owner / Verification alignment |
+| 2026-09-16 | 2.8 | Added the canonical Parent Quote → Quote Option → Option/Date-Price hierarchy and its FR-005 Subquote projection; replaced remaining direct-quote acceptance wording with the approved subquote-driven selected-parent, sibling, and competing-parent lifecycle outcomes. | Product Owner / Verification alignment |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | Joachim Trung Tuan | 2026-09-10 | Approved FR-004 v2.6 — quote-option model, seven-tab flow, ownership matrix, immutable Treatment-version relationship, normalized lifecycle, dependency corrections, mandatory verification matrix, and fourth-pass verification fixes (CR-FR004-20260909-01) |
+| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved through FR-004 v2.8 — quote hierarchy, FR-005 subquote projection, aggregate `QuoteVersion` source, and subquote-driven lifecycle reconciliation |
 | Technical Lead | Not recorded | Not recorded | No separate approval recorded |
 | Stakeholder | Not recorded | Not recorded | No separate approval recorded |
