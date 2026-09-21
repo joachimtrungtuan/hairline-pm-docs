@@ -72,6 +72,7 @@ Interpretation:
   - Split bug (both sides): `Task created (FE: HAIRL-123; BE: HAIRL-124)` — list FE first, then BE, separated by `;`
 - `Resolved - pending re-test` = implementation side reports the issue fixed, but readiness validation has not re-tested the affected product path yet
 - `Resolved - verified YYYY-MM-DD` = the affected product path was re-tested on the stated date and the blocker/fix row no longer blocks sprint readiness
+- **Transition rule:** when a row moves from `Task created (...)` to a resolved status, keep the existing side-labeled Plane key(s) inside the same `Task Status` cell and change only the status wording — e.g. `Resolved - pending re-test (BE: HAIRL-1339)` or `Resolved - verified 2026-09-17 (FE: HAIRL-123; BE: HAIRL-124)`. Never move the tracking key to another column or drop it from the `Task Status` cell; the key stays there for Plane traceback even after resolution.
 
 A split bug stays in `Task created (...)` until both its FE and BE keys are present in the cell. Do not drop a row to `Resolved` until every listed task is resolved. Do not mark an item as `Resolved - verified YYYY-MM-DD` without adding enough re-test evidence in `Review Notes`, `Evidence Link`, or `Notes` for a future reviewer to understand what was checked. Do not invent extra status labels inside this report.
 

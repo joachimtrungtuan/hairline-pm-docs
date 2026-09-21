@@ -39,6 +39,7 @@
 - Use `Task created (...)` after the implementation-task and Plane creation workflow has produced the actual issue key(s). Side-label every key, because one bug may be split into separate FE and BE tasks: `Task created (FE: HAIRL-123)` or `Task created (BE: HAIRL-123)` for a single side, and `Task created (FE: HAIRL-123; BE: HAIRL-124)` (FE first, then BE) when the bug was split across both sides. Keep all of a row's keys in this one cell; do not add extra columns.
 - Use `Resolved - pending re-test` only when the implementation/task side reports that the issue is fixed but the affected product path has not yet been re-tested for readiness.
 - Use `Resolved - verified YYYY-MM-DD` only after the affected product path has been re-tested and the re-test evidence is recorded in `Review Notes`, `Evidence Link`, or `Notes`.
+- When a row transitions from `Task created (...)` to either resolved status, keep the existing Plane key(s) inside this same cell and change only the status wording, e.g. `Resolved - verified 2026-09-17 (BE: HAIRL-1339)`. Never move the key to another column or drop it from the cell.
 - Screenshot evidence must use persistent uploaded URLs that can be revisited later. Do not use local file paths, clipboard-only image references, or temporary file links in `Evidence Link`. If a screenshot is needed but no uploaded URL is available, ask the reviewer to upload it and use `TBD` until the raw URL is provided.
 
 ### Priority Scale
