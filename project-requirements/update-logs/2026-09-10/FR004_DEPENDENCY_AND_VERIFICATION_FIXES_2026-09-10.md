@@ -56,3 +56,7 @@ FR-005, FR-006, FR-008, FR-014, and FR-015 were not edited. Product-code, API, d
 - `project-requirements/update-logs/README.md`
 
 No source code under `main/` was modified.
+
+## Minor clarification (2026-09-21)
+
+- FR-004 now states explicitly that providers may enter and revise Estimated Grafts, while the system regenerates the read-only Graft Description from the approved template and current estimate.

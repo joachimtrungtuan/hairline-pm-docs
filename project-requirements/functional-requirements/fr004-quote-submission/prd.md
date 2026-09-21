@@ -316,8 +316,8 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 | Field Name | Scope | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- | --- |
-| Estimated Grafts | Quote | number | Yes | Estimated graft count shared by every option | Positive integer |
-| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the estimate and approved template | Regenerated when estimated grafts change; retained in aggregate versions |
+| Estimated Grafts | Quote | number | Yes | Provider-entered estimate shared by every option | Provider may enter and revise a positive integer |
+| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the approved template and the current Estimated Grafts value | Regenerated whenever Estimated Grafts changes; providers cannot edit it directly; retained in aggregate versions |
 | Visual Treatment Plan / 3D Markup | Quote | drawing/upload | No | Shared visual plan or markup | Supported file/media rules; stored in the aggregate version |
 
 ##### Tab 4: Dates & Pricing
@@ -572,7 +572,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - Estimated grafts, graft description, visual treatment plan, clinicians, common notes, and common requirements belong to the parent quote and MUST NOT be duplicated as option-specific facts
 - Quote-level attachments apply to every option and MUST follow platform file-access, audit, and retention rules
 - Quote currency MUST be loaded from active system configuration, snapshotted for historical integrity, and displayed read-only; providers MUST NOT enter or change it in the quote
-- Graft description MUST be generated from the approved system template and estimated graft count; providers edit the graft estimate, not the generated description
+- Providers MAY enter and revise the Estimated Grafts value. The system MUST automatically generate and regenerate the Graft Description from the approved system template and the current Estimated Grafts value. Providers MUST NOT directly edit the Graft Description.
 - Included services, custom services, date applicability/pricing, promotions, and the day-to-day plan belong to the Quote Option or its option/date price record
 - Analytics MUST distinguish parent quote responses from Quote Options so option counts do not inflate quote-response or conversion metrics
 - Quote-amount analytics MUST use only the accepted option/date price. A quote with no acceptance has a price range rather than an amount and MUST be excluded from amount metrics, while still counting as one response in volume and conversion metrics
@@ -896,6 +896,7 @@ Acceptance Scenarios:
 | 2026-09-10 | 2.6 | Fourth verification pass: removed the erroneous implication that Admin can edit immutable audit history; completed text and attachment validation limits; moved corrected source evidence into References; completed approval metadata; and reconciled FR-019 promotion attachment, FR-024 package provenance, and FR-026 quote-configuration ownership through their approved Change Requests. | Product Owner / Verification alignment (2026-09-10) |
 | 2026-09-16 | 2.7 | Post-verification clarification: defined the parent aggregate `QuoteVersion` as the sole revision source for FR-005 subquotes. `subquoteVersion` equals the owning parent quote version; Quote Options and option/date-price records retain stable IDs without independent revision counters. | Product Owner / Verification alignment |
 | 2026-09-16 | 2.8 | Added the canonical Parent Quote → Quote Option → Option/Date-Price hierarchy and its FR-005 Subquote projection; replaced remaining direct-quote acceptance wording with the approved subquote-driven selected-parent, sibling, and competing-parent lifecycle outcomes. | Product Owner / Verification alignment |
+| 2026-09-21 | 2.9 | Clarified that providers may enter and revise Estimated Grafts, while Graft Description is regenerated from the approved template and current estimate and is never directly provider-editable. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 
