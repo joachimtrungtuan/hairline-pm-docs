@@ -3,10 +3,10 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.7
+**Version**: 3.9
 **Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
-**Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approval dated 2026-10-07
-**Change Request**: [CR-FR014-20261007-01](change-request-2026-10-07-parent-quote-subquote-analytics.md) — implementation reconciliation required
+**Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07 and 2026-10-13
+**Change Request**: [CR-FR014-20261007-01](change-request-2026-10-07-parent-quote-subquote-analytics.md) (amended 2026-10-13) — implementation reconciliation required
 
 ---
 
@@ -57,7 +57,7 @@ The counting boundary is the FR-004 Parent Quote, not its packages or date-price
 **In Scope**:
 
 - Email notifications for scheduled report delivery (provider-configured)
-- In-app alerts when provider metrics fall below defined thresholds (TTFQ SLA breach)
+- In-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`, FR-020/FR-030 catalog): sent once per distributed inquiry/provider pair when that provider has not submitted a parent quote within the FR-026 SLA target from the inquiry's distribution to the provider. Recipients: provider users permitted to respond to inquiries (FR-009). Default channel: in-app notification dropdown; email/push are off by default and admin-configurable in FR-030. No alert is sent if the inquiry is cancelled, the distribution is withdrawn, or the provider responds before the SLA elapses; it is never repeated for the same pair. The alert does not change TTFQ metrics.
 
 **Out of Scope**:
 
@@ -122,7 +122,7 @@ The counting boundary is the FR-004 Parent Quote, not its packages or date-price
 
 #### Screen 1: Main Dashboard (Cockpit)
 
-> **STATUS: LAYOUT LOCKED.** The Product Owner approved a formula/metric-label-only exception on 2026-10-07 through CR-FR014-20261007-01 for TTFQ, the booking funnel, and accepted-but-unpaid aging. The existing sections, widget count, chart types, filters, and responsive layout remain locked; this exception does not authorize a redesign.
+> **STATUS: LAYOUT LOCKED.** The Product Owner approved a formula/metric-label-only exception on 2026-10-07 through CR-FR014-20261007-01 for TTFQ, the booking funnel, and accepted-but-unpaid aging. The existing sections, widget count, chart types, filters, and responsive layout remain locked; this exception does not authorize a redesign. On 2026-10-13 the Product Owner approved one further exception, recorded as an amendment to the same CR: the Qualified stage is removed from the B1 funnel and B4 trend lines because FR-003 has no canonical spam or qualification data. B1 therefore has four stages; section count, widget count, chart types, filters, and responsive layout are unchanged.
 > Design reference: Figma node 6358-111596
 
 **Purpose**: Single scrollable page for daily triage. Three vertically stacked sections (A: Inbox, B: Performance, C: Financials). No tabs.
@@ -177,10 +177,9 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 ###### B1: Inquiry → Booking Conversion
 
 - Chart: Funnel chart
-- Stages: Inquiries → Qualified → Quoted → Accepted → Confirmed booking
+- Stages: Inquiries → Quoted → Accepted → Confirmed booking
 - Each stage: Count + Step % (stage ÷ previous stage)
 - Footer: Overall booking conversion = Confirmed bookings ÷ Inquiries
-- Qualified = not spam + mandatory fields present (age, problem, contact)
 - Confirmed booking = successful deposit or first installment charge confirms the FR-006 Booking. `In Progress` means procedure started via FR-010 and is not the payment-confirmation label.
 - Count distinct inquiry/provider pairs in a single inquiry cohort cumulatively through each reached stage, per Analytics Counting & Time Basis; multiple parent quotes and subquotes do not multiply the funnel.
 - Drill-down: click stage → filtered Inquiries list
@@ -267,7 +266,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Chart type | Multi-line chart (one line per funnel stage) |
 | X axis | Week or month (toggle) |
 | Y axis | Conversion % to that stage from Inquiries |
-| Lines | Qualified % · Quoted % · Accepted % · Confirmed booking % |
+| Lines | Quoted % · Accepted % · Confirmed booking % |
 | Drill-down | Click a point → Inquiries list filtered to that stage + time period |
 
 **Calculation**: Each stage % = distinct inquiry/provider pairs in the selected inquiry cohort that have reached that stage by the reporting cutoff ÷ all inquiry/provider pairs in that cohort. Counts are cumulative, not mutually exclusive highest-stage buckets. Use the shared cohort and cutoff definitions in Analytics Counting & Time Basis.
@@ -336,7 +335,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Sparkline | Rate trend over selected period |
 | Drill-down | Click tile → filtered Quotes/Bookings list |
 
-**Data source**: FR-006 Booking lifecycle and no-show records, counted once per confirmed booking. Draft/quote expiry and `Payment Window Expired` before confirmation are not post-confirmation cancellations or no-shows. Historical acceptance remains recorded separately.
+**Data source**: Cancellations come from post-confirmation cancellations in the FR-006 Booking lifecycle. No-shows come from FR-010 case closures with closure reason `No-show`; No-show is an admin-managed case closure label, not a booking pipeline status. Each confirmed booking counts at most once, and a booking closed as No-show counts as a no-show, not a cancellation. Draft/quote expiry and `Payment Window Expired` before confirmation are not post-confirmation cancellations or no-shows. Historical acceptance remains recorded separately.
 
 ---
 
@@ -347,9 +346,9 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Chart type | Comparison table with variance indicators |
 | Metrics | TTFQ p50 · Conversion rate · Quote acceptance rate · Avg rating |
 | Columns | Provider value · Platform median · Variance (±%) · Percentile |
-| Color | Green (above median) · Red (below median) |
+| Color | Green / Amber / Red per the Shared Benchmark Rule (direction-aware; TTFQ lower is better) |
 
-**Business rule**: Platform median calculated from all active providers in the same quarter; fully anonymised. Requires minimum 5 providers in comparison pool; if insufficient, display "Benchmark unavailable — not enough providers in your segment."
+**Business rule**: Peer pool, minimum pool size, anonymisation, and colour follow the Shared Benchmark Rule in Analytics Counting & Time Basis. If the pool is insufficient, display "Benchmark unavailable — not enough providers in your segment."
 
 ---
 
@@ -416,7 +415,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | X axis | Treatment type |
 | Y axis | Score (1–5) |
 | Groups per bar | Overall · Results · Staff · Facility · Value |
-| Data source | `reviews` table: `overall_rating`, `results_rating`, `staff_rating`, `facility_rating`, `value_rating` joined via `reviews.quote_id → quotes.treatment_id` |
+| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-018a), keyed by `treatment_id`, Published reviews only; not joined through quote status |
 | Drill-down | Click bar → Reviews list filtered to that treatment |
 
 ---
@@ -431,7 +430,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Purpose | What treatments patients request most vs. what actually gets booked |
 | Drill-down | Click bar → filtered Inquiries or Bookings list |
 
-**Data source**: `quotes.treatment_id` grouped by status (all inquiries vs. those reaching `inprogress`/`completed`).
+**Data source**: Inquiry bars count distinct inquiries assigned to the provider, by inquiry treatment. Booking bars count Confirmed bookings (FR-006), by the treatment of the accepted parent quote (FR-005 AcceptanceEvent). Both follow Analytics Counting & Time Basis; quote statuses are not used.
 
 ---
 
@@ -443,7 +442,7 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Value | Aftercare plans activated ÷ completed treatments |
 | Drill-down | Click → Aftercare records list |
 
-**Data source**: `aftercare` records created, joined to `quotes` with status `completed`.
+**Data source**: FR-011 aftercare records created for procedures completed in the period ÷ procedures completed in the period (FR-010 completion), by the accepted parent's treatment. Each completed procedure counts once.
 
 ---
 
@@ -512,10 +511,10 @@ Row badges: `New` / `Needs Info` / `Awaiting Price`. Default sort: badge priorit
 | Tile 2 | Commission deducted |
 | Trend | Gross income line + commission deducted area, stacked |
 
-**Calculation**: Commission deducted = sum of the effective provider commission for each completed payment in range. Effective commission must respect the provider's configured commission model:
+**Calculation**: Commission deducted = sum of percentage-model deductions for each completed payment in range plus flat-rate deductions for each procedure completed in range (FR-010 completion, per FR-015). Effective commission must respect the provider's configured commission model:
 
 - Percentage model: `payments.amount × (effective_commission_percentage / 100)`
-- Flat-rate model: `effective_commission_amount` per completed booking/payment
+- Flat-rate model: `effective_commission_amount` once per completed procedure, regardless of procedure price, number of payments, or installments (FR-015)
 
 Gross and net are displayed in provider currency.
 
@@ -566,7 +565,15 @@ Gross and net are displayed in provider currency.
 |----------|-------|
 | Chart type | Column bar chart (monthly, full history) + paginated table below |
 | Bar chart | Last 12 months of disbursed payouts |
-| Table columns | Period · Amount · Status (Disbursed / Upcoming / Scheduled) · Disbursed date · Cadence |
+| Table columns | Period · Amount · Status (Upcoming / Processing / Paid / Failed) · Paid date · Cadence |
+**Payout status mapping (FR-017)**:
+
+| Provider display status | FR-017 payout statement status |
+|---|---|
+| Upcoming | No statement yet for the period, or Pending Approval, Approved, or Overdue (internal admin review states are not shown to providers) |
+| Processing | Processing (Stripe transfer initiated) |
+| Paid | Paid (`transfer.paid`); Paid date = webhook time |
+| Failed | Failed (`transfer.failed`); returns to Processing when admin retries |
 | All rows | Full history (not limited to last 2 as in the Main Dashboard widget) |
 | Drill-down | Click bar or row → Payout statement detail (CSV/PDF export) |
 
@@ -636,10 +643,10 @@ Gross and net are displayed in provider currency.
 | Chart type | Comparison table |
 | Rows (metrics) | TTFQ p50 · Overall booking conversion rate · Parent-quote acceptance rate · Average accepted price · Avg overall rating · Avg results rating |
 | Columns | Provider value · Platform median · Variance (±%) · Percentile band (Bottom 25% / Mid 50% / Top 25%) |
-| Color coding | Green = above median · Amber = within 10% below · Red = >10% below |
+| Color coding | Per the Shared Benchmark Rule: Green = at or better than median · Amber = up to 10% worse · Red = more than 10% worse; TTFQ lower is better; average accepted price has no colour |
 | Drill-down | Click metric row → corresponding detailed screen (e.g., TTFQ → Screen 2 Widget 5) |
 
-**Business rule**: Benchmark pool = all active providers with ≥30 inquiries in the same rolling 12-month window. Minimum 5 providers in pool required. If pool is too small, display "Not enough peer providers to generate a meaningful benchmark yet."
+**Business rule**: Benchmark pool follows the Shared Benchmark Rule in Analytics Counting & Time Basis (≥30 inquiries, rolling 12 months, minimum 5 providers). If pool is too small, display "Not enough peer providers to generate a meaningful benchmark yet."
 
 ---
 
@@ -667,8 +674,9 @@ Gross and net are displayed in provider currency.
 | Date range | Date picker | Yes | Max 12-month span |
 | Country filter | Dropdown | No | Optional |
 | Treatment filter | Dropdown | No | Optional |
-| Email delivery | Checkbox | No | Sends to provider's registered email |
-| Schedule recurring | Checkbox | No | Weekly / Monthly / Quarterly |
+| Email delivery | Checkbox | No | Sends to the selected recipients |
+| Recipients | Multi-select | When email delivery is on | Provider's registered email (always included) plus up to 5 active provider team members (FR-009) who are permitted to view every included screen (Rules 15A/15B) |
+| Schedule recurring | Checkbox + select | No | Weekly / Monthly / Quarterly; when on, the date picker is replaced by "previous full period" |
 
 **Business Rules**:
 
@@ -677,6 +685,9 @@ Gross and net are displayed in provider currency.
 - Generated reports stored 7 days for re-download from Report History section
 - Email delivery: PDF attachment + secure link (expires 48 hours)
 - Max 5 active recurring configurations per provider
+- Recurring date range: each run covers the previous full period in the provider's timezone (`providers.timezone`): Monday–Sunday week, calendar month, or calendar quarter. Runs start at 06:00 provider local time on the first day after the period ends.
+- Recurring failures: a failed run is retried up to 3 times at 30-minute intervals; after the final failure the run shows as Failed in Report History with a manual retry action. No partial report is emailed.
+- Recurring management: providers can edit, pause, resume, or delete a recurring configuration; edits apply from the next run. Recipients who are deactivated or lose permission are dropped automatically at the next run.
 - PDF and CSV MUST use the same counting units, cohorts, cutoff, accepted-price eligibility, and financial deduplication as the included screens. State the metric definition, sample size, reporting currency, FX basis, and data-as-of time. For detailed quote/acceptance rows, retain authorized inquiry/provider IDs, parent/option/date-price/subquote IDs, AcceptanceEvent and booking IDs where present, accepted aggregate versions, and immutable price/currency provenance; unaccepted parent rows have no accepted amount or accepted-choice IDs.
 
 ---
@@ -721,7 +732,7 @@ Gross and net are displayed in provider currency.
 ###### Tile 5: Provider Engagement Rate
 
 - Value: % of active providers who first submitted at least 1 parent quote in last 30 days
-- Sub-value: Count of dormant providers (0 first-submitted parent quotes in last 30 days); drafts, child records, edits, and resends do not count as new submissions
+- Sub-values: Dormant providers (engagement status from Screen 8 Widget 3, based on provider activity) and Non-responding providers (0 first-submitted parent quotes in last 30 days; drafts, child records, edits, and resends do not count as new submissions). These are separate counts; a provider can be active but non-responding.
 - Tap → Screen 8 engagement section filtered to dormant
 
 ---
@@ -730,7 +741,7 @@ Gross and net are displayed in provider currency.
 
 ###### B1: Platform-Wide Conversion Funnel
 
-- Chart: Funnel chart (same 5 stages as provider funnel, but distinct platform inquiries, not summed provider funnels)
+- Chart: Funnel chart (same 4 stages as provider funnel, but distinct platform inquiries, not summed provider funnels)
 - Shows: Count + Step % for each stage
 - Footer: Overall platform booking conversion = Confirmed booking inquiries ÷ Inquiries
 - Drill-down: click stage → admin Inquiries list filtered to that stage
@@ -763,7 +774,7 @@ Gross and net are displayed in provider currency.
 
 ###### C2: Commission Earned (Period)
 
-- Value: Sum of effective provider commission deductions for completed payments in period, respecting each provider's configured commission model (`percentage` or `flat rate`)
+- Value: Sum of effective provider commission deductions in period, respecting each provider's configured commission model: percentage per completed payment; flat rate once per completed procedure (FR-015)
 - Sub-value: As % of GMV
 - Drill-down → Screen 12
 
@@ -810,7 +821,7 @@ Gross and net are displayed in provider currency.
 | Avg overall rating | Star rating (from reviews) |
 | Quote response rate | Distinct distributed inquiries answered ÷ distinct inquiries distributed to this provider in the same distribution cohort |
 | vs. Platform | Variance column for conversion rate (+/−%) |
-| Status | Health color badge (Green / Amber / Red based on TTFQ + conversion composite) |
+| Status | Health badge: Red if TTFQ tier is Red or conversion is more than 10% below platform median; Amber if TTFQ tier is Amber or conversion is up to 10% below median; otherwise Green. If the provider has <30 inquiries (Rule 7), the badge uses TTFQ only and shows a low-sample marker |
 
 - Sortable by any column
 - Default sort: TTFQ status (Red first) then conversion rate ascending
@@ -824,7 +835,7 @@ Gross and net are displayed in provider currency.
 | Chart type | Scatter plot |
 | X axis | TTFQ p50 (minutes) |
 | Y axis | Conversion rate (%) |
-| Points | One per provider (anonymised label: "Provider A", "Provider B", etc.) — except when admin is on provider detail view |
+| Points | One per provider, labelled with the provider name (admin view, Rule 14) |
 | Reference lines | Platform median TTFQ · Platform median conversion rate |
 | Quadrants | Fast + High conversion (ideal) · Slow + Low conversion (needs support) |
 | Drill-down | Click point → that provider's detail |
@@ -841,7 +852,7 @@ Gross and net are displayed in provider currency.
 | Last active | `MAX(action_at)` from `provider_activity_logs` for that `provider_id`; for last login specifically use `MAX(action_at) WHERE action_type = 'login'` |
 | Quotes this month | Distinct parent quotes first submitted in current calendar month; no extra counts for options, date-price records, versions, or resends |
 | Inquiry response rate | Distinct distributed inquiries answered ÷ distinct inquiries distributed to this provider (last 30-day distribution cohort) |
-| Status | Active (activity in last 7d) · At Risk (7–30d) · Dormant (>30d no activity) |
+| Status | Based on Last active: Active (activity within the At Risk threshold, default 7d) · At Risk (between the At Risk and Dormant thresholds, default 7–30d) · Dormant (no activity beyond the Dormant threshold, default 30d). Thresholds come from FR-026 Screen 5e |
 
 - Filter by status (Active / At Risk / Dormant)
 - Drill-down: click row → provider detail in FR-015
@@ -853,7 +864,7 @@ Gross and net are displayed in provider currency.
 | Chart type | Line chart (multiple series) |
 | X axis | Days since onboarding (0–90 days) |
 | Y axis | Cumulative distinct parent quotes first submitted |
-| Series | Each provider onboarded in the selected period (one line each, anonymised) |
+| Series | Each provider onboarded in the selected period (one line each, labelled with provider name per Rule 14) |
 | Reference line | Platform average ramp curve |
 | Purpose | Identify new providers who are struggling to get started |
 
@@ -864,9 +875,9 @@ Gross and net are displayed in provider currency.
 | Property | Value |
 |----------|-------|
 | Chart type | Three KPI tiles |
-| Tile 1 | Active providers count (activity in last 7 days) |
-| Tile 2 | At-risk providers count (7–30 days no activity) |
-| Tile 3 | Dormant providers count (>30 days no activity) |
+| Tile 1 | Active providers count (Screen 8 Widget 3 status; default activity in last 7 days) |
+| Tile 2 | At-risk providers count (Screen 8 Widget 3 status; default 7–30 days no activity) |
+| Tile 3 | Dormant providers count (Screen 8 Widget 3 status; default >30 days no activity) |
 
 ---
 
@@ -908,7 +919,7 @@ Gross and net are displayed in provider currency.
 | Chart type | Multi-line chart (one line per stage) |
 | X axis | Month |
 | Y axis | Conversion % to that stage from Inquiries |
-| Lines | Qualified % · Quoted % · Accepted % · Confirmed booking % |
+| Lines | Quoted % · Accepted % · Confirmed booking % |
 | Purpose | Show whether platform-wide conversion is improving or declining |
 | Drill-down | Click line point → admin Inquiries list filtered to that stage + month |
 
@@ -944,11 +955,11 @@ Gross and net are displayed in provider currency.
 
 | Property | Value |
 |----------|-------|
-| Chart type | Calendar heatmap (monthly view, intensity = inquiry count vs. monthly average) |
+| Chart type | Month × weekday heatmap (intensity = weekday average vs. monthly daily average) |
 | Layout | 12 rows (months) × 7 columns (Mon→Sun) |
-| Intensity | `inquiry count on day ÷ monthly daily average × 100` |
+| Intensity | `average daily inquiries on that weekday in that month ÷ that month's overall daily average × 100` |
 | Purpose | Identify seasonal peaks and campaign-worthy slow periods |
-| Cell tooltip | `Inquiries: N • Daily avg: m • Index: X%` |
+| Cell tooltip | `Inquiries on this weekday: N • Weekday avg: w • Month daily avg: m • Index: X%` |
 
 ---
 
@@ -960,7 +971,7 @@ Gross and net are displayed in provider currency.
 | Tile 1 | Affiliate-sourced bookings (count in period) |
 | Tile 2 | Affiliate contribution rate = affiliate bookings ÷ total bookings |
 | Tile 3 | Avg affiliate booking value |
-| Table columns | Affiliate name · Bookings · Revenue · Commission owed · Conversion rate |
+| Table columns | Affiliate name · Bookings · Revenue · Commission owed · Conversion rate (FR-018 definition: checkouts where the code was applied and resulted in a booking ÷ checkouts where the code was applied) |
 | Drill-down | Click affiliate row → affiliate detail in FR-018 |
 
 **Data source**: `discounts` (affiliate codes) linked to `quotes/payments` via FR-018 `Booking with Affiliate Code` entity. Affiliate-sourced = booking where a valid affiliate discount code was applied at payment.
@@ -1067,9 +1078,9 @@ Gross and net are displayed in provider currency.
 |----------|-------|
 | Chart type | Bar chart |
 | X axis | Treatment type |
-| Y axis | Completion rate = quotes reaching `completed` ÷ quotes reaching `confirmed` |
+| Y axis | Completion rate = Confirmed bookings (FR-006) in the confirmation cohort whose procedure reached FR-010 completion by the reporting cutoff ÷ all Confirmed bookings in that cohort, by the accepted parent's treatment |
 | Reference line | Platform average completion rate |
-| Drill-down | Click bar → admin Quotes list filtered to that treatment |
+| Drill-down | Click bar → admin Bookings list filtered to that treatment |
 
 ---
 
@@ -1106,7 +1117,7 @@ Gross and net are displayed in provider currency.
 | X axis | Treatment type |
 | Y axis | Score (1–5) |
 | Groups | Overall · Results · Staff · Facility · Value |
-| Data source | `reviews` sub-scores, joined via `reviews.quote_id → quotes.treatment_id` |
+| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-018a), keyed by `treatment_id`, Published reviews only |
 | Drill-down | Click bar → Reviews list filtered to that treatment |
 
 ---
@@ -1116,7 +1127,7 @@ Gross and net are displayed in provider currency.
 | Property | Value |
 |----------|-------|
 | Chart type | KPI tile + trend line + bar by treatment type |
-| KPI | Platform-wide aftercare activation rate = aftercare records created ÷ completed treatments |
+| KPI | Platform-wide aftercare activation rate = FR-011 aftercare records created for procedures completed in the period ÷ FR-010 completed procedures in the period, by the accepted parent's treatment |
 | Bar chart | Activation rate broken down by treatment type |
 | Drill-down | Click bar → Aftercare records list |
 
@@ -1131,15 +1142,15 @@ Gross and net are displayed in provider currency.
 | X axis | Provider count offering that treatment |
 | Drill-down | Click bar → Provider list filtered to that treatment |
 
-**Data source**: `quotes.treatment_id` grouped by `provider_id`; a provider "offers" a treatment if they have submitted at least 1 quote for it in the last 12 months.
+**Data source**: Submitted parent quotes (FR-004) grouped by treatment and `provider_id`; a provider "offers" a treatment if they have first-submitted at least 1 parent quote for it in the last 12 months.
 
 ---
 
 **Business Rules**:
 
 - Completion rate only calculated for providers with ≥5 confirmed bookings in the period to avoid single-event noise
-- No-show is tracked via the quote status label; if no-show status is not explicitly implemented in the data model, this widget is replaced with "cancellation rate only"
-- Do NOT add any clinical outcome metrics (graft count, hair density, success rates) — these are not in the database
+- No-show rate uses FR-010 case closures with closure reason `No-show` (admin-managed case closure label, not a booking pipeline status) over confirmed bookings in the period; cancellation rate uses post-confirmation cancellations from the FR-006 Booking lifecycle. A booking closed as No-show counts as a no-show, not a cancellation
+- Do NOT add any clinical outcome metrics (achieved graft count, hair density, success rates). FR-004 Estimated Grafts is a provider's quote estimate, not a clinical outcome, and must not be presented as a result
 
 ---
 
@@ -1158,10 +1169,11 @@ Gross and net are displayed in provider currency.
 | Chart type | Dual-line area chart |
 | X axis | Month |
 | Y₁ series | Platform GMV (gross payment volume) |
-| Y₂ series | Net revenue (GMV minus total provider payout disbursements) |
+| Y₂ series | Net revenue (platform commission earned in period, accrual basis) |
+| Tooltip | GMV · Refunds completed in period · Net GMV (GMV − refunds) · Net revenue |
 | Drill-down | Click period → detailed payment records |
 
-**Calculation**: GMV = `SUM(payments.amount)` where `payment_status = 'completed'`; Net revenue = GMV − total disbursed provider payouts in same period.
+**Calculation**: GMV = `SUM(payments.amount)` where `payment_status = 'completed'` (gross; refunds are not subtracted). Net GMV = GMV − refunds completed in the same period. Net revenue = platform commission earned in the period, using the Widget 2 formula (percentage per completed payment; flat rate once per completed procedure). Payout timing does not affect net revenue.
 
 ---
 
@@ -1171,8 +1183,8 @@ Gross and net are displayed in provider currency.
 |----------|-------|
 | Chart type | Bar chart (monthly) |
 | X axis | Month |
-| Y axis | Commission earned = sum of effective provider commission deductions for completed payments in period, respecting each provider's configured commission model (`percentage` or `flat rate`) |
-| Reference line | Target monthly commission (admin-configurable) |
+| Y axis | Commission earned = sum of effective provider commission deductions in period, respecting each provider's configured commission model: percentage per completed payment; flat rate once per completed procedure (FR-015) |
+| Reference line | Target monthly commission (admin-configurable in FR-026; hidden until a target is set) |
 | Drill-down | Click bar → filtered payment records with commission breakdown |
 
 ---
@@ -1211,7 +1223,7 @@ Gross and net are displayed in provider currency.
 |----------|-------|
 | Chart type | KPI tile + table |
 | KPI | Total upcoming payout amount (next 30 days) |
-| Table columns | Provider · Amount · Payout date · Cadence · Status |
+| Table columns | Provider · Amount · Payout date · Cadence · Status (FR-017: Pending Approval / Approved / Overdue / Processing) |
 | Sort | Payout date ascending |
 | Drill-down | Click row → provider payout detail in FR-017 |
 
@@ -1254,7 +1266,7 @@ Gross and net are displayed in provider currency.
 **Business Rules**:
 
 - All amounts converted to Hairline's base reporting currency (configured in admin settings) using daily FX rates; raw currency amounts shown in tooltips
-- Net revenue calculation excludes payout amounts that are still in "Scheduled" status (not yet disbursed)
+- Net revenue is accrual-based (commission earned in the period) and does not depend on when payouts are disbursed
 - This screen is only accessible to admin roles with financial data permissions
 - Payment, refund, commission, installment, and payout metrics aggregate their owning records once before joining the accepted selection. The accepted quote amount is not captured revenue and MUST NOT replace actual financial transactions.
 
@@ -1367,12 +1379,13 @@ These definitions apply to all provider/admin widgets, drill-downs, aggregates, 
 - **Acceptance grain**: FR-005's immutable AcceptanceEvent identifies the selected Subquote, its Quote Option and Option/Date-Price Record, inherited parent context, and accepted aggregate revision. Deduplicate redelivery of the same acceptance and count each accepted parent once. `acceptedSubquoteVersion = acceptedParentQuoteVersion`; neither a changed package preset nor an unselected alternative may replace the accepted snapshot. Historical acceptance measures patient selection and is retained after cancellation or payment-window expiry; it is not proof of a confirmed booking or captured revenue.
 - **Parent-quote acceptance rate**: Numerator = distinct parents in the selected first-submission cohort with an AcceptanceEvent by the reporting cutoff. Denominator = all distinct submitted parents in that same cohort, including unaccepted, expired, withdrawn, or later-cancelled parents. Use the first `sent_at` to assign each parent to its cohort; do not divide acceptance events occurring in one period by unrelated submissions in another. This is a parent-level rate, not accepted subquotes divided by available subquotes.
 - **Inquiry response rate**: Denominator = distinct `(providerId, inquiryId)` distribution records first assigned to that provider within the selected distribution period. Numerator = those same pairs with at least one submitted parent response by the cutoff. Retries of distribution and multiple parent responses do not multiply either side. Missing authoritative distribution data yields an unavailable metric, not a proxy based on platform inquiries or quote volume.
-- **Inquiry funnel and booking conversion**: Use inquiry `created_at` to select the inquiry cohort. Provider views count distinct `(providerId, inquiryId)` pairs assigned to that provider; platform views count distinct Inquiry IDs across providers, not the sum of provider totals. Qualified follows the mandatory-field/spam rule; Quoted means at least one parent was submitted; Accepted means an AcceptanceEvent exists for that inquiry and, in provider views, that provider; Confirmed booking means FR-006 recorded successful deposit or first installment confirmation. Each inquiry contributes at most once to each reached stage and cumulatively to preceding stages. Treatment-segment stages must match the parent/accepted booking's treatment, with deduplication within each segment. Later cancellation does not erase a reached milestone; cancellation and no-show metrics remain separate. `In Progress` is a procedure-start milestone, never a synonym for payment confirmation.
+- **Inquiry funnel and booking conversion**: Use inquiry `created_at` to select the inquiry cohort. Provider views count distinct `(providerId, inquiryId)` pairs assigned to that provider; platform views count distinct Inquiry IDs across providers, not the sum of provider totals. Quoted means at least one parent was submitted; Accepted means an AcceptanceEvent exists for that inquiry and, in provider views, that provider; Confirmed booking means FR-006 recorded successful deposit or first installment confirmation. Each inquiry contributes at most once to each reached stage and cumulatively to preceding stages. Treatment-segment stages must match the parent/accepted booking's treatment, with deduplication within each segment. Later cancellation does not erase a reached milestone; cancellation and no-show metrics remain separate. `In Progress` is a procedure-start milestone, never a synonym for payment confirmation.
 - **Reporting cutoff and empty denominators**: Historical funnel/acceptance/response cohorts are evaluated through the earlier of the selected period end and the pipeline's data-as-of time. Current cohorts show that cutoff and indicate that outcomes may still be pending. A zero denominator is N/A, not 0% or 100%. Tooltips/exports state the unit, cohort timestamp, numerator/denominator, cutoff, and relevant sample sizes; rates based on these distinct-record sets cannot exceed 100%.
 - **First response and journey**: TTFQ uses the same inquiry-created cohort and reporting cutoff as the funnel and contributes one observation per inquiry/provider pair whose first parent response occurred by that cutoff, from inquiry creation to earliest parent first submission. Unanswered inquiries remain in funnel/response denominators but have no completed TTFQ observation. Provider distributions pool those observations; platform p50/p90 pool the underlying observations, not provider percentile averages. Journey time instead uses the successful initial payment that first confirms a booking, selects the confirmation-time cohort, and counts the inquiry once. Later installments or failed payment attempts do not create new journey observations.
 - **Accepted-price grain**: Count one immutable accepted total price per accepted parent, including the accepted package/date-price and promotion. Standalone price metrics use `AcceptanceEvent.acceptedAt` to select their cohort; Screen 5's scatter uses its expressly stated parent first-submission cohort. Unaccepted parents have a price range, not one amount, and remain excluded from all amount observations while included in parent volume/rate metrics. Cancellation, hold expiry, package-library edits, quote revisions, or later financial adjustments do not rewrite the historical acceptance-price observation. Show accepted selection counts and distinguish these statistics from captured revenue.
 - **Active cash risk**: At the displayed snapshot time, include only Accepted FR-006 pending bookings with a non-superseded AcceptanceEvent, valid exclusive slot hold, and no successful initial payment. Scope the time filter by acceptance time, calculate age from immutable `acceptedAt`, and validate the actual configured hold deadline. Remove cancelled, expired-hold, and `Payment Window Expired` selections even before stale quote status caches update; do not restart age on payment retries. Sum each eligible accepted total price once as potential accepted booking value, not deposit receivables, captured revenue, or outstanding installment balances.
 - **Financial record grain**: Payments, refunds, commission deductions, installments, and payouts retain their existing owning-record accounting rules. Aggregate those records before attaching read-only AcceptanceEvent/Booking/quote provenance; joining several packages or date options MUST NOT multiply financial totals. This change does not redefine fund release, fees, payout routing, or travel responsibility.
+- **Shared benchmark rule**: All provider benchmark comparisons (Screen 2 Widget 7 and Screen 5 Widget 4) use one peer pool: active providers with ≥30 inquiries in the same rolling 12-month window, minimum 5 eligible providers per metric (price metrics additionally require accepted-price observations). Provider identities stay anonymised (Rule 13). Colour is direction-aware: for higher-is-better metrics (conversion, parent-quote acceptance, ratings) Green = at or better than median, Amber = up to 10% worse, Red = more than 10% worse; for TTFQ p50 lower is better, so worse means above median. Average accepted price is neutral: variance and percentile are shown without colour. Benchmarks refresh at the FR-026 benchmark refresh frequency.
 
 ### Global Filter Rules
 
@@ -1408,18 +1421,20 @@ These definitions apply to all provider/admin widgets, drill-downs, aggregates, 
 
 **Editable by Admin**:
 
-- SLA target (minutes) — platform-wide value used across all TTFQ color coding and benchmark charts; per-provider SLA overrides are out of scope for this version
-- Benchmark refresh frequency
-- Provider engagement status thresholds (Active/At Risk/Dormant day boundaries)
+Values are owned by the FR-026 Analytics Configuration Manager (Screen 5e); FR-014 reads the active version at calculation time. Recalculation rule: live dashboards and benchmarks always use the configuration version active when they are calculated, including for past periods shown on screen. After a change, the next calculation recolours and re-buckets every period in view (for example, last month's TTFQ tiers after an SLA change); past periods are not frozen at older values. Each aggregate records the configuration version used. PDF/CSV exports and scheduled-export files already generated are never rewritten; they keep the values and version from their generation time.
+
+- SLA target (minutes, default 120) — platform-wide value used across all TTFQ color coding and benchmark charts; per-provider SLA overrides are out of scope for this version
+- Benchmark refresh frequency (default Weekly)
+- Provider engagement status thresholds (Active/At Risk/Dormant day boundaries; defaults At Risk 7 days, Dormant 30 days)
 - Outlier detection threshold for Screen 13 (default 30%)
-- Target monthly commission reference line on Screen 12 Widget 2
+- Target monthly commission reference line on Screen 12 Widget 2 (optional; unset by default, and the line is hidden until set)
 
 **Fixed in Codebase**:
 
 - Dashboard section order (Screen 1: A → B → C)
 - TTFQ formula and funnel stage definitions
 - Booking Intensity Index formula
-- Commission calculation logic: `IF provider_commissions.type = 'percentage' THEN payment.amount × (effective_rate / 100) ELSE effective_flat_amount` — the conditional is fixed; the rate/amount values are sourced from provider commission configuration
+- Commission calculation logic: `IF provider_commissions.type = 'percentage' THEN payment.amount × (effective_rate / 100) ELSE effective_flat_amount once per completed procedure` — percentage applies per completed payment, flat rate applies once per FR-010 completed procedure (FR-015); the conditional is fixed; the rate/amount values are sourced from provider commission configuration
 
 ### Performance Rules
 
@@ -1460,18 +1475,18 @@ These definitions apply to all provider/admin widgets, drill-downs, aggregates, 
 
 ### Internal
 
-- **FR-003**: Inquiry data (`created_at`, `patient_id`, treatment type, spam flag) plus inquiry distribution records (`inquiry_providers.provider_id`, `source`, `status`, `distributed_at`) — feeds all funnel metrics and provider response/distribution analytics
+- **FR-003**: Inquiry data (`created_at`, `patient_id`, treatment type) plus inquiry distribution records (`inquiry_providers.provider_id`, `source`, `status`, `distributed_at`) — feeds all funnel metrics and provider response/distribution analytics
 - **FR-004**: Parent Quote identities, provider/inquiry/treatment context, first submission, aggregate versions, and Quote Option/Option-Date-Price hierarchy — feeds parent response volume, TTFQ, and first-submission cohorts; unaccepted price ranges are not amount observations. See FR-004 REQ-004-030.
 - **FR-005**: AcceptanceEvent and immutable accepted Subquote snapshot, including parent/option/date-price/subquote IDs, equal accepted aggregate versions, acceptedAt, accepted total price/promotion/currency, locked exchange rate, appointment, and cancellation/supersession provenance — feeds patient selection, parent acceptance rate, and accepted-price statistics. See FR-005 REQ-005-017 through REQ-005-020.
 - **FR-006**: Booking/AcceptanceEvent linkage, successful initial-payment confirmation, actual exclusive-hold deadline, terminal Payment Window Expired outcome, lifecycle, and appointment — feeds confirmed-booking funnels, journey time, active cash risk, booking intensity, and downstream treatment milestones
 - **FR-007**: Payment data (`amount`, `currency`, `payment_status`, `payment_type`, `created_at`, `is_installment`) — feeds all financial widgets
-- **FR-010**: Treatment execution status — feeds completion rate and aftercare activation
+- **FR-010**: Treatment execution status and case closure reason — feeds completion rate, aftercare activation, flat-rate commission recognition (once per completed procedure), and no-show rate (closure reason `No-show`)
 - **FR-011**: Aftercare records — feeds aftercare activation rate widgets
 - **FR-013**: Reviews (`overall_rating`, `results_rating`, `staff_rating`, `facility_rating`, `value_rating`) — feeds satisfaction widgets
 - **FR-015**: Provider master/profile data — provider location and timezone (`providers.country_id`, `providers.city_id`, `providers.timezone`) and effective commission settings (`provider_commissions.type`, `price`, `payment_cycle`) drive localization, commission analytics, and payout cadence
 - **FR-017**: Payout records — feeds all payout history and obligation widgets
 - **FR-018**: Affiliate records and discount codes — feeds affiliate acquisition widgets
-- **FR-026**: Admin settings store — provides admin-configurable analytics values such as SLA target, benchmark refresh frequency, engagement thresholds, and target commission reference line
+- **FR-026**: Analytics Configuration Manager (Screen 5e, REQ-026-012g, REQ-026-028) — provides versioned analytics values: SLA target, At Risk/Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission. See CR-FR026-20261013-01
 - **FR-031**: Access control and permissions — governs which admin analytics surfaces and data domains are visible to each authorized role
 - **S-03**: Notification Service — handles scheduled export email delivery and secure-link notifications for Screen 6
 - **S-05**: Media Storage Service — stores generated export artifacts for 7-day re-download retention and secure-link access
@@ -1507,7 +1522,7 @@ Do not backfill an accepted amount by choosing a current alternative or consulti
 - **Assumption 1**: Providers access the analytics section at least weekly; daily triage is via Screen 1 (Main Dashboard), not the analytics section
 - **Assumption 2**: Admin analytics must remain responsive across desktop, tablet, and mobile viewports in accordance with the platform constitution; lower-width layouts may reduce density but must preserve the core workflows
 - **Assumption 3**: Provider analytics screens are desktop-first (≥1024px), responsive single-column on ≤1024px
-- **Assumption 4**: SLA target is configured as a single platform-wide value (in minutes) by the admin, stored in the admin settings store. Per-provider SLA overrides are out of scope for this version — all providers are measured against the same platform SLA target. Days would be too coarse for this domain (response times range from 30 min to 6+ hours); minutes is the correct unit.
+- **Assumption 4**: SLA target is configured as a single platform-wide value (in minutes) by the admin, stored in the FR-026 Analytics Configuration Manager with a default of 120 minutes. Per-provider SLA overrides are out of scope for this version — all providers are measured against the same platform SLA target. Days would be too coarse for this domain (response times range from 30 min to 6+ hours); minutes is the correct unit.
 - **Assumption 5**: Payout cadence (weekly/bi-weekly/monthly) is currently sourced from provider commission configuration (`provider_commissions.payment_cycle`), not from the provider profile record itself
 - **Assumption 6**: Patient-country analytics resolve from `patients.location_id` referencing `countries.id`; during transition, legacy rows may still fall back to `patients.location` for display/grouping compatibility until data cleanup is complete
 - **Assumption 7**: Channel attribution (organic vs. paid vs. social) is not in scope for any screen — only affiliate-sourced traffic is trackable from the current data model
@@ -1537,7 +1552,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 ### Screen 1 — Main Dashboard (LOCKED)
 
-- **REQ-014-001** through **REQ-014-032**: Screen 1 layout, sections, widget count, chart types, filters, and responsive behavior remain locked. Its TTFQ, five-stage Confirmed-booking funnel, and active accepted-but-unpaid aging MUST use the current Screen 1 definitions and shared analytics rules under the approved CR-FR014-20261007-01 metric-only exception; the v2.0 formulas are superseded where explicitly revised.
+- **REQ-014-001** through **REQ-014-032**: Screen 1 layout, sections, widget count, chart types, filters, and responsive behavior remain locked. Its TTFQ, four-stage Confirmed-booking funnel, and active accepted-but-unpaid aging MUST use the current Screen 1 definitions and shared analytics rules under the approved CR-FR014-20261007-01 metric-only exception; the v2.0 formulas are superseded where explicitly revised.
 
 ### Screen 2 — Performance & Conversion
 
@@ -1565,7 +1580,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-048**: System MUST display revenue trend with weekly/monthly/quarterly toggle
 - **REQ-014-049**: System MUST display revenue by treatment type — full list (not capped at 8)
 - **REQ-014-050**: System MUST display revenue by patient country
-- **REQ-014-051**: System MUST display commission deducted per period using the provider's effective commission model for each completed payment/booking in range (`percentage` or `flat rate`)
+- **REQ-014-051**: System MUST display commission deducted per period using the provider's effective commission model: percentage per completed payment in range; flat rate once per procedure completed in range (FR-015)
 - **REQ-014-052**: System MUST display refund volume and refund rate trend
 - **REQ-014-053**: System MUST display installment vs. full payment split
 - **REQ-014-054**: System MUST display cash-at-risk summary of distinct accepted selections awaiting initial payment under valid holds, linking to Screen 1 Section C3; expired/cancelled/superseded selections MUST be excluded
@@ -1582,14 +1597,14 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 - **REQ-014-060**: System MUST allow providers to select which analytics screens to include in the export
 - **REQ-014-061**: System MUST support PDF and CSV exports using the same approved metric definitions, samples, eligibility, and cutoff as the included screens, with authorized accepted-selection provenance in detailed rows
-- **REQ-014-062**: System MUST support scheduled recurring exports (weekly/monthly/quarterly)
+- **REQ-014-062**: System MUST support scheduled recurring exports (weekly/monthly/quarterly) covering the previous full period in the provider's timezone, with recipient limits, retry, and edit/pause/resume/delete as defined on Screen 6
 - **REQ-014-063**: System MUST store generated reports for 7 days for re-download
 
 ### Screen 7 — Platform Overview
 
 - **REQ-014-064**: System MUST display three-section overview (Operations, Performance, Finance) with platform-wide aggregations
 - **REQ-014-065**: System MUST display provider TTFQ health distribution donut (Green/Amber/Red counts)
-- **REQ-014-066**: System MUST display provider engagement rate and dormant provider count
+- **REQ-014-066**: System MUST display provider engagement rate, activity-based Dormant provider count, and separately labelled Non-responding provider count (0 first-submitted parent quotes in 30 days)
 - **REQ-014-067**: System MUST display a cumulative distinct-platform-inquiry Confirmed-booking funnel and TTFQ bullet chart computed from underlying inquiry/provider first-response observations, not summed provider funnels or averaged provider percentiles
 - **REQ-014-068**: System MUST display platform GMV, commission earned, upcoming payout obligations, and cash-at-risk as financial summary tiles
 
@@ -1607,7 +1622,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-075**: System MUST display cumulative distinct-platform-inquiry funnel trend ending in Confirmed booking as a multi-line monthly chart
 - **REQ-014-076**: System MUST display new vs. returning patient rate as stacked monthly bar + KPI tiles
 - **REQ-014-077**: System MUST display platform patient journey time distribution (p50, p90, histogram) using one first successful booking-confirming payment per inquiry
-- **REQ-014-078**: System MUST display inquiry seasonality calendar heatmap (rolling 12-month view)
+- **REQ-014-078**: System MUST display inquiry seasonality month × weekday heatmap (rolling 12-month view; index = weekday average ÷ month daily average × 100)
 - **REQ-014-079**: System MUST display affiliate acquisition KPI tiles and ranked table; display limitation note that tracking begins at booking stage, not inquiry stage
 
 ### Screen 10 — Geographic Intelligence
@@ -1629,7 +1644,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 ### Screen 12 — Financial Health & Cashflow
 
-- **REQ-014-091**: System MUST display platform GMV and net revenue as dual-line area chart (monthly)
+- **REQ-014-091**: System MUST display platform GMV (gross) and accrual-based net revenue (commission earned) as dual-line area chart (monthly), with refunds and Net GMV in the tooltip
 - **REQ-014-092**: System MUST display commission earned trend with admin-configurable target reference line
 - **REQ-014-093**: System MUST display refund volume/rate and failed payment rate as KPI tiles and monthly trend
 - **REQ-014-094**: System MUST display active pending-initial-payment cash-at-risk aging from immutable AcceptanceEvent.acceptedAt (stacked horizontal bar, same buckets and exclusions as Screen 1 C3, platform-wide)
@@ -1657,12 +1672,13 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-110**: System MUST aggregate financial records at their owning grain before quote-hierarchy joins, preventing duplicate payments, refunds, deductions, or payouts from repeated events or multiple alternatives.
 - **REQ-014-111**: System MUST preserve accepted price/currency/locked-rate provenance and historical reporting-conversion provenance; missing canonical history MUST NOT be filled with an invented alternative price or today's package/FX value.
 - **REQ-014-112**: System MUST apply the same revised contracts to provider/admin screens, benchmarks, drill-downs, cached aggregates, PDF/CSV, and scheduled exports without expanding existing permissions or redesigning the locked cockpit.
+- **REQ-014-113**: System MUST send the in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`) once per distributed inquiry/provider pair when no parent quote is submitted within the FR-026 SLA target, suppressed for cancelled or withdrawn distributions and never repeated for the same pair
 
 ---
 
 ## Key Entities
 
-- **Entity 1 — Analytics Metrics Aggregate** (provider-level, daily/cohort): `provider_id`, cohort start/end and timestamp basis, reporting cutoff/data-as-of, distinct inquiry-stage counts (inquiry, qualified, quoted, accepted, confirmed), separately labelled treatment-start count, distinct submitted/accepted parent counts, separately labelled Quote Option/Subquote counts, distribution-cohort assigned/responded inquiry counts, TTFQ observations/p50/p90, accepted-price sample count, effective SLA, income/commission totals, and reporting currency. Inquiry-stage counts MUST NOT be populated with quote/option counts; retain the source observations or equivalent mergeable data needed for longer-range distinct counts and percentiles rather than summing daily percentiles.
+- **Entity 1 — Analytics Metrics Aggregate** (provider-level, daily/cohort): `provider_id`, cohort start/end and timestamp basis, reporting cutoff/data-as-of, distinct inquiry-stage counts (inquiry, quoted, accepted, confirmed), separately labelled treatment-start count, distinct submitted/accepted parent counts, separately labelled Quote Option/Subquote counts, distribution-cohort assigned/responded inquiry counts, TTFQ observations/p50/p90, accepted-price sample count, effective SLA, income/commission totals, and reporting currency. Inquiry-stage counts MUST NOT be populated with quote/option counts; retain the source observations or equivalent mergeable data needed for longer-range distinct counts and percentiles rather than summing daily percentiles.
 
 - **Entity 2 — Booking Intensity Record** (provider-level, daily): `provider_id`, `date`, `bookings_on_day`, `monthly_daily_avg`, `intensity_index`, `baseline_type`
 
@@ -1676,7 +1692,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 - **Entity 7 — Payout Record**: `payout_id`, `provider_id`, `period_start`, `period_end`, `amount`, `currency`, `status`, `disbursed_at`, `cadence`
 
-- **Entity 8 — Export Report Configuration**: `config_id`, `provider_id`, `report_type`, `screens_included` (array), `date_range_type`, `recurring`, `frequency`, `email_recipients`, `last_generated_at`
+- **Entity 8 — Export Report Configuration**: `config_id`, `provider_id`, `report_type`, `screens_included` (array), `date_range_type` (`custom` for one-off exports; `previous_full_period` for recurring), `custom_start`/`custom_end` (one-off only), `recurring`, `frequency`, `timezone`, `status` (active/paused), `email_recipients` (registered email plus up to 5 team member IDs), `next_run_at`, `last_run_status`, `last_generated_at`
   - Generated reports additionally retain the metric definitions/cohorts, reporting cutoff/data-as-of, sample sizes, currency/FX provenance, and authorized accepted-selection IDs/versions for detailed rows. Configuration and scheduling do not change screen metric semantics.
 
 - **Entity 9 — Currency Exchange Rate**: `date`, `base_currency`, `target_currency`, `exchange_rate`, `fetched_at`
@@ -1699,6 +1715,8 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | 2026-04-18 | 3.5 | Verification fixes: Screen 6 PDF branding narrowed to `providers.profile_image` only (colors-from-profile removed — no schema field); FX fallback capped at 48 hours (Rule 10); Assumption 8 added to record that provider-side analytics widgets are PRD-derived (accepted design decision, not a transcription discrepancy); Assumption 9 (FX freshness cap) and Assumption 10 (legacy location UI indicator) added | Claude Code |
 | 2026-04-18 | 3.6 | Status updated to Verified & Approved following completed verify-fr pass (v3.5); approvals signed off by Product Owner | Claude Code |
 | 2026-10-07 | 3.7 | Approved Meeting 02 analytics alignment: distinct parent response and inquiry cohorts, immutable accepted-subquote prices/provenance, Confirmed-booking funnels and first-payment journey, valid-hold aging, accepted-price distribution replacing price-bracket conversion, financial deduplication, export/benchmark/entity contracts, and formula-only Screen 1 exception. CR-FR014-20261007-01 records the delta; implementation reconciliation and consolidated verification remain pending | Codex |
+| 2026-10-13 | 3.8 | Verification fixes approved by Product Owner: flat-rate commission recognised once per completed procedure (aligned with FR-015); Qualified funnel stage removed from provider/admin funnels and trend lines, including a further Screen 1 lock exception recorded as an amendment to CR-FR014-20261007-01; no-show source set to FR-010 case closure reason `No-show` for Screens 2 and 11 (fallback removed); analytics settings ownership and defaults moved to FR-026 Screen 5e (SLA 120 min, At Risk 7 d, Dormant 30 d, outlier 30%, benchmark refresh Weekly, commission target hidden until set) via CR-FR026-20261013-01 | Claude Code |
+| 2026-10-13 | 3.9 | Verification fixes (medium/minor): Screens 3 and 11 moved off quote-status grain (FR-006 Confirmed bookings, FR-010 completion, FR-011 aftercare, FR-013 REQ-013-018a sub-scores); Shared Benchmark Rule with direction-aware colours; Dormant (activity) separated from Non-responding (no quotes); GMV/Net GMV/accrual net revenue and FR-017 payout status mapping; Screen 6 recurring export rules and Entity 8 fields; TTFQ SLA-breach alert specified (REQ-014-113, FR-020/FR-030 `inquiry.ttfq_sla_breached`); Screen 8 admin charts named and composite badge defined; affiliate conversion and seasonality heatmap defined; Estimated Grafts wording; approver name corrected; system PRD FR-014 section synced | Claude Code |
 
 ---
 
@@ -1706,7 +1724,9 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner — prior baseline v3.6 | Joachim Tung | 2026-04-18 | ✅ Approved (historical baseline) |
+| Product Owner — prior baseline v3.6 | Joachim Trung Tuan | 2026-04-18 | ✅ Approved (historical baseline; approver name corrected 2026-10-13) |
+| Product Owner — documentation delta v3.9 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: verify-fr medium/minor resolutions (Issues 5–15, option 1 each). Not an implementation sign-off |
+| Product Owner — documentation delta v3.8 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: verify-fr resolution choices (flat-rate per procedure, Qualified stage removed, FR-010 No-show source, FR-026 analytics settings owner). Not an implementation sign-off |
 | Product Owner — documentation delta v3.7 | Joachim Trung Tuan | 2026-10-07 | ✅ Approved: "Please update as per your suggestions"; includes accepted-price distribution and metric-only Screen 1 exception. Not an implementation sign-off |
 | Technical Lead | — | — | Pending review |
 | Stakeholder | — | — | Pending review |
@@ -1715,4 +1735,4 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-10-07
+**Last Updated**: 2026-10-13

@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-06
 **Decision Date**: 2026-10-07
-**PRD Version Change**: v3.6 to v3.7
+**PRD Version Change**: v3.6 to v3.7; amended 2026-10-13 for v3.7 to v3.8 (Qualified stage removal)
 **Related Commit(s)**: Pending — no commit requested for this change
 
 ---
@@ -17,6 +17,8 @@
 FR-014 now distinguishes parent provider responses, package/date-price Subquotes, inquiry-level conversion, immutable patient acceptance, and payment-confirmed bookings. Multiple parents from one provider are legitimate responses, but neither those additional parents nor their alternatives may inflate inquiry response rates or funnels. Amount analytics use only the exact accepted subquote price, as required by FR-004; pending-payment risk additionally requires a valid FR-006 hold.
 
 The Product Owner approved replacing offered-price-bracket conversion with accepted-price distribution and allowing formula/metric-label-only corrections to the locked cockpit. Screen 1 layout, sections, widget count, chart types, filters, and responsive behavior remain locked. This request approves documentation, not implementation readiness or consolidated FR verification.
+
+**Amendment 2026-10-13 (v3.8)**: During FR-014 verification, the Product Owner approved removing the Qualified funnel stage. FR-003 and the data schema have no canonical spam flag or qualification state, so the stage could not be computed without inventing data. The provider and platform funnels become Inquiries → Quoted → Accepted → Confirmed booking, and the conversion-trend charts drop the Qualified % line. This is the only structural change to the locked cockpit: Screen 1 sections, widget count, chart types, filters, and responsive layout remain unchanged. The other v3.8 fixes (flat-rate commission per completed procedure, FR-010 No-show source, FR-026 analytics settings ownership) are recorded in the PRD change log and do not amend this request.
 
 ## Baseline State
 
@@ -49,6 +51,7 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 | Financial joins | No explicit protection against hierarchy fan-out | Owning financial records counted once before read-only accepted-selection joins | Avoid multiplying revenue, refunds, deductions, or payouts |
 | Reporting data and exports | Flat quote IDs and mixed aggregate fields | FR-005/FR-006 provenance, separate grains, equal accepted versions, immutable accepted-price observation, consistent PDF/CSV/scheduled definitions | Make dashboards and exports auditable against the exact patient selection |
 | Screen 1 lock | Entire screen specification frozen | Product Owner metric-only exception for TTFQ, funnel and aging; layout and presentation structure still locked | Correct changed contracts while preserving the accepted cockpit design |
+| Funnel stages (amendment 2026-10-13) | Inquiries → Qualified → Quoted → Accepted → Confirmed booking; trend lines include Qualified % | Inquiries → Quoted → Accepted → Confirmed booking; trend lines Quoted % · Accepted % · Confirmed booking %; applies to Screen 1 B1/B4, Screen 7 B1, Screen 9 trend, REQ-014-001, and Entity 1 | FR-003 and the schema have no canonical spam or qualification data; Product Owner approved a further Screen 1 lock exception limited to this stage removal |
 
 ## Scope and Impact
 
@@ -58,6 +61,7 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 - Accepted-price-only distributions/benchmarks/outliers and the approved replacement of Screen 13 Widget 4.
 - Formula/metric-label-only cockpit exception; existing screen/widget structure and numerical sample/hold policies remain unchanged.
 - FR-local Change Request, source-register incorporation note, and required update-log traceability.
+- Amendment 2026-10-13: removal of the Qualified funnel stage from provider and platform funnels, trend lines, counting rules, FR-003 dependency, requirements, and Entity 1.
 
 ### Out of Scope
 
@@ -90,14 +94,15 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 - Pricing uses immutable accepted package/date price, promotion, currency, and locked-rate provenance; unaccepted parents remain denominator/volume records but have no amount observation.
 - Accepted-price brackets show distributions, not artificial 100% conversion; scatter text is descriptive, and outlier samples count accepted selections.
 - Financial amounts remain owning-record totals, unaffected by alternative counts. Screens, benchmarks, drill-downs, and exports use the same metric contract.
+- Provider and platform funnels show four stages with no Qualified stage or Qualified % line; inquiry-stage aggregates carry no qualified count; Screen 1 section and widget counts are unchanged.
 - Documentation checks cover links, requirement IDs, Markdown tables, preserved cockpit structure, and the PRD/CR/source-register/update-log chain. Live/backend reconciliation tests are still required before Implementation Reconciliation can become Verified.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner, Joachim Trung Tuan.
-- **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-07; documentation delta only.
+- **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-07; documentation delta only. Amendment approved by Product Owner, Joachim Trung Tuan, 2026-10-13 (verify-fr Issue 2, option to remove the Qualified stage everywhere including the locked Screen 1).
 - **Decision evidence**: [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md), MTG-002-D03–D06 and O01 with Product Owner refinements; FR-004 REQ-004-030; FR-005 REQ-005-020; FR-006 General Module Rules / Payment & Billing Rules / Booking entity. The Product Owner's approval was "Please update as per your suggestions," accepting the FR-014 proposal, accepted-price-bracket replacement, and metric-only cockpit exception.
-- **PRD change log**: [FR-014 Appendix: Change Log](prd.md#appendix-change-log), v3.7 row dated 2026-10-07.
-- **Update log**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](../../update-logs/2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md).
+- **PRD change log**: [FR-014 Appendix: Change Log](prd.md#appendix-change-log), v3.7 row dated 2026-10-07 and v3.8 row dated 2026-10-13.
+- **Update log**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](../../update-logs/2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md); amendment in [FR014_VERIFICATION_FIXES_2026-10-13.md](../../update-logs/2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md).
 - **Supersedes**: None as a Change Request; explicitly revised v3.6 analytics definitions are superseded by v3.7.
 - **Superseded by**: None.
