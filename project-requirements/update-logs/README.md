@@ -6,6 +6,16 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-10-13/ (2 files)
+
+#### **FR-015 Provider Lifecycle and Accepted Subquote Alignment**
+
+- [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md) - FR-015 v1.8 and CR-FR015-20261013-01: automatic suspension cancellation, provider-specific cause and admin-support marker, immutable accepted history, confirmation-time commission snapshots, and distinct completed-procedure counting. Related-FR alignment, consolidated verification, and implementation reconciliation pending.
+
+#### **FR-014 Verification Fixes and FR-026 Analytics Configuration**
+
+- [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9, FR-026 v1.9–v1.10, FR-030 v1.7, FR-020 v2.2, system PRD sync: flat-rate commission recognised once per completed procedure (FR-015), Qualified funnel stage removed (CR-FR014-20261007-01 amended, further Screen 1 lock exception), FR-010 `No-show` closure reason as the no-show source, and new FR-026 Analytics Configuration (SLA 120 min default, commission target hidden until set) via CR-FR026-20261013-01. Implementation reconciliation pending.
+
 ### 2026-10-07/ (1 file)
 
 #### **FR-014 Parent Quote and Accepted Subquote Analytics**
@@ -933,6 +943,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-10-13**: [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md) - FR-015 v1.8 lifecycle/subquote alignment: automatic suspension cancellation, special admin support, booking-time commission snapshots, and accurate completed-procedure counting; documentation approval only.
+- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9 verification fixes (flat-rate per completed procedure, Qualified stage removed, FR-010 No-show source, Shared Benchmark Rule, accrual net revenue, recurring exports, SLA-breach alert) and FR-026 v1.9–v1.10 Analytics Configuration ownership and recalculation rule
 - **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - Reconciled analytics, reporting provenance, and exports with Meeting 02's approved parent/subquote model through CR-FR014-20261007-01 while preserving the cockpit layout.
 
 - **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed FR-031 v1.1 and FR-009 v1.3 global custom provider role contracts with Owner safeguards; approval and implementation reconciliation pending.
@@ -1071,6 +1083,8 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-10-13**: [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md) - FR-015 v1.7 → v1.8 through approved CR-FR015-20261013-01; provider lifecycle/support and accepted-selection/commission/counting handoffs, with related-FR and implementation reconciliation still required.
+- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9 and FR-026 v1.9–v1.10 approved verification fixes; CR-FR014-20261007-01 amended and CR-FR026-20261013-01 created and amended; `inquiry.ttfq_sla_breached` added to FR-030/FR-020
 - **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - FR-014 v3.7 documentation-approved definitions; accepted-price distribution replaces price-bracket conversion, with implementation reconciliation and consolidated verification still pending.
 
 - **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed provider role creation and cloning in FR-031 with FR-009 assignment alignment; prior approved baselines remain distinguishable.
@@ -1258,4 +1272,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: October 7, 2026 (FR-014 parent quote and accepted subquote analytics; retained FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
+**Last Updated**: October 13, 2026 (FR-015 v1.8 provider lifecycle/subquote alignment; FR-014 v3.9 verification fixes, FR-026 v1.10 analytics configuration and recalculation rule, FR-030/FR-020 SLA-breach event, system PRD FR-014 sync, system data schema entities 35–37; retained FR-014 parent quote and accepted subquote analytics, FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
