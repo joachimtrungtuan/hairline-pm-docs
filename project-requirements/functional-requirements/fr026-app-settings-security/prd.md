@@ -33,6 +33,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options
 - **Provider Platform (PR-06 and PR-02)**: Consumes centrally managed profile lists and the versioned quote currency/expiry configuration
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
+- **Analytics (PR-05 and A-08)**: FR-014 provider and admin analytics consume the versioned Analytics Configuration (SLA target, engagement thresholds, outlier threshold, benchmark refresh frequency, optional commission target)
 - **Shared Services (S-03)**: Notification Service consumes OTP email templates for delivery
 
 ### Multi-Tenant Breakdown
@@ -93,6 +94,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
 - Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, inquiry configuration, or quote configuration
 - Admin navigates to Settings → Notifications to edit OTP email templates
+- Admin navigates to Settings → Analytics to edit analytics configuration consumed by FR-014
 
 **System-Triggered**:
 
@@ -247,6 +249,18 @@ The App Settings & Security Policies module provides a centralized, audited, and
   5. FR-004 snapshots the currency and computes expiry when a new parent Quote is created. Existing quotes retain their saved currency and expiry.
 - **Outcome**: New FR-004 quotes use one auditable configuration source without retroactively changing historical quote prices or deadlines.
 
+**A8: Admin Configures Analytics Parameters**:
+
+- **Trigger**: Product or operations team needs to change a threshold or target used by FR-014 analytics.
+- **Steps**:
+  1. Admin navigates to Settings → Analytics → Analytics Configuration.
+  2. Admin edits one or more values: TTFQ SLA target (minutes), At Risk and Dormant thresholds (days), price outlier threshold (%), benchmark refresh frequency, and optional target monthly commission.
+  3. System validates the values (for example, Dormant must be greater than At Risk) and blocks save on error.
+  4. Admin saves with a mandatory change reason.
+  5. System versions and audits the change, invalidates the configuration cache, and exposes the active values through the authenticated Settings API.
+  6. FR-014 applies the active version at its next calculation or benchmark refresh and records the configuration version used with its aggregates.
+- **Outcome**: Analytics thresholds and targets change without a code release, from one auditable source. Exports and scheduled-export files that were already generated are not rewritten.
+
 **B1: Admin Attempts Invalid Configuration**:
 
 - **Trigger**: Admin enters out-of-range value for authentication throttling
@@ -292,14 +306,14 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Business Rules**:
 
 - Only admins with "Settings Management" permission can access this screen
-- Setting groups are organized into sections: Authentication & Security, App Data, Notifications
+- Setting groups are organized into sections: Authentication & Security, App Data, Notifications, Analytics
 - "Edit" button disabled for setting groups marked as "Fixed in Codebase"
 - "View History" always available (read-only)
 
 **Notes**:
 
 - Use card-based layout for setting groups
-- Color-code groups by category (blue: security, green: data, yellow: notifications)
+- Color-code groups by category (blue: security, green: data, yellow: notifications, purple: analytics)
 - Display warning icon if setting change pending propagation
 
 **Setting Groups (detailed)**:
@@ -314,10 +328,13 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Inquiry Cancellation Reasons (reason label, order, requires_explanation, active)
   - Account Deletion Reasons (reason label, requires_explanation, display order, active)
   - Inquiry Configuration (treatment-area options with image/icon assets, and minimum inquiry lead time)
+  - Quote Configuration (active ISO 4217 currency, default expiry hours)
 - Notifications
   - OTP Email Templates
     - Verification Email
     - Password Reset Email
+- Analytics
+  - Analytics Configuration (TTFQ SLA target, engagement thresholds, price outlier threshold, benchmark refresh frequency, optional target monthly commission)
 
 ---
 
@@ -596,6 +613,28 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ---
 
+### Screen 5e: Analytics Configuration Manager
+
+**Purpose**: Own the platform-wide thresholds and targets consumed by FR-014 provider and admin analytics.
+
+| Field Name | Type | Required | Description | Validation Rules |
+| --- | --- | --- | --- | --- |
+| TTFQ SLA Target | number | Yes | Platform-wide time-to-first-quote target in minutes, used for TTFQ colour coding and benchmark charts | Positive whole number of minutes; default 120 |
+| At Risk Threshold | number | Yes | Day boundary after which a provider without qualifying activity is At Risk; FR-014 defines what counts as activity | Positive whole number of days; default 7 |
+| Dormant Threshold | number | Yes | Day boundary after which a provider without qualifying activity is Dormant; FR-014 defines what counts as activity | Positive whole number of days; must be greater than At Risk Threshold; default 30 |
+| Price Outlier Threshold | number | Yes | Percentage deviation from the treatment median that flags a price outlier (FR-014 Screen 13) | Whole number from 1 to 100; default 30 |
+| Benchmark Refresh Frequency | select | Yes | How often FR-014 recomputes provider benchmarks | Daily, Weekly, or Monthly; default Weekly |
+| Target Monthly Commission | currency amount | No | Reference line on FR-014 Screen 12 Widget 2 | Optional; positive amount in the reporting currency of FR-014 admin financial analytics; blank by default |
+
+**Business Rules**:
+
+- Saving requires a change reason, version increment, immutable audit entry, and immediate cache invalidation.
+- Recalculation rule: live dashboards and benchmarks always use the configuration version active when they are calculated, including for past periods shown on screen. After a change, the next calculation recolours and re-buckets every period in view (for example, last month's TTFQ tiers after an SLA change); past periods are not frozen at older values. Each aggregate records the configuration version used. PDF/CSV exports and scheduled-export files already generated are never rewritten; they keep the values and version from their generation time.
+- When Target Monthly Commission is blank, FR-014 hides the reference line; clearing a previously set value hides it again.
+- Per-provider SLA overrides are out of scope; all providers are measured against the same platform SLA target.
+
+---
+
 ### Screen 6: OTP Email Template Editor
 
 **Purpose**: Edit email templates for OTP verification and password reset emails
@@ -696,6 +735,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
 - Inquiry configuration: add, edit, reorder, activate, or deactivate treatment-area options and set the minimum inquiry lead time (FR-003 consumer)
 - Quote configuration: select the active ISO 4217 quote currency and set the positive whole-number default expiry window (FR-004 consumer)
+- Analytics configuration: TTFQ SLA target, At Risk and Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission (FR-014 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
 **Fixed in Codebase (Not Editable)**:
@@ -771,6 +811,10 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **FR-004 / Module PR-02: Inquiry & Quote Management**
   - **Why needed**: FR-004 consumes the active quote currency and default expiry window when creating a parent Quote.
   - **Integration point**: Quote creation retrieves one versioned configuration response, snapshots the ISO 4217 currency, and computes `expiresAt`; existing quotes do not change when configuration is updated.
+
+- **FR-014 / Modules PR-05 and A-08: Provider Analytics & Reporting**
+  - **Why needed**: FR-014 consumes the versioned Analytics Configuration for TTFQ SLA colour coding, provider engagement status, price outlier detection, benchmark refresh cadence, and the optional commission reference line.
+  - **Integration point**: Analytics calculations and benchmark jobs retrieve one configuration version from the Settings API and record that version with the aggregates they produce.
 
 - **FR-009 / Module PR-01: Auth & Team Management**
   - **Why needed**: PR-01 consumes authentication throttling and OTP configuration for provider login and email verification
@@ -945,6 +989,13 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
 - **Templates**:
   - Default "Verification Email" and "Password Reset Email" templates MUST be seeded with standard branding and variables
+- **Analytics Configuration**:
+  - TTFQ SLA Target: 120 minutes
+  - At Risk Threshold: 7 days
+  - Dormant Threshold: 30 days
+  - Price Outlier Threshold: 30%
+  - Benchmark Refresh Frequency: Weekly
+  - Target Monthly Commission: not set (reference line hidden)
 
 ---
 
@@ -1091,6 +1142,21 @@ Admin needs one versioned source for the currency and expiry policy used by newl
 
 ---
 
+### User Story 9 - Manage Analytics Configuration (Priority: P2)
+
+Admin needs one versioned source for the thresholds and targets used by FR-014 analytics.
+
+**Independent Test**: Change the SLA target and engagement thresholds with a reason; verify version/audit records and cache invalidation; confirm FR-014 uses the new values on its next calculation and records the configuration version; confirm a previously generated export is unchanged.
+
+**Acceptance Scenarios**:
+
+1. **Given** valid values, **When** Admin saves with a reason, **Then** the system versions and audits the configuration and invalidates its cache.
+2. **Given** Admin enters a Dormant Threshold that is not greater than the At Risk Threshold, **When** Admin saves, **Then** the system blocks the save and shows a validation error.
+3. **Given** Target Monthly Commission is blank, **When** FR-014 renders Screen 12 Widget 2, **Then** no reference line is shown; **Given** a target is set, **Then** the line appears at that value.
+4. **Given** an export was generated before the change, **When** configuration changes, **Then** that export file is not rewritten.
+
+---
+
 ### Edge Cases
 
 - What happens when **admin attempts to deactivate one of the last 2 active discovery question options**? System prevents deactivation and displays error: "At least 2 active options required. Cannot deactivate this option."
@@ -1130,6 +1196,7 @@ Admin needs one versioned source for the currency and expiry policy used by newl
 - **REQ-026-012d**: System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.
 - **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
 - **REQ-026-012f**: System MUST store one versioned Quote Configuration containing an enabled ISO 4217 currency and a positive whole-number default expiry window, default 48 hours. Consumer: FR-004 quote creation.
+- **REQ-026-012g**: System MUST store one versioned Analytics Configuration containing TTFQ SLA target (positive whole minutes, default 120), At Risk threshold (whole days, default 7), Dormant threshold (whole days, greater than At Risk, default 30), price outlier threshold (whole percent 1-100, default 30), benchmark refresh frequency (Daily, Weekly, or Monthly; default Weekly), and optional target monthly commission (blank by default). Consumer: FR-014.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -1151,6 +1218,8 @@ Admin needs one versioned source for the currency and expiry policy used by newl
 - **REQ-026-025**: The patient configuration response MUST return active ordered treatment-area options and `minimum_inquiry_lead_days` together so the client calendar and backend validator use one configuration source.
 - **REQ-026-026**: The authenticated Settings API MUST return the active quote currency, default expiry hours, configuration version, and last-modified timestamp together so FR-004 creates each parent Quote from one consistent configuration version.
 - **REQ-026-027**: Quote Configuration changes MUST affect only quotes created after activation; existing quote currency snapshots and computed expiry timestamps MUST remain unchanged.
+- **REQ-026-028**: The authenticated Settings API MUST return all Analytics Configuration values with the configuration version and last-modified timestamp so FR-014 calculations use one consistent version and can record it with their aggregates.
+- **REQ-026-029**: Analytics Configuration changes MUST apply from FR-014's next calculation or benchmark refresh to every period then displayed (past periods are not frozen), and MUST NOT rewrite exports or scheduled-export files that were already generated.
 
 ---
 
@@ -1200,6 +1269,10 @@ Admin needs one versioned source for the currency and expiry policy used by newl
   - **Key attributes**: configuration_id, active_currency_code (ISO 4217), default_expiry_hours (positive integer, default 48), version_number, change_reason, created_at, updated_at
   - **Relationships**: Consumed by FR-004; values are snapshotted/derived onto new Quote records and never retroactively applied
 
+- **Entity 12 - Analytics Configuration**: Versioned configuration used by FR-014 analytics
+  - **Key attributes**: configuration_id, ttfq_sla_minutes (default 120), at_risk_days (default 7), dormant_days (default 30, greater than at_risk_days), price_outlier_percent (1-100, default 30), benchmark_refresh_frequency (daily/weekly/monthly, default weekly), target_monthly_commission (nullable, default null), version_number, change_reason, created_at, updated_at
+  - **Relationships**: Consumed by FR-014; the version used is recorded with analytics aggregates; never rewrites generated exports
+
 ---
 
 ## Appendix: Change Log
@@ -1215,6 +1288,8 @@ Admin needs one versioned source for the currency and expiry policy used by newl
 | 2026-09-04 | 1.6 | Corrected the approved default minimum inquiry lead time from 30 days to 3 days; the configurable range, audit, and propagation contracts are unchanged. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
 | 2026-09-04 | 1.7 | Verification follow-up: added the invariant that at least one inquiry treatment-area option must remain active, including Screen 5c validation and REQ-026-012e. | Product Owner |
 | 2026-09-10 | 1.8 | FR-004 v2.6 reconciliation: added versioned Quote Configuration ownership for the active ISO 4217 currency and default 48-hour expiry window, including workflow, Screen 5d, dependency, API, entity, and non-retroactivity contracts. See [Change Request](./change-request-2026-09-10-quote-configuration-ownership.md). | Product Owner / Documentation |
+| 2026-10-13 | 1.9 | FR-014 v3.8 verification resolution: added versioned Analytics Configuration ownership (TTFQ SLA target default 120 minutes, At Risk 7 days, Dormant 30 days, price outlier 30%, benchmark refresh Weekly, optional target monthly commission hidden until set), including workflow A8, Screen 5e, Analytics settings section, dependency, seeding, User Story 9, REQ-026-012g, REQ-026-028, REQ-026-029, and Entity 12. See [CR-FR026-20261013-01](./change-request-2026-10-13-analytics-configuration.md). | Product Owner / Documentation |
+| 2026-10-13 | 1.10 | FR-014 verification follow-up: added Quote Configuration (active ISO 4217 currency, default expiry hours) to the Screen 1 App Data setting groups; made the Analytics Configuration recalculation rule explicit (live views recalculate all displayed periods with the active version; generated exports never rewritten) in Screen 5e and REQ-026-029. Recorded in CR-FR026-20261013-01 | Claude Code |
 
 ---
 
@@ -1231,4 +1306,4 @@ Admin needs one versioned source for the currency and expiry policy used by newl
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-09-10
+**Last Updated**: 2026-10-13
