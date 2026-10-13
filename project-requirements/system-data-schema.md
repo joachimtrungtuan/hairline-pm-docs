@@ -4,7 +4,7 @@
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-09-10
+**Last Updated**: 2026-10-13
 
 ---
 
@@ -2123,6 +2123,134 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 ---
 
+### 35. Treatment Records (Completion and Case Closure)
+
+**Table**: `treatment_records`
+**Description**: Per-booking treatment execution record (FR-010 Entity 1). This entry lists the columns that other modules read: completion and case closure. Day records, photos, and medication instructions are defined in FR-010. Documented from the FR-010 and FR-014 PRDs; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique treatment record identifier |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References inquiries.id (the confirmed booking's case); one treatment record per booking |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (accepted parent quote; source of treatment for analytics) |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| status | ENUM | NOT NULL, DEFAULT 'in_progress' | `in_progress`, `completed`, `closed` |
+| check_in_at | TIMESTAMP | NULLABLE | Set at patient Check In |
+| completed_at | TIMESTAMP | NULLABLE | Set by Save (Complete Treatment); FR-014 completion and flat-rate commission recognition; FR-011 aftercare trigger |
+| closure_reason | ENUM | NULLABLE | `no_show`, `patient_cancellation`, `medical`, `operational`, `other`; set when the provider uses Cancel/Close Case |
+| closure_note | TEXT | NULLABLE | Provider free-text note for the closure |
+| closure_requested_by | UUID | FOREIGN KEY, NULLABLE | References provider_users.id |
+| closure_requested_at | TIMESTAMP | NULLABLE | When the closure was requested |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `inquiry_id`
+- INDEX: `provider_id`, `status`, `completed_at`, `closure_reason`
+
+**Relationships**:
+
+- `belongsTo` → `Inquiry`
+- `belongsTo` → `Quote`
+- `belongsTo` → `Provider`
+
+**Business Rules**:
+
+- `completed_at` and `closure_reason` are mutually exclusive: a completed treatment has no closure reason, and a closed case has no completion timestamp.
+- No-show is a closure reason (admin-managed case label), not a booking pipeline status. FR-014 counts a booking closed with `no_show` once, as a no-show.
+- Admin handles the resulting case status transition and financial reconciliation (FR-010 Workflow B4).
+
+---
+
+### 36. Analytics Configurations
+
+**Table**: `analytics_configurations`
+**Description**: Versioned admin settings consumed by FR-014 analytics (FR-026 Entity 12, Screen 5e). Each save inserts a new version; the highest version is active. Documented from the FR-026 PRD; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique configuration identifier |
+| version_number | INTEGER | NOT NULL, UNIQUE | Increments on every save |
+| ttfq_sla_minutes | INTEGER | NOT NULL, DEFAULT 120 | Platform-wide TTFQ SLA target; positive whole minutes |
+| at_risk_days | INTEGER | NOT NULL, DEFAULT 7 | Engagement At Risk boundary |
+| dormant_days | INTEGER | NOT NULL, DEFAULT 30 | Engagement Dormant boundary; must be greater than `at_risk_days` |
+| price_outlier_percent | INTEGER | NOT NULL, DEFAULT 30 | Price outlier threshold; whole percent 1–100 |
+| benchmark_refresh_frequency | ENUM | NOT NULL, DEFAULT 'weekly' | `daily`, `weekly`, `monthly` |
+| target_monthly_commission | DECIMAL(10,2) | NULLABLE | Optional reference line on FR-014 Screen 12 Widget 2; NULL hides the line |
+| change_reason | TEXT | NOT NULL | Admin-entered reason for the change |
+| created_by | UUID | FOREIGN KEY, NOT NULL | References users.id (admin) |
+| created_at | TIMESTAMP | AUTO | Version creation timestamp (activation time) |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `version_number`
+
+**Relationships**:
+
+- `belongsTo` → `User` (created_by)
+
+**Business Rules**:
+
+- Rows are immutable after insert; a change creates a new version.
+- FR-014 reads one version per calculation and stores that `version_number` with each analytics aggregate it produces.
+- Recalculation: live dashboards recalculate every displayed period with the active version; generated exports are never rewritten (CR-FR026-20261013-01).
+- Seeded with one version using the defaults above.
+
+---
+
+### 37. Export Report Configurations
+
+**Table**: `export_report_configurations`
+**Description**: Provider one-off and recurring analytics export settings (FR-014 Entity 8, Screen 6). Documented from the FR-014 PRD; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique export configuration identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| report_type | ENUM | NOT NULL | `pdf_summary`, `csv_detailed` |
+| screens_included | JSON | NOT NULL | Array of FR-014 provider screen identifiers |
+| date_range_type | ENUM | NOT NULL | `custom` (one-off) or `previous_full_period` (recurring) |
+| custom_start | DATE | NULLABLE | One-off exports only |
+| custom_end | DATE | NULLABLE | One-off exports only |
+| recurring | BOOLEAN | NOT NULL, DEFAULT FALSE | Whether this is a scheduled configuration |
+| frequency | ENUM | NULLABLE | `weekly`, `monthly`, `quarterly`; required when `recurring` is true |
+| timezone | VARCHAR(64) | NULLABLE | IANA timezone copied from `providers.timezone`; defines period boundaries |
+| status | ENUM | NOT NULL, DEFAULT 'active' | `active`, `paused` |
+| email_recipients | JSON | NULLABLE | Registered provider email (always included) plus up to 5 provider_users IDs |
+| next_run_at | TIMESTAMP | NULLABLE | Next scheduled run (06:00 provider local time on the first day after the period ends) |
+| last_run_status | ENUM | NULLABLE | `success`, `retrying`, `failed` |
+| last_generated_at | TIMESTAMP | NULLABLE | Last successful generation |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `provider_id`, `(recurring, status, next_run_at)`
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+
+**Business Rules**:
+
+- Maximum 5 active recurring configurations per provider.
+- Recipients must be active provider team members permitted to view every included screen; recipients who lose access are dropped at the next run.
+- A failed run is retried up to 3 times at 30-minute intervals, then `last_run_status` = `failed` with a manual retry in Report History. No partial report is emailed.
+- Generated files are never rewritten after a configuration change.
+
+---
+
 ## Appendix
 
 ### Complete Table List
@@ -2219,6 +2347,9 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 89. medication_templates
 90. aftercare_templates
 91. aftercare_clinicians
+92. treatment_records
+93. analytics_configurations
+94. export_report_configurations
 
 ### ERD Visualization
 

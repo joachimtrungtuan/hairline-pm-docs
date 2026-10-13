@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-09-16
+**Last Updated**: 2026-10-13
 
 ---
 
@@ -1020,11 +1020,12 @@ Each option is a package snapshot the patient can compare. Options share the par
 
 - Providers MUST have access to performance dashboard
 - System MUST display: inquiry count, quote count, quote acceptance rate, revenue, patient count
-- System MUST provide conversion funnel analytics
-- System MUST show average quote amount and price per graft
+- System MUST provide conversion funnel analytics using four stages: Inquiries → Quoted (first submitted parent quote) → Accepted (FR-005 parent acceptance) → Confirmed booking (FR-006)
+- System MUST show accepted-price metrics (average accepted parent-quote price and price distribution); quote estimates are not presented as clinical results
 - System MUST display review ratings and trends over time
 - Providers MUST be able to export reports (PDF, CSV)
-- System MUST provide comparative benchmarks (anonymized industry averages)
+- System MUST provide comparative benchmarks against an anonymised peer median (active providers with ≥30 inquiries in a rolling 12-month window, minimum 5 providers), colour-coded by direction (Green at or better than median, Amber up to 10% worse, Red more than 10% worse)
+- System MUST show provider commission as a percentage per completed payment or a flat rate once per completed procedure (FR-010 completion), matching FR-015
 
 **Admin Requirements**:
 
@@ -1032,13 +1033,14 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MUST display provider TTFQ health distribution (Green/Amber/Red tiers) and provider engagement rate (active, at risk, dormant)
 - System MUST provide a provider league table sortable by TTFQ, conversion rate, quote acceptance rate, rating, and quote response rate, with platform variance indicators
 - System MUST display provider performance scatter (TTFQ vs. conversion rate) and a new-provider ramp chart for onboarding cohorts
-- System MUST provide patient acquisition analytics: inquiry volume trend, platform funnel trend, new vs. returning patient split, patient journey time distribution, inquiry seasonality heatmap, and affiliate acquisition breakdown
+- System MUST provide patient acquisition analytics: inquiry volume trend, platform funnel trend (same four stages: Inquiries → Quoted → Accepted → Confirmed booking), new vs. returning patient split, patient journey time distribution, inquiry seasonality heatmap, and affiliate acquisition breakdown
 - System MUST provide geographic intelligence: patient demand by country, provider coverage by country, demand vs. supply gap table, conversion rate by patient country, and emerging patient origins
 - System MUST provide treatment outcome analytics (operational and satisfaction-based only — no clinical outcome metrics): completion rate per treatment, cancellation/no-show rate per treatment, treatment volume trend, review sub-scores per treatment, aftercare activation rate per treatment, provider distribution by treatment specialisation
-- System MUST provide financial health & cashflow analytics: platform GMV and net revenue, commission earned trend with configurable target, refund and failed payment rates, platform-wide cash-at-risk aging, upcoming provider payout obligations, installment plan health, affiliate commission obligations, and revenue by currency
-- System MUST provide pricing intelligence: average quote amount by treatment, price range per treatment, quote amount by provider country, conversion by price bracket, price trend per treatment, and price outlier provider detection
+- System MUST provide financial health & cashflow analytics: platform GMV (gross), Net GMV (GMV minus refunds), and net revenue (platform commission earned in the period, accrual basis), commission earned trend with configurable target, refund and failed payment rates, platform-wide cash-at-risk aging, upcoming provider payout obligations, installment plan health, affiliate commission obligations, and revenue by currency
+- System MUST provide pricing intelligence based on accepted parent-quote prices: average accepted price by treatment, accepted price range per treatment, accepted price by provider country, accepted selection count and share by accepted-price bracket (not an offered-price conversion rate), accepted price trend per treatment, and price outlier provider detection
 - System MUST anonymise providers in cross-provider benchmark views (providers cannot identify each other); admin views MUST retain provider identity for operational support
-- Admin-configurable parameters MUST include: platform-wide SLA target, engagement status thresholds, outlier detection threshold, benchmark refresh frequency, target monthly commission reference line
+- Admin-configurable parameters are owned by FR-026 Analytics Configuration (versioned): platform-wide TTFQ SLA target (default 120 minutes), engagement thresholds (At Risk 7 days, Dormant 30 days), price outlier threshold (30%), benchmark refresh frequency (Weekly), and target monthly commission reference line (unset by default; line hidden until set)
+- System MUST send providers an in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`, FR-020/FR-030) once per inquiry when no parent quote is submitted within the SLA target
 - System MUST log all analytics access (user ID, timestamp, screen, filters) with 12-month retention
 
 ---
