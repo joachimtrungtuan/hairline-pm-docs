@@ -6,6 +6,26 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
+### 2026-10-07/ (1 file)
+
+#### **FR-014 Parent Quote and Accepted Subquote Analytics**
+
+- [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - Approved FR-014 v3.7 parent/inquiry metric units, immutable accepted-price reporting, Confirmed-booking funnels, valid-hold aging, accepted-price-bracket distribution, and metric-only cockpit exception; implementation reconciliation and consolidated verification pending.
+
+### 2026-09-29/ (3 files)
+
+#### **FR-031 Global Custom Provider Roles**
+
+- `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed Super Admin creation and cloning of global non-Owner provider roles, with FR-009 assignment alignment and implementation reconciliation pending.
+
+#### **FR-008 Confirmed Booking Travel Context**
+
+- `FR008_CONFIRMED_BOOKING_TRAVEL_CONTEXT_2026-09-29.md` - Revised FR-008 around the accepted subquote and confirmed booking, with booking-owned travel records and idempotent travel requests while preserving binary Path A / Path B responsibility.
+
+#### **Release Phase 2–4 Readiness Backlogs**
+
+- `RELEASE_PHASE_2_TO_4_READINESS_BACKLOGS_2026-09-29.md` - Added Phase 2–4 working readiness/fix backlogs with ordered retest cases, module review signals, and sequential release dependencies.
+
 ### 2026-09-18/ (2 files)
 
 #### **Phase 1 Bug Task Creation**
@@ -913,6 +933,14 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - Reconciled analytics, reporting provenance, and exports with Meeting 02's approved parent/subquote model through CR-FR014-20261007-01 while preserving the cockpit layout.
+
+- **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed FR-031 v1.1 and FR-009 v1.3 global custom provider role contracts with Owner safeguards; approval and implementation reconciliation pending.
+
+- **2026-09-29**: `FR008_CONFIRMED_BOOKING_TRAVEL_CONTEXT_2026-09-29.md` - Rebased FR-008 travel coordination on the FR-005 acceptance snapshot and FR-006 confirmed booking; kept the binary travel model and recorded implementation reconciliation in CR-FR008-20260929-01.
+
+- **2026-09-29**: `RELEASE_PHASE_2_TO_4_READINESS_BACKLOGS_2026-09-29.md` - Prepared Phase 2–4 readiness/fix backlogs from the September dashboard roadmap, preserving sequential gates and untested evidence status; removed redundant boundary notes.
+
 - **2026-09-18**: `PHASE_1_BUG_TASK_CREATION_2026-09-18.md` - Plane creation and code/status reconciliation for 19 confirmed Phase 1 backlog bugs, producing 22 tasks.
 
 - **2026-09-18**: `MEETING_03_SOURCE_EXTRACTION_2026-09-18.md` - Added the `SRC-MTG-003` meeting extraction covering quote-flow simplification, graft-count pricing constraint, in-flow head-scan annotation, localization and free-text auto-translation, website navigation and imagery, and the two-rail billing redesign; pending review with no contract changes.
@@ -1042,6 +1070,10 @@ This folder contains documentation update reports and verification logs for the 
 - **2025-10-28**: `MODULE_RESTRUCTURE_2025-10-28.md` - Provider Platform modules
 
 ### Functional Requirements
+
+- **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - FR-014 v3.7 documentation-approved definitions; accepted-price distribution replaces price-bracket conversion, with implementation reconciliation and consolidated verification still pending.
+
+- **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed provider role creation and cloning in FR-031 with FR-009 assignment alignment; prior approved baselines remain distinguishable.
 
 - **2026-09-16**: `FR005_DEPENDENCY_RECONCILIATION_2026-09-16.md` - FR-005 v2.2 dependency alignment for the Parent Quote hierarchy, atomic subquote acceptance, payment-window expiry, outcome privacy, subquote filtering, Patient ↔ Provider quote messaging, and configurable slot-hold duration.
 
@@ -1226,4 +1258,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: September 18, 2026 (Meeting 03 source extraction; Phase 1 bug task creation)
+**Last Updated**: October 7, 2026 (FR-014 parent quote and accepted subquote analytics; retained FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
