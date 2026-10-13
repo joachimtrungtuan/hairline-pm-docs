@@ -671,13 +671,15 @@ Each option is a package snapshot the patient can compare. Options share the par
 
 ### FR-009: Provider Team & Role Management
 
+> The custom-role extension below is proposed in [CR-FR009-20260929-01](functional-requirements/fr009-provider-team-roles/change-request-2026-09-29-custom-provider-role-assignment.md); the four protected-role baseline remains approved.
+
 **Priority**: P1 (MVP)  
 **Module(s)**: PR-01: Auth & Team Management
 
 **Requirements**:
 
 - Providers MUST be able to invite team members to platform
-- System MUST support role-based permissions (Owner, Manager, Clinical Staff, Billing Staff)
+- System MUST support four protected provider roles (Owner, Manager, Clinical Staff, Billing Staff) and global custom provider roles defined by Super Admins in FR-031
 - Each role MUST have specific access rights to features and data
 - Team members MUST be able to collaborate on inquiries and quotes
 - System MUST log all actions by user for audit trail
@@ -690,6 +692,7 @@ Each option is a package snapshot the patient can compare. Options share the par
 - **Manager (Clinic Manager / Operations)**: Broad operational access across inquiries, quotes, schedules, and day-to-day team management, but no ability to change bank account details or assign/change the primary Owner role.
 - **Clinical Staff**: Access to in-progress and aftercare sections, treatment execution and documentation, and clinical notes; limited or no access to billing configuration.
 - **Billing Staff**: Access to financial views (quotes, payouts, revenue metrics) and reconciliation screens; no access to treatment documentation or team structure changes.
+- **Custom provider roles**: Globally defined by Super Admins from a non-Owner base type; assignable to non-Owner staff by provider organizations. The base type and explicit permission grants preserve role-limited actions, and no custom role can replace the primary Owner.
 
 ---
 
@@ -1518,6 +1521,8 @@ Total Quote:                           £3,000
 
 ### FR-031: Admin Access Control & Permissions
 
+> The custom provider role creation and cloning extension below is proposed in [CR-FR031-20260929-01](functional-requirements/fr031-admin-access-control/change-request-2026-09-29-global-custom-provider-roles.md); implementation reconciliation is pending.
+
 **Priority**: P1 (MVP)
 **Module(s)**: A-09: System Settings & Configuration
 
@@ -1526,6 +1531,7 @@ Total Quote:                           £3,000
 **Requirements**:
 
 - Role Management: Admins MUST be able to create and manage admin roles (aftercare staff, billing staff, support staff, super admin)
+- Provider Role Management: Super Admins MUST be able to create and clone global custom provider roles from non-Owner base types while preserving protected provider roles and Owner-only capabilities
 - Permission Matrix: Admins MUST be able to assign granular permissions per role (feature access control)
 - Team Member Management: Admins MUST be able to invite, manage, and remove admin team members
 - Role Assignment: Admins MUST be able to assign roles to team members with effective date tracking

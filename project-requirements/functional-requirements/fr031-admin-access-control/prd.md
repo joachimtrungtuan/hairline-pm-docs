@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`
 **Created**: 2025-11-14
-**Status**: ✅ Verified & Approved
+**Status**: Proposed revision (v1.1); v1.0.2 baseline verified and approved
 **Source**: FR-031 from system-prd.md
 
 ---
@@ -13,12 +13,12 @@
 The Admin Access Control & Permissions module is a **Super Admin-only configuration tool** that serves as the **single source of truth** for all role definitions and permission matrices across the entire Hairline platform. This module enables Super Admins to:
 
 1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
-2. **Define Provider Platform Role Permissions**: Configure what permissions each provider role has (Owner, Manager, Clinical Staff, Billing Staff)
+2. **Define Provider Platform Roles and Permissions**: Configure the four protected provider roles and create custom provider roles for staff needs shared across provider organizations
 3. **Manage Admin Team Members**: Invite admin users and assign them roles (team member invitation/management for providers is handled separately in FR-009)
 
 **Key Distinction**: This module is exclusively for **Super Admins to configure RBAC rules**. Regular admin users and providers do not have access to this module. Provider owners can assign roles to their team members (FR-009), but only Super Admins can define what permissions those roles have.
 
-This centralized approach ensures consistent security policies across all platforms, enables Super Admins to configure and update role permissions from a single interface, and maintains full auditability and compliance with healthcare data security requirements.
+This centralized approach ensures consistent security policies across all platforms, enables Super Admins to configure and update role permissions from a single interface, and maintains full auditability and compliance with healthcare data security requirements. Custom provider roles are global definitions; provider organizations may assign them to staff but cannot create or edit their permission definitions.
 
 This module directly supports Principle II (Medical Data Privacy & Security) and Principle VI (Data Integrity & Audit Trail) from the Hairline Platform Constitution by enforcing the principle of least privilege and maintaining comprehensive audit trails of all permission changes and administrative actions.
 
@@ -49,7 +49,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Admin Platform (A-09)** (Super Admin Only):
 
 - **Admin role permission configuration**: Super Admins define what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
-- **Provider role permission configuration**: Super Admins define what permissions each provider role has (Owner, Manager, Clinical Staff, Billing Staff)
+- **Provider role configuration**: Super Admins define permissions for the four protected provider roles and create, clone, and edit global custom provider roles
 - **Admin team member management**: Super Admins invite admin users and assign them predefined roles
 - Permission matrix definition and editing for both admin and provider roles
 - Centralized RBAC configuration interface accessible only to Super Admins
@@ -178,10 +178,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **A4: Configure Provider Role Permissions**:
 
-- **Trigger**: Super Admin needs to modify permissions for a provider role (Owner, Manager, Clinical Staff, Billing Staff)
+- **Trigger**: Super Admin needs to modify permissions for a protected or custom provider role
 - **Steps**:
   1. Super Admin navigates to Settings > User Roles & Permissions > Provider Roles tab
-  2. System displays list of provider roles (Owner, Manager, Clinical Staff, Billing Staff) with user counts
+  2. System displays protected and custom provider roles with user counts
   3. Super Admin clicks "Edit Permissions" on target provider role (e.g., "Clinical Staff")
   4. System opens Permission Matrix Modal (Screen 4) with provider permissions
   5. System displays current permissions checked and shows user count: "Currently assigned to [X] users across [Y] providers"
@@ -197,6 +197,29 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   15. System displays confirmation: "Provider role permissions updated. Changes will take effect for all [Role] members on next page load."
   16. All provider team members with this role receive updated permissions on their next API call
 - **Outcome**: Provider role permissions updated and automatically propagated to all provider organizations; changes enforced immediately
+
+**A5: Create Custom Provider Role**:
+
+- **Trigger**: Super Admin needs a reusable provider staff role beyond the four protected roles.
+- **Steps**:
+  1. Super Admin opens Provider Roles and chooses Create New Role.
+  2. Super Admin enters a unique role name and description, then selects a non-Owner base type: Manager, Clinical Staff, or Billing Staff.
+  3. System opens the provider permission matrix. Super Admin selects at least one permission and reviews the effective access and sensitive-permission warnings.
+  4. System rejects Owner-only permissions and any protected action unavailable to the selected base type. The base type defines eligibility for existing role-limited actions; selected permissions may narrow access but cannot bypass those protections.
+  5. Super Admin reviews the organization-wide impact and confirms creation.
+  6. System saves a global custom provider role, records the actor, base type, and permission grants in the audit trail, and makes it available for non-Owner staff assignment in FR-009.
+- **Outcome**: Every provider organization can assign the new role to eligible non-Owner team members; no provider organization can change the role definition.
+
+**A6: Clone Provider Role**:
+
+- **Trigger**: Super Admin needs a new provider role based on an existing non-Owner role.
+- **Steps**:
+  1. Super Admin chooses Clone Role on a system or custom provider role other than Owner.
+  2. System shows the source role's base type and current permission snapshot. Super Admin supplies a unique new name and description.
+  3. System copies the base type and eligible permissions into an editable draft, then validates the same protected-action, dependency, and sensitive-permission rules as role creation.
+  4. Super Admin reviews the resulting access and confirms creation.
+  5. System creates a separate global custom role with `is_system_role = false` and logs the source role, copied permissions, actor, and timestamp. Later edits to either role do not change the other.
+- **Outcome**: The cloned role can be assigned to non-Owner provider staff through FR-009. Cloning never creates a second Owner role or changes the source role.
 
 **B1: Invalid Email Address**:
 
@@ -361,27 +384,32 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 #### Tab 3: Provider Roles
 
-**Purpose**: Define and configure permission matrices for provider platform roles (Owner, Manager, Clinical Staff, Billing Staff)
+**Purpose**: Define and configure permission matrices for the protected provider roles (Owner, Manager, Clinical Staff, Billing Staff) and global custom provider roles.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Role List | table | N/A | List of provider roles | Display: Role Name, Description, Total Users Across All Providers, Actions |
-| Role Name | text | N/A | Name of provider role | Read-only (Owner, Manager, Clinical Staff, Billing Staff) |
+| Role Name | text | N/A | Name of provider role | Protected names read-only; custom names editable by Super Admin and unique within provider roles |
+| Base Type | badge/select | Conditional | Manager, Clinical Staff, or Billing Staff eligibility for custom roles | Required for custom roles; fixed after creation; never Owner |
 | Total Users | number | N/A | Count of provider team members with this role across all providers | Display only, informational |
 | Last Modified | datetime | N/A | When permissions were last updated | Display only |
-| Actions | button group | N/A | Edit Permissions, View Users | Owner role has lock icon |
+| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Owner role has lock icon and no Clone Role action |
 
 **Actions**:
 
 - **Edit Permissions**: Opens permission matrix modal/panel for selected role (Provider Platform permissions)
 - **View Users**: Links to FR-015 (Provider Management) to view providers and their team members with this role
+- **Create New Role**: Creates a global custom provider role with a non-Owner base type and selected permissions
+- **Clone Role**: Copies a non-Owner role's base type and current eligible permissions into a separately editable custom role
 
 **Business Rules**:
 
 - Owner role must always have full access to all provider features (cannot be restricted)
-- Provider roles are system-defined (cannot add/remove roles)
+- The four system-defined provider roles cannot be renamed or removed; custom provider roles can be created and cloned only by Super Admins. Custom-role deletion is outside this revision's scope.
+- Custom roles are global across provider organizations. Provider users may assign an available custom role to non-Owner staff in FR-009, but cannot create, clone, or edit role definitions.
+- A custom role cannot use the Owner base type, replace the primary Owner, or receive Owner-only permissions. Existing role-limited actions require both the applicable base type and the explicit permission grant.
 - Permission changes sync to Provider Platform (FR-009) within 5 seconds
 - Permission changes affect all provider team members with that role across all providers
 - System shows warning when editing: "This will affect [count] provider team members across all provider organizations"
@@ -539,8 +567,9 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system roles** (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) and provider roles (Owner, Manager, Clinical Staff, Billing Staff). **Editable only for custom roles**. When editable: max 50 chars; unique. |
+| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom roles. When editable: max 50 chars; unique within the role's guard. |
 | Role Description | textarea | Yes | Purpose and responsibilities of role | Max 500 chars |
+| Provider Base Type | select/display | Conditional | Eligibility for role-limited provider actions | Required for custom provider roles; Manager, Clinical Staff, or Billing Staff; fixed after creation |
 | Permission Categories | accordion | Yes | Grouped permissions by feature area | At least one permission required |
 
 **Permission Matrix Structure** (Expandable Categories):
@@ -672,7 +701,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Configure Payment Settings | Manage Stripe accounts, commission rates, split pay | ☐ Write |
 | Manage Help Centre | Create/edit Help Centre content for providers | ☐ Write |
 
-**Provider Platform Permission Categories** (for configuring Owner, Manager, Clinical Staff, Billing Staff roles):
+**Provider Platform Permission Categories** (for configuring protected and custom provider roles):
 
 **Category: Patient Inquiries & Quotes (PR-02)**:
 
@@ -701,7 +730,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
 | View In-Progress Cases | View patients currently in treatment | ☐ Read |
-| Document Treatment | Add treatment notes, scans, photos | ☐ Write |
+| Document Treatment | Add treatment notes, scans, photos | ☐ Write (Owner or Clinical Staff base type only) |
 | Update Treatment Status | Change patient treatment stage | ☐ Write |
 | View Treatment History | Access historical treatment records | ☐ Read |
 
@@ -730,7 +759,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 |------------|-------------|--------------|
 | View Team Members | View team member list | ☐ Read |
 | Invite Team Members | Send team member invitations | ☐ Write |
-| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner/Manager only) |
+| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner or Manager base type only) |
 | Remove Team Members | Remove or suspend team members | ☐ Write (Owner only) |
 | View Team Activity | Access team activity logs | ☐ Read |
 
@@ -763,7 +792,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Layout**: 2-axis table where:
 
 - **Rows** = Permissions (grouped by category/module)
-- **Columns** = Roles (all roles of the same type: Admin or Provider)
+- **Columns** = Roles (all roles of the same type: Admin or Provider, including custom roles)
 - **Cell Values** = Checkboxes (☐ = unchecked, ☑ = checked) or access level indicators (Read/Write/Delete/None)
 
 **Data Fields**:
@@ -874,6 +903,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - System prevents saving role with zero permissions
 - **Admin Role Protection**: Super Admin permissions cannot be removed from Super Admin role (system protection, checkboxes disabled)
 - **Provider Role Protection**: Owner role must always have full access to all provider features (cannot be restricted, checkboxes disabled for critical permissions)
+- **Custom Provider Role Protection**: Custom provider roles cannot receive Owner-only permissions. For actions restricted to Manager or Clinical Staff, both the matching base type and the permission grant are required. Cloning copies eligible grants without creating Owner-equivalent access.
 - Permission changes take effect for all users with that role on the next API call after propagation (≤ 5 seconds)
 - **Provider Permission Propagation**: Changes to provider role permissions automatically sync to Provider Platform (FR-009) within 5 seconds
 - Role edits logged in audit trail with before/after permission comparison
@@ -985,7 +1015,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Editable by Super Admin**:
 
-- Create, edit, delete custom roles
+- Create, edit, delete custom admin roles
+- Create, clone, and edit global custom provider roles; select a non-Owner base type at creation
 - Assign/change roles for any admin user
 - Suspend/activate admin accounts
 - Configure invitation token expiry time (default 7 days, range 1-30 days)
@@ -995,7 +1026,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Fixed in Codebase (Not Editable)**:
 
 - Super Admin role permissions (always full access)
-- System role names (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) and provider role names (Owner, Manager, Clinical Staff, Billing Staff)
+- System role names (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff)
+- Owner-only provider capabilities and the custom provider role's base type after creation
 - Core permission categories (cannot rename or remove: Patient Management, Provider Management, Billing, etc.)
 - Audit trail retention period (10 years, per Constitution)
 - Password hashing algorithm (bcrypt, cost factor 12)
@@ -1056,7 +1088,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **FR-009 / Module PR-01**: Provider Team & Role Management
   - **Why needed**: FR-009 handles provider team member invitation, assignment, and management. FR-031 provides the **centralized permission configuration** for provider roles that FR-009 consumes and enforces.
   - **Integration point**:
-    - **FR-031 defines and configures** provider role permission matrices (Owner, Manager, Clinical Staff, Billing Staff permissions)
+    - **FR-031 defines and configures** provider role permission matrices, including global custom provider roles and their base types
     - **FR-009 consumes** these permission definitions from FR-031 and enforces them when provider team members access features
     - Permission changes made in FR-031 automatically propagate to FR-009 enforcement
     - Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
@@ -1229,7 +1261,7 @@ As a Super Admin, I need to create a custom "Analytics Viewer" role with read-on
 
 ### User Story 3 - Configure Provider Role Permissions (Priority: P1)
 
-As a Super Admin, I need to configure and manage permissions for provider roles (Owner, Manager, Clinical Staff, Billing Staff) so that provider team members have appropriate access to platform features based on their role, and these permissions are consistently enforced across all provider organizations.
+As a Super Admin, I need to configure protected provider roles and create or clone global custom provider roles so that provider team members have appropriate access to platform features based on their role, and these permissions are consistently enforced across all provider organizations.
 
 **Why this priority**: Centralized RBAC configuration ensures consistent security policies; provider role permissions must be configurable from Admin Platform; changes must propagate to Provider Platform automatically
 
@@ -1244,6 +1276,12 @@ As a Super Admin, I need to configure and manage permissions for provider roles 
 3. **Given** Super Admin attempts to remove critical permissions from Owner role, **When** Super Admin tries to save changes, **Then** system blocks action with error: "Owner role must maintain full access to all provider features"
 
 4. **Given** provider role permission change has been made, **When** Super Admin views audit trail, **Then** change is logged with: role name, permissions added/removed, affected provider count, timestamp, and actor
+
+5. **Given** Super Admin creates a custom provider role with a non-Owner base type and at least one eligible permission, **When** the role is saved, **Then** it appears in the Provider Roles tab and FR-009 non-Owner assignment choices across provider organizations
+
+6. **Given** Super Admin clones a non-Owner provider role, **When** the clone is saved with a unique name and description, **Then** it is a separate non-system role with the source's base type and eligible permission snapshot; subsequent source changes do not alter the clone
+
+7. **Given** Super Admin attempts to clone Owner or grant an Owner-only permission to a custom role, **When** the request is submitted, **Then** the system rejects it and keeps the single primary Owner invariant
 
 ---
 
@@ -1328,8 +1366,8 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 - **REQ-031-002**: System MUST support creation of custom roles with granular permission assignment per admin module (A-01 through A-10)
 - **REQ-031-003**: System MUST enforce role-based access control on all admin API endpoints and UI components
 - **REQ-031-004**: System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Staff, Support Staff
-- **REQ-031-005**: System MUST provide centralized configuration interface for provider role permissions (Owner, Manager, Clinical Staff, Billing Staff)
-- **REQ-031-006**: System MUST automatically sync provider role permission changes to Provider Platform (FR-009) within 5 seconds
+- **REQ-031-005**: System MUST provide centralized configuration for the four protected provider roles and for global custom provider roles created or cloned by Super Admins; custom roles require a non-Owner base type and cannot gain Owner-only capabilities
+- **REQ-031-006**: System MUST automatically sync provider role creation, cloning, and permission changes to Provider Platform (FR-009) within 5 seconds
 - **REQ-031-007**: System MUST prevent modification of Owner role permissions that would remove full access to provider features
 - **REQ-031-008**: System MUST log all administrative actions (role changes, permission grants, user suspensions, access denials) in immutable audit trail
 - **REQ-031-009**: System MUST prevent suspension or deletion of the last Super Admin account (system protection)
@@ -1339,7 +1377,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 ### Data Requirements
 
 - **REQ-031-012**: System MUST maintain admin user accounts with: email, name, password hash, assigned role(s), role effective date/time, status (active/pending/suspended), creation date, last login timestamp
-- **REQ-031-013**: System MUST maintain role definitions with: role name, description, assigned permissions (as permission matrix)
+- **REQ-031-013**: System MUST maintain role definitions with: guard-scoped role name, description, assigned permissions (as permission matrix), system/custom status, and non-Owner base type for custom provider roles
 - **REQ-031-014**: System MUST maintain audit trail entries with: timestamp, user ID, action type, action details, IP address, outcome (success/failed/denied)
 - **REQ-031-015**: System MUST retain audit trail for minimum 10 years per compliance requirements (Constitution Principle VI)
 
@@ -1369,8 +1407,8 @@ As a platform administrator, I need the system to prevent the last Super Admin a
   - **Relationships**: One admin user has one assigned role; one role can be assigned to many admin users; one admin user has many audit trail entries
 
 - **Entity 2 - Role Definition**
-  - **Key attributes**: role_id (UUID), role_name (unique), description, is_system_role (boolean - true for Super Admin/predefined roles), permissions (JSON object - permission matrix), created_at (timestamp), updated_at (timestamp), created_by (admin user ID)
-  - **Relationships**: One role has many admin users assigned; one role has many permission grants (stored as JSON)
+  - **Key attributes**: role_id (UUID), role_name (unique within guard), guard, description, is_system_role (boolean - true for protected roles), base_type (Manager/Clinical Staff/Billing Staff for custom provider roles), permissions (permission matrix), created_at (timestamp), updated_at (timestamp), created_by (admin user ID)
+  - **Relationships**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned roles retain an independent permission snapshot.
 
 - **Entity 3 - Audit Trail Entry**
   - **Key attributes**: audit_id (UUID), timestamp (indexed), user_id (foreign key), action_type (enum: login, role_change, permission_grant, access_denied, user_suspended, password_reset), action_details (JSON object with context), ip_address, outcome (enum: success, failed, denied), session_id (for tracking related actions)
@@ -1389,6 +1427,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 | 2025-11-14 | 1.0 | Initial PRD creation for FR-031: Admin Access Control & Permissions | Claude AI / Speckit |
 | 2026-01-04 | 1.0.1 | Lock system/provider role names (Issue #3 option 1); mark status + approvals as ✅ Verified & Approved | GPT-5.2 (AI) |
 | 2026-05-14 | 1.0.2 | Renamed A-06 permission `Approve Provider Discounts` to `Manage Admin Campaign Adoptions` to align with FR-019: provider self-created discounts do not require admin approval; admins manage adoption/override for admin-created both-fees campaigns. | Codex |
+| 2026-09-29 | 1.1 (proposed) | Added global custom provider role creation and cloning with non-Owner base types; aligned FR-009 assignment contract. See [CR-FR031-20260929-01](change-request-2026-09-29-global-custom-provider-roles.md). | Codex |
 
 ---
 
@@ -1405,4 +1444,4 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-01-04
+**Last Updated**: 2026-09-29 (proposed revision; prior approval dated 2026-01-04)
