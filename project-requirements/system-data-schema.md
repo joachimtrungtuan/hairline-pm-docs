@@ -1,10 +1,10 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.2.0  
+**Version**: 1.6.0  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-14
+**Last Updated**: 2026-10-15
 
 ---
 
@@ -137,10 +137,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | id | UUID | PRIMARY KEY | Unique provider identifier |
 | user_id | UUID | FOREIGN KEY, NULLABLE | References users.id (owner account) |
 | provider_name | VARCHAR(255) | NOT NULL | Clinic/Hospital name (FR-015 `clinic_name`, 3-200 characters) |
-| email | VARCHAR(255) | NOT NULL, UNIQUE | Primary contact email (FR-015 `contact_email`, unique across providers) |
+| email | VARCHAR(255) | NOT NULL | Primary contact email (FR-015 `contact_email`); unique among `active` and `suspended` providers only (FR-015 v1.14 Rule 4) |
 | phone_number | VARCHAR(255) | NULLABLE | Contact phone number |
 | profile_image | VARCHAR(255) | NULLABLE | S3 path to logo/image |
 | provider_bio | TEXT | NULLABLE | Provider description and credentials |
+| specialty_id | UUID | FOREIGN KEY, NOT NULL | References provider_specialties.id (§39); FR-015 Specialty, chosen from active FR-026 Provider Specialties values |
 | city | VARCHAR(255) | NOT NULL | City where provider is located |
 | country | VARCHAR(255) | NOT NULL | Country where provider is located |
 | status | VARCHAR(255) | DEFAULT 'active' | Provider account status: `active`, `suspended`, `deactivated` only (FR-015 v1.9). There is no `draft` status; a provider is created directly as `active` |
@@ -154,8 +155,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Indexes**:
 
 - PRIMARY: `id`
-- UNIQUE: `email`
-- INDEX: `user_id`, `status`, `country`, `city`
+- UNIQUE (partial): `email` WHERE `status` IN ('active', 'suspended')
+- INDEX: `user_id`, `status`, `country`, `city`, `specialty_id`, `email`
 
 **Business Rules (FR-015 v1.9, FR-029)**:
 
@@ -164,10 +165,16 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - Every admin edit to provider data requires a change reason stored in the audit log (see Audit Trail).
 - Status change to `suspended` or `deactivated` triggers the provider-status cancellation cascade (see Provider-Status Cancellation Fields under §5 Inquiries) and clears `featured`. Reactivation restores nothing.
 - Retention: data of a `deactivated` provider is kept for at least 7 years and then archived; provider records are never hard-deleted.
+- There is no `deleted` provider status. An approved FR-032 account-closure request (§40) is applied as an FR-015 deactivation (FR-015 v1.14, FR-032 v1.8).
+- Email reuse: a `deactivated` provider's contact email does not block a new provider account; contact email uniqueness counts only `active` and `suspended` providers (FR-015 v1.15 Rule 4, REQ-015-014). Owner and team login emails follow the global provider email identity rule (FR-009 Rule 3, REQ-009-008; FR-015 v1.15 REQ-015-014) in §3 and §4. The deactivated record keeps its email unchanged.
+- A future-dated suspension or deactivation is stored in `provider_pending_status_changes` (§38), not in `status`. Reactivation cancels any pending row (FR-015 v1.13).
+- `specialty_id` must reference an active specialty when set or changed; a stored value whose specialty is later deactivated stays valid and still displays (FR-026 v1.11).
 
 **Relationships**:
 
 - `belongsTo` → `User`
+- `belongsTo` → `ProviderSpecialty`
+- `hasMany` → `ProviderPendingStatusChange`
 - `hasMany` → `ProviderUser` (team members)
 - `hasMany` → `Quote`
 - `hasMany` → `Treatment`
@@ -225,13 +232,13 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique configuration identifier (FR-029 `config_id`) |
 | scope | VARCHAR(255) | NOT NULL | `global` or `provider_specific` |
-| provider_id | UUID | FOREIGN KEY, NULLABLE | References providers.id; NULL for `global`. An FR-029 multi-provider assignment writes one row per provider |
+| provider_id | UUID | FOREIGN KEY, NULLABLE | References providers.id; NULL for `global`. An FR-029 multi-provider assignment writes one row per provider, so a provider belongs to at most one active provider-specific configuration |
 | commission_model | VARCHAR(255) | NOT NULL, DEFAULT 'percentage' | `percentage` or `flat_rate`; `global` is always `percentage` |
 | commission_percentage | DECIMAL(5,2) | NULLABLE | Percentage model only: 0-100% for provider scope (0.1% precision), 15-25% for the global default; NULL for `flat_rate` |
 | flat_rate_amount | DECIMAL(10,2) | NULLABLE | `flat_rate` only: fixed amount > 0 deducted once per FR-010 completed procedure; NULL for `percentage` |
 | flat_rate_currency | VARCHAR(3) | NULLABLE | `flat_rate` only: an FR-029 enabled currency, defaulting to the system currency; NULL for `percentage` |
-| effective_date | DATE | NOT NULL | Date the terms take effect (FR-015 `commission_start_date`); today or later when set |
-| status | VARCHAR(255) | NOT NULL, DEFAULT 'active' | `active` or `archived` |
+| effective_date | DATE | NOT NULL | Date the terms take effect (FR-015 `commission_start_date`); today or later when set. Today applies immediately as `active`; a future date creates a `pending` row |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'active' | `pending`, `active`, or `archived` |
 | created_by_admin_id | UUID | FOREIGN KEY, NOT NULL | References users.id |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
@@ -241,10 +248,15 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - PRIMARY: `id`
 - INDEX: `scope`, `status`
 - INDEX: `provider_id`, `status`, `effective_date`
+- UNIQUE (partial): `provider_id` WHERE `status` = 'active' AND `scope` = 'provider_specific'
+- UNIQUE (partial): `provider_id` WHERE `status` = 'pending' AND `scope` = 'provider_specific'
 
-**Business Rules (FR-015 v1.9, FR-029)**:
+**Business Rules (FR-015 v1.12, FR-029 v1.9)**:
 
 - At most one `active` row per provider and exactly one `active` `global` row. An edit archives the current row and inserts a new one, with the admin change reason in the audit log.
+- At most one `pending` row per provider (CR-FR029-20261015-01). Saving a newer future-dated configuration archives the existing `pending` row; an admin cancel (reason and re-authentication) also archives it. Both are audit-logged.
+- On its `effective_date`, a scheduled job archives the provider's `active` row and changes the `pending` row to `active`. FR-015 Tab 7, FR-029 Screen 5, and FR-032 Screen 4 read the `pending` row as the Scheduled Configuration.
+- An FR-015 Tab 7 edit to a provider assigned through an FR-029 multi-provider configuration replaces only that provider's row (the split); other providers' rows are unchanged.
 - A provider without an active provider-specific row uses the global default.
 - FR-015 `commission_value` maps to `commission_percentage` for `percentage` and to `flat_rate_amount` (with `flat_rate_currency`) for `flat_rate`.
 - The model, value, and currency in effect at booking confirmation are snapshotted onto the booking (see §7 Quotes); later rows never change a confirmed booking.
@@ -283,6 +295,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - PRIMARY: `id`
 - UNIQUE: `email`, `username`
 
+**Business Rules (FR-015 v1.15, FR-009 v1.5)**:
+
+- **Global provider email identity**: per the global provider email identity rule (FR-009 Rule 3, REQ-009-008; FR-015 v1.15 REQ-015-014), a login email belongs to at most one provider organization at a time, counted across provider owner accounts (`users` linked to a provider), team members (§4 `provider_users`), and pending invitations (`provider_staff_invitations`). Records of a `deactivated` provider do not count; their emails are freed for reuse, while the records stay archived and are not reactivated by reuse.
+- The check runs on FR-015 provider creation, FR-015 owner login-email edits, and FR-009 staff invitations. Because the three tables are separate, a per-table UNIQUE index cannot enforce it alone: the system needs a shared application-level check (or a shared identity table) plus per-table indexes scoped to non-deactivated providers. The global UNIQUE on `users.email` must be scoped so archived owner accounts of deactivated providers do not block reuse; the mechanism (for example, a partial index, or releasing the email on deactivation while keeping it in the audit trail) is subject to implementation reconciliation.
+
 **Relationships**:
 
 - `hasMany` → `Provider`
@@ -320,6 +337,10 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - PRIMARY: `id`
 - UNIQUE: `email`
 - INDEX: `provider_id`, `status`
+
+**Business Rules (FR-015 v1.15, FR-009 v1.5)**:
+
+- Team member emails follow the global provider email identity rule in §3: a `provider_users.email` must not match another non-deactivated provider's owner login, team member, or pending invitation. Team member and pending-invitation emails of a `deactivated` provider are freed for reuse (same reconciliation note as §3); the global UNIQUE on `email` must be scoped accordingly.
 
 **Relationships**:
 
@@ -910,7 +931,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | currency | VARCHAR(255) | NOT NULL | Currency code |
 | payment_type | VARCHAR(255) | NOT NULL | Payment type (deposit, final, refund) |
 | payment_method | VARCHAR(255) | NOT NULL | Payment method (card, bank_transfer) |
-| payment_status | VARCHAR(255) | NOT NULL | Status (pending, completed, failed, refunded) |
+| payment_status | VARCHAR(255) | NOT NULL | Status (pending, completed, failed, refunded, cancelled). `cancelled` is used only for unpaid scheduled installments stopped by provider suspension or deactivation (FR-017 v2.10) |
 | stripe_payment_intent_id | VARCHAR(255) | NULLABLE | Stripe PaymentIntent ID |
 | transaction_id | VARCHAR(255) | NULLABLE | External transaction reference |
 | metadata | JSON | NULLABLE | Additional payment metadata |
@@ -918,6 +939,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | installment_number | INTEGER | NULLABLE | Current installment number (e.g., 1 of 5) |
 | total_installments | INTEGER | NULLABLE | Total number of installments in plan |
 | is_installment | BOOLEAN | DEFAULT false | Whether this is part of an installment plan |
+| reconciliation_flag | VARCHAR(255) | NOT NULL, DEFAULT 'none' | `none` or `captured_after_provider_cancellation` (FR-017 Rule 14) |
+| provider_status_event_id | UUID | NULLABLE | Provider status-change event that cancelled the booking; set when `reconciliation_flag` is not `none` |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -925,6 +948,12 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - PRIMARY: `id`
 - INDEX: `quote_id`, `patient_id`, `provider_id`, `payment_status`
+- INDEX: `reconciliation_flag`
+
+**Business Rules (FR-015 v1.13 Rule 9, FR-017 v2.10 Rules 14-16)**:
+
+- A payment captured after its booking was cancelled with `ProviderSuspended` or `ProviderDeactivated` is stored as `completed` with `reconciliation_flag` = `captured_after_provider_cancellation`. It never confirms a booking or reopens the case, and it is excluded from provider earnings, payout, and commission until an admin resolves it through the existing refund or adjustment workflow (reason and audit entry required).
+- When a booking is cancelled by provider suspension or deactivation, its `installment_payment_plans` row (§31) moves to `cancelled` and its unpaid scheduled installments move to `cancelled`; no further charges or retries run. Paid installments stay `completed` and go to admin resolution.
 
 **Relationships**:
 
@@ -2086,7 +2115,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | payment_frequency | VARCHAR(255) | DEFAULT 'monthly' | Frequency (weekly, monthly) |
 | first_payment_date | DATE | NOT NULL | Date of first installment |
 | final_payment_date | DATE | NOT NULL | Date of last installment (must be 30 days before procedure) |
-| status | VARCHAR(255) | DEFAULT 'active' | Status (active, completed, cancelled, defaulted) |
+| status | VARCHAR(255) | DEFAULT 'active' | Status (active, completed, cancelled, defaulted). Set to `cancelled` when the booking is cancelled by provider suspension or deactivation (FR-017 v2.10; see §12 business rules) |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -2380,6 +2409,123 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 ---
 
+### 38. Provider Pending Status Changes
+
+**Table**: `provider_pending_status_changes`
+**Description**: Future-dated provider suspension or deactivation scheduled through FR-015 Screen 4 (FR-015 Key Entity 4). Documented from the FR-015 PRD; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique pending change identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| change_type | VARCHAR(255) | NOT NULL | `suspend` or `deactivate` |
+| effective_date | DATE | NOT NULL | Future date on which the midnight UTC job applies the change |
+| reason | TEXT | NOT NULL | Admin reason, minimum 20 characters |
+| notify_provider | BOOLEAN | DEFAULT true | Whether the provider was emailed about the scheduled change |
+| scheduled_by_admin_id | UUID | FOREIGN KEY, NOT NULL | References users.id |
+| state | VARCHAR(255) | NOT NULL, DEFAULT 'pending' | `pending`, `applied`, or `cancelled` |
+| cancelled_by_admin_id | UUID | FOREIGN KEY, NULLABLE | References users.id |
+| cancellation_reason | TEXT | NULLABLE | Admin reason for a manual cancel, or the reactivation reason when Screen 5 cancels it automatically |
+| resolved_at | TIMESTAMP | NULLABLE | When the row was applied or cancelled |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp (scheduled at) |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `state`, `effective_date`
+- UNIQUE (partial): `provider_id` WHERE `state` = 'pending'
+
+**Business Rules (FR-015 v1.13)**:
+
+- At most one `pending` row per provider. An immediate suspension or deactivation, a manual Cancel Scheduled Change, or a Screen 5 reactivation moves the pending row to `cancelled`.
+- On `effective_date`, the job sets `providers.status`, runs the provider-status cancellation cascade, and moves the row to `applied`.
+- Every state change is audit-logged and shown in FR-015 Tab 8.
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+- `belongsTo` → `User` (scheduled_by_admin_id, cancelled_by_admin_id)
+
+---
+
+### 39. Provider Specialties
+
+**Table**: `provider_specialties`
+**Description**: Centrally managed Provider Specialties list (FR-026 Entity 7a, Screen 5f), consumed by FR-015. Documented from the FR-026 PRD; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique specialty identifier (FR-026 `specialty_id`) |
+| specialty_name | VARCHAR(100) | NOT NULL | Display name; unique case-insensitive |
+| display_order | INTEGER | NOT NULL, DEFAULT 999 | Sort order in FR-015 selectors |
+| active | BOOLEAN | NOT NULL, DEFAULT true | Inactive values are hidden from new selection |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `specialty_name` (case-insensitive collation)
+- INDEX: `active`, `display_order`
+
+**Business Rules (FR-026 v1.11)**:
+
+- Rows are never hard-deleted; at least one row must stay active. Changes require a reason and are audit-logged.
+- Seed values: Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other (display order 1-5).
+- Migration: existing free-text provider specialty values must be mapped to a row before `providers.specialty_id` becomes NOT NULL.
+
+**Relationships**:
+
+- `hasMany` → `Provider`
+
+---
+
+### 40. Provider Account Closure Requests
+
+**Table**: `provider_account_closure_requests`
+**Description**: Provider-submitted account-closure requests (FR-032 Entity 5), processed by an admin as an FR-015 deactivation (FR-015 Alternative Flow A7). Documented from the FR-032 and FR-015 PRDs; implementation reconciliation pending.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique closure request identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| requested_by | UUID | FOREIGN KEY, NOT NULL | References provider_users.id (the provider user who submitted) |
+| reason | TEXT | NULLABLE | Optional provider-entered reason |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'pending_admin_review' | `pending_admin_review`, `approved`, `rejected` |
+| reviewed_by | UUID | FOREIGN KEY, NULLABLE | References users.id (admin) |
+| reviewed_at | TIMESTAMP | NULLABLE | When the admin approved or rejected |
+| review_notes | TEXT | NULLABLE | Admin notes (required on rejection) |
+| deactivation_event_id | UUID | NULLABLE | FR-015 deactivation status event that applied the request; set when `approved` |
+| created_at | TIMESTAMP | AUTO | Request submission timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE (partial): `provider_id` WHERE `status` = 'pending_admin_review'
+- INDEX: `provider_id`, `status`
+
+**Business Rules (FR-032 v1.8, FR-015 v1.14)**:
+
+- Submission is never blocked by active bookings or pending payouts; the provider stays `active` until an admin acts.
+- Approval is recorded only when the admin deactivates the provider through FR-015 Screen 4 (immediate or scheduled; a scheduled deactivation uses §38). The request then links to the deactivation status event.
+- There is no `deleted` provider status; provider data is retained per FR-023 (minimum 7 years). Requests are never hard-deleted and are audit-logged.
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+- `belongsTo` → `ProviderUser` (requested_by)
+- `belongsTo` → `User` (reviewed_by)
+
+---
+
 ## Appendix
 
 ### Complete Table List
@@ -2479,6 +2625,9 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 92. treatment_records
 93. analytics_configurations
 94. export_report_configurations
+95. provider_pending_status_changes
+96. provider_specialties
+97. provider_account_closure_requests
 
 ### ERD Visualization
 
@@ -2501,6 +2650,10 @@ Schema version tracked via:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.1.0 | 2026-10-14 | Vân Tay Media | Aligned with FR-015 v1.9 verification decisions and FR-029 flat-rate commission: provider status without `draft`, payout and commission fields, `featured` auto-clear, retention rule; new §2A Provider Documents; provider-status cancellation fields on `inquiries` and `after_cares`; quote status `cancelled_provider_status` with `cancellation_provenance`; booking commission snapshot (model, value, currency); provider audit rules |
+| 1.3.0 | 2026-10-15 | Vân Tay Media | §2B `provider_commissions` aligned with FR-015 v1.12 and CR-FR029-20261015-01: `pending` status for one scheduled configuration per provider (replace, cancel, and activation rules), partial unique indexes enforcing one active and one pending provider-specific row per provider, and the single-provider split rule |
+| 1.4.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.13, FR-017 v2.10, and FR-026 v1.11 (CR-FR017-20261015-01, CR-FR026-20261015-01): new §38 `provider_pending_status_changes` (one pending row per provider, cancelled by reactivation); new §39 `provider_specialties` and `providers.specialty_id`; `payments.reconciliation_flag` and `provider_status_event_id`; `cancelled` payment status for stopped installments and plan cancellation on provider-status cancellation |
+| 1.5.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.14 and FR-032 v1.8 (CR-FR032-20261015-02): `providers.email` unique only among `active` and `suspended` providers (partial index); email-reuse rules for owner (§3) and team (§4) login emails after deactivation, mechanism subject to reconciliation; confirmed no `deleted` provider status; new §40 `provider_account_closure_requests` (one pending request per provider, approved via FR-015 deactivation) |
+| 1.6.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.15 and FR-009 v1.5 (proposed) (CR-FR009-20261015-02): global provider email identity rule in §3 and §4 (one provider organization per login email across owner accounts, `provider_users`, and pending `provider_staff_invitations`; deactivated providers' emails freed, records archived; enforced by a shared check, mechanism subject to reconciliation); §2 contact-email reuse note now separates contact email from login emails |
 | 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
 
 ---
