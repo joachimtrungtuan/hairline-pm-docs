@@ -7,6 +7,7 @@
 **Source**: FR-032 from system-prd.md
 **Change Request**: [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — Commission & Payout panel and provider account-status banner
 **Change Request**: [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md) — Account closure as an admin-processed deactivation request
+**Change Request**: [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md) — Closure request notifications and admin marker
 
 ---
 
@@ -756,7 +757,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 7. Provider clicks "Submit Closure Request"
 8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission)
 9. System logs closure request in audit trail (user, timestamp, reason)
-10. System sends closure request notification to admin team
+10. System sends the FR-020 `provider.closure_requested` notification to admins (mandatory), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter
 11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated."
 12. Provider account remains Active until admin processes the request
 13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
@@ -767,8 +768,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - All non-terminal inquiries, quotes, and bookings cancelled under the FR-015 Screen 4 cascade, with patient and admin-support notifications (FR-020); captured payments reconciled by FR-017
     - All provider data retained in archive (per FR-023 data retention: minimum 7 years)
     - Bank account details encrypted and archived
-15. System sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020)
-16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, and the provider account remains Active
+15. System sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises
+16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later
 
 ### Alternative Flows
 
@@ -2064,6 +2065,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 | 2026-10-15 | 1.6 | FR-015 v1.11 alignment via [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md): added read-only Commission & Payout panel to Screen 4 (Owner only); added Rule 6 provider account-status banner (Suspended banner with admin reason and view-only restrictions, Deactivated login block, Reactivated removal); added REQ-032-029 and REQ-032-030 and an FR-015 internal dependency | Claude |
 | 2026-10-15 | 1.7 | Clarification from FR-015 v1.12 fourth verification: Screen 4 Scheduled Configuration shows at most one pending configuration per provider, and a newer future-dated admin edit replaces it, per FR-015 Tab 7 and [CR-FR029-20261015-01](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md). No change to provider permissions or screen layout | Claude |
 | 2026-10-15 | 1.8 | FR-015 v1.14 alignment via [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md): Delete Account became Request account closure; an admin processes it by deactivating the provider in FR-015 (Alternative Flow A7, Screen 4 cascade). Removed the "Deleted" status and the active-booking and pending-payout blocks (former B13 and B14 of the closure flow). Updated Screen 2 card, Privacy Rule 3, Audit and GDPR rules, Assumption 2, User Story 7, REQ-032-013, REQ-032-020, REQ-032-023, and Entity 5. Minor: Contact Email uniqueness counts Active and Suspended providers only (FR-015 Rule 4) | Claude |
+| 2026-10-15 | 1.9 | FR-015 v1.16 alignment via [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md): Request Account Closure step 10 sends FR-020 `provider.closure_requested` to admins and flags the provider in FR-015 Screen 1; step 15 deactivation email is always sent (Notify Provider locked on in FR-015 A7); step 16 rejection sends `provider.closure_rejected` with review notes | Claude |
 
 ---
 
