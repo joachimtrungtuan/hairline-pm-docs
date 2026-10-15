@@ -33,6 +33,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options
 - **Provider Platform (PR-06 and PR-02)**: Consumes centrally managed profile lists and the versioned quote currency/expiry configuration
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
+- **Admin Platform (A-02)**: FR-015 provider creation (Screen 2 Step 2) and provider profile editing (Screen 3 Tab 1) consume the centrally managed Provider Specialties list
 - **Analytics (PR-05 and A-08)**: FR-014 provider and admin analytics consume the versioned Analytics Configuration (SLA target, engagement thresholds, outlier threshold, benchmark refresh frequency, optional commission target)
 - **Shared Services (S-03)**: Notification Service consumes OTP email templates for delivery
 
@@ -61,6 +62,11 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Rollback capability is not supported; admins make forward-only changes
 - Role-based access restricts sensitive settings to authorized admins only
 - Sensitive values (API keys, secrets) are masked in UI and logs
+
+**Admin Platform (A-02)**:
+
+- FR-015 provider creation wizard (Screen 2 Step 2) populates the required Specialty select from the active Provider Specialties list
+- FR-015 provider profile editing (Screen 3 Tab 1) uses the same list; a provider's stored specialty still displays after that value is deactivated
 
 **Shared Services (S-03)**:
 
@@ -92,7 +98,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Admin-Initiated**:
 
 - Admin navigates to Settings → Authentication & Security to edit throttling policies
-- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, inquiry configuration, or quote configuration
+- Admin navigates to Settings → App Data to manage country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, provider specialties, inquiry configuration, or quote configuration
 - Admin navigates to Settings → Notifications to edit OTP email templates
 - Admin navigates to Settings → Analytics to edit analytics configuration consumed by FR-014
 
@@ -261,6 +267,20 @@ The App Settings & Security Policies module provides a centralized, audited, and
   6. FR-014 applies the active version at its next calculation or benchmark refresh and records the configuration version used with its aggregates.
 - **Outcome**: Analytics thresholds and targets change without a code release, from one auditable source. Exports and scheduled-export files that were already generated are not rewritten.
 
+**A9: Admin Edits Provider Specialties**:
+
+- **Trigger**: Admin needs to add, rename, reorder, or retire a specialty value offered when creating or editing a provider (FR-015)
+- **Steps**:
+  1. Admin navigates to Settings → App Data → Provider Specialties
+  2. System displays the current list: "Hair Transplant Surgeon", "Dermatologist", "Trichologist", "Plastic Surgeon", "Other", with active status and display order
+  3. Admin clicks "Add Specialty" and enters: "Hair Restoration Physician"; or renames, reorders (drag-and-drop), or deactivates an existing value
+  4. Admin clicks "Save"
+  5. System validates that names are unique (case-insensitive), at most 100 characters, and that at least one value remains active
+  6. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Adding specialty requested by provider onboarding team" and confirms.
+  7. System versions the list (v1.0 → v1.1), creates an audit log entry, and invalidates the settings cache
+  8. Within 1 minute, the FR-015 Specialty select (Screen 2 Step 2, Screen 3 Tab 1) shows only active values in display order; renamed values show the new name everywhere, including on existing provider profiles
+- **Outcome**: Admin controls the specialty values offered for new and edited providers without a code release. Deactivated values are no longer selectable, but providers that already hold them keep and still display them.
+
 **B1: Admin Attempts Invalid Configuration**:
 
 - **Trigger**: Admin enters out-of-range value for authentication throttling
@@ -327,6 +347,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Discovery Questions (answer options, order, active)
   - Inquiry Cancellation Reasons (reason label, order, requires_explanation, active)
   - Account Deletion Reasons (reason label, requires_explanation, display order, active)
+  - Provider Specialties (specialty name, display order, active)
   - Inquiry Configuration (treatment-area options with image/icon assets, and minimum inquiry lead time)
   - Quote Configuration (active ISO 4217 currency, default expiry hours)
 - Notifications
@@ -635,6 +656,37 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ---
 
+### Screen 5f: Provider Specialties Manager
+
+**Purpose**: Centralized management of the specialty values offered in the FR-015 provider Specialty select (Screen 2 Step 2 provider creation wizard, Screen 3 Tab 1 provider profile editing)
+
+**Data Fields**:
+
+| Field Name     | Type     | Required | Description                                                | Validation Rules                                   |
+| -------------- | -------- | -------- | ---------------------------------------------------------- | -------------------------------------------------- |
+| Specialty Name | text     | Yes      | Display text for the specialty                             | Max 100 chars, unique (case-insensitive)           |
+| Display Order  | number   | No       | Sort priority (lower = displayed first)                    | Integer, default: 999                              |
+| Active         | checkbox | Yes      | Whether the value is selectable in FR-015 Specialty select | Default: true; at least one value must stay active |
+
+**Business Rules**:
+
+- Admin can add, rename, reorder, and deactivate values; hard delete is not supported (deactivate instead)
+- At least one active value must exist at all times; deactivating the final active value is blocked with a validation message
+- Deactivated values disappear from the FR-015 Specialty select for new selections; providers that already hold a deactivated value keep it, and it still displays on their profile (including in Screen 3 Tab 1 as the current value) until an admin changes it
+- Providers reference the specialty by its stable ID, so a rename applies to the display everywhere, including existing provider profiles
+- Saving requires a change reason, version increment, immutable audit entry (old and new values), and immediate cache invalidation
+- Changes propagate to FR-015 within 1 minute
+- Drag-and-drop reordering updates Display Order field
+
+**Notes**:
+
+- Provide drag-and-drop reordering UI (same pattern as Inquiry Cancellation Reasons)
+- Show how many providers hold each value; warn before deactivating a value that providers currently hold
+- On save, a modal prompts for the mandatory change reason (10-500 chars)
+- Consumer: FR-015 / A-02 Screen 2 Step 2 and Screen 3 Tab 1 read the active list to populate the Specialty select
+
+---
+
 ### Screen 6: OTP Email Template Editor
 
 **Purpose**: Edit email templates for OTP verification and password reset emails
@@ -733,6 +785,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Discovery questions: add, edit, deactivate answer options
 - Inquiry cancellation reasons: add, edit, reorder, deactivate reason options (FR-003 consumer)
 - Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
+- Provider specialties: add, rename, reorder, deactivate specialty values (FR-015 Screen 2 Step 2 and Screen 3 Tab 1 consumer)
 - Inquiry configuration: add, edit, reorder, activate, or deactivate treatment-area options and set the minimum inquiry lead time (FR-003 consumer)
 - Quote configuration: select the active ISO 4217 quote currency and set the positive whole-number default expiry window (FR-004 consumer)
 - Analytics configuration: TTFQ SLA target, At Risk and Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission (FR-014 consumer)
@@ -753,6 +806,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Admin can deactivate discovery options but must maintain at least 2 active options
 - Admin can deactivate cancellation reasons but must maintain at least 2 active reasons; "Other" reason cannot be deactivated
 - Admin can deactivate account deletion reasons but must maintain at least 2 active reasons; "Others" reason cannot be deactivated
+- Admin can deactivate provider specialties but cannot delete them and must maintain at least 1 active value; providers holding a deactivated value keep it and it still displays
 - Admin can edit email templates but must include required variables ({code} for OTP templates)
 
 ---
@@ -845,6 +899,10 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
 - **FR-011 / Module A-03: Aftercare Team Management**
   - **Relationship**: FR-026 provides the settings infrastructure; FR-011 implements aftercare milestone template management within that infrastructure
   - **Integration point**: Providers select from admin-created aftercare templates; templates are managed via the A-09 settings surface defined in FR-026
+
+- **FR-015 / Module A-02: Provider Management**
+  - **Relationship**: FR-026 owns the Provider Specialties list; FR-015 consumes it
+  - **Integration point**: FR-015 Screen 2 Step 2 and Screen 3 Tab 1 populate the required Specialty select from the active list and store the selected specialty ID on the provider
 
 ### External Dependencies (APIs, Services)
 
@@ -985,6 +1043,12 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Initial Option 7: "The app is difficult to use" (Order: 7, Requires Explanation: No)
   - Initial Option 8: "I'm taking a break and may return later" (Order: 8, Requires Explanation: No)
   - Initial Option 9: "Others" (Order: 9, Requires Explanation: Yes, FIXED — cannot be deactivated)
+- **Provider Specialties**:
+  - Initial Value 1: "Hair Transplant Surgeon" (Order: 1)
+  - Initial Value 2: "Dermatologist" (Order: 2)
+  - Initial Value 3: "Trichologist" (Order: 3)
+  - Initial Value 4: "Plastic Surgeon" (Order: 4)
+  - Initial Value 5: "Other" (Order: 5)
 - **Countries**:
   - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
 - **Templates**:
@@ -1197,6 +1261,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
 - **REQ-026-012f**: System MUST store one versioned Quote Configuration containing an enabled ISO 4217 currency and a positive whole-number default expiry window, default 48 hours. Consumer: FR-004 quote creation.
 - **REQ-026-012g**: System MUST store one versioned Analytics Configuration containing TTFQ SLA target (positive whole minutes, default 120), At Risk threshold (whole days, default 7), Dormant threshold (whole days, greater than At Risk, default 30), price outlier threshold (whole percent 1-100, default 30), benchmark refresh frequency (Daily, Weekly, or Monthly; default Weekly), and optional target monthly commission (blank by default). Consumer: FR-014.
+- **REQ-026-012h**: System MUST store a centrally managed Provider Specialties list: stable specialty ID, specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other. Admins can add, rename, reorder, and deactivate values (no hard delete); at least one value MUST remain active; changes MUST be versioned and audit-logged. Deactivated values MUST be hidden from new selection while providers that hold them keep and still display them; renames MUST apply to display everywhere. Consumer: FR-015 Screen 2 Step 2 and Screen 3 Tab 1.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
 
 ### Security & Privacy Requirements
@@ -1253,6 +1318,10 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
   - **Key attributes**: reason_id, reason_label, requires_explanation (boolean), display_order, active, usage_count, created_at, updated_at
   - **Relationships**: Referenced by FR-001 deletion request entity (deletionReason field stores selected reason_label at time of DSR submission)
 
+- **Entity 7a - Provider Specialty**: Centrally managed specialty value for provider records (FR-015)
+  - **Key attributes**: specialty_id, specialty_name, display_order, active, created_at, updated_at
+  - **Relationships**: Referenced by FR-015 provider records by specialty_id; never hard-deleted, so existing references always resolve to the current name
+
 - **Entity 8 - Email Template**: OTP email template configuration
   - **Key attributes**: template_id, template_name, subject_line, html_body, plain_text_body, version_number, required_variables (JSON), created_at, updated_at
   - **Relationships**: One Template has many Versions; Consumed by Notification Service (S-03)
@@ -1290,6 +1359,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-09-10 | 1.8 | FR-004 v2.6 reconciliation: added versioned Quote Configuration ownership for the active ISO 4217 currency and default 48-hour expiry window, including workflow, Screen 5d, dependency, API, entity, and non-retroactivity contracts. See [Change Request](./change-request-2026-09-10-quote-configuration-ownership.md). | Product Owner / Documentation |
 | 2026-10-13 | 1.9 | FR-014 v3.8 verification resolution: added versioned Analytics Configuration ownership (TTFQ SLA target default 120 minutes, At Risk 7 days, Dormant 30 days, price outlier 30%, benchmark refresh Weekly, optional target monthly commission hidden until set), including workflow A8, Screen 5e, Analytics settings section, dependency, seeding, User Story 9, REQ-026-012g, REQ-026-028, REQ-026-029, and Entity 12. See [CR-FR026-20261013-01](./change-request-2026-10-13-analytics-configuration.md). | Product Owner / Documentation |
 | 2026-10-13 | 1.10 | FR-014 verification follow-up: added Quote Configuration (active ISO 4217 currency, default expiry hours) to the Screen 1 App Data setting groups; made the Analytics Configuration recalculation rule explicit (live views recalculate all displayed periods with the active version; generated exports never rewritten) in Screen 5e and REQ-026-029. Recorded in CR-FR026-20261013-01 | Claude Code |
+| 2026-10-15 | 1.11 | FR-015 v1.13 fifth verification resolution: added the centrally managed Provider Specialties App Data list (Settings → App Data → Provider Specialties) consumed by FR-015 / A-02 Screen 2 Step 2 and Screen 3 Tab 1. Specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other; add, rename, reorder, deactivate (no hard delete); at least one active value; deactivated values hidden from new selection but kept and displayed on existing providers; renames apply everywhere; audit-logged. Added Module Scope A-02 consumer, workflow A9, Screen 5f, editability rules, downstream consumer, seeding, REQ-026-012h, and Entity 7a. See [CR-FR026-20261015-01](./change-request-2026-10-15-provider-specialty-list.md). | Product Owner / Documentation |
 
 ---
 
@@ -1306,4 +1376,4 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-15
