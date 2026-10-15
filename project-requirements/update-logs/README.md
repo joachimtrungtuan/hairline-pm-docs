@@ -6,7 +6,23 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-10-15/ (1 file)
+### 2026-10-15/ (5 files)
+
+#### **FR-015 Seventh Verification Pass Fixes and FR-009 Change Request**
+
+- [FR015_SEVENTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_SEVENTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.15: global provider email identity rule owned by FR-009 (Owners, staff, pending invitations; Deactivated providers' emails freed; CR-FR009-20261015-02), FR-020 event names, Tab 6 upload modal fields, module IDs, read-only wording, file_size, FR-031 permission defaults; system data schema v1.6.0 global login-email rule (§3, §4)
+
+#### **FR-015 Sixth Verification Pass Fixes and FR-032, FR-020 Change Requests**
+
+- [FR015_SIXTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_SIXTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.14: FR-032 account closure becomes an admin-processed deactivation request (no Deleted status, new A7), mandatory FR-020 provider events (`provider.activation`, `provider.reactivated`, `provider.scheduled_change_cancelled`), seat requests via FR-034 support case, email uniqueness ignores Deactivated providers, provider-side view points to FR-032 Screen 4; FR-030 v1.10 catalog mirror and system data schema v1.5.0 (partial email unique index, new §40 closure requests); CR-FR032-20261015-02, CR-FR020-20261015-01, CR-FR030-20261015-01
+
+#### **FR-015 Fifth Verification Pass Fixes and FR-009, FR-017, FR-026 Change Requests**
+
+- [FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.13: limited-write Login as Provider kept, Tab 3 per-provider staff with Invite Staff Member, reactivation cancels pending scheduled change (Key Entity 4), Rule 9 points to FR-017, Specialty from FR-026 list, SC-010/SC-015/US3 fixes. FR-009 v1.4 (proposed) via CR-FR009-20261015-01 (Screen 12, limited-write impersonation, REQ-009-023 to 025). FR-017 v2.10 via CR-FR017-20261015-01 (late-capture flag, installment cancellation, payout hold, REQ-017-028/029). FR-026 v1.11 via CR-FR026-20261015-01 (Provider Specialties list, Screen 5f, REQ-026-012h). System data schema v1.4.0 (§38 pending status changes, §39 provider specialties, payment reconciliation flag)
+
+#### **FR-015 Fourth Verification Pass Fixes, FR-029 Change Request, and FR-032 Clarification**
+
+- [FR015_FOURTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_FOURTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.12: Tab 7 Scheduled Configuration (one pending, replaceable, cancellable), Tab 1 commission read-only, shared-scope split on Tab 7 edit, FR-011 standalone aftercare in suspension/deactivation impact, Resend Activation Email visibility. FR-029 v1.9 via CR-FR029-20261015-01 (one active scope per provider, REQ-029-048). FR-032 v1.7 Scheduled Configuration clarification. System data schema v1.3.0 (`provider_commissions` pending status and unique indexes)
 
 #### **FR-015 Third Verification Pass Fixes and FR-032 Alignment**
 
@@ -1106,6 +1122,10 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-10-15**: [FR015_SEVENTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_SEVENTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.14 → v1.15 seventh verification fixes; FR-009 v1.5 (proposed) global provider email identity rule (CR-FR009-20261015-02)
+- **2026-10-15**: [FR015_SIXTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_SIXTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.13 → v1.14 sixth verification pass fixes; FR-032 v1.7 → v1.8, FR-020 v2.4 → v2.5, FR-030 v1.9 → v1.10 via CR-FR032-20261015-02, CR-FR020-20261015-01, CR-FR030-20261015-01; FR-009 seat-request alignment; system data schema v1.5.0
+- **2026-10-15**: [FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.12 → v1.13 fifth verification pass fixes; FR-009 v1.4 (proposed), FR-017 v2.10, and FR-026 v1.11 through CR-FR009-20261015-01, CR-FR017-20261015-01, CR-FR026-20261015-01; system data schema v1.4.0
+- **2026-10-15**: [FR015_FOURTH_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_FOURTH_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.11 → v1.12 fourth verification pass fixes; FR-029 v1.8 → v1.9 through CR-FR029-20261015-01 (single-provider scope split, one pending scheduled configuration); FR-032 v1.7 clarification; system data schema v1.3.0
 - **2026-10-15**: [FR015_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.10 → v1.11 third verification pass fixes; FR-032 v1.5 → v1.6 through CR-FR032-20261015-01 (Commission & Payout panel, account-status banner)
 - **2026-10-14**: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md) - FR-015 v1.8 → v1.9 → v1.10 approved verification fixes (two passes; v1.10 adds Flat Rate currency, scheduled status changes, featured P2) with Change Requests CR-FR029/FR003/FR004/FR010/FR011/FR016/FR020-20261014-01 for the Flat Rate commission model and the suspension/deactivation cascade
 - **2026-10-14**: [FR014_VERIFICATION_FIXES_2026-10-14.md](2026-10-14/FR014_VERIFICATION_FIXES_2026-10-14.md) - FR-014 v3.11 → v3.12 approved verification fixes (Issues 1–9); system PRD FR-014 section synced. No Change Request; implementation reconciliation pending.
@@ -1300,4 +1320,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: October 15, 2026 (FR-015 v1.11 third verification pass fixes and FR-032 v1.6 via CR-FR032-20261015-01; FR-015 v1.10 second verification pass fixes and FR-017 v2.9 alignment; FR-015 v1.9 verification fixes and downstream cascade alignment across FR-003/004/005/006/010/011/016/020/029 with seven new CRs; FR-014 v3.12 fourth verification pass fixes and system PRD FR-014 sync; FR-014 v3.11 third verification pass with FR-003 v2.6, FR-030 v1.8, FR-020 v2.3; FR-007 v1.6 accepted-subquote payment context and FR-017 v2.7 billing clarification; FR-015 v1.8 provider lifecycle/subquote alignment; FR-014 v3.9–v3.10 verification fixes and CR-FR014-20261013-02, FR-026 v1.10 analytics configuration and recalculation rule, FR-030/FR-020 SLA-breach event, system PRD FR-014 sync, system data schema entities 35–37; retained FR-014 parent quote and accepted subquote analytics, FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
+**Last Updated**: October 15, 2026 (FR-015 v1.15 seventh verification pass fixes with FR-009 v1.5 (proposed) global provider email identity rule via CR-FR009-20261015-02 and system data schema v1.6.0; FR-015 v1.14 sixth verification pass fixes with FR-032 v1.8, FR-020 v2.5, and FR-030 v1.10 via three new CRs, system data schema v1.5.0; FR-015 v1.13 fifth verification pass fixes with FR-009 v1.4, FR-017 v2.10, and FR-026 v1.11 via three new CRs, system data schema v1.4.0; FR-015 v1.12 fourth verification pass fixes, FR-029 v1.9 via CR-FR029-20261015-01, and FR-032 v1.7 clarification, system data schema v1.3.0; FR-015 v1.11 third verification pass fixes and FR-032 v1.6 via CR-FR032-20261015-01; FR-015 v1.10 second verification pass fixes and FR-017 v2.9 alignment; FR-015 v1.9 verification fixes and downstream cascade alignment across FR-003/004/005/006/010/011/016/020/029 with seven new CRs; FR-014 v3.12 fourth verification pass fixes and system PRD FR-014 sync; FR-014 v3.11 third verification pass with FR-003 v2.6, FR-030 v1.8, FR-020 v2.3; FR-007 v1.6 accepted-subquote payment context and FR-017 v2.7 billing clarification; FR-015 v1.8 provider lifecycle/subquote alignment; FR-014 v3.9–v3.10 verification fixes and CR-FR014-20261013-02, FR-026 v1.10 analytics configuration and recalculation rule, FR-030/FR-020 SLA-breach event, system PRD FR-014 sync, system data schema entities 35–37; retained FR-014 parent quote and accepted subquote analytics, FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
