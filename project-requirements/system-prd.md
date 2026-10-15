@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-15
 
 ---
 
@@ -1022,7 +1022,7 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MUST display: inquiry count, quote count, quote acceptance rate, revenue, patient count
 - System MUST provide conversion funnel analytics using four stages: Inquiries → Quoted (first submitted parent quote) → Accepted (FR-005 parent acceptance) → Confirmed booking (FR-006)
 - System MUST show accepted-price metrics (average accepted parent-quote price and price distribution); quote estimates are not presented as clinical results
-- System MUST display review ratings and trends over time
+- System MUST display review ratings (average overall rating, benchmark comparison, and per-treatment sub-scores)
 - Providers MUST be able to export reports (PDF, CSV)
 - System MUST provide comparative benchmarks against an anonymised peer median (active providers with ≥30 inquiries in a rolling 12-month window, minimum 5 providers), colour-coded by direction (Green at or better than median, Amber up to 10% worse, Red more than 10% worse)
 - System MUST show provider commission as a percentage per completed payment or a flat rate once per completed procedure (FR-010 completion), matching FR-015
@@ -1040,8 +1040,8 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MUST provide pricing intelligence based on accepted parent-quote prices: average accepted price by treatment, accepted price range per treatment, accepted price by provider country, accepted selection count and share by accepted-price bracket (not an offered-price conversion rate), accepted price trend per treatment, and price outlier provider detection
 - System MUST anonymise providers in cross-provider benchmark views (providers cannot identify each other); admin views MUST retain provider identity for operational support
 - Admin-configurable parameters are owned by FR-026 Analytics Configuration (versioned): platform-wide TTFQ SLA target (default 120 minutes), engagement thresholds (At Risk 7 days, Dormant 30 days), price outlier threshold (30%), benchmark refresh frequency (Weekly), and target monthly commission reference line (unset by default; line hidden until set)
-- System MUST send providers an in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`, FR-020/FR-030) once per inquiry when no parent quote is submitted within the SLA target
-- System MUST log all analytics access (user ID, timestamp, screen, filters) with 12-month retention
+- System MUST send providers an in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`, FR-020/FR-030) once per distributed inquiry/provider pair when that provider has not submitted a parent quote within the SLA target from the inquiry's distribution to the provider
+- System MUST log all analytics access (user ID, timestamp, screen, filters) to the S-06 Audit Log Service as an immutable audit trail retained for 10 years, per the constitution
 
 ---
 
@@ -1059,15 +1059,16 @@ Each option is a package snapshot the patient can compare. Options share the par
 - Admins MUST be able to upload provider documents (licenses, insurance, certifications) for record-keeping; document authenticity verification is handled manually outside the system and MUST NOT block account activation.
 - Admins MUST be able to activate or deactivate provider accounts
 - Admins MUST be able to suspend providers for policy violations
-- System MUST set provider commission rate per provider using configurable Percentage or Flat Rate models (tier-based commission structures are out of scope for MVP and may be defined in a future FR).
-- Admins MUST be able to feature providers in patient-facing app
-- System MUST track provider status (draft, active, suspended, deactivated)
+- System MUST set provider commission rate per provider using configurable Percentage or Flat Rate models; a Flat Rate MUST record its currency (from the FR-029 enabled currency list). The Commission Start Date is the FR-029 Effective Date of the rate; later edits set their own Effective Date, and payout cycles follow the provider's Payout Frequency (tier-based commission structures are out of scope for MVP and may be defined in a future FR).
+- Admins MUST be able to mark providers as featured (flag and 10-provider cap are MVP); the patient-facing featured display is **P2 (Post-MVP)** and ships with FR-022 patient provider search
+- System MUST track provider status (active, suspended, deactivated); there is no draft status. Suspension or deactivation automatically cancels the provider's non-terminal cases for admin support, and reactivation of a suspended provider restores nothing (see FR-015)
+- Admins MUST be able to schedule a suspension or deactivation for a future Effective Date (at most one pending change per provider, shown as "Scheduled" and applied automatically on that date) and cancel it with a reason and password re-authentication before it takes effect
 
 **Admin Workflow**:
 
 1. Admin creates provider account (manual entry)
 2. Admin uploads provider credentials (licenses, certifications, insurance) for record-keeping
-3. Admin sets commission rate (Percentage or Flat Rate)
+3. Admin sets commission rate (Percentage, or Flat Rate with its currency), Commission Start Date, and Payout Frequency
 4. Admin activates provider account (activation is not blocked by document status; documents are assumed to have been pre-verified offline)
 5. Provider receives login credentials and can access platform
 

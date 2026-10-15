@@ -1,10 +1,10 @@
 # Hairline Platform - Technical Specification
 
-**Version**: 1.0.0  
+**Version**: 1.1.1  
 **Document Type**: System-Level Technical Specification  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-09-09
+**Last Updated**: 2026-10-14
 
 ---
 
@@ -152,6 +152,9 @@ Inquiry → Quote → Accepted → Confirmed → In Progress → Aftercare → C
 3. **Quote Expiration**: Configurable per admin settings (default 48 hours)
 4. **Quote Option Aggregate (FR-004 v2.2)**: The quote is the parent aggregate; the acceptance unit is one `quote_option_date_prices` row, not the quote itself. Until acceptance a quote has a price range rather than an amount, so quote-amount analytics MUST read the accepted option/date price only and MUST count an unaccepted quote in volume and conversion metrics only. Quote Options are never counted as separate provider responses.
 5. **Multiple Quotes per Inquiry**: One provider may submit several parent quotes for the same inquiry, each with an independent lifecycle, expiry, version, and audit history. `(inquiry_id, provider_id)` MUST NOT be treated as unique.
+6. **Provider-Status Cancellation Cascade (FR-015 v1.9)**: When a provider suspension or deactivation becomes effective, the system auto-cancels that provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases, including standalone aftercare. Each affected inquiry, booking, and aftercare record stores the cancellation cause (`ProviderSuspended` or `ProviderDeactivated`), the provider status event reference, its effective time, and the prior stage, and sets an independent boolean `supportRequired` marker (not a status). The affected quote moves to `cancelled_provider_status` (displayed "Cancelled (Provider Unavailable)") with the cause in `cancellationProvenance`. `supportRequired` is cleared only by an audited admin resolution (resolution reason, admin, timestamp). An earlier `ProviderSuspended` cause is never overwritten by a later deactivation, and reactivation restores nothing. Field-level storage: `system-data-schema.md` §5, §7, §13.
+7. **Provider Eligibility Revalidation**: Provider status MUST be `active` at inquiry allocation, quote submission, quote acceptance, and the booking-confirming payment; each step rejects a suspended or deactivated provider.
+8. **Commission Model (FR-029, FR-015)**: Provider commission is either Percentage (0-100%) of the booking total or Flat Rate (fixed amount > 0, in an enabled currency) deducted once per FR-010 completed procedure. The global default is percentage-only within 15-25%. At booking confirmation the booking snapshots commission model, value, and Flat Rate currency; payouts and analytics read that snapshot, never the provider's current settings.
 
 ### Payment Processing Architecture
 
@@ -209,6 +212,15 @@ $quote->addons()->attach([
 
 $quote->quote_amount = $quote->base_amount + $quote->addons->sum('amount');
 ```
+
+### Provider Lifecycle & Admin Controls (FR-015 v1.9)
+
+- **Status**: `active`, `suspended`, `deactivated` only; there is no `draft` provider status. Suspension and deactivation trigger the cancellation cascade above and automatically clear the `featured` flag.
+- **Creation fields**: `payout_frequency` (`weekly`, `twice_monthly`, `monthly`) is required at creation; `commission_start_date` is today or later; commission model and value per the Commission Model rule above. Clinic name is 3-200 characters and the contact email is unique.
+- **Provider documents**: `document_type` is one of `medical_license`, `board_certification`, `insurance`, `malpractice_insurance`, `business_license`, `other`; upload validation accepts PDF, JPG, PNG, DOCX, XLSX. Each document records `uploader_type` (`provider` or `admin`) and `uploader_id`; `notes` are admin-only; deletion is a soft delete.
+- **Retention**: data of a deactivated provider is retained for at least 7 years and then archived; provider records are never hard-deleted.
+- **Audit**: every admin edit of provider data requires a change reason stored in the audit log. Login as Provider sessions are audited (reason, admin re-authentication, 30-minute session timeout).
+- **Notification events (FR-020)**: `provider.suspended`, `provider.deactivated`, `provider.status_cancellation_patient` (affected patient), and `provider.status_cancellation_admin_support` (admin support queue for `supportRequired` cases).
 
 ---
 
@@ -588,7 +600,8 @@ class QuoteService
             'inquiry_id' => $inquiry->id,
             'provider_id' => $provider->id,
             'quote_amount' => $pricing['total'], // deprecated, compatibility only
-            'commission' => $pricing['commission'],
+            'commission' => $pricing['commission'], // legacy percentage-only field; the commission
+            // model/value/currency snapshot is captured at booking confirmation (FR-029)
             'status' => 'quote',
             ...
         ]);
@@ -2081,6 +2094,15 @@ Complete list maintained in: `.env.example`
 ### Third-Party Service Credentials
 
 Stored in secure secret management system (AWS Secrets Manager, HashiCorp Vault)
+
+---
+
+### Document Change Log
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.1.0 | 2026-10-14 | Vân Tay Media | Aligned with FR-015 v1.9 verification decisions and FR-029 flat-rate commission: provider-status cancellation cascade, `supportRequired` marker, eligibility revalidation, commission model snapshot, provider lifecycle and admin controls, FR-020 provider status notification events |
+| 1.1.1 | 2026-10-14 | Vân Tay Media | Provider commission settings stored in `provider_commissions` (schema §2B), flat model named `flat_rate` |
 
 ---
 

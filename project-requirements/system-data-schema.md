@@ -1,10 +1,10 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.0.0  
+**Version**: 1.2.0  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-14
 
 ---
 
@@ -136,14 +136,16 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique provider identifier |
 | user_id | UUID | FOREIGN KEY, NULLABLE | References users.id (owner account) |
-| provider_name | VARCHAR(255) | NOT NULL | Clinic/Hospital name |
-| email | VARCHAR(255) | NOT NULL | Primary contact email |
+| provider_name | VARCHAR(255) | NOT NULL | Clinic/Hospital name (FR-015 `clinic_name`, 3-200 characters) |
+| email | VARCHAR(255) | NOT NULL, UNIQUE | Primary contact email (FR-015 `contact_email`, unique across providers) |
 | phone_number | VARCHAR(255) | NULLABLE | Contact phone number |
 | profile_image | VARCHAR(255) | NULLABLE | S3 path to logo/image |
 | provider_bio | TEXT | NULLABLE | Provider description and credentials |
 | city | VARCHAR(255) | NOT NULL | City where provider is located |
 | country | VARCHAR(255) | NOT NULL | Country where provider is located |
-| status | VARCHAR(255) | DEFAULT 'active' | Provider account status (active, inactive, suspended) |
+| status | VARCHAR(255) | DEFAULT 'active' | Provider account status: `active`, `suspended`, `deactivated` only (FR-015 v1.9). There is no `draft` status; a provider is created directly as `active` |
+| featured | BOOLEAN | DEFAULT false | Featured-provider flag; cleared automatically when the provider becomes `suspended` or `deactivated` and never restored by reactivation |
+| payout_frequency | VARCHAR(255) | NOT NULL | Provider payout cadence: `weekly`, `twice_monthly`, `monthly`; required at creation (FR-015) |
 | timezone | VARCHAR(255) | NULLABLE | Provider's timezone (e.g., Europe/Istanbul) |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
@@ -152,7 +154,16 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Indexes**:
 
 - PRIMARY: `id`
+- UNIQUE: `email`
 - INDEX: `user_id`, `status`, `country`, `city`
+
+**Business Rules (FR-015 v1.9, FR-029)**:
+
+- Provider commission settings (model, value, Flat Rate currency, start date) are not stored on `providers`; they live in `provider_commissions` (§2B), which FR-015 Tab 7 and FR-029 Screen 5 read and write. `payout_frequency` stays on `providers`.
+- The commission model, value, and Flat Rate currency are snapshotted onto the booking at confirmation (see §7 Quotes); later provider edits never change a confirmed booking.
+- Every admin edit to provider data requires a change reason stored in the audit log (see Audit Trail).
+- Status change to `suspended` or `deactivated` triggers the provider-status cancellation cascade (see Provider-Status Cancellation Fields under §5 Inquiries) and clears `featured`. Reactivation restores nothing.
+- Retention: data of a `deactivated` provider is kept for at least 7 years and then archived; provider records are never hard-deleted.
 
 **Relationships**:
 
@@ -161,10 +172,87 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `hasMany` → `Quote`
 - `hasMany` → `Treatment`
 - `hasMany` → `ProviderDocument`
+- `hasMany` → `ProviderCommission`
 - `hasMany` → `ProviderAward`
 - `hasMany` → `ProviderLanguage`
 - `hasMany` → `ProviderMedia`
 - `hasMany` → `Review`
+
+---
+
+### 2A. Provider Documents
+
+**Table**: `provider_documents`  
+**Description**: Credential and compliance documents uploaded for a provider by the provider or by an admin (FR-015)
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique document identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| document_name | VARCHAR(255) | NOT NULL | Display name of the document |
+| document_type | VARCHAR(255) | NOT NULL | `medical_license`, `board_certification`, `insurance`, `malpractice_insurance`, `business_license`, `other` |
+| file_url | VARCHAR(500) | NOT NULL | S3 path to the stored file |
+| file_format | VARCHAR(10) | NOT NULL | Allowed formats: PDF, JPG, PNG, DOCX, XLSX |
+| uploader_type | VARCHAR(255) | NOT NULL | Who uploaded the document: `provider` or `admin` |
+| uploader_id | UUID | NOT NULL | References provider_users.id when `uploader_type` is `provider`, users.id when `admin` |
+| notes | TEXT | NULLABLE | Admin-only notes; never exposed to provider or patient views |
+| uploaded_at | TIMESTAMP | NOT NULL | Upload date |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+| deleted_at | TIMESTAMP | NULLABLE | Soft delete timestamp; documents are never hard-deleted |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `provider_id`, `document_type`, `deleted_at`
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+
+---
+
+### 2B. Provider Commissions
+
+**Table**: `provider_commissions`  
+**Description**: Commission rate configuration (FR-029 Entity 6). Holds the single active global default and provider-specific configurations; FR-015 Tab 7 and FR-029 Screen 5 manage the same provider-specific rows. Superseded rows are archived, which keeps the rate history
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique configuration identifier (FR-029 `config_id`) |
+| scope | VARCHAR(255) | NOT NULL | `global` or `provider_specific` |
+| provider_id | UUID | FOREIGN KEY, NULLABLE | References providers.id; NULL for `global`. An FR-029 multi-provider assignment writes one row per provider |
+| commission_model | VARCHAR(255) | NOT NULL, DEFAULT 'percentage' | `percentage` or `flat_rate`; `global` is always `percentage` |
+| commission_percentage | DECIMAL(5,2) | NULLABLE | Percentage model only: 0-100% for provider scope (0.1% precision), 15-25% for the global default; NULL for `flat_rate` |
+| flat_rate_amount | DECIMAL(10,2) | NULLABLE | `flat_rate` only: fixed amount > 0 deducted once per FR-010 completed procedure; NULL for `percentage` |
+| flat_rate_currency | VARCHAR(3) | NULLABLE | `flat_rate` only: an FR-029 enabled currency, defaulting to the system currency; NULL for `percentage` |
+| effective_date | DATE | NOT NULL | Date the terms take effect (FR-015 `commission_start_date`); today or later when set |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'active' | `active` or `archived` |
+| created_by_admin_id | UUID | FOREIGN KEY, NOT NULL | References users.id |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `scope`, `status`
+- INDEX: `provider_id`, `status`, `effective_date`
+
+**Business Rules (FR-015 v1.9, FR-029)**:
+
+- At most one `active` row per provider and exactly one `active` `global` row. An edit archives the current row and inserts a new one, with the admin change reason in the audit log.
+- A provider without an active provider-specific row uses the global default.
+- FR-015 `commission_value` maps to `commission_percentage` for `percentage` and to `flat_rate_amount` (with `flat_rate_currency`) for `flat_rate`.
+- The model, value, and currency in effect at booking confirmation are snapshotted onto the booking (see §7 Quotes); later rows never change a confirmed booking.
+
+**Relationships**:
+
+- `belongsTo` → `Provider` (NULL for global)
+- `belongsTo` → `User` (created_by_admin_id)
 
 ---
 
@@ -299,6 +387,15 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | lifestyle_factors | VARCHAR(255) | NULLABLE | Relevant lifestyle information |
 | additional_files | VARCHAR(255) | NULLABLE | Additional photos/documents |
 | additional_notes | VARCHAR(255) | NULLABLE | Extra notes from patient |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'requested' | Treatment case status: `requested`, `offers`, `accepted`, `scheduled`, `confirmed`, `in_progress`, `completed`, `cancelled` (separate from quote statuses; see §7 Case lifecycle note) |
+| cancellation_cause | VARCHAR(255) | NULLABLE | Set by the provider-status cascade: `ProviderSuspended` or `ProviderDeactivated` |
+| support_required | BOOLEAN | DEFAULT false | Independent `supportRequired` marker (not a status); cleared only by audited admin resolution |
+| provider_status_event_id | UUID | NULLABLE | Reference to the provider status-change event that cancelled the case |
+| provider_status_effective_at | TIMESTAMP | NULLABLE | Effective time of that provider status change |
+| prior_stage | VARCHAR(255) | NULLABLE | Case stage immediately before the cascade cancellation |
+| support_resolved_at | TIMESTAMP | NULLABLE | When an admin resolved the support marker |
+| support_resolved_by | UUID | FOREIGN KEY, NULLABLE | References users.id (resolving admin) |
+| support_resolution_reason | TEXT | NULLABLE | Mandatory admin resolution reason recorded when the marker is cleared |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -306,6 +403,14 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - PRIMARY: `id`
 - INDEX: `patient_id`, `created_at`
+- INDEX: `status`
+- INDEX: `support_required`, `cancellation_cause`
+
+**Provider-Status Cancellation Fields (FR-015 v1.9)**: When a provider suspension or deactivation becomes effective, the system auto-cancels that provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases (including standalone aftercare). The case moves to `cancelled` and stores the fields above; the same fields exist on `after_cares` (§13), and the cancelled quote stores the cause in `quotes.cancellation_provenance` (§7). Rules:
+
+- `support_required` is a boolean marker, not a status. It is cleared only by an admin resolution that records `support_resolution_reason`, `support_resolved_by`, and `support_resolved_at` in the audit trail.
+- A `ProviderSuspended` cause is never overwritten when the provider is later deactivated; reactivation restores no cancelled case.
+- Provider eligibility (status `active`) is revalidated at allocation, quote submission, quote acceptance, and booking-confirming payment.
 
 **Relationships**:
 
@@ -369,7 +474,10 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | package_id | UUID | FOREIGN KEY, NULLABLE | References packages.id. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_options.source_package_id`; retained until every consumer migrates |
 | treatment_date | JSON | NOT NULL | Proposed treatment dates. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_option_date_prices`; retained until every consumer migrates |
 | discount_id | UUID | FOREIGN KEY, NULLABLE | References discounts.id. **DEPRECATED (FR-004 v2.6)** — structured promotions are now attached through `quote_option_date_prices.promotion_id`; retained until every consumer migrates |
-| commission | INTEGER | NOT NULL | Platform commission percentage |
+| commission | INTEGER | NOT NULL | **Legacy** percentage-only commission value; MUST NOT be read as the commission rule. Superseded by the `commission_model` / `commission_value` / `commission_currency` snapshot below |
+| commission_model | VARCHAR(255) | NULLABLE | Booking commission snapshot captured at booking confirmation: `percentage` or `flat_rate` (FR-029) |
+| commission_value | DECIMAL(10,2) | NULLABLE | Snapshot value: percentage (0-100) for `percentage`, fixed amount (> 0, deducted once per FR-010 completed procedure) for `flat_rate` |
+| commission_currency | VARCHAR(3) | NULLABLE | Snapshot Flat Rate currency; NULL for `percentage` |
 | quote_amount | DECIMAL(10,2) | NOT NULL | Total quote amount. **DEPRECATED (FR-004 v2.2)** — a quote has a price range derived from `quote_option_date_prices` until acceptance, then the accepted option/date price; retained until every consumer migrates |
 | currency | VARCHAR(255) | NOT NULL | Currency code (USD, EUR, GBP, TRY, etc.), snapshotted from active system configuration; never provider input (FR-004 REQ-004-025) |
 | note | TEXT | NULLABLE | Additional notes from provider, shared by every quote option |
@@ -385,6 +493,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | appointment_pre_scheduled | BOOLEAN | DEFAULT false | Whether provider pre-scheduled appointment in quote |
 | sent_at | TIMESTAMP | NULLABLE | Set when status transitions from `inquiry` → `quote`; feeds TTFQ analytics (FR-014) |
 | accepted_at | TIMESTAMP | NULLABLE | Set when status transitions to `accepted`; feeds Quote→Payment aging analytics (FR-014) |
+| cancellation_provenance | JSON | NULLABLE | Set with `cancelled_provider_status`: cause (`ProviderSuspended` or `ProviderDeactivated`), provider status event reference, effective time, prior status |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -422,6 +531,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `accepted`: Patient accepted this quote, selecting one option and one date
 - `cancelled_other_accepted`: Auto-cancelled because the patient accepted a different quote for the same inquiry
 - `cancelled_inquiry_cancelled`: Auto-cancelled because the patient cancelled the underlying inquiry
+- `cancelled_provider_status`: Auto-cancelled because the provider was suspended or deactivated (display "Cancelled (Provider Unavailable)"); the cause is held in `cancellation_provenance`
 - `confirmed`: Deposit paid; retained as the FR-006 payment bridge, set after acceptance
 
 **Status Triggers**:
@@ -432,7 +542,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `sent` → `accepted`: Patient accepts one option and one date (sets `accepted_at`)
 - `sent` → `cancelled_other_accepted`: Patient accepts a sibling quote on the same inquiry
 - `sent` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry
-- `accepted` → `confirmed`: Patient completes the deposit payment (FR-006)
+- `accepted` → `confirmed`: Patient completes the deposit payment (FR-006); the commission snapshot is captured here
+- `accepted` or `confirmed` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective while the case is Accepted, Confirmed, In Progress, or Aftercare (FR-015 v1.9)
 - any terminal state → `archived`: Retention job or provider archive action
 
 **API Divergence (verified in source)**: the database column stores `sent`, while `Quote::getStatusAttribute()` maps it to `quote` on read and the matching mutator maps `quote` back to `sent` on write. Clients therefore see `quote` where the schema stores `sent`. Historical rows were converted by the `align_quote_statuses_with_prd` migration, which also split the legacy single `cancelled` value into `cancelled_other_accepted` and `cancelled_inquiry_cancelled`.
@@ -840,11 +951,19 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | aftercare_template_id | UUID | FOREIGN KEY, NOT NULL | References aftercare_milestone_templates.id |
 | recovery_stage | VARCHAR(255) | NOT NULL | Current recovery stage/milestone |
 | recovery_percentage | INTEGER | DEFAULT 0 | Overall recovery progress (0-100) |
-| status | VARCHAR(255) | DEFAULT 'active' | Aftercare status (active, completed, suspended) |
+| status | VARCHAR(255) | DEFAULT 'active' | Aftercare status (active, completed, suspended, cancelled) |
 | pricing_model | VARCHAR(255) | NULLABLE | For standalone: fixed, monthly_subscription |
 | total_price | DECIMAL(10,2) | NULLABLE | For standalone: total price |
 | currency | VARCHAR(3) | NULLABLE | For standalone: currency code |
 | duration_months | INTEGER | NULLABLE | For standalone: duration (6, 12 months) |
+| cancellation_cause | VARCHAR(255) | NULLABLE | Provider-status cascade cause: `ProviderSuspended` or `ProviderDeactivated` |
+| support_required | BOOLEAN | DEFAULT false | Independent `supportRequired` marker (not a status); cleared only by audited admin resolution |
+| provider_status_event_id | UUID | NULLABLE | Reference to the provider status-change event |
+| provider_status_effective_at | TIMESTAMP | NULLABLE | Effective time of that provider status change |
+| prior_stage | VARCHAR(255) | NULLABLE | Aftercare stage immediately before cancellation |
+| support_resolved_at | TIMESTAMP | NULLABLE | When an admin resolved the support marker |
+| support_resolved_by | UUID | FOREIGN KEY, NULLABLE | References users.id (resolving admin) |
+| support_resolution_reason | TEXT | NULLABLE | Mandatory admin resolution reason |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -852,6 +971,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - PRIMARY: `id`
 - INDEX: `quote_id`, `patient_id`, `provider_id`, `aftercare_type`, `status`
+- INDEX: `support_required`, `cancellation_cause`
 
 **Relationships**:
 
@@ -867,6 +987,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - `treatment_linked`: quote_id is NOT NULL (linked to treatment booking)
 - `standalone`: quote_id is NULL (purchased separately, assigned by admin)
+- Provider suspension or deactivation cancels both treatment-linked and standalone aftercare for that provider (`status` → `cancelled`) and sets the provider-status cancellation fields; rules as in §5 Inquiries
 
 ---
 
@@ -1161,6 +1282,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `belongsTo` → `Provider` (assigned provider)
 - `belongsTo` → `User` (admin who assigned)
 - `hasOne` → `AfterCare` (created when activated)
+
+**Note (FR-015 v1.9)**: Provider-status cancellation fields for standalone aftercare are stored on the activated `after_cares` row (§13), not on this request.
 
 ---
 
@@ -1761,6 +1884,9 @@ Status fields use **VARCHAR** (not native ENUM) for flexibility:
   - Quote status: `quote`, `accepted`, `rejected`, etc.
   - Payment status: `pending`, `completed`, `failed`, `refunded`
   - Affiliate status: `draft`, `active`, `inactive`, `suspended`
+  - Provider status: `active`, `suspended`, `deactivated` (no `draft`)
+  - Provider document type: `medical_license`, `board_certification`, `insurance`, `malpractice_insurance`, `business_license`, `other`
+  - Provider-status cancellation cause: `ProviderSuspended`, `ProviderDeactivated`
 
 ---
 
@@ -1796,6 +1922,9 @@ All critical entities maintain audit trail via:
 - `workflow_timelines` for state transitions
 - Model observers logging changes
 - Soft deletes (`deleted_at`) for recoverability
+- Admin edits of provider data require a change reason, stored with the audit entry (FR-015)
+- Login as Provider sessions are audited with the admin's reason, re-authentication, and a 30-minute session timeout (FR-015)
+- Provider status changes (suspension, deactivation, reactivation) and admin resolution of `support_required` markers are audited events
 
 ---
 
@@ -2366,6 +2495,13 @@ Schema version tracked via:
 - Migration files (timestamp-based)
 - `migrations` table records executed migrations
 - Git version control for schema changes
+
+### Document Change Log
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.1.0 | 2026-10-14 | Vân Tay Media | Aligned with FR-015 v1.9 verification decisions and FR-029 flat-rate commission: provider status without `draft`, payout and commission fields, `featured` auto-clear, retention rule; new §2A Provider Documents; provider-status cancellation fields on `inquiries` and `after_cares`; quote status `cancelled_provider_status` with `cancellation_provenance`; booking commission snapshot (model, value, currency); provider audit rules |
+| 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
 
 ---
 
