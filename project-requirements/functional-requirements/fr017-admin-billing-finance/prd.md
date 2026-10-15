@@ -267,6 +267,25 @@ flowchart TD
   B3S7C --> B3S8
 ```
 
+**B3: Payment Captured or Scheduled After Provider-Status Cancellation**
+
+- **Trigger**: FR-015 cancels a booking or selected case with cause `ProviderSuspended` / `ProviderDeactivated`, and either (a) FR-007 / S-02 reports a payment captured against it after the cancellation (for example, a delayed Stripe webhook), or (b) the booking still has unpaid scheduled installments
+- **Outcome**: Remaining installments are cancelled; any late capture is recorded as a real transaction and flagged for admin reconciliation without confirming a booking, reviving the case, or counting toward provider earnings, payout, or commission; admin resolves through the existing refund/adjustment workflow with reason and audit trail
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  B4S1["1. FR-015 provider-status event cancels the booking/case (cause ProviderSuspended or ProviderDeactivated, Admin Support Required)"] --> B4S2["2. System cancels all remaining unpaid scheduled installments for the booking; no further automatic charges or retries"]
+  B4S2 --> B4S3["3. Already-paid installments and deposits stay recorded on the booking invoice and appear for admin financial resolution (Rule 13)"]
+  B4S1 --> B4S4{"4. FR-007 / S-02 reports a capture after the cancellation?"}
+  B4S4 -->|"No"| B4S7
+  B4S4 -->|"Yes"| B4S5["5. System records the capture as a real transaction against the booking invoice (or the cancelled case/inquiry when no booking exists); booking stays cancelled and the case is not revived"]
+  B4S5 --> B4S6["6. System sets Reconciliation Flag &quot;Captured after provider cancellation&quot;, linking the case/inquiry and the FR-015 provider-status event; amount excluded from provider earnings, payout, and commission recognition"]
+  B4S6 --> B4S7["7. Booking amounts are held from provider payout statements until admin financial resolution"]
+  B4S7 --> B4S8["8. Admin reviews the flagged invoice (Screen 4 / 4a) and resolves via the existing refund or adjustment workflow (Screen 4b) with mandatory reason"]
+  B4S8 --> B4S9["9. System writes the audit entry and clears the flag; no new refund percentage, fee, or payout rail applies"]
+```
+
 ---
 
 ## Screen Specifications
@@ -541,6 +560,7 @@ flowchart TD
 | Currency | text | Yes | Accepted payment currency retained by the booking | Display: GBP, EUR, USD, etc.; read-only locked snapshot |
 | Payment Status | badge | Yes | "Pending", "Partial", "Paid", "Overdue", "Refunded", "At Risk" | Color-coded. "At Risk" = all installment retries exhausted, booking requires admin intervention |
 | Payment Method | text | Yes | Masked Stripe payment method | Display: "Visa ending in 1234", "Mastercard ending in 5678", or masked bank transfer reference |
+| Reconciliation Flag | badge | No | "Captured after provider cancellation" when a payment was captured after an FR-015 `ProviderSuspended` / `ProviderDeactivated` cancellation (Rule 14). Links to the case/inquiry and the FR-015 provider-status event | Admin-only; cleared when admin resolution is saved with reason and audit entry |
 | Installment Plan | badge | No | Installment progress with retry indicator (if applicable): "2/5 installments paid" or "2/5 — Retry 2/3 in progress" if a payment is currently in retry | Display format |
 | Actions | buttons | Yes | "View Details", "Send Reminder", "Process Refund", "Download Invoice", "Override Status" | Conditional |
 
@@ -584,7 +604,8 @@ flowchart TD
 
 **Notes**:
 
-- Implement advanced filtering: date range, payment status, currency, installment vs. full payment, patient name/ID
+- Implement advanced filtering: date range, payment status, currency, installment vs. full payment, patient name/ID, and Reconciliation Flag ("Captured after provider cancellation")
+- Invoices with a Reconciliation Flag are surfaced in a dedicated exceptions section alongside "At Risk" until resolved
 - Support bulk actions: "Send reminders to all overdue invoices", "Export selected invoices to CSV"
 - Display warning icon for installments with upcoming payment dates (within 7 days)
 - "At Risk" invoices surfaced at top of list in a dedicated section, similar to Overdue pattern in Screen 2
@@ -1159,6 +1180,9 @@ flowchart TD
 - **Rule 11**: Multi-currency bookings display amounts in patient's selected currency; providers receive payouts in their configured currency
 - **Rule 12**: Billing reads one accepted subquote's immutable commercial base through FR-006, not a parent range, sibling option/date rows, or live library/promotion prices. Existing FR-019 checkout redemptions and authorized finance interventions remain separate records; single-discount precedence, attribution, refund, commission, installment, and payout policies are unchanged.
 - **Rule 13**: Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. No refund, reversal, or rebooking is issued automatically and the Rule 7 graduated patient-cancellation tiers are not auto-applied. Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility
+- **Rule 14**: A payment captured after the booking or selected case was cancelled with cause `ProviderSuspended` / `ProviderDeactivated` (for example, a delayed processor webhook from FR-007 / S-02) MUST be recorded as a real transaction. It MUST NOT confirm a booking, revive the cancelled case, or count toward provider earnings, payout, or platform/affiliate commission recognition. The invoice is flagged "Captured after provider cancellation" with links to the case/inquiry and the FR-015 provider-status event, and admin resolves it through the existing refund/adjustment workflow (Screen 4b, mandatory reason, audit trail). No new refund percentage, fee, or payout rail is introduced
+- **Rule 15**: When a booking is cancelled by provider suspension or deactivation, all its remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Payment Rule 3 does not apply). Already-paid installments stay recorded and go to admin financial resolution under Rule 13
+- **Rule 16**: Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing "Add to Next Payout" resolution (Screen 7) subject to normal Rule 5 eligibility and Billing Rule 5 approval; payout timing is otherwise unchanged
 
 ### Data & Privacy Rules
 
@@ -1289,7 +1313,7 @@ flowchart TD
 
 - **FR-007 / Module S-02: Payment Processing Service**
   - **Why needed**: All payment transactions processed via Stripe integration
-  - **Integration point**: S-02 handles Stripe API calls, webhook processing, and payment retry logic; A-05 consumes transaction events
+  - **Integration point**: S-02 handles Stripe API calls, webhook processing, and payment retry logic; A-05 consumes transaction events. S-02 still executes captures and charges; A-05 classifies captures that arrive after an FR-015 provider-status cancellation (Rule 14) and stops scheduling remaining installments on such bookings (Rule 15)
 
 - **FR-010 / Module PR-03: Treatment Execution & Documentation**
   - **Why needed**: Treatment completion status triggers provider payout eligibility
@@ -1298,6 +1322,7 @@ flowchart TD
 - **FR-015 / Module A-02: Provider Management & Onboarding**
   - **Why needed**: Provider-specific commission settings and payout frequency are configurable in the admin-managed provider profile
   - **Integration point**: A-02 provides the single-provider commission-management surface plus payout frequency; A-05 reads those values as part of the effective commission configuration resolved for a provider
+  - **Provider-status cancellations**: FR-015 Rule 9 requires payments captured after suspension/deactivation to stay recorded and reach admin financial reconciliation. A-05 owns that reconciliation (Rules 13 to 16, Workflow B3): late captures are flagged and excluded from earnings, payout, and commission; remaining installments are cancelled; amounts are held from payout statements until admin resolution
 
 - **FR-019 / Module A-06: Discount & Promotion Management**
   - **Why needed**: Discount codes created in A-06 affect invoice amounts and commission calculations
@@ -1710,6 +1735,8 @@ A patient requests refund due to cancellation, admin reviews request against can
   - FR-017 does not issue any refund automatically; captured deposits, installments, or payments captured while the cascade was running stay recorded on the booking invoice and appear for admin financial resolution
   - Admin decides any refund through Screen 4b with mandatory reason and audit trail; the cancelled booking is excluded from provider payout calculation, and statements are not generated while the provider is Suspended or Deactivated
   - A procedure already recorded as completed under FR-010 is not erased by the cancellation; resolution of its payout stays with admin financial resolution
+  - Remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Rule 15)
+  - If a payment is captured after the cancellation (e.g., delayed webhook), it is recorded, flagged "Captured after provider cancellation", does not confirm a booking or revive the case, and is excluded from provider earnings, payout, and commission until admin resolves it (Rule 14, Workflow B3)
 
 - **How does system handle** partial refund (patient cancels add-on packages but keeps base treatment)?
   - Patient booked treatment (£2,000) + hotel package (£500) + PRP add-on (£200), total £2,700
@@ -1760,13 +1787,15 @@ A patient requests refund due to cancellation, admin reviews request against can
 - **REQ-017-025**: System MUST use idempotent Stripe API calls (unique idempotency keys per transaction) to prevent duplicate charges/transfers
 - **REQ-017-026**: System MUST process Stripe webhook events asynchronously via job queue (Redis Queue or AWS SQS)
 - **REQ-017-027**: System MUST provide read-only API for Provider Platform to query payout history and earnings analytics
+- **REQ-017-028**: System MUST record a payment captured after an FR-015 `ProviderSuspended` / `ProviderDeactivated` cancellation as a real transaction, MUST NOT confirm a booking or revive the case from it, MUST exclude it from provider earnings, payout, and commission recognition, and MUST flag it "Captured after provider cancellation" with links to the case/inquiry and the provider-status event until admin resolves it through the existing refund/adjustment workflow with reason and audit entry
+- **REQ-017-029**: System MUST cancel all remaining unpaid scheduled installments when a booking is cancelled by provider suspension or deactivation, keep already-paid installments recorded for admin financial resolution, and hold the booking's amounts from provider payout statements until that resolution is recorded
 
 ---
 
 ## Key Entities
 
 - **Entity 1 - Patient Invoice**
-  - **Key attributes**: invoice_id, patient_id, booking_id, invoice_date, due_date, total_amount, adjusted_total_after_refund, amount_paid, outstanding_balance, currency, payment_status (Pending, Partial, Paid, Overdue, Refunded, At Risk), payment_method, installment_plan_id (if applicable), discount_code_applied, status_override_reason, status_override_by_admin_id, status_override_at
+  - **Key attributes**: invoice_id, patient_id, booking_id, invoice_date, due_date, total_amount, adjusted_total_after_refund, amount_paid, outstanding_balance, currency, payment_status (Pending, Partial, Paid, Overdue, Refunded, At Risk), payment_method, installment_plan_id (if applicable), discount_code_applied, status_override_reason, status_override_by_admin_id, status_override_at, reconciliation_flag (None, Captured after provider cancellation), provider_status_event_id (if flagged)
   - **Relationships**: One invoice per booking; one patient can have many invoices; one invoice can have many installment payments
   - **Commercial source**: Through `booking_id`, resolve the FR-006 acceptance snapshot, AcceptanceEvent, accepted parent/subquote IDs and equal aggregate versions, package/service and option/date-price provenance, and locked currency/rates. Existing recorded FR-019 applications and finance adjustments remain separate; no new quote entity or option-level invoice fan-out.
 
@@ -1775,7 +1804,7 @@ A patient requests refund due to cancellation, admin reviews request against can
   - **Relationships**: One payout includes many completed bookings; one provider has many payouts over time
 
 - **Entity 3 - Installment Payment**
-  - **Key attributes**: installment_id, invoice_id, installment_number, installment_amount, scheduled_date, payment_status (Pending, Paid, Failed), retry_count, next_retry_date, paid_date, stripe_payment_intent_id
+  - **Key attributes**: installment_id, invoice_id, installment_number, installment_amount, scheduled_date, payment_status (Pending, Paid, Failed, Cancelled — set for remaining installments when the booking is cancelled by provider suspension or deactivation), retry_count, next_retry_date, paid_date, stripe_payment_intent_id
   - **Relationships**: One invoice can have many installments (2-9); one installment linked to one invoice
 
 - **Entity 4 - Discount Code**
@@ -1821,6 +1850,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-10-13 | 2.7 | Clarified existing booking-based billing against Meeting 2's accepted-subquote handoff: invoice amounts/itemization and currency use FR-006's accepted snapshot plus recorded FR-019 applications; one invoice record remains per booking across later payments; acceptance provenance resolves through Booking Reference. Corrected acceptance/invoice dependency ownership and exchange-rate test timing; added snapshot-stability/no-option-fan-out scenarios. No new financial policy, controls, or entities; normal clarification log only. Documentation approved; consolidated verification and implementation reconciliation pending. | Product Owner / Documentation |
 | 2026-10-14 | 2.8 | FR-015 v1.9 / FR-029 v1.8 alignment: removed percentage-only provider commission wording (payout flow, payout detail, booking lookup, User Story 1) so payouts use each booking's confirmation-time commission snapshot (Percentage, or Flat Rate amount + currency deducted once per FR-010 completed procedure); Commission Rule 1 and partial-refund edge case cover both models; payout-frequency labels standardized to Weekly / 2x a Month / Monthly (removed bi-weekly) and commission start date referenced for payout-cycle tracking; added Rule 13 and an edge case for provider suspension/deactivation cancellations (no automatic refunds, captured payments routed to admin financial resolution, cancelled bookings excluded from payout, no restoration on reactivation). See [update log](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md) | Vân Tay Media |
 | 2026-10-14 | 2.9 | FR-015 v1.10 alignment: clarified that the provider's commission start date is the FR-029 commission Effective Date for newly confirmed bookings and that payout statement timing follows payout frequency only | Vân Tay Media |
+| 2026-10-15 | 2.10 | FR-015 v1.13 Rule 9 reconciliation ownership (Product Owner decision, FR-015 fifth verification pass): added Workflow B3 and Rules 14 to 16 so a payment captured after a `ProviderSuspended` / `ProviderDeactivated` cancellation is recorded, flagged "Captured after provider cancellation", does not confirm a booking or revive the case, and is excluded from provider earnings, payout, and commission until admin resolves it through the existing refund/adjustment workflow; remaining scheduled installments are cancelled; amounts are held from payout statements until admin resolution. Added Screen 4 Reconciliation Flag field and filter, Entity 1/3 attributes, FR-007 and FR-015 dependency notes, edge-case bullets, and REQ-017-028/029. No new refund percentage, fee, or payout rail. See [Change Request](change-request-2026-10-15-post-suspension-payment-reconciliation.md) and [update log](../../update-logs/2026-10-15/FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md) | Vân Tay Media |
 
 ---
 
@@ -1832,6 +1862,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | Technical Lead |  | 2026-04-02 | ✅ Approved |
 | Finance Lead |  | 2026-04-02 | ✅ Approved |
 | Product Owner — v2.7 documentation clarification | Joachim Trung Tuan | 2026-10-13 | Approved to complete remaining Meeting 2 quote-model work; prior approvals remain historical, with consolidated verification and implementation reconciliation pending for this revision. |
+| Product Owner — v2.10 post-suspension payment reconciliation | Joachim Trung Tuan | 2026-10-15 | Approved (CR-FR017-20261015-01); implementation reconciliation required. |
 
 ---
 
