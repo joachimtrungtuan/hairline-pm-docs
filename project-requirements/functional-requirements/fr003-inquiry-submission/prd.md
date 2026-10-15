@@ -6,6 +6,7 @@
 **Status**: 🟡 Revised — Pending Consolidated Verification  
 **Source**: FR-003 from system-prd.md  
 **Change Request**: [CR-FR003-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
+**Change Request**: [CR-FR003-20261015-01 — Distribution requires a set password](change-request-2026-10-15-distribution-requires-password-set.md)
 
 ## Executive Summary
 
@@ -194,7 +195,7 @@ flowchart TD
 
     Identify --> Exclusive{"FR-037 monitoring conversion with exclusive<br/>assigned provider?"}
     Exclusive -->|Yes| ExclusiveRoute["Route only to the assigned provider;<br/>skip country/selection matching and the 10-provider cap"]
-    Exclusive -->|No| Match["Match providers by selected countries + explicit selections"]
+    Exclusive -->|No| Match["Match eligible providers (Active, password set) by selected countries + explicit selections"]
     Match --> Cap{"Matched providers &gt; 10?"}
     Cap -->|Yes| Select10["Select up to 10 providers (ensure explicitly selected providers included; remaining per matching rules)"]
     Cap -->|No| Matched["Use matched provider list"]
@@ -1048,6 +1049,7 @@ flowchart TD
 
 6. **Provider Status Cancellation Rules** (FR-015 Alternative Flow A5 and Screen 4)
    - A provider's effective `Suspended` or `Deactivated` status blocks new inquiry allocation to that provider; in-flight requests or callbacks MUST NOT revive cancelled participation.
+   - An `Active` provider that has not yet set its password (FR-015 `password_set = false`) is not eligible for allocation, explicit patient selection, or reassignment. It becomes eligible once the password is set; inquiries distributed before then are not re-sent to it.
    - An inquiry whose accepted treatment belongs to the affected provider is cancelled with cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true`.
    - An inquiry still comparing providers keeps its stage; only the affected provider's ProviderInquiry participation and quotes are cancelled, the inquiry is flagged `supportRequired = true`, and other providers' offers stay available.
    - `supportRequired` is an independent marker, not a lifecycle stage. Clearing it requires an audited admin resolution.
@@ -1224,7 +1226,7 @@ flowchart TD
 - **REQ-003-012**: System MUST allow patients to cancel their own inquiry in Inquiry, Quoted, or Accepted stages with a required cancellation reason; cancellation is immediate and irreversible.
 - **REQ-003-013**: System MUST auto-cancel all associated quotes when an inquiry is cancelled by the patient, with distinct cancellation status "Cancelled (Inquiry Cancelled)" and provider notifications via FR-020.
 - **REQ-003-014**: System MUST release any active appointment slot hold (FR-005/FR-006 48-hour hold) immediately when an Accepted-stage inquiry is cancelled by the patient.
-- **REQ-003-019**: System MUST revalidate provider status at allocation, exclusive routing, and reassignment, and MUST NOT allocate inquiries to a `Suspended` or `Deactivated` provider from the effective time, including through in-flight jobs or retries.
+- **REQ-003-019**: System MUST revalidate provider status at allocation, exclusive routing, and reassignment, and MUST NOT allocate inquiries to a `Suspended` or `Deactivated` provider from the effective time, including through in-flight jobs or retries, or to an `Active` provider whose FR-015 `password_set` is false.
 - **REQ-003-020**: When a provider becomes `Suspended` or `Deactivated`, System MUST cancel each inquiry whose accepted treatment belongs to that provider with cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true`; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Patients MUST receive the provider-caused message with Contact Admin/Support, not the patient-cancellation message (FR-015 A5/Screen 4).
 
 ### Marking Unclear Requirements
@@ -1436,6 +1438,7 @@ Acceptance Scenarios:
 | 2026-09-04 | 2.5 | Verification correction: aligned Workflow 1's service-selection step with the Admin-managed treatment-area catalog rather than a fixed Hair/Beard/Both enum. | Product Owner |
 | 2026-10-14 | 2.6 | Cross-FR sync (FR-014 verification): ProviderInquiry now names its persisted table `inquiry_providers` and defines the per-provider `distributed_at` timestamp (set on first distribution to that provider, including release after an exclusive-provider decline; never overwritten by retries) consumed by FR-014 TTFQ and response rate and the FR-020/FR-030 TTFQ SLA alert | AI Assistant |
 | 2026-10-14 | 2.7 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: Workflow 2 Alternative Flow B4, Distribution and Cancellation Rules notes, new Rule 6, Screen 8 provider-caused messaging, REQ-003-019/020, Inquiry and ProviderInquiry cause/marker notes, FR-015 dependency, and edge cases. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
+| 2026-10-15 | 2.8 | FR-015 v1.16 alignment: providers with `password_set = false` are excluded from allocation, explicit selection, and reassignment until the password is set (Workflow 2 matching, Rule 6, REQ-003-019). See [Change Request](./change-request-2026-10-15-distribution-requires-password-set.md) | Claude |
 
 ## Appendix: Approvals
 
