@@ -5,6 +5,7 @@
 **Created**: 2025-11-17
 **Status**: ✅ Verified & Approved
 **Source**: FR-032 from system-prd.md
+**Change Request**: [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — Commission & Payout panel and provider account-status banner
 
 ---
 
@@ -1163,6 +1164,16 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Routing/SWIFT Code | text | Yes | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing |
 | IBAN | text | Conditional (if applicable) | International Bank Account Number | Format validated per country (e.g., Turkey = 26 chars) |
 
+**Commission & Payout (Read-Only Panel)**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Commission Model | display | N/A | "Percentage" or "Flat Rate" | Retrieved from FR-015 Tab 7 (FR-029 provider-specific commission configuration); read-only |
+| Commission Value | display | N/A | e.g., "15%" or "£200 per completed procedure" | Retrieved from FR-015 Tab 7; Flat Rate shown with its Flat Rate Currency; read-only |
+| Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only |
+| Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only |
+| Payout Frequency | display | N/A | "Weekly" (Mon–Sun), "2x a Month" (1st–15th, 16th–last day), or "Monthly" (calendar month) | Retrieved from FR-015 Tab 7; read-only |
+
 **Business Rules**:
 
 - Billing settings accessible ONLY to Owner role (per FR-009 role permissions)
@@ -1173,6 +1184,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Bank account changes logged in audit trail (Owner user, timestamp, action)
 - Email confirmation sent to Owner after bank account details updated
 - Bank account details used by FR-017 billing workflow for provider payouts
+- **Commission & Payout panel**: Read-only; values are set by admins in FR-015 Tab 7 and synchronized with FR-029. Providers cannot edit them and must contact support to discuss changes. The panel notes that existing confirmed bookings keep the commission snapshot taken at their confirmation (FR-029)
 - If bank account validation fails, display error message from S-02 and prevent saving
 
 **Notes**:
@@ -1633,6 +1645,10 @@ Each message in the thread displays:
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
+- **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015.
+  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, and billing are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins.
+  - **Deactivated**: Login is disabled for the Owner and all team members. A login attempt shows "This account has been deactivated. Contact support@hairlineapp.com for assistance." and no session is created.
+  - **Reactivated**: The banner is removed on the next page load and normal editing returns; nothing cancelled by the suspension is restored (FR-015 Screen 5).
 
 ### Data & Privacy Rules
 
@@ -1713,6 +1729,10 @@ Each message in the thread displays:
 ## Dependencies
 
 ### Internal Dependencies (Other FRs/Modules)
+
+- **FR-015: Provider Management (Admin-Initiated) / Module A-02**: Commission display and account status
+  - **Why needed**: Admins set commission, payout frequency, and provider status in FR-015
+  - **Integration point**: Screen 4 Commission & Payout panel reads FR-015 Tab 7 values (FR-029 configuration); Rule 6 reads provider status and the latest suspension reason from FR-015 Screens 4-5
 
 - **FR-020 / S-03: Notification Service**: Notification preferences integration
   - **Why needed**: Provider notification preferences must be enforced when S-03 sends notifications (quote alerts, schedule reminders, review notifications)
@@ -2020,6 +2040,8 @@ A provider closing their clinic permanently requests account deletion, and admin
 - **REQ-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
 - **REQ-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
 - **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
+- **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout frequency sourced from FR-015 Tab 7 / FR-029
+- **REQ-032-030**: System MUST apply Rule 6: show a persistent Account Suspended banner with the admin reason to all provider users while suspended, restrict editing to the listed exceptions, and block login with a deactivation message once deactivated
 
 ---
 
@@ -2065,6 +2087,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 | 2026-01-26 | 1.3 | **Added two-way communication for support cases with screen structure improvements:** Split support case functionality into 3 dedicated screens for clarity: **Screen 5.7 (My Support Cases List)** with filters, search, quick stats, and merged table column specifications into Data Fields (consistent with other PRDs); **Screen 5.8 (Support Case Detail View)** with complete case information, communication thread, reply interface, timeline, and export capability; **Screen 5.9 (Reopen Case Request Modal)** for reopening closed cases with reason tracking; Renumbered Screen 5.8 (Service Status) to Screen 5.10; Providers can now view all submitted cases (support requests + feedback) in unified list, view case details with full communication thread, reply to admin messages with attachments, track status and feedback resolution, request case reopening, and export cases as PDF/CSV; Added Quick Stats Bar showing Open, In Progress, Resolved, and Unread Messages counts; Added comprehensive filtering (status, type, date range), real-time search, and unread message indicators; Added new business workflow "View and Reply to Support Cases" with 3 alternative flows (reopen closed case, filter/search cases, receive admin reply notification); Added User Story 6 (View and Reply to Support Cases) with 4 comprehensive acceptance scenarios; Renumbered User Story 6 (Request Account Deletion) to User Story 7; Updated Multi-Tenant Breakdown to document two-way communication capability; Updated FR-034 integration point to clarify communication architecture and notification events (support.case_admin_reply, support.case_user_reply); Updated Help Centre category navigation to include "My Support Cases" link; All changes ensure providers have same two-way communication experience as patients (FR-035) for support cases managed in FR-034 unified ticketing system | AI/Claude |
 | 2026-01-26 | 1.4 | **Removed Case export functionality:** Removed Export Case Button from Screen 5.8 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 5.7 (My Support Cases List); Removed all export-related business rules and constraints; Removed export steps from Business Workflow A2 and User Story 6 acceptance scenario 4; Case export feature was accidentally included and is now removed from both provider-facing (FR-032) and admin-facing (FR-034) specifications | AI/Claude |
 | 2026-05-14 | 1.5 | **Aligned Reviews tab scope with FR-013:** Removed read-only / future-enhancement designation for provider responses. Tab 5 (Reviews) is now "Read/Respond" — review content remains read-only but providers can post public responses via the FR-013 Screen 6 inline response composer. Updated: module scope bullet (line ~54), Tab 5 Purpose, Tab 5 Business Rules, General Business Rule 5, Entity 7 name and description. Resolves scope conflict identified in FR-013 verification. | Verification alignment (2026-05-14) |
+| 2026-10-15 | 1.6 | FR-015 v1.11 alignment via [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md): added read-only Commission & Payout panel to Screen 4 (Owner only); added Rule 6 provider account-status banner (Suspended banner with admin reason and view-only restrictions, Deactivated login block, Reactivated removal); added REQ-032-029 and REQ-032-030 and an FR-015 internal dependency | Claude |
 
 ---
 
@@ -2081,4 +2104,4 @@ A provider closing their clinic permanently requests account deletion, and admin
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2025-12-03
+**Last Updated**: 2026-10-15
