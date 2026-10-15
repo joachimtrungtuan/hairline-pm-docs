@@ -3,8 +3,9 @@
 **Module**: S-03: Notification Service
 **Feature Branch**: `fr020-notifications-alerts`
 **Created**: 2025-11-11
-**Status**: ✅ Verified & Approved
-**Source**: FR-020 from local-docs/project-requirements/system-prd.md; Transcriptions (patient/admin/provider references)
+**Status**: 🟡 Revised — Pending Consolidated Verification
+**Source**: FR-020 from local-docs/project-requirements/system-prd.md; Transcriptions (patient/admin/provider references); FR-015 v1.9 provider-status cancellation cascade
+**Change Request**: [CR-FR020-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ---
 
@@ -94,9 +95,13 @@ In Scope:
 | Reviews | Takedown Request Decided | `review.takedown_decided` | Patient | Notifies patient of admin approve/reject decision on their takedown request |
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
 | Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
+| Provider/Compliance | Provider-Caused Cancellation / Offer Unavailable | `provider.status_cancellation_patient` | Patient | FR-015 Alternative Flow A5 / Screen 4. One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. **Mandatory** (cannot be disabled in FR-030 rules); sent regardless of FR-015's "Notify Provider" checkbox. MVP channels: Email + Push + in-app (global patient toggles still apply to Email/Push; in-app record always created) |
+| Provider/Compliance | Provider-Caused Cancellation — Admin Support Required | `provider.status_cancellation_admin_support` | Admin | Same trigger. Mandatory admin-support alert per affected inquiry/case with patient, inquiry/case reference, prior stage, cause, and FR-016 deep link (Admin Support Required filter). Sent regardless of "Notify Provider"; pinned as critical in the admin dropdown. No FR-034 ticket is auto-created |
+| Provider/Compliance | Provider Suspended / Deactivated | `provider.suspended` / `provider.deactivated` | Provider | FR-015 Screen 4. Sent only when "Notify Provider" is checked (default). Email with action taken, admin-provided reason, effective date (if scheduled), and admin support contact. Unaffected by provider FR-032 category preferences (account notice) |
 | Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
 | System/Operations | System Escalation | `system.escalation` | Admin | Operational escalation events requiring admin action |
 | System/Operations | System Alert | `system.alert` | Admin | System health/monitoring alerts surfaced via notifications |
+| System/Operations | Analytics Export Ready | `analytics.export_ready` | Provider | FR-014 REQ-014-062/063. A one-off or scheduled provider analytics export (PDF or CSV) has finished generating. Sent to the provider's registered email and each selected recipient; email carries the PDF attachment where applicable plus a secure download link that expires after 48 hours; in-app notification links to Report History. Default channels: email + in-app |
 
 - Channels: email, push; SMS is an optional/configurable channel for urgent events in the target architecture but is **not available in MVP** (no SMS notifications are sent until a later phase explicitly enables this capability).
 - User preferences (MVP):
@@ -277,6 +282,7 @@ Notification policy, throttling, and delivery monitoring UI live in `FR-030: Not
 - **Patient Preferences**: Global Email/Push toggles available to patients in MVP (managed in FR-001: Patient Authentication & Profile Management, Settings → Notifications); category preferences deferred to V2.
 - **Provider Preferences**: Providers can choose which notification types to receive (quote notifications, schedule notifications, treatment start notifications, aftercare notifications, review notifications, promotion/discount notifications) via notification preferences settings (managed in FR-032: Provider Dashboard Settings & Profile Management, Settings → Notifications section).
 - **Admin Notifications**: Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020).
+- **Provider-Status Cancellation Notifications (FR-015 A5)**: `provider.status_cancellation_patient` and `provider.status_cancellation_admin_support` are mandatory and independent of FR-015's "Notify Provider" checkbox. Delivery failures retry per Flow B2 without duplicates: de-duplicate on provider-status event + affected record + recipient, and never restore cancelled records. Patient content uses provider-caused wording, a Contact Admin/Support action, no payment instruction, and no confidential suspension/deactivation reason. SMS remains future.
 - **FR-005 Quote Outcome Privacy**: `quote.accepted` carries an explicit outcome code and recipient scope. Payload rendering MUST use an allowlist per recipient; non-selected providers MUST NOT receive the selected provider identity, accepted price, or another provider's quote/subquote identifiers.
 - One notification record per attempt with channel, provider, status, and timestamp.
 - Throttling and suppression policies are transparent in audit logs.
@@ -307,6 +313,8 @@ Configurable with Restrictions:
 - **FR-012**: Messaging (message received events).
 - **FR-005**: Quote Comparison & Acceptance (accepted subquote, sibling Not Selected, and competing-parent cancellation outcome/privacy contract).
 - **FR-026**: App Settings & Security Policies (OTP email templates for verification and password reset).
+- **FR-015**: Provider Management (provider suspension/deactivation cascade, Alternative Flow A5 / Screen 4, "Notify Provider" option).
+- **FR-016**: Admin Patient Management (Admin Support Required filter and resolution target of the admin-support alert).
 - **FR-030**: Notification Rules & Configuration (notification template management, template editor, notification rule configuration).
 - **FR-032**: Provider Dashboard Settings & Profile Management (PR-06; provider notification preferences UI).
 - **FR-037**/**FR-038**: Monitor Your Hair Loss / Monitor Your Transplant Progress (monitoring assignment, advice, withdrawal, reassignment, completion, export, and conversion events).
@@ -385,6 +393,19 @@ Acceptance Scenarios:
 3. Given provider has disabled quote notifications in FR-032 preferences, when inquiry is cancelled, then `quote.cancelled_inquiry` notification is suppressed for that provider and suppression is logged in audit.
 4. Given patient has disabled push notifications (email only), when inquiry is cancelled, then patient receives `inquiry.cancelled` via email only; push is suppressed per preference.
 
+### User Story 5 – Provider-caused cancellation notifications (P1)
+
+Why: FR-015 provider suspension/deactivation cancels patient cases/offers through no patient action; patients must be directed to admins and admins alerted for special support.
+
+Independent Test: Suspend a provider with "Notify Provider" unchecked while it holds one confirmed case and one offer on a shared inquiry; force one email failure.
+
+Acceptance Scenarios:
+
+1. Given the cascade completes, when notifications dispatch, then each affected patient receives one `provider.status_cancellation_patient` per affected record with its reference and Contact Admin/Support action, no "you cancelled" wording, no payment instruction, and no suspension reason.
+2. Given the same event, then admins receive one `provider.status_cancellation_admin_support` per affected record linking to FR-016, and no provider email is sent because "Notify Provider" is unchecked.
+3. Given an email attempt fails and retries succeed, then the patient receives exactly one notification per channel for that status event + record, and the cancelled record is not restored.
+4. Given "Notify Provider" is checked, then the provider receives `provider.suspended` email with action, reason, effective date, and support contact.
+
 ---
 
 ## Functional Requirements Summary
@@ -402,6 +423,8 @@ Acceptance Scenarios:
 - REQ-020-010: System MUST provide notification dropdown in admin dashboard header with infinite scroll (loads 20 notifications per batch, no separate listing screen).
 - REQ-020-011: System MUST send notifications to admins for any enabled FR-030 event types where Admin is a primary or optional recipient (per rule configuration).
 - REQ-020-012: System MUST route FR-005 acceptance outcomes through `quote.accepted` with an explicit outcome code and recipient-scoped payload. Non-selected providers MUST receive only their own outcome context and MUST NOT receive the selected provider identity or accepted price; `quote.declined` MUST NOT represent FR-005 system-generated sibling or competing-parent outcomes.
+- REQ-020-013: System MUST send mandatory `provider.status_cancellation_patient` and `provider.status_cancellation_admin_support` notifications for each record affected by an FR-015 provider suspension/deactivation, regardless of the "Notify Provider" checkbox, with privacy-safe patient content (no patient-cancelled wording, no payment instruction, no confidential reason).
+- REQ-020-014: System MUST retry failed provider-status notifications without duplicates per provider-status event + affected record + recipient, and MUST send `provider.suspended` / `provider.deactivated` email to the provider only when "Notify Provider" is checked.
 
 ---
 
@@ -432,6 +455,8 @@ Acceptance Scenarios:
 | 2026-08-20 | 2.0     | Added Monitoring category (8 `monitoring.*` events: assignment_pending, provider_assigned, provider_withdrawn, provider_reassigned, advice_posted, completed, export_ready, converted) to the event catalog and FR-037/FR-038 as dependencies, mirroring FR-030's source-of-truth catalog. See [Change Request](./change-request-2026-08-20-fr037-monitoring-events.md) | Verification alignment (2026-08-20) |
 | 2026-09-16 | 2.1     | Extended the existing `quote.accepted` event with FR-005 recipient-scoped outcome codes and privacy allowlists; reserved `quote.declined` for explicit decline flows so sibling Not Selected and competing-parent cancellation remain distinct. Aligned with FR-030 v1.6. | Product Owner / Verification alignment |
 | 2026-10-13 | 2.2     | Mirrored FR-030 catalog entry `inquiry.ttfq_sla_breached` (Inquiry, Provider) for the FR-014 TTFQ SLA-breach alert (REQ-014-113); in-app default | Claude Code |
+| 2026-10-14 | 2.3     | Mirrored FR-030 catalog entry `analytics.export_ready` (System/Operations, Provider) for FR-014 Screen 6 export delivery | AI Assistant |
+| 2026-10-14 | 2.4     | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-cascade.md) | Vân Tay Media |
 
 ---
 
@@ -448,4 +473,4 @@ Acceptance Scenarios:
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-14
