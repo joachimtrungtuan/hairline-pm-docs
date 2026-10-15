@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-06
 **Decision Date**: 2026-10-07
-**PRD Version Change**: v3.6 to v3.7; amended 2026-10-13 for v3.7 to v3.8 (Qualified stage removal)
+**PRD Version Change**: v3.6 to v3.7; amended 2026-10-13 for v3.7 to v3.8 (Qualified stage removal) and again for v3.9 to v3.10 (TTFQ distribution clock; Inquiry Queue badge)
 **Related Commit(s)**: Pending — no commit requested for this change
 
 ---
@@ -19,6 +19,8 @@ FR-014 now distinguishes parent provider responses, package/date-price Subquotes
 The Product Owner approved replacing offered-price-bracket conversion with accepted-price distribution and allowing formula/metric-label-only corrections to the locked cockpit. Screen 1 layout, sections, widget count, chart types, filters, and responsive behavior remain locked. This request approves documentation, not implementation readiness or consolidated FR verification.
 
 **Amendment 2026-10-13 (v3.8)**: During FR-014 verification, the Product Owner approved removing the Qualified funnel stage. FR-003 and the data schema have no canonical spam flag or qualification state, so the stage could not be computed without inventing data. The provider and platform funnels become Inquiries → Quoted → Accepted → Confirmed booking, and the conversion-trend charts drop the Qualified % line. This is the only structural change to the locked cockpit: Screen 1 sections, widget count, chart types, filters, and responsive layout remain unchanged. The other v3.8 fixes (flat-rate commission per completed procedure, FR-010 No-show source, FR-026 analytics settings ownership) are recorded in the PRD change log and do not amend this request.
+
+**Amendment 2 — 2026-10-13 (v3.10)**: A second verify-fr pass found two Screen 1 defects that needed locked-screen changes. (1) TTFQ was measured from `inquiry.created_at`, while the FR-020/FR-030 SLA-breach alert starts at distribution to the provider. FR-003 can distribute an inquiry later (after an exclusive-provider decline), which inflated those providers' TTFQ and let the tier disagree with the alert. The Product Owner approved measuring TTFQ from `inquiry_providers.distributed_at`. (2) The Inquiry Queue's `Needs Info` and `Awaiting Price` badges had no source state in FR-003 or FR-004. The Product Owner approved keeping only the `New` badge, defined as distributed to the provider with no submitted parent quote. Columns, pagination, sections, widget count, chart types, filters, and responsive layout are unchanged.
 
 ## Baseline State
 
@@ -51,6 +53,8 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 | Financial joins | No explicit protection against hierarchy fan-out | Owning financial records counted once before read-only accepted-selection joins | Avoid multiplying revenue, refunds, deductions, or payouts |
 | Reporting data and exports | Flat quote IDs and mixed aggregate fields | FR-005/FR-006 provenance, separate grains, equal accepted versions, immutable accepted-price observation, consistent PDF/CSV/scheduled definitions | Make dashboards and exports auditable against the exact patient selection |
 | Screen 1 lock | Entire screen specification frozen | Product Owner metric-only exception for TTFQ, funnel and aging; layout and presentation structure still locked | Correct changed contracts while preserving the accepted cockpit design |
+| TTFQ clock (amendment 2, 2026-10-13) | `Parent Quote.sent_at − inquiry.created_at` | `Parent Quote.sent_at − inquiry_providers.distributed_at`; pairs without a distribution timestamp have no observation; applies to Screen 1 Tile 2/B2, Screen 2 Widget 5, benchmarks, Screen 7/8 TTFQ, Counting & Time Basis, and REQ-014-037 | Align with the SLA-breach alert clock and avoid penalising late-distributed providers |
+| Inquiry Queue badges (amendment 2, 2026-10-13) | `New` / `Needs Info` / `Awaiting Price`, sorted by badge priority | `New` only (distributed, no parent quote submitted); `New` rows first, then received time | Two badges had no source state in FR-003/FR-004 |
 | Funnel stages (amendment 2026-10-13) | Inquiries → Qualified → Quoted → Accepted → Confirmed booking; trend lines include Qualified % | Inquiries → Quoted → Accepted → Confirmed booking; trend lines Quoted % · Accepted % · Confirmed booking %; applies to Screen 1 B1/B4, Screen 7 B1, Screen 9 trend, REQ-014-001, and Entity 1 | FR-003 and the schema have no canonical spam or qualification data; Product Owner approved a further Screen 1 lock exception limited to this stage removal |
 
 ## Scope and Impact
@@ -62,6 +66,7 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 - Formula/metric-label-only cockpit exception; existing screen/widget structure and numerical sample/hold policies remain unchanged.
 - FR-local Change Request, source-register incorporation note, and required update-log traceability.
 - Amendment 2026-10-13: removal of the Qualified funnel stage from provider and platform funnels, trend lines, counting rules, FR-003 dependency, requirements, and Entity 1.
+- Amendment 2 (2026-10-13): TTFQ distribution clock and Inquiry Queue badge reduction on the locked Screen 1, plus downstream TTFQ uses.
 
 ### Out of Scope
 
@@ -95,14 +100,15 @@ The updated PRD owns the full metric definitions. Stable parent identities drive
 - Accepted-price brackets show distributions, not artificial 100% conversion; scatter text is descriptive, and outlier samples count accepted selections.
 - Financial amounts remain owning-record totals, unaffected by alternative counts. Screens, benchmarks, drill-downs, and exports use the same metric contract.
 - Provider and platform funnels show four stages with no Qualified stage or Qualified % line; inquiry-stage aggregates carry no qualified count; Screen 1 section and widget counts are unchanged.
+- A provider first distributed an inquiry four hours after creation and responding one hour later records a 60-minute TTFQ, and the TTFQ tier agrees with whether an SLA-breach alert fired. The Inquiry Queue shows only the `New` badge.
 - Documentation checks cover links, requirement IDs, Markdown tables, preserved cockpit structure, and the PRD/CR/source-register/update-log chain. Live/backend reconciliation tests are still required before Implementation Reconciliation can become Verified.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner, Joachim Trung Tuan.
-- **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-07; documentation delta only. Amendment approved by Product Owner, Joachim Trung Tuan, 2026-10-13 (verify-fr Issue 2, option to remove the Qualified stage everywhere including the locked Screen 1).
+- **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-07; documentation delta only. Amendment approved by Product Owner, Joachim Trung Tuan, 2026-10-13 (verify-fr Issue 2, option to remove the Qualified stage everywhere including the locked Screen 1). Amendment 2 approved by Product Owner, Joachim Trung Tuan, 2026-10-13 (second verify-fr pass: Issue 1 option 3, Issue 2 option 1).
 - **Decision evidence**: [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md), MTG-002-D03–D06 and O01 with Product Owner refinements; FR-004 REQ-004-030; FR-005 REQ-005-020; FR-006 General Module Rules / Payment & Billing Rules / Booking entity. The Product Owner's approval was "Please update as per your suggestions," accepting the FR-014 proposal, accepted-price-bracket replacement, and metric-only cockpit exception.
-- **PRD change log**: [FR-014 Appendix: Change Log](prd.md#appendix-change-log), v3.7 row dated 2026-10-07 and v3.8 row dated 2026-10-13.
+- **PRD change log**: [FR-014 Appendix: Change Log](prd.md#appendix-change-log), v3.7 row dated 2026-10-07 and v3.8 and v3.10 rows dated 2026-10-13.
 - **Update log**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](../../update-logs/2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md); amendment in [FR014_VERIFICATION_FIXES_2026-10-13.md](../../update-logs/2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md).
 - **Supersedes**: None as a Change Request; explicitly revised v3.6 analytics definitions are superseded by v3.7.
 - **Superseded by**: None.
