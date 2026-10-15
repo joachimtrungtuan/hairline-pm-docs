@@ -3,8 +3,9 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Status**: ✅ Verified & Approved
+**Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
+**Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](change-request-2026-10-14-provider-flat-rate-commission.md)
 
 ---
 
@@ -59,7 +60,7 @@ The module delivers value by:
 - Admins configure currency conversion rate sources (e.g., xe.com API integration)
 - Admins set currency conversion markup percentages (e.g., 5-10%) to protect against rate fluctuations
 - Admins configure deposit rate percentage (20-30%) globally or per provider
-- Admins configure commission settings: a platform global default rate (15-25%) plus provider-specific commission scopes for selected providers; FR-015 exposes the same provider-specific commission data inside the provider profile for single-provider management
+- Admins configure commission settings: a platform global default percentage (15-25%) plus provider-specific commission scopes for selected providers using either the Percentage model (0-100%) or the Flat Rate model (fixed amount > 0 per completed procedure); FR-015 exposes the same provider-specific commission data inside the provider profile for single-provider management
 - Admins define split payment options (2-9 installments) and cutoff rules (e.g., 30 days before procedure)
 - Admins monitor payment configuration health and receive alerts for rate protection thresholds
 - Admins audit configuration change history for compliance
@@ -185,16 +186,16 @@ The module delivers value by:
 4. Admin clicks "Save Setting" for the global default
 5. System validates the global commission percentage is within allowed range (15-25%) and stores it with effective date = now
 6. Admin may click "Add new provider scope" or edit an existing provider-specific commission scope
-7. System displays a provider-scope modal with Selected Providers, Provider Commission Rate, Effective Date, and a preview calculation
+7. System displays a provider-scope modal with Selected Providers, Commission Model (Percentage / Flat Rate; default Percentage), Provider Commission Value, Flat Rate Currency (Flat Rate only), Effective Date, and a preview calculation
 8. Admin searches for and selects one or more providers
-9. Admin enters the provider-specific commission rate and effective date
-10. System validates selected providers are active and the commission percentage is within allowed range (15-25%)
+9. Admin selects the commission model, enters the provider-specific commission value (and currency for Flat Rate), and sets the effective date
+10. System validates selected providers are active and the commission value matches the selected model: Percentage 0-100% (0.1% precision); Flat Rate amount > 0 in an enabled currency
 11. Admin confirms the add or edit action
 12. System stores the provider-specific commission scope with provider IDs and effective date
 13. System propagates updated commission configuration to Payment Processing Service with cache TTL of 5 minutes
 14. System displays confirmation message: "Commission settings updated. New bookings will use the new effective commission configuration."
 15. System logs each global-default or provider-scope change to audit trail with admin ID, timestamp, scope, and before/after state
-16. If the affected provider is opened in FR-015, the Commission & Financials tab reflects the updated provider-specific commission value
+16. If the affected provider is opened in FR-015, the Commission & Financials tab reflects the updated provider-specific commission model and value
 
 ### Main Flow: Configure Split Payment (Installment) Plans
 
@@ -652,25 +653,30 @@ The module delivers value by:
 | Global Commission Rate | number | Yes | Default commission percentage applied platform-wide when no provider-specific commission configuration exists for a provider | Range: 15-25%, decimal precision: 0.1% |
 | Global Last Updated | display-only | N/A | Shows when the global default was last changed | Auto-populated timestamp |
 | Selected Providers | async multi-select / chips | Yes | Provider list covered by a provider-specific commission scope | Minimum 1 active provider |
-| Provider Commission Rate | number | Yes | Provider-specific commission percentage for the selected provider scope | Range: 15-25%, decimal precision: 0.1% |
+| Commission Model | radio | Yes | Provider-specific commission model for the selected provider scope: "Percentage" or "Flat Rate" (same models as FR-015 Tab 7) | Default: Percentage |
+| Provider Commission Value | number | Yes | Percentage model: commission percentage of the booking total. Flat Rate model: fixed amount deducted once per completed procedure | Percentage: 0-100%, decimal precision: 0.1%. Flat Rate: amount > 0, precision per the currency's minor units (Screen 6) |
+| Flat Rate Currency | select | Conditional | Currency of the Flat Rate amount; shown only when Commission Model = Flat Rate | Required for Flat Rate; must be an enabled currency from Screen 6; defaults to the system default currency |
 | Effective Date | date | Yes | Date when the provider-specific scope becomes active for new bookings | Today or future date |
 | Scope Status | badge | Yes | State of the provider-specific commission scope | Active / Archived |
 | Actions | menu | Yes | Scope-level actions | Edit, Archive |
 
 **Business Rules**:
 
-- Commission rate changes apply to new bookings only (existing bookings retain the commission rate snapshot used at booking confirmation)
+- Commission changes apply to new bookings only (existing bookings retain the commission model and value snapshot captured at FR-006 booking confirmation)
 - Provider-specific commission scopes take precedence over the global default at booking confirmation
 - FR-029 Screen 5 is the central commission-settings screen; FR-015 / A-02 Tab 7 remains a synchronized single-provider edit surface for the same provider-specific commission data
-- Changes made in FR-015 to a provider-specific commission value MUST be reflected in Screen 5 for that provider, and changes made in Screen 5 MUST be reflected in FR-015
+- Changes made in FR-015 to a provider-specific commission model or value MUST be reflected in Screen 5 for that provider, and changes made in Screen 5 MUST be reflected in FR-015
 - A provider-specific commission scope may cover one or multiple providers and may be archived when no longer needed
-- System calculates commission amount by multiplying booking total by commission rate percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
+- The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only
+- **Percentage model** (global default or provider scope): commission amount = booking total × snapshotted commission percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
+- **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment
+- Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling
 - Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
-- All commission rate changes must be logged to audit trail with before/after state
+- All commission configuration changes (model, value, currency, providers, effective date, status) must be logged to audit trail with before/after state
 
 **Notes**:
 
-- Display preview calculation: "For $2,000 booking, 20% commission = $400"
+- Display preview calculation per model: Percentage — "For $2,000 booking, 20% commission = $400"; Flat Rate — "$200 per completed procedure, regardless of booking total"
 - Provide "Add new provider scope", "Edit", and "Archive" actions matching the admin commission-screen design
 - Use FR-029 for global and bulk provider-scope updates; use FR-015 when the admin is already working inside a single provider profile alongside payout frequency
 
@@ -738,7 +744,8 @@ The module delivers value by:
 - Currency pairs (add/edit/delete; per-pair rate mode, source assignment, manual base rate, markup % override, sync frequency override)
 - Global currency conversion defaults (global markup %, global sync frequency, rate protection threshold)
 - Deposit rate percentage (20-30% range) globally or per provider
-- Commission rate percentage (15-25% range) globally or per provider
+- Commission global default percentage (15-25% range)
+- Provider-specific commission model and value: Percentage (0-100%) or Flat Rate (fixed amount > 0 per completed procedure, in an enabled currency)
 - Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
 - Late payment grace period for split payments (0-14 days)
 - Rate protection alert threshold (global) for currency conversion monitoring
@@ -774,7 +781,7 @@ The module delivers value by:
 - **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
 - **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at time of quote acceptance and stored per quote/booking/transaction; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after quote acceptance)
-- **Commission Rule**: Commission rate MUST be determined (global or provider-specific) at booking confirmation and stored per booking/transaction for payout and reconciliation consistency
+- **Commission Rule**: The effective commission configuration (global default or provider-specific) MUST be resolved at FR-006 booking confirmation and its model (Percentage or Flat Rate), value, and currency (Flat Rate) stored per booking/transaction for payout and reconciliation consistency; a Flat Rate snapshot is deducted once at the FR-010 completed-procedure milestone, not per package, Subquote, or installment
 - **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
 
 ---
@@ -1131,10 +1138,10 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
 - **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
-- **REQ-029-043**: System MUST allow admins to configure both the platform commission global default and provider-specific commission scopes (allowed range 15-25%) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
-- **REQ-029-043b**: System MUST keep provider-specific commission values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
+- **REQ-029-043**: System MUST allow admins to configure both the platform commission global default (percentage only, allowed range 15-25%) and provider-specific commission scopes (Percentage model 0-100% or Flat Rate model with a fixed amount > 0 per completed procedure) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
+- **REQ-029-043b**: System MUST keep provider-specific commission models and values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
 - **REQ-029-044**: System MUST lock currency conversion rates (including markup) at quote acceptance and store them per quote/booking/transaction (no rate fluctuation after quote acceptance)
-- **REQ-029-045**: System MUST snapshot commission rate at booking confirmation and store it per booking/transaction for payout and reconciliation consistency
+- **REQ-029-045**: System MUST snapshot the effective commission model and value (and Flat Rate currency) at booking confirmation and store it per booking/transaction for payout and reconciliation consistency; Flat Rate snapshots are deducted once per completed procedure
 
 ### Data Requirements
 
@@ -1167,6 +1174,7 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-040**: System MUST prevent deletion of Stripe accounts with transactions in last 90 days (archive instead)
 - **REQ-029-041**: System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)
 - **REQ-029-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
+- **REQ-029-047**: System MUST validate commission values by model: global default and provider Percentage within allowed ranges (15-25% global, 0-100% provider) and provider Flat Rate amount greater than 0 with an enabled currency, displaying an error and rejecting the save otherwise (client-side and server-side)
 
 ---
 
@@ -1201,8 +1209,8 @@ As a platform administrator managing international payments, I need to receive t
   - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
 
 - **Entity 6 - Commission Rate Configuration**:
-  - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_percentage, effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
-  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission rate snapshot captured at booking confirmation
+  - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_model (percentage/flat_rate; global is always percentage), commission_percentage (nullable when flat_rate), flat_rate_amount (nullable when percentage), flat_rate_currency (nullable when percentage), effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
+  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission model/value snapshot captured at booking confirmation
 
 ---
 
@@ -1218,6 +1226,7 @@ As a platform administrator managing international payments, I need to receive t
 | 2026-04-02 | 1.5 | Ownership split alignment with FR-015 and FR-017: FR-029 now defines the global platform commission default and booking-time snapshot behavior only; provider-specific commission overrides remain in FR-015, while FR-017 consumes the effective commission snapshot for payout and reconciliation flows | Codex |
 | 2026-04-02 | 1.6 | Currency default alignment: documented Screen 6 as the source of truth for FR-017 Screen 1 reporting-currency initialization and recorded USD as the MVP seed value for the system default currency | Codex |
 | 2026-04-02 | 1.7 | Restored the implemented Commission Rate design: FR-029 Screen 5 now manages both the global commission default and provider-specific commission scopes, FR-015 remains the synchronized single-provider commission edit surface, and downstream booking/payout dependencies were updated to consume the shared effective commission configuration model | Codex |
+| 2026-10-14 | 1.8 | Provider-specific commission alignment with FR-015 (CR-FR029-20261014-01): Screen 5 provider scopes now support Commission Model Percentage (0-100%, 0.1% precision) or Flat Rate (fixed amount > 0 in an enabled currency, deducted once per FR-010 completed procedure, not per package/Subquote/installment); global default remains percentage-only at 15-25%. Updated Main Flow, Module Scope, Screen 5 fields/rules/preview, Admin Editability Rules, Commission Rule, REQ-029-043/043b/045, new REQ-029-047, and Entity 6 so the booking-confirmation snapshot captures model and value. Status set to revised pending consolidated verification; implementation reconciliation required. | Vân Tay Media |
 
 ---
 
@@ -1234,4 +1243,4 @@ As a platform administrator managing international payments, I need to receive t
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-04-02
+**Last Updated**: 2026-10-14
