@@ -6,7 +6,27 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-10-13/ (2 files)
+### 2026-10-15/ (1 file)
+
+#### **FR-015 Third Verification Pass Fixes and FR-032 Alignment**
+
+- [FR015_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.11: Last Activity Date defined, Status Count Tiles, grouped commission sort, FR-031 permissions (A-09), immediate Effective Date, Flat Rate Currency in Rule 2, server-side filtering. FR-032 v1.6 via CR-FR032-20261015-01: read-only Commission & Payout panel in Screen 4 and Rule 6 account-status banner. Implementation reconciliation pending.
+
+### 2026-10-14/ (2 files)
+
+#### **FR-015 Verification Fixes and Downstream Cascade Alignment**
+
+- [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md) - FR-015 v1.9: Draft removed, Screen 5 reactivation, wizard fields (Contact Email, Payout Frequency, Commission Start Date), deactivation cascade, `provider_commissions` table, `flat_rate` naming, `inquiries.status` equals suspension, admin edit reason, Login as Provider controls, FR-032 document rules, dependency fixes. New CRs beside FR-003, FR-004, FR-010, FR-011, FR-016, FR-020, FR-029; FR-005/FR-006 change-log alignment; follow-ups: FR-030 v1.9 (CR), FR-017 v2.8, standalone aftercare in scope, system PRD status line, system data schema and technical spec v1.1.0. Second pass FR-015 v1.10: Flat Rate currency, Screen 4 admin password, Commission Start Date as FR-029 Effective Date, featured display P2, Documents Status column removed, scheduled suspension/deactivation (REQ-015-028), affiliate note; FR-017 v2.9. Implementation reconciliation pending.
+
+#### **FR-014 Fourth Verification Pass Fixes**
+
+- [FR014_VERIFICATION_FIXES_2026-10-14.md](2026-10-14/FR014_VERIFICATION_FIXES_2026-10-14.md) - FR-014 v3.12: refund source of truth (no double-counted refunds), Screen 7 time-range basis, Screen 1 cross-filter with "View list" drill-down (layout unchanged), widget-scoped exports, S-06 10-year immutable access audit, FR-003 masked-name Rule 11, FR-009/FR-016 dependencies, date alignment; system PRD FR-014 sync. No Change Request; implementation reconciliation pending.
+
+### 2026-10-13/ (3 files)
+
+#### **FR-007 Accepted Subquote Payment and FR-017 Billing Alignment**
+
+- [FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md](2026-10-13/FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md) - FR-007 v1.6 and CR-FR007-20261013-01: accepted commercial snapshot, locked currency/provenance, and original payment-hold guards; FR-017 v2.7 clarifies existing booking-based invoices. Payment economics and suspension follow-ups unchanged; implementation reconciliation and consolidated verification pending.
 
 #### **FR-015 Provider Lifecycle and Accepted Subquote Alignment**
 
@@ -14,7 +34,7 @@ This folder contains documentation update reports and verification logs for the 
 
 #### **FR-014 Verification Fixes and FR-026 Analytics Configuration**
 
-- [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9, FR-026 v1.9–v1.10, FR-030 v1.7, FR-020 v2.2, system PRD sync: flat-rate commission recognised once per completed procedure (FR-015), Qualified funnel stage removed (CR-FR014-20261007-01 amended, further Screen 1 lock exception), FR-010 `No-show` closure reason as the no-show source, and new FR-026 Analytics Configuration (SLA 120 min default, commission target hidden until set) via CR-FR026-20261013-01. Implementation reconciliation pending.
+- [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.11, FR-026 v1.9–v1.10, FR-030 v1.7–v1.8, FR-020 v2.2–v2.3, FR-003 v2.6, system PRD sync: flat-rate commission recognised once per completed procedure (FR-015), Qualified funnel stage removed (CR-FR014-20261007-01 amended, further Screen 1 lock exception), FR-010 `No-show` closure reason as the no-show source, and new FR-026 Analytics Configuration (SLA 120 min default, commission target hidden until set) via CR-FR026-20261013-01. Implementation reconciliation pending. v3.10: TTFQ from distribution and `New`-only queue badge (CR-FR014-20261007-01 amendment 2), GMV excludes refund rows, provider-scoped returning patients, FR-007B installment labels, Report History UI and accessibility rules (new CR-FR014-20261013-02). v3.11 (applied 2026-10-14): booking commission snapshot, FR-018 affiliate attribution entity, Screen 11 sub-scores need a provider filter, Voided payouts hidden, FR-003 `distributed_at` defined, new `analytics.export_ready` event, Rule 15F role-by-screen matrix, age widget removed, net income tile, Implementation Notes and SC-014–SC-016.
 
 ### 2026-10-07/ (1 file)
 
@@ -943,8 +963,11 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Documentation Updates
 
+- **2026-10-14**: [FR014_VERIFICATION_FIXES_2026-10-14.md](2026-10-14/FR014_VERIFICATION_FIXES_2026-10-14.md) - FR-014 v3.12 fourth verification pass: refund source of truth, Screen 7 period basis, Screen 1 View list drill-down, widget-scoped exports, S-06 audit retention, Rule 11 masking, FR-009/FR-016 dependencies; system PRD ratings and audit lines synced.
+- **2026-10-13**: [FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md](2026-10-13/FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md) - Remaining Meeting 02 payment/billing consumer alignment: FR-007 accepted snapshot/hold contract plus narrow FR-017 invoice clarification, with existing checkout discounts preserved.
+
 - **2026-10-13**: [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md) - FR-015 v1.8 lifecycle/subquote alignment: automatic suspension cancellation, special admin support, booking-time commission snapshots, and accurate completed-procedure counting; documentation approval only.
-- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9 verification fixes (flat-rate per completed procedure, Qualified stage removed, FR-010 No-show source, Shared Benchmark Rule, accrual net revenue, recurring exports, SLA-breach alert) and FR-026 v1.9–v1.10 Analytics Configuration ownership and recalculation rule
+- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.11 verification fixes (v3.11: booking commission snapshot, affiliate attribution entity, Rule 15F role matrix, `analytics.export_ready` event; flat-rate per completed procedure, Qualified stage removed, FR-010 No-show source, Shared Benchmark Rule, accrual net revenue, recurring exports, SLA-breach alert) and FR-026 v1.9–v1.10 Analytics Configuration ownership and recalculation rule
 - **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - Reconciled analytics, reporting provenance, and exports with Meeting 02's approved parent/subquote model through CR-FR014-20261007-01 while preserving the cockpit layout.
 
 - **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed FR-031 v1.1 and FR-009 v1.3 global custom provider role contracts with Owner safeguards; approval and implementation reconciliation pending.
@@ -1083,8 +1106,13 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Functional Requirements
 
+- **2026-10-15**: [FR015_VERIFICATION_FIXES_2026-10-15.md](2026-10-15/FR015_VERIFICATION_FIXES_2026-10-15.md) - FR-015 v1.10 → v1.11 third verification pass fixes; FR-032 v1.5 → v1.6 through CR-FR032-20261015-01 (Commission & Payout panel, account-status banner)
+- **2026-10-14**: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md) - FR-015 v1.8 → v1.9 → v1.10 approved verification fixes (two passes; v1.10 adds Flat Rate currency, scheduled status changes, featured P2) with Change Requests CR-FR029/FR003/FR004/FR010/FR011/FR016/FR020-20261014-01 for the Flat Rate commission model and the suspension/deactivation cascade
+- **2026-10-14**: [FR014_VERIFICATION_FIXES_2026-10-14.md](2026-10-14/FR014_VERIFICATION_FIXES_2026-10-14.md) - FR-014 v3.11 → v3.12 approved verification fixes (Issues 1–9); system PRD FR-014 section synced. No Change Request; implementation reconciliation pending.
+- **2026-10-13**: [FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md](2026-10-13/FR007_ACCEPTED_SUBQUOTE_PAYMENT_BILLING_ALIGNMENT_2026-10-13.md) - FR-007 v1.5 → v1.6 through approved CR-FR007-20261013-01; FR-017 v2.6 → v2.7 normal clarification only. Documentation approval is separate from implementation reconciliation and consolidated verification.
+
 - **2026-10-13**: [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md) - FR-015 v1.7 → v1.8 through approved CR-FR015-20261013-01; provider lifecycle/support and accepted-selection/commission/counting handoffs, with related-FR and implementation reconciliation still required.
-- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.9 and FR-026 v1.9–v1.10 approved verification fixes; CR-FR014-20261007-01 amended and CR-FR026-20261013-01 created and amended; `inquiry.ttfq_sla_breached` added to FR-030/FR-020
+- **2026-10-13**: [FR014_VERIFICATION_FIXES_2026-10-13.md](2026-10-13/FR014_VERIFICATION_FIXES_2026-10-13.md) - FR-014 v3.8–v3.10 and FR-026 v1.9–v1.10 approved verification fixes; CR-FR014-20261007-01 amended and CR-FR026-20261013-01 created and amended; `inquiry.ttfq_sla_breached` added to FR-030/FR-020. v3.11 adds `analytics.export_ready` to FR-030 v1.8/FR-020 v2.3 and defines `inquiry_providers.distributed_at` in FR-003 v2.6. v3.10 adds CR-FR014-20261013-02 (Report History UI, accessibility rules).
 - **2026-10-07**: [FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md](2026-10-07/FR014_PARENT_QUOTE_SUBQUOTE_ANALYTICS_2026-10-07.md) - FR-014 v3.7 documentation-approved definitions; accepted-price distribution replaces price-bracket conversion, with implementation reconciliation and consolidated verification still pending.
 
 - **2026-09-29**: `FR031_GLOBAL_CUSTOM_PROVIDER_ROLES_2026-09-29.md` - Proposed provider role creation and cloning in FR-031 with FR-009 assignment alignment; prior approved baselines remain distinguishable.
@@ -1272,4 +1300,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: October 13, 2026 (FR-015 v1.8 provider lifecycle/subquote alignment; FR-014 v3.9 verification fixes, FR-026 v1.10 analytics configuration and recalculation rule, FR-030/FR-020 SLA-breach event, system PRD FR-014 sync, system data schema entities 35–37; retained FR-014 parent quote and accepted subquote analytics, FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
+**Last Updated**: October 15, 2026 (FR-015 v1.11 third verification pass fixes and FR-032 v1.6 via CR-FR032-20261015-01; FR-015 v1.10 second verification pass fixes and FR-017 v2.9 alignment; FR-015 v1.9 verification fixes and downstream cascade alignment across FR-003/004/005/006/010/011/016/020/029 with seven new CRs; FR-014 v3.12 fourth verification pass fixes and system PRD FR-014 sync; FR-014 v3.11 third verification pass with FR-003 v2.6, FR-030 v1.8, FR-020 v2.3; FR-007 v1.6 accepted-subquote payment context and FR-017 v2.7 billing clarification; FR-015 v1.8 provider lifecycle/subquote alignment; FR-014 v3.9–v3.10 verification fixes and CR-FR014-20261013-02, FR-026 v1.10 analytics configuration and recalculation rule, FR-030/FR-020 SLA-breach event, system PRD FR-014 sync, system data schema entities 35–37; retained FR-014 parent quote and accepted subquote analytics, FR-008 travel context, Release Phase 2–4 backlogs, and proposed FR-031 custom provider roles)
