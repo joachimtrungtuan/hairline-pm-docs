@@ -3,8 +3,9 @@
 **Module**: A-01: Patient Management & Oversight
 **Feature Branch**: `fr016-admin-patient-mgmt`
 **Created**: 2025-11-11
-**Status**: ✅ Verified & Approved
-**Source**: FR-016 from system-prd.md
+**Status**: 🟡 Revised — Pending Consolidated Verification
+**Source**: FR-016 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
+**Change Request**: [CR-FR016-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ---
 
@@ -250,6 +251,17 @@ This is a critical operational module that ensures the platform can provide effe
 
 *Note: Booking modifications or cancellations occur on the dedicated case/inquiry detail page; the intervention flow links admins there rather than duplicating controls.*
 
+**A7: Admin resolves provider-caused cancellation support**:
+
+- **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert
+- **Steps**:
+  1. Admin filters Screen 1 by "Admin Support Required: Unresolved" or opens the alert's deep link
+  2. Admin reviews the patient's Provider-Caused Impacts (Screen 2): affected inquiry/case references, prior stage, cancellation cause, and any linked FR-034 support case
+  3. Admin assists the patient through existing owners (rebooking, refunds, care continuity, FR-034 support case if created); FR-016 adds no automatic rebooking, refund, or ticket creation
+  4. Admin selects "Resolve Support" on the affected record and enters a resolution reason
+  5. System records the resolution reason and audit event (Screen 7), then clears the marker; the cancellation cause remains unchanged
+- **Outcome**: Provider-caused impact is resolved with an audit trail; an inquiry's marker stays set while any linked provider-caused impact on it remains unresolved
+
 ---
 
 ### Note: Patient Support Center / Ticketing
@@ -292,6 +304,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Date Range Filter | date-range | No | Filter by registration date or last activity | Start date ≤ End date |
 | Location Filter | select | No | Filter by patient country | Country list from admin settings |
 | Provider Filter | select | No | Filter by assigned provider | Active providers only |
+| Admin Support Filter | select | No | Filter patients with provider-caused cancellation impacts (FR-015 A5) | Options: All, Unresolved, Resolved; Unresolved = any linked case/inquiry with `supportRequired` set |
 | Sort By | select | No | Sort results | Options: Name, Date, Status, Last Activity |
 | Results Per Page | select | No | Pagination control | Options: 25, 50, 100 |
 
@@ -308,7 +321,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Requested Date | Upcoming/most recent requested treatment window |
 | Med Alerts | Badge: Critical / Standard / None, matches patient medical questionnaire severity |
 | Payment | Latest payment status badge (Paid, Pending, Deposit Due, Refund, etc.) |
-| Stage | Current journey stage badge (Inquiry, Quoted, Accepted, Scheduled, In Progress, Aftercare, Complete, Cancelled). "Cancelled" indicates patient-initiated inquiry cancellation (FR-003 Workflow 5) — admin has oversight only, no reversal. |
+| Stage | Current journey stage badge (Inquiry, Quoted, Accepted, Scheduled, In Progress, Aftercare, Complete, Cancelled). "Cancelled" indicates patient-initiated inquiry cancellation (FR-003 Workflow 5) — admin has oversight only, no reversal — or a provider-caused cancellation shown as "Cancelled — Provider Suspended" or "Cancelled — Provider Deactivated". An unresolved provider-caused impact adds a separate "Admin Support Required" badge, including when the inquiry stage itself is not cancelled. |
 | Last Active | Relative timestamp of last platform action |
 | Action | Overflow menu with shortcuts: open case, view detail, quick actions |
 
@@ -322,6 +335,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Row layout mirrors inquiry list so admins immediately recognize patient intent/context
 - Status badges color-coded: Inquiry (blue), Quoted (purple), Accepted (teal), Scheduled (green), In-Progress (orange), Aftercare (light green), Completed (gray), Cancelled (red), Suspended (dark red)
 - Flagged patients show red alert icon with hover tooltip explaining flag reason
+- "Admin Support Required" badge is independent of Stage and Status Filter; it clears only when every linked provider-caused impact is resolved (Flow A7). Provider-caused cancellations are never labelled "Cancelled by patient"
 - Clicking row navigates to patient detail view
 
 **Notes**:
@@ -353,9 +367,11 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Current Status | badge | Yes (display only) | Journey stage | Read-only, color-coded |
 | Assigned Provider | link | No (display only) | Provider name (if applicable) | Click to navigate to provider profile |
 | Account Status | badge | Yes (display only) | Active, Suspended, Deactivated | Read-only, color-coded |
-| Cancellation Reason | text | Conditional (display only) | Patient-selected cancellation reason (from FR-026 Screen 5a options) | Read-only; only shown when Current Status = Cancelled |
+| Cancellation Reason | text | Conditional (display only) | Patient-selected cancellation reason (from FR-026 Screen 5a options), or provider-caused cause `ProviderSuspended` / `ProviderDeactivated` (FR-015 A5) | Read-only; only shown when Current Status = Cancelled |
 | Cancellation Timestamp | datetime | Conditional (display only) | When the inquiry was cancelled by the patient | Read-only; only shown when Current Status = Cancelled |
 | Flags/Alerts | list | No (display only) | Active warnings or concerns | Clickable to view details |
+| Provider-Caused Impacts | list | Conditional (display only) | One row per affected inquiry/case: inquiry/case reference (deep link), prior stage, cancellation cause, Admin Support Required state (Unresolved/Resolved with reason, admin, timestamp), linked FR-034 support case (if any) | Read-only; shown when any FR-015 A5 impact exists |
+| Resolve Support | action | Conditional | Clears Admin Support Required on one affected record | Resolution reason required (minimum 20 characters); shown only for unresolved records |
 
 **Business Rules**:
 
@@ -368,6 +384,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Flags/alerts section shows maximum 3 most critical items; click "View All" to see complete list
 - "Last Activity" timestamp updates in real-time if patient is currently active
 - When Current Status is "Cancelled", Cancellation Reason and Cancellation Timestamp are displayed below the status badge. Admin has oversight only — no reversal action is available (per FR-003 Workflow 5 design decision). Cancellation reason sourced from FR-026 Screen 5a managed options; reason is patient-private but visible to admin for oversight.
+- Provider-caused impacts (FR-015 A5) are not patient cancellations: show the cause, not "Cancelled by patient". Resolving support records a reason and audit event before clearing the marker; the cause and cancelled state remain. Provider-confidential suspension/deactivation reasons are not shown here; admins follow the FR-015 provider record for them.
 
 **Notes**:
 
@@ -400,6 +417,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Active/in-progress milestone anchored at top with live status indicator
 - Failed milestones (e.g., payment failed) show warning icon and link to relevant payment record
 - "Inquiry Cancelled" milestone displays as a terminal card with: cancellation reason (from FR-026 Screen 5a), cancellation timestamp, and "Cancelled by Patient" indicator. The "Open Case Detail" link navigates to the inquiry detail page showing the read-only cancelled state. If quotes were auto-cancelled as cascade, the milestone summary notes the count (e.g., "3 quotes cancelled")
+- Provider-caused cancellations (FR-015 A5) display a terminal "Cancelled — Provider Suspended" or "Cancelled — Provider Deactivated" card with prior stage, effective timestamp, and Admin Support Required state; for shared unaccepted inquiries the card notes the cancelled provider participation while the inquiry milestone stays active
 - Admin notes are optional but, when provided, log to audit trail referencing the milestone
 - Export generates concise milestone report (no duplicate case data)
 
@@ -541,7 +559,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Admin Action List | table | Yes (display only) | Chronological log of actions | Sortable, filterable |
 | Action Date | datetime | Yes (display only) | When action occurred | Read-only |
 | Admin Name | text | Yes (display only) | Which admin performed action | Read-only |
-| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason) |
+| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason), Provider-Caused Cancellation (system-generated entry per affected case/inquiry from FR-015 A5 — logs provider-status event, cause, prior stage), Provider Support Resolution (logs affected record, resolution reason, admin) |
 | Action Description | text | Yes (display only) | Summary of what changed | Read-only |
 | Justification | text | Yes (display only) | Admin reason for action | Read-only, expandable |
 | Impact | badge | No (display only) | Severity of action | Low, Medium, High |
@@ -619,6 +637,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance)
 - **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per compliance requirements (7 years)
 - **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST notify both patient and provider within 5 minutes
+- **Rule 8**: Provider-caused cancellations (FR-015 A5, causes `ProviderSuspended` / `ProviderDeactivated`) carry an independent Admin Support Required marker that only an admin resolution with reason and audit event can clear; the cause is never overwritten. FR-016 does not auto-create FR-034 tickets or change FR-034's workflow
 
 ### Data & Privacy Rules
 
@@ -725,6 +744,14 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - **FR-002 / Module P-07: 3D Scan Capture & Viewing**
   - **Why needed**: Admin views patient head scan assets (V1 photo set; V2 true 3D) for dispute resolution and support
   - **Integration point**: Medical data tab embeds head scan viewer component
+
+- **FR-015 / Module A-02: Provider Management**
+  - **Why needed**: Provider suspension/deactivation cancels affected cases/inquiries and sets the Admin Support Required marker (FR-015 Alternative Flow A5, Screen 4)
+  - **Integration point**: FR-016 consumes cause, prior stage, affected references, and marker; owns admin filtering and audited resolution (Flow A7)
+
+- **FR-034 / Support Center & Ticketing**
+  - **Why needed**: Admin assistance for provider-caused cancellations may use a support case
+  - **Integration point**: Linked support case reference shown in Provider-Caused Impacts; FR-034's workflow unchanged, no automatic ticket creation
 
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: Admin actions trigger notifications to patients (password reset, booking modifications)
@@ -980,6 +1007,22 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 
 ---
 
+### User Story 9 - Admin Resolves Provider-Caused Cancellation Support (Priority: P1)
+
+A provider is suspended or deactivated (FR-015 A5) and the patient's case is cancelled. Admin must find the patient, assist, and resolve the support marker with an audit trail.
+
+**Why this priority**: Patients lose an accepted or ongoing treatment through no action of their own and are instructed to contact admins.
+
+**Independent Test**: Suspend a provider with one confirmed case and one shared unaccepted inquiry for different patients; verify both patients appear under "Admin Support Required: Unresolved", show the correct cause and references, and clear only after a reasoned resolution.
+
+**Acceptance Scenarios**:
+
+1. **Given** a case cancelled with `ProviderSuspended`, **When** admin filters Screen 1 by Admin Support Required = Unresolved, **Then** the patient appears with the "Cancelled — Provider Suspended" stage and Admin Support Required badge, never "Cancelled by patient"
+2. **Given** admin opens Screen 2, **When** Provider-Caused Impacts loads, **Then** it shows the inquiry/case reference, prior stage, cause, and linked FR-034 case (if any)
+3. **Given** admin resolves one of two unresolved impacts on the same inquiry, **When** resolution is saved with a reason, **Then** an audit event is logged, that record's marker clears, the cause remains, and the inquiry stays flagged until the second impact is resolved
+
+---
+
 ### Edge Cases
 
 - **Edge Case 1**: How does system handle concurrent admin modifications (two admins modifying same patient booking simultaneously)?
@@ -1022,6 +1065,9 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 - **REQ-016-011**: System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000
 - **REQ-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification
 - **REQ-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
+- **REQ-016-028**: System MUST display FR-015 provider-caused cancellation causes (`ProviderSuspended`, `ProviderDeactivated`) distinctly from patient cancellation and let admins filter/badge patients with unresolved Admin Support Required records
+- **REQ-016-029**: System MUST show, per affected record, the inquiry/case reference, prior stage, cancellation cause, support state, and linked FR-034 support case (if any)
+- **REQ-016-030**: System MUST require a resolution reason and log an audit event before clearing Admin Support Required; the cause remains, an inquiry's marker stays while any linked provider-caused impact is unresolved, and no ticket is auto-created
 
 ### Data Governance Requirements
 
@@ -1050,7 +1096,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 ## Key Entities
 
 - **Entity 1 - Patient Account**
-  - **Key attributes**: patient_id (unique code), name, email, phone, date_of_birth, location (country, city), registration_date, last_activity, account_status (active, suspended, deactivated), journey_status (inquiry, quoted, accepted, scheduled, in-progress, aftercare, completed, cancelled), cancellation_reason (conditional, from FR-026 Screen 5a), cancelled_at (conditional), flags/alerts
+  - **Key attributes**: patient_id (unique code), name, email, phone, date_of_birth, location (country, city), registration_date, last_activity, account_status (active, suspended, deactivated), journey_status (inquiry, quoted, accepted, scheduled, in-progress, aftercare, completed, cancelled), cancellation_reason (conditional, from FR-026 Screen 5a or provider-caused `ProviderSuspended` / `ProviderDeactivated`), cancelled_at (conditional), flags/alerts; provider-caused impact context (affected references, prior stage, `supportRequired`, resolution audit, linked FR-034 case) is owned by the inquiry/case records per FR-015 Key Entities and read here
   - **Relationships**: One patient has many inquiries; one patient has many bookings; one patient has many payments; one patient has many communications (with providers, support, aftercare)
 
 - **Entity 2 - Admin Action Log (Audit Trail)**
@@ -1075,6 +1121,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 | 2026-02-05 | 1.3 | Cancel Inquiry flow (FR-003 Workflow 5): Added "Cancelled" and "Accepted" to Stage filter and badge values (Screen 1); added "Patient Inquiry Cancellation" as system-generated audit event type (Screen 7) | AI     |
 | 2026-02-09 | 1.4 | Cancellation integrity fixes: Added cancellation reason/timestamp fields to Screen 2 (Overview) with oversight-only rules. Added "Inquiry Cancelled" milestone to Screen 3 (Treatment Journey) with cascade summary. Updated Entity 1 journey_status enum to include accepted/cancelled with cancellation fields. Completed status badge color coding for all journey stages. Added User Story 8 (admin reviews cancelled inquiry). Fixed Last Updated date. | AI |
 | 2026-03-03 | 1.5 | Clarified V1 scan media as head scan photo sets and updated admin medical data viewing to treat interactive 3D model viewing as a V2 enhancement. Updated viewer terminology, dependencies, and requirements accordingly. | AI |
+| 2026-10-14 | 1.6 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9 | Vân Tay Media |
 
 ---
 
@@ -1091,4 +1138,4 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-03-03
+**Last Updated**: 2026-10-14

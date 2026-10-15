@@ -3,8 +3,9 @@
 **Module**: PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 **Feature Branch**: `fr004-quote-submission-management`
 **Created**: 2025-10-30
-**Status**: ✅ Verified & Approved
+**Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-004 from system-prd.md; SRC-MTG-002 (MTG-002-D03 through D06 and O01); FR-005 v2.1; Product Owner clarifications dated 2026-09-09, 2026-09-10, and 2026-09-16
+**Change Request**: [CR-FR004-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ## Executive Summary
 
@@ -92,6 +93,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - Provider receives inquiry and opens details
 - System verifies parent inquiry status is not Cancelled before allowing quote creation. If inquiry is cancelled, system blocks with error: "Inquiry no longer active — this inquiry was cancelled by the patient."
 - **Restricted recipient check**: If the inquiry carries an exclusive assigned provider from an FR-037 monitoring conversion, system verifies the opening provider is the assigned provider; any other provider is blocked with error "This inquiry is restricted to its assigned provider." (see Business Rules)
+- **Provider status check**: System verifies the provider is `Active` before quote creation and again at submission. A `Suspended` or `Deactivated` provider (FR-015 Screen 4) cannot create or submit quotes; an in-flight submission received after the effective time is rejected and creates no sent quote.
 - In Tab 1, Provider selects one treatment service for the parent quote
 - In Tab 2, Provider selects between one and five packages from the provider's active package library; each selection creates a Quote Option and may be opened in the inline package editor
 - System snapshots each selected package and its service inclusions into the Quote Option; inline additions, edits, inclusions, or removals apply only to that option and are never written back to the package library
@@ -100,7 +102,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - In Tab 5, Provider enters a separate day-to-day treatment plan for each option
 - In Tab 6, Provider selects the shared clinicians and enters common notes/requirements and attachments
 - In Tab 7, Provider reviews the complete quote aggregate and submits it
-- Provider submits quote (system validates required/optional fields; re-validates inquiry is still active at submission time)
+- Provider submits quote (system validates required/optional fields; re-validates that the inquiry is still active and the provider is still `Active` at submission time)
 - System delivers the parent quote and its ordered options to the patient and records one atomic version/audit snapshot of the aggregate
 
 ### Workflow 2: Quote Editing
@@ -121,7 +123,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 **Actors**: System, Provider, Patient, Admin (observer)
 
-**Trigger**: Time-based expiry reached; patient accepts a subquote through FR-005; provider initiates withdrawal/archive; or patient cancels parent inquiry (FR-003 Workflow 5)
+**Trigger**: Time-based expiry reached; patient accepts a subquote through FR-005; provider initiates withdrawal/archive; patient cancels parent inquiry (FR-003 Workflow 5); or the owning provider becomes `Suspended` or `Deactivated` (FR-015 Alternative Flow A5 and Screen 4)
 
 **Outcome**: Quote transitions to correct status; notifications sent; audit recorded
 
@@ -130,6 +132,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - Provider may withdraw or archive quotes pre-acceptance
 - FR-005 subquote acceptance moves the selected subquote and its parent quote to `accepted`, marks sibling subquotes `not_selected`, and moves every competing parent quote for the inquiry to `cancelled_other_accepted`; the parent quote, Quote Option, and Option/Date-Price Record are never direct acceptance targets
 - **Patient cancels parent inquiry**: All quotes for that inquiry transition to "Cancelled (Inquiry Cancelled)" regardless of current state (draft, sent, expired). This is a system-initiated cascade, not a provider or patient action on the quote itself. Providers are notified via `quote.cancelled_inquiry` event (FR-020).
+- **Provider becomes Suspended or Deactivated**: At the effective time, the system cancels every unaccepted draft or sent parent quote of that provider and the accepted parent quote of each case cancelled by FR-015 A5/Screen 4, with status `cancelled_provider_status` and `cancellationProvenance` = `ProviderSuspended` or `ProviderDeactivated`. Cancellation is recorded once per parent quote; its Quote Options and option/date-price alternatives become unavailable with the parent and are not cancelled or counted separately. The FR-005 AcceptanceEvent, accepted IDs/versions, and quote-local package snapshots are not rewritten. Quotes already expired, withdrawn, archived, or otherwise terminal, and accepted quotes of Completed or already-terminal cases, are not reclassified. Other providers' quotes are unaffected. Later reactivation does not restore cancelled quotes.
 - All state transitions are logged and result in notifications as appropriate
 
 ### Workflow 4: Quote Deletion (Soft Delete)
@@ -141,7 +144,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 **Outcome**: Quote becomes Archived with rationale; remains visible in audit/archive; only admin can restore
 
 - Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record)
-- Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled) cannot be soft-deleted by provider — these are already terminal
+- Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by provider — these are already terminal
 - System sets status = Archived with rationale
 - Soft-deletes are fully auditable and revertible only by admin
 
@@ -180,6 +183,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - Another provider's quote is accepted → System marks all other quotes for the same inquiry as "cancelled (other accepted)" and notifies their providers.
 - While a provider is drafting a quote, if another quote is accepted → drafting provider is notified immediately; drafting quote is locked with banner referencing the accepted quote and case status updates.
 - Patient cancels parent inquiry (FR-003 Workflow 5) → ALL quotes for that inquiry are auto-cancelled with status "Cancelled (Inquiry Cancelled)"; each affected provider notified via `quote.cancelled_inquiry` event; drafting providers see locked quote with "Inquiry Cancelled" banner upon next save/refresh. Cancellation reason is patient-private and NOT shared with providers.
+- Owning provider becomes `Suspended` or `Deactivated` (FR-015 A5/Screen 4) → that provider's affected parent quotes are cancelled once each with `cancelled_provider_status` and the provider-caused `cancellationProvenance` (Workflow 3); drafting and submission are blocked; patients see the offer as unavailable with a Contact Admin/Support action rather than the patient-cancellation message.
 
 ## Screen Specifications
 
@@ -468,7 +472,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Inclusions and Services | list | Yes | Snapshot of inclusions and quote-local customizations | Grouped by option; read-only |
 | Treatment Plan | table | Yes | Different day-to-day plan for each option | Grouped by option; read-only |
 | Attachments | file list/viewer | No | Quote-level supporting files | Read-only; patient access rules enforced |
-| Status | badge | Yes | Pending/Accepted/Expired/Cancelled (Inquiry Cancelled)/Cancelled (Other Accepted)/Withdrawn | Enum validation; visual treatment per state (e.g., greyed-out for cancelled/expired) |
+| Status | badge | Yes | Pending/Accepted/Expired/Cancelled (Inquiry Cancelled)/Cancelled (Other Accepted)/Cancelled (Provider Unavailable)/Withdrawn | Enum validation; visual treatment per state (e.g., greyed-out for cancelled/expired) |
 | Expiration Timer | timer | Yes | Countdown to expiry | From admin window |
 | Provider Info | group | Yes | Allowed provider details | Privacy rules |
 | Actions | actions | Yes | Accept/Decline | State & confirmation rules |
@@ -499,7 +503,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Quoted Date | column | Yes | Quote created date | Relative formatting rules |
 | Provider | column | Yes | Provider/clinic | Filterable |
 | Actions | column | Yes | Restore/Archive/View Detail | State-aware |
-| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider. Status filter includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled | Valid enums/ranges |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider. Status filter includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status | Valid enums/ranges |
 | Inquiry Grouping | control | Yes | Default: grouped by inquiry | Toggle grouping |
 | Multi-Quote Cue | badge/icon | No | Visual cue for multiple quotes in inquiry | Shows count or indicator |
 | Audit Trail | modal | Yes | Per-quote audit (who/what/when/prev value) | Immutable |
@@ -586,6 +590,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - GDPR/data compliance: all quote objects are archived for ≥7 years
 - Patient information remains censored at this stage until payment confirmation; only anonymized identifiers and allowed fields are visible to providers.
 - Providers must select option applicability from patient-requested date ranges; each applicable option/date combination must have a specific price and appointment slot.
+- Only a provider in `Active` status may create, edit, or submit quotes. A provider's effective `Suspended` or `Deactivated` status revokes quote submission and cancels that provider's affected parent quotes under Workflow 3 and FR-015 A5/Screen 4; the provider-caused cause is distinct from patient inquiry cancellation and Payment Window Expired.
 - System MUST verify parent inquiry is not in Cancelled status before accepting quote creation or submission. If inquiry is cancelled mid-draft (race condition), system rejects submission with error "Inquiry no longer active" and locks the draft with "Inquiry Cancelled" banner. See FR-003 Workflow 5 edge case.
 - **Restricted recipient mode**: If the inquiry was created via an FR-037 monitoring-case conversion with an active exclusive provider assignment (REQ-037-029, Business Rule 7; see FR-003 Workflow 2 Alternative Flow B3), only that assigned provider may create the initial quote for the inquiry. Any other provider attempting to open the inquiry for quote creation is blocked with error "This inquiry is restricted to its assigned provider." The restriction applies only to initial quote creation and does not affect subsequent workflows (editing, expiry, withdrawal, admin oversight) once a quote exists. FR-038 is self-service and does not create an FR-004 inquiry or provider assignment.
 
@@ -630,6 +635,8 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 ### Cancellation Cascade Requirements
 
 - **REQ-004-013**: System MUST auto-cancel ALL quotes for an inquiry when that inquiry is cancelled by the patient (FR-003 Workflow 5), with distinct status "Cancelled (Inquiry Cancelled)" and provider notifications via `quote.cancelled_inquiry` event (FR-020).
+- **REQ-004-031**: System MUST revalidate provider status at quote creation and submission and MUST reject quote submission by a `Suspended` or `Deactivated` provider from the effective time, including in-flight requests.
+- **REQ-004-032**: When a provider becomes `Suspended` or `Deactivated`, System MUST cancel that provider's unaccepted parent quotes and the accepted parent quote of each case cancelled under FR-015 A5/Screen 4 with status `cancelled_provider_status` and `cancellationProvenance` `ProviderSuspended` or `ProviderDeactivated`, once per parent quote rather than per option or option/date alternative, without rewriting the AcceptanceEvent, accepted IDs/versions, or quote-local package snapshots, and without reclassifying terminal or completed history. Processing MUST be deduplicated per provider-status event and quote.
 
 ### Quote Option Requirements
 
@@ -657,7 +664,8 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
   - One provider may own multiple Quote records for the same inquiry.
   - `treatmentId` identifies the exact immutable FR-024 Treatment record, while `treatmentVersion` retains its version metadata. Treatment name, type, and technique details are resolved through the relationship rather than copied onto Quote.
   - Relationships: belongsTo Inquiry; belongsTo exact Treatment version; belongsTo Provider; hasMany QuoteOption; hasMany QuoteVersion; hasMany QuoteAudit
-  - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**
+  - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**, **cancelled_provider_status**
+  - For `cancelled_provider_status`, `cancellationProvenance` records `ProviderSuspended` or `ProviderDeactivated` and the triggering provider-status event (FR-015 A5/Screen 4).
 - **QuoteOption**: id, quoteId, sourcePackageId, sourcePackageVersion, displayOrder, packageNameSnapshot, packageDescriptionSnapshot, standardPriceSnapshot, includedServices[], isCustomized, createdAt, updatedAt
   - Relationships: belongsTo Quote; belongsTo source Package for provenance; hasMany QuoteOptionItem; hasMany QuoteOptionDatePrice; hasMany QuoteOptionPlanDay
 - **QuoteOptionItem**: id, quoteOptionId, sourcePackageItemId, itemType, name, description, price, isIncluded, displayOrder, metadata
@@ -678,6 +686,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 ### Internal Dependencies
 
 - FR-003: Inquiry Submission (quote distribution and reference)
+- FR-015: Provider Management (provider status eligibility and the suspension/deactivation cancellation cascade — Alternative Flow A5 and Screen 4)
 - FR-005: Quote Comparison & Acceptance (combines one Quote Option and one Option/Date-Price Record into the complete accepted subquote and owns sibling/competing outcomes)
 - FR-008: Travel & Logistics Coordination (accepted-option inclusion routing)
 - FR-010: Treatment Progress Management (accepted-option plan handoff)
@@ -763,6 +772,8 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - Provider opens quote creation for an inquiry that was just cancelled: system blocks with "Inquiry no longer active" error; no draft created
 - Provider is mid-draft when inquiry is cancelled (race condition): on next save/refresh, system locks draft with "Inquiry Cancelled" banner; submission blocked; draft retained for provider reference but cannot be submitted
 - Provider attempts to edit a quote in "Cancelled (Inquiry Cancelled)" status: system blocks with "This quote was cancelled because the patient cancelled their inquiry" message; all edit actions disabled
+- Provider submits a quote at or after the effective time of its suspension or deactivation: submission is rejected; no sent quote, patient notification, or version is created
+- Provider with several parent quotes, each with multiple options/date alternatives, is suspended: each parent quote is cancelled once; option and date alternatives become unavailable with their parent and are not reported as separate cancellations
 
 ## Glossary
 
@@ -897,6 +908,7 @@ Acceptance Scenarios:
 | 2026-09-16 | 2.7 | Post-verification clarification: defined the parent aggregate `QuoteVersion` as the sole revision source for FR-005 subquotes. `subquoteVersion` equals the owning parent quote version; Quote Options and option/date-price records retain stable IDs without independent revision counters. | Product Owner / Verification alignment |
 | 2026-09-16 | 2.8 | Added the canonical Parent Quote → Quote Option → Option/Date-Price hierarchy and its FR-005 Subquote projection; replaced remaining direct-quote acceptance wording with the approved subquote-driven selected-parent, sibling, and competing-parent lifecycle outcomes. | Product Owner / Verification alignment |
 | 2026-09-21 | 2.9 | Clarified that providers may enter and revise Estimated Grafts, while Graft Description is regenerated from the approved template and current estimate and is never directly provider-editable. | Product Owner / Documentation |
+| 2026-10-14 | 3.0 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: provider status checks in Workflow 1, Workflow 3 provider-status trigger and `cancelled_provider_status` outcome (once per parent quote, accepted provenance preserved), terminal-state and alternative-flow updates, Screen 4/5 status values, business rule, REQ-004-031/032, Quote entity provenance note, FR-015 dependency, and edge cases. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
 
 ## Appendix: Approvals
 

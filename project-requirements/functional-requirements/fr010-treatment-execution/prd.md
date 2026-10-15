@@ -3,8 +3,9 @@
 **Module**: PR-03: Treatment Execution & Documentation
 **Feature Branch**: `fr010-treatment-execution`
 **Created**: 2025-11-11
-**Status**: ✅ Verified & Approved
-**Source**: FR-010 from system-prd.md
+**Status**: 🟡 Revised — Pending Consolidated Verification
+**Source**: FR-010 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
+**Change Request**: [CR-FR010-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ---
 
@@ -199,6 +200,20 @@ flowchart TD
   B4S2["2. Provider clicks Cancel/Close Case; selects closure reason from list (No-show, Patient cancellation, Medical, Operational, Other); adds free-text note"] --> B4S3
   B4S3["3. System sends notification to admin with reason and note"] --> B4S4
   B4S4["4. Admin reviews case; manually handles: status transition, financial reconciliation, patient communication, rebooking or refund as appropriate"]
+```
+
+**B5: Provider Suspended or Deactivated While Case Is In Progress**
+
+- **Trigger**: The treating provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal)
+- **Outcome**: The In Progress case is cancelled automatically by the provider-status cascade; clinical records are preserved and clinical continuity is routed to admins
+- **Boundary**: Distinct from B4 provider-requested Cancel/Close Case, which still does not auto-transition status. No automatic clinical reassignment, refund, or rebooking. Provider reactivation does not restore the case; a later deactivation does not overwrite an earlier `ProviderSuspended` cause
+
+```mermaid
+flowchart TD
+  B5S1["1. Provider suspension/deactivation becomes effective (FR-015)"] --> B5S2
+  B5S2["2. System transitions the In Progress case to Cancelled with cause ProviderSuspended or ProviderDeactivated and an independent supportRequired marker"] --> B5S3
+  B5S3["3. Provider documentation actions (day edits, End Treatment) are blocked; day records, clinical notes, photos, head scan photo sets, and any already recorded completion milestone are retained read-only"] --> B5S4
+  B5S4["4. Patient/admin notifications per FR-015 Screen 4; admin handles clinical continuity, patient assistance, and financial resolution through owning FRs and records audited resolution of the support marker"]
 ```
 
 ---
@@ -465,7 +480,7 @@ flowchart TD
 
 ### General Module Rules
 
-- **Rule 1**: Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages)
+- **Rule 1**: Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages). Exception: an effective provider suspension/deactivation cancels an In Progress case per Rule 12.
 - **Rule 2**: Treatment documentation MUST be initiated by the "Check In" action from the Confirmed list (cannot pre-document treatments)
 - **Rule 3**: Procedure date MUST be today or in past to enable "Check In" action (cannot check in future appointments)
 - **Rule 4**: Provider role MUST be Owner, Manager, or Clinical Staff to document treatments (Billing Staff can view but not edit)
@@ -476,6 +491,7 @@ flowchart TD
 - **Rule 9**: Each treatment day is a discrete record — day records are NEVER consolidated into a single multi-day record
 - **Rule 10**: Valid day statuses are: **Not started** | **In progress** | **Finished** | **Need caution/attention** | **Cancelled/Deferred**. No other statuses are permitted.
 - **Rule 11**: Cancel / Close Case action does NOT auto-transition status or trigger financial actions — admin handles all case closure steps manually
+- **Rule 12**: An effective provider suspension/deactivation (FR-015 A5/Screen 4) automatically cancels the provider's In Progress cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Alternative Flow B5). This admin-authorized cascade is distinct from Rule 11's provider-requested closure. Clinical notes, photos, head scan photo sets, and any already recorded completion milestone are preserved; clinical continuity is routed to admins. Reactivation never restores the case.
 
 ### Data & Privacy Rules
 
@@ -807,6 +823,8 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 
 - **What occurs if booking has an outstanding balance at procedure time?** "Check In" is disabled with a clear message. Patient must complete payment through the booking/payment flow (FR-007) before treatment documentation can start.
 
+- **What happens when the provider is suspended or deactivated mid-treatment?** The In Progress case is cancelled with `ProviderSuspended` or `ProviderDeactivated` and `supportRequired`; provider documentation (including an unsaved End Treatment) is blocked, saved day records and media are retained read-only, and admins handle clinical continuity (Alternative Flow B5). If the provider is suspended first and later deactivated, the `ProviderSuspended` cause is kept.
+
 - **How to manage issues with aftercare setup after completing treatment?** Provider cannot edit completed treatment record; aftercare template selection and plan activation are handled entirely by FR-011. If adjustments are needed, provider contacts admin; admin can modify the aftercare plan through FR-011's admin interface; audit trail logs admin intervention.
 
 ---
@@ -825,6 +843,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 - **REQ-010-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
 - **REQ-010-009**: System MUST signal treatment completion data (conclusion, prescription, advice, medication, graft count) to FR-011 for aftercare setup. FR-011 owns aftercare template selection, plan activation, milestone generation, scan schedules, and questionnaire cadence
 - **REQ-010-010**: System MUST enforce treatment documentation completion within 24 hours of Check In; send reminder notifications at 12 and 24 hours if incomplete
+- **REQ-010-025**: When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's In Progress cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, block further provider documentation, preserve clinical notes/photos and any recorded completion milestone, and route clinical continuity to admins, without restoring the case on reactivation (Alternative Flow B5; FR-015 A5/Screen 4). Provider-requested Cancel/Close Case (B4) remains a non-transitioning admin notification.
 
 ### Data Requirements
 
@@ -854,7 +873,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 ## Key Entities
 
 - **Entity 1 - Treatment Record**
-  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, accepted Quote Option ID (foreign key), assigned clinician IDs (one or more, from quote `clinicianIds[]` — provider-locked after Check In; admin-overridable with reason + audit history, at least one must remain), **option plan reference** (the accepted option's `QuoteOptionPlanDay` records from FR-004), **day records** (one per day: day number, day description, day status, day note, last updated timestamp), beginning note, conclusion notes, prescription, advice, medication instructions (free-text), estimated graft count (from quote — read-only reference), actual graft count (entered at end of treatment), status ("In Progress", "Completed"), check-in timestamp, completion timestamp
+  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, accepted Quote Option ID (foreign key), assigned clinician IDs (one or more, from quote `clinicianIds[]` — provider-locked after Check In; admin-overridable with reason + audit history, at least one must remain), **option plan reference** (the accepted option's `QuoteOptionPlanDay` records from FR-004), **day records** (one per day: day number, day description, day status, day note, last updated timestamp), beginning note, conclusion notes, prescription, advice, medication instructions (free-text), estimated graft count (from quote — read-only reference), actual graft count (entered at end of treatment), status ("In Progress", "Completed", "Cancelled" — provider-status cascade only; cause and `supportRequired` held on the booking/case), check-in timestamp, completion timestamp
   - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record references the accepted FR-004 Quote Option and its relative plan days; one treatment record has one or more assigned clinicians (from quote `clinicianIds[]`); one treatment record has multiple treatment photos / head scan photo sets (V1); **one treatment record tracks day-based progress changes over time for patient/admin visibility**
 
 - **Entity 2 - Treatment Photo / Head Scan Photo Set**
@@ -885,6 +904,7 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 | 2026-03-03 | 1.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer to match `prd-template.md`. | Documentation governance (2026-03-03) |
 | 2026-09-09 | 1.9 | **Clinician cardinality aligned to FR-004 v2.2**: the quote now carries `clinicianIds[]` (one or more clinicians shared by every Quote Option, REQ-004-027), superseding the singular clinician model adopted in v1.4. Updated Patient Screen 3, Provider Screens 1 and 3, Admin Screen 2, the Check In lock rule, Business Rule 8, dependency notes, and Entity 1 attributes/relationships. Admin reassignment may add or remove clinicians provided at least one remains, with reason + audit. See [FR-004 Change Request](../fr004-quote-submission/change-request-2026-09-09-quote-options-model.md) and [FR-010 Change Request](./change-request-2026-09-09-clinician-cardinality-alignment.md). | Verification alignment (2026-09-09) |
 | 2026-09-10 | 2.0 | **Accepted Quote Option consumer alignment**: replaced singular `packageId` and quote-level `plan` dependencies with the stable accepted Quote Option relationship, its package snapshot, and its relative `QuoteOptionPlanDay` records. Parent Quote data remains the source for the immutable Treatment relationship, graft estimate, and clinician assignments. See [Change Request](./change-request-2026-09-10-quote-option-consumer-alignment.md). | Product Owner / Verification alignment (2026-09-10) |
+| 2026-10-14 | 2.1 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Alternative Flow B5, Rule 1 exception, Rule 12, mid-treatment suspension edge case, REQ-010-025, and Cancelled treatment status; B4 provider-requested Cancel/Close Case unchanged. See [CR-FR010-20261014-01](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
 
 ---
 
@@ -901,4 +921,4 @@ Admin receives report of potential issue with treatment. Admin searches for pati
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-010 from system-prd.md (Lines 682-705)
-**Last Updated**: 2026-09-10
+**Last Updated**: 2026-10-14

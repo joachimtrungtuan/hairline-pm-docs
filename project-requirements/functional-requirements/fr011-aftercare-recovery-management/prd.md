@@ -3,8 +3,9 @@
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
-**Status**: ✅ Verified & Approved  
-**Source**: FR-011 from system-prd.md
+**Status**: 🟡 Revised — Pending Consolidated Verification  
+**Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
+**Change Request**: [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ## Executive Summary
 
@@ -337,6 +338,14 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
   - Admin identifies patterns in patient complaints
   - Admin updates templates or processes
   - Admin communicates changes to all providers
+
+- **D4**: Provider suspended or deactivated during Aftercare
+  - Trigger: the assigned provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal)
+  - Scope covers every non-terminal Aftercare case assigned to that provider, including post-treatment (Workflow 1), add-on (Workflow 2b), and standalone aftercare for external-clinic patients (Workflow 2); standalone cases keep their intake data and payment history for admin follow-up
+  - System automatically cancels that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker; the provider loses aftercare actions on those cases
+  - The FR-010 completion milestone, aftercare plan, milestones, scans, questionnaire responses, medications, and communication history are retained read-only
+  - Patient/admin notifications follow FR-015 Screen 4; recovery continuity is routed to admins, who use this workflow's existing reassignment/recovery tools (reassign to another provider, assign to the Hairline aftercare team, or keep cancelled with reason) and record audited resolution of the support marker
+  - Boundary: no automatic reassignment, refund, or restoration on provider reactivation; a later deactivation does not overwrite an earlier `ProviderSuspended` cause. Distinct from D1 provider withdrawal, which remains admin-reviewed without an automatic cancellation
 
 ## Screen Specifications
 
@@ -1264,6 +1273,11 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
    - Admin has full access to all aftercare data
    - Patient anonymization lifted after payment confirmation
 
+4. **Provider Status Cancellation Rules**
+   - An effective provider suspension/deactivation cancels that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4)
+   - The cancellation keeps the FR-010 completion milestone and all aftercare records; it is not a patient cancellation or a provider withdrawal (D1)
+   - Recovery continuity is an admin decision through the existing reassignment/recovery workflow; nothing is reassigned automatically and reactivation never restores the case
+
 ### Milestone and Task Rules
 
 1. **Milestone Progression**
@@ -1543,6 +1557,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
 - **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
+- **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
 
 ### Data Requirements
 
@@ -1602,12 +1617,13 @@ Acceptance Scenarios:
 ### Edge Cases
 
 - Provider withdrawal: admin reassigns or cancels with reason; patient notified
+- Provider suspended or deactivated mid-aftercare: case cancelled with the provider-status cause and `supportRequired`; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause
 - Network loss during scan upload: resumable upload; no duplicate entries
 - Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved
 
 ## Key Entities
 
-- AftercarePlan: patientId, providerId, templateId, status, milestones[], medications[], customInstructions, activatedAt
+- AftercarePlan: patientId, providerId, templateId, status, milestones[], medications[], customInstructions, activatedAt, cancellationReason (incl. ProviderSuspended, ProviderDeactivated), supportRequired (with audited admin resolution)
   - Key attributes: plan status, schedule, customization
   - Relationships: belongsTo Patient; belongsTo Provider; references Template
 
@@ -1647,6 +1663,7 @@ Acceptance Scenarios:
 | 2025-11-04 | 1.1 | Template compliance: added Shared Services; Communication Structure (In/Out of Scope); Triggers/Outcomes for workflows; restructured Assumptions; added User Scenarios & Testing; Appendices | Product & Engineering |
 | 2026-03-03 | 1.2 | Clarified that V1 scan uploads are standardized head scan photo sets (multiple 2D views), with true 3D scanning deferred to V2. Updated module scope, dependencies, and external integrations accordingly. | AI |
 | 2026-04-12 | 1.3 | Screen 13: Expanded Search/Filters control to include Risk Level, Specialist, and Completion Rate filters, aligning with FR-022 Module Scope for A-03. | AI |
+| 2026-10-14 | 1.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Workflow 4 D4, General Module Rule 4 (Provider Status Cancellation), REQ-011-014, mid-aftercare suspension edge case, and AftercarePlan cancellationReason/supportRequired attributes; admin reassignment/recovery workflow unchanged. See [CR-FR011-20261014-01](change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification.. Product Owner confirmed (2026-10-14) that standalone aftercare (Workflow 2) is inside the cascade scope | Vân Tay Media |
 
 ## Appendix: Approvals
 

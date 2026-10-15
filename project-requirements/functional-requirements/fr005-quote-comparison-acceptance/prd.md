@@ -93,7 +93,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 3. Patient compares eligible subquotes, including subquotes from different parent quotes or from the same parent quote.
 4. Patient opens one subquote and taps "Accept".
 5. Patient confirms the exact subquote with terms acknowledgment and a complete selection summary.
-6. System atomically revalidates the inquiry, parent quote, and subquote; confirms that no prior subquote has been accepted for the inquiry; verifies that the presented parent aggregate `QuoteVersion` is current; and acquires the appointment slot's exclusive payment-window hold. The derived `subquoteVersion` MUST equal that same version. If another pending or confirmed booking already holds or blocks the same slot, acceptance is rejected before an AcceptanceEvent or booking handoff is created.
+6. System atomically revalidates the inquiry, parent quote, and subquote, and confirms the owning provider is still `Active` (not `Suspended` or `Deactivated` under FR-015); confirms that no prior subquote has been accepted for the inquiry; verifies that the presented parent aggregate `QuoteVersion` is current; and acquires the appointment slot's exclusive payment-window hold. The derived `subquoteVersion` MUST equal that same version. If another pending or confirmed booking already holds or blocks the same slot, acceptance is rejected before an AcceptanceEvent or booking handoff is created.
 7. After the exclusive hold succeeds, System records the selected subquote as Accepted, locks its inherited parent context and commercial details, sets the parent quote and inquiry to Accepted, and records the acceptance snapshot and reserved slot reference.
 8. System marks every sibling subquote in the accepted parent quote as Not Selected and auto-cancels every competing parent quote for the inquiry with reason "Other subquote accepted."
 9. System sends notifications to the patient and all affected providers without disclosing the selected provider or accepted price to non-selected providers.
@@ -131,6 +131,12 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 - Trigger: Patient confirms a subquote whose appointment slot is already held or blocked by another pending or confirmed booking.
 - Steps: System rejects acceptance atomically before creating an AcceptanceEvent, changing quote/inquiry states, or emitting a booking handoff; the patient is told that the appointment is no longer available and may choose another eligible subquote.
 - Outcome: The existing slot reservation remains unchanged and no second accepted selection is created for that slot.
+
+**A6: Provider Becomes Suspended or Deactivated**:
+
+- Trigger: The owning provider's `Suspended` or `Deactivated` status becomes effective (FR-015 Alternative Flow A5 and Screen 4) before, during, or after subquote acceptance.
+- Steps: From the effective time, Accept is blocked for every subquote of that provider and a confirmation already in flight is rejected before an AcceptanceEvent or hold is created. If the inquiry is still comparing providers, FR-004 cancels that provider's parent quotes once each; their subquotes become unavailable, while subquotes from other providers remain acceptable and the inquiry keeps its stage with `supportRequired = true` (FR-003 Workflow 2 Alternative Flow B4). If the accepted subquote belongs to that provider, the accepted parent quote/subquote and inquiry are cancelled with cause `ProviderSuspended` or `ProviderDeactivated`, any active hold is released, and booking-confirming payment is blocked (FR-006). The AcceptanceEvent, accepted IDs/versions, and acceptance snapshot are retained without rewriting.
+- Outcome: The patient sees the provider-caused cancellation or offer-unavailability message with a Contact Admin/Support action, not the A4 patient-cancellation messaging. Late acceptance requests or payment callbacks cannot revive the selection, and later reactivation does not restore it.
 
 ---
 
@@ -293,9 +299,10 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 2. A valid subquote acceptance atomically acquires an exclusive hold on its appointment slot, locks that subquote and its inherited parent context, marks its sibling subquotes Not Selected, and auto-cancels every competing parent quote for the same inquiry with clear reasons and notifications. If the slot is already held or blocked, the acceptance attempt fails before any of those state changes.
 3. Acceptance does not reveal patient full identity to provider; full PII becomes accessible only after successful payment confirmation, per constitution.  
 4. All acceptance-related state transitions are immutably audited (who, when, what, reason).  
-5. A subquote is ineligible if it or its parent quote is expired, withdrawn, cancelled, archived, superseded, or no longer the version presented to the patient.
+5. A subquote is ineligible if it or its parent quote is expired, withdrawn, cancelled, archived, superseded, or no longer the version presented to the patient, or if its owning provider is `Suspended` or `Deactivated` (FR-015).
 6. All deletes are soft deletes; no hard deletes permitted.
 7. Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price.
+8. Provider-status cancellation (Alternative Flow A6; FR-015 A5/Screen 4) uses cause `ProviderSuspended` or `ProviderDeactivated` with an independent `supportRequired` marker. It is distinct from patient inquiry cancellation (A4) and Payment Window Expired, and does not reclassify Completed or already-terminal history.
 
 ### Data & Privacy Rules
 
@@ -331,6 +338,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 - Pricing and promotions shown are those attached to the subquote; acceptance does not modify financial terms.
 - Post-Acceptance Hold: Acceptance and exclusive slot reservation are one atomic operation. After acceptance, the system holds the pre-selected appointment slot for the FR-006 configurable duration, default 48 hours, to allow the patient to complete the initial payment (deposit or first installment). A second acceptance targeting the held or blocked slot is rejected. If payment is not completed within the configured hold period, the reservation is released and the slot may be reallocated by the provider.
 - Inquiry Cancellation During Hold: If the patient cancels the inquiry (FR-003 Workflow 5) while the appointment slot hold is active, the hold is released immediately and the slot is returned to the provider's availability. The accepted subquote and its parent quote transition to "Cancelled (Inquiry Cancelled)". See FR-006 for hold configuration and booking-side guard rules.
+- Provider Status Change During Hold: If the accepted subquote's provider becomes `Suspended` or `Deactivated` while the hold is active, the hold is released even if time remains, the accepted subquote and parent quote are cancelled with the provider-caused cause, and FR-006 blocks booking-confirming payment. The acceptance snapshot and locked price/exchange rate are retained unchanged for admin support.
 
 ---
 
@@ -374,7 +382,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 - **FR-020 / S-03**: Notifications & alerts (event delivery).  
 - **FR-012 / P-06, PR-07, A-10**: Messaging & communication (Patient ↔ Provider quote questions through the dedicated Messages/Inbox; Admin monitors and intervenes only under FR-012 policy).
 - **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
-- **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary).  
+- **FR-015 / A-02**: Provider Management & Onboarding (source for provider credentials/licenses/certifications summary, provider status eligibility, and the suspension/deactivation cancellation cascade in Alternative Flow A5 and Screen 4).  
 - **FR-006 / P-03, PR-02, A-01**: Booking & Scheduling consumes the FR-005 `AcceptanceEvent`, accepted parent quote ID/version, accepted subquote ID/version, immutable acceptance snapshot, and pre-scheduled slot without package, date, appointment, or price reselection; it owns payment initiation, booking confirmation, and post-payment PII reveal.
 - **A-09**: System settings (legal copy, terms acknowledgment text, and the FR-006 payment-failure slot-hold duration whose default is 48 hours).
 
@@ -480,6 +488,8 @@ Patient cancels the inquiry while subquotes are available for review or after ac
 - Patient attempts to accept a subquote while inquiry cancellation is being processed: system checks inquiry status at confirmation; if cancelled, blocks acceptance with message "This inquiry has been cancelled."
 - Provider edits either the parent quote or selected subquote after the patient opens confirmation: system rejects the stale confirmation and requires review of the current version.
 - Patient cancels inquiry while on the acceptance confirmation modal (Screen 3): modal dismissed; inquiry dashboard refreshes to show "Cancelled" badge; all actions disabled.
+- Provider becomes `Suspended` or `Deactivated` while the patient is on the confirmation modal: confirmation is rejected at revalidation; the patient sees the provider-unavailable message with Contact Admin/Support and may choose another provider's eligible subquote if the inquiry is still comparing.
+- Provider-status cascade is replayed or a stale acceptance request arrives afterward: no duplicate cancellation, notification, AcceptanceEvent, or hold is created.
 
 ---
 
@@ -517,6 +527,7 @@ Patient cancels the inquiry while subquotes are available for review or after ac
 - **REQ-005-019**: Acceptance confirmation MUST validate the current parent aggregate `QuoteVersion`, MUST require the derived `subquoteVersion` to equal it, and MUST reject stale selections before creating an AcceptanceEvent.
 - **REQ-005-020**: Parent quote and subquote analytics MUST remain distinct: one provider response counts once at parent level, while comparison and selection behavior is recorded at subquote level.
 - **REQ-005-021**: Acceptance MUST atomically acquire an exclusive hold on the selected appointment slot and MUST reject a second acceptance for a slot already held or blocked by another pending or confirmed booking before creating an AcceptanceEvent, changing quote/inquiry states, or emitting a booking handoff.
+- **REQ-005-022**: System MUST revalidate the owning provider's status at acceptance and MUST block acceptance of any subquote whose provider is `Suspended` or `Deactivated` from the effective time, including in-flight confirmations. When FR-015 A5/Screen 4 cancels an accepted subquote, System MUST release any active hold, retain the AcceptanceEvent and acceptance snapshot without rewriting, record cause `ProviderSuspended` or `ProviderDeactivated` with `supportRequired`, keep other providers' subquotes acceptable for a still-comparing inquiry, and show the patient the provider-caused message with Contact Admin/Support instead of the patient-cancellation message.
 
 ---
 
@@ -531,6 +542,7 @@ Patient cancels the inquiry while subquotes are available for review or after ac
   - `acceptedSubquoteVersion` MUST equal `acceptedParentQuoteVersion`.
   - `acceptanceSnapshot` preserves the complete subquote plus inherited parent context at acceptance.
   - If the patient cancels after acceptance, the event is retained and marked superseded; the accepted subquote and parent Quote transition to "Cancelled (Inquiry Cancelled)".
+  - If the provider becomes `Suspended` or `Deactivated`, the event, accepted IDs/versions, and snapshot are retained unchanged; the provider-caused cause is recorded on the cancelled quote and inquiry (Alternative Flow A6).
   - Relationships: belongsTo Inquiry; belongsTo accepted parent Quote; belongsTo accepted Subquote.
 - **Quote** (from FR-004): id, providerId, version, status, expiresAt; parent and inheritance boundary, never the direct patient acceptance target.
 - **AuditEntry**: entityType, entityId, action, actorId, reason, before, after, timestamp
@@ -552,6 +564,7 @@ Patient cancels the inquiry while subquotes are available for review or after ac
 | 2026-09-16 | 2.1 | Resolved post-verification contract findings: bound `subquoteVersion` and `acceptedSubquoteVersion` to the owning parent aggregate `QuoteVersion`, and replaced the generic Upcoming FR dependency with the explicit FR-006 accepted-subquote handoff contract. Verification status remains pending consolidated review. | Product Owner / Verification alignment |
 | 2026-09-16 | 2.2 | Aligned quote questions with FR-012 Patient ↔ Provider messaging through the dedicated Messages/Inbox, and aligned the post-acceptance slot hold with FR-006/A-09 as configurable with a 48-hour default. Consolidated verification remains pending. | Product Owner / Verification alignment |
 | 2026-09-16 | 2.3 | Resolved the acceptance-slot concurrency contract: subquote acceptance now atomically acquires an exclusive appointment hold and rejects a second acceptance before creating an AcceptanceEvent or booking handoff. Consolidated verification remains pending. | Product Owner / Verification resolution |
+| 2026-10-14 | 2.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: provider-status revalidation at acceptance (Main Flow step 6), Alternative Flow A6, General Module Rules 5 and 8, provider-status hold release in Payment & Billing Rules, edge cases, REQ-005-022, AcceptanceEvent retention note, and FR-015 dependency. Consolidated verification remains pending. | Vân Tay Media |
 
 ---
 

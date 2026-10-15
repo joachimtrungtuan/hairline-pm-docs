@@ -3,8 +3,9 @@
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight  
 **Feature Branch**: `fr003-inquiry-submission`  
 **Created**: 2025-10-23  
-**Status**: ✅ Verified & Approved  
-**Source**: FR-003 from system-prd.md
+**Status**: 🟡 Revised — Pending Consolidated Verification  
+**Source**: FR-003 from system-prd.md  
+**Change Request**: [CR-FR003-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
 
 ## Executive Summary
 
@@ -258,6 +259,18 @@ flowchart TD
     Exclusive --> Views["Create provider-specific inquiry view (anonymized)"]
     Views --> Notify["Send provider notification (within 5 minutes)"]
 ```
+
+**B4: Provider becomes Suspended or Deactivated**:
+
+- **Trigger**: A provider's `Suspended` or `Deactivated` status becomes effective under FR-015 (Alternative Flow A5 and Screen 4).
+- **Steps**:
+  1. From the effective time, the provider is ineligible for new inquiry allocation. Workflow 2 matching, exclusive routing, and Workflow 4 reassignment revalidate provider status immediately before creating a ProviderInquiry; in-flight distribution jobs, retries, or callbacks MUST NOT create or reopen that provider's participation.
+  2. If the inquiry's accepted treatment belongs to the affected provider (stage Accepted, Confirmed, In Progress, or Aftercare), the inquiry transitions to `Cancelled` with system cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true`. FR-004 cancels the related quotes; FR-005/FR-006 own hold release and payment blocking.
+  3. If the inquiry is still comparing providers (stage Inquiry or Quoted), only the affected provider's ProviderInquiry participation and quotes are cancelled. The inquiry keeps its current stage and is flagged `supportRequired = true`; other providers' participation and offers remain available.
+  4. The patient receives the provider-caused cancellation or offer-unavailability message with a Contact Admin/Support action (FR-020), not the Workflow 5 patient-cancellation confirmation. No patient cancellation reason is requested.
+  5. Completed and already-cancelled inquiries are not reclassified. Later reactivation does not restore cancelled inquiries or participation and does not clear `supportRequired`; only an audited admin resolution clears it.
+- **Outcome**: Affected inquiries are cancelled or flagged for special admin support under a provider-caused cause; unrelated providers' offers are unaffected.
+- **Boundary**: Distinct from Workflow 5 patient cancellation, E3 account-deletion cancellation, and Payment Window Expired. Cascade processing is deduplicated per provider-status event and inquiry. FR-015 A5/Screen 4 owns the triggering event and cross-module cascade.
 
 ---
 
@@ -706,6 +719,7 @@ flowchart TD
 - Dashboard shows: full inquiry summary, provider responses, deadlines, and context-aware next actions
 - "Cancel Inquiry" action appears in Next Actions area only for eligible stages (Inquiry, Quoted, Accepted)
 - If inquiry is in "Cancelled" stage, dashboard is read-only with "Cancelled" badge; no actions available except viewing details
+- Provider-caused cancellation (`ProviderSuspended` or `ProviderDeactivated`) shows a provider-unavailable message with a Contact Admin/Support action instead of patient-cancellation copy. For a still-comparing inquiry, the affected provider's offers show as unavailable while other offers remain actionable (Workflow 2 Alternative Flow B4)
 
 **Business Rules**:
 
@@ -1000,6 +1014,7 @@ flowchart TD
    - Providers must respond within 72 hours (configurable)
    - Provider capacity limits affect distribution where capacity data is available; until the dedicated Provider Capacity Management FR is delivered, capacity checks are advisory and MUST NOT block inquiry distribution
    - Admin can manually assign inquiries
+   - Only providers in `Active` status are eligible for distribution, exclusive routing, or reassignment; eligibility is revalidated at allocation time (Workflow 2 Alternative Flow B4)
    - Patient can select maximum 5 preferred providers
    - Provider suggestions based on positive reviews and admin curation
    - An FR-037 monitoring-conversion inquiry is initially restricted to its assigned provider. If that provider explicitly declines before quote creation, the system removes the restriction and immediately reruns normal distribution. Expiry does not use this decline fallback
@@ -1011,6 +1026,7 @@ flowchart TD
    - All data access logged for audit trail
 
 4. **Cancellation Rules**
+   - These rules govern patient- and account-deletion-initiated cancellation. Provider-status cancellation follows Rule 6 and does not use the patient cancellation reason, confirmation, or messaging.
    - Patient can cancel their own inquiry in stages: Inquiry, Quoted, or Accepted (before Confirmed)
    - Cancellation is blocked for inquiries in Confirmed, In Progress, Aftercare, or Completed stages — patient must contact support
    - Cancellation is immediate and irreversible; no grace period, no admin approval required
@@ -1029,6 +1045,13 @@ flowchart TD
    - A treatment-area option used by an existing inquiry cannot be deleted. It may be deactivated for future inquiries while historical inquiry display retains the saved label and asset reference.
    - Admin configures the minimum inquiry lead time as a whole number of blocked days. The default is 3; the permitted value is 0 through 730, consistent with the existing two-year date horizon.
    - The patient platform retrieves the current catalog and lead-time setting from the backend. A client release is not required for ordinary option or lead-time changes only after implementation verifies compatibility with this dynamic response.
+
+6. **Provider Status Cancellation Rules** (FR-015 Alternative Flow A5 and Screen 4)
+   - A provider's effective `Suspended` or `Deactivated` status blocks new inquiry allocation to that provider; in-flight requests or callbacks MUST NOT revive cancelled participation.
+   - An inquiry whose accepted treatment belongs to the affected provider is cancelled with cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true`.
+   - An inquiry still comparing providers keeps its stage; only the affected provider's ProviderInquiry participation and quotes are cancelled, the inquiry is flagged `supportRequired = true`, and other providers' offers stay available.
+   - `supportRequired` is an independent marker, not a lifecycle stage. Clearing it requires an audited admin resolution.
+   - Provider-caused causes are distinct from patient cancellation, account-deletion cancellation, and Payment Window Expired, and are never overwritten by later provider status changes.
 
 ### Medical Data Rules
 
@@ -1201,6 +1224,8 @@ flowchart TD
 - **REQ-003-012**: System MUST allow patients to cancel their own inquiry in Inquiry, Quoted, or Accepted stages with a required cancellation reason; cancellation is immediate and irreversible.
 - **REQ-003-013**: System MUST auto-cancel all associated quotes when an inquiry is cancelled by the patient, with distinct cancellation status "Cancelled (Inquiry Cancelled)" and provider notifications via FR-020.
 - **REQ-003-014**: System MUST release any active appointment slot hold (FR-005/FR-006 48-hour hold) immediately when an Accepted-stage inquiry is cancelled by the patient.
+- **REQ-003-019**: System MUST revalidate provider status at allocation, exclusive routing, and reassignment, and MUST NOT allocate inquiries to a `Suspended` or `Deactivated` provider from the effective time, including through in-flight jobs or retries.
+- **REQ-003-020**: When a provider becomes `Suspended` or `Deactivated`, System MUST cancel each inquiry whose accepted treatment belongs to that provider with cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true`; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Patients MUST receive the provider-caused message with Contact Admin/Support, not the patient-cancellation message (FR-015 A5/Screen 4).
 
 ### Marking Unclear Requirements
 
@@ -1210,8 +1235,11 @@ flowchart TD
 
 - **Inquiry**: patientId, treatmentAreaId, treatmentAreaSnapshot, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
   - Status enum: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, **Cancelled**
+  - `cancellationReason` also carries the system causes `ProviderSuspended` and `ProviderDeactivated`; `supportRequired` (boolean) is an independent admin-support marker with audited resolution, not a stage (Workflow 2 Alternative Flow B4)
   - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
-- **ProviderInquiry**: inquiryId, providerId, distributionAt, viewedAt, status
+- **ProviderInquiry** (persisted as `inquiry_providers`): inquiryId, providerId, distributed_at, viewedAt, status
+  - `distributed_at` (timestamp, UTC): set once per provider when the inquiry is distributed to that provider, including when an inquiry is released to normal distribution after an exclusive provider declines (REQ-003-016). Distribution retries or re-sends to the same provider never overwrite it. It is the start point for FR-014 time to first quote (TTFQ) and response rate, and for the FR-020/FR-030 `inquiry.ttfq_sla_breached` alert.
+  - `status` includes Cancelled with cause `ProviderSuspended` or `ProviderDeactivated` when only that provider's participation is cancelled; the record is retained and never reopened by reactivation.
   - Relationships: belongsTo Inquiry; belongsTo Provider
 - **MedicalQuestionnaireResponse**: inquiryId, questionId, answer, details *(MVP: `answer` is boolean; V2+: extend to typed answers if Inquiry supports additional question types)*
   - Relationships: belongsTo Inquiry
@@ -1238,6 +1266,7 @@ flowchart TD
 - **FR-001**: Patient Authentication & Profile Management (patient registration)
 - **FR-002**: Medical History & 3D Scanning (head scan media validation/processing; V1 photo set; V2 true 3D)
 - **FR-004**: Quote Submission & Management (provider quote creation)
+- **FR-015**: Provider Management (provider status eligibility and the suspension/deactivation cancellation cascade — Alternative Flow A5 and Screen 4)
 - **FR-020**: Notifications & Alerts (inquiry notifications)
 - **FR-025**: Medical Questionnaire Management (centralized settings)
 - **FR-026**: App Settings & Security Policies (owns the treatment-area catalog and minimum inquiry lead-time configuration consumed by FR-003)
@@ -1375,6 +1404,8 @@ Acceptance Scenarios:
 - Patient cancels inquiry during simultaneous provider quote submission: system processes cancellation first (inquiry status is source of truth); incoming quote submission rejected with "Inquiry no longer active" error. **Cross-FR note**: FR-004 must implement corresponding rejection handling for this edge case.
 - Exclusive provider submits duplicate decline requests: the first accepted request releases the inquiry to normal distribution; later duplicates return the committed result without creating duplicate provider views or notifications.
 - Exclusive inquiry reaches its configured expiry without an explicit provider decline: existing expiry rules apply and the decline-triggered redistribution path does not run.
+- Distribution job or retry targets a provider that became `Suspended` or `Deactivated` after matching: allocation is revalidated and skipped; no ProviderInquiry or notification is created.
+- Provider-status cascade is replayed for the same event: no duplicate cancellations, support flags, or patient messages are produced.
 
 ---
 
@@ -1403,6 +1434,8 @@ Acceptance Scenarios:
 | 2026-09-04 | 2.3 | Corrected the approved default inquiry lead time from 30 days to 3 days; the configurable range and all other date constraints are unchanged. See [Change Request](./change-request-2026-09-04-inquiry-configuration.md). | Product Owner |
 | 2026-09-04 | 2.4 | Verification correction: limited exclusive-provider conversion and decline fallback to FR-037, and declared FR-026 as the owner of the inquiry-configuration dependency. | Product Owner |
 | 2026-09-04 | 2.5 | Verification correction: aligned Workflow 1's service-selection step with the Admin-managed treatment-area catalog rather than a fixed Hair/Beard/Both enum. | Product Owner |
+| 2026-10-14 | 2.6 | Cross-FR sync (FR-014 verification): ProviderInquiry now names its persisted table `inquiry_providers` and defines the per-provider `distributed_at` timestamp (set on first distribution to that provider, including release after an exclusive-provider decline; never overwritten by retries) consumed by FR-014 TTFQ and response rate and the FR-020/FR-030 TTFQ SLA alert | AI Assistant |
+| 2026-10-14 | 2.7 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: Workflow 2 Alternative Flow B4, Distribution and Cancellation Rules notes, new Rule 6, Screen 8 provider-caused messaging, REQ-003-019/020, Inquiry and ProviderInquiry cause/marker notes, FR-015 dependency, and edge cases. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
 
 ## Appendix: Approvals
 

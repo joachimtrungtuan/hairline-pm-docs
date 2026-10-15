@@ -140,6 +140,17 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
   3. Refunds processed per policy schedule.
 - **Outcome**: Refunds per policy; status updated to "Cancelled"; audit logged; slot released back to provider calendar.
 
+**B4: Provider Suspended or Deactivated (Admin-Initiated Cascade)**:
+
+- **Trigger**: The provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal).
+- **Steps**:
+  1. Every non-terminal booking of that provider (`Accepted` including unpaid within the payment hold, `Confirmed`, `In Progress`, `Aftercare`) transitions to `Cancelled` with cancellation cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker. The provider-status event itself authorizes the cascade; no per-booking approval is required.
+  2. System immediately releases any active appointment hold, reservation, or confirmed calendar slot and blocks further payment against the accepted selection, even if the original hold had time remaining.
+  3. The FR-005 AcceptanceEvent, accepted snapshot, and booking/payment history are retained unchanged.
+  4. Patient and admin notifications and the admin support handoff follow FR-015 Screen 4; FR-006 does not send a patient-cancellation or payment-retry message for these bookings.
+- **Outcome**: Bookings are cancelled with a provider-caused cause and flagged for admin support. No automatic refund or rebooking occurs; admins resolve finances and rebooking through FR-007/FR-017 and the normal booking flow.
+- **Boundary**: Distinct from patient cancellation (B2/B3), provider-requested Cancel/Close Case (FR-010), and `Payment Window Expired` (B1). Provider reactivation never restores cancelled bookings, holds, or payment windows. A later deactivation does not overwrite an earlier `ProviderSuspended` cause.
+
 ---
 
 ## Screen Specifications
@@ -681,6 +692,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
   - If payment still fails after the hold period, the slot is released and further payment against it is blocked.
   - The AcceptanceEvent and snapshot remain immutable. Recovery requires a new current subquote or audited admin intervention; the parent quote is not automatically reopened.
 - Refunds per cancellation policy example in `system-prd.md`; provider cancellations require admin approval and full refund.
+- **Provider-Status Cancellation**: Bookings cancelled by an effective provider suspension/deactivation (Alternative Flow B4) receive no automatic refund or rebooking; admins resolve finances through FR-007/FR-017. Provider eligibility is revalidated at booking-confirming payment (FR-015 Rule 9). A payment captured while suspension/deactivation becomes effective is recorded and routed to admin financial resolution; it never confirms or revives the booking.
 - Prices shown in patient's currency; exchange rate locked in the subquote acceptance snapshot; payouts use that locked rate.
 
 ### Rescheduling Rules
@@ -871,6 +883,7 @@ Late cancellation applies refund schedule; provider cancellation triggers full r
 - A stale or forged booking handoff references a slot not exclusively held by its AcceptanceEvent: reject it before payment initiation and leave the valid reservation unchanged.
 - Installment plan default before deadline: flag booking, notify admin and patient; apply policy.
 - Provider emergency closure: admin-approved cancellation, full refund, suggest alternatives.
+- Provider suspended or deactivated while the patient is paying: the booking-confirming payment step revalidates provider eligibility and rejects the payment before the gateway is called. If a capture still completes concurrently, record it, keep the booking `Cancelled` with the provider-status cause and `supportRequired`, and route the capture to admin financial resolution (Alternative Flow B4).
 - Payment failure after subquote acceptance: hold the slot for the configurable duration (default 48 hours) and allow retry only during that window; on expiry, set `Payment Window Expired`, release the slot, permanently block payment against that selection, and do not reopen the parent quote or accepted subquote.
 - Two patients attempt to accept subquotes with the same slot simultaneously: the atomic acceptance transaction creates one exclusive hold and one AcceptanceEvent; the losing attempt receives a clear unavailable-slot error and creates no booking handoff.
 - Patient submits payment while inquiry is being cancelled concurrently: system MUST perform atomic pre-booking validation at payment submission time (not just at screen entry). If inquiry transitions to "Cancelled" between screen load and payment submission, payment MUST be rejected with message "This inquiry has been cancelled" and no charge processed. Payment gateway must not be called if inquiry is cancelled.
@@ -887,6 +900,7 @@ Late cancellation applies refund schedule; provider cancellation triggers full r
 - **REQ-006-003**: System MUST require an exclusive appointment hold created atomically with FR-005 acceptance, reject any handoff that does not own the valid hold before payment initiation, and convert that hold into a provider calendar block only after successful payment confirmation.
 - **REQ-006-004**: System MUST enforce cancellation policy with scheduled refunds per policy (rescheduling deferred to V2).
 - **REQ-006-005**: System MUST hold the accepted subquote's appointment slot for a configurable duration (default 48 hours) after payment failure. If the hold expires, System MUST set the booking to `Payment Window Expired`, release the slot, permanently block payment against that accepted selection, preserve the immutable AcceptanceEvent/snapshot, and require a new current subquote or audited admin intervention for recovery without reopening the prior parent quote or accepted subquote.
+- **REQ-006-015**: When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's non-terminal bookings with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, release holds/reservations/slots, block further payment, revalidate provider eligibility at booking-confirming payment, route any racing capture to admin financial resolution, and retain the accepted snapshot and booking/payment history, without automatic refund, rebooking, or restoration on reactivation (Alternative Flow B4; FR-015 A5/Screen 4).
 
 ### Data Requirements
 
@@ -918,14 +932,14 @@ None.
 ## Key Entities
 
 - **Entity 1 - Booking**: Represents a confirmed or pending booking derived from one accepted subquote and its inherited parent context.
-  - **Key attributes**: booking reference, acceptanceEventId, acceptedParentQuoteId, acceptedParentQuoteVersion, acceptedSubquoteId, acceptedSubquoteVersion, acceptanceSnapshot, providerId, patientId, slotId, status, payment state, refund state.
+  - **Key attributes**: booking reference, acceptanceEventId, acceptedParentQuoteId, acceptedParentQuoteVersion, acceptedSubquoteId, acceptedSubquoteVersion, acceptanceSnapshot, providerId, patientId, slotId, status, cancellationReason, supportRequired (with audited admin resolution), payment state, refund state.
   - **Version invariant**: `acceptedSubquoteVersion = acceptedParentQuoteVersion`; both identify the accepted FR-004 aggregate revision.
-  - **Status values**: `Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted). From `Accepted`, hold expiry transitions to `Payment Window Expired`; governed cancellation transitions to `Cancelled`.
+  - **Status values**: `Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted). From `Accepted`, hold expiry transitions to `Payment Window Expired`; governed cancellation transitions to `Cancelled`. An effective provider suspension/deactivation transitions any non-terminal status to `Cancelled` with cause `ProviderSuspended` or `ProviderDeactivated` and `supportRequired = true` (Alternative Flow B4); `supportRequired` is a marker, not a status.
   - **Relationships**: One booking links to one AcceptanceEvent, one accepted subquote and parent quote context, one provider calendar entry, and one patient.
 
 - **Entity 2 - Calendar Slot**: Represents a provider's pre-scheduled appointment time.
   - **Key attributes**: provider ID, start/end, capacity, hold/blocked flags, expiration.
-  - **Release triggers**: (1) Payment failure hold expiry (48h default), (2) Patient-initiated inquiry cancellation during hold period (FR-003 Workflow 5, immediate release per B3 flow), (3) Booking cancellation per B2 flow.
+  - **Release triggers**: (1) Payment failure hold expiry (48h default), (2) Patient-initiated inquiry cancellation during hold period (FR-003 Workflow 5, immediate release per B3 flow), (3) Booking cancellation per B2 flow, (4) Provider suspension/deactivation cascade per B4 flow (immediate release, including holds with time remaining).
   - **Relationships**: One slot can be held or blocked by at most one pending or confirmed booking; acceptance and hold acquisition are atomic.
 
 ---
@@ -948,6 +962,7 @@ None.
 | 2026-09-16 | 2.3 | Clarified the appointment lifecycle boundary: subquote acceptance fixes the appointment choice and reserves the slot for the payment window; only successful deposit or first-installment payment confirms the booking. Removed remaining wording that equated acceptance with slot/booking confirmation. | Product Owner / Documentation |
 | 2026-09-16 | 2.4 | Resolved the slot-reservation concurrency contract: FR-005 acceptance atomically acquires one exclusive appointment hold; a second acceptance is rejected before AcceptanceEvent or booking-handoff creation; FR-006 revalidates hold ownership before payment and converts it to a confirmed calendar block on success. | Product Owner / Verification resolution |
 | 2026-09-16 | 2.5 | Completed accepted-snapshot screen provenance: Patient Screen 1 and Provider/Admin booking details now enumerate inherited provider, treatment, graft, clinician, note, visual-plan, requirement, attachment, expiry, version, and acceptance-audit context as read-only snapshot data. Consolidated verification remains pending. | Product Owner / Verification resolution |
+| 2026-10-14 | 2.6 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Alternative Flow B4, Provider-Status Cancellation payment rule, racing-capture edge case, REQ-006-015, Booking cancellationReason/supportRequired attributes, and the cascade slot-release trigger. Consolidated verification remains pending. | Vân Tay Media |
 
 ---
 
@@ -965,4 +980,4 @@ None.
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-09-16
+**Last Updated**: 2026-10-14
