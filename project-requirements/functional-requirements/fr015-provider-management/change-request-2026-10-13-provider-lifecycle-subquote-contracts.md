@@ -109,4 +109,15 @@ This update also aligns commission edits with booking-confirmation snapshots, cl
 - **PRD change log**: [FR-015 Appendix: Change Log](prd.md#appendix-change-log), v1.8 dated 2026-10-13.
 - **Update log**: [FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md](../../update-logs/2026-10-13/FR015_PROVIDER_LIFECYCLE_SUBQUOTE_ALIGNMENT_2026-10-13.md).
 - **Supersedes**: None as a Change Request; replaces v1.7 wording that suspension leaves upcoming bookings active and commission edits apply to new transactions.
-- **Superseded by**: None.
+- **Superseded by**: Partially amended by FR-015 v1.9 (2026-10-14), see below.
+
+## Amendment — 2026-10-14 (FR-015 v1.9)
+
+The Product Owner's FR-015 verification decisions (2026-10-14, Issues 4 and 8) broaden the deactivation policy recorded above. Effective deactivation now applies the same cascade scope as suspension: all non-terminal Accepted, Confirmed, In Progress, and Aftercare cases are cancelled with `ProviderDeactivated` and the separate `supportRequired` marker; an earlier `ProviderSuspended` cause is not overwritten. The statement "Its ongoing-care policy is not broadened here" no longer applies. FR-015 v1.9 also adds the Screen 5 reactivation modal; reactivation still restores nothing.
+
+The downstream follow-ups listed under Affected Contracts were run under these Change Requests:
+
+- [CR-FR003-20261014-01](../fr003-inquiry-submission/change-request-2026-10-14-provider-status-cancellation-cascade.md), [CR-FR004-20261014-01](../fr004-quote-submission/change-request-2026-10-14-provider-status-cancellation-cascade.md), [CR-FR010-20261014-01](../fr010-treatment-execution/change-request-2026-10-14-provider-status-cancellation-cascade.md), [CR-FR011-20261014-01](../fr011-aftercare-recovery-management/change-request-2026-10-14-provider-status-cancellation-cascade.md), [CR-FR016-20261014-01](../fr016-admin-patient-mgmt/change-request-2026-10-14-provider-status-cancellation-cascade.md), [CR-FR020-20261014-01](../fr020-notifications-alerts/change-request-2026-10-14-provider-status-cancellation-cascade.md)
+- [CR-FR029-20261014-01](../fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md) resolves the FR-029 percentage-only compatibility gap noted under Affected Contracts.
+- FR-005 (v2.4) and FR-006 (v2.6) were aligned through their change logs only, because they are already pending consolidated verification.
+- Update log: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md).
