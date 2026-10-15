@@ -3,7 +3,7 @@
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`
 **Created**: 2025-11-11
-**Status**: Proposed revision (v1.3); prior v1.2 document marked Verified & Approved
+**Status**: Proposed revision (v1.5); prior v1.2 document marked Verified & Approved
 **Source**: FR-009 from system-prd.md
 
 ---
@@ -137,7 +137,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **A3: Team member already has account (different provider)**:
 
-- **Trigger**: Invitee email address already exists in system for another provider organization (single-membership rule)
+- **Trigger**: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count
 - **Steps**:
   1. System detects existing membership during invitation validation
   2. System displays blocking error: "This email already belongs to another provider team. Remove the member from their current provider or invite them with a different email."
@@ -324,7 +324,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Current logged-in user's row highlighted with "(You)."
 - Sorting: Owners (locked) first, then other roles alphabetically.
 - Search/filter by name, email, role, status.
-- Banner surfaces central team-size policy and provides link to "Request More Seats" modal (sends request to Admin Platform).
+- Banner surfaces central team-size policy and provides link to "Request More Seats", which opens an FR-034 support case pre-filled as a seat-increase request; the admin applies an approved increase by editing Seat Limit in FR-015 Screen 3 Tab 1.
 
 **Notes**:
 
@@ -344,16 +344,16 @@ The provider platform starts with four protected clinic-side roles that directly
 |------------|------|----------|-------------|------------------|
 | First Name | text | Yes | Team member's first name | 2-50 characters, letters, spaces, hyphens |
 | Last Name | text | Yes | Team member's last name | 2-50 characters |
-| Email | email | Yes | Work email | Valid email, unique within org, not exceeding seat limit |
+| Email | email | Yes | Work email | Valid email; globally unique across provider organizations (Owners, team members, pending invitations; REQ-009-008); not exceeding seat limit |
 | Role | select/dropdown | Yes | Non-Owner protected roles and active global custom provider roles from FR-031 | Owner option shows warning + lock icon and is disabled |
 | Personal Message | textarea | No | Optional note for invitation email | Max 500 chars |
 | Seat Limit Banner | Display | N/A | Shows remaining seats & link to request more if depleted | Display-only |
 
 **Business Rules**:
 
-- Email uniqueness enforced per org; duplicates prompt "View member / Resend invitation" CTA.
+- Email uniqueness is global (global provider email identity rule, REQ-009-008). An email already on this team or pending here prompts the "View member / Resend invitation" CTA (B2). An email used by another provider organization (Owner, member, or pending invitation) shows the A3 blocking error; emails freed by a Deactivated provider can be invited.
 - Role dropdown includes inline permission summary from FR-031's current matrix; Owner option is always disabled in this screen and annotated: "Primary Owner cannot be set or changed from this screen."
-- Form blocked when seat limit reached; CTA changes to "Request more seats" which routes to the admin/support process defined in FR-015.
+- Form blocked when seat limit reached; CTA changes to "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request (FR-015 Rule 7); the admin edits Seat Limit in FR-015 Screen 3 Tab 1.
 - SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
 
 **Notes**:
@@ -589,9 +589,13 @@ The provider platform starts with four protected clinic-side roles that directly
 | Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
 | Status | badge | N/A | Active, Invited, Suspended | Color-coded |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
-| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate (read-only) | Buttons enabled based on admin permissions |
+| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) |
 | Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select |
 | Pagination Controls | pagination | N/A | Navigate through result pages | Server-driven |
+
+**Notes**:
+
+- For a single provider's team with an admin invite action, see Screen 12 (embedded in FR-015 Screen 3, Tab 3: Staff List).
 
 ---
 
@@ -599,7 +603,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Purpose**: Provide platform admins with comprehensive oversight of individual team members across all providers, including audit logs, compliance monitoring, and emergency intervention capabilities.
 
-**Access Control**: Accessible by platform administrators only. Supports read-only impersonation mode for troubleshooting.
+**Access Control**: Accessible by platform administrators only. Supports a Super Admin-only impersonation session for support and troubleshooting, governed by the FR-015 "Login as Provider" rules (limited write; see Business Rules below).
 
 **Entry Points**:
 
@@ -622,7 +626,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Status Indicator | badge | N/A | Active / Invited / Suspended / Flagged | Real-time status; "Flagged" shown if compliance alert exists |
 | Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
 | Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
-| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate (Read-Only) | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
+| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
 
 **Tab 1: Profile & Overview**:
 
@@ -704,7 +708,12 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - All admin actions (suspend, password reset, session logout, etc.) require strong re-authentication before execution; MFA-based re-authentication is **planned as a future improvement** and is not part of the initial FR-009 scope.
 - Every admin action generates high-priority audit log entry with justification field (required).
-- "Impersonate (Read-Only)" mode allows admin to view platform as team member would see it, but disables all write actions and displays persistent banner: "Viewing as [Name] - Read-Only Admin Mode."
+- **Impersonate** follows the FR-015 "Login as Provider" rules, which own this behavior (FR-015 Screen 3); FR-009 applies them to impersonating an individual team member:
+  - Super Admin only. Before starting, the admin enters a reason (min 20 chars) and re-authenticates with password (MFA re-authentication is a future enhancement tied to the platform-wide MFA rollout).
+  - The impersonated session shows a persistent banner: "You are viewing as [Name] — admin session by [Admin Name]" with an "End Session" action.
+  - The admin may act on the impersonated user's behalf, except changing that user's password or login email, or changing payout/bank or financial settings; those actions are blocked during the session.
+  - Session start (with reason), session end, and every write action performed during the session are logged in the FR-009 audit trail and FR-015 Tab 8: Activity Log, attributed to the admin acting as the user.
+  - The session ends automatically after the standard 30-minute admin inactivity timeout.
 - Patient data access log obeys data retention policies: anonymized after 1 year, deleted after 2 years (unless part of active investigation).
 - Compliance flags automatically trigger notification to admin compliance team via FR-020.
 - IP addresses shown in full for admins (not anonymized) to support security investigations.
@@ -721,13 +730,52 @@ The provider platform starts with four protected clinic-side roles that directly
 
 ---
 
+#### Screen 12: Provider Team (Admin, Single Provider)
+
+**Purpose**: Let Hairline admins view one provider's team and invite staff on that provider's behalf. This view is embedded in FR-015 Screen 3 (Provider Profile Details), Tab 3: Staff List.
+
+**Access Control**: Platform administrators. Viewing follows admin access to the provider profile; the Invite Staff Member action requires the FR-031 "Edit Providers" permission. Impersonate remains Super Admin only.
+
+**Data Fields / UI Elements**:
+
+| Field Name | Type | Required | Description | Validation / Notes |
+|------------|------|----------|-------------|--------------------|
+| Team Member Name | display (link) | N/A | Full name of team member | Click opens Screen 11 |
+| Email | display | N/A | Team member email | Read-only |
+| Role | badge | N/A | Protected or custom provider role | Owner row shows lock icon |
+| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
+| Status | badge | N/A | Active, Invited, Suspended | Color-coded |
+| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
+| Seat Usage | display | N/A | Current members and pending invitations against the provider's Seat Limit (FR-015) | Example: "12 / 100 seats used" |
+| Row Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11 |
+| Invite Staff Member | button | N/A | Opens the admin invite form for this provider | Hidden or disabled without FR-031 "Edit Providers"; disabled with reason when blocked (see Business Rules) |
+
+**Invite Staff Member Form (admin)**:
+
+| Field Name | Type | Required | Description | Validation / Notes |
+|------------|------|----------|-------------|--------------------|
+| Email Address | email | Yes | Invitee email | Same validation as Screen 2, including the global provider email identity rule (REQ-009-008) and duplicate pending invitation checks |
+| Role | dropdown | Yes | One of the provider's assignable roles | Non-Owner protected roles and active global custom provider roles (FR-031) only; Owner is not offered |
+
+**Business Rules**:
+
+- The list shows only the selected provider's members and pending invitations; no cross-provider data appears in this view.
+- Admin invitations use the normal FR-009 invitation flow: same invitation email, acceptance flow (Screens 7-9), token rules, and expiry (REQ-009-016), and the same per-provider invitation rate limit (REQ-009-018).
+- Admins cannot assign the Owner role here. Ownership transfer stays in FR-009's existing Owner flow.
+- Invite is blocked when the provider's Seat Limit (FR-015) is reached, with message: "This provider has reached its seat limit. Increase the Seat Limit in Tab 1 before inviting."
+- Invite is blocked when the provider status is Suspended or Deactivated, with message: "Invitations are unavailable while this provider is [Status]."
+- Each admin invitation is logged in the FR-009 audit trail and in FR-015 Tab 8: Activity Log, recording the inviting admin as the actor.
+- Existing admin actions (force suspend, reset invitation, view audit log, impersonate) remain available from each row.
+
+---
+
 ## Business Rules
 
 ### General Module Rules
 
 - **Rule 1**: Every provider organization must have exactly one Owner at all times (single primary account holder).
 - **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI.
-- **Rule 3**: Team member accounts are scoped to a single provider organization—an email cannot belong to more than one provider team at a time.
+- **Rule 3 (Global Provider Email Identity)**: An email belongs to at most one provider organization at a time, across all forms of membership: Owner (created via FR-015), team member, or pending invitation. When a provider is Deactivated (FR-015), its Owner, team member, and pending-invitation emails are freed for reuse; the old records stay archived and are not reactivated by reuse. FR-015 provider creation and owner login-email edits apply this same rule.
 - **Rule 4**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
 - **Rule 5**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
 - **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Providers can request limit increases through support per FR-015; invitations must be blocked when the limit is reached.
@@ -752,6 +800,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Activity log retention period (default 2 years, minimum 1 year for compliance)
 - Force-suspend individual team member accounts for terms violations
 - Force-remove team member in emergency situations (bypasses Owner-only rule)
+- Invite staff to a single provider with a non-Owner role (Screen 12; requires FR-031 "Edit Providers")
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -763,7 +812,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Configurable with Restrictions**:
 
-- Admin can view any provider's team structure but cannot modify without provider consent (audit trail logged)
+- Admin can view any provider's team structure but cannot modify it without provider consent (audit trail logged), except the admin actions defined in Screens 10-12 (including inviting staff via Screen 12 and actions taken during a Super Admin impersonation session)
 - Admin can suspend team members but cannot delete accounts (compliance requirement)
 
 ### Payment & Billing Rules
@@ -823,7 +872,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - **FR-015 / Module A-02**: Provider Management (Admin-Initiated)
   - **Why needed**: Provider organizations and initial owner accounts are created and managed by admins; team members attach to these provider entities
-  - **Integration point**: Team member records reference provider organizations and owners created via FR-015 flows
+  - **Integration point**: Team member records reference provider organizations and owners created via FR-015 flows. FR-015 Screen 3 Tab 3: Staff List embeds FR-009 Screen 12 (admin single-provider team view and Invite Staff Member), enforcing the FR-015 Seat Limit and provider status. FR-009 admin impersonation follows the FR-015 "Login as Provider" rules; FR-015 Tab 8 records admin invitations and impersonation activity. FR-015 provider creation (Screen 2) and owner login-email edits (Tab 1) apply the FR-009 global provider email identity rule (Rule 3, REQ-009-008); deactivation in FR-015 frees the provider's emails.
 
 - **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
   - **Why needed**: Owner-level settings (including billing, notification preferences, and profile details) rely on FR-009 roles (especially Owner) for access control
@@ -1099,7 +1148,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 - **REQ-009-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
 - **REQ-009-006**: System MUST enforce "at least one owner" rule—prevent removal or demotion of last owner
 - **REQ-009-007**: System MUST send email notifications for team management events (invitation, role change, removal)
-- **REQ-009-008**: System MUST enforce single-provider membership—an email can only belong to one provider organization at a time; invitations for emails tied to another provider must be blocked
+- **REQ-009-008**: System MUST enforce the global provider email identity rule (Rule 3): an email can belong to only one provider organization at a time as Owner, team member, or pending invitation; invitations, FR-015 provider creation, and FR-015 owner login-email edits that use an email tied to another non-Deactivated provider must be blocked; emails of Deactivated providers are freed for reuse while their records stay archived
 
 ### Data Requirements
 
@@ -1129,6 +1178,9 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 - **REQ-009-020**: System MUST integrate with authentication service to create team member accounts and manage sessions
 - **REQ-009-021**: System MUST publish role change events to session management service for real-time permission updates
 - **REQ-009-022**: System MUST write all team management events to centralized audit logging service
+- **REQ-009-023**: System MUST restrict admin impersonation of a provider team member to Super Admins and apply the FR-015 "Login as Provider" rules: reason (min 20 chars) and password re-authentication before start, persistent banner with End Session, write actions allowed except changing the user's password, login email, or payout/bank/financial settings, session start/end and every write action logged and attributed to the admin, and automatic end after 30 minutes of inactivity
+- **REQ-009-024**: System MUST let admins with the FR-031 "Edit Providers" permission invite staff to a single provider from FR-009 Screen 12 (FR-015 Screen 3, Tab 3) using the normal invitation flow and expiry, assigning only a non-Owner role available to that provider, and blocking the invite when the provider's Seat Limit is reached or the provider is Suspended or Deactivated
+- **REQ-009-025**: System MUST log each admin-initiated invitation in the FR-009 audit trail and FR-015 Tab 8: Activity Log with the inviting admin as actor
 
 ---
 
@@ -1164,6 +1216,9 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 | 2025-11-21 | 1.1 | **Screen 11 Enhancement**: Added Tab 3 "Assigned Work" to Admin Console Team Member Detail Page (Screen 11) to provide admins with context on current workload during investigations. Renumbered subsequent tabs (Patient Data Access Log → Tab 4, Security & Sessions → Tab 5, Provider Relationship → Tab 6, Compliance & Investigations → Tab 7). Verified necessity of all admin oversight tabs against original transcription requirements. | Claude (AI) |
 | 2025-12-03 | 1.2 | **MFA/2FA Scope Clarification for FR-009**: Marked all MFA-related behaviors in team member signup and admin console as future improvements (not in initial implementation scope), while keeping phone number as a required field on Screen 8 for contact and future MFA use. Added explicit **Future Improvements: MFA/2FA** section summarizing deferred items and aligned wording with Constitution / FR-026 / FR-031. | GPT-5.1 (AI) |
 | 2026-09-29 | 1.3 (proposed) | Aligned provider team invitation, role change, and Owner safeguards with proposed global custom roles in FR-031. See [CR-FR009-20260929-01](change-request-2026-09-29-custom-provider-role-assignment.md). | Codex |
+| 2026-10-15 | 1.4 (proposed) | Replaced the former view-only admin impersonation with the FR-015 "Login as Provider" limited-write rules (Screens 10 and 11). Added Screen 12: Provider Team (Admin, Single Provider), embedded in FR-015 Screen 3 Tab 3, with admin Invite Staff Member (non-Owner roles only, Seat Limit and provider status checks, FR-031 "Edit Providers" permission, audit in FR-009 and FR-015 Tab 8). Added REQ-009-023 to REQ-009-025 and an FR-015 dependency note. See [CR-FR009-20261015-01](change-request-2026-10-15-admin-staff-invite-impersonation.md). | Claude (AI) |
+| 2026-10-15 | 1.4 (proposed) | Minor alignment with FR-015 v1.14 Rule 7: "Request more seats" (Screen 2 banner and invite form) opens an FR-034 support case pre-filled as a seat-increase request; the admin edits Seat Limit in FR-015 Screen 3 Tab 1. Clarified the Screen 2 invite-form email rule: uniqueness is global per REQ-009-008 and A3 (matches `provider_users.email` UNIQUE), not per org; same-team duplicates get the View/Resend CTA | Claude |
+| 2026-10-15 | 1.5 (proposed) | **Global provider email identity rule**: Rule 3 and REQ-009-008 now cover Owners, team members, and pending invitations across all provider organizations, and FR-015 provider creation and owner login-email edits apply the same rule. Emails of a Deactivated provider (FR-015) are freed for reuse; old records stay archived. Updated A3 trigger, Screen 2 and Screen 12 email validation, and the FR-015 dependency note. See [CR-FR009-20261015-02](change-request-2026-10-15-global-provider-email-identity.md). | Claude |
 
 ---
 
@@ -1180,4 +1235,4 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-09-29 (proposed revision; prior approval status unchanged)
+**Last Updated**: 2026-10-15 (proposed revision v1.5; prior approval status unchanged)
