@@ -3,8 +3,8 @@
 **Module**: A-05: Billing & Financial Reconciliation | PR-05: Financial Management & Reporting
 **Feature Branch**: `fr017-admin-billing-finance`
 **Created**: 2025-11-12
-**Status**: ✅ Verified & Approved
-**Source**: FR-017 from system-prd.md
+**Status**: 🟡 Revised — Documentation Approved; Consolidated Verification Pending
+**Source**: FR-017 from `system-prd.md`; [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md#mtg-002-o01-quote-option-contract), approved FR-005/FR-006 accepted-subquote handoff, and [FR-007 payment context](../fr007-payment-processing/prd.md#payment--billing-rules). This revision clarifies existing booking-based billing; no new payment policy.
 
 ---
 
@@ -13,6 +13,8 @@
 The Admin Billing & Financial Management module provides Hairline administrators with comprehensive tools to manage the platform's financial operations across all stakeholders (patients, providers, and affiliates). This module centralizes transaction monitoring, provider payout processing, discount code management, multi-currency revenue reporting, and financial reconciliation across the three-tenant architecture.
 
 This module serves as the financial control center for the platform, ensuring timely payments, accurate commission calculations, transparent billing, and complete audit trails for all financial transactions. It enables Hairline to scale its medical tourism operations while maintaining financial integrity and regulatory compliance.
+
+Financial records remain booking-based: one patient invoice resolves through its FR-006 Booking to one accepted FR-005 subquote and immutable AcceptanceEvent. The accepted package/services, date/appointment, offered price, attached promotion, and currency/exchange-rate snapshot provide the commercial base; existing FR-019 checkout applications and authorized financial adjustments remain separate recorded events. Parent quote alternatives are not additional billable cases or invoice lines.
 
 **Key Capabilities**:
 
@@ -56,7 +58,7 @@ This module serves as the financial control center for the platform, ensuring ti
 
 *Stage 2 — Payout Consolidation & Processing (Admin-initiated, Provider-visible summary)*:
 
-- Admin consolidates all eligible treatment earnings into scheduled payouts (weekly, bi-weekly, or monthly per provider agreement)
+- Admin consolidates all eligible treatment earnings into scheduled payouts (Weekly, 2x a Month, or Monthly per the provider's payout frequency configured in FR-015 / A-02)
 - Providers view their upcoming payout schedule and expected payout amounts
 - Providers view payout history (completed payouts with itemised breakdown)
 - Providers download invoices for completed payouts (PDF, generated after admin processes payout)
@@ -146,12 +148,12 @@ This module serves as the financial control center for the platform, ensuring ti
 
 ```mermaid
 flowchart TD
-  S1["1. Daily cron checks each provider's individual payout schedule (FR-015 / A-02)"] --> S2["2. System calculates eligible earnings per provider: completed/aftercare treatments, commission %, net payout amount"]
+  S1["1. Daily cron checks each provider's individual payout schedule (FR-015 / A-02)"] --> S2["2. System calculates eligible earnings per provider: completed/aftercare treatments, commission from each booking's confirmation-time snapshot (Percentage or Flat Rate per completed procedure), net payout amount"]
   S2 --> S3["3. Payout statement created per provider — status &quot;Pending Approval&quot;; dashboard view only, no PDF generated"]
   S3 --> S4["4. System notifies admin via push + email: &quot;X statements ready for review. Payout date: [date]&quot;"]
   S4 --> S5["5. Provider does NOT see the statement — internal to admin review workflow only"]
   S5 --> S6["6. Admin opens Provider Billing → Upcoming Payments list; selects a provider statement"]
-  S6 --> S7["7. Admin reviews payout detail: treatment revenue, commission %, net payout, treatment breakdown, bank details"]
+  S6 --> S7["7. Admin reviews payout detail: treatment revenue, commission model/value, net payout, treatment breakdown, bank details"]
   S7 --> S8{"8. Admin needs to add an internal note?"}
   S8 -->|"Yes"| S8A["8a. Admin enters note (max 500 chars) and saves — attached to payout record, not visible to provider"]
   S8 -->|"No"| S9
@@ -232,7 +234,7 @@ flowchart TD
   B2S1["1. Provider contacts admin via support ticket — claims missing booking revenue in payout"] --> B2S2["2. Admin searches disputed Booking Reference in A-05 transaction history"]
   B2S2 --> B2S3{"3. Booking Reference found in system?"}
   B2S3 -->|"No"| B2S3A["3a. Admin escalates to technical investigation — booking may be missing due to system error; documents in audit trail"]
-  B2S3 -->|"Yes"| B2S4["4. System displays booking details: treatment date, amount, commission %, expected net payout, current status"]
+  B2S3 -->|"Yes"| B2S4["4. System displays booking details: treatment date, amount, commission model/value, expected net payout, current status"]
   B2S4 --> B2S5["5. Admin checks payout history for this provider during the booking's completion date range"]
   B2S5 --> B2S6{"6. Booking already included in a prior payout?"}
   B2S6 -->|"Yes — already paid"| B2S7A["7a. Admin confirms booking was correctly included; shares payout reference with provider as evidence"]
@@ -379,7 +381,7 @@ flowchart TD
 - Payout amount MUST include all treatments with status "Completed" or "Aftercare" completed since the last payout cycle
 - Treatments with status "Scheduled", "In Progress", or "Cancelled" are NOT included
 - Providers with status "Suspended" or "Deactivated" do NOT have statements generated
-- Commission shown in this list comes from the booking-time snapshot: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default; supported models are Percentage and Flat Rate where applicable
+- Commission shown in this list comes from the commission snapshot captured at booking confirmation (FR-006): provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default; supported models are Percentage and Flat Rate where applicable
 - Bank account details shown ONLY if provider has a valid bank account on file in FR-032 Billing Settings
 - Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not "Ready" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06
 - "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue"
@@ -465,9 +467,9 @@ flowchart TD
   - **Weekly**: Monday to Sunday of the preceding week
   - **2x a Month**: Either 1st–15th or 16th–last day of the preceding month period
   - **Monthly**: Full preceding calendar month
-- The commission model/value for each included booking comes from the booking-time snapshot: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default
+- The commission model/value (and Flat Rate currency) for each included booking comes from the commission snapshot captured at booking confirmation (FR-006): provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default
 - If provider commission model is Percentage, the percentage calculation is applied AFTER currency conversion (if applicable)
-- If provider commission model is Flat Rate, the configured fixed deduction from FR-015 / A-02 is applied per completed procedure included in the payout
+- If provider commission model is Flat Rate, the snapshotted fixed amount (in its snapshotted currency) is deducted once per FR-010 completed procedure included in the payout, regardless of procedure price; later changes to the provider's commission configuration do not alter existing snapshots
 - Exchange rates locked at time of patient booking acceptance (no fluctuation risk to provider during payout)
 - If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]`
 - If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered
@@ -530,13 +532,13 @@ flowchart TD
 | Invoice Number | text | Yes | Unique invoice ID (e.g., "INV-2511-00456") | Clickable link |
 | Patient Name | text | Yes | Full patient name | Searchable |
 | Patient ID | text | Yes | Unique patient identifier (e.g., "HP-PAT-00789") | Clickable link |
-| Booking Reference | text | Yes | Associated booking reference | Clickable link |
+| Booking Reference | text | Yes | Associated booking and its accepted-subquote context | Clickable link to FR-006; preserve acceptance provenance |
 | Invoice Date | date | Yes | Date invoice generated | Format: DD-MM-YYYY |
 | Due Date | date | Yes | Payment due date. Derived from FR-007B installment schedule (if installment plan) or booking confirmation terms (if full/deposit payment — 7 days before treatment date per Payment Rule 2) | Format: DD-MM-YYYY |
-| Total Amount | currency | Yes | Total invoice amount | Display: £X,XXX.XX |
+| Total Amount | currency | Yes | Recorded payable total for the booking's accepted subquote and permitted FR-019 applications | Display: £X,XXX.XX; not a parent price range or sum of sibling alternatives |
 | Amount Paid | currency | Yes | Amount paid so far (for installment plans) | Display: £X,XXX.XX |
 | Outstanding Balance | currency | Yes | Remaining amount due | Auto-calculated |
-| Currency | text | Yes | Invoice currency | Display: GBP, EUR, USD, etc. |
+| Currency | text | Yes | Accepted payment currency retained by the booking | Display: GBP, EUR, USD, etc.; read-only locked snapshot |
 | Payment Status | badge | Yes | "Pending", "Partial", "Paid", "Overdue", "Refunded", "At Risk" | Color-coded. "At Risk" = all installment retries exhausted, booking requires admin intervention |
 | Payment Method | text | Yes | Masked Stripe payment method | Display: "Visa ending in 1234", "Mastercard ending in 5678", or masked bank transfer reference |
 | Installment Plan | badge | No | Installment progress with retry indicator (if applicable): "2/5 installments paid" or "2/5 — Retry 2/3 in progress" if a payment is currently in retry | Display format |
@@ -563,6 +565,7 @@ flowchart TD
 **Business Rules**:
 
 - Invoice generated automatically when patient completes booking payment (deposit or full)
+- An eligible first installment also confirms booking and generates its invoice. Retain one invoice record per booking; later successful payments update that invoice/payment history and issue payment documents, not new invoices for unaccepted sibling options.
 - Invoices with installment plans display: "X of Y installments paid"
 - "Overdue" status triggered if outstanding balance remains 7 days after due date
 - **"At Risk" status** triggered when all 3 retry attempts for any installment have failed; booking is flagged for admin review. Admin MUST manually follow up with patient (contact via support, update payment method, or cancel booking)
@@ -599,14 +602,14 @@ flowchart TD
 | Invoice Number | text | Unique invoice ID |
 | Patient Name | text | Full name (post-payment reveal) |
 | Patient ID | text | Clickable link to patient record in A-01 |
-| Booking Reference | text | Clickable link to booking record in A-01 |
+| Booking Reference | text | Clickable link to FR-006 booking record and its immutable accepted subquote, parent revision, and AcceptanceEvent context |
 | Invoice Date | date | Date invoice was generated |
-| Currency | text | Invoice currency |
-| Total Amount | currency | Full invoice amount |
+| Currency | text | Accepted payment currency from the booking's locked snapshot |
+| Total Amount | currency | Recorded payable amount for the one accepted subquote, with permitted FR-019 applications; no live quote/library re-pricing |
 | Adjusted Total After Refund | currency | Updated invoice total after any completed partial refund. Hidden if no refund adjustment exists |
 | Outstanding Balance | currency | Remaining unpaid amount (auto-calculated) |
 | Payment Status | badge | Current status (including "At Risk") |
-| Discount Code Applied | text | Discount code used at checkout (if any); display code + type (e.g., "SUMMER25 — Platform-Wide 10%"); links to FR-019 detail. "None" if no discount applied |
+| Discount Code Applied | text | Recorded effective FR-019 application for this booking (if any); display captured code + type and applied amount. Retain the accepted attached-promotion provenance separately when applicable; do not recalculate past discounts from current program settings. Link to FR-019 detail; "None" if no discount applied |
 
 **Payment History Table**:
 
@@ -675,6 +678,7 @@ flowchart TD
 **Business Rules**:
 
 - All data on this screen is read-only except via action buttons
+- Itemized invoice/PDF content uses the accepted package/service and price snapshot via FR-006 plus recorded FR-019 applications; historical adjustments stay separate. Booking Reference supplies acceptance provenance without adding a quote/package selector to billing.
 - Installment Schedule Table visible ONLY if `installment_plan_id` is set on the invoice
 - Refund History Table visible ONLY if at least one refund exists for this invoice
 - Reminder History Table visible ONLY if at least one automated or manual reminder event exists for this invoice
@@ -1143,16 +1147,18 @@ flowchart TD
 ### General Module Rules
 
 - **Rule 1**: All financial transactions MUST be logged with timestamp, admin user ID, transaction amount, and affected parties (patient/provider/affiliate)
-- **Rule 2**: Every payment record (patient invoice, provider payout, affiliate commission) MUST maintain a traceable link to the treatment case(s) that generated it via Booking Reference. This traceability is required for audit, dispute resolution, and commission verification. Patient invoices link 1:1 to a booking; provider payouts and affiliate commissions link 1:N to the bookings included in the payout/commission period.
+- **Rule 2**: Every payment record (patient invoice, provider payout, affiliate commission) MUST maintain a traceable link to the treatment case(s) that generated it via Booking Reference and, through FR-006, the accepted subquote/parent IDs, equal accepted aggregate versions, and AcceptanceEvent snapshot. Patient invoices link 1:1 to a booking; payout/commission periods aggregate their existing booking-linked records, never unaccepted quote alternatives. This provenance supports audit, dispute resolution, and commission verification without duplicating the quote aggregate in billing.
 - **Rule 3**: All payment processing MUST use Stripe API (PCI-DSS compliant); NO direct credit card storage
 - **Rule 4**: Currency exchange rates locked at time of patient booking acceptance; NO rate changes during payout cycle. USD is the base currency — all conversions route through USD (e.g., GBP→USD→TRY; no direct non-USD pair rates). The list of supported currency pairs is dynamic and admin-configurable in FR-029 / A-09: Payment System Configuration. FR-017 supports any currency pair that is enabled in FR-029; it does not restrict or define which pairs are available.
 - **Rule 5**: Provider payouts processed ONLY after treatment status changes to "Completed" or "Aftercare"
 - **Rule 6**: Installment payments MUST complete by the cutoff date before scheduled treatment (cutoff days configured in FR-029 / A-09; default: 30 days). See FR-007B: Split Payment / Installment Plans.
-- **Rule 7**: Refunds follow graduated cancellation policy (FR-006: Booking & Scheduling): >30 days = 90%, 15-30 days = 50%, <15 days = 0%
+- **Rule 7**: Refunds follow graduated cancellation policy (FR-006: Booking & Scheduling): >30 days = 90%, 15-30 days = 50%, <15 days = 0%. Provider-status cancellations follow Rule 13
 - **Rule 8**: **[Not in scope — see FR-019]** Discount code expiration and lifecycle rules (including the requirement for expiration dates) are defined and enforced in FR-019 / A-06: Discount & Promotion Management
 - **Rule 9**: **[Not in scope — see FR-019]** Provider approval workflow for both-fees discounts is defined in FR-019 / A-06: Discount & Promotion Management
 - **Rule 10**: Affiliate commissions calculated ONLY on net revenue (after discounts and refunds)
 - **Rule 11**: Multi-currency bookings display amounts in patient's selected currency; providers receive payouts in their configured currency
+- **Rule 12**: Billing reads one accepted subquote's immutable commercial base through FR-006, not a parent range, sibling option/date rows, or live library/promotion prices. Existing FR-019 checkout redemptions and authorized finance interventions remain separate records; single-discount precedence, attribution, refund, commission, installment, and payout policies are unchanged.
+- **Rule 13**: Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. No refund, reversal, or rebooking is issued automatically and the Rule 7 graduated patient-cancellation tiers are not auto-applied. Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility
 
 ### Data & Privacy Rules
 
@@ -1167,10 +1173,10 @@ flowchart TD
 
 **Editable by Admin**:
 
-- **[Not in scope — see FR-015/A-02]** Per-provider payout frequency (Weekly, 2x a Month, or Monthly): configured per provider via the Commission & Financials tab in Provider Management; FR-017 reads this setting per provider to determine individual statement generation timing
+- **[Not in scope — see FR-015/A-02]** Per-provider payout frequency (Weekly, 2x a Month, or Monthly): configured per provider via the Commission & Financials tab in Provider Management; FR-017 reads this setting, per provider to determine individual statement generation timing (period definitions in FR-015 Tab 7); the provider's commission start date is the FR-029 commission Effective Date for newly confirmed bookings, not a payout-cycle anchor
 - **[Not in scope — see FR-019]** Discount code creation, activation, deactivation, and expiration dates: managed in FR-019 / A-06
 - **[Not in scope — see FR-019]** Discount maximum usage limits: managed in FR-019 / A-06
-- **[Not in scope — see FR-015/A-02 and FR-029]** Provider commission configuration (Percentage or Flat Rate): managed through the provider profile in FR-015 and surfaced centrally in FR-029 for global / provider-scope commission administration; A-05 reads the booking-time snapshot for payout calculations
+- **[Not in scope — see FR-015/A-02 and FR-029]** Provider commission configuration (Percentage or Flat Rate): managed through the provider profile in FR-015 and surfaced centrally in FR-029 for global / provider-scope commission administration; A-05 reads the commission model, value, and Flat Rate currency snapshotted at booking confirmation (FR-006) for payout calculations
 - **[Not in scope — see FR-029]** Installment cutoff days (default: 30 days before treatment date): configured in FR-029 / A-09: Payment System Configuration; FR-017 reads this value at runtime to determine installment eligibility
 - **[Not in scope — see FR-029]** Currency conversion markup percentage: configured in FR-029 / A-09: Payment System Configuration
 - **[Not in scope — see FR-029]** Payout buffer window (days before payout date that statement is auto-generated, default: 3 days): configured in FR-029 / A-09: Payment System Configuration
@@ -1197,17 +1203,17 @@ flowchart TD
 
 ### Payment & Billing Rules
 
-- **Payment Rule 1**: Patient deposits (20-30% of total) REQUIRED for booking confirmation; held until treatment completion
+- **Payment Rule 1**: Initial payment is REQUIRED for booking confirmation: deposit (20-30% of total under existing configuration), eligible first installment per FR-007B, or the existing full-payment alternative. Existing treatment-completion fund-holding policy is unchanged.
 - **Payment Rule 2**: Final payment due 7 days before treatment date OR last installment 30 days before treatment (whichever is configured)
 - **Payment Rule 3**: Failed installment payments trigger 3 automatic retry attempts (day 1, day 3, day 7); if all fail, booking flagged for admin review
-- **Billing Rule 1**: Patient invoices generated immediately upon successful payment (deposit, installment, or final)
+- **Billing Rule 1**: Initial successful payment creates the booking's patient invoice; subsequent successful installment/final payments update that same invoice and generate the corresponding payment PDF/receipt. One invoice record per booking is retained; mere subquote acceptance or unpaid options do not create additional patient invoices.
 - **Billing Rule 2**: Provider payout statements (dashboard view) are auto-generated at the start of the buffer window before each scheduled payout date. Provider invoice PDFs are generated separately only after the Stripe transfer is confirmed (post-payout). Statements and invoices are two distinct artefacts.
 - **Billing Rule 3**: Affiliate invoices generated at the start of the buffer window before the monthly payout date (1st processing date minus buffer days)
 - **Billing Rule 4**: The buffer window is configurable globally (default: 3 days before payout date). For example, a Friday payout with a 3-day buffer means the statement is generated on Tuesday. Buffer window configuration is managed in FR-029 / A-09: Payment System Configuration.
 - **Billing Rule 5**: Admin must approve payout statements during the buffer window. On payout day, the system auto-processes only "Approved" statements. Any statement still in "Pending Approval" at that point moves to "Overdue" and is NOT auto-processed. Overdue statements can be approved and processed at any time outside the normal cycle; the Stripe transfer is initiated immediately on approval. Delay is recorded in the audit trail.
 - **Currency Rule 1**: Patients charged in their selected currency; providers paid in their configured currency; Hairline absorbs currency conversion costs
 - **Currency Rule 2**: Exchange rates locked at booking acceptance; NO fluctuation risk to patient or provider during booking lifecycle
-- **Commission Rule 1**: Platform commission calculated AFTER discount application and BEFORE provider payout
+- **Commission Rule 1**: Platform commission calculated BEFORE provider payout from the booking's confirmation-time snapshot. Percentage commission is calculated AFTER discount application; Flat Rate commission is a fixed deduction once per FR-010 completed procedure, independent of procedure price
 - **Commission Rule 2**: Affiliate commissions deducted from Hairline's commission (does not reduce provider payout)
 
 ---
@@ -1266,16 +1272,20 @@ flowchart TD
   - **Integration point**: Patient billing records linked to patient accounts; in MVP, invoice delivery is via email/PDF while any future in-app dashboard access remains backlog
 
 - **FR-003 / Module P-02: Quote Request & Management**
-  - **Why needed**: Quote acceptance triggers initial invoice generation
-  - **Integration point**: Quote acceptance locks pricing and exchange rates used for all billing calculations
+  - **Why needed**: Original inquiry/patient context for booking-linked financial records.
+  - **Integration point**: Preserve the booking's inquiry reference; inquiry submission is not quote acceptance or an invoice-generation trigger.
 
 - **FR-004 / Module PR-02: Inquiry & Quote Management**
   - **Why needed**: Provider quote submission determines treatment pricing and packages included in billing
-  - **Integration point**: Quote data flows to booking confirmation; itemized breakdown appears in invoices
+  - **Integration point**: Parent context and one accepted Quote Option/date-price record flow through FR-005's snapshot and FR-006 Booking; invoice itemization excludes unaccepted alternatives and later library edits.
+
+- **FR-005 / Module P-02: Subquote Comparison & Acceptance**
+  - **Why needed**: Atomic acceptance identifies one complete commercial selection and locks its price/currency context.
+  - **Integration point**: Resolve AcceptanceEvent and accepted parent/subquote IDs/aggregate versions through FR-006; acceptance alone collects no funds and does not generate the patient invoice.
 
 - **FR-006 / Module P-03: Booking & Scheduling**
   - **Why needed**: Booking confirmation (triggered by successful deposit or first installment) initiates invoice generation and payout eligibility tracking; cancellation policy defined here governs refund amounts; booking status transitions drive billing workflows
-  - **Integration point**: Booking status transitions (Confirmed, Cancelled) trigger invoice creation and payout eligibility updates in A-05; refund amounts follow the graduated cancellation policy owned by FR-006; any provider payout deductions from post-payout refunds are reconciled in subsequent payout cycles
+  - **Integration point**: Initial successful payment/confirmation creates the booking-linked invoice; subsequent payments/status changes update its financial state without changing acceptance history. Consume the FR-006 acceptance snapshot and provenance; refund amounts follow its existing cancellation policy, and provider deductions from post-payout refunds retain existing subsequent-cycle reconciliation.
 
 - **FR-007 / Module S-02: Payment Processing Service**
   - **Why needed**: All payment transactions processed via Stripe integration
@@ -1334,7 +1344,7 @@ flowchart TD
 
 - **Entity 1: Booking Records (from P-03: Booking & Payment)**
   - **Why needed**: Invoices link to bookings; payout calculations aggregate completed bookings
-  - **Source**: Booking module creates booking records upon quote acceptance; financial module consumes booking data
+  - **Source**: [FR-006 Booking](../fr006-booking-scheduling/prd.md#key-entities) carries the accepted FR-005 snapshot/provenance. Initial successful payment confirms the pending booking and creates its invoice; financial aggregation uses existing eligible booking/transaction records, not sibling subquotes.
 
 - **Entity 2: Treatment Completion Status (from PR-03: Treatment Execution & Documentation)**
   - **Why needed**: Provider payouts released ONLY after treatment marked "Completed" or "Aftercare"
@@ -1342,11 +1352,11 @@ flowchart TD
 
 - **Entity 3: Provider Commission Structure (from A-02: Provider Management & Onboarding)**
   - **Why needed**: Commission model/value determines platform revenue and provider payout split
-  - **Source**: Configured during provider onboarding and stored in provider profile
+  - **Source**: Configured during provider onboarding and stored in provider profile: commission model (Percentage 0-100% or Flat Rate amount + currency per completed procedure), payout frequency (Weekly, 2x a Month, or Monthly), and commission start date; model, value, and currency are snapshotted per booking at confirmation (FR-006)
 
 - **Entity 4: Discount Code Data (from A-06: Discount & Promotion Management)**
   - **Why needed**: Discount codes affect invoice amounts, commission calculations, and affiliate attribution
-  - **Source**: Discount codes created in A-06; applied at checkout; tracked in A-05 for financial reporting
+  - **Source**: FR-019 owns code/program validation and checkout application records; accepted option/date promotion provenance is retained via FR-005/FR-006. Billing reads recorded effective applications rather than reapplying current program settings; captured affiliate attribution remains independent under FR-018.
 
 - **Entity 5: Payment Method Tokens (from Stripe)**
   - **Why needed**: Installment payments require stored payment methods for recurring charges
@@ -1465,7 +1475,7 @@ An admin processes weekly provider payouts every Friday for providers who have c
 
 1. **Given** admin is logged into Admin Platform AND navigates to "Provider Billing" → "Upcoming Payments"
    **When** admin filters by "Payment Schedule: Weekly" AND views list of providers with earnings
-   **Then** system displays all providers with completed treatments in past 7 days, showing: provider name, outstanding earnings, commission %, net payout, bank account last 4 digits
+   **Then** system displays all providers with completed treatments in past 7 days, showing: provider name, outstanding earnings, commission model/value, net payout, bank account last 4 digits
 
 2. **Given** admin selects a provider from "Upcoming Payments" list AND clicks "View Details"
    **When** payout detail modal opens
@@ -1495,7 +1505,7 @@ Patients book treatments with split payment plans (2-9 monthly installments), an
 
 **Acceptance Scenarios**:
 
-1. **Given** patient accepts quote AND selects "Split Payment: 5 months" at checkout
+1. **Given** patient accepts one subquote AND selects an eligible "Split Payment: 5 months" plan at checkout
    **When** patient completes first installment payment
    **Then** system calculates remaining 4 installments (equal amounts), schedules charges for days 30, 60, 90, 120, generates invoice with installment schedule, confirms booking
 
@@ -1514,6 +1524,14 @@ Patients book treatments with split payment plans (2-9 monthly installments), an
 5. **Given** all 3 retry attempts fail
    **When** final retry fails
    **Then** system flags booking as "Payment Failed", sends admin alert, sends email to patient: "Payment unsuccessful after 3 attempts. Please update payment method or contact support.", booking moves to "At Risk" status
+
+6. **Given** multiple parent quotes/options/date-price rows but only one accepted subquote and confirmed booking,
+   **When** invoice detail/PDF is produced and subsequent installments succeed,
+   **Then** the same booking has one invoice record using its accepted package/date/price context and recorded FR-019 applications; payment history grows without invoices or revenue for unaccepted alternatives.
+
+7. **Given** package-library, live quote, or current promotion settings change after acceptance,
+   **When** historical billing is viewed,
+   **Then** accepted commercial facts and recorded discount applications remain unchanged and traceable through Booking Reference; any authorized adjustment is recorded separately.
 
 ---
 
@@ -1551,17 +1569,17 @@ An admin reviews discount performance and financial impact inside Billing & Fina
 
 ### User Story 4 - Multi-Currency Booking with Locked Exchange Rates (Priority: P1)
 
-A patient from the UK books a treatment in Turkey, pays in GBP, while the provider receives payout in EUR, with exchange rates locked at booking time to protect both parties from currency fluctuations.
+A patient from the UK books a treatment in Turkey, pays in GBP, while the provider receives payout in EUR, with exchange rates locked at subquote acceptance and retained by the booking to protect both parties from currency fluctuations.
 
 **Why this priority**: Multi-currency support essential for international medical tourism platform; locked rates prevent disputes and financial losses from rate fluctuations.
 
-**Independent Test**: Create booking with patient currency GBP and provider currency EUR, verify exchange rate locked at booking, advance time, verify payout uses locked rate regardless of current market rate.
+**Independent Test**: Accept a subquote with patient currency GBP and provider currency EUR; verify FR-005 locks the applicable rate, FR-006 retains it, and payment/invoice/payout use that rate regardless of later market changes.
 
 **Acceptance Scenarios**:
 
-1. **Given** patient (UK) accepts quote from provider (Turkey) with treatment price £2,000 GBP
+1. **Given** patient (UK) accepts one subquote from provider (Turkey) with treatment price £2,000 GBP and a locked applicable rate (e.g., 1 GBP = 1.17 EUR)
    **When** patient confirms booking and completes payment
-   **Then** system locks exchange rate at booking time (e.g., 1 GBP = 1.17 EUR), stores locked rate in booking record, displays on invoice: "Exchange rate locked: 1 GBP = 1.17 EUR"
+   **Then** billing uses the already-locked FR-005 rate retained by FR-006, rather than fetching/relocking a rate at payment, and displays on invoice: "Exchange rate locked: 1 GBP = 1.17 EUR"
 
 2. **Given** booking completed and treatment marked "Aftercare" (ready for payout)
    **When** admin processes provider payout (2 weeks after booking)
@@ -1569,7 +1587,7 @@ A patient from the UK books a treatment in Turkey, pays in GBP, while the provid
 
 3. **Given** current market exchange rate has changed (1 GBP = 1.22 EUR) after booking
    **When** admin views payout detail modal
-   **Then** system displays: "Booking Amount: £2,000 GBP", "Exchange Rate (Locked): 1.17 EUR", "Provider Payout: €2,340 EUR", "Note: Exchange rate locked at booking time"
+   **Then** system displays: "Booking Amount: £2,000 GBP", "Exchange Rate (Locked): 1.17 EUR", "Provider Payout: €2,340 EUR", "Note: Exchange rate locked at subquote acceptance"
 
 4. **Given** provider views payout history in Provider Platform
    **When** provider clicks on payout record
@@ -1663,12 +1681,13 @@ A patient requests refund due to cancellation, admin reviews request against can
   - Second patient completes checkout: system displays "Discount code no longer available (maximum uses reached)"
   - System prevents race condition using database row locking on discount code record
 
-- **How to manage** currency exchange rate API downtime during booking?
-  - Patient initiates booking requiring EUR → GBP conversion
-  - System attempts to fetch latest exchange rate from API, receives timeout error
+- **How to manage** currency exchange rate API downtime while preparing subquote acceptance?
+  - Patient attempts to accept a subquote requiring EUR → GBP conversion
+  - Before the acceptance snapshot is locked, system attempts to fetch the exchange rate from API and receives a timeout error
   - System uses cached exchange rate (refreshed 1 hour ago) with warning notification to admin: "Using cached rate (1 hour old) due to API unavailability"
-  - System flags booking for manual review if cached rate >24 hours old
-  - Admin reviews and approves rate OR contacts patient to confirm acceptable rate
+  - System flags the acceptance handoff for manual review if cached rate >24 hours old
+  - Admin review/confirmation occurs before the accepted rate is locked; FR-005/FR-029 own acceptance/rate eligibility. These existing fallback thresholds are not changed by this clarification.
+  - If acceptance already has a valid locked rate, FR-017 uses that snapshot even during a later API outage; it does not fetch/relock a replacement rate at payment or payout.
 
 - **What happens when** affiliate discount code and provider discount code both applied?
   - Patient enters or arrives through "AFFILIATE10" (affiliate-bound code/link), and a provider-side promotion "PROVIDER15" is also eligible or applied during checkout
@@ -1686,12 +1705,18 @@ A patient requests refund due to cancellation, admin reviews request against can
   - If the deduction exceeds the provider's next payout amount (e.g., provider has no other completed treatments that cycle), the deduction carries forward to the subsequent cycle — it is never silently absorbed by Hairline
   - The audit trail records: refund event, deduction amount, affected payout statement ID, and admin ID
 
+- **What happens when** a provider is suspended or deactivated while the patient has a paid booking?
+  - FR-015 cancels the provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases with cause `ProviderSuspended` / `ProviderDeactivated` and marks them Admin Support Required (FR-016)
+  - FR-017 does not issue any refund automatically; captured deposits, installments, or payments captured while the cascade was running stay recorded on the booking invoice and appear for admin financial resolution
+  - Admin decides any refund through Screen 4b with mandatory reason and audit trail; the cancelled booking is excluded from provider payout calculation, and statements are not generated while the provider is Suspended or Deactivated
+  - A procedure already recorded as completed under FR-010 is not erased by the cancellation; resolution of its payout stays with admin financial resolution
+
 - **How does system handle** partial refund (patient cancels add-on packages but keeps base treatment)?
   - Patient booked treatment (£2,000) + hotel package (£500) + PRP add-on (£200), total £2,700
   - Patient cancels hotel and PRP, keeps base treatment
   - Admin processes partial refund: £500 + £200 = £700
   - System initiates Stripe refund for £700, updates invoice: "Partial Refund: £700", "New Total: £2,000"
-  - Provider payout adjusted: original commission calculated on £2,700, recalculated on £2,000
+  - Provider payout adjusted: under the Percentage model, original commission calculated on £2,700, recalculated on £2,000; under the Flat Rate model, the per-procedure deduction is unchanged because the base procedure is still completed
 
 ---
 
@@ -1700,19 +1725,19 @@ A patient requests refund due to cancellation, admin reviews request against can
 ### Core Requirements
 
 - **REQ-017-001**: System MUST allow admins to view all patient invoices with filtering by payment status (Pending, Partial, Paid, Overdue, Refunded, At Risk)
-- **REQ-017-002**: System MUST allow admins to view all provider payment schedules (weekly, bi-weekly, monthly) and process payouts with itemized treatment breakdowns
+- **REQ-017-002**: System MUST allow admins to view all provider payment schedules (Weekly, 2x a Month, Monthly) and process payouts with itemized treatment breakdowns
 - **REQ-017-003**: System MUST allow admins to view discount code usage, fee split, attributed revenue, and ROI for discounts created and managed in FR-019 / A-06
-- **REQ-017-004**: System MUST automatically generate invoices (PDF) immediately upon successful patient payment (deposit, installment, final)
+- **REQ-017-004**: System MUST automatically generate invoice/payment PDFs upon successful patient payment, retaining one invoice record per booking and updating its payment history for later installments/final payments. Invoice itemization uses the accepted subquote snapshot via FR-006 plus recorded permitted FR-019 applications; unaccepted alternatives are not billed.
 - **REQ-017-005**: System MUST automatically schedule and charge installment payments on configured dates, with 3 retry attempts for failed charges
 - **REQ-017-006**: System MUST calculate provider payouts based on completed treatments (status "Completed" or "Aftercare"), deducting platform commission
-- **REQ-017-007**: System MUST lock currency exchange rates at time of booking acceptance for all multi-currency transactions
+- **REQ-017-007**: System MUST consume the currency/exchange-rate snapshot locked at FR-005 subquote acceptance and retained by FR-006 for all applicable multi-currency billing transactions; payment must not relock it.
 - **REQ-017-008**: System MUST generate financial dashboard with real-time metrics: total revenue, platform commission, provider payouts, outstanding invoices
 - **REQ-017-009**: System MUST track affiliate commissions based on discount code usage and process monthly payouts with failure and retry visibility
 - **REQ-017-010**: System MUST send payment reminder emails 3 days before installment due date and 7 days if overdue
 
 ### Data Requirements
 
-- **REQ-017-011**: System MUST maintain complete transaction history for all payments, refunds, and payouts with timestamp, amount, currency, and affected parties
+- **REQ-017-011**: System MUST maintain complete transaction history for all payments, refunds, and payouts with timestamp, amount, currency, and affected parties, resolving acceptance provenance through the associated FR-006 booking without duplicating/mutating the accepted quote aggregate.
 - **REQ-017-012**: System MUST store provider bank account details encrypted at rest (AES-256) and display masked (last 4 digits only) in UI
 - **REQ-017-013**: System MUST track discount code usage with metrics: times used, total discount amount, bookings generated, ROI
 - **REQ-017-014**: System MUST store locked exchange rates per booking for multi-currency transactions (rate never changes after booking)
@@ -1743,6 +1768,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 - **Entity 1 - Patient Invoice**
   - **Key attributes**: invoice_id, patient_id, booking_id, invoice_date, due_date, total_amount, adjusted_total_after_refund, amount_paid, outstanding_balance, currency, payment_status (Pending, Partial, Paid, Overdue, Refunded, At Risk), payment_method, installment_plan_id (if applicable), discount_code_applied, status_override_reason, status_override_by_admin_id, status_override_at
   - **Relationships**: One invoice per booking; one patient can have many invoices; one invoice can have many installment payments
+  - **Commercial source**: Through `booking_id`, resolve the FR-006 acceptance snapshot, AcceptanceEvent, accepted parent/subquote IDs and equal aggregate versions, package/service and option/date-price provenance, and locked currency/rates. Existing recorded FR-019 applications and finance adjustments remain separate; no new quote entity or option-level invoice fan-out.
 
 - **Entity 2 - Provider Payout**
   - **Key attributes**: payout_id, payout_reference, provider_id, payout_period (date_range), total_revenue, commission_model, commission_value, commission_amount, net_payout, bank_account_id, payout_readiness_status, payout_status (Pending Approval, Approved, Overdue, Processing, Paid, Failed, Voided), approved_by_admin_id, approved_at, voided_by_admin_id, voided_at, void_reason, processed_at, payout_date, stripe_transfer_id, failure_reason, invoice_pdf_url
@@ -1767,6 +1793,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 - **Entity 7 - Currency Exchange Rate Lock**
   - **Key attributes**: rate_lock_id, booking_id, source_currency, target_currency, locked_rate, lock_timestamp
   - **Relationships**: One booking has one currency rate lock (if multi-currency); rate used for all calculations related to that booking
+  - **Lock origin**: FR-005 subquote acceptance; FR-006 retains the snapshot for FR-017 consumption, rather than locking a replacement rate at initial payment.
 
 ---
 
@@ -1791,6 +1818,9 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-04-02 | 2.4 | Status updated from Draft to ✅ Verified & Approved and approval metadata aligned to the verified-template pattern used by other approved FRs | Codex |
 | 2026-04-02 | 2.5 | Commission-source model realigned to implemented admin design: FR-029 again exposes provider-specific commission scope management alongside the global default, FR-015 remains the single-provider commission + payout-frequency surface, and all payout/reporting references now point to the shared effective commission configuration instead of the prior FR-015-only provider-specific split | Codex |
 | 2026-06-23 | 2.6 | FR-018 attribution alignment: corrected the affiliate-vs-provider discount edge case so the single-discount priority controls only the patient's final price. A valid captured affiliate-bound code/link remains preserved as affiliate referral attribution and still feeds FR-018 commission output consumed by FR-017 for payout execution after payment-confirmed booking completion. | Codex |
+| 2026-10-13 | 2.7 | Clarified existing booking-based billing against Meeting 2's accepted-subquote handoff: invoice amounts/itemization and currency use FR-006's accepted snapshot plus recorded FR-019 applications; one invoice record remains per booking across later payments; acceptance provenance resolves through Booking Reference. Corrected acceptance/invoice dependency ownership and exchange-rate test timing; added snapshot-stability/no-option-fan-out scenarios. No new financial policy, controls, or entities; normal clarification log only. Documentation approved; consolidated verification and implementation reconciliation pending. | Product Owner / Documentation |
+| 2026-10-14 | 2.8 | FR-015 v1.9 / FR-029 v1.8 alignment: removed percentage-only provider commission wording (payout flow, payout detail, booking lookup, User Story 1) so payouts use each booking's confirmation-time commission snapshot (Percentage, or Flat Rate amount + currency deducted once per FR-010 completed procedure); Commission Rule 1 and partial-refund edge case cover both models; payout-frequency labels standardized to Weekly / 2x a Month / Monthly (removed bi-weekly) and commission start date referenced for payout-cycle tracking; added Rule 13 and an edge case for provider suspension/deactivation cancellations (no automatic refunds, captured payments routed to admin financial resolution, cancelled bookings excluded from payout, no restoration on reactivation). See [update log](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md) | Vân Tay Media |
+| 2026-10-14 | 2.9 | FR-015 v1.10 alignment: clarified that the provider's commission start date is the FR-029 commission Effective Date for newly confirmed bookings and that payout statement timing follows payout frequency only | Vân Tay Media |
 
 ---
 
@@ -1801,10 +1831,11 @@ A patient requests refund due to cancellation, admin reviews request against can
 | Product Owner |  | 2026-04-02 | ✅ Approved |
 | Technical Lead |  | 2026-04-02 | ✅ Approved |
 | Finance Lead |  | 2026-04-02 | ✅ Approved |
+| Product Owner — v2.7 documentation clarification | Joachim Trung Tuan | 2026-10-13 | Approved to complete remaining Meeting 2 quote-model work; prior approvals remain historical, with consolidated verification and implementation reconciliation pending for this revision. |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-06-23
+**Based on**: FR-017 Admin Billing & Financial Management (system-prd.md), with FR-005/FR-006 accepted-subquote context
+**Last Updated**: 2026-10-14
