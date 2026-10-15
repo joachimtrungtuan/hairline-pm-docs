@@ -1,6 +1,6 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.6.0  
+**Version**: 1.7.0  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
@@ -145,6 +145,9 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | city | VARCHAR(255) | NOT NULL | City where provider is located |
 | country | VARCHAR(255) | NOT NULL | Country where provider is located |
 | status | VARCHAR(255) | DEFAULT 'active' | Provider account status: `active`, `suspended`, `deactivated` only (FR-015 v1.9). There is no `draft` status; a provider is created directly as `active` |
+| password_set | BOOLEAN | NOT NULL, DEFAULT false | Whether the owner has set a password through the FR-015 activation link (FR-015 REQ-015-011); set to true when the password is first saved |
+| activation_token_hash | VARCHAR(255) | NULLABLE, UNIQUE | Hash of the one-time password setup token sent in the FR-015 activation email (REQ-015-011); the raw token is never stored. NULL once the password is set |
+| activation_token_expires_at | TIMESTAMP | NULLABLE | Token expiry, 24 hours after generation (REQ-015-011) |
 | featured | BOOLEAN | DEFAULT false | Featured-provider flag; cleared automatically when the provider becomes `suspended` or `deactivated` and never restored by reactivation |
 | payout_frequency | VARCHAR(255) | NOT NULL | Provider payout cadence: `weekly`, `twice_monthly`, `monthly`; required at creation (FR-015) |
 | timezone | VARCHAR(255) | NULLABLE | Provider's timezone (e.g., Europe/Istanbul) |
@@ -157,6 +160,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - PRIMARY: `id`
 - UNIQUE (partial): `email` WHERE `status` IN ('active', 'suspended')
 - INDEX: `user_id`, `status`, `country`, `city`, `specialty_id`, `email`
+- INDEX: (`status`, `password_set`) for inquiry distribution eligibility
 
 **Business Rules (FR-015 v1.9, FR-029)**:
 
@@ -169,6 +173,9 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - Email reuse: a `deactivated` provider's contact email does not block a new provider account; contact email uniqueness counts only `active` and `suspended` providers (FR-015 v1.15 Rule 4, REQ-015-014). Owner and team login emails follow the global provider email identity rule (FR-009 Rule 3, REQ-009-008; FR-015 v1.15 REQ-015-014) in §3 and §4. The deactivated record keeps its email unchanged.
 - A future-dated suspension or deactivation is stored in `provider_pending_status_changes` (§38), not in `status`. Reactivation cancels any pending row (FR-015 v1.13).
 - `specialty_id` must reference an active specialty when set or changed; a stored value whose specialty is later deactivated stays valid and still displays (FR-026 v1.11).
+- Inquiry distribution eligibility (FR-015 v1.16 Rule 3, FR-003 v2.8 REQ-003-019): a provider receives allocations, explicit patient selections, and reassignments only when `status` = 'active' AND `password_set` = true. Turning `password_set` true does not re-send inquiries distributed earlier.
+- Activation token (FR-015 REQ-015-011, A1): each provider holds at most one valid token. Generating a new token (creation, provider self-service resend, or admin Resend Activation Email) overwrites the hash and expiry, which invalidates the previous link. A token is accepted only when its hash matches, `activation_token_expires_at` is in the future, `password_set` = false, and `status` = 'active'. Saving the password sets `password_set` = true and clears both token columns. The 3-per-hour resend limit is enforced by the application, not stored here.
+- Provider languages (`provider_languages`) reference the FR-021 central language catalog (`languages`), not an FR-026 list (FR-015 v1.16). A language later removed from the catalog still displays but cannot be newly selected.
 
 **Relationships**:
 
@@ -258,6 +265,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - On its `effective_date`, a scheduled job archives the provider's `active` row and changes the `pending` row to `active`. FR-015 Tab 7, FR-029 Screen 5, and FR-032 Screen 4 read the `pending` row as the Scheduled Configuration.
 - An FR-015 Tab 7 edit to a provider assigned through an FR-029 multi-provider configuration replaces only that provider's row (the split); other providers' rows are unchanged.
 - A provider without an active provider-specific row uses the global default.
+- Provider-specific rows can be inserted, scheduled, or archived only while `providers.status` is `active` or `suspended`. A `deactivated` provider's rows are read-only (FR-015 v1.16 Tab 7, FR-029 v1.10, CR-FR029-20261015-02).
 - FR-015 `commission_value` maps to `commission_percentage` for `percentage` and to `flat_rate_amount` (with `flat_rate_currency`) for `flat_rate`.
 - The model, value, and currency in effect at booking confirmation are snapshotted onto the booking (see §7 Quotes); later rows never change a confirmed booking.
 
@@ -2443,6 +2451,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 - At most one `pending` row per provider. An immediate suspension or deactivation, a manual Cancel Scheduled Change, or a Screen 5 reactivation moves the pending row to `cancelled`.
 - On `effective_date`, the job sets `providers.status`, runs the provider-status cancellation cascade, and moves the row to `applied`.
 - Every state change is audit-logged and shown in FR-015 Tab 8.
+- A `deactivate` row that processes an account-closure request (§40) must have `notify_provider` = true; FR-015 A7 locks Notify Provider on (FR-015 v1.16).
 
 **Relationships**:
 
@@ -2501,7 +2510,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | status | VARCHAR(255) | NOT NULL, DEFAULT 'pending_admin_review' | `pending_admin_review`, `approved`, `rejected` |
 | reviewed_by | UUID | FOREIGN KEY, NULLABLE | References users.id (admin) |
 | reviewed_at | TIMESTAMP | NULLABLE | When the admin approved or rejected |
-| review_notes | TEXT | NULLABLE | Admin notes (required on rejection) |
+| review_notes | TEXT | NULLABLE | Admin notes; required on rejection (minimum 20 characters) and sent to the provider in FR-020 `provider.closure_rejected` |
 | deactivation_event_id | UUID | NULLABLE | FR-015 deactivation status event that applied the request; set when `approved` |
 | created_at | TIMESTAMP | AUTO | Request submission timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
@@ -2512,9 +2521,12 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 - UNIQUE (partial): `provider_id` WHERE `status` = 'pending_admin_review'
 - INDEX: `provider_id`, `status`
 
-**Business Rules (FR-032 v1.8, FR-015 v1.14)**:
+**Business Rules (FR-032 v1.9, FR-015 v1.16)**:
 
 - Submission is never blocked by active bookings or pending payouts; the provider stays `active` until an admin acts.
+- Submission emits FR-020 `provider.closure_requested` to admins (mandatory). FR-015 Screen 1's Closure Requested marker and filter read the provider's `pending_admin_review` row; the marker clears when the row becomes `approved` or `rejected`.
+- The deactivation that approves a request always notifies the provider (`provider.deactivated`); Notify Provider cannot be cleared, including on a scheduled §38 row.
+- Rejection emits FR-020 `provider.closure_rejected` to the provider (mandatory). After a rejection the provider may submit a new request.
 - Approval is recorded only when the admin deactivates the provider through FR-015 Screen 4 (immediate or scheduled; a scheduled deactivation uses §38). The request then links to the deactivation status event.
 - There is no `deleted` provider status; provider data is retained per FR-023 (minimum 7 years). Requests are never hard-deleted and are audit-logged.
 
@@ -2654,6 +2666,7 @@ Schema version tracked via:
 | 1.4.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.13, FR-017 v2.10, and FR-026 v1.11 (CR-FR017-20261015-01, CR-FR026-20261015-01): new §38 `provider_pending_status_changes` (one pending row per provider, cancelled by reactivation); new §39 `provider_specialties` and `providers.specialty_id`; `payments.reconciliation_flag` and `provider_status_event_id`; `cancelled` payment status for stopped installments and plan cancellation on provider-status cancellation |
 | 1.5.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.14 and FR-032 v1.8 (CR-FR032-20261015-02): `providers.email` unique only among `active` and `suspended` providers (partial index); email-reuse rules for owner (§3) and team (§4) login emails after deactivation, mechanism subject to reconciliation; confirmed no `deleted` provider status; new §40 `provider_account_closure_requests` (one pending request per provider, approved via FR-015 deactivation) |
 | 1.6.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.15 and FR-009 v1.5 (proposed) (CR-FR009-20261015-02): global provider email identity rule in §3 and §4 (one provider organization per login email across owner accounts, `provider_users`, and pending `provider_staff_invitations`; deactivated providers' emails freed, records archived; enforced by a shared check, mechanism subject to reconciliation); §2 contact-email reuse note now separates contact email from login emails |
+| 1.7.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.16, FR-003 v2.8, FR-029 v1.10, and FR-032 v1.9 (CR-FR003-20261015-01, CR-FR029-20261015-02, CR-FR032-20261015-03): §2 `providers.password_set` with the distribution eligibility rule (`active` and password set) and index; §2 `activation_token_hash` and `activation_token_expires_at` with the one-valid-token rule (FR-015 REQ-015-011); `provider_languages` reference the FR-021 `languages` catalog; §2B provider-specific rows writable only for `active` or `suspended` providers; §38 closure deactivations must notify the provider; §40 rejection notes required (min 20 chars), closure notification events, Screen 1 marker source, resubmission after rejection |
 | 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
 
 ---
