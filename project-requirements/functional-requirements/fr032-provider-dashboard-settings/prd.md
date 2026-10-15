@@ -6,6 +6,7 @@
 **Status**: ✅ Verified & Approved
 **Source**: FR-032 from system-prd.md
 **Change Request**: [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — Commission & Payout panel and provider account-status banner
+**Change Request**: [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md) — Account closure as an admin-processed deactivation request
 
 ---
 
@@ -51,13 +52,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers view all their submitted support cases and feedback via My Support Cases screen (Screen 5.7) with complete case details, communication thread, and status tracking
 - Providers engage in two-way communication with admin by replying to admin messages within their support cases
 - Providers request to reopen closed cases if issue persists or resolution was unsatisfactory
-- Providers request account deletion (soft-delete with admin approval)
+- Providers request account closure (admin processes the request by deactivating the provider in FR-015; no self-service deactivation)
 - Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and post public responses to individual reviews (response composer defined in FR-013 Screen 6)
 
 **Admin Platform (A-XX)**:
 
 - Admins create and manage Help Centre content (FAQs, guides, videos, resources)
-- Admins approve provider account deletion requests
+- Admins process provider account-closure requests by deactivating the provider in FR-015
 
 **Shared Services (S-XX)**:
 
@@ -732,82 +733,55 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ---
 
-### Main Flow: Request Account Deletion
+### Main Flow: Request Account Closure
 
 **Actors**: Provider (any role), Admin, System
-**Trigger**: Provider navigates to "Settings" → "Account Settings" → "Delete Account"
-**Outcome**: Provider account deletion request submitted to admin for approval (soft-delete, not hard-delete)
+**Trigger**: Provider navigates to "Settings" → "Account Settings" → "Request account closure"
+**Outcome**: Provider account-closure request submitted to admin; when the admin processes it, the provider is deactivated through FR-015 (Provider Management) Screen 4 (status "Deactivated", standard deactivation cascade). There is no separate "Deleted" status and no self-service deactivation.
 
 **Steps**:
 
 1. Provider navigates to Settings → Account Settings
 2. Provider scrolls to bottom of page
-3. Provider clicks "Delete Account" button (in red/warning color)
-4. System displays account deletion warning dialog:
-   - "Warning: Deleting your account will remove access to the Hairline platform."
-   - "This action cannot be undone."
-   - "All your quotes, bookings, and financial data will be archived."
-   - "If you have active bookings or pending payments, please contact support before deleting your account."
-   - [Checkbox] "I understand that this action is permanent and my account data will be archived."
-   - Reason for deletion: [textarea] (optional)
+3. Provider clicks "Request account closure" button (in red/warning color)
+4. System displays account closure warning dialog:
+   - "Closing your account permanently deactivates it. You will no longer be able to log in or receive inquiries."
+   - "Deactivation cannot be reversed. To rejoin Hairline, our team must create a new account for you."
+   - "When our team deactivates your account, all open inquiries, quotes, and active bookings are cancelled and the affected patients are notified. Payments already captured are reconciled by our finance team."
+   - "Your quotes, bookings, and financial data will be archived per our data retention policy."
+   - [Checkbox] "I understand that closing my account is permanent and my account data will be archived."
+   - Reason for closure: [textarea] (optional)
 5. Provider checks "I understand" checkbox
-6. Provider enters reason for deletion (optional): "Closing clinic permanently"
-7. Provider clicks "Submit Deletion Request"
-8. System validates:
-   - Provider has no active bookings (status = "Scheduled" or "Confirmed" or "In Progress")
-   - Provider has no pending payouts
-9. System creates account deletion request record with status "Pending Admin Approval"
-10. System logs deletion request in audit trail (user, timestamp, reason)
-11. System sends deletion request notification to admin team
-12. System displays confirmation to provider "Account deletion request submitted. Our team will review and process your request within 5 business days. You will receive an email confirmation once your account is deleted."
-13. Provider account remains active until admin approves deletion
-14. Admin reviews deletion request in admin dashboard (A-XX: Provider Management)
-15. Admin verifies provider has no active obligations
-16. Admin approves deletion request
-17. System performs soft-delete:
-    - Provider account status changed to "Deleted"
-    - Provider login disabled
-    - Provider profile hidden from patient quote requests
+6. Provider enters reason for closure (optional): "Closing clinic permanently"
+7. Provider clicks "Submit Closure Request"
+8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission)
+9. System logs closure request in audit trail (user, timestamp, reason)
+10. System sends closure request notification to admin team
+11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated."
+12. Provider account remains Active until admin processes the request
+13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
+14. System applies the FR-015 deactivation:
+    - Provider account status changed to "Deactivated"
+    - Provider login blocked with the Rule 6 deactivation message
+    - Provider profile hidden from patients and new inquiries
+    - All non-terminal inquiries, quotes, and bookings cancelled under the FR-015 Screen 4 cascade, with patient and admin-support notifications (FR-020); captured payments reconciled by FR-017
     - All provider data retained in archive (per FR-023 data retention: minimum 7 years)
     - Bank account details encrypted and archived
-18. System sends email confirmation to provider "Your account has been deleted. Your data has been archived per our data retention policy."
+15. System sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020)
+16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, and the provider account remains Active
 
 ### Alternative Flows
 
-**A13: Provider Cancels Deletion Request**:
+**A13: Provider Cancels Closure Request Dialog**:
 
-- **Trigger**: Provider changes mind before submitting deletion request
+- **Trigger**: Provider changes mind before submitting closure request
 - **Steps**:
-  1. Provider clicks "Delete Account"
+  1. Provider clicks "Request account closure"
   2. System displays warning dialog
   3. Provider reads warning
   4. Provider clicks "Cancel" button
-  5. System closes dialog without creating deletion request
-- **Outcome**: Account deletion canceled, provider account remains active
-
-**B13: Active Bookings Prevent Deletion**:
-
-- **Trigger**: Provider has active bookings and attempts to delete account
-- **Steps**:
-  1. Provider clicks "Delete Account"
-  2. Provider completes deletion form
-  3. Provider clicks "Submit Deletion Request"
-  4. System validates provider obligations
-  5. System detects 3 active bookings (status = "Confirmed")
-  6. System displays error "Cannot delete account. You have 3 active bookings. Please complete or cancel all bookings before deleting your account. For assistance, contact support at <support@hairlineapp.com>."
-  7. Provider contacts support or waits for bookings to complete
-- **Outcome**: Deletion request blocked until bookings completed
-
-**B14: Pending Payouts Prevent Deletion**:
-
-- **Trigger**: Provider has pending payouts and attempts to delete account
-- **Steps**:
-  1. Provider submits deletion request
-  2. System validates financial status
-  3. System detects pending payout of $2,500 scheduled for next week
-  4. System displays error "Cannot delete account. You have pending payout of $2,500 scheduled for [date]. Please wait for payout to complete or contact support."
-  5. Provider waits for payout or contacts support
-- **Outcome**: Deletion request blocked until payout processed
+  5. System closes dialog without creating closure request
+- **Outcome**: No closure request created; provider account remains active
 
 ---
 
@@ -834,7 +808,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 | Edit Profile Button | button | N/A | Quick access to edit mode for all fields in tab | N/A | **Toggle Action**: Clicking button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows bulk editing of multiple fields |
 | About/Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars | **Inline Edit**: Click textarea to activate edit mode; expands to show full textarea with character counter (e.g., "245/500 characters"); save/cancel buttons appear; real-time validation; saves on save button click |
 | Contact Phone (Public) | object | No | Public-facing clinic phone number shown in profile "About" section | Contains `Country Code` (dropdown, FR-026) and `Number` (text, numeric only, length validated per country code) | **Inline Edit**: Click to activate edit mode; field becomes object with dropdown for country code and input for number; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click |
-| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique if changed | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click |
+| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique among Active and Suspended providers if changed (Deactivated records ignored, per FR-015 Rule 4) | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click |
 | Location - City | text | No | City where clinic is located | Max 100 chars | **Inline Edit**: Click city name to activate edit mode; field becomes editable input; save/cancel buttons appear; saves on save button click |
 | Location - Country | dropdown | No | Country where clinic is located | Values from centrally managed country list (FR-026); optional but recommended | **Inline Edit**: Click country name to activate edit mode; field becomes dropdown selector with search; shows country list from FR-026; save/cancel buttons appear; saves on save button click |
 | Website URL | url | No | Public-facing clinic website shown in profile "About" section | Valid URL format (http/https); auto-prepends https:// if protocol missing | **Inline Edit**: Click URL to activate edit mode; field becomes editable input with URL validation; auto-formats on blur (adds https:// if missing); shows validation error if invalid; save/cancel buttons appear; saves on save button click |
@@ -1101,7 +1075,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Timezone dropdown should include offset and city examples (e.g., "(GMT+3) Istanbul")
 - Provide "Show/Hide Password" toggle icon for password fields
 - Display last password change date below password section
-- Include a dedicated **Delete Account** warning card at the bottom of the Account Information tab with explanatory copy and a red `Delete account` button; clicking the button opens the Account Deletion dialog described in the "Request Account Deletion" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
+- Include a dedicated **Account Closure** warning card at the bottom of the Account Information tab with explanatory copy and a red `Request account closure` button; clicking the button opens the Account Closure dialog described in the "Request Account Closure" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
 - Account Settings shares the Settings page with Notification Preferences as a two-tab interface; the `Account Information` tab (this screen) is the default tab when landing on Settings
 - Each tab can be saved independently; system displays unsaved changes indicator on tabs with edits
 - When provider attempts to navigate away or quit, system displays reminder dialog for unsaved changes
@@ -1171,7 +1145,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Commission Model | display | N/A | "Percentage" or "Flat Rate" | Retrieved from FR-015 Tab 7 (FR-029 provider-specific commission configuration); read-only |
 | Commission Value | display | N/A | e.g., "15%" or "£200 per completed procedure" | Retrieved from FR-015 Tab 7; Flat Rate shown with its Flat Rate Currency; read-only |
 | Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only |
-| Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only |
+| Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change. At most one pending configuration exists per provider; a newer future-dated edit by an admin replaces it (FR-015 Tab 7, FR-029) | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only |
 | Payout Frequency | display | N/A | "Weekly" (Mon–Sun), "2x a Month" (1st–15th, 16th–last day), or "Monthly" (calendar month) | Retrieved from FR-015 Tab 7; read-only |
 
 **Business Rules**:
@@ -1654,9 +1628,9 @@ Each message in the thread displays:
 
 - **Privacy Rule 1**: Bank account details encrypted at rest using AES-256 and masked in UI (e.g., ●●●●●●1234)
 - **Privacy Rule 2**: Password stored as bcrypt hash (cost factor 12+), never stored in plain text
-- **Privacy Rule 3**: Account deletion requests result in soft-delete (account status = "Deleted", data archived per FR-023 data retention: minimum 7 years)
-- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account deletion requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value
-- **GDPR Compliance**: Provider account deletion request allows provider to exercise "right to erasure" (soft-delete with data archival, not permanent deletion)
+- **Privacy Rule 3**: Approved account-closure requests result in FR-015 deactivation (account status = "Deactivated"; there is no separate "Deleted" status), with data archived per FR-023 data retention: minimum 7 years
+- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value
+- **GDPR Compliance**: Provider account closure request gives the provider a path to request erasure (FR-015 deactivation with data archival per FR-023, not permanent deletion)
 - **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 
 ### Admin Editability Rules
@@ -1675,7 +1649,7 @@ Each message in the thread displays:
 - Encryption algorithms: AES-256 for data at rest, TLS 1.3 for data in transit
 - Role-based access control rules: billing settings accessible only to Owner role (FR-009)
 - Password hash algorithm: bcrypt with cost factor 12+
-- Account deletion workflow: soft-delete only, data retained per FR-023 (minimum 7 years)
+- Account closure workflow: admin deactivation through FR-015 only (no "Deleted" status), data retained per FR-023 (minimum 7 years)
 
 **Configurable with Restrictions**:
 
@@ -1809,7 +1783,7 @@ Each message in the thread displays:
 ### Business Process Assumptions
 
 - **Assumption 1**: Admins update Help Centre content at least monthly to keep resources current and relevant
-- **Assumption 2**: Admins review and approve provider account deletion requests within 5 business days
+- **Assumption 2**: Admins review and process provider account closure requests within 5 business days
 - **Assumption 3**: Provider profile updates (logo, awards) reviewed by admin for quality assurance (future enhancement, not MVP)
 - **Assumption 4**: Bank account details remain valid for at least 12 months; providers responsible for updating if bank account changes
 
@@ -1856,7 +1830,7 @@ Each message in the thread displays:
 - **Encryption**: All provider data encrypted in transit (TLS 1.3) and at rest (AES-256); bank account details use field-level encryption with separate encryption keys
 - **Audit trail**: Log all settings changes (profile, account, notifications, billing) with timestamp, user ID, IP address, action, old value, new value
 - **Threat mitigation**: Rate limiting on password change endpoint (max 5 attempts/hour/user) to prevent brute force attacks; rate limiting on image upload endpoint (max 10 uploads/hour/user) to prevent abuse
-- **Compliance**: GDPR-compliant account deletion (soft-delete with data archival); PCI-DSS compliance for bank account data handling (no card data stored, only bank account details for payouts)
+- **Compliance**: GDPR-compliant account closure (FR-015 deactivation with data archival); PCI-DSS compliance for bank account data handling (no card data stored, only bank account details for payouts)
 
 ---
 
@@ -1958,19 +1932,19 @@ A provider submits a support request about a technical issue, receives admin res
 
 ---
 
-### User Story 7 - Request Account Deletion (Priority: P2)
+### User Story 7 - Request Account Closure (Priority: P2)
 
-A provider closing their clinic permanently requests account deletion, and admin reviews and approves deletion request.
+A provider closing their clinic permanently requests account closure, and an admin processes the request by deactivating the provider in FR-015.
 
-**Why this priority**: Account deletion allows provider to exercise GDPR "right to erasure" and ensures platform doesn't retain inactive accounts. Account deletion implemented as soft-delete with data archival per FR-023 compliance requirements.
+**Why this priority**: Account closure gives the provider a path to leave the platform and request erasure, and ensures the platform doesn't keep inactive accounts open. Closure is implemented as FR-015 deactivation with data archival per FR-023 compliance requirements; there is no separate "Deleted" status.
 
-**Independent Test**: Can be fully tested by submitting account deletion request as provider, verifying admin receives request, admin approves deletion, provider account soft-deleted, and provider data archived.
+**Independent Test**: Can be fully tested by submitting an account closure request as provider, verifying admin receives request, admin deactivates the provider in FR-015, provider status becomes Deactivated, the FR-015 cascade runs, and provider data is archived.
 
 **Acceptance Scenarios**:
 
-1. **Given** provider is closing clinic permanently, **When** provider navigates to Settings → Account Settings, clicks "Delete Account", checks "I understand" checkbox, enters reason "Closing clinic permanently", clicks "Submit Deletion Request", **Then** system validates provider has no active bookings or pending payouts, creates account deletion request with status "Pending Admin Approval", logs deletion request in audit trail, sends notification to admin team, displays confirmation "Account deletion request submitted. Our team will review and process your request within 5 business days.", and provider account remains active until admin approves
-2. **Given** admin receives account deletion request, **When** admin reviews deletion request in admin dashboard, verifies provider has no active obligations, approves deletion request, **Then** system performs soft-delete (account status changed to "Deleted", provider login disabled, provider profile hidden from patient quote requests, all data retained in archive per FR-023), sends email confirmation to provider "Your account has been deleted. Your data has been archived per our data retention policy."
-3. **Given** provider has 3 active bookings, **When** provider attempts to submit account deletion request, **Then** system validates provider obligations, detects active bookings, displays error "Cannot delete account. You have 3 active bookings. Please complete or cancel all bookings before deleting your account. For assistance, contact support at <support@hairlineapp.com>.", and blocks deletion request until bookings completed
+1. **Given** provider is closing clinic permanently, **When** provider navigates to Settings → Account Settings, clicks "Request account closure", checks "I understand" checkbox, enters reason "Closing clinic permanently", clicks "Submit Closure Request", **Then** system creates account closure request with status "Pending Admin Review", logs the request in audit trail, sends notification to admin team, displays confirmation "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated.", and provider account remains Active until admin processes it
+2. **Given** admin receives account closure request, **When** admin deactivates the provider from the request via FR-015 Screen 4, **Then** system sets account status to "Deactivated", blocks provider login, hides the provider profile, cancels non-terminal cases under the FR-015 cascade, retains all data in archive per FR-023, sets the request to "Approved", and sends the FR-015 deactivation email
+3. **Given** provider has 3 active bookings, **When** provider submits an account closure request, **Then** system accepts the request without blocking; when the admin later deactivates the provider, the 3 bookings are cancelled under the FR-015 cascade with patient and admin-support notifications, and any captured payments are reconciled by FR-017
 
 ---
 
@@ -2015,7 +1989,7 @@ A provider closing their clinic permanently requests account deletion, and admin
 - **REQ-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
 - **REQ-032-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
 - **REQ-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
-- **REQ-032-013**: System MUST allow providers to request account deletion (soft-delete with admin approval required)
+- **REQ-032-013**: System MUST allow providers to request account closure; the request is processed by an admin, who deactivates the provider through FR-015 (no self-service deactivation)
 
 ### Data Requirements
 
@@ -2028,10 +2002,10 @@ A provider closing their clinic permanently requests account deletion, and admin
 
 - **REQ-032-018**: System MUST encrypt bank account details at rest using AES-256
 - **REQ-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
-- **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account deletion requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
+- **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
 - **REQ-032-021**: System MUST send email notification to provider after password change (security alert)
 - **REQ-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
-- **REQ-032-023**: System MUST perform soft-delete for account deletion requests (account status = "Deleted", data archived per FR-023 minimum 7 years)
+- **REQ-032-023**: System MUST process approved account-closure requests as FR-015 deactivation (account status = "Deactivated", standard FR-015 cascade, data archived per FR-023 minimum 7 years)
 
 ### Integration Requirements
 
@@ -2063,9 +2037,9 @@ A provider closing their clinic permanently requests account deletion, and admin
   - **Key attributes**: provider ID, account holder name, bank name, account number (encrypted), routing/SWIFT code, IBAN (if applicable), last updated timestamp, updated by user ID (Owner role), S-02 validation status
   - **Relationships**: One provider has one billing settings record (accessible only to Owner role); billing settings used by FR-017 for provider payouts
 
-- **Entity 5 - Provider Account Deletion Request**: Represents provider account deletion request workflow
-  - **Key attributes**: request ID, provider ID, reason for deletion, request date, requested by user ID, status (Pending Admin Approval / Approved / Rejected), reviewed by admin ID, review date, review notes
-  - **Relationships**: One provider can have multiple deletion requests (but only one "Pending" at a time); deletion request reviewed by one admin
+- **Entity 5 - Provider Account Closure Request**: Represents provider account closure request workflow
+  - **Key attributes**: request ID, provider ID, reason for closure, request date, requested by user ID, status (Pending Admin Review / Approved / Rejected), reviewed by admin ID, review date, review notes, FR-015 deactivation status event ID (set when Approved)
+  - **Relationships**: One provider can have multiple closure requests (but only one "Pending" at a time); closure request reviewed by one admin; an approved request links to one FR-015 deactivation status event
 
 - **Entity 6 - Help Centre Content (Admin-Managed)**: Represents help resources displayed to providers
   - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
@@ -2088,6 +2062,8 @@ A provider closing their clinic permanently requests account deletion, and admin
 | 2026-01-26 | 1.4 | **Removed Case export functionality:** Removed Export Case Button from Screen 5.8 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 5.7 (My Support Cases List); Removed all export-related business rules and constraints; Removed export steps from Business Workflow A2 and User Story 6 acceptance scenario 4; Case export feature was accidentally included and is now removed from both provider-facing (FR-032) and admin-facing (FR-034) specifications | AI/Claude |
 | 2026-05-14 | 1.5 | **Aligned Reviews tab scope with FR-013:** Removed read-only / future-enhancement designation for provider responses. Tab 5 (Reviews) is now "Read/Respond" — review content remains read-only but providers can post public responses via the FR-013 Screen 6 inline response composer. Updated: module scope bullet (line ~54), Tab 5 Purpose, Tab 5 Business Rules, General Business Rule 5, Entity 7 name and description. Resolves scope conflict identified in FR-013 verification. | Verification alignment (2026-05-14) |
 | 2026-10-15 | 1.6 | FR-015 v1.11 alignment via [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md): added read-only Commission & Payout panel to Screen 4 (Owner only); added Rule 6 provider account-status banner (Suspended banner with admin reason and view-only restrictions, Deactivated login block, Reactivated removal); added REQ-032-029 and REQ-032-030 and an FR-015 internal dependency | Claude |
+| 2026-10-15 | 1.7 | Clarification from FR-015 v1.12 fourth verification: Screen 4 Scheduled Configuration shows at most one pending configuration per provider, and a newer future-dated admin edit replaces it, per FR-015 Tab 7 and [CR-FR029-20261015-01](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md). No change to provider permissions or screen layout | Claude |
+| 2026-10-15 | 1.8 | FR-015 v1.14 alignment via [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md): Delete Account became Request account closure; an admin processes it by deactivating the provider in FR-015 (Alternative Flow A7, Screen 4 cascade). Removed the "Deleted" status and the active-booking and pending-payout blocks (former B13 and B14 of the closure flow). Updated Screen 2 card, Privacy Rule 3, Audit and GDPR rules, Assumption 2, User Story 7, REQ-032-013, REQ-032-020, REQ-032-023, and Entity 5. Minor: Contact Email uniqueness counts Active and Suspended providers only (FR-015 Rule 4) | Claude |
 
 ---
 
