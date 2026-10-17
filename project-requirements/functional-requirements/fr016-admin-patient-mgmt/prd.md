@@ -253,7 +253,7 @@ This is a critical operational module that ensures the platform can provide effe
 
 **A7: Admin resolves provider-caused cancellation support**:
 
-- **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert
+- **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation, or closes an accepted booking for the FR-006 provider-fault transfer while the inquiry stays open, with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert
 - **Steps**:
   1. Admin filters Screen 1 by "Admin Support Required: Unresolved" or opens the alert's deep link
   2. Admin reviews the patient's Provider-Caused Impacts (Screen 2): affected inquiry/case references, prior stage, cancellation cause, and any linked FR-034 support case
@@ -746,7 +746,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Integration point**: Medical data tab embeds head scan viewer component
 
 - **FR-015 / Module A-02: Provider Management**
-  - **Why needed**: Provider suspension/deactivation cancels affected cases/inquiries and sets the Admin Support Required marker (FR-015 Alternative Flow A5, Screen 4)
+  - **Why needed**: Provider suspension/deactivation closes affected bookings (transfer through FR-006 Alternative Flow B5 after acceptance, inquiry stays open), cancels unaccepted participation, and sets the Admin Support Required marker (FR-015 Alternative Flow A5, Screen 4)
   - **Integration point**: FR-016 consumes cause, prior stage, affected references, and marker; owns admin filtering and audited resolution (Flow A7)
 
 - **FR-034 / Support Center & Ticketing**
@@ -1009,7 +1009,7 @@ Patient cancelled their inquiry via FR-003 Workflow 5. Admin needs to view the c
 
 ### User Story 9 - Admin Resolves Provider-Caused Cancellation Support (Priority: P1)
 
-A provider is suspended or deactivated (FR-015 A5) and the patient's case is cancelled. Admin must find the patient, assist, and resolve the support marker with an audit trail.
+A provider is suspended or deactivated (FR-015 A5) and the patient's case is cancelled, or their accepted booking is closed and awaits rehoming through FR-006 Alternative Flow B5. Admin must find the patient, assist, and resolve the support marker with an audit trail.
 
 **Why this priority**: Patients lose an accepted or ongoing treatment through no action of their own and are instructed to contact admins.
 
@@ -1122,6 +1122,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-02-09 | 1.4 | Cancellation integrity fixes: Added cancellation reason/timestamp fields to Screen 2 (Overview) with oversight-only rules. Added "Inquiry Cancelled" milestone to Screen 3 (Treatment Journey) with cascade summary. Updated Entity 1 journey_status enum to include accepted/cancelled with cancellation fields. Completed status badge color coding for all journey stages. Added User Story 8 (admin reviews cancelled inquiry). Fixed Last Updated date. | AI |
 | 2026-03-03 | 1.5 | Clarified V1 scan media as head scan photo sets and updated admin medical data viewing to treat interactive 3D model viewing as a V2 enhancement. Updated viewer terminology, dependencies, and requirements accordingly. | AI |
 | 2026-10-14 | 1.6 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9 | Vân Tay Media |
+| 2026-10-16 | 1.7 | MTG-002 quote model alignment (minor wording, decision M18): the admin-support trigger and its user story now include an accepted booking closed for the FR-006 provider-fault transfer while the inquiry stays open. No CR needed (clarification only). | Vân Tay Media |
 
 ---
 
@@ -1138,4 +1139,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-10-14
+**Last Updated**: 2026-10-16

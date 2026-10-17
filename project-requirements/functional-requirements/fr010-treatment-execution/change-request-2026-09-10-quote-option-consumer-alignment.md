@@ -16,6 +16,8 @@
 
 FR-010 consumes the exact Quote Option selected under FR-005 rather than a singular quote-level package or plan. The stable accepted Quote Option relationship supplies its package snapshot and relative plan days; the parent Quote continues to supply the Treatment relationship, graft estimate, and clinicians.
 
+> **Superseded in part (2026-10-16)**: [CR-FR010-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md) moves every accepted-data read to the FR-005 accepted snapshot reached through the booking's AcceptanceEvent. The parent Quote is no longer read live; treatment, graft estimate, and clinicians are seeded from the snapshot and change after acceptance only through FR-010's audited treatment-detail change.
+
 ## Baseline State
 
 **Source version**: FR-010 v1.9, Dependencies, Integration Points, Functional Requirements Summary, and Key Entities
@@ -75,4 +77,4 @@ The updated [FR-010 PRD](./prd.md) uses the accepted Quote Option ID and its `Qu
 - **PRD change log**: FR-010 v2.0
 - **Update log**: [`FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md`](../../update-logs/2026-09-10/FR004_FR010_VERIFICATION_RESOLUTION_2026-09-10.md)
 - **Supersedes**: None
-- **Superseded by**: None
+- **Superseded by**: CR-FR010-20261016-01 (in part: accepted-data source and post-acceptance treatment-detail changes)

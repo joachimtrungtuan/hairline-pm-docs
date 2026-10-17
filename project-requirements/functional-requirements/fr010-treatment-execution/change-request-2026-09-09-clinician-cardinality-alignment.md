@@ -54,7 +54,7 @@ The quote supplies `clinicianIds[]` — one or more eligible clinicians shared b
 
 ### Affected Contracts
 
-- **PRD owner**: [`prd.md`](./prd.md) — Patient Screen 3, Provider Screens 1 and 3, Admin Screen 2, Business Rule 8, Dependencies, Entity 1
+- **PRD owner**: [`prd.md`](./prd.md) — Patient Screen 3, Provider Screens 1 and 3, Admin Screen 2, Business Rule 8, Dependencies, Entity 1 (current global numbering from v2.1: Screens 1, 3, 4, 7 and 8)
 - **Related FRs**: FR-004 owns `clinicianIds[]`; FR-009 supplies eligible provider team members; FR-031 governs the roles permitted to edit
 - **System documents**: system data schema requires a set-valued clinician association on the treatment record during the same reconciliation pass as the FR-004 quote-option tables
 
