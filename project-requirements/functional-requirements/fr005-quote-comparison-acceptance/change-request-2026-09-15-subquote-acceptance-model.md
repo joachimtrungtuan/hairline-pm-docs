@@ -59,7 +59,7 @@ FR-005 now groups subquotes under their parent quotes and makes each complete su
 
 - **PRD owner**: `project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md` — `Main Flow: Patient Accepts a Subquote`, Screen 1 through Screen 3, Business Rules, requirements, and Key Entities.
 - **Related FRs**: FR-004 supplies parent quote/subquote data and lifecycle; FR-006 must later consume the accepted subquote handoff without asking the patient to reselect its commercial details.
-- **System documents**: Reconciliation deferred until the controlled cross-FR verification phase.
+- **System documents**: Reconciliation is carried out in the MTG-002 quote-model alignment pass of 2026-10-16 (`CR-FR005-20261016-01`, [change-request-2026-10-16-mtg002-quote-model-alignment.md](change-request-2026-10-16-mtg002-quote-model-alignment.md)); the system PRD, data schema, and technical specification are updated in that pass after the FR edits.
 
 ### Implementation Reconciliation
 

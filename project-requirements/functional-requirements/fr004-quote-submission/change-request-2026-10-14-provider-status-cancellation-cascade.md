@@ -83,4 +83,4 @@ FR-015 defines a provider-status cancellation cascade: when a provider becomes `
 - **PRD change log**: [FR-004 Appendix: Change Log](prd.md#appendix-change-log), v3.0 dated 2026-10-14.
 - **Update log**: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md).
 - **Supersedes**: None.
-- **Superseded by**: None.
+- **Superseded by**: CR-FR004-20261016-01 in part (an accepted quote is no longer cancelled by the provider-status cascade; it follows the FR-006 provider-fault transfer).

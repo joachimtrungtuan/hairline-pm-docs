@@ -73,4 +73,4 @@ The updated [FR-024 PRD](./prd.md) points to FR-004 Quote Option provenance and 
 - **PRD change log**: FR-024 v1.2
 - **Update log**: [`FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md`](../../update-logs/2026-09-10/FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md)
 - **Supersedes**: None
-- **Superseded by**: None
+- **Superseded by**: CR-FR024-20261016-01 in part (QuotePackage is removed rather than kept as a compatibility link; see [CR](./change-request-2026-10-16-mtg002-quote-model-alignment.md))

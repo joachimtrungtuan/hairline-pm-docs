@@ -86,4 +86,4 @@ FR-015 defines a provider-status cancellation cascade: when a provider becomes `
 - **PRD change log**: [FR-003 Appendix: Change Log](prd.md#appendix-change-log), v2.7 dated 2026-10-14.
 - **Update log**: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md).
 - **Supersedes**: None.
-- **Superseded by**: None.
+- **Superseded by**: CR-FR003-20261016-01 in part (an inquiry whose accepted booking belongs to the suspended or deactivated provider is no longer cancelled; it stays open for the FR-006 provider-fault transfer).

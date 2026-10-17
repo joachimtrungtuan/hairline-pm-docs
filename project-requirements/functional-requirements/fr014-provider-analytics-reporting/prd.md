@@ -3,10 +3,10 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.14
+**Version**: 3.16
 **Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
-**Change Request**: [CR-FR014-20261007-01](change-request-2026-10-07-parent-quote-subquote-analytics.md) (amended twice on 2026-10-13); [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessibility.md) — implementation reconciliation required
+**Change Request**: [CR-FR014-20261007-01](change-request-2026-10-07-parent-quote-subquote-analytics.md) (amended twice on 2026-10-13); [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessibility.md); [CR-FR014-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) — implementation reconciliation required
 
 ---
 
@@ -155,7 +155,7 @@ The counting boundary is the FR-004 Parent Quote, not its packages or date-price
 - Color: Green (p50 ≤ SLA and p90 ≤ 2×SLA) · Amber (p50 ≤ SLA and p90 > 2×SLA) · Red (p50 > SLA)
 - Tap → Inquiries list grouped by coordinator
 
-**TTFQ formula**: earliest first-submission `Parent Quote.sent_at − inquiry_providers.distributed_at` per `(providerId, inquiryId)` (elapsed wall time from the inquiry's distribution to that provider; display in provider timezone). This is the same clock as the FR-020/FR-030 `inquiry.ttfq_sla_breached` alert, so a provider who receives an inquiry later (for example after an FR-003 exclusive-provider decline releases it to normal distribution) is not penalised for time before distribution. Missing `distributed_at` yields no TTFQ observation for that pair, not a fallback to `inquiry.created_at`. Draft creation, option/date-price creation, later parent quotes, edits, and resends do not reset the first-response timestamp. Exclude auto-acks; calls/messages do not stop the clock.
+**TTFQ formula**: `Parent Quote.first_sent_at` of the provider's earliest parent quote for the inquiry `− inquiry_providers.distributed_at` per `(providerId, inquiryId)` (elapsed wall time from the inquiry's distribution to that provider; display in provider timezone). This is the same clock as the FR-020/FR-030 `inquiry.ttfq_sla_breached` alert, so a provider who receives an inquiry later (for example after an FR-003 exclusive-provider decline releases it to normal distribution) is not penalised for time before distribution. Missing `distributed_at` yields no TTFQ observation for that pair, not a fallback to `inquiry.created_at`. `first_sent_at` is set by FR-004 on the parent quote's first send; a re-send or new version never changes it. Draft creation, option/date-price creation, later parent quotes, edits, and resends do not reset the first-response timestamp. Exclude auto-acks; calls/messages do not stop the clock.
 
 ###### Table: Inquiry Queue
 
@@ -195,8 +195,9 @@ Row badge: `New` = inquiry distributed to this provider (FR-003 `inquiry_provide
 
 - Chart: Calendar heatmap (6 rows × 7 cols, Mon→Sun)
 - Colored metric: Intensity Index = `(Bookings_on_day ÷ MonthlyDailyAvg_for_that_day's_month) × 100`
+- `Bookings_on_day` counts FR-006 Bookings whose appointment falls on that day and whose status is `Confirmed` or `In Progress`. Held bookings (`Accepted`), `Payment Window Expired` and `Cancelled` bookings never count, and no separate held figure is shown. The monthly average uses the same status filter.
 - Color scale: ≤50% Cool · 50–90% Below avg · 90–110% Neutral · 110–150% Above avg · >150% Hot
-- Cell tooltip: `Bookings: N • Monthly avg: m/day • Index: X%`
+- Cell tooltip: `Confirmed bookings: N • Monthly avg: m/day • Index: X%`
 - Drill-down: click cell → Schedule day view
 - Baseline priority: 12-month same-month avg → current MTD → rolling 90-day
 - Index clamped 0–300% for coloring; actual value in tooltip
@@ -206,8 +207,9 @@ Row badge: `New` = inquiry distributed to this provider (FR-003 `inquiry_provide
 - Chart: Donut (top 8 countries by inquiry share + Other)
 - Center: total Inquiries in range
 - Slice labels: `CC (ISO-2) • %`
-- Slice border: thin/neutral <20% booked rate · medium/amber 20–40% · thick/green >40%
-- Tooltip: `Country • Inquiries: N • Booked: B • Booked rate: R%`
+- Slice border: thin/neutral <20% confirmed booking rate · medium/amber 20–40% · thick/green >40%
+- Tooltip: `Country • Inquiries: N • Confirmed bookings: B • Confirmed booking rate: R%`
+- Confirmed bookings and the confirmed booking rate use the inquiry cohort and Confirmed booking stage defined in Analytics Counting & Time Basis (rate = Confirmed bookings ÷ Inquiries).
 - Drill-down: click slice → filtered Inquiries list
 
 ---
@@ -375,7 +377,7 @@ Row badge: `New` = inquiry distributed to this provider (FR-003 `inquiry_provide
 | Property | Value |
 |----------|-------|
 | Chart type | Ranked table + donut chart (linked) |
-| Table columns | Country · Inquiries · Booked · Booked rate · Avg rating |
+| Table columns | Country · Inquiries · Confirmed bookings · Confirmed booking rate · Avg rating (Confirmed bookings and rate follow the inquiry cohort and Confirmed booking stage in Analytics Counting & Time Basis) |
 | Table | All countries (not capped at 8); sortable by any column |
 | Donut | Top 10 countries by inquiry volume + Other |
 | Drill-down | Click row/slice → Inquiries list filtered to that country |
@@ -1045,7 +1047,7 @@ Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessi
 | Chart type | Choropleth map OR ranked table with flag icons (implementation choice) |
 | Value mapped | Inquiry count per patient country (in selected period) |
 | Color scale | 5-bin scale from low (cool) to high (warm) |
-| Tooltip | `Country · Inquiries: N · Booked: B · Conversion rate: R%` |
+| Tooltip | `Country · Inquiries: N · Confirmed bookings: B · Conversion rate: R%` (Confirmed booking stage per Analytics Counting & Time Basis) |
 | Drill-down | Click country → filtered admin Inquiries list |
 
 ---
@@ -1425,7 +1427,7 @@ These definitions apply to all provider/admin widgets, drill-downs, aggregates, 
 - **Inquiry response rate**: Denominator = distinct `(providerId, inquiryId)` distribution records first assigned to that provider within the selected distribution period. Numerator = those same pairs with at least one submitted parent response by the cutoff. Retries of distribution and multiple parent responses do not multiply either side. Missing authoritative distribution data yields an unavailable metric, not a proxy based on platform inquiries or quote volume.
 - **Inquiry funnel and booking conversion**: Use inquiry `created_at` to select the inquiry cohort. Provider views count distinct `(providerId, inquiryId)` pairs assigned to that provider; platform views count distinct Inquiry IDs across providers, not the sum of provider totals. Quoted means at least one parent was submitted; Accepted means an AcceptanceEvent exists for that inquiry and, in provider views, that provider; Confirmed booking means FR-006 recorded successful deposit or first installment confirmation. Each inquiry contributes at most once to each reached stage and cumulatively to preceding stages. Inquiries have no treatment (the provider chooses it in the parent quote), so treatment segments start at Quoted and use the parent/accepted booking's treatment; unquoted inquiries count only in all-treatments views. Deduplicate within each segment. Later cancellation does not erase a reached milestone; cancellation and no-show metrics remain separate. `In Progress` is a procedure-start milestone, never a synonym for payment confirmation.
 - **Reporting cutoff and empty denominators**: Historical funnel/acceptance/response cohorts are evaluated through the earlier of the selected period end and the pipeline's data-as-of time. Current cohorts show that cutoff and indicate that outcomes may still be pending. A zero denominator is N/A, not 0% or 100%. Tooltips/exports state the unit, cohort timestamp, numerator/denominator, cutoff, and relevant sample sizes; rates based on these distinct-record sets cannot exceed 100%.
-- **First response and journey**: TTFQ uses the same inquiry-created cohort and reporting cutoff as the funnel and contributes one observation per inquiry/provider pair whose first parent response occurred by that cutoff, from the inquiry's distribution to that provider (`inquiry_providers.distributed_at`) to the earliest parent first submission. Pairs without an authoritative distribution timestamp have no TTFQ observation. Unanswered inquiries remain in funnel/response denominators but have no completed TTFQ observation. Provider distributions pool those observations; platform p50/p90 pool the underlying observations, not provider percentile averages. Journey time instead uses the successful initial payment that first confirms a booking, selects the confirmation-time cohort, and counts the inquiry once. Later installments or failed payment attempts do not create new journey observations.
+- **First response and journey**: TTFQ uses the same inquiry-created cohort and reporting cutoff as the funnel, which differs on purpose from the distribution-period cohort of the inquiry response rate; screens that show both (such as Screen 8) and exports MUST state each metric's cohort basis in the tooltip and export definition. TTFQ contributes one observation per inquiry/provider pair whose first parent response occurred by that cutoff, from the inquiry's distribution to that provider (`inquiry_providers.distributed_at`) to the `first_sent_at` of the provider's earliest parent quote for the inquiry; a re-send or new version never changes it. Pairs without an authoritative distribution timestamp have no TTFQ observation. Unanswered inquiries remain in funnel/response denominators but have no completed TTFQ observation. Provider distributions pool those observations; platform p50/p90 pool the underlying observations, not provider percentile averages. Journey time instead uses the successful initial payment that first confirms a booking, selects the confirmation-time cohort, and counts the inquiry once. Later installments or failed payment attempts do not create new journey observations.
 - **Accepted-price grain**: Count one immutable accepted total price per accepted parent, including the accepted package/date-price and promotion. Standalone price metrics use `AcceptanceEvent.acceptedAt` to select their cohort; Screen 5's scatter uses its expressly stated parent first-submission cohort. Unaccepted parents have a price range, not one amount, and remain excluded from all amount observations while included in parent volume/rate metrics. Cancellation, hold expiry, package-library edits, quote revisions, or later financial adjustments do not rewrite the historical acceptance-price observation. Show accepted selection counts and distinguish these statistics from captured revenue.
 - **Active cash risk**: At the displayed snapshot time, include only Accepted FR-006 pending bookings with a non-superseded AcceptanceEvent, valid exclusive slot hold, and no successful initial payment. Scope the time filter by acceptance time, calculate age from immutable `acceptedAt`, and validate the actual configured hold deadline. Remove cancelled, expired-hold, and `Payment Window Expired` selections even before stale quote status caches update; do not restart age on payment retries. Sum each eligible accepted total price once as potential accepted booking value, not deposit receivables, captured revenue, or outstanding installment balances.
 - **Financial record grain**: Payments, refunds, commission deductions, installments, and payouts retain their existing owning-record accounting rules. Aggregate those records before attaching read-only AcceptanceEvent/Booking/quote provenance; joining several packages or date options MUST NOT multiply financial totals. This change does not redefine fund release, fees, payout routing, or travel responsibility.
@@ -1555,7 +1557,7 @@ Measured over the first two full quarters after release, against the quarter bef
 - **FR-003**: Inquiry data (`created_at`, `patient_id`, patient-selected treatment area; inquiries carry no treatment — treatment comes from the FR-004 Parent Quote) plus inquiry distribution records (`inquiry_providers.provider_id`, `source`, `status`, `distributed_at`) — feeds all funnel metrics and provider response/distribution analytics. `distributed_at` is defined in FR-003 Key Entities as the per-provider distribution timestamp and is the TTFQ and response-rate start point
 - **FR-004**: Parent Quote identities, provider/inquiry/treatment context, first submission, aggregate versions, and Quote Option/Option-Date-Price hierarchy — feeds parent response volume, TTFQ, and first-submission cohorts; unaccepted price ranges are not amount observations. See FR-004 REQ-004-030.
 - **FR-005**: AcceptanceEvent and immutable accepted Subquote snapshot, including parent/option/date-price/subquote IDs, equal accepted aggregate versions, acceptedAt, accepted total price/promotion/currency, locked exchange rate, appointment, and cancellation/supersession provenance — feeds patient selection, parent acceptance rate, and accepted-price statistics. See FR-005 REQ-005-017 through REQ-005-020.
-- **FR-006**: Booking/AcceptanceEvent linkage, successful initial-payment confirmation, actual exclusive-hold deadline, terminal Payment Window Expired outcome, lifecycle, and appointment — feeds confirmed-booking funnels, journey time, active cash risk, booking intensity, and downstream treatment milestones
+- **FR-006**: Booking/AcceptanceEvent linkage, successful initial-payment confirmation, actual exclusive-hold deadline, Payment Window Expired outcome and audited admin revive to `Accepted` with a fresh hold, lifecycle, and appointment — feeds confirmed-booking funnels, journey time, active cash risk, booking intensity, and downstream treatment milestones
 - **FR-007**: Payment data (`amount`, `currency`, `payment_status`, `payment_type`, `created_at`, `is_installment`) — feeds all financial widgets
 - **FR-007B**: Installment plan records and Plan Status (`Active`, `Completed`, `Overdue`, `Defaulted`) — feeds Screen 12 Widget 6 installment plan health
 - **FR-009**: Provider team roles and permissions (Owner, Manager, Billing Staff, Clinical Staff, custom roles) — drive the Rule 15F default screen access and Screen 6 export recipients
@@ -1587,7 +1589,7 @@ The revised analytics entities below are target reporting contracts, not evidenc
 
 | Contract input | Where used | Canonical boundary / legacy constraint |
 |----------------|------------|----------------------------------------|
-| Parent Quote first-submission `sent_at` | Response volume, TTFQ, acceptance-rate cohorts, provider ramp | One immutable first submission per stable parent identity; legacy `quotes.sent_at` is usable only if it preserves this meaning, not draft creation or latest resend |
+| Parent Quote first-submission `first_sent_at` | Response volume, TTFQ, acceptance-rate cohorts, provider ramp | One immutable first send per stable parent identity, set by FR-004 on first send and never changed by a re-send or new version; legacy `quotes.sent_at` is usable only if it preserves this meaning, not draft creation or latest resend |
 | AcceptanceEvent acceptedAt + accepted snapshot | Acceptance milestones, accepted prices, aging origin | FR-005 event is authoritative; legacy `quotes.accepted_at` alone cannot identify the chosen package/date price or establish an active hold |
 | Parent/subquote IDs and accepted aggregate versions; Quote Option/Option-Date-Price IDs | Drill-downs, accepted-price observations, detailed exports | Resolve the exact accepted version and inherited context; require equal parent/subquote aggregate versions |
 | Booking linkage, confirmation event, hold deadline, and lifecycle | Confirmed funnels, patient journey, pending-payment aging | FR-006 distinguishes Accepted, Confirmed, In Progress, Payment Window Expired, and Cancelled; flat quote status is insufficient |
@@ -1654,7 +1656,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-034**: System MUST display conversion breakdown by treatment type as a grouped bar chart
 - **REQ-014-035**: System MUST display conversion breakdown by patient country as a ranked horizontal bar
 - **REQ-014-036**: System MUST display parent-quote acceptance rate trend using accepted parents and submitted parents from the same first-submission cohort
-- **REQ-014-037**: System MUST display TTFQ p50 and p90 trend, measured from the inquiry's distribution to the provider to the earliest parent first submission per inquiry/provider pair, with SLA reference line
+- **REQ-014-037**: System MUST display TTFQ p50 and p90 trend, measured from the inquiry's distribution to the provider to the `first_sent_at` of the provider's earliest parent quote for the inquiry per inquiry/provider pair (never changed by a re-send or new version), with SLA reference line
 - **REQ-014-038**: System MUST display cancellation and no-show rate KPI tiles with sparklines
 - **REQ-014-039**: System MUST display an anonymised platform benchmark comparison table (TTFQ, booking conversion, parent-quote acceptance rate, avg rating) with percentile bands and the same per-metric counting definitions for provider and peer values
 - **REQ-014-040**: Benchmark pool MUST require minimum 5 providers; display explanatory message if pool is insufficient
@@ -1665,7 +1667,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-042**: System MUST display new vs. returning patient rate as donut and monthly trend line
 - **REQ-014-043**: System MUST display patient journey time (p50 and p90 days inquiry → first successful booking-confirming payment) with distribution histogram, without failed-attempt or later-installment duplication
 - **REQ-014-044**: System MUST display review sub-scores (overall, results, staff, facility, value) per treatment type
-- **REQ-014-045**: System MUST display treatment preference distribution (quoted inquiry count vs. booked count per treatment, by the parent quote's treatment)
+- **REQ-014-045**: System MUST display treatment preference distribution (quoted inquiry count vs. Confirmed booking count per treatment, by the parent quote's treatment)
 - **REQ-014-046**: System MUST display aftercare activation rate KPI with trend sparkline
 - **REQ-014-047**: *Removed in v3.11.* No patient age distribution widget is included in this version; the ID is kept so later numbering stays stable
 
@@ -1767,6 +1769,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-111**: System MUST preserve accepted price/currency/locked-rate provenance and historical reporting-conversion provenance; missing canonical history MUST NOT be filled with an invented alternative price or today's package/FX value.
 - **REQ-014-112**: System MUST apply the same revised contracts to provider/admin screens, benchmarks, drill-downs, cached aggregates, PDF/CSV, and scheduled exports without expanding existing permissions or redesigning the locked cockpit.
 - **REQ-014-113**: System MUST send the in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`) once per distributed inquiry/provider pair when no parent quote is submitted within the FR-026 SLA target, suppressed for cancelled or withdrawn distributions and never repeated for the same pair
+- **REQ-014-116**: System MUST count booking load and country booking figures (Screen 1 B3 and B4, Screen 3 Widget 1, Screen 10 Widget 1) from FR-006 Bookings in `Confirmed` or `In Progress` status only, label them "Confirmed bookings", and never count held (`Accepted`), `Payment Window Expired` or `Cancelled` bookings or show a separate held figure.
 
 ### Report History & Accessibility (CR-FR014-20261013-02)
 
@@ -1779,7 +1782,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 - **Entity 1 — Analytics Metrics Aggregate** (provider-level, daily/cohort): `provider_id`, cohort start/end and timestamp basis, reporting cutoff/data-as-of, distinct inquiry-stage counts (inquiry, quoted, accepted, confirmed), separately labelled treatment-start count, distinct submitted/accepted parent counts, separately labelled Quote Option/Subquote counts, distribution-cohort assigned/responded inquiry counts, TTFQ observations/p50/p90, accepted-price sample count, effective SLA, income/commission totals, and reporting currency. Inquiry-stage counts MUST NOT be populated with quote/option counts; retain the source observations or equivalent mergeable data needed for longer-range distinct counts and percentiles rather than summing daily percentiles.
 
-- **Entity 2 — Booking Intensity Record** (provider-level, daily): `provider_id`, `date`, `bookings_on_day`, `monthly_daily_avg`, `intensity_index`, `baseline_type`
+- **Entity 2 — Booking Intensity Record** (provider-level, daily): `provider_id`, `date`, `bookings_on_day`, `monthly_daily_avg`, `intensity_index`, `baseline_type`. `bookings_on_day` and `monthly_daily_avg` count only FR-006 Bookings in `Confirmed` or `In Progress` status by appointment date; `Accepted` (held), `Payment Window Expired` and `Cancelled` bookings are excluded.
 
 - **Entity 3 — Accepted Selection Aging Snapshot** (provider-level, refreshed every 15 min): Booking/AcceptanceEvent/inquiry/provider IDs, accepted parent/subquote IDs and equal aggregate versions, Quote Option/Option-Date-Price IDs, immutable acceptedAt, actual hold deadline, booking/payment/hold eligibility, age hours/bucket, snapshot time, treatment/country, accepted total price/original currency/locked FX, and reporting amount/currency/FX provenance. One row per active pending booking; deadline/status checks prevent a stale Accepted quote from remaining in cash risk after hold expiry.
 
@@ -1821,6 +1824,8 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | 2026-10-14 | 3.12 | Fourth verify-fr pass fixes approved by Product Owner on 2026-10-14: system PRD rating requirement narrowed to ratings without a trend-over-time widget; Rule 15 analytics access logs moved to the S-06 audit trail with 10-year immutable retention (constitution §II); Refund Source of Truth rule added and applied to Screens 4, 7 and 12 so refunds are counted once from refund rows and refunded originals stay in gross figures; Screen 7 Section A tiles follow the time range; Screen 1 click behaviour clarified (single click cross-filters, explicit "View list" drills down; Rule 3 exception; locked layout unchanged); exports and recipients scoped to widgets the user can see; FR-009 and FR-016 dependencies added; Rule 11 reworded to the FR-003 partial-name masking format; v3.11 change log and approval dates aligned | Claude Code |
 | 2026-10-14 | 3.13 | Fifth verify-fr pass fixes approved by Product Owner on 2026-10-14: treatment segmentation uses only the provider-chosen Parent Quote treatment because inquiries carry no treatment: Screen 2 Widget 2 measures Quoted → Confirmed booking per treatment, the Screen 2 treatment filter applies from Quoted onward, Screen 3 Widget 5 and Screen 7 B4 count quoted inquiries by treatment, and the counting rule, export filter, and FR-003 dependency were aligned; Screen 10 gap table flags zero-provider countries as "No coverage" and sorts them first; calculation bases defined for revenue by treatment (Screen 4 Widget 2, referenced by Screen 1 C2 as a definition-only note), failed payment rate (Screen 12), average affiliate booking value (Screen 9), and the Screen 11 five-booking minimum (low-volume providers stay in pooled rates; low-sample bar visuals left to UX design); Screen 4 Widget 8 wording aligned with the Screen 1 C4 inline table | Claude Code |
 | 2026-10-14 | 3.14 | Sixth verify-fr pass fixes approved by Product Owner on 2026-10-14: new Global Filter Rule 5A defines where the Treatment and country filters apply (Screens 4, 9 and 10 list unfiltered widgets; payout statements are not split by treatment or patient country); Screen 3 Widget 1 Avg rating source defined (Published FR-013 reviews by reviewing patient country); REQ-014-045 wording aligned to quoted inquiries; Screen 1 C4 Type column defined from the FR-017 provider display statuses (definition only, layout unchanged); Screen 7 Tile 5 "active providers" clarified as account status; Screen 6 treatment filter references Rule 5A; system PRD SLA-breach alert wording aligned to once per distributed inquiry/provider pair from distribution | Claude Code |
+| 2026-10-16 | 3.15 | MTG-002 quote model alignment approved by Product Owner on 2026-10-16: Screen 1 B3 booking intensity (`bookings_on_day`, Entity 2) counts only FR-006 `Confirmed` and `In Progress` bookings, with held, Payment Window Expired and Cancelled bookings excluded and no held figure; "Booked" relabelled "Confirmed bookings" on Screen 1 B4, Screen 3 Widget 1 and Screen 10 Widget 1, and REQ-014-045 aligned; new REQ-014-116; TTFQ and response-rate cohort difference stated as intentional and disclosed; FR-006 dependency notes the audited Payment Window Expired revive (FR-014-2 with decision M7, FR-014-3, D2; CR-FR014-20261016-01) | Claude Code |
+| 2026-10-16 | 3.16 | Product Owner Q-series follow-up (Q15, Q16; CR-FR014-20261016-01): TTFQ end point named as the `first_sent_at` of the provider's earliest parent quote for the inquiry, set by FR-004 on first send and never changed by a re-send or new version (Tile 2 formula, Calculation Rules, Data Dependencies, REQ-014-037). Q16 confirmed the existing inquiry-created TTFQ cohort and tooltip/export disclosure with no text change. Status remains pending consolidated verification. | Claude Code |
 
 ---
 
