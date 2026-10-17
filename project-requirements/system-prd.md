@@ -4,7 +4,7 @@
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16
 
 ---
 
@@ -26,10 +26,10 @@ To become the world's leading platform for medical hair restoration by creating 
 
 ### Success Metrics
 
-- **Conversion Rate**: 25% of inquiries to booked procedures
+- **Conversion Rate**: 25% of inquiries to confirmed bookings
 - **Platform NPS**: > 60
 - **Provider Response Time**: < 24 hours for quote submission
-- **Booking Completion**: 85% of accepted subquotes to scheduled procedures
+- **Booking Completion**: 85% of accepted subquotes to confirmed bookings
 - **Aftercare Engagement**: 70% of patients actively using aftercare features
 
 ---
@@ -211,17 +211,19 @@ The Hairline Platform consists of four distinct applications serving different u
    - Asks clarifying questions through chat
    - Reviews before/after photos and provider credentials
 
-4. **Subquote Acceptance & Scheduling**
-   - Accepts exactly one preferred subquote per inquiry; acceptance atomically acquires the appointment slot's exclusive payment-window hold and rejects a competing acceptance before creating an AcceptanceEvent or booking handoff
+4. **Subquote Acceptance & Slot Hold**
+   - Accepts exactly one preferred subquote per inquiry; acceptance atomically places one fixed exclusive hold on the appointment slot (keyed by provider, appointment date/time, and time zone) for the FR-026 slot-hold duration (default 48 hours) and rejects a competing acceptance before creating an AcceptanceEvent or booking handoff
    - Provider must pre-schedule appointment times in quote submission
-   - Accepted subquote and its inherited parent context are snapshotted; its parent quote and inquiry move to "Accepted"
+   - Accepted subquote and its inherited parent context are snapshotted (price after promotion, currency, date range, appointment, promotion, and the exchange rate with its timestamp); its parent quote and inquiry move to "Accepted"
    - Sibling subquotes become "Not Selected" and competing parent quotes auto-cancel
-   - Receives preliminary booking details
+   - Sees the booking as "Booking Accepted — Slot Held (Pending Payment)" (booking status `Accepted`): the slot is held, not yet booked, and no appointment record exists until payment
 
 5. **Payment & Confirmation**
    - Makes payment (deposit or full amount, or selects installment plan)
    - Installment plans: 2-9 months interest-free (must complete 30 days before procedure)
-   - Payment completion moves booking to "Confirmed" status
+   - The first successful payment (deposit or first installment) before the hold expires moves the booking to "Confirmed", creates the appointment record, and blocks the slot in the provider calendar
+   - Payment failure or retry never extends or restarts the hold; if no payment succeeds before the hold expires, the booking moves to "Payment Window Expired" (final except for the audited admin revive), the slot is released, and the accepted quote is not reopened. The patient may cancel the inquiry and start a new one, or ask support for an audited admin revive (back to "Accepted" with a new hold)
+   - A missed later installment or final payment never causes "Payment Window Expired"
    - Patient anonymization lifted - provider can now see full name and contact details
    - Receives final booking confirmation
 
@@ -242,6 +244,7 @@ The Hairline Platform consists of four distinct applications serving different u
    - Undergoes hair transplant procedure
    - Provider updates treatment progress in real-time
    - Provider documents procedure details, graft counts, techniques used
+   - Treatment plan days, clinicians, or estimated grafts change only through FR-010 with a reason, an audit record, and a patient notice; price, currency, date range, appointment, and promotion never change
    - Treatment completion moves status to "Aftercare"
    - Receives post-op instructions and medications
 
@@ -252,6 +255,8 @@ The Hairline Platform consists of four distinct applications serving different u
    - Chats with aftercare specialists for questions/concerns
    - Completes recovery questionnaires
    - Submits final review and rating (status moves to "Completed")
+
+**Exception - provider fault after acceptance**: If the selected provider withdraws the accepted quote, drops out before or during treatment, or is suspended or deactivated after acceptance, the booking is cancelled with a provider-fault cause, the inquiry stays open and is flagged for admin support, and an admin transfers the patient to a replacement provider in the same inquiry; the patient re-enters nothing (FR-003, FR-006, FR-015).
 
 ---
 
@@ -268,30 +273,32 @@ The Hairline Platform consists of four distinct applications serving different u
 
 2. **Quote Creation**
    - **Selects treatment** (from admin-created list: FUE, FUT, DHI, etc.) - foundation, same for all providers
-   - **Selects optional packages** (from own package list: hotels, transport, flights, medications, PRP) - provider-specific add-ons
+   - **Selects one to five packages** from own package library (versioned templates holding included services and their prices, travel services such as hotel, transport, and flights, and a relative-day treatment plan); each package seeds one Quote Option and may be customised inline for this quote only
    - Analyzes head scan capture assets *(V1 photo set; true 3D scan in V2)* to estimate graft count needed
    - **Selects clinician** who will perform the procedure (from clinic's staff list)
    - Customizes graft count, technique specifications
-   - Sets pricing for treatment + selected packages
+   - Sets an offered price for every applicable option/date-range combination (prefilled from the package standard price); package prices are never summed
    - Adds photos/videos of similar cases or visual treatment plan
-   - **Pre-schedules appointment time slots** (required for auto-accept)
-   - Applies any applicable discounts
+   - **Pre-schedules an appointment for every applicable option/date combination** (required for auto-accept)
+   - Eligible automatic promotions attach to option/date-price rows when the quote is sent, with their terms fixed at send
    - Adds notes for patient
 
 3. **Quote Submission**
    - Submits quote to patient with pre-scheduled appointment times (deadline: 72 hours from inquiry)
-   - Quote expires after 48 hours (configurable by admin)
+   - Quote expiry (FR-026 Quote Expiry Window, default 48 hours, admin-configurable) and quote currency are captured at first send; there is no per-quote extension
    - Quote enters patient's comparison dashboard
 
 4. **Negotiation (Optional)**
    - Responds to patient questions through chat
-   - May adjust quote based on patient feedback
+   - May revise a sent quote before acceptance; each revision creates a new parent quote version with audit history
    - Provides additional information or credentials
 
 5. **Subquote Acceptance (Auto-Scheduled)**
    - Receives notification when one of the provider's subquotes is accepted or its parent quote is auto-cancelled
    - Appointment is AUTOMATICALLY selected from the accepted subquote's Option/date-price record
    - No manual confirmation needed - the selected subquote and parent quote move directly to "Accepted" status
+   - The slot is held for the patient's first payment; the booking becomes "Confirmed" and the appointment record is created only on successful payment
+   - The accepted quote is locked: treatment-detail changes go through FR-010, and a provider withdrawal or drop-out follows the FR-006 provider-fault transfer
    - Patient proceeds to payment
 
 6. **Pre-Procedure Preparation**
@@ -434,6 +441,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Providers MUST receive inquiry notification within 5 minutes
 - System MUST track inquiry expiration (72 hours for quote submission)
 - System MUST allow patients to close/cancel inquiry before Confirmed stage (i.e., in Inquiry, Quoted, or Accepted stages per FR-003 Workflow 5)
+- When the accepted provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, the inquiry MUST NOT be cancelled: it keeps its stage, is flagged `supportRequired`, and an admin transfers the patient to a replacement provider in the same inquiry through the FR-006 provider-fault transfer
 - System MUST support secondary service options: Monitor Hair Loss, Aftercare services
 - System MUST generate unique inquiry IDs in HPID format (HPID + YY + MM + 4-digit sequence)
 
@@ -460,23 +468,27 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 **Requirements**:
 
 - Providers MUST select treatment from the admin-created list (FUE, FUT, DHI, etc.). The quote MUST retain the exact immutable Treatment ID/version relationship so treatment name, type, and technique details can be loaded without duplicating treatment-owned data on the Quote.
-- Providers MUST offer one to five package-based Quote Options per quote, each starting from their own package library (hotels, transport, flights, medications, PRP) - provider-specific
-- Providers MUST be able to customize a selected package inline for the current quote; the customization is a quote-local snapshot and MUST NOT create or update a reusable package-library record
+- Providers MUST offer one to five package-based Quote Options per quote; each selected package version from the provider's own library (hotels, transport, flights, medications, PRP) seeds exactly one option, and packages are never summed into one option
+- Providers MUST be able to customize a selected package inline for the current quote; the customization is a quote-local copy and MUST NOT create or update a reusable package-library record or package version
+- Each Quote Option MUST record its source package ID, source package version, and an inline-customised flag
 - A provider MAY submit multiple parent quotes for the same inquiry, each with an independent lifecycle, expiry, version history, and audit history
 - Providers MUST pre-schedule an appointment time for every applicable option/date combination as part of quote submission
 - Quotes MUST include: the exact selected Treatment version, its related read-only technique details when documented in FR-024, graft count, one to five package options, per-option pricing, timeline, and a pre-scheduled appointment slot for every applicable option/date combination. Technique details are loaded through the Treatment relationship and are not separate provider input or duplicated Quote data.
-- Quote currency MUST be loaded from active system configuration and snapshotted on the quote; it is never provider input. The platform supports multiple currencies across quotes, and exchange conversion is applied at acceptance rather than entered per quote
+- Quote currency MUST be captured read-only at first send from the active FR-026 quote configuration (the FR-029 Default Currency); it is never provider input, and packages carry no currency. The platform supports multiple currencies across quotes, and the exchange rate is locked at acceptance rather than entered per quote
 - Providers MUST be able to attach before/after photos, credentials, facility images
 - Providers MUST set an offered price for every applicable option/date combination; that price covers the treatment and the option's inclusions. System MUST derive the quote's price range from the complete option/date matrix, and the accepted total only after the patient selects one option/date combination
-- System MUST apply applicable discounts (provider promotions, affiliate codes)
+- System MUST store the offered price as entered with any promotion discount kept separate, MUST attach every eligible automatic promotion to each eligible option/date-price row at send, and MUST copy the attached promotion terms into the sent quote version; later promotion edits never change a sent quote
 - Providers MUST submit quotes within 72 hours of inquiry receipt
 - System MUST validate quote completeness before submission
-- Quotes MUST have customizable expiration period (default: 48 hours, admin-configurable)
+- Quote expiry MUST be captured at first send from the FR-026 Quote Expiry Window (default: 48 hours, admin-configurable); drafts carry no expiry and there is no per-quote extension
+- Quote statuses are: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled, and cancelled_provider_status (unaccepted quotes only). `Confirmed` is a booking status, not a quote status
+- After a subquote is accepted, System MUST block every FR-004 quote edit by providers and admins; treatment-detail changes (plan, clinicians, grafts) go through FR-010. An accepted parent quote is never reopened, including after `Payment Window Expired`
+- A provider withdrawal of an accepted quote moves it to `withdrawn` and hands the case to the FR-006 provider-fault transfer
 
 **Subquote Acceptance Handoff**:
 
-- When the patient accepts a subquote, its exact appointment is selected and the system atomically acquires the slot's exclusive payment-window hold; if another pending or confirmed booking already holds or blocks that slot, acceptance is rejected before any AcceptanceEvent, quote/inquiry state change, or booking handoff is created
-- System immediately moves the inquiry and selected parent quote to "Accepted" and creates the pending booking handoff; the booking is not Confirmed until successful deposit or first-installment payment
+- When the patient accepts a subquote, its exact appointment is selected and the system atomically acquires one fixed exclusive hold on the slot, keyed by provider, appointment date/time, and time zone, for the FR-026 slot-hold duration (default 48 hours); if another pending or confirmed booking already holds or blocks that slot, acceptance is rejected before any AcceptanceEvent, quote/inquiry state change, or booking handoff is created. FR-004 creates no appointment record
+- System immediately moves the inquiry and selected parent quote to "Accepted" and creates the pending booking handoff in booking status `Accepted`; the booking becomes `Confirmed`, and the appointment record is created, only on successful deposit or first-installment payment
 - Provider receives notification of the accepted subquote and reserved appointment details
 - Patient proceeds directly to payment screen
 
@@ -487,30 +499,30 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Treatment type (FUE, FUT, DHI, etc.) - selected from admin list and retained as an exact immutable Treatment-version relationship
 - Graft count estimation
 - Technique specifications - loaded read-only through the related Treatment version; not stored as a duplicate Quote field
-- Treatment pricing (set by provider)
+- No separate treatment price on the quote; each option/date offered price covers the treatment and the option's inclusions
 
 **2. Quote Options (Required - One to Five, Provider-Created)**:
 
-Each option is a package snapshot the patient can compare. Options share the parent quote's treatment, graft facts, visual plan, clinicians, and common notes; they differ by inclusions, applicable date ranges, prices, promotions, and day-to-day plan.
+Each option is a quote-local copy of one package version that the patient can compare. Options share the parent quote's treatment, graft facts, visual plan, clinicians, and common notes; they differ by inclusions, applicable date ranges, prices, promotions, and day-to-day plan.
 
 - Hotel packages (4-star, 5-star, etc.)
 - Transport packages (airport pickup, transfers)
 - Flight assistance packages
 - Medication packages (post-op medications)
 - Additional services (PRP therapy, specialized treatments)
-- Package pricing (set by provider, per applicable option/date combination)
+- Offered price per applicable option/date combination, prefilled from the package standard price and set by the provider
 - Option-local custom services added for this patient only
-- A separate relative day-to-day treatment plan per option
+- A separate relative day-to-day treatment plan per option (Day 1, Day 2, ...; never converted to calendar dates)
 
 **3. Other Components**:
 
-- Consultation fees
 - Clinician selection
 - Pre-scheduled appointment time slots
 
 **Pricing Rules**:
 
-- Quote MUST lock exchange rate at time of patient acceptance
+- Quote MUST lock exchange rate at time of patient acceptance; the rate and its timestamp are recorded in the acceptance snapshot
+- Commission shown on the quote is indicative only; the binding commission is fixed at booking confirmation on the booking total (accepted subquote price after promotion, in the quote currency, from the acceptance snapshot)
 - Quote-amount analytics MUST use the accepted option/date price only; an unaccepted quote has a price range, not an amount
 - Quote MUST clearly separate provider fees from Hairline platform fees
 - Quote MUST show original price and discount if applicable
@@ -531,7 +543,9 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MUST notify providers of patient questions within 5 minutes (via real-time messaging notifications)
 - Patients MUST be able to accept exactly one current subquote per inquiry; parent quotes and upper-level records MUST NOT be direct acceptance targets
 - Acceptance MUST atomically acquire an exclusive hold on the selected appointment slot and reject a second acceptance for a held or blocked slot before creating an AcceptanceEvent or booking handoff
-- System MUST snapshot the accepted subquote identifier/version, parent quote identifier/version, complete commercial terms, and inherited context; the subquote version MUST equal the owning parent aggregate `QuoteVersion`
+- Patients MAY enter a promotion code on one named subquote before acceptance; the system validates it for that subquote only
+- System MUST snapshot the accepted subquote identifier/version, parent quote identifier/version, complete commercial terms (price after promotion, currency, date range, appointment, promotion, and the exchange rate with its timestamp), and inherited context; the subquote version MUST equal the owning parent aggregate `QuoteVersion`
+- The AcceptanceEvent and its snapshot MUST be append-only and never edited; supersession (causes `InquiryCancelled`, `ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`) and annotations are separate linked records. The only route to a new acceptance after supersession is the FR-006 provider-fault transfer, recorded as a new admin-authored acceptance record linked to the original
 - System MUST mark sibling subquotes in the accepted parent quote "Not Selected" and auto-cancel competing parent quotes with reason "Other subquote accepted"
 - System MUST notify the patient and affected providers immediately without exposing the selected provider or accepted price to non-selected providers
 - Parent quote response metrics and subquote comparison/selection metrics MUST remain distinct
@@ -556,13 +570,16 @@ Each option is a package snapshot the patient can compare. Options share the par
 
 - Booking uses an **auto-scheduled** model: provider pre-schedules appointment slots on FR-004 Option/date-price records; patient accepts one complete subquote in FR-005, and FR-006 consumes that accepted subquote plus its immutable inherited parent context without package, date, appointment, or price reselection.
 - Every pending or confirmed Booking MUST link to exactly one FR-005 AcceptanceEvent, accepted parent quote identifier/version, accepted subquote identifier/version, immutable acceptance snapshot, and provider calendar slot; accepted parent and subquote versions MUST identify the same FR-004 aggregate `QuoteVersion`.
-- FR-006 MUST verify that the AcceptanceEvent owns the slot's valid exclusive hold before payment initiation. Successful deposit or first-installment payment converts that hold into the confirmed calendar block.
-- If the payment window expires, the Booking MUST transition to terminal `Payment Window Expired`, release the slot, permanently block payment against that accepted selection, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote.
+- Booking statuses are: `Accepted` (slot held pending first payment; shown to the patient as "Booking Accepted — Slot Held (Pending Payment)"), `Payment Window Expired`, `Confirmed`, `In Progress`, `Aftercare`, `Completed`, and `Cancelled`.
+- Acceptance places one fixed exclusive hold keyed by provider, appointment date/time, and time zone for the FR-026 slot-hold duration (default 48 hours), starting at acceptance; payment failure or retry never extends or restarts it. FR-006 MUST verify that the AcceptanceEvent owns the slot's valid exclusive hold before payment initiation. Successful deposit or first-installment payment moves the booking to `Confirmed`, creates the appointment record, and converts that hold into the confirmed calendar block.
+- If the payment window expires, the Booking MUST transition to `Payment Window Expired` (final except for the audited admin revive), release the slot, block payment against that accepted selection unless an admin revives the booking, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote. `Payment Window Expired` applies only to the first payment step; a missed later installment or final payment never causes it.
+- Admin MAY revive a `Payment Window Expired` booking to `Accepted` only with a mandatory reason, a slot availability re-check, a new hold of the FR-026 duration, promotion usage re-reservation (rejected if the limit is exhausted), an audit entry, an unchanged AcceptanceEvent, and a mandatory "booking revived" notice to patient and provider. No other manual status change is allowed.
+- When the provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, the booking MUST be cancelled with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and a `supportRequired` marker, the hold or calendar block released, and the AcceptanceEvent kept unchanged and superseded through a linked record; an admin transfers the patient to a replacement provider in the same inquiry through a new admin-authored acceptance record linked to the original. Paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee; exact mechanics are defined in FR-007, FR-007B, and FR-017.
 - System MUST integrate with provider's calendar to validate availability at quote creation time and to block the slot upon payment-confirmed booking
-- Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of total, configured via FR-029)
+- Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of the booking total, configured via FR-029); the booking total is the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot
 - System MUST generate booking confirmation with reference number
 - System MUST send confirmation emails to patient and provider
-- **Rescheduling is deferred to V2**; in MVP, post-confirmation date/time changes require admin intervention or cancellation/rebooking (see FR-006 PRD)
+- **Rescheduling is deferred to V2**; in MVP, an admin MAY change the appointment date/time of an `Accepted` or `Confirmed` booking only with a mandatory reason and a slot availability check; the change is audited and triggers an FR-008 travel review of linked travel records (see FR-006 PRD)
 - System MUST enforce cancellation policy with graduated refund schedule
 - System MUST block out provider calendar upon confirmed booking
 
@@ -712,6 +729,10 @@ Each option is a package snapshot the patient can compare. Options share the par
 - Providers MUST be able to prescribe medications and provide post-op instructions
 - System MUST generate post-op instruction sheet for patient
 - System MUST record treatment completion and signal FR-011 to activate aftercare plan and transition status to **"Aftercare"**
+- System MUST read price, currency, date range, appointment, and promotion only from the accepted snapshot reached through the booking's AcceptanceEvent, and MUST seed the case's treatment plan days, clinician set, and estimated graft count from the same snapshot; FR-010 never edits the snapshot or reads accepted data from live quote records
+- FR-010 MUST be the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count, limited to the clinic (Owner, Manager, or Clinical Staff, before Check In) and admins; each change requires a reason, is audited with before/after values, notifies the patient (`treatment.plan_changed`), leaves the accepted snapshot unchanged, and never changes money fields
+- Treatment plan days MUST be displayed and stored as relative day numbers only (Day 1, Day 2, ...), never as calendar dates
+- FR-010 MUST NOT reassign the treating provider; provider withdrawal, drop-out, or replacement after acceptance is handed to the FR-006 provider-fault transfer
 
 **Status Transitions**:
 
@@ -1020,8 +1041,8 @@ Each option is a package snapshot the patient can compare. Options share the par
 
 - Providers MUST have access to performance dashboard
 - System MUST display: inquiry count, quote count, quote acceptance rate, revenue, patient count
-- System MUST provide conversion funnel analytics using four stages: Inquiries → Quoted (first submitted parent quote) → Accepted (FR-005 parent acceptance) → Confirmed booking (FR-006)
-- System MUST show accepted-price metrics (average accepted parent-quote price and price distribution); quote estimates are not presented as clinical results
+- System MUST provide conversion funnel analytics using four stages: Inquiries → Quoted (first submitted parent quote) → Accepted (parent quote with an accepted subquote, FR-005) → Confirmed booking (FR-006)
+- System MUST show accepted-price metrics (average accepted subquote price and price distribution); quote estimates are not presented as clinical results
 - System MUST display review ratings (average overall rating, benchmark comparison, and per-treatment sub-scores)
 - Providers MUST be able to export reports (PDF, CSV)
 - System MUST provide comparative benchmarks against an anonymised peer median (active providers with ≥30 inquiries in a rolling 12-month window, minimum 5 providers), colour-coded by direction (Green at or better than median, Amber up to 10% worse, Red more than 10% worse)
@@ -1037,7 +1058,7 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MUST provide geographic intelligence: patient demand by country, provider coverage by country, demand vs. supply gap table, conversion rate by patient country, and emerging patient origins
 - System MUST provide treatment outcome analytics (operational and satisfaction-based only — no clinical outcome metrics): completion rate per treatment, cancellation/no-show rate per treatment, treatment volume trend, review sub-scores per treatment, aftercare activation rate per treatment, provider distribution by treatment specialisation
 - System MUST provide financial health & cashflow analytics: platform GMV (gross), Net GMV (GMV minus refunds), and net revenue (platform commission earned in the period, accrual basis), commission earned trend with configurable target, refund and failed payment rates, platform-wide cash-at-risk aging, upcoming provider payout obligations, installment plan health, affiliate commission obligations, and revenue by currency
-- System MUST provide pricing intelligence based on accepted parent-quote prices: average accepted price by treatment, accepted price range per treatment, accepted price by provider country, accepted selection count and share by accepted-price bracket (not an offered-price conversion rate), accepted price trend per treatment, and price outlier provider detection
+- System MUST provide pricing intelligence based on accepted subquote prices: average accepted price by treatment, accepted price range per treatment, accepted price by provider country, accepted selection count and share by accepted-price bracket (not an offered-price conversion rate), accepted price trend per treatment, and price outlier provider detection
 - System MUST anonymise providers in cross-provider benchmark views (providers cannot identify each other); admin views MUST retain provider identity for operational support
 - Admin-configurable parameters are owned by FR-026 Analytics Configuration (versioned): platform-wide TTFQ SLA target (default 120 minutes), engagement thresholds (At Risk 7 days, Dormant 30 days), price outlier threshold (30%), benchmark refresh frequency (Weekly), and target monthly commission reference line (unset by default; line hidden until set)
 - System MUST send providers an in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`, FR-020/FR-030) once per distributed inquiry/provider pair when that provider has not submitted a parent quote within the SLA target from the inquiry's distribution to the provider
@@ -1148,8 +1169,11 @@ Each option is a package snapshot the patient can compare. Options share the par
 - Providers MUST be able to create provider-specific discounts
 - System MUST support discount types: percentage, fixed amount, package upgrades
 - Discounts MUST have start/end dates and usage limits
-- System MUST validate discount codes at quote creation and booking
-- System MUST apply only one discount per booking (priority: patient code > provider code > affiliate code)
+- Promotions MUST attach to individual option/date-price rows (subquotes) when a quote is sent, with their terms fixed at send; later promotion edits never change a sent quote
+- Patients MAY enter a code on one named subquote before acceptance; the system validates it for that subquote only
+- System MUST apply only one discount per subquote (priority: patient code > provider code > affiliate code)
+- At acceptance, the promotion and discounted price MUST be frozen into the acceptance snapshot; no removal, replacement, or code entry is allowed afterwards, including at checkout or booking. The only exception is the FR-006 provider-fault transfer, handled through a new linked acceptance record
+- System MUST reserve one promotion use at acceptance, consume it at the first successful payment, and release it on `Payment Window Expired` or cancellation
 - System MUST track discount usage and total discount amount
 
 **Discount Approval Workflow**:
@@ -1182,6 +1206,7 @@ Each option is a package snapshot the patient can compare. Options share the par
 - System MAY support SMS notifications for urgent events in future phases (optional, configurable, **not in MVP scope**)
 - Patients and providers MUST be able to configure notification preferences
 - System MUST support notification types: inquiry received, quote submitted, booking confirmed, payment received, message received, appointment reminder, aftercare milestone
+- Quote, booking and treatment-change notifications MUST use the FR-030 event registry: `quote.submitted` (shows the "From" price), `quote.expiring_soon`, `quote.withdrawn` (mandatory), `quote.accepted` (one event with recipient-scoped outcomes for the selected subquote, its siblings, and other sent parent quotes; unsent drafts get no notice), `booking.scheduled` (shown as "Booking Accepted — Slot Held (Pending Payment)"), `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement` and `treatment.plan_changed`. `quote.declined` is Post-MVP; `provider.status_cancellation_patient` applies before acceptance only
 - System MUST throttle notifications to prevent spam
 - System MUST track notification delivery status
 
@@ -1256,7 +1281,8 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 - Treatments are the **foundation** that all providers select from (ensures consistency)
 - Admin creates treatments with: name, description, type (FUE, FUT, DHI), video, images, technique details
 - Providers can ONLY select from pre-created treatment list (cannot create custom treatments)
-- Providers configure **pricing** for each treatment in their clinic
+- Providers configure **pricing** for each treatment in their clinic, in the system quote currency; treatments carry no currency of their own
+- Treatment versions are immutable once saved; every edit creates a new version, and quotes keep the version they copied
 - All providers see the **same treatment list** (FUE, FUT, DHI, etc.)
 
 **Examples of Treatments**:
@@ -1269,15 +1295,20 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 
 ---
 
-#### Part B: Packages (Provider-Created Add-Ons)
+#### Part B: Packages (Provider-Created Quote Option Templates)
 
 **Requirements**:
 
 - **Package Creation Authority**: Each provider creates their own packages
-- Packages are **optional add-ons** that supplement the treatment
-- Providers configure: package name, description, pricing, availability
-- Each provider has **their own package list** (can differ between providers)
-- Packages are NOT part of treatment - they are separate selections
+- A package is a **reusable, versioned template for one quote option**: it holds the included services and their prices, flight, hotel, transport, and other travel services, a standard price, and the day-by-day relative treatment plan. Date ranges, additional notes, and documents are never packaged
+- Packages carry **no currency**; all library prices use the system quote currency
+- Each provider has **their own package library** (can differ between providers)
+- Packages are NOT part of treatment - the treatment is selected separately on the parent quote
+- Every library edit creates a new immutable package version; earlier versions stay read-only, and quotes keep the version they copied
+- Inline edits during quote creation change only that quote option's copy; they are never written back to the library and never create a package version
+- Each package selected in FR-004 seeds exactly one quote option (at most five per parent quote); package prices are never summed, and the standard price prefills each date-range price row of that option
+- A quote option records the source package ID, the source package version, and whether it was customised inline; patient-visible package fields are read from that copy or exact version, never from the latest library version
+- Packages are deactivated or archived, never hard-deleted
 
 **Examples of Packages**:
 
@@ -1285,7 +1316,7 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 - Transport packages (airport pickup, city transfers)
 - Flight assistance packages
 - Medication packages (post-op medications to take home)
-- PRP therapy add-on
+- PRP therapy package
 - Extended consultation packages
 
 ---
@@ -1293,19 +1324,28 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 #### Quote Structure
 
 ```sh
-Quote = Treatment (required) + Packages (optional)
-      = Treatment Price + Package Prices = Total Quote
+Parent Quote = Treatment version + shared grafts, plan visuals, clinicians, notes,
+               documents, quote currency, expiry, version, audit
+  Quote Option (1 to 5) = quote-local copy of one package version
+                          (services, travel services, relative-day plan)
+    Option/date-price row = one applicable date range + offered price + appointment
+Subquote = one Quote Option x one option/date-price row (the patient accepts exactly one)
 ```
 
-**Example Quote Breakdown**:
+**Example Quote** (quote currency GBP, captured from system configuration at first send):
 
 ```sh
-Treatment: FUE (3000 grafts)           £2,500
-Package: 4-star hotel (5 nights)       £300
-Package: Airport transfer              £50
-Package: PRP therapy session           £150
-                                       ------
-Total Quote:                           £3,000
+Treatment: FUE, 3000 grafts (shared by every option)
+
+Option A - "Comfort" package (v3): 4-star hotel 5 nights, airport transfer
+   Date range 1 (10-20 Mar)      £3,000
+   Date range 2 (5-15 Apr)       £2,850
+Option B - "Premium" package (v2): 5-star hotel 5 nights, transfers, PRP session
+   Date range 1 (10-20 Mar)      £3,600
+
+Subquotes offered: A x range 1, A x range 2, B x range 1 (three choices)
+Patient accepts exactly one, for example A x range 2 at £2,850.
+Option prices are never added together.
 ```
 
 ---
@@ -1317,7 +1357,7 @@ Total Quote:                           £3,000
 1. **Consistency**: All providers offer same treatments (FUE, FUT, DHI) with standardized info and videos
 2. **Flexibility**: Providers differentiate through their own package offerings
 3. **Scalability**: When platform offers direct travel booking, provider packages can be disabled without affecting treatments
-4. **Clarity**: Patients understand core procedure vs optional add-ons
+4. **Clarity**: Patients understand the core procedure vs the package options offered around it
 5. **Future-Proof**: Easy transition from provider-managed to platform-managed services
 
 ---
@@ -1871,21 +1911,22 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 - System MUST retry payment up to 3 times
 - System MUST notify patient of payment failure with clear error message
-- System MUST hold the accepted subquote's reserved slot for **48 hours** (admin-configurable) to allow patient to retry payment
+- System MUST keep the one fixed slot hold that started at subquote acceptance (FR-026 slot-hold duration, default **48 hours**, admin-configurable); payment failure or retry never extends or restarts it, and the patient may retry while it is active
 - System MUST release the reservation if payment not completed within the hold window
 - System MUST notify provider and patient of slot release
-- System MUST transition the pending booking to terminal `Payment Window Expired`, permanently block payment against that accepted selection, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote
+- System MUST transition the pending booking to `Payment Window Expired` (final except for the audited admin revive), block payment against that accepted selection unless an admin revives the booking, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote
+- This applies only to the first payment step; a missed later installment or final payment never causes `Payment Window Expired`
 
 ### EC-002: Provider Cancellation
 
-**Scenario**: Provider cancels confirmed booking due to emergency or overbooking
+**Scenario**: After subquote acceptance, the provider withdraws the accepted quote, drops out before or during treatment, or is suspended or deactivated
 
 **Handling**:
 
-- Provider MUST submit cancellation request with reason
-- Admin MUST approve cancellation (emergency only)
-- System MUST issue full refund to patient immediately
-- System MUST notify patient and suggest alternative providers
+- System MUST cancel the booking with cause `ProviderFault` (or `ProviderSuspended` / `ProviderDeactivated`) and a `supportRequired` marker, release the hold or calendar block, and keep the AcceptanceEvent unchanged, superseded through a linked record
+- The inquiry MUST stay open; an admin transfers the patient to a replacement provider in the same inquiry through a new admin-authored acceptance record linked to the original (FR-006 provider-fault transfer)
+- Amounts already paid move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee; exact mechanics are defined in FR-007, FR-007B, and FR-017
+- System MUST notify the patient and both providers of the transfer
 - System MUST apply penalty to provider (e.g., commission increase on next booking)
 - System MUST track provider cancellation rate and flag high-cancellation providers
 
@@ -1930,7 +1971,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 **Handling**:
 
-- System MUST lock exchange rate at time of subquote acceptance
+- System MUST lock exchange rate at time of subquote acceptance and record the rate and its timestamp in the acceptance snapshot
 - Patient MUST pay based on locked rate, regardless of current market rate
 - Provider MUST receive payout based on locked rate
 - Platform bears currency risk during escrow period
@@ -1965,8 +2006,8 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 ### SC-001: Conversion Rate
 
-- **Target**: 25% of submitted inquiries result in booked procedures
-- **Measurement**: (Booked procedures / Total inquiries) x 100
+- **Target**: 25% of submitted inquiries result in confirmed bookings (FR-006 `Confirmed`, reached at the first successful payment)
+- **Measurement**: (Confirmed bookings / Total inquiries) x 100
 - **Timeframe**: Measured quarterly
 
 ### SC-002: Platform NPS
@@ -2081,8 +2122,11 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 - **Provider**: Clinic or hospital offering hair transplant services
 - **Inquiry**: Patient's request for treatment quotes
 - **Parent Quote**: Provider response that owns shared provider, treatment, clinical, lifecycle, version, and audit context and groups one or more Quote Options
+- **Quote Option**: One alternative within a parent quote, seeded from exactly one package version as a quote-local copy (at most five per parent quote)
+- **Package**: Provider-owned, versioned, currency-free template for one quote option (included services and prices, travel services, standard price, relative-day treatment plan)
 - **Subquote**: Complete patient-visible choice resolving one Quote Option plus one applicable Option/date-price record; the atomic comparison and acceptance unit
-- **Booking**: Pending or confirmed booking record derived from exactly one AcceptanceEvent, accepted subquote, and immutable inherited parent context. `Accepted` awaits initial payment under an exclusive slot hold; successful payment moves it to `Confirmed`; hold expiry moves it to terminal `Payment Window Expired`.
+- **AcceptanceEvent**: Append-only record of the patient's acceptance of exactly one subquote, with an immutable snapshot of price after promotion, currency, date range, appointment, promotion, and the exchange rate with its timestamp; supersession and annotations are separate linked records
+- **Booking**: Pending or confirmed booking record derived from exactly one AcceptanceEvent, accepted subquote, and immutable inherited parent context. `Accepted` (shown to the patient as "Booking Accepted — Slot Held (Pending Payment)") awaits initial payment under one fixed exclusive slot hold; successful first payment moves it to `Confirmed` and creates the appointment; hold expiry moves it to terminal `Payment Window Expired`.
 - **Graft**: Unit of hair follicles transplanted (typically 1-4 hairs per graft)
 - **FUE**: Follicular Unit Extraction (hair transplant technique)
 - **FUT**: Follicular Unit Transplantation (hair transplant technique)

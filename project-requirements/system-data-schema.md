@@ -1,10 +1,10 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.7.0  
+**Version**: 1.9.0  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16
 
 ---
 
@@ -14,7 +14,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ### Schema Overview
 
-- **Total Tables**: 97 tables (6 new aftercare-related tables added)
+- **Total Tables**: 112 tables (see Complete Table List)
 - **Primary Key Type**: UUID (string) for user-facing entities, auto-increment for system tables
 - **Character Set**: utf8mb4_unicode_ci (supports emoji and international characters)
 - **Storage Engine**: InnoDB (supports foreign keys and transactions)
@@ -267,7 +267,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - A provider without an active provider-specific row uses the global default.
 - Provider-specific rows can be inserted, scheduled, or archived only while `providers.status` is `active` or `suspended`. A `deactivated` provider's rows are read-only (FR-015 v1.16 Tab 7, FR-029 v1.10, CR-FR029-20261015-02).
 - FR-015 `commission_value` maps to `commission_percentage` for `percentage` and to `flat_rate_amount` (with `flat_rate_currency`) for `flat_rate`.
-- The model, value, and currency in effect at booking confirmation are snapshotted onto the booking (see §7 Quotes); later rows never change a confirmed booking.
+- The model, value, and currency in effect at booking confirmation are snapshotted onto the booking (see §11A Bookings); later rows never change a confirmed booking.
 
 **Relationships**:
 
@@ -435,7 +435,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - INDEX: `status`
 - INDEX: `support_required`, `cancellation_cause`
 
-**Provider-Status Cancellation Fields (FR-015 v1.9)**: When a provider suspension or deactivation becomes effective, the system auto-cancels that provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases (including standalone aftercare). The case moves to `cancelled` and stores the fields above; the same fields exist on `after_cares` (§13), and the cancelled quote stores the cause in `quotes.cancellation_provenance` (§7). Rules:
+**Provider-Status Cancellation Fields (FR-015 v1.9)**: When a provider suspension or deactivation becomes effective, the system auto-cancels that provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases (including standalone aftercare) and stores the fields above; the same fields exist on `after_cares` (§13). For a case with an accepted subquote, the booking (§11A) is cancelled with the cause, the AcceptanceEvent is superseded through a linked `acceptance_supersessions` row (§7J), the accepted quote stays `accepted`, and the inquiry is not cancelled: it stays open with `support_required = true` so that an admin can rehome the patient in the same inquiry through the FR-006 provider-fault transfer. Quotes that were not accepted move to `cancelled_provider_status` with the cause in `quotes.cancellation_provenance` (§7). Rules:
 
 - `support_required` is a boolean marker, not a status. It is cleared only by an admin resolution that records `support_resolution_reason`, `support_resolved_by`, and `support_resolved_at` in the audit trail.
 - A `ProviderSuspended` cause is never overwritten when the provider is later deactivated; reactivation restores no cancelled case.
@@ -503,12 +503,12 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | package_id | UUID | FOREIGN KEY, NULLABLE | References packages.id. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_options.source_package_id`; retained until every consumer migrates |
 | treatment_date | JSON | NOT NULL | Proposed treatment dates. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_option_date_prices`; retained until every consumer migrates |
 | discount_id | UUID | FOREIGN KEY, NULLABLE | References discounts.id. **DEPRECATED (FR-004 v2.6)** — structured promotions are now attached through `quote_option_date_prices.promotion_id`; retained until every consumer migrates |
-| commission | INTEGER | NOT NULL | **Legacy** percentage-only commission value; MUST NOT be read as the commission rule. Superseded by the `commission_model` / `commission_value` / `commission_currency` snapshot below |
-| commission_model | VARCHAR(255) | NULLABLE | Booking commission snapshot captured at booking confirmation: `percentage` or `flat_rate` (FR-029) |
-| commission_value | DECIMAL(10,2) | NULLABLE | Snapshot value: percentage (0-100) for `percentage`, fixed amount (> 0, deducted once per FR-010 completed procedure) for `flat_rate` |
-| commission_currency | VARCHAR(3) | NULLABLE | Snapshot Flat Rate currency; NULL for `percentage` |
+| commission | INTEGER | NOT NULL | **Legacy** percentage-only commission value; MUST NOT be read as the commission rule. The binding commission snapshot is stored on `bookings` (§11A) |
+| commission_model | VARCHAR(255) | NULLABLE | Indicative commission model shown on the quote: `percentage` or `flat_rate` (FR-004, FR-029). Never binding; the binding snapshot is captured at booking confirmation on `bookings` (§11A) |
+| commission_value | DECIMAL(10,2) | NULLABLE | Indicative value: percentage (0-100) for `percentage`, fixed amount (> 0) for `flat_rate`; never binding |
+| commission_currency | VARCHAR(3) | NULLABLE | Indicative Flat Rate currency; NULL for `percentage` |
 | quote_amount | DECIMAL(10,2) | NOT NULL | Total quote amount. **DEPRECATED (FR-004 v2.2)** — a quote has a price range derived from `quote_option_date_prices` until acceptance, then the accepted option/date price; retained until every consumer migrates |
-| currency | VARCHAR(255) | NOT NULL | Currency code (USD, EUR, GBP, TRY, etc.), snapshotted from active system configuration; never provider input (FR-004 REQ-004-025) |
+| currency | VARCHAR(255) | NULLABLE | Quote currency code (USD, EUR, GBP, TRY, etc.). NULL on drafts; copied read-only at first send from the FR-026 Quote Configuration (the FR-029 Default Currency); never provider input (FR-004 REQ-004-025) |
 | note | TEXT | NULLABLE | Additional notes from provider, shared by every quote option |
 | estimated_grafts | INTEGER | NOT NULL | Graft estimate shared by every quote option (FR-004 REQ-004-020) |
 | graft_description | TEXT | NULLABLE | System-generated from the approved template and `estimated_grafts`; read-only to providers (FR-004 REQ-004-028) |
@@ -516,13 +516,19 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | treatment_plan_validated | BOOLEAN | DEFAULT false | Set once every option's treatment plan passes validation at submit (FR-004 Screen 7) |
 | expiry_calculated_at | TIMESTAMP | NULLABLE | When `expires_at` was last derived from `expiration_hours` |
 | status | VARCHAR(255) | NOT NULL | Quote lifecycle status — see Status Values below. Stored as `sent` in the database but exposed as `quote` through the API (see API Divergence note). Distinct from the treatment case lifecycle, which lives on `inquiries.status` |
-| expires_at | TIMESTAMP | NULLABLE | Quote expiration date |
-| expiration_hours | INTEGER | DEFAULT 48 | Hours until quote expires (customizable, default 48) |
+| expires_at | TIMESTAMP | NULLABLE | Quote expiration time; NULL on drafts; computed at first send from the send time and `expiration_hours` |
+| expiration_hours | INTEGER | NULLABLE | Quote expiry window in hours, copied read-only from the FR-026 Quote Configuration at first send (default 48); NULL on drafts; never changed per quote and never extended |
 | auto_accepted | BOOLEAN | DEFAULT false | Whether quote was auto-accepted with pre-scheduled appointment |
 | appointment_pre_scheduled | BOOLEAN | DEFAULT false | Whether provider pre-scheduled appointment in quote |
-| sent_at | TIMESTAMP | NULLABLE | Set when status transitions from `inquiry` → `quote`; feeds TTFQ analytics (FR-014) |
+| sent_at | TIMESTAMP | NULLABLE | Set when status transitions from `draft` → `sent` (exposed as `quote`); feeds TTFQ analytics (FR-014) |
 | accepted_at | TIMESTAMP | NULLABLE | Set when status transitions to `accepted`; feeds Quote→Payment aging analytics (FR-014) |
 | cancellation_provenance | JSON | NULLABLE | Set with `cancelled_provider_status`: cause (`ProviderSuspended` or `ProviderDeactivated`), provider status event reference, effective time, prior status |
+| version | INTEGER | NOT NULL, DEFAULT 1 | Aggregate quote version; one `quote_versions` row per sent version. Every FR-005 subquote of this quote uses this value as its version (`subquoteVersion = QuoteVersion.version`) |
+| first_sent_at | TIMESTAMP | NULLABLE | NULL on drafts; set once at first send and never overwritten by later versions |
+| quote_config_version | VARCHAR(64) | NULLABLE | FR-026 Quote Configuration version used at first send (source of `currency` and `expiration_hours`); NULL on drafts. A Default Currency change creates a new Quote Configuration version, as does an expiry-hours change, so this version identifies both the hours and the currency used |
+| accepted_total | DECIMAL(10,2) | NULLABLE | Read-only copy written at FR-005 acceptance: accepted subquote price after promotion, in the quote currency, from the acceptance snapshot. The snapshot (`acceptance_events`, §7G) is authoritative |
+| terms_acknowledged_at | TIMESTAMP | NULLABLE | Read-only copy written at FR-005 acceptance from the acceptance snapshot |
+| locked_exchange_rate_snapshot | JSON | NULLABLE | Read-only copy written at FR-005 acceptance: exchange rate and its timestamp from the acceptance snapshot |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -543,6 +549,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `belongsTo` → exact immutable `Treatment` version; `treatment_id` is the record reference and `treatment_version` retains its version metadata
 - `belongsTo` → `Package` *(deprecated; package provenance now held per option)*
 - `hasMany` → `QuoteOption` (one to five, ordered)
+- `hasMany` → `QuoteVersion` (§7H) and `QuoteAudit` (§7I)
+- `hasMany` → `AcceptanceEvent` as the accepted parent quote (§7G)
 - `belongsToMany` → `Clinician` (one or more shared clinicians, FR-004 REQ-004-027)
 - Promotion relationships are owned by `QuoteOptionDatePrice.promotion_id`; the parent Quote has no new direct Promotion relationship
 - `hasOne` → `Schedule`
@@ -555,24 +563,27 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `draft`: Provider is still composing the quote; not visible to the patient
 - `sent`: Quote submitted to the patient and awaiting a response (exposed to clients as `quote`)
 - `expired`: Expiry window elapsed with no patient response
-- `withdrawn`: Provider retracted the quote before the patient responded
+- `withdrawn`: Provider retracted the quote before the patient responded, or withdrew after acceptance (the case then passes to the FR-006 provider-fault transfer)
 - `archived`: Retained for audit only; excluded from active provider and patient lists
-- `accepted`: Patient accepted this quote, selecting one option and one date
-- `cancelled_other_accepted`: Auto-cancelled because the patient accepted a different quote for the same inquiry
+- `accepted`: Patient accepted one subquote (one option and one date range) of this quote. The quote stays `accepted` after the booking reaches `Payment Window Expired` and after a provider suspension or deactivation that follows acceptance; it is never reopened or expired
+- `cancelled_other_accepted`: Auto-cancelled because the patient accepted a subquote of a different quote for the same inquiry; also applied silently (no notice) to drafts
 - `cancelled_inquiry_cancelled`: Auto-cancelled because the patient cancelled the underlying inquiry
-- `cancelled_provider_status`: Auto-cancelled because the provider was suspended or deactivated (display "Cancelled (Provider Unavailable)"); the cause is held in `cancellation_provenance`
-- `confirmed`: Deposit paid; retained as the FR-006 payment bridge, set after acceptance
+- `cancelled_provider_status`: Auto-cancelled because the provider was suspended or deactivated (display "Cancelled (Provider Unavailable)"); the cause is held in `cancellation_provenance`. Applies only to quotes that were not accepted
+
+`confirmed` is not a quote status. Booking confirmation is an FR-006 booking status held on `bookings.status` (§11A).
 
 **Status Triggers**:
 
-- `draft` → `sent`: Provider submits the quote (sets `sent_at`)
+- `draft` → `sent`: Provider first sends the quote (sets `sent_at` and `first_sent_at`, copies `currency` and `expiration_hours` and records `quote_config_version` from one FR-026 configuration response, computes `expires_at`, writes `quote_versions` version 1). First send is blocked when the configuration cannot be read
+- `sent` → `sent` (new version): Any edit of a sent quote increments `version` and writes a new `quote_versions` row; edits are blocked once a subquote is accepted
 - `sent` → `expired`: Expiry job runs after `expires_at`
 - `sent` → `withdrawn`: Provider retracts before a patient response
-- `sent` → `accepted`: Patient accepts one option and one date (sets `accepted_at`)
-- `sent` → `cancelled_other_accepted`: Patient accepts a sibling quote on the same inquiry
+- `sent` → `accepted`: Patient accepts one subquote (sets `accepted_at`, `accepted_total`, `terms_acknowledged_at`, `locked_exchange_rate_snapshot`; creates the `acceptance_events` row)
+- `draft` or `sent` → `cancelled_other_accepted`: Patient accepts a subquote of another quote on the same inquiry (no notice for drafts)
 - `sent` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry
-- `accepted` → `confirmed`: Patient completes the deposit payment (FR-006); the commission snapshot is captured here
-- `accepted` or `confirmed` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective while the case is Accepted, Confirmed, In Progress, or Aftercare (FR-015 v1.9)
+- `accepted` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry after acceptance; the AcceptanceEvent is retained and superseded through an `acceptance_supersessions` row with cause `InquiryCancelled`
+- `accepted` → `withdrawn`: Provider withdraws after acceptance (FR-004 Workflow 6); the AcceptanceEvent is unchanged and the case passes to the FR-006 provider-fault transfer
+- `draft` or `sent` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective before acceptance (FR-015). After acceptance the quote stays `accepted`: the booking is cancelled with cause `ProviderSuspended` or `ProviderDeactivated`, the AcceptanceEvent is superseded through a linked record, and an admin rehomes the patient through the FR-006 provider-fault transfer
 - any terminal state → `archived`: Retention job or provider archive action
 
 **API Divergence (verified in source)**: the database column stores `sent`, while `Quote::getStatusAttribute()` maps it to `quote` on read and the matching mutator maps `quote` back to `sent` on write. Clients therefore see `quote` where the schema stores `sent`. Historical rows were converted by the `align_quote_statuses_with_prd` migration, which also split the legacy single `cancelled` value into `cancelled_other_accepted` and `cancelled_inquiry_cancelled`.
@@ -592,14 +603,14 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique quote option identifier; recorded by FR-005 acceptance |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
-| source_package_id | UUID | FOREIGN KEY, NOT NULL | References packages.id for provenance only |
+| source_package_id | UUID | FOREIGN KEY, NOT NULL | Stable package ID; with `source_package_version` references the exact `packages` (`id`, `version`) row that seeded the option, for provenance only |
 | source_package_version | INTEGER | NOT NULL | Package library version captured at selection |
 | display_order | SMALLINT | NOT NULL | Patient-facing comparison order; consecutive within the quote |
 | package_name_snapshot | VARCHAR(255) | NOT NULL | Package name copied at selection |
 | package_description_snapshot | TEXT | NULLABLE | Package description copied at selection |
 | standard_price_snapshot | DECIMAL(10,2) | NOT NULL | Library price copied at selection; prefills offered prices |
 | included_services | JSON | NULLABLE | Travel services included in this option (flight, hotel, transport, other); consumed by FR-008 |
-| is_customized | BOOLEAN | DEFAULT false | Whether the snapshot differs from its source package |
+| is_customized | BOOLEAN | DEFAULT false | Inline-customised flag: whether the quote-local copy was edited inline and differs from its source package version |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -612,11 +623,12 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Constraints**:
 
 - A quote MUST have between one and five options; enforced in request validation and the quote domain service.
+- Inline edits change only this quote-local copy (and its items and plan days). They never write back to the package library and never create a package version; library edits create a new package version (§9) and never change an existing option.
 
 **Relationships**:
 
 - `belongsTo` → `Quote`
-- `belongsTo` → `Package` (provenance only)
+- `belongsTo` → exact `Package` version (`source_package_id`, `source_package_version`; provenance only)
 - `hasMany` → `QuoteOptionItem`
 - `hasMany` → `QuoteOptionDatePrice`
 - `hasMany` → `QuoteOptionPlanDay`
@@ -670,15 +682,20 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | end_date | DATE | NOT NULL | Copied from the selected inquiry range |
 | appointment_at | TIMESTAMP | NOT NULL | Pre-scheduled appointment start; must fall inside the range |
 | appointment_timezone | VARCHAR(64) | NOT NULL | IANA timezone for the appointment |
-| price | DECIMAL(10,2) | NOT NULL | Offered price in the quote's snapshotted currency; non-negative |
-| promotion_id | UUID | FOREIGN KEY, NULLABLE | References a structured promotion program (FR-019) |
-| is_accepted | BOOLEAN | DEFAULT false | Set by FR-005; at most one true row per inquiry |
+| price | DECIMAL(10,2) | NOT NULL, CHECK (price > 0) | Provider price as entered, before any promotion, in the quote currency; must be greater than 0 before send (a date range the clinic cannot do is left out of the option rather than priced at 0) |
+| promotion_id | UUID | FOREIGN KEY, NULLABLE | References a structured promotion program (FR-019), `REUSABLE` or `AD_HOC_QUOTE_BOUND`, selected by the provider or attached automatically at send |
+| promotion_terms_snapshot | JSON | NULLABLE | Promotion terms copied at send into the sent quote version; consumers read these copied terms and never resolve live FR-019 terms for a sent quote |
+| discount_amount | DECIMAL(10,2) | NULLABLE | Discount in the quote currency, copied at send with the terms |
+| is_auto_attached_promotion | BOOLEAN | DEFAULT false | Whether the promotion was attached automatically at send |
 
 **Indexes**:
 
 - PRIMARY: `id`
 - INDEX: `quote_option_id`, `promotion_id`
 - UNIQUE: `(quote_option_id, source_inquiry_date_range_id)`
+- CHECK: `price > 0`
+
+**Acceptance state**: not stored on this table. FR-005 owns subquote identity and acceptance state (accepted, not selected, superseded); a subquote is one option/date-price row combined with its option, and any acceptance flag shown for a row is derived from `acceptance_events` (§7G). The former `is_accepted` column is removed. The unique `(quote_option_id, source_inquiry_date_range_id)` index keeps one row per option and date range; at most one non-superseded acceptance per inquiry is enforced by `acceptance_events`.
 
 **Relationships**:
 
@@ -776,6 +793,278 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ---
 
+### 7G. Acceptance Events
+
+**Table**: `acceptance_events`
+**Description**: Append-only record of one subquote acceptance (FR-005 AcceptanceEvent). It carries the immutable acceptance snapshot that every downstream module reads for money fields. Created in the same transaction as the slot hold and the `bookings` row (§11A).
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique acceptance event identifier |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
+| accepted_parent_quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| accepted_parent_quote_version | INTEGER | NOT NULL | Aggregate quote version accepted (`quote_versions.version`) |
+| accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID, derived deterministically from `quote_option_id` and `option_date_price_id` |
+| accepted_subquote_version | INTEGER | NOT NULL | MUST equal `accepted_parent_quote_version` |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id |
+| reserved_slot_id | UUID | NOT NULL | Identifier of the fixed slot hold keyed by provider, appointment date/time, and time zone; the hold fields live on the booking (§11A). Not an appointment record |
+| actor_id | UUID | NOT NULL | Patient, or admin for a provider-fault transfer record |
+| actor_type | VARCHAR(255) | NOT NULL | `patient` or `admin` (admin only for a provider-fault transfer record) |
+| accepted_at | TIMESTAMP | NOT NULL | Acceptance time |
+| acceptance_snapshot | JSON | NOT NULL | Immutable snapshot of the complete subquote and inherited parent context (FR-005 REQ-005-006): IDs and versions, source package ID and version, parent expiry, treatment ID and version, package and service snapshot, date range, appointment date/time and time zone, offered price, promotion and any patient-applied promotion code with the resulting discounted price, currency, exchange rate and its timestamp, treatment plan, grafts, visual plan, clinician IDs, notes, requirements, attachment IDs with versions, actor, and timestamp |
+| offered_price | DECIMAL(10,2) | NOT NULL | Projection of the snapshot: provider price before promotion |
+| accepted_price | DECIMAL(10,2) | NOT NULL | Projection of the snapshot: accepted subquote price after promotion (the booking total) |
+| currency | VARCHAR(3) | NOT NULL | Projection of the snapshot: quote currency |
+| date_range_start | DATE | NOT NULL | Projection of the snapshot: accepted date range start |
+| date_range_end | DATE | NOT NULL | Projection of the snapshot: accepted date range end |
+| appointment_at | TIMESTAMP | NOT NULL | Projection of the snapshot: accepted appointment start |
+| appointment_timezone | VARCHAR(64) | NOT NULL | Projection of the snapshot: IANA time zone |
+| promotion_id | UUID | NULLABLE | Projection of the snapshot: promotion program applied, if any |
+| promotion_code_id | UUID | NULLABLE | Projection of the snapshot: patient-applied promotion code, if any |
+| exchange_rate | DECIMAL(18,8) | NULLABLE | Projection of the snapshot: exchange rate locked at acceptance (a stale cached rate is accepted and recorded) |
+| exchange_rate_at | TIMESTAMP | NULLABLE | Projection of the snapshot: timestamp of that rate |
+| handoff_metadata | JSON | NULLABLE | FR-006 booking handoff context |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `inquiry_id`, `accepted_parent_quote_id`, `option_date_price_id`, `accepted_at`
+
+**Business Rules**:
+
+- Append-only: rows are never updated, deleted, soft-deleted, or restored. Projection columns are written once from the snapshot, and the snapshot is authoritative.
+- Price, currency, date range, appointment, and promotion are the binding money fields; downstream modules (FR-006, FR-007, FR-007b, FR-008, FR-010, FR-017, FR-019, FR-029) read them from this record, never from live quote rows.
+- At most one acceptance event per inquiry has no `acceptance_supersessions` row. The acceptance transaction locks the inquiry and rejects a second acceptance before any event, hold, or booking is created.
+- Supersession and admin notes are separate linked records (§7J, §7K). A provider-fault transfer creates a new admin-authored event linked to the original through `acceptance_supersessions.replacement_acceptance_event_id`.
+
+**Relationships**:
+
+- `belongsTo` → `Inquiry`
+- `belongsTo` → `Quote` (accepted parent quote)
+- `belongsTo` → `QuoteOption`, `QuoteOptionDatePrice`
+- `hasOne` → `Booking`
+- `hasOne` → `AcceptanceSupersession` (as superseded event)
+- `hasMany` → `AcceptanceAnnotation`
+- `hasOne` → `PromotionApplication`
+
+---
+
+### 7H. Quote Versions
+
+**Table**: `quote_versions`
+**Description**: One row per sent version of a parent quote (FR-004 QuoteVersion). The version is the version source for every subquote derived from the quote.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique version row identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| version | INTEGER | NOT NULL | Aggregate version number |
+| changeset | JSON | NOT NULL | Snapshot of the full quote aggregate and all option-owned children, including the promotion terms copied at send |
+| created_by | UUID | NOT NULL | Actor who sent the version |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `(quote_id, version)`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+
+---
+
+### 7I. Quote Audits
+
+**Table**: `quote_audits`
+**Description**: Audit trail of quote actions (FR-004 QuoteAudit).
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique audit row identifier |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| action | VARCHAR(255) | NOT NULL | Action performed |
+| actor_id | UUID | NOT NULL | Actor |
+| reason | TEXT | NULLABLE | Reason, where the action requires one |
+| before | JSON | NULLABLE | Values before the action |
+| after | JSON | NULLABLE | Values after the action |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `quote_id`, `created_at`
+
+**Relationships**:
+
+- `belongsTo` → `Quote`
+
+---
+
+### 7J. Acceptance Supersessions
+
+**Table**: `acceptance_supersessions`
+**Description**: Linked, append-only record that marks an AcceptanceEvent superseded without editing it (FR-005 AcceptanceSupersession).
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique supersession identifier |
+| superseded_acceptance_event_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References acceptance_events.id |
+| cause | VARCHAR(255) | NOT NULL | `InquiryCancelled`, `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` |
+| replacement_acceptance_event_id | UUID | FOREIGN KEY, NULLABLE | References the new admin-authored acceptance_events.id; set for a provider-fault transfer only |
+| actor_id | UUID | NOT NULL | Actor recording the supersession |
+| reason | TEXT | NULLABLE | Reason |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `superseded_acceptance_event_id`
+- INDEX: `replacement_acceptance_event_id`, `cause`
+
+**Business Rules**:
+
+- Append-only. `ProviderFault`, `ProviderSuspended`, and `ProviderDeactivated` follow the FR-006 provider-fault transfer: the booking closes, the inquiry stays open with `support_required`, and an admin rehomes the patient in the same inquiry. Handling of money already paid is out of scope here and follows the later payment documentation.
+
+**Relationships**:
+
+- `belongsTo` → `AcceptanceEvent` (superseded)
+- `belongsTo` → `AcceptanceEvent` (replacement, nullable)
+
+---
+
+### 7K. Acceptance Annotations
+
+**Table**: `acceptance_annotations`
+**Description**: Audited, append-only admin note on an AcceptanceEvent (FR-005 AcceptanceAnnotation). It never alters the event, its snapshot, or any state.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique annotation identifier |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id |
+| author_id | UUID | FOREIGN KEY, NOT NULL | References users.id (admin) |
+| type | VARCHAR(255) | NOT NULL | `note` or `correction` |
+| text | TEXT | NOT NULL | Annotation text |
+| reason | TEXT | NOT NULL | Reason |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `acceptance_event_id`
+
+**Relationships**:
+
+- `belongsTo` → `AcceptanceEvent`
+- `belongsTo` → `User` (admin author)
+
+---
+
+### 7L. Promotion Applications
+
+**Table**: `promotion_applications`
+**Description**: Promotion redemption record (FR-019 Application), created only at subquote acceptance and linked to the AcceptanceEvent.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique application identifier |
+| program_id | UUID | NOT NULL | FR-019 PromotionProgram ID |
+| code_id | UUID | NULLABLE | FR-019 PromotionCode ID, when a code was used |
+| source | VARCHAR(255) | NOT NULL | `provider_selected`, `auto_attached`, or `patient_code` |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| quote_version | INTEGER | NOT NULL | Accepted aggregate quote version |
+| quote_option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id (the accepted subquote) |
+| booking_id | UUID | FOREIGN KEY, NULLABLE | References bookings.id |
+| patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
+| provider_id | UUID | FOREIGN KEY, NULLABLE | References providers.id; NULL for Hairline-Funded programs |
+| state | VARCHAR(255) | NOT NULL | Lifecycle depends on `source` (see Business Rules). `APPLIED` at acceptance; `COMPLETED` at the first successful payment. For `auto_attached` the use was already reserved at send and is consumed at acceptance; for `provider_selected` and `patient_code` one use is reserved at acceptance and consumed at the first successful payment |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'active' | `active`, `voided`, `superseded`, `reversed`, or `refunded` |
+| supersedes_application_id | UUID | FOREIGN KEY, NULLABLE | References promotion_applications.id; set on a replacement created by a provider-fault transfer |
+| terms_snapshot | JSON | NOT NULL | Type, value, applies-to, and funding model as fixed at send |
+| currency | VARCHAR(3) | NOT NULL | Quote currency from the acceptance snapshot |
+| discount_value | DECIMAL(10,2) | NOT NULL | Discount applied, in `currency` |
+| funding_split | JSON | NULLABLE | `hairline_portion` and `provider_portion` |
+| applied_at | TIMESTAMP | NOT NULL | Acceptance time |
+| completed_at | TIMESTAMP | NULLABLE | First successful payment time |
+| use_reservation_id | UUID | FOREIGN KEY, NULLABLE | References promotion_use_reservations.id; set for `auto_attached` applications (the send-time reservation consumed at acceptance) |
+| use_returned_at | TIMESTAMP | NULLABLE | When the counted use was returned to the program limit (booking `Payment Window Expired` or cancelled before first payment); cleared if an admin revive re-takes it |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `acceptance_event_id`, `program_id`, `code_id`, `booking_id`, `state`, `status`
+
+**Business Rules**:
+
+- Usage-limit lifecycle by `source`:
+  - `auto_attached`: one use is reserved at send in `promotion_use_reservations` (at most one per parent quote) and consumed at acceptance, when this row is created with `use_reservation_id`. If the booking ends `Payment Window Expired` or is cancelled before the first successful payment, the use is returned to the limit (`use_returned_at` set). An admin revive re-takes the use only if the limit has room (`use_returned_at` cleared); FR-006 and FR-019 define the revive outcome when it has none.
+  - `provider_selected` and `patient_code`: one use is reserved at acceptance and consumed at the first successful payment; the reservation is released on `Payment Window Expired` or cancellation before that payment, and reserved again on admin revive only if the limit has room (FR-019).
+- The limit is checked against active reservations in `promotion_use_reservations` plus uses held by applications here that have not been returned, so it can never be exceeded.
+- Promotions are frozen after acceptance: no provider remove or replace and no checkout or booking code entry. The only exception is the replacement application linked through `supersedes_application_id` in a provider-fault transfer.
+
+**Relationships**:
+
+- `belongsTo` → `AcceptanceEvent`, `Quote`, `QuoteOptionDatePrice`, `Booking`, `Patient`, `Provider`
+
+---
+
+### 7M. Promotion Use Reservations
+
+**Table**: `promotion_use_reservations`
+**Description**: Send-time reservation of one use of an auto-attached promotion (FR-019), so the program's usage limit can never be exceeded between quote send and acceptance. `promotion_applications` is created only at acceptance and cannot hold this pre-acceptance state.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique reservation identifier |
+| program_id | UUID | NOT NULL | FR-019 PromotionProgram ID whose usage limit is reserved against |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (the sent parent quote carrying the auto-attached promotion) |
+| quote_version | INTEGER | NOT NULL | Quote version whose send created the reservation (unchanged when later versions keep it) |
+| state | VARCHAR(255) | NOT NULL, DEFAULT 'reserved' | `reserved` at send, `released` when the quote expires, is withdrawn, is not selected or a resent version drops the promotion, `consumed` at acceptance |
+| reserved_at | TIMESTAMP | NOT NULL | Send time |
+| released_at | TIMESTAMP | NULLABLE | Release time |
+| release_reason | VARCHAR(255) | NULLABLE | `expired`, `withdrawn`, `not_selected`, or `dropped_on_resend` |
+| consumed_at | TIMESTAMP | NULLABLE | Acceptance time |
+| acceptance_event_id | UUID | FOREIGN KEY, NULLABLE | References acceptance_events.id; set when consumed |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `program_id`, `state`
+- UNIQUE: `quote_id` for rows in state `reserved` (at most one active reservation per parent quote, whatever the promotion)
+
+**Business Rules**:
+
+- Sending a quote that carries an auto-attached promotion reserves one use. The send is blocked if reserved plus consumed uses would exceed the program's usage limit, so the limit can never be exceeded.
+- A parent quote holds at most one active reservation. Resending a new version of the same quote keeps the active reservation and never reserves a second use; it creates a reservation only if the new version newly carries the auto-attached promotion, and releases the active reservation (reason `dropped_on_resend`) if the new version no longer carries it.
+- The reservation is released when the quote expires, is withdrawn, or is not selected, and is consumed when a subquote of that quote is accepted. Released and consumed rows are terminal; after consumption, any return of the use to the limit or re-take on admin revive is recorded on the linked `promotion_applications` row.
+
+**Relationships**:
+
+- `belongsTo` → `Quote`, `AcceptanceEvent`
+
+---
+
 ### 8. Treatments (Admin-Created Foundation)
 
 **Table**: `treatments`  
@@ -822,80 +1111,110 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ---
 
-### 9. Packages (Provider-Created Add-Ons)
+### 9. Packages (Versioned Provider Templates)
 
 **Table**: `packages`  
-**Description**: Optional add-ons created by each provider - supplements the treatment (hotels, transport, medications, PRP, etc.)
-
-**Purpose**: Allows providers to differentiate their offerings - each provider has their own package list
+**Description**: Versioned package templates in each provider's library (FR-024 Package). A package is a full template that seeds one Quote Option: included items, travel services, a relative-day plan, and a standard price. Date ranges, notes, and documents are never packaged. Each selected package becomes one alternative option on a quote (up to five); packages are never summed.
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| id | UUID | PRIMARY KEY | Unique package identifier |
+| id | UUID | NOT NULL | Stable package identifier, shared by all versions |
+| version | INTEGER | NOT NULL, DEFAULT 1 | Version number; each library edit creates a new version row |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id (owner of package) |
-| package_name | VARCHAR(255) | NOT NULL | Package name (e.g., "5-Star Hotel Package") |
-| package_price | DECIMAL(10,2) | NOT NULL | Package price |
-| currency | VARCHAR(255) | NOT NULL | Currency code |
-| package_description | TEXT | NULLABLE | Package description |
-| package_category | VARCHAR(255) | NOT NULL | Category: hotel, transport, flight, medication, prp_therapy, consultation |
+| name | VARCHAR(255) | NOT NULL | Package name |
+| description | TEXT | NULLABLE | Package description |
+| duration | VARCHAR(255) | NULLABLE | Package duration |
+| standard_price | DECIMAL(10,2) | NOT NULL | Standard price in the system quote currency; prefills option prices. No package currency is stored |
+| included_travel_services | JSON | NULLABLE | Included travel services (flight, hotel, transport, other) |
+| image_urls | JSON | NULLABLE | Package images |
+| terms_conditions | TEXT | NULLABLE | Package terms |
 | status | VARCHAR(255) | DEFAULT 'active' | Package status (active, inactive) |
-| created_at | TIMESTAMP | AUTO | Record creation timestamp |
-| updated_at | TIMESTAMP | AUTO | Record creation timestamp |
+| created_by | UUID | NOT NULL | Provider user who created this version |
+| created_at | TIMESTAMP | AUTO | Version creation timestamp |
 
 **Indexes**:
 
-- PRIMARY: `id`
-- INDEX: `provider_id`, `package_category`, `status`
+- PRIMARY: `(id, version)`
+- INDEX: `provider_id`, `status`
 
 **Relationships**:
 
 - `belongsTo` → `Provider` (package owner)
-- `hasMany` → `PackageItem` (items included in package)
-- `belongsToMany` → `Quote` (via quote_packages junction)
+- `hasMany` → `PackageItem` and `PackagePlanDay` (per version)
+- `hasMany` → `QuoteOption` (as provenance source via `source_package_id` and `source_package_version`)
 
 **Business Rules**:
 
-- Each provider creates their own packages
-- Packages are optional (not required for quote)
-- Providers can have different packages (unlike treatments which are standardized)
-- Package categories: hotel, transport, flight_assistance, medications, prp_therapy, extended_consultation
+- Each provider creates their own packages. Earlier versions are read-only, and packages are never hard-deleted.
+- A library edit creates a new version and never changes an existing Quote Option. Inline edits on a quote change only that quote-local option copy (§7A) and never write back to the library.
+- Patient-facing package data on a quote is read from the option copy and its recorded source version, never from the latest library version.
+- Usage Count counts Quote Options on open (draft or sent) quotes that reference the package.
+- The legacy add-on package categories and the `quote_packages` and `quote_treatments` junctions are removed; FR-004 Quote Options hold package provenance and the quote-local copy, and legacy rows are handled by the FR-004 migration.
 
 ---
 
 ### 10. Package Items
 
 **Table**: `package_items`  
-**Description**: Individual items included in a package
+**Description**: Items included in one package version (FR-024 PackageItem). FR-004 copies them into `quote_option_items` and records the source item ID.
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique item identifier |
-| package_id | UUID | FOREIGN KEY, NOT NULL | References packages.id |
-| item_name | VARCHAR(255) | NOT NULL | Item name (e.g., "Grafts", "Medications") |
-| item_value | VARCHAR(255) | NOT NULL | Item value/quantity |
-| item_price | DECIMAL(10,2) | NOT NULL | Item price |
-| created_at | TIMESTAMP | AUTO | Record creation timestamp |
-| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+| package_id | UUID | NOT NULL | Stable package ID |
+| package_version | INTEGER | NOT NULL | With `package_id`, references the `packages` (`id`, `version`) row |
+| item_type | VARCHAR(255) | NOT NULL | medical, travel, accommodation, transport, flight, or other |
+| name | VARCHAR(255) | NOT NULL | Item name |
+| description | TEXT | NULLABLE | Item details |
+| price | DECIMAL(10,2) | NULLABLE | Optional component price in the system quote currency |
+| is_included | BOOLEAN | NOT NULL | Explicit included or excluded state |
+| display_order | SMALLINT | NOT NULL | Order within the package version |
 
 **Indexes**:
 
 - PRIMARY: `id`
-- INDEX: `package_id`
+- INDEX: `(package_id, package_version)`
 
 **Relationships**:
 
-- `belongsTo` → `Package`
+- `belongsTo` → `Package` version
+
+---
+
+### 10A. Package Plan Days
+
+**Table**: `package_plan_days`  
+**Description**: Relative-day plan of one package version (FR-024 PackagePlanDay). FR-004 copies these rows into `quote_option_plan_days`; days are never converted to calendar dates.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique plan day identifier |
+| package_id | UUID | NOT NULL | Stable package ID |
+| package_version | INTEGER | NOT NULL | With `package_id`, references the `packages` (`id`, `version`) row |
+| day_number | SMALLINT | NOT NULL | Relative day index, starting at 1 |
+| description | TEXT | NOT NULL | What happens on that relative day |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `(package_id, package_version, day_number)`
+
+**Relationships**:
+
+- `belongsTo` → `Package` version
 
 ---
 
 ### 11. Schedules
 
 **Table**: `schedules`  
-**Description**: Appointment scheduling details
+**Description**: Appointment record. Created only when the first payment succeeds and the booking (§11A) moves to `confirmed`; acceptance creates no schedule row, and the payment-window hold lives on `bookings`
 
 **Columns**:
 
@@ -903,6 +1222,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique schedule identifier |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| booking_id | UUID | FOREIGN KEY, NULLABLE | References bookings.id; set for every appointment created from a confirmed booking |
 | schedule_date | DATE | NOT NULL | Appointment date |
 | schedule_time | TIME | NULLABLE | Appointment time |
 | location | VARCHAR(255) | NULLABLE | Clinic location details |
@@ -919,6 +1239,75 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Relationships**:
 
 - `belongsTo` → `Quote`
+
+---
+
+### 11A. Bookings
+
+**Table**: `bookings`
+**Description**: Booking derived from one accepted subquote and its inherited parent context (FR-006 Booking). Created with status `accepted` in the same transaction as the AcceptanceEvent and the slot hold. Payment-window hold fields live here; the appointment (`schedules`) is created only on the first successful payment.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique booking identifier |
+| booking_reference | VARCHAR(255) | UNIQUE, NOT NULL | Patient-facing booking reference |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
+| patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References acceptance_events.id; one booking per acceptance event |
+| accepted_parent_quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| accepted_parent_quote_version | INTEGER | NOT NULL | Accepted aggregate quote version |
+| accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID |
+| accepted_subquote_version | INTEGER | NOT NULL | MUST equal `accepted_parent_quote_version` |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'accepted' | `accepted`, `payment_window_expired`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled` (displayed as Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled) |
+| hold_appointment_at | TIMESTAMP | NOT NULL | Hold key: appointment date/time from the acceptance snapshot |
+| hold_appointment_timezone | VARCHAR(64) | NOT NULL | Hold key: IANA time zone from the acceptance snapshot |
+| hold_started_at | TIMESTAMP | NOT NULL | Start of the current fixed hold (acceptance, or admin revive) |
+| hold_expires_at | TIMESTAMP | NOT NULL | `hold_started_at` plus the FR-026 Slot-Hold Duration in effect when the hold was placed (default 48 hours); never extended or restarted by payment failure |
+| hold_released_at | TIMESTAMP | NULLABLE | When the hold was released (expiry, cancellation, provider status cascade, or provider fault) |
+| confirmed_at | TIMESTAMP | NULLABLE | First successful payment (deposit or first instalment); the appointment is created and the slot blocked at this point |
+| booking_total | DECIMAL(10,2) | NOT NULL | Booking total: accepted subquote price after promotion, in the quote currency, copied read-only from the acceptance snapshot |
+| currency | VARCHAR(3) | NOT NULL | Quote currency copied from the acceptance snapshot |
+| commission_model | VARCHAR(255) | NULLABLE | Binding commission snapshot captured at booking confirmation: `percentage` or `flat_rate` (FR-029) |
+| commission_value | DECIMAL(10,2) | NULLABLE | Snapshot value: percentage (0-100) for `percentage`, fixed amount (> 0, deducted once per FR-010 completed procedure) for `flat_rate` |
+| commission_currency | VARCHAR(3) | NULLABLE | Snapshot Flat Rate currency; NULL for `percentage` |
+| commission_config_id | UUID | FOREIGN KEY, NULLABLE | Source configuration ID: references provider_commissions.id (§2B) resolved at booking confirmation |
+| commission_scope_type | VARCHAR(255) | NULLABLE | `global` or `provider_specific` |
+| cancellation_reason | VARCHAR(255) | NULLABLE | Set with `cancelled`: governed cancellation reason, or cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` |
+| support_required | BOOLEAN | DEFAULT false | Marker, not a status; set for provider status and provider-fault closures and cleared only by audited admin resolution |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `booking_reference`, `acceptance_event_id`
+- INDEX: `inquiry_id`, `provider_id`, `patient_id`, `status`, `hold_expires_at`
+- UNIQUE (active hold key): at most one booking in `accepted`, `confirmed`, `in_progress`, or `aftercare` per (`provider_id`, `hold_appointment_at`, `hold_appointment_timezone`); enforced through a unique index on a generated column that is NULL for other statuses
+
+**Status Triggers (FR-006)**:
+
+- `accepted` → `confirmed`: First successful payment before `hold_expires_at`; sets `confirmed_at`, creates the `schedules` appointment, blocks the slot, and captures the commission snapshot
+- `accepted` → `payment_window_expired`: The hold lapses before the first successful payment; the hold is released and no appointment exists
+- `payment_window_expired` → `accepted`: Audited admin revive only; places a new fixed hold (new `hold_started_at` and `hold_expires_at`)
+- `confirmed` → `in_progress` (FR-010) → `aftercare` (FR-011) → `completed`
+- `accepted` → `cancelled`: Governed cancellation, including patient inquiry cancellation during the hold
+- Any non-terminal status → `cancelled` with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and `support_required = true`, followed by the FR-006 provider-fault transfer (Alternative Flows B4 and B5)
+
+**Business Rules**:
+
+- Money fields come from the acceptance snapshot only. The booking total is the base for commission (FR-029); the exchange rate is locked at acceptance (`acceptance_events`), and commission and deposit settings are locked at booking confirmation.
+- The Payment Window Expired boundary applies to the first payment only.
+- `confirmed` is a booking status only, never a quote status.
+
+**Relationships**:
+
+- `belongsTo` → `AcceptanceEvent`, `Inquiry`, `Patient`, `Provider`
+- `belongsTo` → `Quote` (accepted parent quote)
+- `hasOne` → `Schedule` (created at first successful payment)
+- `hasOne` → `TravelContext`, `TreatmentRecord`
 
 ---
 
@@ -1846,6 +2235,14 @@ All foreign keys are defined with **ON DELETE** rules to maintain referential in
 
 - **RESTRICT**: Prevent parent deletion if children exist
   - `payments.quote_id` → `quotes.id` (RESTRICT - cannot delete quote with payments)
+  - `quote_options.quote_id`, `quote_versions.quote_id`, `quote_audits.quote_id` → `quotes.id` (RESTRICT)
+  - `quote_option_items.quote_option_id`, `quote_option_date_prices.quote_option_id`, `quote_option_plan_days.quote_option_id` → `quote_options.id` (RESTRICT)
+  - `acceptance_events.accepted_parent_quote_id` → `quotes.id`, `acceptance_events.quote_option_id` → `quote_options.id`, `acceptance_events.option_date_price_id` → `quote_option_date_prices.id` (RESTRICT)
+  - `acceptance_supersessions.superseded_acceptance_event_id` and `replacement_acceptance_event_id`, `acceptance_annotations.acceptance_event_id`, `promotion_applications.acceptance_event_id`, `bookings.acceptance_event_id` → `acceptance_events.id` (RESTRICT; acceptance records are append-only)
+  - `schedules.booking_id`, `travel_contexts.booking_id`, `treatment_records.booking_id` → `bookings.id` (RESTRICT)
+  - `passport_details.travel_context_id`, `hotels.travel_context_id`, `flights.travel_context_id` → `travel_contexts.id` (RESTRICT; superseded versions are retained)
+  - `treatment_detail_changes.treatment_record_id` → `treatment_records.id` (RESTRICT)
+  - `quote_options` (`source_package_id`, `source_package_version`), `package_items` and `package_plan_days` (`package_id`, `package_version`) → `packages` (`id`, `version`) (RESTRICT; packages are never hard-deleted)
 
 ### Unique Constraints
 
@@ -1856,6 +2253,13 @@ All foreign keys are defined with **ON DELETE** rules to maintain referential in
 - **Affiliates**: `email`
 - **Discount Codes**: `code`
 - **Affiliate Discount Codes**: `code`
+- **Quote Option Date Prices**: `(quote_option_id, source_inquiry_date_range_id)`
+- **Quote Versions**: `(quote_id, version)`
+- **Packages**: `(id, version)`
+- **Acceptance Supersessions**: `superseded_acceptance_event_id`
+- **Bookings**: `booking_reference`, `acceptance_event_id`, active hold key (`provider_id`, `hold_appointment_at`, `hold_appointment_timezone`) for `accepted`, `confirmed`, `in_progress`, `aftercare`
+- **Travel Contexts**: `booking_id`
+- **Flights**: `(travel_context_id, leg_type, version)`
 
 ### Composite Indexes
 
@@ -1918,7 +2322,9 @@ Status fields use **VARCHAR** (not native ENUM) for flexibility:
 - Allows adding values without schema changes
 - Defined as constants in Laravel models
 - Examples:
-  - Quote status: `quote`, `accepted`, `rejected`, etc.
+  - Quote status: `draft`, `sent` (exposed as `quote`), `expired`, `withdrawn`, `archived`, `accepted`, `cancelled_other_accepted`, `cancelled_inquiry_cancelled`, `cancelled_provider_status` (no `confirmed`, no `rejected`)
+  - Booking status: `accepted`, `payment_window_expired`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled`
+  - Acceptance supersession cause: `InquiryCancelled`, `ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`
   - Payment status: `pending`, `completed`, `failed`, `refunded`
   - Affiliate status: `draft`, `active`, `inactive`, `suspended`
   - Provider status: `active`, `suspended`, `deactivated` (no `draft`)
@@ -1962,6 +2368,7 @@ All critical entities maintain audit trail via:
 - Admin edits of provider data require a change reason, stored with the audit entry (FR-015)
 - Login as Provider sessions are audited with the admin's reason, re-authentication, and a 30-minute session timeout (FR-015)
 - Provider status changes (suspension, deactivation, reactivation) and admin resolution of `support_required` markers are audited events
+- `acceptance_events`, `acceptance_supersessions`, `acceptance_annotations`, `quote_versions`, `quote_audits`, and `treatment_detail_changes` are append-only: never updated, deleted, soft-deleted, or restored
 
 ---
 
@@ -1984,10 +2391,13 @@ Migrations are executed in chronological order based on filename timestamps. Key
    - `providers`, `provider_users`, `patients`
 
 5. **Inquiry & Quote Flow** (2024-02)
-   - `inquiries`, `medical_histories`, `quotes`, `treatments`, `packages`
+   - `inquiries`, `medical_histories`, `quotes`, `treatments`, `packages`, `package_items`, `package_plan_days`
+   - `quote_options`, `quote_option_items`, `quote_option_date_prices`, `quote_option_plan_days`, `quote_versions`, `quote_audits`
+   - `acceptance_events`, `acceptance_supersessions`, `acceptance_annotations`, `promotion_use_reservations` (after `acceptance_events`)
 
 6. **Payments & Scheduling** (2024-03+)
-   - `payments`, `schedules`, `after_cares`
+   - `bookings`, `promotion_applications` (after `bookings`; references `booking_id`), `payments`, `schedules`, `after_cares`, `travel_contexts`, `treatment_detail_changes`
+   - `passport_details`, `hotels`, `flights` (after `travel_contexts`; keyed by `travel_context_id`)
 
 7. **Communication & Reviews** (2024-07+)
    - `conversations`, `messages`, `reviews`
@@ -2116,7 +2526,9 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | id | UUID | PRIMARY KEY | Unique plan identifier |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
 | patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
-| total_amount | DECIMAL(10,2) | NOT NULL | Total amount to be paid |
+| total_amount | DECIMAL(10,2) | NOT NULL | Total amount to be paid; read-only copy of the booking total from the accepted snapshot through the booking, never recomputed from a live quote |
+| currency | VARCHAR(3) | NOT NULL | Read-only copy of the quote currency from the accepted snapshot; used for every instalment |
+| exchange_rate | DECIMAL(18,8) | NULLABLE | Read-only copy of the exchange rate from the accepted snapshot |
 | installment_amount | DECIMAL(10,2) | NOT NULL | Amount per installment |
 | number_of_installments | INTEGER | NOT NULL | Total installments (2-9) |
 | completed_installments | INTEGER | DEFAULT 0 | Number of completed payments |
@@ -2143,14 +2555,14 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 ### 32. Hotels (Travel Records — Provider Entry, Path A)
 
 **Table**: `hotels`
-**Description**: Hotel booking details entered by provider (Path A) or patient (Path B) for a confirmed appointment. One record per appointment in MVP. Immutable after submission; admin corrections create a new versioned record.
+**Description**: FR-008 HotelRecord. Hotel booking details entered by provider (Path A) or patient (Path B) for a confirmed booking, owned by its travel context. One current record per confirmed booking in MVP. Immutable after submission; admin corrections create a new versioned record.
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique hotel record identifier |
-| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (appointment anchor) |
+| travel_context_id | UUID | FOREIGN KEY, NOT NULL | References travel_contexts.id (booking-owned travel anchor; accepted quote provenance is read from the travel context) |
 | hotel_name | VARCHAR(255) | NOT NULL | Full name of the hotel/lodging |
 | hotel_address | TEXT | NOT NULL | Full address |
 | check_in_date | DATE | NOT NULL | Arrival date |
@@ -2169,38 +2581,43 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | submitted_at | TIMESTAMP | NOT NULL | Submission timestamp |
 | version | INTEGER | DEFAULT 1 | Version number; incremented on admin correction |
 | superseded_by | UUID | FOREIGN KEY, NULLABLE | References hotels.id of the corrected version |
+| copied_from_hotel_id | UUID | FOREIGN KEY, NULLABLE | References hotels.id of the source record on the closed booking when copied by a provider-fault transfer |
+| travel_date_review_required | BOOLEAN | NOT NULL, DEFAULT false | True on a provider-fault transfer copy until an admin confirms or corrects its dates |
+| early_departure_acknowledged_by | UUID | NULLABLE | User who acknowledged the warning that check-out falls before the last treatment plan day |
+| early_departure_acknowledged_at | TIMESTAMP | NULLABLE | When that warning was acknowledged; non-NULL shows the provider an early-departure flag |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
 **Indexes**:
 
 - PRIMARY: `id`
-- INDEX: `quote_id`, `submitted_by_id`, `version`
+- INDEX: `travel_context_id`, `submitted_by_id`, `version`
 
 **Relationships**:
 
-- `belongsTo` → `Quote`
-- `belongsTo` → `Itinerary`
+- `belongsTo` → `TravelContext` (`travel_context_id`)
+- Shown in the FR-008 itinerary read view of the same travel context as its hotel record (no itineraries table)
 
 **Business Rules**:
 
 - Locked immediately after submission. No edits by patient or provider post-submission.
 - Admin corrections write a new version (version + 1) and set `superseded_by` on the old record.
-- One active hotel record per appointment in MVP.
+- One current (non-superseded) hotel record per travel context in MVP.
+- On a provider-fault transfer, the current record is copied to the replacement travel context with `copied_from_hotel_id` set and `travel_date_review_required` true; the source stays read-only on the closed travel context. The admin travel-date review clears the flag.
 
 ---
 
 ### 33. Flights (Travel Records — Flight Legs)
 
 **Table**: `flights`
-**Description**: Flight leg details submitted by patient (Path B) or entered by provider (Path A). Up to 2 records per appointment (outbound + return). Immutable after submission.
+**Description**: Flight leg details submitted by patient (Path B) or entered by provider (Path A). FR-008 FlightRecord, owned by the confirmed booking's travel context. Up to 2 current records per travel context (outbound + return). Immutable after submission.
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique flight record identifier |
-| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (appointment anchor) |
+| travel_context_id | UUID | FOREIGN KEY, NOT NULL | References travel_contexts.id (booking-owned travel anchor; accepted quote provenance is read from the travel context) |
 | leg_type | ENUM | NOT NULL | `outbound` or `return` |
 | airline_name | VARCHAR(255) | NOT NULL | Name of the airline |
 | flight_number | VARCHAR(20) | NOT NULL | Flight number |
@@ -2219,39 +2636,44 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | submitted_at | TIMESTAMP | NOT NULL | Submission timestamp |
 | version | INTEGER | DEFAULT 1 | Version number; incremented on admin correction |
 | superseded_by | UUID | FOREIGN KEY, NULLABLE | References flights.id of the corrected version |
+| copied_from_flight_id | UUID | FOREIGN KEY, NULLABLE | References flights.id of the source record on the closed booking when copied by a provider-fault transfer |
+| travel_date_review_required | BOOLEAN | NOT NULL, DEFAULT false | True on a provider-fault transfer copy until an admin confirms or corrects its dates |
+| early_departure_acknowledged_by | UUID | NULLABLE | Return leg only: user who acknowledged the warning that the flight departs before the last treatment plan day |
+| early_departure_acknowledged_at | TIMESTAMP | NULLABLE | Return leg only: when that warning was acknowledged; non-NULL shows the provider an early-departure flag |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
 **Indexes**:
 
 - PRIMARY: `id`
-- INDEX: `quote_id`, `leg_type`, `submitted_by_id`
-- UNIQUE: `quote_id`, `leg_type`, `version` (one active record per leg per appointment)
+- INDEX: `travel_context_id`, `leg_type`, `submitted_by_id`
+- UNIQUE: `travel_context_id`, `leg_type`, `version` (one record per leg per version within a travel context)
 
 **Relationships**:
 
-- `belongsTo` → `Quote`
-- `belongsTo` → `Itinerary`
+- `belongsTo` → `TravelContext` (`travel_context_id`)
+- Shown in the FR-008 itinerary read view of the same travel context as its outbound or return flight (no itineraries table)
 
 **Business Rules**:
 
-- Maximum 2 active flight records per appointment (one per leg_type).
+- Maximum 2 current (non-superseded) flight records per travel context (one per leg_type).
 - `total_price` is excluded; cost captured at package/quote level (FR-004/FR-007).
 - Locked immediately after submission.
+- On a provider-fault transfer, current records are copied to the replacement travel context with `copied_from_flight_id` set and `travel_date_review_required` true; the sources stay read-only on the closed travel context. The admin travel-date review clears the flag.
 
 ---
 
 ### 34. Passport Details
 
 **Table**: `passport_details`
-**Description**: Patient passport data captured for Path A appointments (provider-booked travel). Encrypted at rest. Immutable after submission. Not captured in Path B.
+**Description**: FR-008 PassportRecord. Patient passport data captured for a Path A confirmed booking (provider-booked travel), owned by its travel context. Encrypted at rest. Immutable after submission. Not captured in Path B.
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique passport record identifier |
-| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| travel_context_id | UUID | FOREIGN KEY, NOT NULL | References travel_contexts.id (booking-owned travel anchor; accepted quote provenance is read from the travel context) |
 | patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
 | passport_name | VARCHAR(100) | NOT NULL | Full name as on passport |
 | passport_number | VARCHAR(20) | NOT NULL, ENCRYPTED | Machine-readable passport number (AES-256 at rest) |
@@ -2273,19 +2695,75 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 **Indexes**:
 
 - PRIMARY: `id`
-- INDEX: `quote_id`, `patient_id`, `status`
+- INDEX: `travel_context_id`, `patient_id`, `status`
 
 **Relationships**:
 
-- `belongsTo` → `Quote`
+- `belongsTo` → `TravelContext` (`travel_context_id`)
 - `belongsTo` → `Patient`
+- Shown in the FR-008 itinerary read view of the same travel context as its passport status (no itineraries table)
 
 **Business Rules**:
 
 - `passport_number` and `passport_image` encrypted at rest (AES-256). Access restricted to submitting patient, assigned provider, and admin.
 - Displayed masked (`A1234****`) to patient; shown in full to assigned provider and admin only.
 - Locked immediately after submission. Admin corrections create a new versioned record.
+- One current (non-superseded) passport record per Path A travel context. Eligible prior details may be copied into a new locked record for a new travel context without changing the earlier source record; on a provider-fault transfer the current passport record carries over this way to the replacement travel context.
 - Retained for 7 years (medical data retention per constitution). Audit log entries retained for 10 years.
+
+---
+
+### 34A. Travel Contexts
+
+**Table**: `travel_contexts`
+**Description**: One travel context per confirmed booking (FR-008 TravelContext), created idempotently from the booking's immutable AcceptanceEvent and accepted subquote snapshot when the booking moves to `confirmed`. Owns the booking's travel records and itinerary. The current appointment is read from the booking; the accepted baseline stays immutable here.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique travel context identifier |
+| booking_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References bookings.id |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id |
+| accepted_parent_quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
+| accepted_parent_quote_version | INTEGER | NOT NULL | Accepted aggregate quote version |
+| accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID |
+| accepted_subquote_version | INTEGER | NOT NULL | Same as `accepted_parent_quote_version` |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id |
+| accepted_appointment_date_time | TIMESTAMP | NOT NULL | Accepted appointment baseline from the snapshot |
+| accepted_appointment_timezone | VARCHAR(64) | NOT NULL | IANA time zone of the baseline |
+| accepted_date_range_start | DATE | NOT NULL | Accepted date range start from the snapshot |
+| accepted_date_range_end | DATE | NOT NULL | Accepted date range end from the snapshot |
+| included_services_snapshot | JSON | NULLABLE | Included travel services from the accepted option snapshot |
+| travel_path | VARCHAR(255) | NOT NULL | `provider_included` or `patient_self_booked` |
+| travel_required | BOOLEAN | NOT NULL, DEFAULT true | False means `no_travel_required` |
+| travel_required_set_by | UUID | NULLABLE | Actor who last set `travel_required` (patient, or admin override) |
+| travel_required_set_at | TIMESTAMP | NULLABLE | When `travel_required` was last set |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'active' | `active`, `travel_date_review_required`, or `closed` |
+| review_flagged_at | TIMESTAMP | NULLABLE | When a travel-date review was flagged |
+| review_cleared_by | UUID | FOREIGN KEY, NULLABLE | References users.id (admin who cleared the review) |
+| review_cleared_at | TIMESTAMP | NULLABLE | When the review was cleared |
+| initialized_at | TIMESTAMP | NOT NULL | Creation on booking confirmation |
+| initial_request_dispatched_at | TIMESTAMP | NULLABLE | When the initial patient travel request was sent |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `booking_id`
+- INDEX: `acceptance_event_id`, `status`
+
+**Business Rules**:
+
+- Replayed confirmation events MUST NOT create another travel context or a duplicate initial request.
+- The provider package-library ID and version are quote-option provenance, not a travel decision source.
+- There is no `itineraries` table. The FR-008 itinerary is a read view assembled from the travel context, its current passport, flight and hotel records, and the booking.
+
+**Relationships**:
+
+- `belongsTo` → `Booking`, `AcceptanceEvent`
 
 ---
 
@@ -2301,6 +2779,13 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | id | UUID | PRIMARY KEY | Unique treatment record identifier |
 | inquiry_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References inquiries.id (the confirmed booking's case); one treatment record per booking |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (accepted parent quote; source of treatment for analytics) |
+| booking_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References bookings.id |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id; the accepted snapshot is the original record and is never edited |
+| accepted_parent_quote_version | INTEGER | NOT NULL | Accepted aggregate quote version |
+| accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID |
+| accepted_subquote_version | INTEGER | NOT NULL | Same as `accepted_parent_quote_version` |
+| quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
+| option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
 | status | ENUM | NOT NULL, DEFAULT 'in_progress' | `in_progress`, `completed`, `closed` |
 | check_in_at | TIMESTAMP | NULLABLE | Set at patient Check In |
@@ -2322,13 +2807,52 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 - `belongsTo` → `Inquiry`
 - `belongsTo` → `Quote`
+- `belongsTo` → `Booking`, `AcceptanceEvent`
 - `belongsTo` → `Provider`
+- `hasMany` → `TreatmentDetailChange` (§35A)
 
 **Business Rules**:
 
+- The current treatment plan (relative plan days seeded from the accepted option's plan days in the snapshot), assigned clinicians, and estimated graft count change only through the audited FR-010 treatment-detail change (§35A); money fields are read from the acceptance snapshot only.
 - `completed_at` and `closure_reason` are mutually exclusive: a completed treatment has no closure reason, and a closed case has no completion timestamp.
 - No-show is a closure reason (admin-managed case label), not a booking pipeline status. FR-014 counts a booking closed with `no_show` once, as a no-show.
 - Admin handles the resulting case status transition and financial reconciliation (FR-010 Workflow B4).
+
+---
+
+### 35A. Treatment Detail Changes
+
+**Table**: `treatment_detail_changes`
+**Description**: Append-only audit of post-acceptance treatment-detail changes made through FR-010 (FR-010 Treatment Detail Change). Never alters the accepted snapshot or any money field.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique change identifier |
+| treatment_record_id | UUID | FOREIGN KEY, NOT NULL | References treatment_records.id |
+| field_group | VARCHAR(255) | NOT NULL | `plan_days`, `clinicians`, or `estimated_graft_count` |
+| before_values | JSON | NOT NULL | Values before the change |
+| after_values | JSON | NOT NULL | Values after the change |
+| reason | TEXT | NOT NULL | Mandatory reason |
+| actor_id | UUID | NOT NULL | Actor user ID |
+| actor_type | VARCHAR(255) | NOT NULL | `clinic` or `admin` |
+| actor_role | VARCHAR(255) | NOT NULL | Actor role |
+| notification_event_ref | VARCHAR(255) | NULLABLE | Notification event reference (`treatment.plan_changed`) |
+| changed_at | TIMESTAMP | NOT NULL | Change time |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `treatment_record_id`, `changed_at`
+
+**Business Rules**:
+
+- No change is allowed while the booking is `accepted` (unpaid). From `confirmed`, clinic changes are allowed until Check In and admin changes at any later time. At least one clinician must remain. Plan days stay relative day numbers and are never stored as calendar dates.
+
+**Relationships**:
+
+- `belongsTo` → `TreatmentRecord`
 
 ---
 
@@ -2561,12 +3085,25 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 17. quotes
 18. quote_clinicians
 18a. quote_documents
+18b. quote_options
+18c. quote_option_items
+18d. quote_option_date_prices
+18e. quote_option_plan_days
+18f. quote_versions
+18g. quote_audits
+18h. acceptance_events
+18i. acceptance_supersessions
+18j. acceptance_annotations
+18k. promotion_applications
+18l. promotion_use_reservations
 19. treatments
 20. packages
 21. package_items
+21a. package_plan_days
 22. treatment_includes
 23. treatment_customizes
 24. schedules
+24a. bookings
 25. payments
 26. payment_histories
 27. installment_payment_plans
@@ -2598,6 +3135,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 53. hotels
 54. flights
 55. passport_details
+55a. travel_contexts
 56. questionnaires
 57. discovery_questions
 58. patient_resources
@@ -2635,6 +3173,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 90. aftercare_templates
 91. aftercare_clinicians
 92. treatment_records
+92a. treatment_detail_changes
 93. analytics_configurations
 94. export_report_configurations
 95. provider_pending_status_changes
@@ -2667,6 +3206,8 @@ Schema version tracked via:
 | 1.5.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.14 and FR-032 v1.8 (CR-FR032-20261015-02): `providers.email` unique only among `active` and `suspended` providers (partial index); email-reuse rules for owner (§3) and team (§4) login emails after deactivation, mechanism subject to reconciliation; confirmed no `deleted` provider status; new §40 `provider_account_closure_requests` (one pending request per provider, approved via FR-015 deactivation) |
 | 1.6.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.15 and FR-009 v1.5 (proposed) (CR-FR009-20261015-02): global provider email identity rule in §3 and §4 (one provider organization per login email across owner accounts, `provider_users`, and pending `provider_staff_invitations`; deactivated providers' emails freed, records archived; enforced by a shared check, mechanism subject to reconciliation); §2 contact-email reuse note now separates contact email from login emails |
 | 1.7.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.16, FR-003 v2.8, FR-029 v1.10, and FR-032 v1.9 (CR-FR003-20261015-01, CR-FR029-20261015-02, CR-FR032-20261015-03): §2 `providers.password_set` with the distribution eligibility rule (`active` and password set) and index; §2 `activation_token_hash` and `activation_token_expires_at` with the one-valid-token rule (FR-015 REQ-015-011); `provider_languages` reference the FR-021 `languages` catalog; §2B provider-specific rows writable only for `active` or `suspended` providers; §38 closure deactivations must notify the provider; §40 rejection notes required (min 20 chars), closure notification events, Screen 1 marker source, resubmission after rejection |
+| 1.8.0 | 2026-10-16 | Vân Tay Media | MTG-002 quote model alignment with FR-004 v3.1, FR-005 v2.5, FR-006 v2.7, FR-007b, FR-008, FR-010, FR-019 v2.2, FR-022 v2.14, FR-024 v1.3, FR-026 v1.12, and FR-029 v1.11 (ESC-1 to ESC-6; S5-1, S5-3, S5-5, S5-6, S5-8, S5-11, FR-024-8, FR-026-4; decisions D4, D6, D6-M, D10, D12, D17, D18, D19, D23, D24, M4, M5, M10, M11, M12, M18): new §7G `acceptance_events` (append-only snapshot with money projections, exchange rate and timestamp, actor type), §7H `quote_versions`, §7I `quote_audits`, §7J `acceptance_supersessions` (causes InquiryCancelled, ProviderFault, ProviderSuspended, ProviderDeactivated), §7K `acceptance_annotations`, §7L `promotion_applications`, §11A `bookings` (hold key, fixed hold, Payment Window Expired, booking total, binding commission snapshot with config ID and scope type), §34A `travel_contexts`, §35A `treatment_detail_changes`, §10A `package_plan_days`; `quotes.version`, `first_sent_at`, `quote_config_version`, `accepted_total`, `terms_acknowledged_at`, `locked_exchange_rate_snapshot`; quote status `confirmed` removed and `rejected` dropped from the enum list; `accepted` → `cancelled_inquiry_cancelled` and `accepted` → `withdrawn` transitions; `cancelled_provider_status` limited to unaccepted quotes; quote commission columns now indicative only; `expiration_hours` copied at first send, not customisable; `quote_option_date_prices.is_accepted` removed and promotion terms snapshot, discount amount, auto-attached flag added; §9 and §10 rewritten to versioned package templates without currency; schedules created at first payment; instalment plan currency and exchange rate; treatment record acceptance identifiers; option tables added to the table list, constraints, and migration order; `passport_details`, `hotels` and `flights` re-keyed from `quote_id` to `travel_context_id` per FR-008 PassportRecord, HotelRecord and FlightRecord, undefined `Itinerary` relationship resolved to the travel context, and FK, unique and migration-order lists updated |
+| 1.9.0 | 2026-10-16 | Vân Tay Media | Product Owner Q-series follow-up (Q3, Q6, Q14, Q15, Q17, Q18, Q21, Q29, Q30; Q2 alignment) with FR-006 v2.8, FR-008 v2.7, and FR-010 v2.3 (CR-FR006-20261016-01, CR-FR008-20261016-01, CR-FR010-20261016-01): §7C `quote_option_date_prices.price` CHECK (price > 0); new §7M `promotion_use_reservations` (reserved at send, at most one active reservation per parent quote kept across resent versions, created only when a new version newly qualifies and released when it drops the promotion; released on expiry, withdrawal or not selected; consumed at acceptance); §7L reconciled with §7M: usage-limit lifecycle stated by source (automatic promotion consumed at acceptance and returned to the limit on `Payment Window Expired` or cancellation before first payment, re-taken on revive only if the limit has room; provider-selected and patient-code promotions reserved at acceptance and consumed at first payment), new `use_reservation_id` and `use_returned_at`; §7 `quote_config_version` note that a Default Currency change creates a new Quote Configuration version; §7 `quotes.first_sent_at` confirmed as the column set once at first send and never changed (no edit); §32 `hotels` and §33 `flights` add `copied_from_*_id`, `travel_date_review_required`, and early-departure acknowledgement fields; §34 passport carry-over on provider-fault transfer; §34A note that there is no `itineraries` table (itinerary is a read view); §35A treatment-detail changes blocked while the booking is `accepted`. Q22 and Q23 confirmed with no change. |
 | 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
 
 ---
