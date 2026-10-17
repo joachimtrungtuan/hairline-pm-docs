@@ -3,8 +3,9 @@
 **Module**: P-03: Booking & Payment | S-02: Payment Processing Service
 **Feature Branch**: `fr007b-payment-installments`
 **Created**: 2025-11-10
-**Status**: ✅ Verified & Approved
+**Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-007B from local-docs/project-requirements/system-prd.md (Split Payment / Installment Plans) + Constitution (.specify/memory/constitution.md)
+**Change Request**: [CR-FR007B-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -87,26 +88,26 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 ### Main Flow: Patient Selects Installment Plan and Completes Payments
 
 **Actors**: Patient, System (Payment Processing Service), Admin
-**Upstream Context**: Quote has been accepted (FR-005) and booking details (procedure date, total cost) are available via FR-006; FR-007 has presented a **Payment Options** step where the patient chose **"Pay in Installments"** instead of **"Pay in Full"**.
+**Upstream Context**: Subquote has been accepted (FR-005) and booking details are available via FR-006: the procedure date, and the plan total, currency and exchange rate copied read-only from the FR-005 accepted snapshot through the booking; FR-007 has presented a **Payment Options** step where the patient chose **"Pay in Installments"** instead of **"Pay in Full"**.
 **Trigger**: Patient confirms the choice to **"Pay in Installments"** on the Payment Options step and proceeds to the Installment Plan selection screen (Screen 1 in this FR)
 **Outcome**: Booking confirmed with installment plan; scheduled installments charged automatically; booking fully paid by the configured cutoff date (minimum 30 days before procedure, configured via FR-029)
 
 **Steps**:
 
-1. Patient reviews booking summary with total procedure cost and sees that **"Pay in Installments"** is selected as the payment option
+1. Patient reviews booking summary with the total procedure cost in the accepted currency and sees that **"Pay in Installments"** is selected as the payment option
 2. System calculates feasible installment options based on time until procedure date and the configured cutoff days (minimum 30 days before procedure, configured via FR-029) with monthly installments
 3. System displays installment options (e.g., "Pay in 2-5 installments" if procedure is in 6 months)
 4. Patient selects desired installment plan (e.g., 4 monthly installments)
 5. System calculates installment amount (total ÷ number of installments) and displays payment schedule with dates
 6. Patient confirms installment plan selection and provides payment method
-7. System processes first installment immediately to confirm booking
+7. System charges the first installment at checkout; its success confirms the existing `Accepted` booking (FR-006) and consumes any promotion use reserved at acceptance (FR-019)
 8. System schedules remaining installments on monthly intervals
-9. System marks booking as "Confirmed - Installment Plan Active"
+9. System records the booking as `Confirmed` (FR-006) with installment plan status active
 10. Three days before each scheduled installment, System sends reminder to patient
 11. On due date, System automatically charges payment method
 12. On successful charge, System updates installment status and sends confirmation
 13. System repeats steps 10-12 for each remaining installment
-14. When final installment completes by the cutoff date, System marks booking as "Fully Paid"
+14. When final installment completes by the cutoff date, System marks the installment plan as completed (shown as "Fully Paid"); the booking status continues to follow FR-006
 
 ### Alternative Flows
 
@@ -117,7 +118,6 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   1. Patient selects fewer installments (e.g., 3 installments when 6 are available)
   2. System calculates higher installment amount with same total
   3. System adjusts payment schedule accordingly
-- **Outcome**: Booking completed with shorter payment timeline; same 30-day buffer maintained
 - **Outcome**: Booking completed with shorter payment timeline; same cutoff window maintained
 
 **A2: Patient Opts for Full Payment Instead of Installments (Handled by FR-007)**:
@@ -126,7 +126,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - **Steps** (owned by FR-007, summarized here for branching clarity):
   1. System routes patient to the standard full-payment checkout flow defined in FR-007
   2. System processes full payment immediately
-  3. System marks booking as "Fully Paid"
+  3. System records the payment as paid in full; booking status follows FR-006 (`Confirmed` on successful payment)
 - **Outcome**: Booking confirmed without installment plan; **FR-007B is not invoked** in this path
 
 **A3: Patient Updates Payment Method Mid-Plan**:
@@ -152,6 +152,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   7. System notifies admin of defaulted plan and overdue booking
   8. Admin reviews and contacts patient to resolve payment issue
 - **Outcome**: Payment resolved manually or booking canceled per admin decision; patient may be charged late fees or rescheduling fees
+- **Boundary**: B1 covers installments after the first. A missed or failed later installment never causes `Payment Window Expired`, automatic booking cancellation, or inquiry cancellation (FR-006). Failure of the first installment at checkout is part of the first payment step and follows the FR-006 payment hold (see Edge Cases).
 
 **B2: Patient Cancels Booking With Active Installment Plan**:
 
@@ -162,19 +163,29 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   3. Admin reviews cancellation request and calculates refund amount
   4. System processes refund based on cancellation timing (e.g., >30 days = 90% refund of paid amount)
   5. System cancels remaining scheduled installments
-  6. System updates booking status to "Canceled - Partial Refund"
+  6. System records the partial refund outcome on the instalment plan; booking status moves to `Cancelled` per FR-006
 - **Outcome**: Patient refunded per policy; no further installments charged; provider notified
 
 **B3: Procedure Date Changes After Installment Plan Established**:
 
 - **Trigger**: Admin manually reschedules a confirmed booking due to emergency or exceptional circumstances (per FR-016 Admin Patient Management; patient self-service rescheduling remains deferred to V2 per FR-006 and system PRD)
 - **Steps**:
-  1. Rescheduling request triggers installment plan recalculation
+  1. The admin date change, recorded as an audited FR-006 intervention, triggers installment plan recalculation from the updated booking date; the plan total, currency and the accepted snapshot do not change
   2. System checks if new procedure date allows completion of remaining installments (30-day buffer)
   3. **If sufficient time**: System adjusts installment schedule dates to align with new procedure date
   4. **If insufficient time**: System notifies patient that remaining balance must be paid immediately or installment plan canceled
   5. Admin, in coordination with patient, either collects remaining balance immediately or cancels booking per cancellation policy
 - **Outcome**: Installment plan adjusted to new schedule or remaining balance paid immediately; booking date updated
+
+**B4: Provider Fault After Acceptance**:
+
+- **Trigger**: The provider withdraws the accepted quote, drops out, or is suspended or deactivated after acceptance, and an admin transfers the patient to a replacement provider through FR-006 Alternative Flow B5
+- **Steps**:
+  1. System cancels the remaining scheduled installments of the original booking
+  2. Installments already paid move with the patient as credit toward the replacement booking; any unused part is refunded; the patient pays no cancellation fee because the fault is not theirs
+  3. Any installment plan for the replacement booking takes its total, currency and exchange rate from the new linked acceptance record, never from the original snapshot or a live quote
+- **Outcome**: Patient keeps the value already paid and continues with the replacement provider in the same inquiry
+- **Boundary**: Exact credit, refund, fund-release and payment-allocation override mechanics are defined later in FR-007, FR-007B and FR-017
 
 ---
 
@@ -190,7 +201,8 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 | Field Name           | Type   | Required | Description                        | Validation Rules                                      |
 |---------------------|--------|----------|------------------------------------|-------------------------------------------------------|
-| Total Amount         | number | Yes      | Total procedure cost               | Positive amount; matches accepted quote               |
+| Total Amount         | number | Yes      | Total procedure cost               | Read-only; copied from the accepted snapshot through the FR-006 booking; already includes the accepted promotion and any patient promotion code; never recomputed |
+| Currency             | text   | Yes      | Accepted patient currency          | Read-only; copied with the exchange rate from the accepted snapshot; used for every installment |
 | Time Until Procedure | date   | Yes      | Days remaining until procedure     | At least 60 days (for minimum 2 installments + buffer)|
 | Maximum Installments | number | Yes      | Calculated max installments available | 2-9; based on (days until procedure - 30) ÷ 30     |
 | Selected Installments| select | Yes      | Patient's chosen number of installments | Must be ≤ maximum available                      |
@@ -203,7 +215,9 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Display clear explanation: "Final payment must complete 30 days before your procedure"
 - Show maximum installments prominently with calculation explanation
 - Allow patient to select any number from 2 to maximum available
-- First installment charged immediately upon confirmation
+- First installment charged at checkout when the patient confirms the plan; its success confirms the existing `Accepted` booking (FR-006)
+- Show the total and every installment amount in the accepted currency
+- A failed first installment can be retried, or another payment method used, only while the original FR-006 payment hold is active (FR-007 REQ-007-017); when the hold expires the booking moves to `Payment Window Expired` and installment checkout is blocked
 - Display full payment schedule with dates before patient confirms
 - Show comparison: installment plan vs. full payment
 - Disable installment option if procedure is less than 60 days away
@@ -226,6 +240,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 | Field Name            | Type   | Required | Description                           | Validation Rules                            |
 |----------------------|--------|----------|---------------------------------------|---------------------------------------------|
 | Total Amount          | number | Yes      | Total procedure cost                  | Matches booking total                       |
+| Currency              | text   | Yes      | Accepted patient currency             | Read-only; from the accepted snapshot; same for all installments |
 | Installments Paid     | number | Yes      | Count of completed installments       | 0 to total installments                     |
 | Installments Remaining| number | Yes      | Count of upcoming installments        | Total minus paid                            |
 | Next Payment Date     | date   | Conditional | Date of next scheduled installment | Only if installments remaining > 0          |
@@ -300,6 +315,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 | Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
 | Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
 | Total Amount              | number | Yes      | Total procedure cost                                 | Matches booking total                     |
+| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot     |
 | Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
 | Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
 | Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
@@ -380,6 +396,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 | Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
 | Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
 | Total Amount              | number | Yes      | Total procedure cost                                 | Matches booking total                     |
+| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot     |
 | Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
 | Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
 | Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
@@ -422,7 +439,9 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Available installment options: 2, 3, 4, 5, 6, 7, 8, or 9 monthly payments (enabled in FR-029)
 - Final payment MUST complete by the configured cutoff days before scheduled procedure date (minimum 30 days; configured in FR-029)
 - System offers only installment counts that are feasible given booking date, procedure date, monthly frequency, and the cutoff window
-- First installment charged immediately upon booking confirmation
+- First installment charged at checkout; its success confirms the existing `Accepted` booking (FR-006)
+- Installment plan total, currency and exchange rate are copied read-only from the FR-005 accepted snapshot through the FR-006 booking. The total already includes the accepted promotion and any patient promotion code (FR-019). It is never recomputed from a live quote, sibling option, package library price or current exchange rate
+- `Payment Window Expired` applies only to the first payment step (acceptance to first installment). Missed later installments never cause `Payment Window Expired` or inquiry cancellation (FR-006)
 - Subsequent installments charged monthly (30-day intervals)
 - Installment amount calculated as: total procedure cost ÷ number of installments (rounded to 2 decimal places)
 - Patient can choose fewer installments than maximum available (pay faster)
@@ -471,7 +490,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Patient can update payment method anytime before next installment
 - Cancellation refunds calculated based on timing: >30 days = 90% of paid installments; 15-30 days = 50%; <15 days = no refund
 - Platform commission calculated on total procedure cost (commission rate configured in FR-029 and snapshotted at booking), deducted from provider payout after final installment completes
-- Provider payout delayed until all installments completed and booking reaches "Fully Paid" status
+- Provider payout delayed until all installments completed and the instalment plan is fully paid
 - Rescheduling procedure date may require installment plan adjustment or immediate payment of remaining balance
 
 ### Admin Action & Audit Rules
@@ -543,7 +562,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 
 - **FR-006: Booking & Scheduling**
   - **Why needed**: Installment plan tied to booking confirmation and procedure date
-  - **Integration point**: Booking creation triggers installment plan setup; procedure date determines maximum installments
+  - **Integration point**: Installment plan is set up at checkout for an `Accepted` booking, and first installment success confirms that booking; procedure date determines maximum installments; plan total, currency and exchange rate come from the booking's accepted snapshot; provider fault after acceptance follows Alternative Flow B5
 
 - **FR-007: Payment Processing**
   - **Why needed**: Core payment infrastructure for processing installment charges
@@ -556,6 +575,10 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 - **A-05: Billing & Financial Reconciliation**
   - **Why needed**: Admin oversight of installment plans and revenue reconciliation
   - **Integration point**: Installment revenue tracked separately from one-time payments; affects provider payout timing
+
+- **FR-019: Promotions & Discounts**
+  - **Why needed**: The accepted promotion and any patient promotion code are already in the plan total
+  - **Integration point**: The first successful installment consumes the promotion use reserved at acceptance; installments never apply or remove a promotion
 
 - **S-03: Notification Service**
   - **Why needed**: Send installment reminders, confirmations, and failure notifications
@@ -579,9 +602,9 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
   - **Why needed**: Calculate available installments and payment schedule
   - **Source**: Booking & Scheduling module (FR-006)
 
-- **Accepted quote with total pricing**
-  - **Why needed**: Calculate installment amounts
-  - **Source**: Quote acceptance flow (FR-005)
+- **Accepted snapshot: plan total, currency and exchange rate**
+  - **Why needed**: Calculate installment amounts and charge every installment in the accepted currency
+  - **Source**: FR-006 Booking, read-only from the FR-005 AcceptanceEvent snapshot of the one accepted subquote; the total already includes the accepted promotion and any patient promotion code (FR-019)
 
 - **Patient payment method on file**
   - **Why needed**: Process recurring installment charges
@@ -681,6 +704,9 @@ Patient selects installment plan during booking checkout, sees payment schedule,
 1. **Given** a booking with procedure in 6 months (180 days), **When** patient views checkout, **Then** system displays installment options 2-5 (maximum 5 installments allowed per calculation)
 2. **Given** patient selects 4 installment plan, **When** patient reviews payment schedule, **Then** system shows 4 equal installments with first charged today and remaining monthly
 3. **Given** patient confirms installment plan, **When** first installment processes successfully, **Then** booking is confirmed and remaining 3 installments are scheduled at 30-day intervals
+4. **Given** a parent quote with several options and date ranges where the patient accepted one subquote with a promotion, **When** patient views checkout, **Then** the plan total equals that subquote's accepted price after promotion and is not recalculated from the quote, sibling options or library prices
+5. **Given** an active installment plan, **When** later installments are charged after exchange rates move, **Then** every installment is charged in the accepted currency at the accepted exchange rate and the total is unchanged
+6. **Given** the first installment failed and the FR-006 payment hold has expired, **When** patient retries, **Then** the retry is rejected and the booking shows `Payment Window Expired`
 
 ---
 
@@ -713,6 +739,7 @@ System detects failed installment charge, notifies patient immediately, executes
 1. **Given** scheduled installment charge fails, **When** failure detected, **Then** patient is notified immediately with clear error message and guidance
 2. **Given** first retry attempt is due (1 day later), **When** retry executes and fails, **Then** system schedules second retry for 3 days later
 3. **Given** all 3 retry attempts fail, **When** retries exhausted, **Then** system flags installment plan as "Defaulted" and notifies admin for intervention
+4. **Given** a later installment is defaulted, **When** admin reviews it, **Then** the booking is not moved to `Payment Window Expired` and the inquiry is not cancelled
 
 ---
 
@@ -768,7 +795,10 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 - What happens when patient's payment method expires mid-plan? (Charge fails; retry logic engages; patient notified to update card)
 - How does system handle procedure date rescheduled after installment plan established? (Recalculate installment schedule if sufficient time; otherwise require immediate payment of remaining balance)
-- What occurs if first installment fails at checkout? (Booking not confirmed; patient prompted to retry immediately or use different payment method)
+- What occurs if first installment fails at checkout? (Booking stays `Accepted` and not confirmed; patient may retry or use a different payment method only while the original FR-006 payment hold is active, per FR-007 REQ-007-017; when the hold expires the booking moves to `Payment Window Expired`, installment checkout is blocked, and recovery follows FR-006)
+- What if a later installment is missed? (B1 retry and default handling applies; it never causes `Payment Window Expired` or inquiry cancellation)
+- What if the provider fails after acceptance? (Alternative Flow B4 and FR-006 Alternative Flow B5 apply)
+- What if the quote, package or promotion is edited after acceptance? (No effect; the plan reads only the accepted snapshot)
 - How to manage patient requesting fewer installments mid-plan? (Not supported; patient can pay remaining balance early to complete plan)
 - What if admin increases the cutoff window from 30 to 45 days via FR-029? (Applies only to new bookings; existing installment plans unchanged)
 - How does system handle refund for partial installments if patient disputes charge? (Admin reviews dispute; processes refund per resolution; may cancel booking or allow continuation)
@@ -784,7 +814,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007b-002**: System MUST determine feasible installment options based on time until procedure, monthly frequency, and cutoff days configured in FR-029 (minimum 30 days); offered options are limited to enabled installment counts configured in FR-029 (2-9)
 - **REQ-007b-003**: System MUST enforce the cutoff window: final installment must complete by the configured cutoff days before procedure date (minimum 30 days; configured in FR-029)
 - **REQ-007b-004**: System MUST calculate installment amounts as: total procedure cost ÷ number of installments
-- **REQ-007b-005**: System MUST charge first installment immediately upon booking confirmation
+- **REQ-007b-005**: System MUST charge the first installment at checkout; its success confirms the existing `Accepted` booking (FR-006)
 - **REQ-007b-006**: System MUST schedule remaining installments at 30-day intervals
 
 ### Data Requirements
@@ -820,12 +850,19 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007b-023**: System MUST cancel remaining installments when booking is canceled
 - **REQ-007b-024**: System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment
 
+### Accepted Snapshot & Payment Window Requirements
+
+- **REQ-007b-025**: System MUST copy the installment plan total, currency and exchange rate read-only from the FR-005 accepted snapshot through the FR-006 booking; the total already includes the accepted promotion and any patient promotion code; it MUST NOT be recomputed and MUST be shown with its currency on all installment screens
+- **REQ-007b-026**: System MUST allow first-installment retries only within the original FR-006 payment hold; `Payment Window Expired` applies only to that first payment step, and missed later installments MUST NOT cause `Payment Window Expired` or inquiry cancellation
+- **REQ-007b-027**: When the provider fails after acceptance, System MUST cancel remaining installments and treat paid installments as credit toward the replacement booking per FR-006 Alternative Flow B5, with any unused part refunded and no patient cancellation fee
+
 ---
 
 ## Key Entities
 
 - **Entity 1 - Installment Plan**: Represents the payment schedule for a booking
-  - **Key attributes**: booking ID, total amount, number of installments, installment amount, cutoff_days, creation date, status (active, completed, defaulted, canceled)
+  - **Key attributes**: booking ID, total amount, currency, exchange rate, number of installments, installment amount, cutoff_days, creation date, status (active, completed, defaulted, canceled); total amount, currency and exchange rate are read-only copies of the accepted snapshot
+  - **Provenance**: resolves the AcceptanceEvent, accepted parent quote and subquote IDs and versions through its booking (FR-007 REQ-007-019)
   - **Relationships**: belongs to one booking; has many installment payments; linked to one patient payment method
 
 - **Entity 2 - Installment Payment**: Represents a single scheduled/completed installment charge
@@ -845,6 +882,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2025-11-10 | 1.0     | Initial PRD creation    | AI     |
 | 2025-12-16 | 1.1     | Documentation alignment: Moved customer-facing installment configuration ownership to FR-029 (cutoff days, enabled installment counts, eligibility thresholds) and removed conflicting admin-configurable ranges/formulas; retained monthly schedule execution and retry/reminder behavior here. | AI |
 | 2026-02-12 | 1.2     | Constitution alignment enhancements: Added explicit performance targets (p95 < 500ms API response times, job execution timing) to Implementation Notes; added Admin Action & Audit Rules subsection documenting audit logging requirements for admin actions (retry charge, mark as resolved, cancel plan) per Constitution Principle VI. | AI |
+| 2026-10-16 | 1.3     | MTG-002 quote model alignment: plan total, currency and exchange rate copied read-only from the accepted snapshot through the booking, including accepted promotion and any patient code, never recomputed, currency on installment screens (FR-007b-2 merged FR-007b-4, S1-7; M15, D8); first-payment-only Payment Window Expired boundary with first-installment retry bound to the FR-006 hold (D1; FR-007b-3); Alternative Flow B4 provider fault with payment placeholder (D6, D6-M, M18); REQ-007b-025 to REQ-007b-027 added. Minors: FR-007b-1, FR-007b-5, FR-007b-6, FR-007b-7 (O). See CR-FR007B-20261016-01. Consolidated verification pending. | Product Owner / Documentation |
 
 ---
 
@@ -861,4 +899,4 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007B from system-prd.md (Split Payment / Installment Plans)
-**Last Updated**: 2026-02-12
+**Last Updated**: 2026-10-16

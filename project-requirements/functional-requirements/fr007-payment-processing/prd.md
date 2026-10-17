@@ -4,7 +4,7 @@
 **Feature Branch**: `fr007-payment-processing`
 **Created**: 2025-11-04
 **Status**: 🟡 Revised — Documentation Approved; Consolidated Verification Pending
-**Source**: FR-007 from `system-prd.md`; [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md#mtg-002-o01-quote-option-contract) and the approved FR-004/FR-005/FR-006 accepted-subquote handoff; [CR-FR007-20261013-01](./change-request-2026-10-13-accepted-subquote-payment-context.md); Constitution (.specify/memory/constitution.md)
+**Source**: FR-007 from `system-prd.md`; [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md#mtg-002-o01-quote-option-contract) and the approved FR-004/FR-005/FR-006 accepted-subquote handoff; [CR-FR007-20261013-01](./change-request-2026-10-13-accepted-subquote-payment-context.md); [CR-FR007-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md); Constitution (.specify/memory/constitution.md)
 
 ---
 
@@ -12,7 +12,7 @@
 
 Enable patients to pay securely for procedures (deposit at booking and final payment before or on procedure day) in supported currencies and methods, while ensuring compliant handling of payments, automated receipt/invoice generation, platform commission calculation, and timely provider payouts after treatment completion. This module focuses on the what/why of payments across tenants: a clear, trustworthy checkout for patients, transparent payout tracking for providers, and configurable oversight for admins. It excludes implementation details and adheres to the Hairline Constitution (multi-tenant separation, privacy, auditability, and compliance).
 
-Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-booking-scheduling/prd.md#key-entities) and its immutable FR-005 AcceptanceEvent. The selected package/services, date range, appointment, offered price, attached promotion, currency/exchange-rate snapshot, and inherited parent context are not reselected or repriced at checkout. Existing FR-019 checkout-code rules remain available as separately recorded discount applications; they do not overwrite the acceptance snapshot or introduce stacking. Initial payment requires the valid FR-006 exclusive slot hold; successful deposit, first installment, or full payment confirms that same booking.
+Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-booking-scheduling/prd.md#key-entities) and its immutable FR-005 AcceptanceEvent. The selected package/services, date range, appointment, offered price, attached promotion, currency/exchange-rate snapshot, and inherited parent context are not reselected or repriced at checkout. Payment amount and currency are read from the accepted snapshot, which already includes the accepted promotion and any patient code applied before acceptance (FR-019); no promotion code can be entered, removed, or replaced at checkout or payment. Initial payment requires the valid FR-006 exclusive slot hold; successful deposit, first installment, or full payment confirms that same booking and creates its appointment record.
 
 ---
 
@@ -96,15 +96,15 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 **Trigger**: Patient opens payment for one accepted subquote's pending FR-006 booking; later completes final payment
 **Outcome**: Booking confirmed upon deposit; booking fully paid after final payment; receipts/invoices issued; payout becomes eligible after treatment completion
 
-**Initial Payment Guard**: Before calling the payment processor, validate the FR-006 handoff: inquiry and accepted selection remain eligible, parent/subquote versions match the AcceptanceEvent (`acceptedSubquoteVersion = acceptedParentQuoteVersion`), and that event owns the unexpired exclusive appointment hold. Payment cannot select a different package, option/date-price record, appointment, or quote price. This hold guard applies to the first confirming charge, not to later installments/final payments on an already confirmed booking.
+**Initial Payment Guard**: Before calling the payment processor, validate the FR-006 handoff (FR-006 owns these checks): the booking is `Accepted`; the parent inquiry is not `Cancelled`; the parent quote and accepted subquote are still `Accepted`; the provider is still Active (FR-015); parent/subquote versions match the AcceptanceEvent (`acceptedSubquoteVersion = acceptedParentQuoteVersion`); and that event owns the unexpired exclusive appointment hold. Payment cannot select a different package, option/date-price record, appointment, or quote price. This hold guard applies to the first confirming charge, not to later installments/final payments on an already confirmed booking.
 
 **Steps**:
 
-1. Patient reviews the accepted subquote summary (selected package/services, date range, appointment/timezone, offered price, attached promotion, locked currency), permitted FR-019 discount applications, payable booking total, deposit amount, and remaining balance.
+1. Patient reviews the accepted subquote summary (selected package/services, date range, appointment/timezone, offered price, accepted promotion and discounted price, locked currency), payable booking total, deposit amount, and remaining balance.
 2. System displays supported payment methods and any applicable fees/requirements
 3. Patient selects payment method and confirms deposit payment
 4. System processes payment and returns success or actionable challenge (e.g., additional authentication)
-5. On success, System confirms the same FR-006 booking and converts its hold to a calendar block; generates receipt and invoice from that booking's recorded terms; sends confirmation to patient and provider. A retry or duplicate callback cannot create a second booking or change the accepted selection.
+5. On success, System confirms the same FR-006 booking, creates its appointment record from the hold (until this point only the temporary hold exists), and consumes the promotion usage reserved at acceptance (FR-019); generates receipt and invoice from that booking's recorded terms; sends confirmation to patient and provider. A retry or duplicate callback cannot create a second booking or change the accepted selection.
 6. Prior to procedure date, Patient initiates final payment from booking details
 7. System processes final payment and updates booking to fully paid; issues final receipt/invoice; sends confirmations
 8. After treatment completion, provider payout becomes eligible (payout execution handled in FR-017: Admin Billing & Financial Management)
@@ -135,7 +135,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - **Steps**:
   1. System informs patient of the authentication requirement and guides action
   2. If challenge fails or times out, System presents retry and alternative method options
-- **Outcome**: Payment remains incomplete until successful authentication; booking not confirmed. Retrying is allowed only while the original FR-006 hold remains valid; an authentication challenge does not restart the payment window.
+- **Outcome**: Payment remains incomplete until successful authentication; booking not confirmed. Retrying is allowed only while the original FR-006 hold remains active; an authentication challenge does not restart the payment window. Payment failure never extends or restarts the slot hold. The slot stays held only until the single hold that started at subquote acceptance expires (FR-026 slot-hold duration, default 48 hours).
 
 **B2: Payment Failure or Decline**:
 
@@ -145,22 +145,32 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
   2. For transient errors, Payment Service performs up to 3 automatic retries using exponential backoff (per Constitution) with idempotency safeguards; surface progress and final failure to patient if retries exhaust.
   3. For hard declines, System displays clear error and suggested next steps (retry, use different method).
   4. Patient retries or selects another method against the same accepted snapshot while the original FR-006 hold remains valid.
-- **Outcome**: Booking remains unconfirmed until successful initial payment; failure/retry does not change the accepted selection or extend its hold.
+- **Outcome**: Booking remains unconfirmed until successful initial payment; failure/retry does not change the accepted selection. Payment failure never extends or restarts the slot hold. The slot stays held only until the single hold that started at subquote acceptance expires (FR-026 slot-hold duration, default 48 hours).
 
 **B3: Invalid Accepted Handoff / Payment Window Expired**:
 
 - **Trigger**: Initial payment is requested for an ineligible inquiry/selection, mismatched accepted versions, or a released/expired hold.
 - **Steps**:
   1. Reject the request before calling the payment processor and show the FR-006 outcome/recovery instructions.
-  2. On hold expiry, FR-006 releases the slot and records terminal `Payment Window Expired`; payment against that accepted selection remains blocked.
-  3. Retain the AcceptanceEvent and snapshot unchanged. Do not reopen the parent quote or make the accepted subquote selectable again; recovery follows FR-006's new-selection or audited-admin-intervention route.
+  2. On hold expiry, FR-006 releases the hold, creates no appointment record, and records `Payment Window Expired`; payment against that accepted selection remains blocked.
+  3. Retain the AcceptanceEvent and snapshot unchanged. Do not reopen the parent quote or make the accepted subquote selectable again; recovery is by cancelling the inquiry and starting a new inquiry, or by the FR-006 audited admin revive.
+  4. An admin revive does not extend the expired hold. It starts a new hold of the FR-026 slot-hold duration at the revive time and re-reserves the promotion usage; initial payment then runs the Initial Payment Guard against that new hold.
 - **Outcome**: No new charge or booking confirmation against an invalid handoff; no package/date/price reselection inside checkout.
+
+**B4: Provider Fault After Acceptance**:
+
+- **Trigger**: After subquote acceptance, the accepted provider withdraws, drops out, or has a suspension or deactivation take effect.
+- **Steps**:
+  1. FR-006 Alternative Flow B5 closes the booking with the provider-fault cause, releases the hold, and an admin transfers the patient to a replacement provider in the same inquiry through a new linked acceptance record.
+  2. Payment against the closed booking is blocked. Money already paid follows the FR-006 B5 placeholder: paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee.
+  3. The replacement booking takes its payable amount and currency from its own linked acceptance record and follows the main flow.
+- **Outcome**: The patient is not charged for the provider fault. Exact credit, refund, fund-release, and allocation-override mechanics are defined in the payment pass (FR-007, FR-007B, and FR-017) and are not specified here.
 
 ---
 
 ## Screen Specifications
 
-**Shared Accepted-Selection Source Contract**: All checkout, payment-detail, payout-summary, receipt/invoice, and refund views below resolve commercial facts through the FR-006 Booking's acceptance snapshot, not a current parent-quote price range, sibling subquotes, or reusable package-library prices. Parent clinical facts are inherited snapshot context; package/services and date/appointment are the one accepted subquote. Optional captured price components are informational and must not be added again to the final offered price. Display permitted FR-019 checkout applications separately and use the recorded payable booking terms for payment amounts; preserve FR-019 validation, replacement, fee-split, and attribution rules. Actual payments/refunds and later authorized booking interventions remain separate auditable records.
+**Shared Accepted-Selection Source Contract**: All checkout, payment-detail, payout-summary, receipt/invoice, and refund views below resolve commercial facts through the FR-006 Booking's acceptance snapshot, not a current parent-quote price range, sibling subquotes, or reusable package-library prices. Parent clinical facts are inherited snapshot context; package/services and date/appointment are the one accepted subquote. Optional captured price components are informational and must not be added again to the final offered price. Show the accepted promotion and discount as frozen in the snapshot and take payment amounts and currency from the snapshot; no code entry, removal, replacement, or price-changing revalidation is available at checkout or payment (FR-019). Actual payments/refunds and later authorized booking interventions remain separate auditable records.
 
 ### Patient Platform
 
@@ -174,11 +184,11 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |------------|------|----------|-------------|------------------|
 | Accepted Selection | group | Yes | Package/services, date range, appointment/timezone, inherited treatment context, and accepted subquote reference | Read-only; FR-006 acceptance snapshot |
 | Accepted Subquote Amount | number | Yes | Offered price for exactly one accepted option/date-price record | Read-only; acceptance snapshot; never sum sibling alternatives |
-| Discount Applications | group | Conditional | Attached promotion snapshot and any permitted FR-019 checkout-code application | Show recorded application and resulting breakdown; one active discount per FR-019 |
-| Total Amount | number | Yes | Payable booking total under the recorded commercial terms | Positive amount; accepted price with permitted FR-019 adjustments, without double-counting components |
-| Deposit Amount | number | Yes | Deposit to confirm booking | Admin-configurable percentage (default 20-30% range, configured via FR-029); within allowed range |
+| Discount Applications | group | Conditional | Accepted promotion and discount frozen in the acceptance snapshot, including any patient code applied before acceptance | Read-only; acceptance snapshot; no code input at checkout |
+| Total Amount | number | Yes | Payable booking total under the recorded commercial terms | Positive amount; accepted discounted price from the acceptance snapshot, never recomputed, without double-counting components |
+| Deposit Amount | number | Yes | Deposit to confirm booking | Admin-configurable percentage (default 20-30% range, configured via FR-029) of the booking total (accepted price after promotion, from the acceptance snapshot); within allowed range |
 | Currency | text | Yes | Accepted patient payment currency | Read-only; accepted currency/exchange-rate snapshot; no checkout reselection |
-| Payment Hold Expires At | datetime | Yes | Deadline for the initial confirming payment | Read-only; original FR-006 hold; display countdown and disable payment after expiry |
+| Payment Hold Expires At | datetime | Yes | Deadline for the initial confirming payment | Read-only; the single FR-006 hold that started at subquote acceptance, or the new hold after an admin revive; display countdown and disable payment after expiry |
 | Payment Method | select | Yes | Card or bank transfer | Must be in supported methods |
 | Billing Details | text | Yes | Name, address, contact | Required for invoicing |
 
@@ -188,7 +198,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - Disable payment button until all required fields are valid
 - Display clear error messaging and retry options on failure
 - Do not reveal provider direct contact details until booking confirmed
-- Apply the Initial Payment Guard before processor submission; initial payment failure does not restart the hold. Eligible installment selection is owned by FR-007B and confirms booking only after its first successful charge.
+- Apply the Initial Payment Guard before processor submission; initial payment failure never extends or restarts the hold. Eligible installment selection is owned by FR-007B and confirms booking only after its first successful charge.
 
 **Notes**:
 
@@ -215,7 +225,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 - Display due date and countdown to procedure date
 - Send reminder 3 days before due date and on due date
-- If payment overdue, flag booking and notify admin
+- If payment overdue, flag booking and notify admin; an overdue final payment never causes `Payment Window Expired` or booking cancellation (FR-006)
 
 **Notes**:
 
@@ -239,7 +249,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |------------|------|----------|-------------|------------------|
 | Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
 | Booking Status | badge | Yes | Current FR-006 status, including Accepted and Payment Window Expired | Read-only; full lifecycle owned by FR-006 |
-| Appointment Date | datetime | Yes | Accepted appointment; reserved before initial payment, confirmed after it | Read-only; acceptance snapshot |
+| Appointment Date | datetime | Yes | Accepted appointment; held before initial payment, appointment record created at successful initial payment | Read-only; acceptance snapshot |
 | Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
 | Parent Quote Reference | text | Yes | Accepted parent quote reference | Read-only; acceptedParentQuoteId; historical context, not payment target |
 | Accepted Subquote Reference | text | Yes | One selected option/date-price combination | Read-only; acceptedSubquoteId; link to accepted selection |
@@ -272,16 +282,16 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Currency | text | Yes | Accepted payment currency | Read-only; locked snapshot |
 | Treatment Price | number | Conditional | Treatment component, if captured in accepted pricing | Read-only; informational; not added on top of offered price |
 | Package / Service Price Components | group | Conditional | Captured components of the single accepted package | Read-only; informational; exclude sibling options and live library prices |
-| Discount Applied | group | Conditional | Accepted promotion and permitted FR-019 application breakdown | Read-only; recorded terms; no live recalculation of historical applications |
+| Discount Applied | group | Conditional | Accepted promotion and discount breakdown frozen at acceptance | Read-only; recorded terms; no live recalculation of historical applications |
 | Accepted Subquote Amount | number | Yes | Final offered price of the selected option/date-price record | Read-only; acceptance snapshot |
-| Payable Booking Total | number | Yes | Amount payable after permitted recorded FR-019 adjustments | Read-only; booking commercial terms; no component double-counting |
+| Payable Booking Total | number | Yes | Accepted discounted price payable for this booking | Read-only; booking commercial terms; no component double-counting |
 
 **Section 5: Payment Progress & Status** (from FR-007):
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured via FR-029 |
-| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Amount | number | Yes | Required deposit amount | FR-029 deposit percentage of the booking total (accepted price after promotion, from the acceptance snapshot) |
 | Deposit Status | badge | Yes | Pending / Paid / Partial | Read-only |
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
 | Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid |
@@ -377,7 +387,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |------------|------|----------|-------------|------------------|
 | Currency | text | Yes | Accepted payment currency | Read-only; locked snapshot |
 | Accepted Subquote Amount | number | Yes | Offered price for the accepted option/date-price record | Read-only; acceptance snapshot via booking |
-| Payable Booking Total | number | Yes | Booking amount after permitted recorded FR-019 adjustments | Read-only; recorded booking terms |
+| Payable Booking Total | number | Yes | Accepted discounted price payable for this booking | Read-only; recorded booking terms |
 | Total Paid Amount | number | Yes | Sum of all payments made by patient | Read-only |
 | Payment Status | badge | Yes | Deposit Only / Installments / Full Paid | Read-only |
 | Payment History | link | Yes | Link to full payment history (Screen 3) | Read-only |
@@ -420,7 +430,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |--------|------|-----------|-------------|
 | View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
 | View Payment Details | link | Always | Open Screen 3: Payment Status & Progress |
-| View Quote | link | Always | Open full quote details (FR-004) |
+| View Accepted Selection | link | Always | Open the accepted subquote snapshot and inherited parent context via FR-006 |
 | Download Payout Invoice | link | Conditional | Download payout invoice PDF (if payout executed) |
 | View Payout Details (FR-017) | link | Conditional | Open detailed payout information in FR-017 (if payout exists) |
 
@@ -459,7 +469,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Patient Name | text | Yes | Full patient name | Searchable |
 | Provider Name | text | Yes | Provider/clinic name | Filterable |
 | Total Amount | number | Yes | Total booking amount | Sortable |
-| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Amount | number | Yes | Required deposit amount | FR-029 deposit percentage of the booking total (accepted price after promotion, from the acceptance snapshot) |
 | Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable |
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
 | Payment Status | badge | Yes | Unpaid / Deposit Only / Installments Active / Full Paid / Overdue | Filterable |
@@ -500,7 +510,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |------------|------|----------|-------------|------------------|
 | Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail |
 | Booking Status | badge | Yes | Current FR-006 status, including Accepted and Payment Window Expired | Read-only; full lifecycle owned by FR-006 |
-| Appointment Date | datetime | Yes | Accepted appointment; reserved before initial payment, confirmed after it | Read-only; acceptance snapshot |
+| Appointment Date | datetime | Yes | Accepted appointment; held before initial payment, appointment record created at successful initial payment | Read-only; acceptance snapshot |
 | Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
 | Parent Quote Reference | text | Yes | Accepted parent quote reference | Read-only; acceptedParentQuoteId; historical context, not payment target |
 | Accepted Subquote Reference | text | Yes | One selected option/date-price combination | Read-only; acceptedSubquoteId; link to accepted selection |
@@ -538,16 +548,16 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Currency | text | Yes | Accepted payment currency | Read-only; locked snapshot |
 | Treatment Price | number | Conditional | Treatment component, if captured in accepted pricing | Read-only; informational; not added on top of offered price |
 | Package / Service Price Components | group | Conditional | Captured components of the single accepted package | Read-only; informational; exclude sibling options and live library prices |
-| Discount Applied | group | Conditional | Accepted promotion and permitted FR-019 application breakdown | Read-only; recorded terms; no live recalculation of historical applications |
+| Discount Applied | group | Conditional | Accepted promotion and discount breakdown frozen at acceptance | Read-only; recorded terms; no live recalculation of historical applications |
 | Accepted Subquote Amount | number | Yes | Final offered price of the selected option/date-price record | Read-only; acceptance snapshot |
-| Payable Booking Total | number | Yes | Amount payable after permitted recorded FR-019 adjustments | Read-only; booking commercial terms; no component double-counting |
+| Payable Booking Total | number | Yes | Accepted discounted price payable for this booking | Read-only; booking commercial terms; no component double-counting |
 
 **Section 5: Payment Progress & Status** (from FR-007):
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured via FR-029 |
-| Deposit Amount | number | Yes | Required deposit amount | Calculated from admin-configured percentage |
+| Deposit Amount | number | Yes | Required deposit amount | FR-029 deposit percentage of the booking total (accepted price after promotion, from the acceptance snapshot) |
 | Deposit Status | badge | Yes | Pending / Paid / Partial | Read-only |
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
 | Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid |
@@ -700,7 +710,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 |--------|------|-----------|-------------|
 | View Booking Details | link | Always | Open FR-006 booking detail view (full context) |
 | View Payment Details | link | Always | Open Screen 5B: Payment Detail View |
-| View Quote | link | Always | Open full quote details (FR-004) |
+| View Accepted Selection | link | Always | Open the accepted subquote snapshot and inherited parent context via FR-006 |
 | Cancel Refund | button | Always | Cancel refund processing and return to dashboard |
 | Process Refund | button | All fields complete | Confirm and process refund |
 
@@ -741,8 +751,11 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - Receipts and invoice/payment documents are generated for every successful transaction; FR-017 retains one invoice record per booking, updated for later payments rather than duplicating it per option/charge.
 - Provider payout occurs only after treatment completion and admin-triggered execution
 - **Retry Policy (Constitution-aligned)**: For transient processor/network failures, Payment Service MUST perform up to 3 automatic retries using exponential backoff with jitter (and idempotency) before marking a payment attempt failed; hard declines require explicit patient action to retry.
-- Initial payment requires the Initial Payment Guard above, implementing FR-006's pre-booking validation; retrying cannot extend the acceptance hold. `Payment Window Expired` blocks further payment against that selection without reopening its parent/subquote. Later payments use the confirmed booking and do not require a new acceptance hold.
+- Initial payment requires the Initial Payment Guard above, implementing FR-006's pre-booking validation; Payment failure never extends or restarts the slot hold. The slot stays held only until the single hold that started at subquote acceptance expires (FR-026 slot-hold duration, default 48 hours). `Payment Window Expired` blocks further payment against that selection without reopening its parent/subquote; only the FR-006 audited admin revive creates a new hold. Later payments use the confirmed booking and do not require a new acceptance hold.
 - One booking's payments resolve one accepted subquote and its AcceptanceEvent; payment attempts and callbacks cannot fan out into sibling-option bookings.
+- The appointment record is created only on successful initial payment; before that, only the temporary hold keyed by provider, appointment date/time, and time zone exists (FR-006).
+- `Payment Window Expired` applies only to the first payment step (acceptance to deposit or first installment), as stated in FR-006. A missed later installment or final payment never causes `Payment Window Expired`, booking cancellation, or inquiry cancellation; it is flagged and notified.
+- Provider fault after acceptance follows FR-006 Alternative Flow B5 (Alternative Flow B4 above); paid money follows its placeholder, with detailed mechanics deferred to the payment pass.
 
 ### Data & Privacy Rules
 
@@ -779,8 +792,8 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - Refunds follow FR-006 cancellation policy: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund (unless medical emergency with documentation)
 - Invoices and receipts are issued for every successful payment and refund
 - Patient payment currency and applicable exchange rates come from the accepted snapshot and remain read-only throughout checkout and later payments; provider payout currency follows existing configuration and the locked conversion contract.
-- Payment amounts derive from the accepted subquote's offered price and permitted FR-019 recorded discount applications. Do not price from a parent range, sum alternative packages/date rows, reload library prices, or add informational price components to an already complete offered total.
-- Preserve attached promotion snapshots and independently audited checkout-code applications under FR-019's existing single-discount/replacement rules; do not mutate the AcceptanceEvent or reapply current promotion settings to historical payments.
+- Payment amounts derive from the accepted subquote's offered price after the accepted promotion, as frozen in the acceptance snapshot, and are never recomputed. Do not price from a parent range, sum alternative packages/date rows, reload library prices, or add informational price components to an already complete offered total.
+- The accepted promotion and discounted price are frozen at acceptance (FR-019). Checkout and payment offer no code entry, removal, replacement, or price-changing revalidation; do not mutate the AcceptanceEvent or reapply current promotion settings to payments. The first successful initial payment consumes the promotion usage reserved at acceptance.
 - Support additional authentication flows when requested by issuer/regulation
 - Platform is the Merchant of Record; platform issues invoices to patients, manages refunds/taxes, and pays providers net of commission
 - Commission is deducted at time of payout after treatment completion (admin-triggered), consistent with FR-007 Payment Flow V1
@@ -832,15 +845,15 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 - **P-03: Booking & Scheduling (FR-006)**
   - **Why needed**: One accepted subquote provides immutable pricing/appointment context; initial successful charge confirms its booking; final payment and refunds use that booking's schedule/policy.
-  - **Integration point**: Consume Booking's AcceptanceEvent, accepted parent/subquote IDs and equal aggregate versions, snapshot, and hold ownership. Reject invalid initial handoffs before processor submission; payment success confirms that same booking. Expiry/cancellation follows FR-006 without reopening quotes.
+  - **Integration point**: Consume Booking's AcceptanceEvent, accepted parent/subquote IDs and equal aggregate versions, snapshot (the source of payment amount and currency), and hold ownership (one fixed hold from acceptance keyed by provider, appointment date/time, and time zone). Reject invalid initial handoffs before processor submission; payment success confirms that same booking and creates its appointment record. Provider fault after acceptance follows FR-006 Alternative Flow B5. Expiry/cancellation follows FR-006 without reopening quotes.
 
 - **FR-004 / FR-005: Quote Structure & Subquote Acceptance**
   - **Why needed**: Distinguish parent alternatives from the single accepted commercial choice.
   - **Integration point**: Read inherited parent context and one Quote Option plus one option/date-price record only through the immutable FR-005 snapshot carried by FR-006; no direct re-pricing from live quote/library data.
 
 - **FR-019: Discount & Promotion Management**
-  - **Why needed**: Existing attached-promotion and patient checkout-code validation, replacement, funding, and attribution rules.
-  - **Integration point**: Preserve accepted promotion provenance; record permitted checkout redemptions separately against the same booking/accepted option-date context. The AcceptanceEvent remains unchanged.
+  - **Why needed**: The accepted promotion is frozen into the acceptance snapshot, and its usage is reserved at acceptance and consumed at the first successful payment.
+  - **Integration point**: Read the accepted promotion and discounted price from the snapshot only; no code entry, removal, or replacement at checkout or payment. The first successful initial payment consumes the reserved usage. The AcceptanceEvent remains unchanged.
 
 - **PR-05: Financial Management & Reporting**
   - **Why needed**: Providers need payout visibility and statements
@@ -851,7 +864,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
   - **Integration point**: Payment records and invoice/receipt data retain the booking-to-AcceptanceEvent provenance and recorded payable terms; FR-017 retains one patient invoice per booking and existing payout/refund policy.
 - **FR-029: Payment System Configuration (A-09)**
   - **Why needed**: Commission rates and deposit defaults are configured at system level via FR-029
-  - **Integration point**: Payment processing uses configured deposit percentages and commission rates from FR-029
+  - **Integration point**: Payment processing uses configured deposit percentages and commission rates from FR-029. The FR-029 booking total (accepted price after promotion, from the acceptance snapshot) is the single base for the deposit percentage, instalment amounts, and commission.
 
 - **S-03: Notification Service**
   - **Why needed**: Send confirmations, reminders, and alerts
@@ -872,7 +885,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 - **Accepted pending / confirmed bookings with accepted snapshots and recorded payment terms**
   - **Why needed**: Calculate initial/final payment from one selected commercial choice; enforce the original initial-payment hold, due dates, and existing refunds.
-  - **Source**: [FR-006 Key Entities](../fr006-booking-scheduling/prd.md#key-entities), carrying [FR-005 AcceptanceEvent](../fr005-quote-comparison-acceptance/prd.md#key-entities), plus authorized FR-019 applications and append-only booking interventions.
+  - **Source**: [FR-006 Key Entities](../fr006-booking-scheduling/prd.md#key-entities), carrying [FR-005 AcceptanceEvent](../fr005-quote-comparison-acceptance/prd.md#key-entities), including the FR-019 promotion application linked to it, plus append-only booking interventions.
 
 ---
 
@@ -942,9 +955,11 @@ Patient pays deposit to confirm booking and receives immediate confirmation with
 2. **Given** a required additional authentication step, **When** the patient completes it successfully, **Then** the payment completes and confirmation is shown within 5 seconds.
 3. **Given** a payment failure, **When** the patient retries with a different method, **Then** the system prevents duplicate charges and confirms only a single successful payment.
 4. **Given** several parent quotes and sibling subquotes, **When** initial payment is opened, **Then** only the accepted package/services, date range, appointment/timezone, price, promotion, and inherited parent context are shown; no sibling prices are summed or selectable.
-5. **Given** the package library or current promotion settings change after acceptance, **When** payment or an invoice is opened, **Then** the accepted snapshot remains unchanged; permitted checkout codes are recorded separately under FR-019, with its existing single-discount rules.
+5. **Given** the package library or current promotion settings change after acceptance, **When** payment or an invoice is opened, **Then** the accepted snapshot remains unchanged; no code input is shown at checkout, and any request to apply, remove, or replace a code is rejected (FR-019).
 6. **Given** an expired/released hold, ineligible selection, or mismatched accepted aggregate versions, **When** initial payment is submitted, **Then** no processor request occurs; FR-006's outcome is shown, and no quote is reopened.
 7. **Given** a failed initial payment within its hold, **When** the patient retries, **Then** the same acceptance provenance, currency, and original hold deadline are used; only successful deposit/eligible first installment/full payment confirms the booking.
+8. **Given** an accepted booking with a promotion whose usage is reserved, **When** the initial payment succeeds, **Then** the appointment record is created from the hold, the reserved promotion usage is consumed, and the amount and currency charged equal the acceptance snapshot.
+9. **Given** a `Payment Window Expired` booking revived by an admin, **When** the patient opens payment, **Then** the deadline shown is the new hold started at the revive time, not an extension of the expired hold.
 
 ---
 
@@ -961,6 +976,7 @@ Patient completes final payment before or on procedure day and receives confirma
 1. **Given** a confirmed booking with a remaining balance, **When** the patient pays the final amount, **Then** the booking is marked fully paid and a final receipt/invoice is delivered.
 2. **Given** a final payment due date, **When** it is approaching within 3 days, **Then** the patient receives a reminder notification.
 3. **Given** a confirmed booking paid through deposit/installments, **When** final payment is calculated, **Then** the balance uses its recorded payable terms and actual successful payments/adjustments, retaining the original accepted selection and currency; no new acceptance hold is required.
+4. **Given** a confirmed booking whose final payment is overdue, **When** the due date passes, **Then** the booking is flagged and the admin notified; the booking does not become `Payment Window Expired` and is not cancelled.
 
 ---
 
@@ -984,7 +1000,8 @@ Admin processes a refund request according to cancellation policy; patient and p
 - Payment challenge required but device/app loses focus; flow must resume gracefully
 - Duplicate submission from rapid taps; idempotency ensures single charge
 - Patient locale/system currency or market exchange rate changes after acceptance; payment currency/rates remain the accepted values, not a new checkout selection
-- Hold expires during an authentication challenge; retry cannot extend/recreate the hold or bypass FR-006 eligibility
+- Hold expires during an authentication challenge; retry cannot extend/recreate the hold or bypass FR-006 eligibility; only an FR-006 audited admin revive starts a new hold
+- Provider withdraws or drops out after the deposit is paid; FR-006 Alternative Flow B5 applies and the paid amount moves with the patient as credit toward the replacement booking, with any unused part refunded and no fee
 - Duplicate or late processor callbacks must not create another booking, replace the accepted choice, or bypass FR-006's confirmation rules; reconcile financial events under the existing payment/booking owners
 - Accepted pricing lacks optional component itemization; show the complete offered price without inventing treatment/package components
 - Refund requested outside policy window; admin records exception with documentation
@@ -1006,8 +1023,8 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 - **REQ-007-006**: System MUST maintain complete payment history per booking, including refunds and payout references
 - **REQ-007-007**: System MUST compute platform commission per transaction and link to provider payout records
-- **REQ-007-016**: All payment, receipt/invoice, provider/admin financial-detail, and refund views MUST use one FR-006 Booking's immutable accepted subquote snapshot as the commercial base; exclude sibling alternatives/live library prices and prevent component double-counting. Existing FR-019 applications remain separate auditable adjustments, not mutations to the acceptance snapshot.
-- **REQ-007-019**: Payment history MUST resolve through its booking to the AcceptanceEvent, accepted parent/subquote IDs, equal aggregate versions, selected option/date-price provenance, and original snapshot; subsequent authorized interventions/applications remain separately recorded.
+- **REQ-007-016**: All payment, receipt/invoice, provider/admin financial-detail, and refund views MUST use one FR-006 Booking's immutable accepted subquote snapshot as the commercial base; exclude sibling alternatives/live library prices and prevent component double-counting. The accepted promotion and discounted price are read from the snapshot and never recomputed; no promotion code can be entered, removed, or replaced at checkout or payment.
+- **REQ-007-019**: Payment history MUST resolve through its booking to the AcceptanceEvent, accepted parent/subquote IDs, equal aggregate versions, selected option/date-price provenance, and original snapshot; subsequent authorized admin interventions remain separately recorded.
 
 ### Security & Privacy Requirements
 
@@ -1019,13 +1036,16 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 - **REQ-007-011**: System MUST support processor-driven payment flows for authorization, capture, and refund
 - **REQ-007-012**: System MUST support payout execution with commission deduction and statement generation
-- **REQ-007-017**: Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows terminal `Payment Window Expired`, without hold extension or quote reopening. Later confirmed-booking payments do not acquire a new acceptance hold.
-- **REQ-007-018**: System MUST use the accepted patient currency/exchange-rate snapshot for initial and subsequent payments; checkout cannot change these values or reselect package/date/appointment/quote price.
+- **REQ-007-017**: Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows `Payment Window Expired`, without hold extension or quote reopening. Payment failure MUST NOT extend or restart the hold; only the FR-006 audited admin revive creates a new hold. Later confirmed-booking payments do not acquire a new acceptance hold.
+- **REQ-007-018**: System MUST read the payment amount and the accepted patient currency/exchange-rate from the FR-005 accepted snapshot for initial and subsequent payments, never recomputed; checkout cannot change these values or reselect package/date/appointment/quote price.
+- **REQ-007-020**: On the first successful initial payment, System MUST confirm the booking, create its appointment record from the hold (FR-006), and consume the promotion usage reserved at acceptance (FR-019).
+- **REQ-007-021**: `Payment Window Expired` MUST apply only to the first payment step, as stated in FR-006 (REQ-006-016). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation.
+- **REQ-007-022**: When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it and treat money already paid under the B5 placeholder: credit toward the replacement booking, refund of any unused part, and no patient fee. Detailed mechanics are defined in the payment pass.
 
 ### Marking Unclear Requirements
 
 - **REQ-007-013**: Platform is Merchant of Record; platform issues patient invoices, manages refunds and tax implications, and pays out net to providers
-- **REQ-007-014**: Commission is deducted on the total procedure cost at the time of provider payout after treatment completion (admin‑triggered); not pro‑rata across deposit/final
+- **REQ-007-014**: Commission is calculated on the accepted price after promotion (the FR-029 booking total), locked at booking confirmation, and is deducted at the time of provider payout after treatment completion (admin‑triggered); not pro‑rata across deposit/final
 - **REQ-007-015**: Refunds require Admin approval with an SLA to approve/deny within 2 business days; the decision and reason are logged and notifications sent
 
 ---
@@ -1034,9 +1054,9 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 - **Entity 1 - Payment**: Represents a financial transaction (deposit, installment, full, final, refund)
   - **Key attributes**: booking reference, amount, currency, method, status, timestamps, receipt/invoice refs
-  - **Relationships**: belongs to one FR-006 booking; via that booking resolves exactly one FR-005 AcceptanceEvent, accepted subquote/parent IDs and aggregate versions, original commercial snapshot, and permitted FR-019 application records. May relate to a payout or reverse via a refund; repeated payments do not create new accepted-choice bookings.
+  - **Relationships**: belongs to one FR-006 booking; via that booking resolves exactly one FR-005 AcceptanceEvent, accepted subquote/parent IDs and aggregate versions, original commercial snapshot, and the FR-019 promotion application linked to that AcceptanceEvent. May relate to a payout or reverse via a refund; repeated payments do not create new accepted-choice bookings.
 
-- **Accepted Booking Context (owned by FR-006, not a new payment-owned quote entity)**: Contains `acceptanceEventId`, `acceptedParentQuoteId`, `acceptedParentQuoteVersion`, `acceptedSubquoteId`, `acceptedSubquoteVersion`, `acceptanceSnapshot`, and the reserved slot/hold context. The subquote resolves one Quote Option plus one option/date-price record; both accepted versions identify the same parent aggregate revision. FR-007 reads this context and does not duplicate/rewrite the quote aggregate.
+- **Accepted Booking Context (owned by FR-006, not a new payment-owned quote entity)**: Contains `acceptanceEventId`, `acceptedParentQuoteId`, `acceptedParentQuoteVersion`, `acceptedSubquoteId`, `acceptedSubquoteVersion`, `acceptanceSnapshot`, and the hold context (one fixed hold from acceptance keyed by provider, appointment date/time, and time zone; the appointment record exists only after successful initial payment). The subquote resolves one Quote Option plus one option/date-price record; both accepted versions identify the same parent aggregate revision. FR-007 reads this context and does not duplicate/rewrite the quote aggregate.
 
 - **Entity 2 - Payout**: Represents provider disbursement after commission
   - **Key attributes**: provider, gross amount, commission, net amount, execution date, status, statement ref
@@ -1059,6 +1079,8 @@ Admin processes a refund request according to cancellation policy; patient and p
 | 2025-11-12 | 1.4 | Simplified admin configuration access: Removed read-only Screen 7 in favor of direct link-out to `FR-029: Payment System Configuration`; clarified in Admin Platform intro and post-screen note that configuration lives entirely in FR-029 | AI |
 | 2025-11-12 | 1.5 | Cross-checked PRD against `system-prd.md` and client transcriptions; updated status to "✅ Verified & Approved" per template; confirmed change log consistency | AI |
 | 2026-10-13 | 1.6 | Aligned checkout/payment/refund context with one accepted subquote via FR-006; made accepted currency and commercial selection read-only; added original-hold eligibility and terminal-expiry guards, snapshot provenance, optional component handling, and regression scenarios. Preserved existing FR-019 checkout discounts as separate applications and all payment economics. [CR-FR007-20261013-01](./change-request-2026-10-13-accepted-subquote-payment-context.md); documentation approved, implementation reconciliation and consolidated verification pending. | Product Owner / Documentation |
+| 2026-10-16 | 1.7 | MTG-002 quote-model alignment ([CR-FR007-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)). One fixed hold from acceptance for the FR-026 duration that payment failure never extends; admin revive creates a new hold (E007-1, S1-2, M3, D2, D14). Appointment record created at successful initial payment (E007-2, M4). First-payment-only `Payment Window Expired` boundary, amount and currency read from the accepted snapshot, checkout code entry removed, promotion usage consumed at first successful payment, provider-fault money deferred to the FR-006 B5 placeholder (E007-3, D1, D6, D6-M, D9, D11, M2, R7-1). Explicit Initial Payment Guard checks (FR-007-3); View Quote actions on Screens 4 and 6 now open the accepted selection (FR-007-4). New Alternative Flow B4, REQ-007-020 to REQ-007-022. Documentation approved; implementation reconciliation and consolidated verification pending. | Product Owner / Documentation |
+| 2026-10-16 | 1.8 | Product Owner follow-up decisions ([CR-FR007-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)): REQ-007-014 now calculates commission on the accepted price after promotion (the FR-029 booking total), locked at booking confirmation, replacing "total procedure cost" (Q28); the deposit amount fields (Screens 1, 3, 5, 5B) and the FR-029 integration point name the same booking total as the single base for deposit, instalments, and commission (Q25). Missed-instalment handling and payout rules unchanged (deferred to the payment pass). | Product Owner / Documentation |
 
 ---
 
@@ -1070,10 +1092,12 @@ Admin processes a refund request according to cancellation policy; patient and p
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |
 | Product Owner — v1.6 documentation delta | Joachim Trung Tuan | 2026-10-13 | Approved to complete remaining Meeting 2 quote-model work; implementation reconciliation and consolidated verification pending. |
+| Product Owner — v1.7 documentation delta | Joachim Trung Tuan | 2026-10-16 | Approved via the MTG-002 quote-model decision log; implementation reconciliation and consolidated verification pending. |
+| Product Owner — v1.8 documentation delta | Joachim Trung Tuan | 2026-10-16 | Approved via the MTG-002 Product Owner follow-up decisions; implementation reconciliation and consolidated verification pending. |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007 Payment Processing (system-prd.md)
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-16

@@ -3,7 +3,7 @@
 **Change Request ID**: CR-FR019-20260910-01
 **Primary FR**: FR-019
 **Triggering FR / Event**: Approved FR-004 parent-quote/Quote Option restructure
-**Decision Status**: Approved
+**Decision Status**: Approved — superseded in part by CR-FR019-20261016-01
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-09-10
 **Decision Date**: 2026-09-10
@@ -63,7 +63,7 @@ The updated [FR-019 PRD](./prd.md) uses `QuoteOptionDatePrice.promotionId`, reta
 
 - Every applied quote-stage promotion identifies one option/date-price row.
 - Ad-hoc programs cannot apply outside their bound parent quote and row.
-- Contract and integration tests prove selection, acceptance, and redemption provenance.
+- Contract and integration tests prove selection, acceptance, and redemption provenance (now covered by FR-019 v2.2 User Story 4; redemption provenance links to the AcceptanceEvent per CR-FR019-20261016-01).
 
 ## Approval and Traceability
 
@@ -73,4 +73,4 @@ The updated [FR-019 PRD](./prd.md) uses `QuoteOptionDatePrice.promotionId`, reta
 - **PRD change log**: FR-019 v2.1
 - **Update log**: [`FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md`](../../update-logs/2026-09-10/FR004_DEPENDENCY_AND_VERIFICATION_FIXES_2026-09-10.md)
 - **Supersedes**: None
-- **Superseded by**: None
+- **Superseded by**: CR-FR019-20261016-01, in part: redemption provenance (Application created at acceptance and linked to the AcceptanceEvent) and promotion changes after send or acceptance

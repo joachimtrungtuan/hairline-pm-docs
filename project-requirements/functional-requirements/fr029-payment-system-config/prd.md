@@ -3,12 +3,13 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Version**: 1.10
+**Version**: 1.12
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](change-request-2026-10-14-provider-flat-rate-commission.md)
 **Change Request**: [CR-FR029-20261015-01 — Single-provider scope edits and scheduled commission configuration](change-request-2026-10-15-single-provider-scope-scheduled-commission.md)
 **Change Request**: [CR-FR029-20261015-02 — Suspended providers in provider-specific commission scopes](change-request-2026-10-15-suspended-provider-commission-scopes.md)
+**Change Request**: [CR-FR029-20261016-01 — Quote model alignment: configuration lock points and booking total](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -674,7 +675,7 @@ The module delivers value by:
 - **Single-provider edit from FR-015**: When an admin edits commission in FR-015 Tab 7 for a provider covered by a scope shared with other providers, the system removes that provider from the shared scope and creates a single-provider scope for it with the new values; the shared scope and its other providers are unchanged. The split is audit-logged with before/after state.
 - **Scheduled configuration**: Each provider has at most one pending future-dated configuration. Saving another future-dated configuration for the same provider replaces the pending one (logged); on its Effective Date the pending configuration becomes the active one automatically. Screen 5 and FR-015 Tab 7 show the same pending configuration, which FR-032 Screen 4 displays read-only to the provider.
 - The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only
-- **Percentage model** (global default or provider scope): commission amount = booking total × snapshotted commission percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
+- **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
 - **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment
 - Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling
 - Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
@@ -701,7 +702,7 @@ The module delivers value by:
 | Currency Name | display-only | - | Human-readable currency name | From master catalog |
 | Symbol | display-only | - | Currency symbol (e.g., $, €, £) | From master catalog |
 | Minor Units | display-only | - | Decimal precision (e.g., 2 for USD/EUR/GBP, 0 for JPY/KRW) | From master catalog |
-| Enabled | toggle | Yes | Whether this currency is available for selection across the system | Must keep at least 1 enabled currency |
+| Enabled | toggle | Yes | Whether this currency is available for selection across the system | Must keep at least 1 enabled currency; cannot be turned off while quotes, bookings, or instalment plans still use the currency (see Business Rules) |
 | Default Currency | radio/select | Yes | Which enabled currency is the system default | Exactly 1 default; default must be enabled |
 
 **Business Rules**:
@@ -711,6 +712,9 @@ The module delivers value by:
 - Exactly one enabled currency must be set as the system default.
 - If an admin attempts to disable a currency currently referenced by system configuration (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable.
 - Enabling/disabling currencies affects new configuration choices immediately; existing records retain their stored currency codes.
+- Disabling a currency is blocked while any sent quote that is not yet in a terminal state, any accepted booking that is not yet paid, or any open booking or instalment plan uses that currency. The admin sees the count of records still using it, and can disable the currency only when that count reaches zero.
+- Changing the Default Currency creates a new FR-026 Quote Configuration version, so the configuration version recorded on a quote identifies both the quote hours and the currency used. Quotes already sent keep the currency copied onto them at first send.
+- When the Default Currency changes, open quote drafts keep the numbers the provider typed and switch to the new currency without conversion. Before the provider can send such a draft, the quote screen (owned by FR-004) shows a "currency changed, check your prices" banner that the provider must acknowledge.
 
 **Notes**:
 
@@ -724,7 +728,7 @@ The module delivers value by:
 
 ### General Module Rules
 
-- **Rule 1**: Payment configuration changes apply to new transactions only (existing bookings, quotes, and active installment plans retain original configuration)
+- **Rule 1**: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation.
 - **Rule 2**: All payment configuration changes must be logged to audit trail with admin ID, timestamp, and change details for compliance
 - **Rule 3**: Configuration cache propagates to Payment Processing Service within 5 minutes maximum (cache TTL)
 - **Rule 4**: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration)
@@ -780,14 +784,16 @@ The module delivers value by:
 - **Payment Rule 1**: Payment Processing Service routes transactions to appropriate Stripe account based on patient's country location
 - **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses the Stripe account marked as Global Fallback (if configured) or blocks payment
 - **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
+- **Booking Total Rule**: Throughout this FR, "booking total" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate locked under Currency Rule 2.
 - **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to 2 decimal places)
 - **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
 - **Payout Rule 1**: Payout buffer window determines when payout statements are auto-generated before a scheduled payout date. The buffer window is a global setting (default: 3 days, range: 1–7 days). FR-017 / A-05 reads this value to schedule statement creation for provider and affiliate payouts.
 - **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
 - **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
 - **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
-- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at time of quote acceptance and stored per quote/booking/transaction; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after quote acceptance)
-- **Commission Rule**: The effective commission configuration (global default or provider-specific) MUST be resolved at FR-006 booking confirmation and its model (Percentage or Flat Rate), value, and currency (Flat Rate) stored per booking/transaction for payout and reconciliation consistency; a Flat Rate snapshot is deducted once at the FR-010 completed-procedure milestone, not per package, Subquote, or installment
+- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at FR-005 subquote acceptance and stored in that acceptance snapshot, then copied to the booking and its transactions; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after subquote acceptance). The parent quote never owns a locked rate.
+- **Commission Rule**: The effective commission configuration (global default or provider-specific) MUST be resolved at FR-006 booking confirmation and its model (Percentage or Flat Rate), value, currency (Flat Rate), source configuration ID, and scope type (global or provider-specific) stored per booking/transaction for payout and reconciliation consistency; a Flat Rate snapshot is deducted once at the FR-010 completed-procedure milestone, not per package, Subquote, or installment. The Percentage model applies to the booking total defined in the Booking Total Rule. An accepted-but-unpaid subquote has not yet fixed its commission, so a configuration that becomes effective before booking confirmation applies to it.
+- **Indicative Commission Rule**: Any commission shown before booking confirmation, including the FR-004 quote screen, is indicative only. It shows the model and value (percentage or flat amount) from the configuration effective at the time of display, labelled "indicative, final at booking confirmation". Only the booking-confirmation snapshot is authoritative for payout, invoicing, and reconciliation.
 - **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
 
 ---
@@ -846,6 +852,14 @@ The module delivers value by:
 - **FR-006 / Module P-03**: Booking & Scheduling
   - **Why needed**: Booking flow uses configured deposit rates and split payment rules to calculate deposit amount and determine feasible installment options at booking confirmation
   - **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
+
+- **FR-004 / Module PR-02**: Quote Submission & Management
+  - **Why needed**: The quote screen shows the commission that would apply if the booking were confirmed now
+  - **Integration point**: FR-004 reads the currently effective commission configuration and shows its model and value labelled "indicative, final at booking confirmation"; FR-004 stores no binding commission and freezes no payment configuration at quote creation or sending
+
+- **FR-005 / Module P-02**: Quote Comparison & Acceptance
+  - **Why needed**: Subquote acceptance is the lock point for the currency conversion rate
+  - **Integration point**: FR-005 stores the effective conversion rate (including markup) in the acceptance snapshot, together with the accepted price after promotion and the quote currency that form the booking total
 
 - **FR-015 / Module A-02**: Provider Management & Onboarding
   - **Why needed**: FR-015 exposes the single-provider commission edit surface used by admins inside the provider profile
@@ -1091,6 +1105,22 @@ As a platform administrator managing international payments, I need to receive t
 4. **Given** markup is updated for USD/EUR, **When** next patient views price in EUR, **Then** price reflects new 7% per-pair markup instead of previous 5% global default
 5. **Given** rate protection alert was triggered, **When** I view the pair's "Rate History" section in Screen 2B, **Then** chart shows rate spike and timestamp when alert was sent
 
+### User Story 6 - Commission Resolution at Booking Confirmation (Priority: P2)
+
+As a platform administrator managing provider commission, I need the commission for each booking to be resolved once, at booking confirmation, from the configuration effective at that moment and applied to the accepted price after promotion, so that payouts and reconciliation never depend on when a quote was created or what the quote screen showed.
+
+**Why this priority**: Commission drives provider payouts and platform revenue. Without one named lock point and one base, two implementations can charge different amounts for the same booking.
+
+**Independent Test**: Can be fully tested by accepting a subquote, scheduling a provider-specific scope change that becomes effective before payment, completing the first payment, and checking the booking snapshot's model, value, base, source configuration ID, and scope type.
+
+**Acceptance Scenarios**:
+
+1. **Given** a provider is on the 20% global default and a provider-specific 18% scope is scheduled to become effective on Day 7, **When** the patient accepts a subquote on Day 6 and booking confirmation happens on Day 8, **Then** the booking snapshot stores 18% with the provider-specific scope's configuration ID and scope type, and the quote screen had shown 20% labelled "indicative, final at booking confirmation".
+2. **Given** a provider's scope switches from Percentage to Flat Rate after a subquote is accepted but before booking confirmation, **When** booking confirmation happens, **Then** the booking snapshot stores the Flat Rate model, amount, and currency, and the commission is deducted once at the FR-010 completed-procedure milestone.
+3. **Given** an accepted subquote reaches Payment Window Expired and the patient later accepts again, **When** the new booking is confirmed, **Then** commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate is the one locked at the new acceptance.
+4. **Given** an accepted subquote of $3,000 with a $300 promotion in the quote currency and a 20% Percentage commission, **When** booking confirmation happens, **Then** the commission is $540 (20% of the $2,700 booking total), and the deposit and installments use the same $2,700 base.
+5. **Given** a provider is covered by a shared provider-specific scope, **When** an admin edits that provider's commission in FR-015 Tab 7 before a pending booking is confirmed, **Then** the provider moves to its own single-provider scope and the booking snapshot records that new scope's configuration ID.
+
 ---
 
 ### Edge Cases
@@ -1146,8 +1176,8 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
 - **REQ-029-043**: System MUST allow admins to configure both the platform commission global default (percentage only, allowed range 15-25%) and provider-specific commission scopes (Percentage model 0-100% or Flat Rate model with a fixed amount > 0 per completed procedure) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
 - **REQ-029-043b**: System MUST keep provider-specific commission models and values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
-- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at quote acceptance and store them per quote/booking/transaction (no rate fluctuation after quote acceptance)
-- **REQ-029-045**: System MUST snapshot the effective commission model and value (and Flat Rate currency) at booking confirmation and store it per booking/transaction for payout and reconciliation consistency; Flat Rate snapshots are deducted once per completed procedure
+- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance)
+- **REQ-029-045**: System MUST snapshot the effective commission model and value (and Flat Rate currency), with the source configuration ID and scope type, at booking confirmation and store it per booking/transaction for payout and reconciliation consistency; Flat Rate snapshots are deducted once per completed procedure
 
 ### Data Requirements
 
@@ -1182,6 +1212,12 @@ As a platform administrator managing international payments, I need to receive t
 - **REQ-029-042**: System MUST display warning if admin configures aggressive cutoff date that may limit installment availability
 - **REQ-029-047**: System MUST validate commission values by model: global default and provider Percentage within allowed ranges (15-25% global, 0-100% provider) and provider Flat Rate amount greater than 0 with an enabled currency, displaying an error and rejecting the save otherwise (client-side and server-side)
 - **REQ-029-048**: System MUST keep each provider in at most one active provider-specific commission scope with at most one pending future-dated configuration (a new one replaces it); an FR-015 Tab 7 edit to a provider in a shared scope MUST split that provider into its own single-provider scope without changing the other providers
+- **REQ-029-049**: System MUST lock payment configuration only at its named lock points: the currency conversion rate at FR-005 subquote acceptance; the commission configuration, deposit rate, and split payment settings at FR-006 booking confirmation; nothing at quote creation or sending
+- **REQ-029-050**: System MUST calculate the Percentage commission, deposit amount, and installment split from the booking total, defined as the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot and never recomputed from the live quote
+- **REQ-029-051**: System MUST present any pre-confirmation commission (including the FR-004 quote screen) as an indicative model and value labelled "indicative, final at booking confirmation"; only the booking-confirmation snapshot is authoritative
+- **REQ-029-052**: System MUST block disabling a currency while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, and MUST show the admin the count of records still using that currency.
+- **REQ-029-053**: System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a currency-change banner (FR-004 quote screen) before send.
+- **REQ-029-054**: System MUST calculate commission on the price after promotion for every discount type, including discounts funded only by Hairline.
 
 ---
 
@@ -1201,7 +1237,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - **Entity 2c - Currency Pair Configuration**:
   - **Key attributes**: pair_id, base_currency (always USD), target_currency, rate_mode (auto/manual), source_id (nullable; required if auto), manual_base_rate (nullable; required if manual), markup_percentage_override (nullable; if null, inherits global default), sync_frequency_override (nullable; if null, inherits global default; ignored if manual), current_base_rate, current_effective_rate, last_updated_timestamp, next_sync_timestamp (nullable; auto-fetch only), status (healthy/warning/error), created_by_admin_id, created_date
-  - **Relationships**: One pair per target currency (unique constraint on target_currency); many quotes/bookings/transactions reference the pair's effective rate snapshot captured at quote acceptance; one pair references one source (if auto-fetch)
+  - **Relationships**: One pair per target currency (unique constraint on target_currency); many acceptance snapshots reference the pair's effective rate captured at FR-005 subquote acceptance, and bookings and transactions copy it from there; one pair references one source (if auto-fetch)
 
 - **Entity 3 - Deposit Rate Configuration**:
   - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), deposit_percentage, effective_date, created_by_admin_id, created_date
@@ -1217,7 +1253,7 @@ As a platform administrator managing international payments, I need to receive t
 
 - **Entity 6 - Commission Rate Configuration**:
   - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_model (percentage/flat_rate; global is always percentage), commission_percentage (nullable when flat_rate), flat_rate_amount (nullable when percentage), flat_rate_currency (nullable when percentage), effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
-  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission model/value snapshot captured at booking confirmation
+  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission model/value snapshot captured at booking confirmation, which records this record's config_id and scope
 
 ---
 
@@ -1236,6 +1272,8 @@ As a platform administrator managing international payments, I need to receive t
 | 2026-10-14 | 1.8 | Provider-specific commission alignment with FR-015 (CR-FR029-20261014-01): Screen 5 provider scopes now support Commission Model Percentage (0-100%, 0.1% precision) or Flat Rate (fixed amount > 0 in an enabled currency, deducted once per FR-010 completed procedure, not per package/Subquote/installment); global default remains percentage-only at 15-25%. Updated Main Flow, Module Scope, Screen 5 fields/rules/preview, Admin Editability Rules, Commission Rule, REQ-029-043/043b/045, new REQ-029-047, and Entity 6 so the booking-confirmation snapshot captures model and value. Status set to revised pending consolidated verification; implementation reconciliation required. | Vân Tay Media |
 | 2026-10-15 | 1.9 | FR-015 v1.12 alignment (CR-FR029-20261015-01): a provider belongs to at most one active provider-specific scope (Selected Providers validation); an FR-015 Tab 7 edit to a provider in a shared scope splits it into a single-provider scope without changing the others; at most one pending future-dated configuration per provider, replaced by a newer one and applied automatically on its Effective Date. Added Screen 5 business rules and REQ-029-048. Implementation reconciliation required. | Claude |
 | 2026-10-15 | 1.10 | FR-015 v1.16 alignment (CR-FR029-20261015-02): provider-specific scopes accept Active and Suspended providers (step 10, Selected Providers validation); Deactivated providers cannot be selected and their scopes are read-only, matching FR-015 Tab 7 edit eligibility. Implementation reconciliation required. | Claude |
+| 2026-10-16 | 1.11 | MTG-002 quote model alignment (CR-FR029-20261016-01): Rule 1 now names each lock point (exchange rate at FR-005 subquote acceptance; commission, deposit rate and split payment settings at FR-006 booking confirmation; nothing at quote creation) (FR-029-1, M5); added Booking Total Rule defining the base as the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot (FR-029-2, D12); added Indicative Commission Rule and FR-004/FR-005 dependencies so the quote screen shows an indicative model and value only (S2-4, D13); Currency Rule 2, REQ-029-044 and Entity 2c use subquote acceptance vocabulary (FR-029-5); commission snapshot records source configuration ID and scope type (FR-029-6); Commission Rule states accepted-but-unpaid subquotes are not yet fixed (FR-029-7); added User Story 6 and REQ-029-049 to REQ-029-051 (FR-029-4). Implementation reconciliation required. | Claude |
+| 2026-10-16 | 1.12 | Product Owner follow-up decisions (CR-FR029-20261016-01): disabling a currency is blocked while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, with the blocking-record count shown (Q7); a Default Currency change creates a new FR-026 Quote Configuration version (Q14) and open drafts keep typed numbers, switch currency, and need a must-acknowledge banner before send, FR-004 owning the screen (Q4); commission is on the price after promotion for every discount type, including Hairline-funded discounts (Q5). Booking total as the single base for deposit, instalments and commission confirmed already compliant (Q25). Updated Screen 6 (Enabled validation and business rules), Booking Total Rule, and new REQ-029-052 to REQ-029-054. | Product Owner / Documentation |
 
 ---
 
@@ -1252,4 +1290,4 @@ As a platform administrator managing international payments, I need to receive t
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16

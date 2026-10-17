@@ -3,8 +3,9 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr026-app-settings-security`
 **Created**: 2025-11-04
-**Status**: ✅ Verified & Approved
+**Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-026 from system-prd.md, Client transcription (Hairline-AdminPlatformPart2.txt)
+**Change Request**: [CR-FR026-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -14,7 +15,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 **Problem**: Currently, settings are scattered across different modules, making it difficult to maintain consistency, audit changes, or roll back problematic configurations. Security policies like authentication throttling and OTP expiry are hardcoded, preventing operational flexibility.
 
-**Solution**: A unified admin interface where authorized administrators can view, create, update, and version settings within clearly defined groups (Authentication & Security, App Data Lists, Notifications). All changes require a reason and are fully auditable (who/when/old value/new value).
+**Solution**: A unified admin interface where authorized administrators can view, create, update, and version settings within clearly defined groups (Authentication & Security, App Data, Notifications, Analytics). All changes require a reason and are fully auditable (who/when/old value/new value).
 
 **Value Delivered**:
 
@@ -31,7 +32,8 @@ The App Settings & Security Policies module provides a centralized, audited, and
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-01)**: Consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options
-- **Provider Platform (PR-06 and PR-02)**: Consumes centrally managed profile lists and the versioned quote currency/expiry configuration
+- **Provider Platform (PR-06 and PR-02)**: Consumes centrally managed profile lists and the versioned Quote Configuration (quote currency, quote expiry window, and quote-expiring-soon lead time)
+- **Quote Acceptance and Booking (FR-005 and FR-006)**: Consume the versioned slot-hold duration and the hold-expiring-soon reminder lead time from the Quote Configuration
 - **Admin Platform (A-09)**: Primary interface for viewing, editing, and versioning all settings
 - **Admin Platform (A-02)**: FR-015 provider creation (Screen 2 Step 2) and provider profile editing (Screen 3 Tab 1) consume the centrally managed Provider Specialties list
 - **Analytics (PR-05 and A-08)**: FR-014 provider and admin analytics consume the versioned Analytics Configuration (SLA target, engagement thresholds, outlier threshold, benchmark refresh frequency, optional commission target)
@@ -52,7 +54,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Provider staff management (PR-06) indirectly uses centrally managed lists
 - Authentication throttling (PR-01) applies to provider login attempts
 - OTP parameters (PR-01) apply to provider email verification flows
-- Quote creation (PR-02) consumes the active currency and expiry policy from one configuration version
+- Quote creation (PR-02) consumes the quote currency, quote expiry window, and quote-expiring-soon lead time from one configuration version; FR-004 copies the currency and expiry window read-only onto each quote at first send
 
 **Admin Platform (A-09)**:
 
@@ -244,16 +246,18 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 - **Outcome**: Admin can change future inquiry options and the date blocked window without a code change. Implementation must confirm the patient client consumes the dynamic response before treating ordinary configuration changes as release-free.
 
-**A7: Admin Configures Quote Currency and Expiry**:
+**A7: Admin Configures Quote and Slot-Hold Settings**:
 
-- **Trigger**: Product team needs to change the currency used by newly created quotes or the default quote response window.
+- **Trigger**: Product team needs to change the quote expiry window, the quote-expiring-soon lead time, the slot-hold duration, or the hold-expiring-soon reminder lead time.
 - **Steps**:
   1. Admin navigates to Settings → App Data → Quote Configuration.
-  2. Admin selects one enabled ISO 4217 quote currency and enters a positive whole-number expiry window in hours; default is 48.
-  3. Admin saves with a mandatory change reason.
-  4. System versions and audits the change, invalidates the configuration cache, and exposes the active values through the authenticated Settings API.
-  5. FR-004 snapshots the currency and computes expiry when a new parent Quote is created. Existing quotes retain their saved currency and expiry.
-- **Outcome**: New FR-004 quotes use one auditable configuration source without retroactively changing historical quote prices or deadlines.
+  2. Admin sees the quote currency as a read-only value. It is the FR-029 Default Currency and can be changed only in FR-029 Screen 6. Each Default Currency change in FR-029 creates a new Quote Configuration version.
+  3. Admin enters whole-number hours for the quote expiry window (default 48), the quote-expiring-soon lead time (default 12), the slot-hold duration (default 48), and the hold-expiring-soon lead time (default 12).
+  4. Admin saves with a mandatory change reason.
+  5. System checks that the quote expiry window is 24 to 336 hours, the slot-hold duration is 24 to 168 hours, and each lead time is at least 1 hour and at most half of the window it warns about, then versions and audits the change, invalidates the configuration cache, and exposes the active values and configuration version through the authenticated Settings API.
+  6. When a provider first sends a parent Quote, FR-004 copies the quote currency and the quote expiry window read-only onto it and records the configuration version used. Drafts carry neither value. Later setting changes never affect a sent quote, and there is no per-quote extension.
+  7. When a patient accepts a subquote, FR-005 and FR-006 place one fixed slot hold for the slot-hold duration in effect at acceptance. Later setting changes never alter an existing hold, and payment failure never extends or restarts it.
+- **Outcome**: Quotes and slot holds use one auditable configuration source without retroactively changing sent quotes or existing holds.
 
 **A8: Admin Configures Analytics Parameters**:
 
@@ -349,7 +353,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Account Deletion Reasons (reason label, requires_explanation, display order, active)
   - Provider Specialties (specialty name, display order, active)
   - Inquiry Configuration (treatment-area options with image/icon assets, and minimum inquiry lead time)
-  - Quote Configuration (active ISO 4217 currency, default expiry hours)
+  - Quote Configuration (quote currency shown read-only from FR-029, quote expiry window, quote-expiring-soon lead time, slot-hold duration, hold-expiring-soon lead time)
 - Notifications
   - OTP Email Templates
     - Verification Email
@@ -618,17 +622,22 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ### Screen 5d: Quote Configuration Manager
 
-**Purpose**: Own the active currency snapshot and default expiry policy consumed by FR-004 when a parent Quote is created.
+**Purpose**: Own the quote expiry window, the quote-expiring-soon lead time, the slot-hold duration, and the hold-expiring-soon reminder lead time, and show the quote currency that FR-004 copies onto each parent Quote at first send.
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Active Quote Currency | select | Yes | ISO 4217 currency snapshotted onto each new parent Quote | Exactly one enabled currency; never provider-editable |
-| Default Quote Expiry | number | Yes | Whole hours used to compute a new Quote's expiry timestamp | Positive integer; default 48 hours |
+| Quote Currency | read-only label | Yes | ISO 4217 currency copied read-only onto each parent Quote at first send. It is the FR-029 Default Currency (FR-029 Screen 6), not a separate setting. Consumer: FR-004 | Changed only in FR-029; never provider-editable |
+| Quote Expiry Window | number | Yes | Whole hours copied read-only onto each parent Quote at first send to compute its expiry timestamp. Consumer: FR-004 | Whole hours from 24 to 336; default 48 hours |
+| Quote Expiring Soon Lead Time | number | Yes | Whole hours before a sent quote expires at which FR-004 emits `quote.expiring_soon` (delivered through FR-030 and FR-020). Consumer: FR-004 | Whole hours from 1 up to half of the Quote Expiry Window; default 12 hours |
+| Slot-Hold Duration | number | Yes | Whole hours of the one fixed, exclusive slot hold placed at subquote acceptance, and of the new hold placed by an FR-006 admin revive. Consumers: FR-005 and FR-006 | Whole hours from 24 to 168; default 48 hours |
+| Hold Expiring Soon Lead Time | number | Yes | Whole hours before a slot hold expires at which the patient receives the "hold expiring soon" reminder (triggered by FR-006, delivered through FR-030 and FR-020). Consumer: FR-006 | Whole hours from 1 up to half of the Slot-Hold Duration; default 12 hours |
 
 **Business Rules**:
 
-- Changes apply only to parent Quotes created after the new configuration version becomes active.
-- Existing quotes retain their currency snapshot and computed expiry.
+- The quote currency is the FR-029 Default Currency. FR-026 keeps no second currency setting. When the FR-029 Default Currency changes, the Quote Configuration records a new version so one version number identifies every value FR-004 copies.
+- FR-004 copies the quote currency and the quote expiry window read-only onto each parent Quote at first send and records the configuration version it used. Drafts carry neither value. Later changes never affect a sent quote, and no per-quote extension exists.
+- The slot hold starts at subquote acceptance. Each hold uses the slot-hold duration in effect when it is placed; later changes never alter an existing hold. Payment failure or retry never extends or restarts a hold.
+- Lead-time changes apply only to reminders that have not yet been sent.
 - Saving requires a change reason, version increment, immutable audit entry, and immediate cache invalidation.
 - Currency conversion and exchange-rate locking remain owned by FR-029 and occur at acceptance; this screen does not manage conversion rates.
 
@@ -787,7 +796,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Account deletion reasons: add, edit, reorder, deactivate reason options (FR-001 Screen 16 consumer)
 - Provider specialties: add, rename, reorder, deactivate specialty values (FR-015 Screen 2 Step 2 and Screen 3 Tab 1 consumer)
 - Inquiry configuration: add, edit, reorder, activate, or deactivate treatment-area options and set the minimum inquiry lead time (FR-003 consumer)
-- Quote configuration: select the active ISO 4217 quote currency and set the positive whole-number default expiry window (FR-004 consumer)
+- Quote configuration: set the quote expiry window and the quote-expiring-soon lead time (FR-004 consumer), and the slot-hold duration and the hold-expiring-soon lead time (FR-005 and FR-006 consumers); the quote currency is shown read-only because it is the FR-029 Default Currency
 - Analytics configuration: TTFQ SLA target, At Risk and Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission (FR-014 consumer)
 - OTP email templates: subject line, HTML body, plain text body
 
@@ -863,8 +872,16 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Integration point**: P-02 retrieves active cancellation reasons for Workflow 5 and retrieves the active ordered treatment-area catalog with `minimum_inquiry_lead_days` for Screen 1, Screen 5, and backend submission validation. Submitted inquiries retain their treatment-area snapshot.
 
 - **FR-004 / Module PR-02: Inquiry & Quote Management**
-  - **Why needed**: FR-004 consumes the active quote currency and default expiry window when creating a parent Quote.
-  - **Integration point**: Quote creation retrieves one versioned configuration response, snapshots the ISO 4217 currency, and computes `expiresAt`; existing quotes do not change when configuration is updated.
+  - **Why needed**: FR-004 consumes the quote currency, the quote expiry window, and the quote-expiring-soon lead time.
+  - **Integration point**: At first send, FR-004 retrieves one versioned configuration response, copies the ISO 4217 currency and the expiry window read-only onto the parent Quote, computes `expiresAt` from the send time, and records the configuration version. FR-004 emits `quote.expiring_soon` at the configured lead time. Sent quotes do not change when configuration is updated.
+
+- **FR-005 and FR-006 / Quote Acceptance and Booking**
+  - **Why needed**: FR-005 places the slot hold at acceptance and FR-006 manages it; both consume the slot-hold duration. FR-006 also consumes the hold-expiring-soon lead time for the patient reminder.
+  - **Integration point**: Acceptance and an FR-006 admin revive read the active slot-hold duration when the hold is placed. FR-006 has no separate hold setting.
+
+- **FR-029 / Payment System Configuration**
+  - **Why needed**: The FR-029 Default Currency is the quote currency shown in the Quote Configuration.
+  - **Integration point**: The Settings API returns the FR-029 Default Currency as the quote currency; a change in FR-029 records a new Quote Configuration version.
 
 - **FR-014 / Modules PR-05 and A-08: Provider Analytics & Reporting**
   - **Why needed**: FR-014 consumes the versioned Analytics Configuration for TTFQ SLA colour coding, provider engagement status, price outlier detection, benchmark refresh cadence, and the optional commission reference line.
@@ -875,8 +892,8 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   - **Integration point**: PR-01 polls Settings API every 60 seconds to retrieve authentication policies
 
 - **FR-020 / Module S-03: Notification Service**
-  - **Why needed**: S-03 consumes OTP email templates for verification and password reset emails
-  - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 1 minute
+  - **Why needed**: S-03 consumes OTP email templates for verification and password reset emails, and the `inquiry.ttfq_sla_breached` alert uses the Analytics Configuration TTFQ SLA target
+  - **Integration point**: S-03 retrieves template by name via Settings API when generating OTP email; caches template for 1 minute. Quote-expiring-soon and hold-expiring-soon reminders are delivered through FR-030 and FR-020 at the lead times set in the Quote Configuration
 
 - **Module S-05: Media Storage Service**
   - **Why needed**: S-05 stores country flag assets and treatment-area image/icon assets uploaded through the Settings UI.
@@ -1053,6 +1070,12 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Minimum initial set: Turkey (TR, +90), UK (GB, +44), USA (US, +1), Germany (DE, +49)
 - **Templates**:
   - Default "Verification Email" and "Password Reset Email" templates MUST be seeded with standard branding and variables
+- **Quote Configuration**:
+  - Quote Currency: the FR-029 Default Currency (not seeded as a separate value)
+  - Quote Expiry Window: 48 hours
+  - Quote Expiring Soon Lead Time: 12 hours
+  - Slot-Hold Duration: 48 hours
+  - Hold Expiring Soon Lead Time: 12 hours
 - **Analytics Configuration**:
   - TTFQ SLA Target: 120 minutes
   - At Risk Threshold: 7 days
@@ -1194,15 +1217,17 @@ Admin needs to manage the treatment-area choices and minimum inquiry lead time w
 
 ### User Story 8 - Manage Quote Configuration (Priority: P1)
 
-Admin needs one versioned source for the currency and expiry policy used by newly created FR-004 quotes.
+Admin needs one versioned source for the quote expiry window, the slot-hold duration, and their reminder lead times, with the quote currency taken from FR-029.
 
-**Independent Test**: Change the active quote currency and expiry window with a reason; verify version/audit records and cache invalidation; create a new quote and confirm its snapshot/deadline; confirm an older quote is unchanged.
+**Independent Test**: Change the quote expiry window and the slot-hold duration with a reason; verify version/audit records and cache invalidation; send a new quote and confirm its currency, expiry, and recorded configuration version; confirm a quote sent earlier and a hold placed earlier are unchanged.
 
 **Acceptance Scenarios**:
 
-1. **Given** an enabled ISO 4217 currency and a positive whole-number expiry window, **When** Admin saves with a reason, **Then** the system versions and audits the configuration and invalidates its cache.
-2. **Given** the new configuration is active, **When** FR-004 creates a parent Quote, **Then** it snapshots that currency and computes expiry from the configured hours.
-3. **Given** an existing quote predates the change, **When** configuration changes, **Then** its currency snapshot and expiry remain unchanged.
+1. **Given** a quote expiry window of 24 to 336 hours, a slot-hold duration of 24 to 168 hours, and each lead time from 1 hour up to half of its window, **When** Admin saves with a reason, **Then** the system versions and audits the configuration and invalidates its cache.
+2. **Given** the new configuration is active, **When** a provider first sends a parent Quote, **Then** FR-004 copies the FR-029 Default Currency and the quote expiry window read-only onto it and records the configuration version; a draft carries neither value.
+3. **Given** a quote was sent before the change, **When** configuration changes, **Then** its currency and expiry remain unchanged.
+4. **Given** a slot hold was placed before the slot-hold duration changed, **When** the duration changes, **Then** that hold keeps its original end time and only new holds use the new duration.
+5. **Given** Admin enters a window outside its bounds, a lead time under 1 hour, or a lead time longer than half of its window, **When** Admin saves, **Then** the system blocks the save and shows a validation error.
 
 ---
 
@@ -1231,6 +1256,8 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - What happens when **admin attempts to deactivate the "Other" cancellation reason**? System prevents deactivation and displays error: "'Other' is a fixed reason and cannot be deactivated."
 - What happens when **admin attempts to deactivate the "Others" deletion reason**? System prevents deactivation and displays error: '"Others" is a fixed reason and cannot be deactivated.'
 - What happens when **admin deactivates a cancellation reason while a patient is mid-cancellation flow**? Patient app uses cached reason list (up to 1 minute stale); if patient submits with a now-deactivated reason, system still accepts the submission (reason was valid at flow start). Next cancellation flow loads updated list.
+- What happens when **the Settings API is unavailable as a provider first sends a quote**? FR-004 blocks the send and keeps the quote as a draft; it never sends a quote with a guessed or stale currency or expiry. The provider can retry.
+- What happens when **admin changes the slot-hold duration while holds are active**? Existing holds keep their original end time; holds placed after the change use the new duration.
 - What occurs if **admin deletes country that active patients have selected in profile**? System prevents hard delete (soft delete only); patients who selected deleted country retain selection; country hidden from new users.
 
 ---
@@ -1259,7 +1286,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-012c**: System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.
 - **REQ-026-012d**: System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.
 - **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
-- **REQ-026-012f**: System MUST store one versioned Quote Configuration containing an enabled ISO 4217 currency and a positive whole-number default expiry window, default 48 hours. Consumer: FR-004 quote creation.
+- **REQ-026-012f**: System MUST store one versioned Quote Configuration containing the quote expiry window (whole hours from 24 to 336, default 48), the quote-expiring-soon lead time (whole hours from 1 up to half of the expiry window, default 12), the slot-hold duration (whole hours from 24 to 168, default 48), and the hold-expiring-soon lead time (whole hours from 1 up to half of the slot-hold duration, default 12). The quote currency MUST be the FR-029 Default Currency, not a separate setting, and each change to the FR-029 Default Currency MUST create a new Quote Configuration version so the version recorded on a quote identifies both the hours and the currency used. Consumers: FR-004 (currency, expiry window, quote-expiring-soon lead time), FR-005 and FR-006 (slot-hold duration), and FR-006 (hold-expiring-soon lead time).
 - **REQ-026-012g**: System MUST store one versioned Analytics Configuration containing TTFQ SLA target (positive whole minutes, default 120), At Risk threshold (whole days, default 7), Dormant threshold (whole days, greater than At Risk, default 30), price outlier threshold (whole percent 1-100, default 30), benchmark refresh frequency (Daily, Weekly, or Monthly; default Weekly), and optional target monthly commission (blank by default). Consumer: FR-014.
 - **REQ-026-012h**: System MUST store a centrally managed Provider Specialties list: stable specialty ID, specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other. Admins can add, rename, reorder, and deactivate values (no hard delete); at least one value MUST remain active; changes MUST be versioned and audit-logged. Deactivated values MUST be hidden from new selection while providers that hold them keep and still display them; renames MUST apply to display everywhere. Consumer: FR-015 Screen 2 Step 2 and Screen 3 Tab 1.
 - **REQ-026-013**: System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number
@@ -1281,10 +1308,12 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-023**: Settings API MUST support OAuth 2.0 authentication with "read:settings" or "write:settings" scopes
 - **REQ-026-024**: System MUST NOT expose a rollback API.
 - **REQ-026-025**: The patient configuration response MUST return active ordered treatment-area options and `minimum_inquiry_lead_days` together so the client calendar and backend validator use one configuration source.
-- **REQ-026-026**: The authenticated Settings API MUST return the active quote currency, default expiry hours, configuration version, and last-modified timestamp together so FR-004 creates each parent Quote from one consistent configuration version.
-- **REQ-026-027**: Quote Configuration changes MUST affect only quotes created after activation; existing quote currency snapshots and computed expiry timestamps MUST remain unchanged.
+- **REQ-026-026**: The authenticated Settings API MUST return the quote currency, the quote expiry window, both lead times, the slot-hold duration, the configuration version, and the last-modified timestamp together, so FR-004 sends each parent Quote from one consistent configuration version and can record that version on the quote.
+- **REQ-026-027**: Quote Configuration changes MUST affect only quotes first sent after activation; the currency and expiry already copied onto a sent quote MUST remain unchanged, drafts MUST carry neither value, and no per-quote extension is allowed.
 - **REQ-026-028**: The authenticated Settings API MUST return all Analytics Configuration values with the configuration version and last-modified timestamp so FR-014 calculations use one consistent version and can record it with their aggregates.
 - **REQ-026-029**: Analytics Configuration changes MUST apply from FR-014's next calculation or benchmark refresh to every period then displayed (past periods are not frozen), and MUST NOT rewrite exports or scheduled-export files that were already generated.
+- **REQ-026-030**: Each slot hold MUST use the slot-hold duration in effect when the hold is placed (at subquote acceptance or an FR-006 admin revive); later changes MUST NOT alter an existing hold, and payment failure MUST NOT extend or restart a hold.
+- **REQ-026-031**: Changes to the quote-expiring-soon or hold-expiring-soon lead time MUST apply only to reminders not yet sent.
 
 ---
 
@@ -1334,9 +1363,9 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
   - **Key attributes**: policy_id, minimum_inquiry_lead_days, version_number, change_reason, created_at, updated_at
   - **Relationships**: Consumed by FR-003 patient calendar and backend submission validation
 
-- **Entity 11 - Quote Configuration**: Versioned configuration used when FR-004 creates a parent Quote
-  - **Key attributes**: configuration_id, active_currency_code (ISO 4217), default_expiry_hours (positive integer, default 48), version_number, change_reason, created_at, updated_at
-  - **Relationships**: Consumed by FR-004; values are snapshotted/derived onto new Quote records and never retroactively applied
+- **Entity 11 - Quote Configuration**: Versioned configuration for quote expiry, slot holds, and their reminder lead times
+  - **Key attributes**: configuration_id, currency_code (ISO 4217, read from the FR-029 Default Currency), quote_expiry_hours (positive integer, default 48), quote_expiring_soon_lead_hours (default 12), slot_hold_hours (positive integer, default 48), hold_expiring_soon_lead_hours (default 12), version_number, change_reason, created_at, updated_at
+  - **Relationships**: Consumed by FR-004 (currency and expiry copied read-only onto a quote at first send, with the version recorded), FR-005 and FR-006 (slot-hold duration), and FR-006 (hold reminder); never retroactively applied
 
 - **Entity 12 - Analytics Configuration**: Versioned configuration used by FR-014 analytics
   - **Key attributes**: configuration_id, ttfq_sla_minutes (default 120), at_risk_days (default 7), dormant_days (default 30, greater than at_risk_days), price_outlier_percent (1-100, default 30), benchmark_refresh_frequency (daily/weekly/monthly, default weekly), target_monthly_commission (nullable, default null), version_number, change_reason, created_at, updated_at
@@ -1360,6 +1389,8 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-10-13 | 1.9 | FR-014 v3.8 verification resolution: added versioned Analytics Configuration ownership (TTFQ SLA target default 120 minutes, At Risk 7 days, Dormant 30 days, price outlier 30%, benchmark refresh Weekly, optional target monthly commission hidden until set), including workflow A8, Screen 5e, Analytics settings section, dependency, seeding, User Story 9, REQ-026-012g, REQ-026-028, REQ-026-029, and Entity 12. See [CR-FR026-20261013-01](./change-request-2026-10-13-analytics-configuration.md). | Product Owner / Documentation |
 | 2026-10-13 | 1.10 | FR-014 verification follow-up: added Quote Configuration (active ISO 4217 currency, default expiry hours) to the Screen 1 App Data setting groups; made the Analytics Configuration recalculation rule explicit (live views recalculate all displayed periods with the active version; generated exports never rewritten) in Screen 5e and REQ-026-029. Recorded in CR-FR026-20261013-01 | Claude Code |
 | 2026-10-15 | 1.11 | FR-015 v1.13 fifth verification resolution: added the centrally managed Provider Specialties App Data list (Settings → App Data → Provider Specialties) consumed by FR-015 / A-02 Screen 2 Step 2 and Screen 3 Tab 1. Specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other; add, rename, reorder, deactivate (no hard delete); at least one active value; deactivated values hidden from new selection but kept and displayed on existing providers; renames apply everywhere; audit-logged. Added Module Scope A-02 consumer, workflow A9, Screen 5f, editability rules, downstream consumer, seeding, REQ-026-012h, and Entity 7a. See [CR-FR026-20261015-01](./change-request-2026-10-15-provider-specialty-list.md). | Product Owner / Documentation |
+| 2026-10-16 | 1.12 | MTG-002 quote-model alignment: Quote Configuration now owns the versioned, audited slot-hold duration (default 48 hours, one fixed hold from acceptance, never extended by payment failure; consumers FR-005 and FR-006), the hold-expiring-soon reminder lead time (default 12 hours; FR-006), and the quote-expiring-soon lead time (default 12 hours; FR-004 emits `quote.expiring_soon`). Quote currency and expiry window are copied read-only at first send with the configuration version recorded; drafts carry neither; no per-quote extension; "Default Quote Expiry" renamed "Quote Expiry Window". The quote currency is the FR-029 Default Currency, not a second setting, and is seeded from it. Updated A7, Screen 1, Screen 5d, editability rules, dependencies (FR-005, FR-006, FR-029, FR-020), seeding, User Story 8, edge cases (Settings API outage at first send, duration change during active holds), REQ-026-012f, 026, 027, new REQ-026-030 and 031, Entity 11, and the Executive Summary setting groups. Findings S2-5 (absorbs FR-026-1), FR-026-2, FR-026-3, FR-026-4, FR-026-5, FR-026-6 (part), FR-026-7 (part), FR-026-8, FR-026-9, S2-6; decisions D14, D15, D16, M3, M11, M13, R7-3. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR026-20261016-01). | Product Owner / Documentation |
+| 2026-10-16 | 1.13 | Product Owner follow-up decisions: reminder defaults kept at 12 hours with validation bounds (quote expiry window 24 to 336 hours; slot-hold duration 24 to 168 hours; each lead time at least 1 hour and at most half of its window), and an FR-029 Default Currency change explicitly creates a new Quote Configuration version. Updated A7, Screen 5d, REQ-026-012f, and User Story 8. Decisions Q13, Q14. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR026-20261016-01). | Product Owner / Documentation |
 
 ---
 
@@ -1370,10 +1401,11 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | Product Owner  | Hairline Product Owner   | 2025-12-11 | ✅ Approved         |
 | Technical Lead | Hairline Technical Lead  | 2025-12-11 | ✅ Approved         |
 | Security Lead  | Hairline Security Lead   | 2025-12-11 | ✅ Approved         |
+| Product Owner  | Hairline Product Owner   | 2026-10-16 | ✅ Approved (v1.13 documentation; implementation reconciliation required) |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16

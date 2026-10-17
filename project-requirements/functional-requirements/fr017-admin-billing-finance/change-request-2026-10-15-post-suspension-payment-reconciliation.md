@@ -91,4 +91,4 @@ The Product Owner assigned ownership to FR-017 (A-05 Billing & Financial Reconci
 - **PRD change log**: [FR-017 Appendix: Change Log](prd.md#appendix-change-log), v2.10 dated 2026-10-15.
 - **Update log**: [FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md](../../update-logs/2026-10-15/FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md).
 - **Supersedes**: None.
-- **Superseded by**: None.
+- **Superseded by**: CR-FR017-20261016-01 in part (a provider suspended or deactivated after acceptance now follows the FR-006 provider-fault transfer, so the patient is rehomed instead of left without rebooking).
