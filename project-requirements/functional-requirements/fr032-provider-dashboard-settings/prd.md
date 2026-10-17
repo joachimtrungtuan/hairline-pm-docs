@@ -3,11 +3,12 @@
 **Module**: PR-06: Profile & Settings Management
 **Feature Branch**: `fr032-provider-dashboard-settings`
 **Created**: 2025-11-17
-**Status**: ✅ Verified & Approved
+**Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-032 from system-prd.md
 **Change Request**: [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — Commission & Payout panel and provider account-status banner
 **Change Request**: [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md) — Account closure as an admin-processed deactivation request
 **Change Request**: [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md) — Closure request notifications and admin marker
+**Change Request**: [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) — Inquiry-cancelled quote notice made mandatory (no provider toggle)
 
 ---
 
@@ -215,7 +216,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - **Section B: Global Channel Preferences** (email, push)
 3. Provider reviews current settings (all loaded from database)
 4. Provider toggles individual notification types:
-   - ☑ Quote Notifications (new inquiry received, quote expiring soon)
+   - ☑ Quote Notifications (new inquiry received, quote expiring soon). This toggle does not cover the inquiry-cancelled quote notice, which is mandatory and has no toggle
    - ☑ Schedule Notifications (appointment confirmed, appointment reminder)
    - ☑ Treatment Start Notifications (patient checked in, procedure started)
    - ☐ Aftercare Notifications (patient milestone completed, urgent aftercare alert) — DISABLED
@@ -259,7 +260,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   3. System displays confirmation dialog "Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?"
   4. Provider confirms or cancels
   5. If confirmed, system saves "all disabled" preference
-  6. S-03 stops sending notifications to this provider (except critical system alerts)
+  6. S-03 stops sending notifications to this provider (except critical system alerts and mandatory notices such as the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`))
 - **Outcome**: Provider receives no notifications except critical platform alerts
 
 **B4: Network Error During Save**:
@@ -1091,7 +1092,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Quote Notifications | toggle/checkbox | No (default enabled) | New inquiry received, quote expiring soon | Toggle on/off |
+| Quote Notifications | toggle/checkbox | No (default enabled) | New inquiry received, quote expiring soon. Does not cover the inquiry-cancelled quote notice, which is mandatory and always sent | Toggle on/off |
 | Schedule Notifications | toggle/checkbox | No (default enabled) | Appointment confirmed, appointment reminder | Toggle on/off |
 | Treatment Start Notifications | toggle/checkbox | No (default enabled) | Patient checked in, procedure started | Toggle on/off |
 | Aftercare Notifications | toggle/checkbox | No (default enabled) | Patient milestone completed, urgent aftercare alert | Toggle on/off |
@@ -1109,6 +1110,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits
 - When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 - Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels
+- The inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`) is mandatory: this screen offers no toggle for it, and neither the Quote Notifications toggle, "Disable All" nor the channel preferences can suppress it
 - Preference changes logged in audit trail
 - Preference updates propagate to S-03 within 1 minute
 - All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard
@@ -1616,7 +1618,7 @@ Each message in the thread displays:
 ### General Module Rules
 
 - **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute
-- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts which bypass preferences)
+- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts and mandatory notices, such as the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`), which bypass preferences)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
@@ -2017,6 +2019,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 - **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout frequency sourced from FR-015 Tab 7 / FR-029
 - **REQ-032-030**: System MUST apply Rule 6: show a persistent Account Suspended banner with the admin reason to all provider users while suspended, restrict editing to the listed exceptions, and block login with a deactivation message once deactivated
+- **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`) and MUST deliver that notice to each affected provider regardless of notification type and channel preferences
 
 ---
 
@@ -2066,6 +2069,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 | 2026-10-15 | 1.7 | Clarification from FR-015 v1.12 fourth verification: Screen 4 Scheduled Configuration shows at most one pending configuration per provider, and a newer future-dated admin edit replaces it, per FR-015 Tab 7 and [CR-FR029-20261015-01](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md). No change to provider permissions or screen layout | Claude |
 | 2026-10-15 | 1.8 | FR-015 v1.14 alignment via [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md): Delete Account became Request account closure; an admin processes it by deactivating the provider in FR-015 (Alternative Flow A7, Screen 4 cascade). Removed the "Deleted" status and the active-booking and pending-payout blocks (former B13 and B14 of the closure flow). Updated Screen 2 card, Privacy Rule 3, Audit and GDPR rules, Assumption 2, User Story 7, REQ-032-013, REQ-032-020, REQ-032-023, and Entity 5. Minor: Contact Email uniqueness counts Active and Suspended providers only (FR-015 Rule 4) | Claude |
 | 2026-10-15 | 1.9 | FR-015 v1.16 alignment via [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md): Request Account Closure step 10 sends FR-020 `provider.closure_requested` to admins and flags the provider in FR-015 Screen 1; step 15 deactivation email is always sent (Notify Provider locked on in FR-015 A7); step 16 rejection sends `provider.closure_rejected` with review notes | Claude |
+| 2026-10-16 | 1.10 | MTG-002 notification alignment via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): removed provider control over the inquiry-cancelled quote notice (`quote.cancelled_inquiry`); the Quote Notifications toggle, Disable All and channel preferences no longer suppress it; updated Main Flow step 4, Alternative Flow A5, Screen 3 and Rule 2, and added REQ-032-031. Aligns with FR-020 v2.8 and FR-030 v1.13. Decision Q12. Status reset to pending consolidated verification. | Claude |
 
 ---
 
@@ -2082,4 +2086,4 @@ A provider closing their clinic permanently requests account closure, and an adm
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16

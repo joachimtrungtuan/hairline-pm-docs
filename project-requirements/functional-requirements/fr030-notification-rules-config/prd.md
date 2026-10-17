@@ -8,6 +8,7 @@
 **Change Request**: [CR-FR030-20261014-01](./change-request-2026-10-14-provider-status-cancellation-events.md) — provider suspension/deactivation cancellation notification events
 **Change Request**: [CR-FR030-20261015-01](./change-request-2026-10-15-provider-lifecycle-events.md) — mandatory provider lifecycle events
 **Change Request**: [CR-FR030-20261015-02](./change-request-2026-10-15-provider-closure-request-events.md) — provider closure request events
+**Change Request**: [CR-FR030-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md) — MTG-002 quote model event alignment
 
 ---
 
@@ -32,7 +33,7 @@ This module extends the foundational OTP template management capabilities from F
 
 **Patient Platform (Mobile App)**:
 
-- Patients receive notifications triggered by system events (quote received, booking confirmed, payment due, aftercare milestone, etc.)
+- Patients receive notifications triggered by system events (quote submitted, booking confirmed, payment due, aftercare milestone, etc.)
 - Patients can view notification history in-app
 - Patients can manage personal notification preferences within boundaries set by admin (e.g., cannot disable critical payment notifications)
 - Notifications delivered via email and push notifications in MVP; SMS delivery is optional and only becomes available in later phases when enabled in S-03/FR-020.
@@ -125,19 +126,24 @@ Notes:
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
 | Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Patient, Provider, Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 11a). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Available template variables differ by recipient: Patient receives `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`; Provider receives `inquiry.id`, `inquiry.cancelled_at` only (reason excluded per privacy rule). |
 | Inquiry | Inquiry Response SLA Breached | `inquiry.ttfq_sla_breached` | Provider | FR-014 REQ-014-113. Fires once per distributed inquiry/provider pair when the provider has not submitted a parent quote within the FR-026 Analytics Configuration TTFQ SLA target (default 120 minutes) from distribution. Recipients: provider users permitted to respond to inquiries (FR-009). Not sent if the inquiry is cancelled, the distribution is withdrawn, or the provider responds first; never repeated for the same pair. MVP default channel: in-app only; email/push off by default and admin-configurable |
-| Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Starts quote expiry timer (see below) |
-| Quote | Quote Updated / Revised | `quote.updated` | Patient, Provider | Notify on meaningful changes (price/package/dates) |
-| Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Default expiry window is policy-bound (e.g., 48h) |
+| Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Fired by FR-004 when the provider sends the parent quote; the quote expiry is set and governed by FR-004. The notice shows the "From" price (the lowest subquote price in the parent quote, in the quote currency), the option count, the treatment and the expiry date. Exact subquote prices are not shown before acceptance (see Quote, Booking and Treatment-Change Event Rules) |
+| Quote | Quote Revised (New Version) | `quote.updated` | Patient, Provider | Fired by FR-004 when a new version of an already-sent parent quote is re-sent to the patient. The notice describes the quote as revised (new version). Drafts that were never sent do not fire this event |
+| Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Fired by FR-004 once per sent parent quote when the time left before expiry reaches the quote-expiring-soon lead time set by admin in FR-026. Never fired for drafts or for accepted, withdrawn or cancelled quotes. Admin-configurable |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
-| Quote | Quote Accepted / Subquote Outcomes | `quote.accepted` | Provider, Patient, Admin (optional) | FR-005 uses the existing event with `outcome` = `selected_subquote_accepted`, `sibling_subquote_not_selected`, or `competing_parent_cancelled_other_subquote_accepted`. Patient and selected-provider templates may use accepted-subquote details. Non-selected-provider templates are restricted to that provider's own parent quote/subquote references, outcome, and reason; selected provider identity and accepted price are unavailable. |
-| Quote | Quote Declined | `quote.declined` | Provider, Patient (optional) | Reserved for an explicit governed decline flow; FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event. |
-| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push** (subject to provider notification preference toggles in FR-032). Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. |
-| Booking/Schedule | Booking Scheduled (Pending Payment) | `booking.scheduled` | Patient, Provider | “Schedule notifications” prior to payment confirmation |
+| Quote | Quote Withdrawn | `quote.withdrawn` | Patient, Admin | Fired by FR-004 when a provider withdraws a sent parent quote, before or after acceptance. After acceptance, FR-006 hands the case to the provider-fault transfer and the patient also receives `booking.provider_fault_replacement`. **Mandatory before and after acceptance — admin cannot disable this event** (see Non-Disableable by Default section) |
+| Quote | Quote Accepted / Subquote Outcomes | `quote.accepted` | Provider | FR-005 uses the existing event with `outcome` = `selected_subquote_accepted`, `sibling_subquote_not_selected`, or `competing_parent_cancelled_other_subquote_accepted`. Selected-provider templates may use accepted-subquote details. Non-selected-provider templates are restricted to that provider's own parent quote/subquote references, outcome, and reason; selected provider identity and accepted price are unavailable. Each provider receives one notice per sent parent quote: the provider of the accepted parent quote receives `selected_subquote_accepted`, with that parent's sibling subquotes listed in the same notice as `sibling_subquote_not_selected`; each other sent parent quote produces one not-selected notice (`competing_parent_cancelled_other_subquote_accepted`) to its provider, including another parent quote of the selected provider. Unsent drafts cancelled by FR-004 produce no notice. **The selected-provider and not-selected-provider outcomes are mandatory — admin cannot disable them** (see Non-Disableable by Default section). The patient is not a recipient: at acceptance the patient receives only `booking.scheduled`. No admin notification is sent for an acceptance; admins follow acceptances on their dashboards |
+| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. |
+| Booking/Schedule | Booking Accepted — Slot Held (Pending Payment) | `booking.scheduled` | Patient, Provider | Fired by FR-006 when subquote acceptance creates the slot hold, before the first payment is confirmed; states the payment deadline (hold expiry) |
+| Booking/Schedule | Hold Expiring Soon (Payment Reminder) | `booking.hold_expiring_soon` | Patient, Admin | Fired by FR-006 once per slot hold when the time left before the hold expires reaches the hold-expiring-soon lead time set by admin in FR-026 and the first payment is still outstanding. Reminds the patient to pay before the slot is released; admins receive it as an exception alert (slot hold expiring while unpaid). Admin-configurable |
+| Booking/Schedule | Payment Window Expired | `booking.payment_window_expired` | Patient, Provider, Admin | Fired by FR-006 when the slot hold expires before the first payment (deposit or first instalment) succeeds; applies only to that first payment step. Patient is told the booking lapsed and given the recovery routes (cancel and start a new inquiry, or contact support); provider is told the slot is free; admins receive it as an exception alert. **Mandatory — admin cannot disable this event** |
+| Booking/Schedule | Booking Revived | `booking.revived` | Patient, Provider | Fired by FR-006 when an admin revives a booking after Payment Window Expired. Patient receives the new payment deadline; provider is told the slot is held again. **Mandatory — admin cannot disable this event** |
+| Booking/Schedule | Provider Unable to Proceed — Replacement Being Arranged | `booking.provider_fault_replacement` | Patient, Admin | Fired by FR-006 when an accepted booking is closed for provider fault: the provider withdraws after acceptance, drops out before or during treatment, or is suspended or deactivated after acceptance (FR-015). Tells the patient that an admin will arrange a replacement provider within the same inquiry and that the patient pays no cancellation fee; MUST NOT expose confidential suspension or deactivation reasons. Admins receive it as an exception alert so they can arrange the replacement. **Mandatory — admin cannot disable this event** |
 | Booking/Schedule | Booking Confirmed | `booking.confirmed` | Patient, Provider | Critical |
 | Booking/Schedule | Booking Rescheduled | `booking.rescheduled` | Patient, Provider | Critical if schedule changes |
 | Booking/Schedule | Booking Cancelled | `booking.cancelled` | Patient, Provider, Admin (optional) | Include cancellation reason where appropriate |
 | Booking/Schedule | Appointment Reminder | `booking.appointment_reminder` | Patient, Provider | Scheduled reminders; policy-driven |
 | Treatment | Treatment Start / Day-1 Starting | `treatment.started` | Patient, Provider | “Treatment start notifications” |
+| Treatment | Treatment Details Changed After Acceptance | `treatment.plan_changed` | Patient | Fired by FR-010 when the clinic or an admin makes an audited change to the treatment plan, assigned clinicians or graft count after acceptance. States what changed; price, currency and other money terms never change through this path. **Mandatory — admin cannot disable this event** |
 | Treatment | Treatment Cancelled | `treatment.cancelled` | Patient, Provider, Admin (optional) | Used when treatment is cancelled after scheduling/confirmation |
 | Treatment | Treatment Completed (Post‑Op Instructions) | `treatment.completed` | Patient, Provider, Admin (optional) | Completion confirmation; triggers post-op and aftercare next steps |
 | Treatment | Treatment Documentation Completed | `treatment.documentation_completed` | Provider | Sent when treatment documentation is successfully saved |
@@ -180,7 +186,7 @@ Notes:
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
 | Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
 | Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
-| Provider/Compliance | Provider-Caused Cancellation / Offer Unavailable | `provider.status_cancellation_patient` | Patient | FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. **Mandatory — admin cannot disable this event** (see Non-Disableable by Default section); sent regardless of FR-015's "Notify Provider" checkbox. **MVP default channels: Email + Push + in-app** (global patient toggles still apply to Email/Push; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient |
+| Provider/Compliance | Provider-Caused Cancellation / Offer Unavailable | `provider.status_cancellation_patient` | Patient | FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. **Mandatory — admin cannot disable this event** (see Non-Disableable by Default section); sent regardless of FR-015's "Notify Provider" checkbox. **MVP default channels: Email + Push + in-app** (global patient toggles still apply to Email/Push; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient |
 | Provider/Compliance | Provider-Caused Cancellation — Admin Support Required | `provider.status_cancellation_admin_support` | Admin | Same trigger (FR-020 REQ-020-013). Mandatory admin-support alert per affected inquiry/case with patient, inquiry/case reference, prior stage, cause, and FR-016 deep link (Admin Support Required filter). **Mandatory — admin cannot disable this event**; sent regardless of "Notify Provider"; pinned as critical in the admin dropdown. No FR-034 ticket is auto-created. Retries de-duplicated per provider-status event + affected record + recipient |
 | Provider/Compliance | Provider Suspended / Deactivated | `provider.suspended` / `provider.deactivated` | Provider | FR-015 Screen 4 (FR-020 REQ-020-014). Sent only when "Notify Provider" is checked (default); always sent for a deactivation that processes an FR-032 account-closure request (FR-015 A7 locks Notify Provider on; FR-020 REQ-020-016). Email with action taken, admin-provided reason, effective date (if scheduled), and admin support contact. Unaffected by provider FR-032 category preferences (account notice) |
 | Provider/Compliance | Provider Account Activation (Welcome / Set Password) | `provider.activation` | Provider | FR-015 Main Flow step 13 and Alternative Flow A1 (FR-020 REQ-020-015). Welcome email with login email, first-login instructions, and the one-time set-password link (expires in 24 hours); re-sent on A1 resend. **Mandatory; toggle locked.** Email only |
@@ -192,6 +198,18 @@ Notes:
 | System/Operations | System Alert | `system.alert` | Admin | System health/monitoring alerts surfaced via notifications |
 | System/Operations | Analytics Export Ready | `analytics.export_ready` | Provider | FR-014 REQ-014-062/063. A one-off or scheduled provider analytics export (PDF or CSV) has finished generating. Sent to the provider's registered email and each selected recipient; email carries the PDF attachment where applicable plus a secure download link that expires after 48 hours; in-app notification links to Report History. Default channels: email + in-app |
 
+### Quote, Booking and Treatment-Change Event Rules
+
+- **Producers**: FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn`. FR-005 produces `quote.accepted` and its outcomes. FR-006 produces `booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived` and `booking.provider_fault_replacement`. FR-010 produces `treatment.plan_changed`.
+- **Recipient grain for `quote.accepted`**: one provider notice per sent parent quote, never one per subquote. The de-duplication key is acceptance record + parent quote + recipient. Drafts produce no notice.
+- **Pre-acceptance price variables**: `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn` may use only parent-level variables: the "From" price (lowest subquote price in the parent quote) with its currency, option count, treatment, expiry date, provider name and the parent quote reference. A single quote total does not exist and MUST NOT be offered as a variable.
+- **Post-acceptance money variables**: on `quote.accepted` (selected-provider outcome) and on every `booking.*` event, price, currency, date range, appointment and promotion variables resolve from the accepted snapshot recorded at acceptance, never from the live parent quote, Quote Option or package. Allowed references are the parent quote, accepted subquote, quote version and acceptance record identifiers.
+- **Treatment-detail variables**: `treatment.plan_changed` and other treatment events may use the current treatment plan, clinicians and graft count maintained through FR-010; they MUST NOT carry changed money values.
+- **Not-selected allowlist**: not-selected notices may use only that provider's own parent quote and subquote references, the outcome and the reason; selected provider identity and accepted price are unavailable.
+- **Locks**: `quote.withdrawn`, the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement` and `treatment.plan_changed` are mandatory. `quote.expiring_soon` and `booking.hold_expiring_soon` are admin-configurable. `quote.cancelled_inquiry` is mandatory and is not subject to FR-032 provider notification preferences.
+- **Acceptance recipients**: at acceptance the patient receives only `booking.scheduled`; `quote.accepted` goes to providers only (the accepted provider and each not-selected provider). No admin notification is sent for an acceptance.
+- **Admin exception alerts**: admins are alerted only for exceptions on the quote-to-booking path: a slot hold expiring while the first payment is unpaid (`booking.hold_expiring_soon`), Payment Window Expired (`booking.payment_window_expired`) and provider fault (`booking.provider_fault_replacement`). Routine acceptances are visible on admin dashboards only.
+
 ### Post‑MVP / Hidden Events (Not Shown in UI Until Enabled)
 
 These event types may exist in backend roadmap but MUST NOT appear in admin UI until the backend supports them end-to-end and product enables them.
@@ -202,6 +220,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Aftercare | Medication / Washing / Activity Reminders | `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` | Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules |
 | Travel | Passport / Travel Document Required | `travel.passport_required` | Only show once travel module + event publishing exists |
 | Travel | Flight / Hotel Itinerary Updates | `travel.itinerary_updated` | Post‑release travel roadmap |
+| Quote | Quote Declined | `quote.declined` | Reserved for an explicit governed decline flow; no MVP producer exists because patients have no explicit decline action (FR-005). FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event |
 
 ## Business Workflows
 
@@ -284,7 +303,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Trigger**: Admin needs to support multiple locales for the same event (initially English and Turkish per FR-021)
 - **Steps**:
   1. Admin navigates to Settings → Alerts & Notifications and opens the Templates section
-  2. Admin selects event type: "Quote Received"
+  2. Admin selects event type: "Quote Submitted / Ready"
   3. Admin selects language: English (default) from the **supported locales list** (managed in FR-021)
   4. Admin edits email template with subject, body, variables
   5. Admin clicks "Add Translation"
@@ -508,7 +527,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 **Fixed in Codebase (Not Editable)**:
 
-- Core event definitions (system events that can trigger notifications - e.g., "Quote Received", "Payment Confirmed")
+- Core event definitions (system events that can trigger notifications - e.g., "Quote Submitted / Ready", "Payment Received / Receipt")
 - Variable schema per event type (which variables available in notification templates per event)
 - Maximum retry attempts (hard limit: 5 retries to prevent infinite loops)
 - Rate limiting thresholds (max 10 notifications per hour per recipient)
@@ -518,7 +537,12 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 **Non-Disableable by Default (Security-Critical and Mandatory)**:
 
 - **Account/Auth notifications (OTP verification, password reset)** are security-critical and MUST be **non-disableable by default** in the admin UI (toggle locked; no pause).
-- **Quote Cancelled — Inquiry Cancelled (`quote.cancelled_inquiry`)** is a mandatory provider notification. Provider MUST be notified when their quote is auto-cancelled due to inquiry cancellation. Admin cannot disable this event because the provider needs to know the slot is released and the quote is no longer active. Toggle is locked for this event.
+- **Quote Cancelled — Inquiry Cancelled (`quote.cancelled_inquiry`)** is a mandatory provider notification. Provider MUST be notified when their quote is auto-cancelled due to inquiry cancellation. Admin cannot disable this event because the provider needs to know the slot is released and the quote is no longer active. Toggle is locked for this event, and FR-032 provider notification preferences cannot suppress it.
+- **Quote Withdrawn (`quote.withdrawn`)** is mandatory before and after acceptance: the patient and admin MUST learn that the provider has withdrawn the quote. Toggle is locked.
+- **Quote Accepted (`quote.accepted`)**: the selected-provider outcome and the not-selected-provider outcome are mandatory, because the selected provider must learn that its slot is held and every other provider with a sent parent quote must learn that the quote is no longer active. These outcome toggles are locked. `quote.accepted` has no patient or admin recipient.
+- **Payment Window Expired (`booking.payment_window_expired`)** and **Booking Revived (`booking.revived`)** are mandatory for patient and provider: both must know whether the slot is released or held again and what the payment deadline is. Toggles are locked.
+- **Provider Unable to Proceed — Replacement Being Arranged (`booking.provider_fault_replacement`)** is mandatory: the patient MUST learn that an admin will arrange a replacement provider. Toggle is locked.
+- **Treatment Details Changed After Acceptance (`treatment.plan_changed`)** is mandatory: every audited post-acceptance change to plan, clinicians or grafts MUST be notified to the patient. Toggle is locked.
 - **Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`)** are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's "Notify Provider" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records.
 - **Provider Account Activation (`provider.activation`)** is mandatory and non-disableable: without it a new provider cannot set a password and log in. **Provider Reactivated (`provider.reactivated`)** and **Scheduled Status Change Cancelled (`provider.scheduled_change_cancelled`)** follow FR-015's "Notify Provider" choice; when triggered they cannot be disabled here. Toggles are locked for all three events. See [CR-FR030-20261015-01](./change-request-2026-10-15-provider-lifecycle-events.md).
 - **Provider Account-Closure Requested (`provider.closure_requested`)** and **Provider Account-Closure Request Rejected (`provider.closure_rejected`)** are mandatory: admins must learn of every closure request, and a provider whose request is rejected must be told the account stays Active. Toggles are locked for both. See [CR-FR030-20261015-02](./change-request-2026-10-15-provider-closure-request-events.md).
@@ -546,7 +570,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ### Patient Experience Metrics
 
-- **SC-001**: Patients receive quote received notifications within 5 minutes of provider submitting quote for 95% of quotes
+- **SC-001**: Patients receive quote submitted notifications within 5 minutes of provider sending the parent quote for 95% of quotes
 - **SC-002**: Patients receive payment reminder notifications at configured time (e.g., 3 days before due) with 98%+ accuracy
 - **SC-003**: Patients can view notification history in-app and access past notifications for 90 days
 - **SC-004**: Patients who opt out of non-critical notifications successfully stop receiving those notifications (0 opt-out violations)
@@ -606,8 +630,20 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Integration point**: FR-030 enforces permission checks via FR-031 permission matrix before allowing rule modifications
 
 - **FR-003 / Module P-02**: Inquiry Submission & Distribution
-  - **Why needed**: Inquiry events trigger notifications (inquiry submitted, quote received, quote expiring)
+  - **Why needed**: Inquiry events trigger notifications (inquiry submitted, inquiry cancelled)
   - **Integration point**: P-02 publishes inquiry events to S-03 Notification Service for evaluation against notification rules
+
+- **FR-004 / FR-005 / Module PR-02, P-02**: Quote Submission; Quote Comparison & Acceptance
+  - **Why needed**: FR-004 produces the quote lifecycle events (`quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired`, `quote.withdrawn`); FR-005 produces `quote.accepted` with its outcomes and records the acceptance and accepted snapshot that post-acceptance money variables read
+  - **Integration point**: Quote and acceptance events are published to S-03 with parent quote, subquote, quote version and acceptance record identifiers
+
+- **FR-006 / Module P-03**: Booking & Scheduling
+  - **Why needed**: FR-006 produces the booking events, including the slot-hold reminder, Payment Window Expired, booking revived and provider-fault replacement notices
+  - **Integration point**: Booking events are published to S-03; hold and quote-expiring-soon lead times come from FR-026
+
+- **FR-010 / Module PR-03**: Treatment Execution
+  - **Why needed**: FR-010 is the only path for post-acceptance changes to treatment plan, clinicians and grafts, and produces `treatment.plan_changed`
+  - **Integration point**: Each audited change publishes `treatment.plan_changed` to S-03
 
 - **FR-007 / Module P-03**: Payment Processing
   - **Why needed**: Payment events trigger notifications (payment received, payment due, payment failed, installment reminder)
@@ -662,8 +698,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Source**: FR-007 (Payment Processing), FR-007B (Split Payment / Installment Plans)
 
 - **Entity 4**: Inquiry and Quote Data
-  - **Why needed**: Required for inquiry/quote notifications (quote amount, provider name, quote expiry date)
-  - **Source**: FR-003 (Inquiry Submission), FR-004 (Quote Submission)
+  - **Why needed**: Required for inquiry/quote notifications ("From" lowest subquote price and currency, option count, treatment, provider name, quote expiry date) and for post-acceptance notices, whose money values come from the accepted snapshot
+  - **Source**: FR-003 (Inquiry Submission), FR-004 (Quote Submission), FR-005 (Quote Comparison & Acceptance)
 
 ---
 
@@ -777,19 +813,19 @@ Admin needs to configure automated payment reminder notifications to reduce over
 
 ### User Story 2 - Admin Creates Multi-Language Notification Template (Priority: P1)
 
-Admin needs to create email notification template for "Quote Received" event in both English and Turkish to support patients in UK and Turkey. Template must include patient name, quote amount, provider name, and expiry date with consistent formatting across languages.
+Admin needs to create email notification template for the "Quote Submitted / Ready" event in both English and Turkish to support patients in UK and Turkey. Template must include patient name, the "From" price, option count, treatment, provider name, and expiry date with consistent formatting across languages.
 
-**Why this priority**: Multi-language support is critical for international patient base. Quote received notification is high-volume and directly impacts conversion rates.
+**Why this priority**: Multi-language support is critical for international patient base. Quote submitted notification is high-volume and directly impacts conversion rates.
 
 **Independent Test**: Can be fully tested by creating template in both languages, sending test notifications in each language, verifying correct language selection based on recipient language preference.
 
 **Acceptance Scenarios**:
 
-1. **Given** admin navigates to Admin Platform → Settings → Alerts & Notifications, **When** admin clicks "Create New Template" and selects event type "Quote Received", channel "Email", language "English", **Then** system displays email template editor with available variables for Quote Received event
-2. **Given** admin edits template with subject "Your Hair Transplant Quote from {{provider.name}}", body "Hello {{patient.first_name}}, You've received a quote for {{quote.treatment_type}} from {{provider.name}}. Quote Amount: {{quote.total_amount}} {{quote.currency}}. Quote expires on {{quote.expiry_date}}. View your quote in the app.", **When** admin clicks "Save Draft", **Then** system validates template variables against event payload schema and saves template as draft
+1. **Given** admin navigates to Admin Platform → Settings → Alerts & Notifications, **When** admin clicks "Create New Template" and selects event type "Quote Submitted / Ready", channel "Email", language "English", **Then** system displays email template editor with available variables for the Quote Submitted / Ready event
+2. **Given** admin edits template with subject "Your Hair Transplant Quote from {{provider.name}}", body "Hello {{patient.first_name}}, You've received a quote for {{quote.treatment_type}} from {{provider.name}} with {{quote.option_count}} options from {{quote.from_price}} {{quote.currency}}. Quote expires on {{quote.expiry_date}}. View your quote in the app.", **When** admin clicks "Save Draft", **Then** system validates template variables against event payload schema and saves template as draft
 3. **Given** admin clicks "Add Translation", **When** admin selects language "Turkish" and edits Turkish template with translated subject and body (same variables), **Then** system validates both templates have matching variables and saves Turkish version
 4. **Given** admin clicks "Activate Template", **When** system validates both language versions active, **Then** system activates template and displays success message
-5. **Given** notification rule configured with "Quote Received" event and template activated, **When** patient with language preference "Turkish" receives quote from provider, **Then** S-03 Notification Service renders Turkish template and sends Turkish-language email to patient
+5. **Given** notification rule configured with "Quote Submitted / Ready" event and template activated, **When** patient with language preference "Turkish" receives quote from provider, **Then** S-03 Notification Service renders Turkish template and sends Turkish-language email to patient
 6. **Given** patient with language preference "English" receives quote, **When** S-03 evaluates notification rule, **Then** system renders English template and sends English-language email
 
 ---
@@ -929,6 +965,8 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-10-14 | 1.9 | Added Provider/Compliance source-of-truth catalog entries `provider.status_cancellation_patient` (mandatory patient notice, Email + Push + in-app, Contact Admin/Support action), `provider.status_cancellation_admin_support` (mandatory admin alert, FR-016 deep link, no automatic ticket), and `provider.suspended` / `provider.deactivated` (provider email only when "Notify Provider" is checked) to mirror FR-020 v2.4; added both cancellation events to Non-Disableable by Default with de-duplicated retries; added FR-015/FR-016 dependency. Status set to Revised — Pending Consolidated Verification. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-events.md) | Vân Tay Media |
 | 2026-10-15 | 1.10 | Added Provider/Compliance source-of-truth catalog entries `provider.activation` (mandatory, toggle locked), `provider.reactivated`, and `provider.scheduled_change_cancelled` (mandatory when triggered by FR-015 "Notify Provider") to mirror FR-020 v2.5 and FR-015 v1.14; `account.created` now Patient only; added the three events to Non-Disableable by Default; expanded FR-015 dependency. See [CR-FR030-20261015-01](./change-request-2026-10-15-provider-lifecycle-events.md) | Claude |
 | 2026-10-15 | 1.11 | Added Provider/Compliance catalog entries `provider.closure_requested` (Admin, Email + in-app) and `provider.closure_rejected` (Provider, email), both mandatory with toggles locked, to mirror FR-020 v2.6 and FR-015 v1.16; `provider.deactivated` noted as always sent for closure deactivations; extended Non-Disableable by Default and the FR-015 dependency. See [CR-FR030-20261015-02](./change-request-2026-10-15-provider-closure-request-events.md) | Claude |
+| 2026-10-16 | 1.12 | MTG-002 quote model alignment: added `quote.withdrawn` (mandatory before and after acceptance), `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.revived` (mandatory), `booking.provider_fault_replacement` (mandatory, also for suspension or deactivation after acceptance) and `treatment.plan_changed` (mandatory, FR-010); locked the selected and not-selected provider outcomes of `quote.accepted` with one notice per sent parent quote and none for drafts; `quote.submitted` shows the "From" price, option count, treatment and expiry instead of a single quote total; post-acceptance money variables read the accepted snapshot; named producers and lead times (FR-004, FR-006, FR-010, FR-026); renamed `booking.scheduled` display name; moved `quote.declined` to Post-MVP; fixed event-name drift; added FR-004/005/006/010 dependencies. Findings S4-1, S4-2, S4-3, S4-5, FR-020-1, FR-030-3, FR-030-7, S4-8, S4-9, S4-14; decisions D20, D21, D22, M2, M9, M13, M17, M18. See [CR-FR030-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md) | Claude |
+| 2026-10-16 | 1.13 | Product Owner follow-up decisions: at acceptance the patient receives only `booking.scheduled`, and `quote.accepted` goes to the accepted and not-selected providers only; removed the admin recipient from `quote.accepted` and added admins as exception-alert recipients of `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.provider_fault_replacement`; `quote.cancelled_inquiry` cannot be suppressed by FR-032 preferences; `quote.updated` renamed Quote Revised (New Version) and defined as the FR-004 re-send of a new version of a sent quote. Confirmed `booking.provider_fault_replacement` and `treatment.plan_changed` stay mandatory and lead times stay in FR-026. Decisions Q9, Q10, Q11, Q12, Q13, Q24. See [CR-FR030-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md) | Claude |
 
 ---
 
@@ -946,4 +984,4 @@ Admin needs to monitor notification delivery performance to identify and resolve
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-10-15
+**Last Updated**: 2026-10-16
