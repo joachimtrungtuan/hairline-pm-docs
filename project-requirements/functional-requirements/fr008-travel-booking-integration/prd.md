@@ -3,7 +3,7 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview); SRC-MTG-002, CR-FR008-20260929-01, CR-FR008-20261016-01, and Product Owner binary-path decision of 2026-09-29
 **Change Request**: [CR-FR008-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
@@ -248,15 +248,15 @@ flowchart TD
 
 **B2: Provider-Fault Transfer to a Replacement Booking**
 
-- **Trigger**: An admin transfers the patient to a replacement provider through FR-006 Alternative Flow B5 after the original booking was confirmed and its TravelContext exists.
+- **Trigger**: An admin transfers the patient to a replacement provider through FR-006 Alternative Flow B5 after the original booking was confirmed and its TravelContext exists, and before treatment starts. A provider fault during `Aftercare` reassigns only the aftercare provider (FR-011) and leaves the booking and its TravelContext unchanged.
 - **Outcome**: The original booking's TravelContext closes and its records stay read-only. The replacement booking's TravelContext receives a copy of the passport record and copies of the flight and hotel records, each flight and hotel copy flagged "travel-date review required", so the patient does not re-enter travel details.
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-  B2S1["[AUTOMATED] FR-006 cancels the original booking with cause ProviderFault and creates the replacement booking in the same inquiry"]
+  B2S1["[AUTOMATED] FR-006 closes the original booking with cause ProviderFault; an admin authors a replacement quote in the same inquiry and the replacement booking is created when it is accepted"]
   B2S2["System sets the original TravelContext to closed; its passport, flight and hotel records stay read-only on the closed booking"]
-  B2S3["[AUTOMATED] Replacement booking reaches Confirmed; system creates its TravelContext from the new linked acceptance record"]
+  B2S3["[AUTOMATED] Replacement booking reaches Confirmed; system creates its TravelContext from the replacement quote's acceptance snapshot"]
   B2S4["System copies the current passport record into a new locked booking-linked passport record on the replacement TravelContext"]
   B2S5["System copies the current flight and hotel records to the replacement TravelContext, each with a copy-source reference and the flag travel-date review required"]
   B2S6["Replacement TravelContext is set to travel-date-review-required; patient, replacement provider and admin are notified"]
@@ -1103,12 +1103,12 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### FlightRecord
 
-**Key attributes**: `id`, `travel_context_id`, `leg_type` (outbound/return), `airline_name`, `flight_number`, `departure_airport`, `arrival_airport`, `departure_date`, `departure_time`, `arrival_date`, `arrival_time`, `ticket_confirmation_number`, `ticket_class`, `baggage_allowance`, `special_request`, `submitted_by`, `submitted_at`, `version`, `early_departure_acknowledged_by`, `early_departure_acknowledged_at` (return leg only), `copied_from_flight_record_id` (set on provider-fault transfer copies), `travel_date_review_required`
+**Key attributes**: `id`, `travel_context_id`, `leg_type` (outbound/return), `airline_name`, `flight_number`, `departure_airport`, `arrival_airport`, `departure_date`, `departure_time`, `arrival_date`, `arrival_time`, `ticket_confirmation_number`, `ticket_class`, `baggage_allowance`, `special_request`, `submitted_by`, `submitted_at`, `version`, `early_departure_acknowledged_by`, `early_departure_acknowledged_at` (return leg only), `copied_from_flight_id` (set on provider-fault transfer copies), `travel_date_review_required`
 **Relationships**: Up to 2 current records per confirmed booking/appointment (outbound + return); shown in the itinerary read view. Superseded correction versions remain retained.
 
 ### HotelRecord
 
-**Key attributes**: `id`, `travel_context_id`, `hotel_name`, `hotel_address`, `check_in_date`, `check_in_time`, `check_out_date`, `check_out_time`, `reservation_number`, `room_type`, `amenities`, `transportation`, `special_request`, `contact_number`, `contact_email`, `submitted_by`, `submitted_at`, `version`, `early_departure_acknowledged_by`, `early_departure_acknowledged_at`, `copied_from_hotel_record_id` (set on provider-fault transfer copies), `travel_date_review_required`
+**Key attributes**: `id`, `travel_context_id`, `hotel_name`, `hotel_address`, `check_in_date`, `check_in_time`, `check_out_date`, `check_out_time`, `reservation_number`, `room_type`, `amenities`, `transportation`, `special_request`, `contact_number`, `contact_email`, `submitted_by`, `submitted_at`, `version`, `early_departure_acknowledged_by`, `early_departure_acknowledged_at`, `copied_from_hotel_id` (set on provider-fault transfer copies), `travel_date_review_required`
 **Relationships**: One current record per confirmed booking/appointment; shown in the itinerary read view. Superseded correction versions remain retained.
 
 ### Itinerary
@@ -1132,6 +1132,8 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 | 2026-09-29 | 2.5 | Rebased travel coordination on the immutable FR-005 accepted subquote and FR-006 Confirmed Booking: added booking-owned TravelContext, accepted-choice provenance, idempotent post-payment trigger, booking-keyed records and API examples, lifecycle guards, and booking-context screens. Preserved the binary Path A / Path B model and no submitter mixing under CR-FR008-20260929-01; consolidated verification and implementation reconciliation remain pending. | Product Owner decision / documentation alignment |
 | 2026-10-16 | 2.6 | MTG-002 quote model alignment under CR-FR008-20261016-01: admin-owned exit for travel-date review with audit (FR-008-2, D7); appointment and date range read from the accepted snapshot, accepted date range added to TravelContext, relative plan days not converted (M2); travel-date validation anchored to the current booking appointment (FR-008-1); closed TravelContext guard (FR-008-3); accepted-option wording (FR-008-4); single owner of included services (FR-008-5); `travel_required` field (FR-008-6); Path B covers other travel services (FR-008-7); acceptance scenarios added (FR-008-8). Decisions D7, M2, P1. Consolidated verification and implementation reconciliation remain pending. | Product Owner decision / documentation alignment |
 | 2026-10-16 | 2.7 | Product Owner Q-series follow-up (Q17, Q18, Q21): return flight or hotel check-out before the last treatment plan day now raises a soft warning that must be acknowledged, the record still saves and the provider sees an early-departure flag (REQ-008-008 amended, REQ-008-031); provider-fault transfer through FR-006 Alternative Flow B5 carries the passport over and copies flight and hotel records to the replacement booking flagged "travel-date review required", originals read-only on the closed booking (new Alternative Flow B2, REQ-008-032); itinerary is a read view assembled from TravelContext, travel records and Booking with no stored table (Itinerary Rules, Screen 5, REQ-008-014, REQ-008-025, REQ-008-033, Itinerary entity). Lifecycle rules, Screen 6 rules, acceptance scenarios 8 to 10, and FlightRecord and HotelRecord attributes updated. See [CR-FR008-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). Consolidated verification pending. | Product Owner / Documentation |
+| 2026-10-18 | 2.8 | Consolidated verification corrections (CR record only, no PRD requirement change): CR-FR008-20261016-01 Out of Scope no longer excludes the provider-fault travel carry-over that its Approved State and REQ-008-032 include (Q18); the CR now counts ten acceptance scenarios and lists REQ-008-031 to REQ-008-033 and Alternative Flow B2 in Affected Contracts. | Product Owner / Documentation |
+| 2026-10-18 | 2.9 | Final audit corrections (Q35, Q36): Alternative Flow B2 applies to a provider fault before treatment starts; FR-006 closes the original booking with the provider-fault cause, an admin authors a replacement quote in the same inquiry, and the replacement TravelContext is created from the replacement quote's acceptance snapshot when the replacement booking is confirmed. FlightRecord and HotelRecord copy-source attributes renamed to `copied_from_flight_id` and `copied_from_hotel_id` to match the data schema. Approvals row recorded. See [CR-FR008-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). | Product Owner / Documentation |
 
 ---
 
@@ -1143,6 +1145,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 | Technical Lead | [Name] | 2026-02-23 | ✅ Verified & Approved |
 | Stakeholder | [Name] | 2026-02-23 | ✅ Verified & Approved |
 | Product Owner | [Name] | 2026-09-29 | ✅ Approved v2.5 revision scope and binary-path preservation; consolidated verification pending |
+| Product Owner | Product Owner | 2026-10-18 | Approved v2.9 via MTG-002 decision log (documentation only) |
 
 The 2026-02-23 verification approvals apply to the earlier baseline, not to the revised v2.5 contract.
 
@@ -1151,4 +1154,4 @@ The 2026-02-23 verification approvals apply to the earlier baseline, not to the 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18

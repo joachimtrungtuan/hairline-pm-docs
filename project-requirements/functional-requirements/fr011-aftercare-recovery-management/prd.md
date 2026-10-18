@@ -5,7 +5,7 @@
 **Created**: 2025-10-23  
 **Status**: 🟡 Revised — Pending Consolidated Verification  
 **Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
-**Change Request**: [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
+**Change Request**: [CR-FR011-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md) (previous: [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
 ## Executive Summary
 
@@ -342,10 +342,20 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **D4**: Provider suspended or deactivated during Aftercare
   - Trigger: the assigned provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal)
   - Scope covers every non-terminal Aftercare case assigned to that provider, including post-treatment (Workflow 1), add-on (Workflow 2b), and standalone aftercare for external-clinic patients (Workflow 2); standalone cases keep their intake data and payment history for admin follow-up
-  - System automatically cancels that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker; the provider loses aftercare actions on those cases
+  - For standalone aftercare cases (Workflow 2), the system automatically cancels that provider's non-terminal cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker
+  - For treatment-linked cases (Workflow 1 and Workflow 2b), the aftercare case is not cancelled and the FR-006 booking stays `Aftercare`: the system records the provider-status cause and sets the `supportRequired` marker, and an admin reassigns the aftercare provider or team through Screen 19 (Alternative Flow D5)
+  - In both cases the provider loses aftercare actions on those cases
   - The FR-010 completion milestone, aftercare plan, milestones, scans, questionnaire responses, medications, and communication history are retained read-only
   - Patient/admin notifications follow FR-015 Screen 4; recovery continuity is routed to admins, who use this workflow's existing reassignment/recovery tools (reassign to another provider, assign to the Hairline aftercare team, or keep cancelled with reason) and record audited resolution of the support marker
   - Boundary: no automatic reassignment, refund, or restoration on provider reactivation; a later deactivation does not overwrite an earlier `ProviderSuspended` cause. Distinct from D1 provider withdrawal, which remains admin-reviewed without an automatic cancellation
+
+- **D5**: Provider fault during treatment-linked aftercare (aftercare reassignment)
+  - Trigger: the FR-006 booking is `Aftercare` and the assigned aftercare provider withdraws, drops out, is suspended or deactivated, or an admin decides the aftercare must move to another provider or to the Hairline aftercare team (FR-006 Alternative Flow B6); it also applies when an admin moves an `In Progress` booking to `Aftercare` after a provider fault (FR-006 Alternative Flow B7, FR-006 Screen 11)
+  - The admin opens Screen 19 from Screen 14 or from the FR-006 admin booking detail and reassigns only the aftercare provider or team
+  - The FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; there is no new quote, acceptance, or payment
+  - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history move with the case unchanged; the previous provider keeps read-only access to the history it recorded and loses all aftercare actions
+  - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider (or the assigned Hairline aftercare team member); no admin alert is sent because the admin is the actor, and the previous provider is not a recipient
+  - Boundary: money effects, if any, follow the FR-006 payment placeholder; this flow never reassigns the treating provider of an earlier treatment stage
 
 ## Screen Specifications
 
@@ -985,7 +995,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 | Message Type | text | Yes | Type of message | Valid message type enum |
 | **Tab 4: Admin Actions** | | | | |
 | Edit Aftercare Plan | action | No | Button to modify any aspect of plan | Always available |
-| Reassign Provider | action | No | Button to change provider assignment | Always available |
+| Reassign Provider | action | No | Opens Screen 19 to reassign the aftercare provider or team | Available while the case is not completed or cancelled; standalone cases use the same screen |
 | Escalate Case | action | No | Button to escalate to supervisor | Always available |
 | Add Notes | action | No | Button to add internal admin notes | Always available |
 | Change History | list | Yes | Audit trail of all changes | Chronological order |
@@ -1253,6 +1263,36 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Quick action buttons enable rapid interventions across multiple cases
 - Deferred to post-MVP phase as it extends beyond core case management operations
 
+#### Screen 19: Reassign Aftercare Provider (Admin)
+
+**Purpose**: Let an admin reassign the aftercare provider or team on an aftercare case, including a treatment-linked case whose booking is `Aftercare`, without changing the booking or the treatment record (Workflow 4 D1, D4, and D5).
+
+**Entry points**: Reassign Provider on Screen 14 (Tab 4), the Reassign Aftercare link on the FR-006 admin booking detail (FR-006 Screen 6), or the Move to Aftercare route of the FR-006 In-Progress provider-fault decision (FR-006 Screen 11).
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Case Reference | text | Yes (read-only) | Aftercare case identifier, patient ID, and linked booking reference for a treatment-linked case | Display only |
+| Current Aftercare Provider or Team | text | Yes (read-only) | Provider or Hairline aftercare team now assigned | Display only |
+| Provider Status and Cause | text | No (read-only) | Current provider status and any recorded cause, such as `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`, with the `supportRequired` marker | Display only |
+| Reassignment Target Type | radio | Yes | Another provider or the Hairline aftercare team | One option must be selected |
+| New Provider | searchable select | Conditional | Replacement aftercare provider | Required when the target type is another provider; only `Active` providers; cannot be the current provider |
+| New Aftercare Team Member | select | Conditional | Hairline aftercare team member who takes the case | Required when the target type is the Hairline aftercare team |
+| Reassignment Reason | text area | Yes | Why the aftercare is reassigned | Mandatory; 10 to 1000 characters |
+| Resolve Support Marker | checkbox | Conditional | Marks the `supportRequired` marker resolved | Shown only when the marker is set; checked by default |
+| Confirmation Summary | panel | Yes (read-only) | Shows the current and new assignee, the reason, and that the booking, treatment record, plan, and payments stay unchanged | Shown on the confirmation step |
+| Confirm Reassignment | button | Yes | Saves the reassignment after the admin confirms | Enabled only when every required field is valid |
+| Cancel | button | No | Closes the screen without saving | — |
+
+**Business Rules**:
+
+- The reassignment changes only the aftercare provider or team. For a treatment-linked case, the FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; no quote, acceptance, or payment is created.
+- The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history stay with the case. The new assignee gets the case's aftercare actions from the moment of confirmation; the previous provider loses them.
+- The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker.
+- On save, System sends the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider (or the assigned Hairline aftercare team member); no admin alert is sent because the admin is the actor, and the previous provider is not a recipient. FR-011 is the producer of this FR-030 event.
+- Money effects, if any, follow the FR-006 payment placeholder.
+
 ## Business Rules
 
 ### General Module Rules
@@ -1274,7 +1314,8 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
    - Patient anonymization lifted after payment confirmation
 
 4. **Provider Status Cancellation Rules**
-   - An effective provider suspension/deactivation cancels that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4)
+   - An effective provider suspension/deactivation cancels that provider's non-terminal standalone aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4)
+   - For treatment-linked cases the aftercare case is not cancelled and the booking stays `Aftercare`; the cause and the `supportRequired` marker are recorded and an admin reassigns the aftercare provider or team on Screen 19 (Workflow 4 D5)
    - The cancellation keeps the FR-010 completion milestone and all aftercare records; it is not a patient cancellation or a provider withdrawal (D1)
    - Recovery continuity is an admin decision through the existing reassignment/recovery workflow; nothing is reassigned automatically and reactivation never restores the case
 
@@ -1557,7 +1598,8 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
 - **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
-- **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's non-terminal Aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
+- **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's non-terminal standalone aftercare cases with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (treatment-linked cases are not cancelled and follow REQ-011-015), retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
+- **REQ-011-015**: System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider or assigned team member (no admin alert); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment
 
 ### Data Requirements
 
@@ -1617,7 +1659,7 @@ Acceptance Scenarios:
 ### Edge Cases
 
 - Provider withdrawal: admin reassigns or cancels with reason; patient notified
-- Provider suspended or deactivated mid-aftercare: case cancelled with the provider-status cause and `supportRequired`; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause
+- Provider suspended or deactivated mid-aftercare: a standalone case is cancelled with the provider-status cause and `supportRequired`, while a treatment-linked case stays active with the cause and `supportRequired` until an admin reassigns it on Screen 19; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause
 - Network loss during scan upload: resumable upload; no duplicate entries
 - Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved
 
@@ -1664,11 +1706,16 @@ Acceptance Scenarios:
 | 2026-03-03 | 1.2 | Clarified that V1 scan uploads are standardized head scan photo sets (multiple 2D views), with true 3D scanning deferred to V2. Updated module scope, dependencies, and external integrations accordingly. | AI |
 | 2026-04-12 | 1.3 | Screen 13: Expanded Search/Filters control to include Risk Level, Specialist, and Completion Rate filters, aligning with FR-022 Module Scope for A-03. | AI |
 | 2026-10-14 | 1.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Workflow 4 D4, General Module Rule 4 (Provider Status Cancellation), REQ-011-014, mid-aftercare suspension edge case, and AftercarePlan cancellationReason/supportRequired attributes; admin reassignment/recovery workflow unchanged. See [CR-FR011-20261014-01](change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification.. Product Owner confirmed (2026-10-14) that standalone aftercare (Workflow 2) is inside the cascade scope | Vân Tay Media |
+| 2026-10-18 | 1.5 | Final audit corrections (Q36, Q43): new Workflow 4 Alternative Flow D5 and Admin Screen 19 (Reassign Aftercare Provider) let an admin reassign only the aftercare provider or team for a provider fault during `Aftercare`, with fields, validation, mandatory reason, confirmation, audit entry and notice; the FR-006 booking stays `Aftercare` and the treatment record stays unchanged, with no new quote, acceptance or payment. D4, General Module Rule 4, the mid-aftercare suspension edge case and REQ-011-014 now cancel only standalone cases on provider suspension or deactivation; treatment-linked cases stay active for reassignment. Screen 14 Reassign Provider opens Screen 19. REQ-011-015 added. Round-two corrections (Q45, Q47): Screen 19, Alternative Flow D5 and REQ-011-015 now send the new mandatory FR-030 event `aftercare.provider_reassigned` (FR-011 producer) to the patient and the new aftercare provider, with no admin alert and no notice to the previous provider, replacing the note that the event was not registered; D5 and Screen 19 also accept a booking moved from `In Progress` to `Aftercare` by the FR-006 In-Progress provider-fault decision. See CR-FR011-20261016-01. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
+| Product Owner | Product Owner | 2026-10-18 | Approved v1.5 via MTG-002 decision log (documentation only) |
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |
+
+---
+
+**Last Updated**: 2026-10-18

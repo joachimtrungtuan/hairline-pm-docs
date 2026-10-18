@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v1.2 to v1.3
+**PRD Version Change**: v1.2 to v1.5
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -33,7 +33,7 @@ The MTG-002 quote-model verification found that FR-007B took the installment pla
 
 ## Approved State
 
-**Target version**: FR-007B v1.3, same headings plus Alternative Flow B4 and REQ-007b-025 to REQ-007b-027
+**Target version**: FR-007B v1.5, same headings plus Alternative Flow B4 and REQ-007b-025 to REQ-007b-027
 
 The updated [FR-007B PRD](./prd.md) states:
 
@@ -41,8 +41,10 @@ The updated [FR-007B PRD](./prd.md) states:
 - The first installment is charged at checkout; its success confirms the existing `Accepted` booking and consumes the promotion use reserved at acceptance (FR-019). Booking status follows FR-006 (`Confirmed`); the plan has its own status.
 - A failed first installment can be retried only while the original FR-006 hold is active (FR-007 REQ-007-017). When the hold expires the booking moves to `Payment Window Expired`.
 - `Payment Window Expired` applies only to the first payment step. Missed later installments never cause it or inquiry cancellation.
-- Provider fault after acceptance follows FR-006 Alternative Flow B5 (new Alternative Flow B4): remaining installments are cancelled, paid amounts move as credit toward the replacement booking, any unused part is refunded and the patient pays no fee. Mechanics are deferred.
-- Admin reschedule reads the updated booking date and never changes the accepted snapshot.
+- Provider fault before treatment starts (booking `Accepted` or `Confirmed`) follows FR-006 Alternative Flow B5 (new Alternative Flow B4), where an admin authors a replacement quote in the same inquiry; the replacement plan reads the replacement quote's acceptance snapshot. A provider fault in `Aftercare` reassigns only the aftercare provider (FR-011). Remaining installments are cancelled, paid amounts move as credit toward the replacement booking, any unused part is refunded and the patient pays no fee. Mechanics are deferred.
+- Admin reschedule uses the FR-006 Change Appointment action with `booking.rescheduled`, reads the updated booking date and never changes the accepted snapshot.
+- After acceptance the patient cannot cancel in the app; a cancellation request goes through Contact Support and the admin cancels through the FR-006 Cancel Booking action with a mandatory reason. Refund amounts follow the payment placeholder.
+- Instalment amounts and platform commission are based on the booking total (accepted price after promotion); commission uses the type (Percentage or Flat Rate) and value from the booking-confirmation snapshot, matching FR-007 REQ-007-014 (Q25, Q28).
 - The Installment Plan entity carries currency and exchange rate and resolves acceptance provenance through its booking.
 
 ## Requirement Delta
@@ -57,6 +59,9 @@ The updated [FR-007B PRD](./prd.md) states:
 | Later installments | PWE scope unstated | Never cause `Payment Window Expired` or inquiry cancellation | D1 |
 | Provider fault | No path | Alternative Flow B4 to FR-006 B5 with payment placeholder | D6, D6-M, M18 |
 | Admin reschedule | Recalculation only | Reads updated booking date; snapshot unchanged | Observation FR-007b-7 |
+| Cancellation and date change (Alternative Flows B1, B2, B3) | Patient cancels through app or support; admin reschedule as a generic intervention | Patient uses Contact Support; admin uses FR-006 Cancel Booking or Change Appointment with `booking.rescheduled`; refund amounts to the payment placeholder | Q37, Q42 |
+| Provider fault scope (Alternative Flow B4) | Any time after acceptance; new linked acceptance record | Only `Accepted` and `Confirmed`; replacement quote acceptance snapshot; `Aftercare` handled by FR-011 | Q35, Q36 |
+| Instalment and commission base (General Module Rules, REQ-007b-004, Screens) | "Total procedure cost" | Booking total (accepted price after promotion); commission locked at booking confirmation | D12, Q5, Q25, Q28 |
 
 ## Scope and Impact
 
@@ -66,13 +71,13 @@ The updated [FR-007B PRD](./prd.md) states:
 
 ### Out of Scope
 
-- Installment economics, schedule calculation, retry/default handling of later installments, refunds, commission and payout timing (parked for the payment pass), including the "first installment type" FR-029 setting and the payout trigger on "Fully Paid".
+- Installment economics, schedule calculation, retry/default handling of later installments, refunds, and commission deduction and payout timing (parked for the payment pass); the instalment and commission base itself is in scope, including the "first installment type" FR-029 setting and the payout trigger on "Fully Paid".
 - Exact credit, refund, fund-release and override mechanics of the provider-fault transfer (D6-M placeholder only).
 
 ### Affected Contracts
 
-- **PRD owner**: [`prd.md`](./prd.md) — Main Flow steps 7, 9, 14; Alternative Flows B1, B3, B4; Screens 1, 2, 4, 6; General Module Rules; Dependencies; User Stories 1 and 3; Edge Cases; REQ-007b-005, REQ-007b-025 to REQ-007b-027; Key Entities (Installment Plan)
-- **Related FRs**: FR-005 (AcceptanceEvent snapshot is the source), FR-006 (hold, `Payment Window Expired` first-payment boundary REQ-006-016, Alternative Flow B5, booking status enum), FR-007 (REQ-007-016 to REQ-007-019 accepted-selection contract and hold check), FR-019 (promotion use consumed at first successful payment), FR-017 (provider-fault money mechanics, later), FR-029 (installment configuration unchanged)
+- **PRD owner**: [`prd.md`](./prd.md) — Main Flow steps 7, 9, 14; Alternative Flows B1 to B4; Screens 1, 2, 4, 6; General Module Rules; Dependencies; User Stories 1 and 3; Edge Cases; REQ-007b-004, REQ-007b-005, REQ-007b-025 to REQ-007b-027; Key Entities (Installment Plan)
+- **Related FRs**: FR-005 (AcceptanceEvent snapshot is the source), FR-006 (hold, `Payment Window Expired` first-payment boundary REQ-006-016, Alternative Flow B5, booking status enum), FR-007 (REQ-007-016 to REQ-007-019 accepted-selection contract and hold check), FR-019 (promotion use consumed at first successful payment), FR-017 (provider-fault money mechanics, later), FR-011 (aftercare reassignment), FR-016 (support request queue), FR-029 (installment configuration unchanged; commission snapshot)
 - **System documents**: `system-data-schema.md` (installment plan currency and exchange-rate columns copied from the acceptance snapshot), `system-prd.md` (FR-007B summary wording), `system-technical-spec.md` (installment checkout hold check and snapshot read)
 
 ### Implementation Reconciliation
@@ -87,14 +92,16 @@ The updated [FR-007B PRD](./prd.md) states:
 - No plan amount is read from a live quote, sibling option or library price (General Module Rules; Screen 1; Data Dependencies; REQ-007b-025).
 - The first-payment boundary is stated and referenced to FR-006 (General Module Rules; Alternative Flow B1 boundary; Edge Cases; REQ-007b-026).
 - User Story 1 scenarios 4 to 6 and User Story 3 scenario 4 cover the snapshot total, fixed currency, rejected retry after hold expiry, and no PWE on later default.
+- No FR-007B text bases instalments or commission on "total procedure cost"; both use the booking total (accepted price after promotion).
+- Alternative Flow B2 has no in-app patient cancellation after acceptance and routes the admin to FR-006 Cancel Booking; B4 is not offered for `In Progress` or `Aftercare` bookings.
 - Cross-FR checks against FR-005, FR-006, FR-007, FR-019 and the schema pass in consolidated verification.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote-model verification)
-- **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M15, D1, D6, D6-M, D8, M18); findings FR-007b-1, FR-007b-2, FR-007b-3, FR-007b-5, FR-007b-6, FR-007b-7
-- **PRD change log**: FR-007B v1.3 row dated 2026-10-16
+- **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log and 2026-10-18 via the MTG-002 decision log (documentation only); implementation reconciliation required, not assessed
+- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M15, D1, D6, D6-M, D8, M18; Q5, Q25, Q28, Q30; final decisions Q35, Q36, Q37, Q42 dated 2026-10-18); findings FR-007b-1, FR-007b-2, FR-007b-3, FR-007b-5, FR-007b-6, FR-007b-7
+- **PRD change log**: FR-007B v1.3 row dated 2026-10-16; v1.4 consolidated verification corrections and v1.5 final audit corrections dated 2026-10-18
 - **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: None
 - **Superseded by**: None

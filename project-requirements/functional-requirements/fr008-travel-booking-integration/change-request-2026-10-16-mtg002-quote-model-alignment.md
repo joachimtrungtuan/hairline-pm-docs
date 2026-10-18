@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v2.5 to v2.7
+**PRD Version Change**: v2.5 to v2.9
 **Related Commit(s)**: Pending
 
 > Created under decision P1: the implementation status of FR-008 is unknown, so a Change Request is recorded to keep documentation approval separate from implementation reconciliation.
@@ -30,13 +30,13 @@ The MTG-002 quote model verification found that the FR-008 travel-date review fl
 
 ## Approved State
 
-**Target version**: FR-008 v2.7, same headings plus `Acceptance Scenarios`, Alternative Flow B2 and REQ-008-030 to REQ-008-033
+**Target version**: FR-008 v2.9, same headings plus `Acceptance Scenarios`, Alternative Flow B2 and REQ-008-030 to REQ-008-033
 
 - Travel-date review is admin-owned. From Screen 11 the admin confirms the existing flight and hotel dates or corrects them through Screen 12; either action returns the TravelContext to `active` and is audited. Patients and providers see the review state but cannot clear it.
 - FR-008 reads the accepted appointment and date range from the FR-005 accepted snapshot, never from the live quote, and stores the accepted date range on TravelContext. Relative treatment plan days are never converted to calendar dates. Later FR-010 changes to plan, clinicians or grafts do not change the TravelContext.
 - Travel-date validation is anchored to the current booking appointment, which equals the accepted snapshot appointment unless an admin-approved change exists.
 - A closed TravelContext rejects new travel records, re-notification and admin corrections; its records stay read-only.
-- Wording refers to the accepted option; inclusion data has one owner (TravelContext); `travel_required` with actor and time records the Path B "no travel" decision; Path B covers transport-only and other-services-only options; seven acceptance scenarios cover the lifecycle.
+- Wording refers to the accepted option; inclusion data has one owner (TravelContext); `travel_required` with actor and time records the Path B "no travel" decision; Path B covers transport-only and other-services-only options; ten acceptance scenarios cover the lifecycle.
 - A return flight or hotel check-out before the last treatment plan day raises a soft warning that must be acknowledged; the record still saves and the provider sees an early-departure flag. The last plan day date is derived only for this warning and is not stored (Q17).
 - On an FR-006 provider-fault transfer, the passport carries over to the replacement booking, flight and hotel records are copied to it with a copy-source reference and flagged "travel-date review required", and the originals stay read-only on the closed booking (Q18).
 - The itinerary is a read view assembled from the TravelContext, the current travel records and the Booking; no itinerary table or stored record exists (Q21).
@@ -54,8 +54,9 @@ The MTG-002 quote model verification found that the FR-008 travel-date review fl
 | Path B scope | Transport only or empty | Transport, other travel services, or empty | Finding FR-008-7 |
 | Early departure | Return flight or check-out before the last plan day not addressed | Soft warning, acknowledged, record saves, provider flag (REQ-008-008, REQ-008-031) | Q17 |
 | Provider-fault transfer | Travel records stayed on the closed booking only | Passport carried over; flight and hotel copied with source reference and review flag; originals read-only (Alternative Flow B2, REQ-008-032) | Q18 |
+| Provider-fault scope and source (Alternative Flow B2, FlightRecord, HotelRecord) | Any confirmed booking; replacement TravelContext from a new linked acceptance record; `copied_from_*_record_id` | Before treatment starts only; replacement quote in the same inquiry and its acceptance snapshot; `Aftercare` handled by FR-011; `copied_from_flight_id` and `copied_from_hotel_id` | Q35, Q36; data schema alignment |
 | Itinerary storage | Stored Itinerary entity with record IDs | Read view only, no table (REQ-008-014, REQ-008-033) | Q21 |
-| Testability | No scenarios | Seven Given/When/Then acceptance scenarios | Finding FR-008-8 |
+| Testability | No scenarios | Ten Given/When/Then acceptance scenarios | Finding FR-008-8 |
 
 ## Scope and Impact
 
@@ -66,13 +67,12 @@ The MTG-002 quote model verification found that the FR-008 travel-date review fl
 ### Out of Scope
 
 - Payment rails, fund release, refunds, later instalments, and payment-driven booking states (installment default, dispute, refund-driven cancellation); these stay with the payment pass.
-- Provider-fault transfer effects on travel coordination (FR-006 and FR-005 own the transfer; any travel follow-up is to be assessed at consolidated verification).
 - Changes to the binary Path A / Path B model.
 
 ### Affected Contracts
 
-- **PRD owner**: `prd.md` — `Travel Path Determination`, `Travel Context and Booking Lifecycle`, REQ-008-008, REQ-008-026, REQ-008-028 to REQ-008-030, `TravelContext`, `Itinerary`, Screens 2, 3, 5, 6, 8, 11, `Acceptance Scenarios`
-- **Related FRs**: FR-005 (accepted snapshot fields, including date range), FR-006 (admin appointment-date change triggers review), FR-004 (travel items as Quote Option items; optional wording alignment "at FR-006 booking confirmation"), FR-010 (plan, clinicians and grafts changes do not affect TravelContext), FR-024 (packages seed travel items)
+- **PRD owner**: `prd.md` — `Travel Path Determination`, `Travel Context and Booking Lifecycle`, REQ-008-008, REQ-008-026, REQ-008-028 to REQ-008-033, Alternative Flow B2, `TravelContext`, `Itinerary`, Screens 2, 3, 5, 6, 8, 11, `Acceptance Scenarios`
+- **Related FRs**: FR-005 (accepted snapshot fields, including date range), FR-006 (admin appointment-date change triggers review; Alternative Flow B5 replacement quote), FR-011 (provider fault in `Aftercare` reassigns aftercare only), FR-004 (travel items as Quote Option items; optional wording alignment "at FR-006 booking confirmation"), FR-010 (plan, clinicians and grafts changes do not affect TravelContext), FR-024 (packages seed travel items)
 - **System documents**: `system-data-schema.md` (travel context fields: accepted date range, `travel_required` with actor and time, review cleared by/at; drop itinerary `included_services_snapshot`), `system-technical-spec.md` (closed-context rejection)
 
 ### Implementation Reconciliation
@@ -91,13 +91,15 @@ The MTG-002 quote model verification found that the FR-008 travel-date review fl
 - No itinerary table exists; the itinerary view is built from TravelContext, travel records and Booking.
 - Writes against a closed TravelContext are rejected.
 - Cross-FR check: FR-005 snapshot and system schema carry the accepted date range and the TravelContext fields named above.
+- Alternative Flow B2 is not applied to an `Aftercare` booking, and the replacement TravelContext reads the replacement quote's acceptance snapshot.
+- FlightRecord and HotelRecord name their copy source `copied_from_flight_id` and `copied_from_hotel_id`, matching the data schema.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote model audit)
-- **Approved by**: Product Owner, 2026-10-16, via the decision log `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (documentation approval only)
-- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-verification-2026-10-16.md`, `reports/2026-10-16/mtg002-quote-model-fix-plan-2026-10-16.md`; Product Owner Q-series answers Q17, Q18 and Q21 in `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`
-- **PRD change log**: v2.6 and v2.7 rows dated 2026-10-16
+- **Approved by**: Product Owner, 2026-10-16, via the decision log `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (documentation approval only); v2.9 approved 2026-10-18 via MTG-002 decision log (documentation only)
+- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-verification-2026-10-16.md`, `reports/2026-10-16/mtg002-quote-model-fix-plan-2026-10-16.md`; Product Owner Q-series answers Q17, Q18 and Q21 in `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`; final decisions Q35 and Q36 (2026-10-18)
+- **PRD change log**: v2.6 and v2.7 rows dated 2026-10-16; v2.8 consolidated verification corrections and v2.9 final audit corrections dated 2026-10-18
 - **Update log**: Combined 2026-10-16 MTG-002 update log (controller-owned)
 - **Supersedes**: None (extends CR-FR008-20260929-01)
 - **Superseded by**: None

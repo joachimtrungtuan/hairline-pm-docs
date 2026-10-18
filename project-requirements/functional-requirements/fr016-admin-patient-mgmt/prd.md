@@ -5,7 +5,7 @@
 **Created**: 2025-11-11
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-016 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
-**Change Request**: [CR-FR016-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md)
+**Change Request**: [CR-FR016-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md) (previous: [CR-FR016-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
 ---
 
@@ -108,7 +108,7 @@ This is a critical operational module that ensures the platform can provide effe
 4. System executes search and returns matching patient records
 5. System displays results in paginated list with key information:
    - Patient name and code (e.g., "Mark Peterson #HP258742")
-   - Current journey status (Inquiry, Quoted, Scheduled, In-Progress, Aftercare, Completed)
+   - Current journey stage (Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled), using the FR-003 stage list
    - Registration date
    - Last activity timestamp
    - Provider assignment (if applicable)
@@ -244,12 +244,24 @@ This is a critical operational module that ensures the platform can provide effe
   7. Admin selects suspension duration: 30 days, 90 days, Permanent
   8. Admin confirms suspension
   9. System immediately revokes patient authentication tokens
-  10. System cancels any active bookings with refund processing
+  10. System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the FR-006 payment placeholder
   11. System sends suspension notification to patient with appeal process information
   12. System logs suspension in audit trail with full justification
 - **Outcome**: Account suspended, patient locked out, audit trail created
 
 *Note: Booking modifications or cancellations occur on the dedicated case/inquiry detail page; the intervention flow links admins there rather than duplicating controls.*
+
+**A8: Admin handles a support-routed booking cancellation or change request**:
+
+- **Trigger**: From subquote acceptance onward the patient has no in-app booking cancellation; the patient uses Contact Support on the FR-006 booking screens, and the request is logged as an FR-034 support case of type booking cancellation or booking change
+- **Steps**:
+  1. Admin opens the request from Screen 9 (Booking Support Requests) or from the patient's Overview tab
+  2. Admin reviews the booking reference, current booking status, current appointment, and the patient's stated reason
+  3. For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the FR-006 payment placeholder
+  4. For a change request, admin opens the FR-006 Change Appointment action (FR-006 Screen 8), which applies to `Accepted` or `Confirmed` bookings; the patient and provider receive `booking.rescheduled`
+  5. If the admin declines the request, admin records a decline reason, and the patient is answered through the FR-034 support case
+  6. System links the outcome to the request, marks it Resolved or Declined, and logs the action on Screen 7
+- **Outcome**: Every post-acceptance cancellation or change goes through one audited FR-006 action, and the patient's request has a recorded outcome
 
 **A7: Admin resolves provider-caused cancellation support**:
 
@@ -300,7 +312,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Search Input | text | No | Search by name, email, patient code, phone | Min 2 characters |
-| Status Filter | multi-select | No | Filter by journey status | Options: Inquiry, Quoted, Accepted, Scheduled, In-Progress, Aftercare, Completed, Cancelled, Suspended |
+| Status Filter | multi-select | No | Filter by journey stage | Options: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list) |
+| Account Status Filter | multi-select | No | Filter by account status | Options: Active, Suspended, Deactivated |
 | Date Range Filter | date-range | No | Filter by registration date or last activity | Start date ≤ End date |
 | Location Filter | select | No | Filter by patient country | Country list from admin settings |
 | Provider Filter | select | No | Filter by assigned provider | Active providers only |
@@ -321,7 +334,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Requested Date | Upcoming/most recent requested treatment window |
 | Med Alerts | Badge: Critical / Standard / None, matches patient medical questionnaire severity |
 | Payment | Latest payment status badge (Paid, Pending, Deposit Due, Refund, etc.) |
-| Stage | Current journey stage badge (Inquiry, Quoted, Accepted, Scheduled, In Progress, Aftercare, Complete, Cancelled). "Cancelled" indicates patient-initiated inquiry cancellation (FR-003 Workflow 5) — admin has oversight only, no reversal — or a provider-caused cancellation shown as "Cancelled — Provider Suspended" or "Cancelled — Provider Deactivated". An unresolved provider-caused impact adds a separate "Admin Support Required" badge, including when the inquiry stage itself is not cancelled. |
+| Stage | Current journey stage badge (Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled), using the FR-003 stage list. "Cancelled" indicates a patient-initiated inquiry cancellation in the Inquiry or Quoted stage (FR-003 Workflow 5) — admin has oversight only, no reversal — an admin cancellation of a booking through FR-006 (shown as "Cancelled — Admin"), or a provider-caused cancellation shown as "Cancelled — Provider Suspended" or "Cancelled — Provider Deactivated". An unresolved provider-caused impact adds a separate "Admin Support Required" badge, including when the inquiry stage itself is not cancelled. |
 | Last Active | Relative timestamp of last platform action |
 | Action | Overflow menu with shortcuts: open case, view detail, quick actions |
 
@@ -329,11 +342,11 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - Default view shows all patients sorted by last activity (most recent first)
 - Search executes automatically after 500ms typing pause (debounced search)
-- Filters are combinable (e.g., "Status: In-Progress AND Location: UK")
+- Filters are combinable (e.g., "Status: In Progress AND Location: UK")
 - Patient list updates in real-time when new patients register (WebSocket push)
 - Patient codes always displayed alongside names for unique identification
 - Row layout mirrors inquiry list so admins immediately recognize patient intent/context
-- Status badges color-coded: Inquiry (blue), Quoted (purple), Accepted (teal), Scheduled (green), In-Progress (orange), Aftercare (light green), Completed (gray), Cancelled (red), Suspended (dark red)
+- Stage badges color-coded: Inquiry (blue), Quoted (purple), Accepted (teal), Confirmed (green), In Progress (orange), Aftercare (light green), Completed (gray), Cancelled (red); the Suspended account status badge is dark red
 - Flagged patients show red alert icon with hover tooltip explaining flag reason
 - "Admin Support Required" badge is independent of Stage and Status Filter; it clears only when every linked provider-caused impact is resolved (Flow A7). Provider-caused cancellations are never labelled "Cancelled by patient"
 - Clicking row navigates to patient detail view
@@ -626,6 +639,39 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Deny records a reason and notifies the patient; the request remains auditable
 - Approve/Deny actions require justification and are written to the audit trail with request ID metadata
 
+### Screen 9: Booking Support Requests (Cancellation and Change)
+
+**Purpose**: Give admins one queue of patient requests to cancel or change a booking after subquote acceptance, which patients raise through Contact Support because they cannot cancel in the app, and route each one to the governed FR-006 action (Flow A8)
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Screen Title | text | Yes (display only) | "Booking Support Requests" | Located under **User management → Patients** |
+| Search | text | No | Search by patient name, HPID, booking reference, or support case reference | Debounced; case-insensitive |
+| Request Type Filter | select | No | Filter by request type | Options: All, Cancellation, Appointment Change |
+| Request Status Filter | select | No | Filter by request status | Options: Open, Resolved, Declined; default Open |
+| Requests Table | table | Yes (display only) | One row per request | Sorted by oldest open request first |
+| Table Column: Support Case Reference | link | Yes (display only) | FR-034 support case that holds the request | Opens the support case |
+| Table Column: Patient | text | Yes (display only) | Patient name and HPID | Click opens the patient Overview tab |
+| Table Column: Booking Reference and Status | text | Yes (display only) | Booking reference and current booking status | Read-only |
+| Table Column: Current Appointment | datetime | Yes (display only) | The booking's current appointment date and time with time zone | Read-only |
+| Table Column: Request Type | badge | Yes (display only) | Cancellation or Appointment Change | Read-only |
+| Table Column: Patient Reason | text | No (display only) | Reason the patient gave | Truncated to one line; expand in panel |
+| Table Column: Submitted At | datetime | Yes (display only) | When the patient raised the request | Read-only |
+| Action: Cancel Booking | button | Conditional | Opens the FR-006 Cancel Booking action (FR-006 Screen 9) prefilled with the request source and support case reference | Shown for cancellation requests when the booking is `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` |
+| Action: Change Appointment | button | Conditional | Opens the FR-006 Change Appointment action (FR-006 Screen 8) | Shown for change requests when the booking is `Accepted` or `Confirmed` |
+| Action: Decline Request | button | Conditional | Declines the request without changing the booking | Shown for open requests; decline reason required (minimum 20 characters) |
+| Outcome | text | Conditional (display only) | Action taken, admin, timestamp, and linked audit entry | Shown for Resolved or Declined requests |
+
+**Business Rules**:
+
+- Requests appear here when the patient uses Contact Support on an FR-006 booking screen from acceptance onward; requests for an inquiry still in the Inquiry or Quoted stage are not listed, because the patient can cancel those in the app (FR-003)
+- The admin performs a cancellation or appointment change only through the FR-006 action; FR-006 holds the mandatory reason, confirmation, audit entry, and notice (`booking.cancelled` or `booking.rescheduled`) for that action
+- A request becomes Resolved when its FR-006 action completes, and Declined when the admin records a decline reason; the patient is answered through the FR-034 support case in both cases
+- Every action on this screen is logged on Screen 7 with the request and booking references
+- Refund amounts and cancellation fees are not set here; they follow the FR-006 payment placeholder
+
 ## Business Rules
 
 ### General Module Rules
@@ -636,7 +682,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - **Rule 4**: High-impact actions (account suspension, refunds > $1000, permanent data deletion) MUST require enhanced confirmation + justification, even though the same Super Admin executes them
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance)
 - **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per compliance requirements (7 years)
-- **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST notify both patient and provider within 5 minutes
+- **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST go through the FR-006 Change Appointment or Cancel Booking action and MUST notify both patient and provider within 5 minutes through `booking.rescheduled` or `booking.cancelled`
 - **Rule 8**: Provider-caused cancellations (FR-015 A5, causes `ProviderSuspended` / `ProviderDeactivated`) carry an independent Admin Support Required marker that only an admin resolution with reason and audit event can clear; the cause is never overwritten. FR-016 does not auto-create FR-034 tickets or change FR-034's workflow
 
 ### Data & Privacy Rules
@@ -656,7 +702,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - Patient profile information (name, email, phone, location) with justification
 - Patient account status (active, suspended, deactivated)
-- Booking dates and details (emergency reschedules with provider coordination)
+- Booking appointment date only through the FR-006 guarded date change: allowed for `Accepted` or `Confirmed` bookings, with a mandatory reason and a slot availability check, and triggering an FR-008 travel-date review for any linked travel records (emergency reschedules with provider coordination)
+- Booking cancellation only through the FR-006 Cancel Booking action: allowed from `Accepted` through `Aftercare`, on an admin decision or a support-routed patient request, with a mandatory reason, confirmation, and audit entry (Flow A8, Screen 9)
 - Payment status (manual refund issuance, payment retry)
 - Support escalations context (view-only link to Support Center; see FR-034)
 
@@ -730,8 +777,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Integration point**: Treatment journey tab displays inquiry and quote data; admin can view quote details
 
 - **FR-006 / Module P-03: Booking & Payment**
-  - **Why needed**: Admin monitors booking status, payment history, and can manually intervene in bookings
-  - **Integration point**: Payment tab fetches transaction history; admin can initiate refunds or modify bookings
+  - **Why needed**: Admin monitors booking status and payment history, and intervenes in bookings only through the FR-006 governed actions
+  - **Integration point**: Payment tab fetches transaction history; Flow A8 and Screen 9 open the FR-006 Change Appointment and Cancel Booking actions
 
 - **FR-011 / Module P-05: Aftercare & Progress Monitoring**
   - **Why needed**: Admin views patient aftercare status, milestone completion, and can access aftercare data
@@ -911,13 +958,13 @@ Patient contacts support with medical emergency requiring postponement of proced
 
 **Why this priority**: Emergency booking modifications are critical patient support scenarios that require admin intervention. Handling these smoothly impacts patient satisfaction and provider relationships.
 
-**Independent Test**: Can be tested by creating confirmed booking, simulating emergency request, and verifying admin can modify booking date, system notifies patient and provider, and all payment/travel details remain intact.
+**Independent Test**: Can be tested by creating confirmed booking, simulating emergency request, and verifying admin can modify booking date through the FR-006 guarded date change, system notifies patient and provider, payment details remain intact, and any linked travel records are flagged for an FR-008 travel-date review.
 
 **Acceptance Scenarios**:
 
-1. **Given** admin locates patient with confirmed booking, **When** admin clicks "Modify Booking" button, **Then** system displays booking details and available modification options (change date, cancel with refund)
+1. **Given** admin locates patient with confirmed booking, **When** admin clicks "Modify Booking" button, **Then** system displays booking details and the available FR-006 actions (Change Appointment, Cancel Booking)
 2. **Given** admin selects "Change Appointment Date", **When** admin enters new date (coordinated with provider offline) and justification ("Patient medical emergency"), **Then** system validates new date is available and prompts for confirmation
-3. **Given** admin confirms modification, **When** system processes change, **Then** booking date updated, patient receives notification email, provider receives notification, and audit log records admin action
+3. **Given** admin confirms modification, **When** system processes change, **Then** the booking's current appointment is updated, the patient and provider receive `booking.rescheduled` with the old and new appointment, any linked travel records are flagged for an FR-008 travel-date review, and audit log records admin action
 4. **Given** booking rescheduled, **When** admin views booking details, **Then** new date displayed with note "Rescheduled by admin on [date] - Reason: [justification]"
 
 ---
@@ -1061,13 +1108,15 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 
 - **REQ-016-008**: System MUST allow admins to reset patient passwords with email notification sent to patient
 - **REQ-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts
-- **REQ-016-010**: System MUST allow admins to manually reschedule bookings with justification, notifying both patient and provider
+- **REQ-016-010**: System MUST allow admins to reschedule bookings only through the FR-006 Change Appointment action with justification, notifying both patient and provider through `booking.rescheduled`
 - **REQ-016-011**: System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000
 - **REQ-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification
 - **REQ-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
 - **REQ-016-028**: System MUST display FR-015 provider-caused cancellation causes (`ProviderSuspended`, `ProviderDeactivated`) distinctly from patient cancellation and let admins filter/badge patients with unresolved Admin Support Required records
 - **REQ-016-029**: System MUST show, per affected record, the inquiry/case reference, prior stage, cancellation cause, support state, and linked FR-034 support case (if any)
 - **REQ-016-030**: System MUST require a resolution reason and log an audit event before clearing Admin Support Required; the cause remains, an inquiry's marker stays while any linked provider-caused impact is unresolved, and no ticket is auto-created
+- **REQ-016-031**: System MUST list patient booking cancellation and change requests raised through Contact Support after acceptance on Screen 9, open the matching FR-006 action for each, and record a Resolved or Declined outcome with reason and audit entry
+- **REQ-016-032**: System MUST NOT cancel or change a booking from FR-016 except through the FR-006 Cancel Booking or Change Appointment action, including cancellations caused by patient account suspension
 
 ### Data Governance Requirements
 
@@ -1123,6 +1172,8 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-03-03 | 1.5 | Clarified V1 scan media as head scan photo sets and updated admin medical data viewing to treat interactive 3D model viewing as a V2 enhancement. Updated viewer terminology, dependencies, and requirements accordingly. | AI |
 | 2026-10-14 | 1.6 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9 | Vân Tay Media |
 | 2026-10-16 | 1.7 | MTG-002 quote model alignment (minor wording, decision M18): the admin-support trigger and its user story now include an accepted booking closed for the FR-006 provider-fault transfer while the inquiry stays open. No CR needed (clarification only). | Vân Tay Media |
+| 2026-10-18 | 1.8 | Consolidated verification corrections (decision D2): admin booking date edits are limited to the FR-006 guarded date change (`Accepted` or `Confirmed`, mandatory reason, slot availability check), and User Story 3 now flags linked travel records for an FR-008 travel-date review instead of stating that travel details remain intact. No CR: this aligns FR-016 with the existing FR-006 rule (CR-FR006-20261016-01) and does not change FR-016 scope. | Vân Tay Media |
+| 2026-10-18 | 1.9 | Final audit corrections (Q37, Q42, Q43): journey stage lists in the Main Flow and Screen 1 now use the FR-003 stage list (Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled); Suspended moves to a new Account Status Filter. New Flow A8 and Screen 9 (Booking Support Requests) route support-routed patient cancellation and change requests to the FR-006 Cancel Booking and Change Appointment actions with outcome, reason and audit entry. Rule 7, Admin Editability, User Story 3, REQ-016-010 and the FR-006 dependency use the FR-006 actions and `booking.rescheduled` or `booking.cancelled`; patient account suspension cancels bookings through FR-006. REQ-016-031 and REQ-016-032 added. See CR-FR016-20261016-01. | Product Owner / Documentation |
 
 ---
 
@@ -1130,7 +1181,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Pending] | [Pending] | [Pending] |
+| Product Owner | Product Owner | 2026-10-18 | Approved v1.9 via MTG-002 decision log (documentation only) |
 | Technical Lead | [Pending] | [Pending] | [Pending] |
 | Stakeholder | [Pending] | [Pending] | [Pending] |
 
@@ -1139,4 +1190,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18
