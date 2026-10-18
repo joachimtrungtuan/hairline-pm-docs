@@ -69,7 +69,6 @@ Validation bounds: the quote expiry window is 24 to 336 hours, the slot-hold dur
 ### Out of Scope
 
 - Payment rails, fund release, refunds, and later instalments.
-- Numeric minimum and maximum bounds for the hour settings (not decided).
 - Whether the FR-020 SLA-breach check uses the TTFQ target in effect at distribution or at check time (not decided).
 - Implementation, API, and migration changes.
 

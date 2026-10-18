@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v2.10 to v2.12
+**PRD Version Change**: v2.10 to v2.14 (v2.11 MTG-002 alignment; v2.12 Product Owner follow-up decision; v2.13 consolidated verification corrections; v2.14 final audit corrections)
 **Related Commit(s)**: Pending
 
 > Created under plan decision P1: FR-017 implementation status is unknown, so this alignment is recorded as a Change Request to be safe.
@@ -31,12 +31,13 @@ The MTG-002 quote model makes the FR-005 acceptance snapshot the single money so
 
 ## Approved State
 
-**Target version**: [FR-017 v2.12](prd.md) — same headings, plus REQ-017-030
+**Target version**: [FR-017 v2.14](prd.md) — same headings, plus REQ-017-030
 
 - No acceptance-time manual review; FR-017 consumes the snapshot rate and timestamp and never fetches or relocks a rate. Stale-cache alerts are operational only.
 - Invoice total, currency, locked rate and promotion come from the acceptance snapshot. The FR-019 application record is linked to the AcceptanceEvent and is provenance only. No promotion entry, removal, replacement or recalculation after acceptance; the only exception is the FR-006 provider-fault transfer's new linked acceptance record.
 - Percentage commission base is the accepted price after promotion, in the quote currency, from the snapshot; exchange rate locked at subquote acceptance; commission model and value, with deposit and instalment settings, fixed at booking confirmation; nothing fixed at quote creation (REQ-017-030).
 - The same commission base applies to every discount type, including Hairline Only discounts, so the provider bears part of such a discount.
+- Both Fees funding is owned by FR-019: Hairline reimburses the program's Hairline share % of the discount to the provider at payout, on top of the commission effect. FR-017 Screen 5, its user story and the discount entity apply that share and define no split of their own.
 - Rate-lock wording names subquote acceptance (FR-005 AcceptanceEvent); Entity 7 is a read-only projection with `acceptance_event_id` and the rate timestamp.
 - Any change agreed with providers after a currency alert is a separate finance adjustment; the snapshot and AcceptanceEvent stay unchanged.
 - Suspension or deactivation after acceptance: admin rehomes the patient through the FR-006 provider-fault transfer; paid money moves with the patient as credit, unused part refunded, no patient fee (placeholder only).
@@ -53,6 +54,7 @@ The MTG-002 quote model makes the FR-005 acceptance snapshot the single money so
 | Currency alert (Workflow B2, Screen 8) | Renegotiate booking terms | Separate finance adjustment; snapshot unchanged; config changes never alter confirmed bookings | FR-017-5, M5 |
 | Provider suspension after acceptance (Rule 13, Edge Cases) | No automatic rebooking | FR-006 provider-fault transfer with placeholder money principle | M18, D6, D6-M |
 | Discount types (Screen 5, Commission Rule 1, REQ-017-030) | Provider Cost shown only for Both Fees discounts | Commission on the price after promotion for every discount type; providers bear part of Hairline Only discounts too | Q5 |
+| Both Fees allocation (Screen 5, user story scenario 3, FR-019 dependency, discount entity) | FR-017 deferred to an FR-019 allocation that FR-019 deferred back to FR-017 | FR-019 Hairline share % applied on top of the commission effect; FR-017 references FR-019 | Q41, final audit |
 
 ## Scope and Impact
 
@@ -62,13 +64,13 @@ The MTG-002 quote model makes the FR-005 acceptance snapshot the single money so
 
 ### Out of Scope
 
-- Refunds, reversal mechanics, provider-fault payment reallocation, funding-split settlement, payouts and fund release (later payment pass). Reverse/Refund of completed promotion redemptions and FR-019 funding-split settlement are referenced only.
+- Refunds, reversal mechanics, provider-fault payment reallocation, payout mechanics for the Both Fees reimbursement, payouts and fund release (later payment pass). Reverse/Refund of completed promotion redemptions is referenced only.
 - Invoice handling of a capture after `Payment Window Expired` (observation FR-017-7, parked for the payment pass).
 
 ### Affected Contracts
 
-- **PRD owner**: `prd.md` — Edge Cases, Payment & Billing Rules, General Module Rules 4, 12, 13, Screens 3, 4a, 6, 8, 10, Entities 1, 4, 7, REQ-017-004, REQ-017-014, REQ-017-030
-- **Related FRs**: FR-005 (acceptance snapshot incl. rate timestamp and promotion), FR-006 (booking confirmation lock point, provider-fault transfer B5), FR-019 (application record linked to AcceptanceEvent; reservation and consumption), FR-015 and FR-029 (commission base and lock points), FR-007 / FR-007b (payment amounts from the snapshot)
+- **PRD owner**: `prd.md` — Edge Cases, Payment & Billing Rules, General Module Rules 4, 12, 13, Screens 3, 4a, 5, 6, 8, 10, Screen 5 user story scenarios, Entities 1, 4, 7, REQ-017-004, REQ-017-014, REQ-017-030
+- **Related FRs**: FR-005 (acceptance snapshot incl. rate timestamp and promotion), FR-006 (booking confirmation lock point, provider-fault transfer B5), FR-019 (application record linked to AcceptanceEvent; reservation and consumption; owner of the Both Fees Hairline share %), FR-015 and FR-029 (commission base and lock points), FR-007 / FR-007b (payment amounts from the snapshot)
 - **System documents**: `system-prd.md`, `system-data-schema.md` (acceptance snapshot rate timestamp, promotion application `acceptance_event_id`, rate-lock projection), `system-technical-spec.md`
 
 ### Implementation Reconciliation
@@ -84,14 +86,15 @@ The MTG-002 quote model makes the FR-005 acceptance snapshot the single money so
 - Invoice total, currency, rate and promotion are read from the acceptance snapshot; no FR-017 text allows a promotion change at checkout or after acceptance.
 - Commission base and lock points match FR-006, FR-015, FR-029 and the schema (one base sentence).
 - Commission Rule 1, REQ-017-030 and Screen 5 Provider Cost apply the price after promotion to every discount type, including Hairline Only discounts.
+- Screen 5 derives Both Fees costs from the FR-019 Hairline share %; no FR-017 text defines its own allocation.
 - Implementation evidence for the above before reconciliation is marked Verified.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote model audit)
 - **Approved by**: Product Owner, 2026-10-16, via `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (documentation only)
-- **Decision evidence**: SRC-MTG-002; decision log 2026-10-16 (D6, D6-M, D8, D9, D11, D12, D19, M5, M18, P1); findings FR-017-1, FR-019-2, S2-4, FR-017-4, FR-017-5, FR-017-6; Product Owner follow-up decision Q5
-- **PRD change log**: v2.11 and v2.12 rows
+- **Decision evidence**: SRC-MTG-002; decision log 2026-10-16 (D6, D6-M, D8, D9, D11, D12, D19, M5, M18, P1); findings FR-017-1, FR-019-2, S2-4, FR-017-4, FR-017-5, FR-017-6; Product Owner follow-up decisions Q5 and Q41; final audit 2026-10-18 money finding F7
+- **PRD change log**: v2.11 and v2.12 rows (2026-10-16); v2.13 and v2.14 rows (2026-10-18)
 - **Update log**: Combined 2026-10-16 MTG-002 log (controller-owned)
 - **Supersedes**: None (CR-FR017-20261015-01 remains in force, except that Rule 13 now adds the provider-fault rehoming after acceptance)
 - **Superseded by**: None

@@ -762,8 +762,8 @@ flowchart TD
 | Type | badge | Yes | Platform-Wide / Provider-Specific / Affiliate | Display only |
 | Times Used | number | Yes | Total bookings where discount applied | Display only |
 | Total Discount Amount | currency | Yes | Cumulative discount value granted | Display only |
-| Hairline Cost | currency | Yes | Portion absorbed by platform commission | Display only |
-| Provider Cost | currency | Yes | Portion borne by the provider. Commission is always calculated on the price after promotion, so the provider bears part of every discount, including Hairline Only discounts, in addition to any Both Fees allocation | Display only |
+| Hairline Cost | currency | Yes | Portion borne by Hairline: the commission effect, plus, for a Both Fees discount, the Hairline share % of the discount defined in FR-019 that Hairline reimburses to the provider at payout | Display only |
+| Provider Cost | currency | Yes | Portion borne by the provider. Commission is always calculated on the price after promotion, so the provider bears part of every discount, including Hairline Only discounts. For a Both Fees discount, the FR-019 Hairline share % reimbursed by Hairline reduces Provider Cost | Display only |
 | Revenue Generated | currency | Yes | Total booking revenue attributed to this code | Display only |
 | Active Window | daterange | Yes | Valid From — Valid Until | Display only |
 | Status | badge | Yes | Active / Expired / Disabled | Display only |
@@ -772,7 +772,7 @@ flowchart TD
 
 - This screen is **read-only**; all discount management actions route to FR-019 / A-06
 - Data here is derived from booking and invoice records; no source-of-truth discount records are stored in A-05
-- "Hairline Cost" and "Provider Cost" splits reflect the fee allocation defined in FR-019 at creation time
+- "Hairline Cost" and "Provider Cost" splits reflect the commission effect plus, for Both Fees discounts only, the Hairline share % that FR-019 defines on the program (fixed at send and frozen at acceptance). FR-019 owns that definition; FR-017 applies it in payout settlement and defines no split of its own. Because commission is calculated on the price after promotion for every discount type, Provider Cost is non-zero for Hairline Only discounts as well as Both Fees discounts. Payout mechanics for the reimbursement belong to the payment work
 
 **Notes**:
 
@@ -1328,7 +1328,7 @@ flowchart TD
 
 - **FR-019 / Module A-06: Discount & Promotion Management**
   - **Why needed**: Discount codes created in A-06 affect invoice amounts and commission calculations
-  - **Integration point**: A-06 manages discount code creation and approval; A-05 tracks discount usage and financial impact
+  - **Integration point**: A-06 manages discount code creation and approval and owns the Both Fees Hairline share %; A-05 tracks discount usage and financial impact and applies that share in payout settlement
 
 - **FR-020 / Module S-03: Notification Service**
   - **Why needed**: Email notifications for payment confirmations, payout notifications, payment reminders
@@ -1574,7 +1574,7 @@ An admin reviews discount performance and financial impact inside Billing & Fina
 
 1. **Given** discount codes already exist in FR-019 / A-06 AND have been applied to bookings
    **When** admin opens "Billing & Finance" → "Discount Usage Overview"
-   **Then** system displays each code with: code, name, type, times used, total discount amount, Hairline cost, provider cost (if applicable), revenue generated, ROI, and status
+   **Then** system displays each code with: code, name, type, times used, total discount amount, Hairline cost, provider cost (including the commission effect for every discount type), revenue generated, ROI, and status
 
 2. **Given** admin clicks a discount row in Screen 5
    **When** the row action executes
@@ -1582,13 +1582,17 @@ An admin reviews discount performance and financial impact inside Billing & Fina
 
 3. **Given** a discount affects "Both Fees"
    **When** admin reviews the code in Screen 5
-   **Then** system displays separate Hairline Cost and Provider Cost values derived from the fee allocation defined in FR-019
+   **Then** system displays separate Hairline Cost and Provider Cost values derived from the commission effect and the FR-019 Hairline share % of the discount that Hairline reimburses to the provider at payout
 
-4. **Given** finance wants to reconcile a campaign's impact
+4. **Given** a Hairline Only discount of $100 on a $1,000 accepted subquote and a 20% Percentage commission
+   **When** admin reviews the code in Screen 5
+   **Then** commission is $180 (20% of the $900 price after promotion), so Hairline Cost shows $20 and Provider Cost shows $80, and Provider Cost is not zero
+
+5. **Given** finance wants to reconcile a campaign's impact
    **When** admin filters the discount usage list by status/date range and sorts by ROI
    **Then** system shows the highest and lowest performing campaigns based on booking revenue attributed versus discount cost
 
-5. **Given** a discount is expired or disabled in FR-019
+6. **Given** a discount is expired or disabled in FR-019
    **When** admin views Screen 5
    **Then** the same status appears in FR-017, but no creation, edit, activation, or approval actions are available from A-05
 
@@ -1808,7 +1812,7 @@ A patient requests refund due to cancellation, admin reviews request against can
   - **Relationships**: One invoice can have many installments (2-9); one installment linked to one invoice
 
 - **Entity 4 - Discount Code**
-  - **Key attributes**: discount_code_id, discount_code, discount_name, discount_type (Platform-Wide, Provider-Specific, Affiliate), affected_fees (Hairline Only, Both Fees), discount_value_type (Percentage, Fixed Amount), discount_value, currency (if fixed amount), valid_from, valid_until, max_uses, current_uses, status (Draft, Active, Expired, Disabled), approval_required (boolean), approval_status
+  - **Key attributes**: discount_code_id, discount_code, discount_name, discount_type (Platform-Wide, Provider-Specific, Affiliate), affected_fees (Hairline Only, Both Fees), hairline_share_percent (Both Fees only; read from FR-019), discount_value_type (Percentage, Fixed Amount), discount_value, currency (if fixed amount), valid_from, valid_until, max_uses, current_uses, status (Draft, Active, Expired, Disabled), approval_required (boolean), approval_status
   - **Relationships**: One discount code can be applied to many bookings; one accepted subquote, and therefore one booking, has at most one promotion, frozen at acceptance
 
 - **Entity 5 - Transaction Audit Log**
@@ -1853,6 +1857,8 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-10-15 | 2.10 | FR-015 v1.13 Rule 9 reconciliation ownership (Product Owner decision, FR-015 fifth verification pass): added Workflow B3 and Rules 14 to 16 so a payment captured after a `ProviderSuspended` / `ProviderDeactivated` cancellation is recorded, flagged "Captured after provider cancellation", does not confirm a booking or revive the case, and is excluded from provider earnings, payout, and commission until admin resolves it through the existing refund/adjustment workflow; remaining scheduled installments are cancelled; amounts are held from payout statements until admin resolution. Added Screen 4 Reconciliation Flag field and filter, Entity 1/3 attributes, FR-007 and FR-015 dependency notes, edge-case bullets, and REQ-017-028/029. No new refund percentage, fee, or payout rail. See [Change Request](change-request-2026-10-15-post-suspension-payment-reconciliation.md) and [update log](../../update-logs/2026-10-15/FR015_FIFTH_VERIFICATION_FIXES_2026-10-15.md) | Vân Tay Media |
 | 2026-10-16 | 2.11 | MTG-002 quote model alignment (CR-FR017-20261016-01): removed the acceptance-time manual-review outcome for a stale exchange rate; billing consumes the acceptance snapshot rate and its timestamp (FR-017-1, D19). Invoices read price, currency, locked rate, and promotion from the acceptance snapshot and never recalculate or change the promotion after acceptance; the FR-019 application is linked to the AcceptanceEvent; checkout code entry removed (FR-019-2, D8, D9, D11). Commission base and lock points aligned: Percentage base is the accepted price after promotion in the quote currency, rate locked at subquote acceptance, commission fixed at booking confirmation; added REQ-017-030 (S2-4, D12, M5). Minors: rate-lock wording (FR-017-4), currency-alert renegotiation as a separate adjustment (FR-017-5), Entity 7 as a read-only snapshot projection with acceptance_event_id (FR-017-6). Provider suspension after acceptance now rehomes the patient through the FR-006 provider-fault transfer with the placeholder money principle (M18, D6, D6-M). Refund, reversal, settlement, and payout mechanics left to the payment pass. | Product Owner / Documentation |
 | 2026-10-16 | 2.12 | Product Owner follow-up decision (CR-FR017-20261016-01): commission is on the price after promotion for every discount type, including Hairline Only discounts (Q5). Commission Rule 1 and REQ-017-030 state it; Screen 5 Provider Cost no longer implies providers bear nothing of a Hairline Only discount. | Product Owner / Documentation |
+| 2026-10-18 | 2.13 | Consolidated verification corrections (CR-FR017-20261016-01): Screen 5 business rule and user story now state that Provider Cost includes the commission effect for every discount type, with a new Hairline Only scenario showing a non-zero Provider Cost; later scenarios renumbered (Q5). | Product Owner / Documentation |
+| 2026-10-18 | 2.14 | Final audit corrections (CR-FR017-20261016-01): Both Fees funding now references FR-019 as owner. Screen 5 Hairline Cost and Provider Cost, its business rule, user story scenario 3, the FR-019 dependency note and the discount entity use the FR-019 Hairline share % that Hairline reimburses to the provider at payout, on top of the commission effect; FR-017 defines no split of its own; payout mechanics stay with the payment work (Q41). Approvals row and footer refreshed. | Product Owner / Documentation |
 
 ---
 
@@ -1867,10 +1873,11 @@ A patient requests refund due to cancellation, admin reviews request against can
 | Product Owner — v2.10 post-suspension payment reconciliation | Joachim Trung Tuan | 2026-10-15 | Approved (CR-FR017-20261015-01); implementation reconciliation required. |
 | Product Owner — v2.11 MTG-002 quote model alignment | Joachim Trung Tuan | 2026-10-16 | Documentation approved via the 2026-10-16 decision log (CR-FR017-20261016-01); consolidated verification pending; implementation reconciliation required. |
 | Product Owner — v2.12 commission base for all discount types | Joachim Trung Tuan | 2026-10-16 | Documentation approved via the 2026-10-16 Product Owner follow-up decisions (CR-FR017-20261016-01); implementation reconciliation pending. |
+| Product Owner — v2.13 and v2.14 verification and final audit corrections | Joachim Trung Tuan | 2026-10-18 | Approved via MTG-002 decision log (documentation only) (CR-FR017-20261016-01). |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management (system-prd.md), with FR-005/FR-006 accepted-subquote context
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18

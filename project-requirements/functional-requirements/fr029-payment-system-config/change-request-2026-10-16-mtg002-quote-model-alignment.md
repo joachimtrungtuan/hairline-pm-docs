@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v1.10 to v1.12
+**PRD Version Change**: v1.10 to v1.14 (v1.11 MTG-002 alignment; v1.12 Product Owner follow-up decisions; v1.13 consolidated verification corrections; v1.14 final audit corrections)
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -30,7 +30,7 @@ MTG-002 moved acceptance to the subquote level and fixed commission at booking c
 
 ## Approved State
 
-**Target version**: FR-029 v1.12 — Screen 6, Business Rules, Dependencies, User Story 6, Functional Requirements Summary, Key Entities
+**Target version**: FR-029 v1.14 — Screen 6, Business Rules, Dependencies, User Story 6, Functional Requirements Summary, Key Entities
 
 - Rule 1 names each lock point: exchange rate at FR-005 subquote acceptance (stored in the acceptance snapshot); commission, deposit rate, and split payment settings at FR-006 booking confirmation; nothing frozen at quote creation or sending.
 - New Booking Total Rule: booking total is the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot and never recomputed from the live quote. It is the base for Percentage commission, deposit, and installments.
@@ -51,11 +51,12 @@ MTG-002 moved acceptance to the subquote level and fixed commission at booking c
 | Pre-confirmation commission | Not addressed | Indicative model and value only; booking snapshot is authoritative | S2-4, D13 |
 | FX lock vocabulary | Quote acceptance, per quote | Subquote acceptance, stored in acceptance snapshot, copied to booking and transactions | FR-029-5 |
 | Commission snapshot | Model, value, Flat Rate currency | Adds source configuration ID and scope type | FR-029-6 |
-| Testability | No commission user story | User Story 6 (scheduled activation, model switch, re-acceptance after Payment Window Expired, promotion base, shared-scope split) | FR-029-4, FR-029-7 |
+| Testability | No commission user story | User Story 6 (scheduled activation, model switch, admin revive after Payment Window Expired keeping the original acceptance exchange rate, promotion base, shared-scope split) | FR-029-4, FR-029-7 |
 | Discount types | Not stated per discount type | Commission on the price after promotion for every discount type, including Hairline-funded discounts | Q5 |
 | Currency disable | Warn and offer a resolution path for configuration references only | Also blocked while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses the currency; count of blocking records shown | Q7 |
 | Default Currency change | No effect on quote configuration or drafts stated | New FR-026 Quote Configuration version; open drafts keep typed numbers, switch currency, and require an acknowledged banner before send (FR-004 screen) | Q4, Q14 |
 | Single base | Booking total base for commission, deposit, installments | Confirmed unchanged: one booking total for deposit percentage, instalment amounts, and commission | Q25 |
+| Fixed-amount promotion conversion at send (Rule 1) | Not stated; Rule 1(c) says nothing locks at send | FR-019 converts a fixed-amount promotion at the rate in effect at send; this sets the promotion amount only and does not move the payment rate lock from acceptance | Final audit money finding F11 |
 
 ## Scope and Impact
 
@@ -84,18 +85,20 @@ MTG-002 moved acceptance to the subquote level and fixed commission at booking c
 ## Acceptance and Validation
 
 - FR-029 Rule 1 names three lock points and nothing is frozen at quote creation.
+- User Story 6 scenario 3 covers an admin revive after Payment Window Expired: configuration resolves at the later confirmation and the exchange rate stays the one in the original acceptance snapshot; no scenario implies a second acceptance on the same inquiry.
 - One booking total definition is used for commission, deposit, and installments.
 - The Booking Total Rule and REQ-029-054 apply the price after promotion to every discount type, including Hairline-funded discounts.
 - Screen 6 blocks a currency disable while in-use quotes, bookings, or instalment plans exist and shows their count (REQ-029-052).
 - Screen 6 and REQ-029-053 state the new Quote Configuration version and the draft banner on Default Currency change; FR-004 and FR-026 carry matching statements.
 - FR-004 and FR-006 describe the pre-confirmation commission as indicative; FR-015, FR-017, and the schema carry the same base and lock points.
+- FR-019 and FR-029 Rule 1 agree that a fixed-amount promotion converts at the rate in effect at quote send while the payment rate stays locked at acceptance.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote model verification)
 - **Approved by**: Product Owner, 2026-10-16, via `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M5, D12, D13). Documentation approval only; implementation reconciliation is required and not yet assessed.
-- **Decision evidence**: `project-requirements/sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md`; decision log above; verification report `reports/2026-10-16/mtg002-quote-model-verification-2026-10-16.md`; Product Owner follow-up decisions Q4, Q5, Q7, Q14, Q25 in `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`
-- **PRD change log**: v1.11 and v1.12 rows, 2026-10-16
+- **Decision evidence**: `project-requirements/sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md`; decision log above; verification report `reports/2026-10-16/mtg002-quote-model-verification-2026-10-16.md`; Product Owner follow-up decisions Q4, Q5, Q7, Q14, Q25 in `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`; D1 and D2 applied to User Story 6 scenario 3 in consolidated verification (2026-10-18); final audit money finding F11 and doc-control findings F1, F2 (2026-10-18)
+- **PRD change log**: v1.11 and v1.12 rows, 2026-10-16; v1.13 and v1.14 rows, 2026-10-18
 - **Update log**: Pending (controller-owned)
 - **Supersedes**: None
 - **Superseded by**: None

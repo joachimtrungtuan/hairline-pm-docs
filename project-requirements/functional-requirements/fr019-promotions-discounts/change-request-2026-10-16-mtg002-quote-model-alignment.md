@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v2.1 to v2.3
+**PRD Version Change**: v2.1 to v2.5 (v2.2 MTG-002 alignment; v2.3 Product Owner follow-up decisions; v2.4 consolidated verification corrections; v2.5 final audit corrections)
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -33,7 +33,7 @@ The MTG-002 quote-model verification found that FR-019 let a patient code write 
 
 ## Approved State
 
-**Target version**: FR-019 v2.3, same headings plus Alternative Flows A3, A4, A5, B4, User Story 4, REQ-019-012 to REQ-019-016, and the UsageReservation entity
+**Target version**: FR-019 v2.5, same headings plus Alternative Flows A3, A4, A5, B4, User Story 4, REQ-019-012 to REQ-019-019, and the UsageReservation entity
 
 The updated [FR-019 PRD](./prd.md) states:
 
@@ -42,7 +42,12 @@ The updated [FR-019 PRD](./prd.md) states:
 - A patient may enter a code only before acceptance, on one named subquote; it is recorded against the patient's selection and never written to the provider's promotion.
 - The Application is created at acceptance, linked to the AcceptanceEvent, the parent quote and version, and the accepted row. Not-accepted rows never create one.
 - For provider-selected promotions and patient codes, usage is reserved at acceptance, consumed at the first successful payment, released on `Payment Window Expired` or cancellation, and re-reserved on an FR-006 admin revive, which fails if the limit is exhausted.
-- For auto-applied promotions, sending a quote reserves one use, and a sent quote holds at most one reserved use: re-sending a new version keeps it, creates one only if the new version newly qualifies, and releases it if the new version drops the promotion; the reservation is released when the quote expires, is withdrawn, or ends Not Selected or cancelled, and consumed at acceptance. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the limit; an admin revive takes it again if the limit has room, otherwise the revive is rejected (FR-006), so the accepted price never changes. Usage limits count reservations plus consumed uses, so a limit can never be exceeded.
+- For auto-applied promotions, sending a quote reserves one use, and a sent quote holds at most one reserved use: re-sending a new version keeps it, creates one only if the new version newly qualifies, and releases it if the new version drops the promotion; the reservation is released when the quote expires, is withdrawn, ends Not Selected, loses the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, and consumed when the accepted subquote carries the promotion; when a subquote of the quote is accepted that does not carry the promotion, the reservation is released with reason `not_applied`. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the limit; an admin revive takes it again if the limit has room, otherwise the revive is rejected (FR-006), so the accepted price never changes. Usage limits count reservations plus consumed uses, so a limit can never be exceeded. Because an auto-applied use is consumed at acceptance, the Applied state means the use is already consumed and Completed only marks the first payment. The UsageReservation entity matches `promotion_use_reservations`, with release reasons `expired`, `withdrawn`, `not_selected`, `dropped_on_resend`, `cancelled` and `not_applied`; the return and re-take of a consumed use are recorded on the Application.
+- PromotionProgram is stored in the new `promotion_programs` table and PromotionCode in `promotion_codes`; the legacy `discounts` table does not hold promotion programs.
+- A quote carries at most one automatic promotion. When several qualify, the priority order picks one: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount.
+- FR-019 owns the Both Fees funding: each Both Fees program has a required `Hairline Share %` (0 to 100) on Admin Screen 2, fixed at send and frozen at acceptance; Hairline reimburses that share of the discount to the provider at payout, on top of the commission effect. FR-017 applies it and defines no split of its own.
+- A fixed-amount discount converts into the quote currency at the FR-029 conversion rate in effect at send.
+- No automatic promotion attaches to an admin-authored replacement quote and no use is reserved for it; the admin sets the replacement price directly.
 - After acceptance the promotion and price are frozen; there is no removal, replacement, checkout or booking code entry, price-changing revalidation, or admin Void. The only exception is the FR-006 provider-fault transfer, which creates a new linked acceptance record; the original Application is marked Superseded and its use carries over.
 - Commission is calculated on the accepted price after the promotion, in the quote currency, from the acceptance snapshot, for every discount type including Hairline-funded programs; a Hairline-funded discount reduces the provider's payout as well as Hairline's commission, and the provider bears most of it.
 
@@ -57,10 +62,15 @@ The updated [FR-019 PRD](./prd.md) states:
 | Usage limit | Enforced at validation time | Reserve at acceptance, consume at first successful payment, release on PWE or cancellation, re-reserve on revive | D11, D2, finding FR-019-4 |
 | Automatic promotions | No attachment rule | Attach at send to every eligible row; price unchanged; discount shown separately | M14, finding FR-019-7 |
 | Commission base | Not stated; Hairline-only discounts described as leaving providers unaffected | Accepted price after promotion, quote currency, from the snapshot, for every discount type including Hairline-funded programs (REQ-019-016) | D12, Q5 |
-| Auto-applied promotion usage | Reserved only at acceptance, like other sources | One use reserved at send, at most one per sent quote across re-sent versions (kept on re-send, created only when newly qualifying, released when dropped); released on expiry, withdrawal, or Not Selected or cancelled outcomes; consumed at acceptance; limits count reservations plus consumed uses (REQ-019-015, UsageReservation) | Q6, Q29, Q30 |
-| Fixed-amount currency | No currency | Fixed values carry a currency and are expressed in the quote currency at send; Application records currency | Finding FR-019-6 |
+| Auto-applied promotion usage | Reserved only at acceptance, like other sources | One use reserved at send, at most one per sent quote across re-sent versions (kept on re-send, created only when newly qualifying, released when dropped); released on expiry, withdrawal, or Not Selected or cancelled outcomes; consumed at acceptance; limits count reservations plus consumed uses; release reasons match the schema (`expired`, `withdrawn`, `not_selected`, `dropped_on_resend`, `cancelled`), and the return and re-take after acceptance are recorded on the Application (REQ-019-015, UsageReservation, Application) | Q6, Q29, Q30 |
+| Promotion programme storage | Entity name only | PromotionProgram is stored in `promotion_programs` and PromotionCode in `promotion_codes`; `discounts` is legacy (Key Entities) | Q38 (supersedes Q33) |
+| Automatic promotion not on the accepted row | Reserved use consumed when any subquote of the quote was accepted | Released with reason `not_applied` (A3, A5, REQ-019-015, UsageReservation) | Q39, final audit |
+| Automatic promotions per quote | Two automatic programs could attach to one quote; Hairline-funded discounts unranked | At most one automatic promotion per quote; Hairline-funded ranked after provider discounts and before affiliate discounts (B3, REQ-019-004) | Q40, final audit |
+| Both Fees funding | FR-019 and FR-017 each pointed to the other | FR-019 `Hairline Share %` field (0 to 100) on Screen 2; Hairline reimburses that share at payout on top of the commission effect (REQ-019-017) | Q41, Q43, final audit |
+| Fixed-amount currency | No currency | Fixed values carry a currency and are converted into the quote currency at the FR-029 conversion rate in effect at send; Application records currency (REQ-019-018) | Finding FR-019-6, final audit |
 | Admin Void | Manual action on any redemption | Removed; Voided and Superseded set only by the system | D9 |
 | Screen 11 | Apply Discount at Quote / Booking | Apply Discount Before Acceptance | D8, D9 |
+| Admin-authored replacement quote | Not addressed; automatic promotions implied to attach to any quote | No automatic promotion attaches and no use is reserved; the admin sets the price directly; the closed acceptance's use is returned or kept under the normal rules (REQ-019-019) | Q48 |
 
 ## Scope and Impact
 
@@ -71,14 +81,14 @@ The updated [FR-019 PRD](./prd.md) states:
 ### Out of Scope
 
 - Payment, refund, fund-release, and later-instalment mechanics, including the money side of the provider-fault transfer (parked for the payment pass under D6-M).
-- Settlement of the Hairline/provider funding split (FR-017).
+- Payout mechanics for the Both Fees reimbursement (FR-017 and the payment work); FR-019 owns only the share definition.
 - The "Save as reusable program" toggle on inline promotions (observation only; no change).
 
 ### Affected Contracts
 
-- **PRD owner**: [`prd.md`](./prd.md) — Alternative Flows A3, A4, A5, B4; Screens 2, 5, 6, 9, 10, 11; General Module Rules; User Stories 3 and 4; REQ-019-003, REQ-019-007, REQ-019-012 to REQ-019-014; Key Entities (PromotionCode, Application)
-- **Related FRs**: FR-004 (copy row promotion terms into the sent quote version; admin promotion edits only before acceptance), FR-005 (Alternative Flow A8 patient code; AcceptanceEvent snapshot carries the discounted price and promotion), FR-006 (PWE and cancellation release; admin revive re-reserves; Alternative Flow B5 provider-fault transfer), FR-007 and FR-007b (first successful payment consumes the use; totals read from the snapshot), FR-015 and FR-029 (commission base after promotion), FR-017 (refund, reversal, and funding-split reconciliation), FR-018 (affiliate attribution unchanged), FR-020 and FR-030 (no new promotion events required by this change)
-- **System documents**: `system-data-schema.md` (Application/redemption table with acceptance_event_id, quote_version, source, status values, currency, terms snapshot; row-level promotion terms in the sent quote version), `system-prd.md` (FR-019 summary wording), `system-technical-spec.md` (promotion service hooks at send, acceptance, and first payment)
+- **PRD owner**: [`prd.md`](./prd.md) — Alternative Flows A2, A3, A4, A5, B3, B4; Screens 2, 5, 6, 9, 10, 11; General Module Rules; User Stories 3 and 4; REQ-019-003, REQ-019-004, REQ-019-007, REQ-019-012 to REQ-019-018; Key Entities (PromotionProgram, PromotionCode, Application, UsageReservation)
+- **Related FRs**: FR-004 (copy row promotion terms into the sent quote version; admin promotion edits only before acceptance), FR-005 (Alternative Flow A8 patient code; AcceptanceEvent snapshot carries the discounted price and promotion), FR-006 (PWE and cancellation release; admin revive re-reserves; Alternative Flow B5 provider-fault transfer), FR-007 and FR-007b (first successful payment consumes the use; totals read from the snapshot), FR-015 and FR-029 (commission base after promotion), FR-017 (refund and reversal; applies the FR-019 Both Fees Hairline share % in payout settlement), FR-029 (conversion rate at send for fixed-amount discounts), FR-018 (affiliate attribution unchanged), FR-020 and FR-030 (no new promotion events required by this change)
+- **System documents**: `system-data-schema.md` (`promotion_programs` and `promotion_codes` tables, including the Hairline share %; `not_applied` release reason; at most one automatic reservation per quote; Application/redemption table with acceptance_event_id, quote_version, source, status values, currency, terms snapshot; row-level promotion terms in the sent quote version), `system-prd.md` (FR-019 summary wording), `system-technical-spec.md` (promotion service hooks at send, acceptance, and first payment)
 
 ### Implementation Reconciliation
 
@@ -91,17 +101,20 @@ The updated [FR-019 PRD](./prd.md) states:
 
 - No path changes a promotion or price after acceptance except the FR-006 provider-fault transfer (FR-019 Screens 6, 10, 11; Alternative Flow B4; REQ-019-013).
 - One rule states the reserve, consume, release, and re-reserve lifecycle (General Module Rules; REQ-019-014).
-- Auto-applied promotions reserve at send, release on expiry, withdrawal, or Not Selected or cancelled outcomes, and consume at acceptance; no limit is exceeded when concurrent quotes compete for the last use (REQ-019-015; User Story 4 scenarios 9 and 10); a re-sent version never creates a second reservation for the same quote (User Story 4 scenario 11); a consumed auto-applied use returns to the limit on `Payment Window Expired` or cancellation before the first payment and is re-taken on revive only if room remains (User Story 4 scenario 12).
+- Auto-applied promotions reserve at send, release on expiry, withdrawal, or Not Selected or cancelled outcomes, and consume at acceptance; no limit is exceeded when concurrent quotes compete for the last use (REQ-019-015; User Story 4 scenarios 9 and 10); a re-sent version never creates a second reservation for the same quote (User Story 4 scenario 11); a consumed auto-applied use returns to the limit on `Payment Window Expired` or cancellation before the first payment and is re-taken on revive only if room remains (User Story 4 scenario 12); Applied and Completed states are scoped by source so an auto-applied use is never counted twice (Screen 6, User Story 4 scenarios 3 and 5); UsageReservation states and release reasons match `promotion_use_reservations`, including `cancelled` and `not_applied` (Key Entities); at most one automatic promotion attaches per quote (User Story 4 scenario 13).
+- Both Fees programs carry a validated `Hairline Share %` and FR-017 references FR-019 for it (Screen 2 acceptance criterion 5; REQ-019-017).
+- PromotionProgram and PromotionCode point to `promotion_programs` and `promotion_codes` (Key Entities).
 - No FR-019 text keeps commission on the price before promotion or states that a Hairline-funded discount leaves providers unaffected (REQ-019-016).
 - User Story 4 scenarios cover auto-attachment, acceptance-to-Application provenance, rejection on a row the promotion was not attached to, and the usage lifecycle.
+- No automatic promotion or reservation applies to an admin-authored replacement quote (Alternative Flow A3; REQ-019-019).
 - Cross-FR checks against FR-004, FR-005, FR-006, FR-015, FR-029, and the schema pass in consolidated verification.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote-model verification)
 - **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D2, D6, D6-M, D8, D9, D10, D11, D12, M14; Q-series Q5, Q6, Q29, Q30); findings FR-019-1, FR-019-2, FR-019-3, FR-019-4, FR-019-6, FR-019-7, FR-019-9
-- **PRD change log**: FR-019 v2.2 and v2.3 rows dated 2026-10-16
+- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D2, D6, D6-M, D8, D9, D10, D11, D12, M14; Q-series Q5, Q6, Q29, Q30, Q33, Q38 to Q41, Q43, Q48); final audit 2026-10-18 money findings F1, F2, F3, F7, F11; findings FR-019-1, FR-019-2, FR-019-3, FR-019-4, FR-019-6, FR-019-7, FR-019-9
+- **PRD change log**: FR-019 v2.2 and v2.3 rows dated 2026-10-16; v2.4 and v2.5 rows dated 2026-10-18
 - **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: CR-FR019-20260910-01, in part (redemption provenance and promotion changes after send or acceptance)
 - **Superseded by**: None

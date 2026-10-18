@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Version**: 1.12
+**Version**: 1.14
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](change-request-2026-10-14-provider-flat-rate-commission.md)
@@ -728,7 +728,7 @@ The module delivers value by:
 
 ### General Module Rules
 
-- **Rule 1**: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation.
+- **Rule 1**: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation. When FR-019 expresses a fixed-amount promotion in the quote currency at quote send, it uses the currency conversion rate (including markup) in effect at send; this sets the promotion amount on the quote only and does not lock the conversion rate for payment, which stays locked at acceptance under (a).
 - **Rule 2**: All payment configuration changes must be logged to audit trail with admin ID, timestamp, and change details for compliance
 - **Rule 3**: Configuration cache propagates to Payment Processing Service within 5 minutes maximum (cache TTL)
 - **Rule 4**: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration)
@@ -1117,7 +1117,7 @@ As a platform administrator managing provider commission, I need the commission 
 
 1. **Given** a provider is on the 20% global default and a provider-specific 18% scope is scheduled to become effective on Day 7, **When** the patient accepts a subquote on Day 6 and booking confirmation happens on Day 8, **Then** the booking snapshot stores 18% with the provider-specific scope's configuration ID and scope type, and the quote screen had shown 20% labelled "indicative, final at booking confirmation".
 2. **Given** a provider's scope switches from Percentage to Flat Rate after a subquote is accepted but before booking confirmation, **When** booking confirmation happens, **Then** the booking snapshot stores the Flat Rate model, amount, and currency, and the commission is deducted once at the FR-010 completed-procedure milestone.
-3. **Given** an accepted subquote reaches Payment Window Expired and the patient later accepts again, **When** the new booking is confirmed, **Then** commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate is the one locked at the new acceptance.
+3. **Given** an accepted subquote reaches Payment Window Expired and an admin later revives the booking through FR-006, **When** the revived booking is confirmed, **Then** commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate stays the one locked in the original acceptance snapshot, because a revive keeps the original acceptance unchanged. If the patient instead starts a new inquiry, that inquiry's own acceptance locks its own rate.
 4. **Given** an accepted subquote of $3,000 with a $300 promotion in the quote currency and a 20% Percentage commission, **When** booking confirmation happens, **Then** the commission is $540 (20% of the $2,700 booking total), and the deposit and installments use the same $2,700 base.
 5. **Given** a provider is covered by a shared provider-specific scope, **When** an admin edits that provider's commission in FR-015 Tab 7 before a pending booking is confirmed, **Then** the provider moves to its own single-provider scope and the booking snapshot records that new scope's configuration ID.
 
@@ -1274,6 +1274,8 @@ As a platform administrator managing provider commission, I need the commission 
 | 2026-10-15 | 1.10 | FR-015 v1.16 alignment (CR-FR029-20261015-02): provider-specific scopes accept Active and Suspended providers (step 10, Selected Providers validation); Deactivated providers cannot be selected and their scopes are read-only, matching FR-015 Tab 7 edit eligibility. Implementation reconciliation required. | Claude |
 | 2026-10-16 | 1.11 | MTG-002 quote model alignment (CR-FR029-20261016-01): Rule 1 now names each lock point (exchange rate at FR-005 subquote acceptance; commission, deposit rate and split payment settings at FR-006 booking confirmation; nothing at quote creation) (FR-029-1, M5); added Booking Total Rule defining the base as the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot (FR-029-2, D12); added Indicative Commission Rule and FR-004/FR-005 dependencies so the quote screen shows an indicative model and value only (S2-4, D13); Currency Rule 2, REQ-029-044 and Entity 2c use subquote acceptance vocabulary (FR-029-5); commission snapshot records source configuration ID and scope type (FR-029-6); Commission Rule states accepted-but-unpaid subquotes are not yet fixed (FR-029-7); added User Story 6 and REQ-029-049 to REQ-029-051 (FR-029-4). Implementation reconciliation required. | Claude |
 | 2026-10-16 | 1.12 | Product Owner follow-up decisions (CR-FR029-20261016-01): disabling a currency is blocked while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, with the blocking-record count shown (Q7); a Default Currency change creates a new FR-026 Quote Configuration version (Q14) and open drafts keep typed numbers, switch currency, and need a must-acknowledge banner before send, FR-004 owning the screen (Q4); commission is on the price after promotion for every discount type, including Hairline-funded discounts (Q5). Booking total as the single base for deposit, instalments and commission confirmed already compliant (Q25). Updated Screen 6 (Enabled validation and business rules), Booking Total Rule, and new REQ-029-052 to REQ-029-054. | Product Owner / Documentation |
+| 2026-10-18 | 1.13 | Consolidated verification corrections (CR-FR029-20261016-01): User Story 6 scenario 3 now describes an admin revive of a Payment Window Expired booking, which resolves commission, deposit rate and split payment settings at the later confirmation and keeps the exchange rate from the original acceptance snapshot; a new inquiry gets its own acceptance rate. There is no second acceptance on the same inquiry (D1, D2). | Product Owner / Documentation |
+| 2026-10-18 | 1.14 | Final audit corrections (CR-FR029-20261016-01): Rule 1 states that the FR-019 conversion of a fixed-amount promotion into the quote currency at quote send uses the rate in effect at send and does not move the payment rate lock from acceptance (final audit money finding F11); Product Owner approval row added. Rule 1(b) wording on deposit and instalment settings is unchanged; their storage belongs to the schema. | Product Owner / Documentation |
 
 ---
 
@@ -1284,10 +1286,11 @@ As a platform administrator managing provider commission, I need the commission 
 | Product Owner |  | 2025-12-16 | ✅ Approved |
 | Technical Lead |  | 2025-12-16 | ✅ Approved |
 | Stakeholder |  | 2025-12-16 | ✅ Approved |
+| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-029 v1.11 to v1.14 via MTG-002 decision log (documentation only), including CR-FR029-20261016-01 |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18
