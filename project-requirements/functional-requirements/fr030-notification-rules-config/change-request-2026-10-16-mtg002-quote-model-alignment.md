@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v1.11 to v1.13 (v1.12 MTG-002 alignment; v1.13 Product Owner follow-up decisions)
+**PRD Version Change**: v1.11 to v1.15 (v1.12 MTG-002 alignment; v1.13 Product Owner follow-up decisions; v1.14 consolidated verification corrections; v1.15 final audit corrections)
 **Related Commit(s)**: Pending
 
 ---
@@ -28,17 +28,21 @@ MTG-002 replaced the single-price quote with parent quotes holding option and da
 
 ## Approved State
 
-**Target version**: v1.13, same headings plus new "Quote, Booking and Treatment-Change Event Rules"
+**Target version**: v1.15, same headings plus new "Quote, Booking and Treatment-Change Event Rules" and REQ-030-026
 
 See the updated PRD. Registered event keys: `quote.withdrawn`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement`, `treatment.plan_changed`; updated `quote.submitted`, `quote.expiring_soon`, `quote.accepted`, `booking.scheduled`, `provider.status_cancellation_patient`.
 
 v1.13 follow-up: at acceptance the patient receives only `booking.scheduled`, and `quote.accepted` goes to the accepted and not-selected providers only, with no patient or admin recipient. Admins are alerted only for exceptions: `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.provider_fault_replacement` now list Admin as a recipient. `quote.cancelled_inquiry` is mandatory and cannot be suppressed by FR-032 provider preferences. `quote.updated` is Quote Revised (New Version), produced by FR-004 when a new version of a sent quote is re-sent. `booking.provider_fault_replacement` and `treatment.plan_changed` stay mandatory, and lead times stay in FR-026.
 
+v1.14 consolidated verification corrections: `quote.withdrawn` always reaches the patient and alerts the admin only when the withdrawn quote was already accepted; `booking.provider_fault_replacement` goes to the patient and admin only, and the replacement provider learns through the normal new-booking and acceptance notice; `treatment.plan_changed` fires from booking confirmation onward; the `inquiry.cancelled` row references FR-003 Screen 8b.
+
+v1.15 final corrections: `aftercare.provider_reassigned` is added as a locked mandatory FR-011 event for the patient and new aftercare provider, with no admin alert and no FR-032 suppression. An `In Progress` booking under a provider-status event stays `In Progress` with `supportRequired` and raises the admin-support alert for the admin's decision; `booking.provider_fault_replacement` applies only before treatment starts.
+
 ## Requirement Delta
 
 | Contract Area | Before | After | Reason |
 |---|---|---|---|
-| `quote.withdrawn` | Not in catalogue | Patient and Admin, FR-004 producer, mandatory before and after acceptance | D22 |
+| `quote.withdrawn` | Not in catalogue | Patient always; Admin only when the withdrawn quote was already accepted; FR-004 producer, mandatory before and after acceptance | D22, Q31 |
 | `quote.accepted` | Fully configurable; grain undefined | One provider notice per sent parent quote, siblings listed in the selected notice, no notice for drafts; selected and not-selected provider outcomes locked | D20, D21 |
 | `quote.submitted` | Single quote amount; claimed to start expiry timer | "From" lowest subquote price, option count, treatment and expiry; expiry owned by FR-004 | M9 |
 | `quote.expiring_soon` | Expiry window wording, no producer | FR-004 producer, FR-026 lead time, once per sent parent quote | M13 handoff from FR-004 |
@@ -50,9 +54,18 @@ v1.13 follow-up: at acceptance the patient receives only `booking.scheduled`, an
 | Variable sourcing | No rule | Pre-acceptance parent-level variables only; post-acceptance money from the accepted snapshot | M2, M9 |
 | `booking.scheduled`, `quote.declined`, event names | Drifted names; declined in MVP | Renamed display; declined moved to Post-MVP; catalogue names used | Minor fixes |
 | Acceptance recipients | Patient received `quote.accepted` as well as `booking.scheduled`; admin receipt of `quote.accepted` optional | Patient receives only `booking.scheduled` at acceptance; `quote.accepted` goes to the accepted provider and not-selected providers only; no admin notification for an acceptance | Q10, Q11 |
-| Admin exception alerts | No admin recipient on the slot-hold reminder, Payment Window Expired or provider-fault notices | Admin added as exception-alert recipient of `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.provider_fault_replacement`; these are the only admin alerts on the quote-to-booking path | Q11 |
+| Admin exception alerts | No admin recipient on the slot-hold reminder, Payment Window Expired or provider-fault notices | Admin added as exception-alert recipient of `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.provider_fault_replacement`, and of `quote.withdrawn` when the withdrawn quote was already accepted; these are the only admin alerts on the quote-to-booking path | Q11, Q31 |
+| Provider-fault transfer recipients | Other FRs said both providers were notified | `booking.provider_fault_replacement` goes to the patient and admin only; the replacement provider learns through the normal new-booking and acceptance notice, and the faulted provider is not notified by this event | Q32 |
+| `treatment.plan_changed` timing | Changes after acceptance | Changes from booking confirmation (`Confirmed`) onward | Q2 |
 | `quote.cancelled_inquiry` preferences | Mandatory in FR-030 but described as subject to FR-032 provider preference toggles | Mandatory; not subject to FR-030 toggles or FR-032 preferences; FR-032 offers no toggle for it | Q12 |
 | `quote.updated` | Quote Updated / Revised; meaningful changes, no producer detail | Quote Revised (New Version); FR-004 producer; emitted when a new version of an already-sent parent quote is re-sent | Q24 |
+| `booking.rescheduled` | Catalogue row with no producer or lock (Critical if schedule changes) | FR-006 producer for the admin appointment change; Patient and Provider; mandatory and locked; previous and new appointment | Q42; final audit notification finding F1 |
+| `booking.scheduled` | Patient and Provider; not in the Non-Disableable list; fired only by patient acceptance | Patient only; mandatory and locked; also fired by an admin-authored replacement acceptance (provider told through `quote.accepted`) | Q42; final audit notification findings F3 and F7 |
+| Booking appointment variables | Appointment read from the accepted snapshot | Booking notices read the booking's current appointment; the snapshot keeps the accepted baseline | Q42 |
+| FR-032 preference exemption | Non-Disableable list named only `quote.cancelled_inquiry` as preference-exempt | New list entry exempts every mandatory provider event from FR-032 preferences | Final audit notification finding F6 |
+| Admin support alert scope | Provider-status cancellations only | Also Aftercare cases flagged for aftercare reassignment | Q36 |
+| In Progress booking under a provider-status event (v1.15) | `booking.provider_fault_replacement` covered drop-out during treatment; admin-support alert did not name In Progress | The booking stays `In Progress` with `supportRequired`; `provider.status_cancellation_admin_support` fires for the admin decision (move to Aftercare with reassignment, or cancel); `booking.provider_fault_replacement` applies only before treatment starts (REQ-030-026) | Q45 |
+| Aftercare reassignment notice (v1.15) | No event | New locked mandatory FR-011 event `aftercare.provider_reassigned` to the patient and new aftercare provider, no admin alert, exempt from FR-032 preferences (REQ-030-026) | Q47 |
 | Mandatory flags and lead times | `booking.provider_fault_replacement` and `treatment.plan_changed` mandatory; lead times from FR-026 | Confirmed unchanged | Q9, Q13 |
 
 ## Scope and Impact
@@ -60,6 +73,7 @@ v1.13 follow-up: at acceptance the patient receives only `booking.scheduled`, an
 ### In Scope
 
 - Event catalogue rows, mandatory locks, variable-sourcing rules, dependencies, examples and user story text in FR-030.
+- Final audit corrections: `booking.rescheduled`, `booking.scheduled` recipients and lock, appointment variables, FR-032 exemption, admin support alert scope.
 
 ### Out of Scope
 
@@ -68,7 +82,7 @@ v1.13 follow-up: at acceptance the patient receives only `booking.scheduled`, an
 
 ### Affected Contracts
 
-- **PRD owner**: `fr030-notification-rules-config/prd.md` — event catalogue, Quote, Booking and Treatment-Change Event Rules, Admin Editability Rules, Internal Dependencies, User Story 2
+- **PRD owner**: `fr030-notification-rules-config/prd.md` — event catalogue, Quote, Booking and Treatment-Change Event Rules, Admin Editability Rules, Internal Dependencies, User Story 2, `inquiry.cancelled` row (Screen 8b reference)
 - **Related FRs**: FR-020 (mirror catalogue, locks and grain), FR-004 (producer of quote events), FR-005 (`quote.accepted` outcomes), FR-006 (booking events), FR-010 (`treatment.plan_changed`), FR-015 (status cancellation before acceptance only), FR-026 (lead-time settings), FR-032 (no provider preference toggle for `quote.cancelled_inquiry`)
 - **System documents**: `system-prd.md`, `system-data-schema.md`, `system-technical-spec.md` (event keys and payload identifiers)
 
@@ -85,16 +99,20 @@ v1.13 follow-up: at acceptance the patient receives only `booking.scheduled`, an
 - FR-020 lists the same events, locks and grain.
 - No `quote.total_amount` remains in FR-030.
 - `quote.accepted` lists Provider as its only recipient; the patient receives only `booking.scheduled` at acceptance.
-- Admin appears as a recipient only on the exception events `booking.hold_expiring_soon`, `booking.payment_window_expired` and `booking.provider_fault_replacement` on the quote-to-booking path.
+- Admin appears as a recipient only on the exception events `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.provider_fault_replacement` and, when the withdrawn quote was already accepted, `quote.withdrawn` on the quote-to-booking path; no provider is a recipient of `booking.provider_fault_replacement`, and `treatment.plan_changed` starts at booking confirmation.
 - `quote.cancelled_inquiry` is locked and is not described as subject to FR-032 preferences.
 - `quote.updated` names FR-004 as producer and describes a re-sent new version.
+- `booking.scheduled` (Patient only) and `booking.rescheduled` (Patient and Provider) are in the Non-Disableable list, and the list exempts every mandatory provider event from FR-032 preferences.
+- Booking notices read the booking's current appointment.
+- `aftercare.provider_reassigned` is catalogued as a locked mandatory FR-011 event for the patient and new aftercare provider, with no admin recipient (REQ-030-026).
+- An `In Progress` booking under a provider-status event raises `provider.status_cancellation_admin_support` and never `booking.provider_fault_replacement` (REQ-030-026).
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote model audit)
 - **Approved by**: Product Owner, 2026-10-16, via the MTG-002 decision log (documentation approval); implementation reconciliation required, not assessed
-- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`; findings S4-1, S4-2, S4-3, S4-5, FR-020-1, FR-030-3, FR-030-7, S4-8, S4-9, S4-14; Post-execution open questions Q9, Q10, Q11, Q12, Q13, Q24
-- **PRD change log**: v1.12 and v1.13 rows (2026-10-16)
+- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md`; findings S4-1, S4-2, S4-3, S4-5, FR-020-1, FR-030-3, FR-030-7, S4-8, S4-9, S4-14; Post-execution open questions Q2, Q9, Q10, Q11, Q12, Q13, Q24; consolidated verification decisions Q31, Q32; final decisions Q36, Q42, Q45 and Q47 (2026-10-18); final audit notification findings F1, F3, F6, F7 and doc-control findings F1, F2
+- **PRD change log**: v1.12 and v1.13 rows (2026-10-16); v1.14 and v1.15 rows (2026-10-18)
 - **Update log**: Combined 2026-10-16 MTG-002 log (controller-owned)
 - **Supersedes**: None
 - **Superseded by**: None
