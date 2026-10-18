@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v2.13 to v2.15
+**PRD Version Change**: v2.13 to v2.17 (v2.14 and v2.15 on 2026-10-16; v2.16 approvals refresh and v2.17 final audit corrections on 2026-10-18, both with no requirement change)
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -29,9 +29,9 @@ MTG-002 fixed the canonical quote and booking state lists and redefined a packag
 
 ## Approved State
 
-**Target version**: FR-022 v2.15 (same headings)
+**Target version**: FR-022 v2.17 (same headings)
 
-- Quote Status filters use the exact FR-004 quote statuses, including Cancelled (Provider Status). `confirmed` is not a quote status.
+- Quote Status filters use the exact FR-004 quote statuses, including Cancelled (Provider Status). `confirmed` is not a quote status. This provider and admin label is kept as FR-004 states it; FR-004 owns the patient-facing label Offer Unavailable (v2.17 check).
 - The admin Booking Status filter uses the exact FR-006 booking states: Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled. "Pending Payment" is removed.
 - The provider package list filters by package status (Active, Inactive); REQ-022-041 is updated to match.
 - FR-005 / Screen 1 price sorts use the complete offered price with promotion included; ties are ordered by parent quote send date, option order and date range start; ineligible subquotes stay listed, disabled, after eligible ones; each result is one subquote. User Story 5 tests this behaviour (REQ-022-057).
@@ -47,6 +47,7 @@ MTG-002 fixed the canonical quote and booking state lists and redefined a packag
 | Package filter (FR-024 / Screen 4, REQ-022-041) | Package Type, admin-defined types | Package status, Active or Inactive | MTG-002 decision D17 (package types removed) via FR-024 v1.3 |
 | Subquote sort and filter (FR-005 / Screen 1) | Sort basis, tie-break and ineligible placement undefined | Promotion-inclusive offered price; defined tie-break; ineligible subquotes last; result unit is the subquote; User Story 5 added | R7-3 minors FR-022-1, FR-022-4, FR-022-5 |
 | Quote list row and count unit (FR-004 / Screen 2 and Screen 5) | Implicit | One row and one counted result per parent quote | R7-3 minor FR-022-6 |
+| Change log order (v2.17) | 2026-04-13 rows listed 2.5 before 2.4 | Rows listed in version order; no requirement change | Final audit 2026-10-18 |
 | Price sort across currencies (FR-005 / Screen 1 and any patient-facing price sort or filter) | Unstated | Converted to the display currency at the current rate for ordering only; cards keep their own currency; mixed-currency order labelled approximate (Rule 9, REQ-022-058) | Q8 |
 
 ## Scope and Impact
@@ -80,14 +81,15 @@ MTG-002 fixed the canonical quote and booking state lists and redefined a packag
 - Booking Status options equal the FR-006 state list; "Pending Payment" appears nowhere in FR-022.
 - The package list filter offers only All, Active and Inactive.
 - User Story 5 scenarios pass on FR-005 / Screen 1.
+- The FR-022 change log lists versions in order (v2.17).
 - A mixed-currency subquote list sorts by converted display-currency value, cards show their own currency, and the order is labelled approximate.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote-model verification)
 - **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M6, D23, D17, R7-3; Q-series Q8)
-- **PRD change log**: FR-022 v2.14 and v2.15 rows dated 2026-10-16
+- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M6, D23, D17, R7-3; Q-series Q8); consolidated verification 2026-10-18; final audit 2026-10-18
+- **PRD change log**: FR-022 v2.14 and v2.15 rows dated 2026-10-16; v2.16 row dated 2026-10-18 (Approvals row refreshed); v2.17 row dated 2026-10-18 (final audit corrections)
 - **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: None
 - **Superseded by**: None

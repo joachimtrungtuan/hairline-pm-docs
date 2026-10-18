@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v1.2 to v1.4
+**PRD Version Change**: v1.2 to v1.5 (v1.3 and v1.4 on 2026-10-16; v1.5 consolidated verification correction on 2026-10-18)
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -34,7 +34,7 @@ The MTG-002 quote-model verification found that FR-024 still described packages 
 
 ## Approved State
 
-**Target version**: FR-024 v1.4, same headings plus `Business Rules > Package Edit Paths`, Rules 8 to 11, REQ-024-030 to REQ-024-035, and Entities 6 and 7
+**Target version**: FR-024 v1.5, same headings plus `Business Rules > Package Edit Paths`, Rules 8 to 11, REQ-024-030 to REQ-024-035, and Entities 6 and 7
 
 The updated [FR-024 PRD](./prd.md) owns the detail. In summary: a package is a full template for one Quote Option holding included items with prices, flight, hotel, transport and other travel services, and a relative-day plan; the date range, notes and documents are never packaged; each selected package is one alternative option, at most five per parent quote, never summed, with the standard price prefilling each date-range price row; library prices use the system quote currency; each library edit creates a new version and leaves earlier versions read-only, while inline quote edits stay quote-local and are never written back. The Screen 3 treatment Base Price is a reference-only, non-binding "starting from" value: it may prefill new FR-004 quote rows only where no other standard value exists and may feed a future post-MVP starting price on provider cards, but it is never binding and never read after a quote is sent.
 
@@ -67,7 +67,7 @@ The updated [FR-024 PRD](./prd.md) owns the detail. In summary: a package is a f
 
 ### Affected Contracts
 
-- **PRD owner**: [`prd.md`](./prd.md) — Main Flow: Provider Creates Package, A3, A4, A5, B3, Screens 3 to 5, General Module Rules 3, 5, 8 to 11, Package Edit Paths, Provider Editability Rules, Field Calculation Rules, User Stories 3, 4 and 6, REQ-024-007, 008, 010, 011, 014, 026, 030 to 034, Entities 1 to 7.
+- **PRD owner**: [`prd.md`](./prd.md) — Main Flow: Provider Creates Package, A2 step 3 (v1.5), A3, A4, A5, B3, Screens 3 to 5, General Module Rules 3, 5, 8 to 11, Package Edit Paths, Provider Editability Rules, Field Calculation Rules, User Stories 3, 4 and 6, REQ-024-007, 008, 010, 011, 014, 026, 030 to 034, Entities 1 to 7.
 - **Related FRs**: FR-004 (Quote Option seeding from one package, up to five options, standard-price prefill of date-range rows, copy of included items, travel services and plan, inline quote-local edits, `isCustomized` flag, status values `draft` and `sent` for Usage Count, behaviour for a source package deactivated mid-draft), FR-005 (patient sees options as alternatives; subquotes up to options × date ranges), FR-008 (included travel services come from the option copy), FR-022 (package filter and status vocabulary), FR-026 and FR-029 (system quote currency and exchange rates).
 - **System documents**: `system-prd.md` (package definition and examples), `system-data-schema.md` (`packages` version column and immutable versions, `package_items` with version, plan-day table, no package or treatment currency, removal of `quote_treatments` and `quote_packages`), and `system-technical-spec.md` (package versioning and no stale-price fallback).
 
@@ -93,8 +93,8 @@ The updated [FR-024 PRD](./prd.md) owns the detail. In summary: a package is a f
 
 - **Requested by**: Product Owner (MTG-002 quote-model verification)
 - **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D17, D18, M1, M8, M10, R7-3; Q-series Q20)
-- **PRD change log**: FR-024 v1.3 and v1.4 rows dated 2026-10-16
+- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D17, D18, M1, M6, M8, M10, R7-3; Q-series Q20); consolidated verification 2026-10-18
+- **PRD change log**: FR-024 v1.3 and v1.4 rows dated 2026-10-16; v1.5 row dated 2026-10-18 (Alternative Flow A2 step 3 uses FR-006 booking states)
 - **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: CR-FR024-20260910-01 in part (the retained `QuotePackage` compatibility link)
 - **Superseded by**: None

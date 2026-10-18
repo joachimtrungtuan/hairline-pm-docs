@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v2.4 to v2.6
+**PRD Version Change**: v2.4 to v2.8 (v2.5 and v2.6 on 2026-10-16; v2.7 consolidated verification correction and v2.8 final audit corrections on 2026-10-18)
 **Related Commit(s)**: Pending
 
 > Create this document only for a major requirement event: a new or materially revised FR changes another verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Record small corrections only in the PRD change log and normal update log.
@@ -31,16 +31,16 @@ The MTG-002 quote-model verification found that FR-005 allowed admins to soft-de
 
 ## Approved State
 
-**Target version**: FR-005 v2.6, same headings plus Alternative Flows A7 and A8, User Stories 4 and 5, and REQ-005-023 to REQ-005-029
+**Target version**: FR-005 v2.8, same headings plus Alternative Flows A7, A8 and A9, User Stories 4 and 5, and REQ-005-023 to REQ-005-030
 
-The updated PRD owns the detail. In summary: acceptance records are annotated only; one patient acceptance per inquiry, with a provider-fault transfer creating a new linked admin-authored record; one fixed hold from acceptance for the FR-026 duration keyed by provider, appointment date/time, and time zone, with the appointment created only on first payment; a defined recovery route after `Payment Window Expired`; patient promotion codes frozen at acceptance; and a snapshot whose money fields bind downstream modules while treatment details change only through FR-010. The v2.6 Q-series additions: price sort converts to the display currency for ordering only and is labelled approximate when currencies are mixed; the auto-applied promotion use reserved at send is consumed at acceptance and released for quotes that end Not Selected or auto-cancelled; the patient receives only `booking.scheduled` at acceptance; and a concurrent second acceptance fails on the existing active hold with a "slot was just taken" message.
+The updated PRD owns the detail. In summary: acceptance records are annotated only; one patient acceptance per inquiry, with a provider-fault transfer creating a new linked admin-authored record; one fixed hold from acceptance for the FR-026 duration keyed by provider, appointment date/time, and time zone, with the appointment created only on first payment; a defined recovery route after `Payment Window Expired`; patient promotion codes frozen at acceptance; and a snapshot whose money fields bind downstream modules while treatment details change only through FR-010. The v2.6 Q-series additions: price sort converts to the display currency for ordering only and is labelled approximate when currencies are mixed; the auto-applied promotion use reserved at send is consumed at acceptance and released for quotes that end Not Selected or auto-cancelled; the patient receives only `booking.scheduled` at acceptance; and a concurrent second acceptance fails on the existing active hold with a "slot was just taken" message. The v2.8 final audit additions: Alternative Flow A9 records the admin-authored replacement acceptance against the FR-004 replacement quote, with the supersession record written once at that acceptance and no new acceptance in Aftercare; the patient can cancel only before acceptance, and from acceptance onward uses Contact support while an admin cancels the booking, releasing the hold and leaving the accepted quote `accepted`; unused reserved automatic promotions are released with `not_applied`; and `booking.scheduled` is patient-only and mandatory, firing on patient acceptance and on the admin replacement acceptance, while booking notices read the current appointment and the snapshot keeps the baseline. Round-two corrections: a replacement quote that is not accepted expires normally, the inquiry stays `supportRequired`, and the admin may author another replacement quote or cancel; an `In Progress` provider fault creates no replacement acceptance; and AcceptanceSupersession causes match the schema, with `InquiryCancelled` removed.
 
 ## Requirement Delta
 
 | Contract Area | Before | After | Reason |
 |---|---|---|---|
 | Admin actions on acceptance | Soft-delete/restore of acceptance, parent quote, and subquote; undefined conflict resolution | Audited "Add note or correction" annotation only; no delete, restore, or edit; first valid acceptance stands | D4 (FR-005-4) |
-| Supersession | Mutable `supersededByCancellation` flag | Linked append-only AcceptanceSupersession record (inquiry cancelled or provider fault) | D6, FR-005-11, S1-13 |
+| Supersession | Mutable `supersededByCancellation` flag | Linked append-only AcceptanceSupersession record written only at a replacement acceptance, with cause `ProviderFault`, `ProviderSuspended` or `ProviderDeactivated`; admin booking cancellation writes no supersession record | D6, FR-005-11, S1-13 |
 | Rule 1 exception | None | Provider-fault transfer (FR-006) creates a new admin-authored acceptance record linked to the original; paid money moves as credit, details in the payment pass | D6, D6-M, D3, S1-3 |
 | Payment Window Expired | Recovery route undefined | Accepted subquote never reopened; patient cancels and starts a new inquiry or contacts support for the FR-006 revive; applies only to the first payment | D1, D2, S1-1 |
 | Slot hold | FR-006 duration, no key, no appointment rule | One fixed hold from acceptance for the FR-026 duration, keyed by provider, appointment date/time, and time zone; never extended; appointment created at first payment | M3, M4, D14, S1-2, S1-6 |
@@ -53,7 +53,13 @@ The updated PRD owns the detail. In summary: acceptance records are annotated on
 | Price sort across currencies | Unstated | Converted to the patient display currency at the current rate for ordering only; cards keep their own currency; mixed-currency order labelled approximate (REQ-005-027) | Q8 |
 | Auto-applied promotion use | Unstated | Use reserved at send (at most one per sent quote across re-sent versions) is consumed at acceptance; reservations of Not Selected or auto-cancelled quotes released; consumed use returns to the limit on Payment Window Expired or cancellation before first payment (REQ-005-028) | Q6, Q29, Q30 |
 | Patient notice at acceptance | Notifications to the patient unspecified | Patient receives only `booking.scheduled`; `quote.accepted` goes to providers only (REQ-005-029) | Q10 |
+| Replacement acceptance (v2.8) | Transfer described only as a linked admin-authored record | Alternative Flow A9: admin-authored acceptance of the FR-004 replacement quote; supersession inserted once at that acceptance; Aftercare has no new acceptance | Q35, Q36 |
+| Patient cancellation after acceptance (v2.8) | Patient could cancel during the hold | Patient cancels only before acceptance; Contact support and admin cancellation afterwards; accepted quote stays `accepted` (A4, A7, REQ-005-030) | Q37 |
+| Unused automatic promotion (v2.8) | Released as not selected or cancelled only | Released with `not_applied` when the accepted row does not carry it | Q39 |
+| `booking.scheduled` scope (v2.8) | Patient notice at acceptance | Patient-only and mandatory; fires on patient and admin replacement acceptance; booking notices read the current appointment (REQ-005-006) | Q42 |
 | Concurrent slot acceptance | Patient told the appointment is no longer available | Second acceptance fails because an active hold exists; error state "This appointment slot was just taken"; no Accepted state (A5, Screen 3, REQ-005-021) | Q23 |
+| Unaccepted replacement quote (v2.8) | Not defined | Replacement quote expires under the normal quote expiry; inquiry stays `supportRequired`; admin may author another replacement quote or cancel (A9) | Q49 |
+| Supersession causes (v2.8) | Included inquiry cancellation | `ProviderFault`, `ProviderSuspended`, `ProviderDeactivated` only; admin cancellation is shown as Booking Cancelled from the FR-006 cancellation, with no supersession record (AcceptanceSupersession entity, Screen 3, User Story 3) | Q45, schema alignment |
 | Acceptance-outcome tests | None | User Story 4 (one notice per parent quote, no winner identity or price, no notice for cancelled drafts, no `quote.declined`) and User Story 5 (exceptions) | M16, D20, P2, FR-020-4, FR-005-10 |
 
 ## Scope and Impact
@@ -72,9 +78,9 @@ The updated PRD owns the detail. In summary: acceptance records are annotated on
 
 ### Affected Contracts
 
-- **PRD owner**: `project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md` — Admin Editability Rules, General Module Rules 1 and 6, Payment & Billing Rules, Alternative Flows A3, A7, A8, User Stories 4 and 5, REQ-005-006, REQ-005-017, REQ-005-018, REQ-005-020, REQ-005-023 to REQ-005-026, Key Entities.
+- **PRD owner**: `project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md` — Admin Editability Rules, General Module Rules 1 and 6, Payment & Billing Rules, Alternative Flows A3, A4, A6, A7, A8, A9, Screen 1, Cancellation During Hold, User Stories 3, 4 and 5, REQ-005-006, REQ-005-017, REQ-005-018, REQ-005-020, REQ-005-022 to REQ-005-030, Key Entities.
 - **Related FRs**: FR-004 (`acceptedTotal`, silent draft cancellation, subquote state ownership), FR-006 (provider-fault transfer and linked records, including Alternative Flows B4 and B5 for provider suspension or deactivation after acceptance, `Payment Window Expired` boundary and admin revive, appointment created at first payment, supersession record), FR-007 and FR-007b (snapshot money fields), FR-010 (only route for post-acceptance treatment changes), FR-017 (stale FX rate recording), FR-019 (patient code validation, usage limits), FR-020 and FR-030 (one notice per parent quote, no `quote.declined`), FR-022 (subquote-level search, filter and price sort for patients), FR-026 (slot-hold duration owner).
-- **System documents**: `system-prd.md`, `system-data-schema.md` (dedicated `acceptance_events` table with `id`, option IDs, and linked supersession and annotation records), and `system-technical-spec.md` (hold at acceptance, appointment at payment).
+- **System documents**: `system-prd.md`, `system-data-schema.md` (dedicated `acceptance_events` table with `id`, option IDs, and linked supersession and annotation records; the supersession row is inserted once at the replacement acceptance; release reason `not_applied`), and `system-technical-spec.md` (hold at acceptance, appointment at payment).
 
 ### Implementation Reconciliation
 
@@ -94,14 +100,17 @@ The updated PRD owns the detail. In summary: acceptance records are annotated on
 - The patient receives only `booking.scheduled` at acceptance; no `quote.accepted` reaches the patient.
 - A concurrent second acceptance for the same slot fails on the existing active hold, shows the "slot was just taken" message, and creates no Accepted state.
 - Cross-FR checks against FR-006, FR-010, FR-019, FR-020, and FR-026 pass in consolidated verification.
+- A9 describes the admin-authored replacement acceptance, and no FR-005 text lets the patient cancel after acceptance.
+- An unaccepted replacement quote expires normally with the inquiry kept `supportRequired`, and no FR-005 text writes a supersession record for an admin cancellation or uses an `InquiryCancelled` supersession cause.
+- `not_applied` is used for an unused reserved automatic promotion, and `booking.scheduled` is patient-only and mandatory.
 - Observation recorded: CR-FR005-20260915-01 predates the v2.3 slot-hold atomicity and the v2.4 provider-status cascade; both are clarifications covered by the PRD change log and need no separate CR.
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote-model verification)
 - **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D1, D2, D3, D4, D6, D6-M, D8, D9, D14, D19, D20, M1, M2, M3, M4, M16, M18, P2, R7-1, R7-3; Q-series Q6, Q8, Q10, Q23, Q29, Q30)
-- **PRD change log**: FR-005 v2.5 and v2.6 rows dated 2026-10-16
+- **Decision evidence**: SRC-MTG-002; `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (D1, D2, D3, D4, D6, D6-M, D8, D9, D14, D19, D20, M1, M2, M3, M4, M16, M18, P2, R7-1, R7-3; Q-series Q6, Q8, Q10, Q23, Q29, Q30, Q35, Q36, Q37, Q39, Q42, Q45, Q49); consolidated verification 2026-10-18 (D14 reference correction); final audit 2026-10-18
+- **PRD change log**: FR-005 v2.5 and v2.6 rows dated 2026-10-16; v2.7 row dated 2026-10-18 (Payment & Billing Rules hold reference now points to FR-026 for the slot-hold duration); v2.8 row dated 2026-10-18 (final audit corrections)
 - **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: None
 - **Superseded by**: None

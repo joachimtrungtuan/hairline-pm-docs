@@ -163,14 +163,14 @@ flowchart TD
 
 **A4: Patient cancels inquiry (see Workflow 5)**:
 
-- **Trigger**: Patient initiates cancellation from Inquiry Dashboard (Screen 8) in stages: Inquiry, Quoted, or Accepted
+- **Trigger**: Patient initiates cancellation from Inquiry Dashboard (Screen 8) in stages: Inquiry or Quoted. From acceptance onward the patient sees "Contact support" instead, and only an admin can cancel the booking (FR-006).
 - **Outcome**: Inquiry cancelled; quotes auto-cancelled; providers notified; inquiry becomes read-only
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-    Start["Patient initiates cancellation from Inquiry Dashboard (Screen 8)<br/>in stages: Inquiry, Quoted, or Accepted"] --> Eligible{"Stage eligible?"}
-    Eligible -->|No| Block["Block cancellation + error message"]
+    Start["Patient initiates cancellation from Inquiry Dashboard (Screen 8)<br/>in stages: Inquiry or Quoted"] --> Eligible{"Stage eligible?"}
+    Eligible -->|No| Block["Block cancellation + message: Contact support"]
     Eligible -->|Yes| Process["System validates eligibility, captures cancellation reason, and processes cancellation"]
     Process --> Cascade["All associated quotes auto-cancelled; providers notified;<br/>inquiry becomes read-only"]
     Cascade --> New["Patient can immediately create a new inquiry (no cooldown;<br/>one-active-inquiry rule still applies)"]
@@ -267,11 +267,11 @@ flowchart TD
 - **Trigger**: A provider's `Suspended` or `Deactivated` status becomes effective under FR-015 (Alternative Flow A5 and Screen 4).
 - **Steps**:
   1. From the effective time, the provider is ineligible for new inquiry allocation. Workflow 2 matching, exclusive routing, and Workflow 4 reassignment revalidate provider status immediately before creating a ProviderInquiry; in-flight distribution jobs, retries, or callbacks MUST NOT create or reopen that provider's participation.
-  2. If the inquiry's accepted treatment belongs to the affected provider (stage Accepted, Confirmed, In Progress, or Aftercare), the inquiry is not cancelled. FR-006 Alternative Flow B4 closes the affected booking with cause `ProviderSuspended` or `ProviderDeactivated`, the inquiry keeps its current stage and is flagged `supportRequired = true`, and an admin rehomes the patient to a replacement provider in the same inquiry through FR-006 Alternative Flow B5. FR-004 cancels the provider's unaccepted quotes; FR-005 and FR-006 own hold release, payment blocking, and the linked replacement acceptance record.
+  2. If the inquiry's accepted treatment belongs to the affected provider (stage Accepted, Confirmed, In Progress, or Aftercare), the inquiry is not cancelled; it keeps its current stage and is flagged `supportRequired = true`. FR-006 Alternative Flow B4 records cause `ProviderSuspended` or `ProviderDeactivated` on the booking. Before treatment starts (Accepted or Confirmed), B4 closes the booking and an admin rehomes the patient to a replacement provider in the same inquiry through FR-006 Alternative Flow B5. An `In Progress` booking is not closed or transferred; it stays `In Progress` and an admin decides under FR-006 Alternative Flow B7 whether to move it to Aftercare with aftercare reassignment or cancel it with a reason. An `Aftercare` booking stays `Aftercare` and follows the aftercare reassignment in FR-006 Alternative Flow B6. FR-004 cancels the provider's unaccepted quotes; FR-005 and FR-006 own hold release, payment blocking, and the linked replacement acceptance record.
   3. If the inquiry is still comparing providers (stage Inquiry or Quoted), only the affected provider's ProviderInquiry participation and quotes are cancelled. The inquiry keeps its current stage and is flagged `supportRequired = true`; other providers' participation and offers remain available.
-  4. The patient receives the provider-caused cancellation or offer-unavailability message with a Contact Admin/Support action (FR-020), not the Workflow 5 patient-cancellation confirmation. No patient cancellation reason is requested.
-  5. Completed and already-cancelled inquiries are not reclassified. Later reactivation does not restore cancelled inquiries or participation and does not clear `supportRequired`; only an audited admin resolution clears it.
-- **Outcome**: Affected inquiries stay open and are flagged for special admin support under a provider-caused cause; accepted cases are rehomed through FR-006 Alternative Flow B5, and unrelated providers' offers are unaffected.
+  4. Before acceptance (stage Inquiry or Quoted), the patient receives the offer-unavailability message (`provider.status_cancellation_patient`) with a Contact Admin/Support action (FR-020). After acceptance and before treatment starts (stage Accepted or Confirmed), the patient receives the `booking.provider_fault_replacement` notice (FR-020) saying that the provider can no longer perform the treatment and that an admin will arrange a replacement provider within the same inquiry; no cancellation copy is shown. For stage In Progress or Aftercare, patient notices follow FR-006 Alternative Flows B7 and B6 and FR-015 Screen 4. In neither case does the patient see the Workflow 5 patient-cancellation confirmation, and no patient cancellation reason is requested.
+  5. Completed and already-cancelled inquiries are not reclassified. Later reactivation does not restore cancelled participation or quotes and does not clear `supportRequired`; only an audited admin resolution clears it.
+- **Outcome**: Affected inquiries stay open and are flagged for special admin support under a provider-caused cause; accepted cases before treatment are rehomed through FR-006 Alternative Flow B5, `In Progress` cases follow the admin decision in FR-006 Alternative Flow B7, `Aftercare` cases follow FR-006 Alternative Flow B6, and unrelated providers' offers are unaffected.
 - **Boundary**: Distinct from Workflow 5 patient cancellation, E3 account-deletion cancellation, and Payment Window Expired. Cascade processing is deduplicated per provider-status event and inquiry. FR-015 A5/Screen 4 owns the triggering event and cross-module cascade.
 
 ---
@@ -370,7 +370,7 @@ flowchart TD
 ### Workflow 5: Patient-Initiated Inquiry Cancellation
 
 **Actors**: Patient, System, Providers (notified), Admin (observer)  
-**Trigger**: Patient opens the Inquiry Dashboard (Screen 8), taps into an inquiry detail view, and selects "Cancel Inquiry" from the action menu, for an inquiry in stage Inquiry, Quoted, or Accepted  
+**Trigger**: Patient opens the Inquiry Dashboard (Screen 8), taps into an inquiry detail view, and selects "Cancel Inquiry" from the action menu, for an inquiry in stage Inquiry or Quoted. From the Accepted stage onward the action is replaced by "Contact support" (see Alternative Flow E2)  
 **Outcome**: Inquiry transitions to "Cancelled"; all associated quotes auto-cancelled; providers notified; inquiry becomes read-only in patient dashboard
 
 **Flow Diagram**:
@@ -378,20 +378,20 @@ flowchart TD
 ```mermaid
 flowchart TD
     Start["Patient opens Inquiry detail (Screen 8)"] --> Cancel["Patient taps &quot;Cancel Inquiry&quot;"]
-    Cancel --> CheckStage{"Stage eligible?<br/>Inquiry / Quoted / Accepted"}
+    Cancel --> CheckStage{"Stage eligible?<br/>Inquiry / Quoted"}
 
     CheckStage -->|No| Block["Block cancellation + message: Contact support"] --> End1["Exit"]
     CheckStage -->|Yes| Modal["Show cancellation confirmation modal (Screen 8a)"]
 
     Modal --> ReasonOk{"Reason valid/selected?"}
     ReasonOk -->|No| Modal
-    ReasonOk -->|Yes| Preflight["Preflight (no state change):<br/>confirm inquiry still active<br/>load quotes + slot-hold + notification targets"]
+    ReasonOk -->|Yes| Preflight["Preflight (no state change):<br/>confirm inquiry still active<br/>load quotes + notification targets"]
 
     Preflight --> PreflightOk{"Preflight successful?"}
     PreflightOk -->|No| PreflightErr["Show temporary error + Retry/Back<br/>(do NOT cancel yet)"] --> Modal
     PreflightOk -->|Yes| Confirm["Patient confirms cancellation"]
 
-    Confirm --> Commit["Atomic commit:<br/>set inquiry = Cancelled + timestamp + reason<br/>cancel quotes (if any)<br/>release slot hold (if any)<br/>write immutable audit event"]
+    Confirm --> Commit["Atomic commit:<br/>set inquiry = Cancelled + timestamp + reason<br/>cancel quotes (if any)<br/>write immutable audit event"]
     Commit -.-> Race["If quote submitted concurrently:<br/>quote flow must re-check inquiry status<br/>and reject if not active (FR-004)"]
 
     Commit --> Notify["Send/enqueue notifications (target &lt;= 5 minutes)<br/>providers: reason NOT shared"]
@@ -418,17 +418,18 @@ flowchart TD
     Notify --> Patient["Send patient confirmation"] --> Done["Show success (Screen 8b)"]
 ```
 
-**E2: Patient cancels inquiry during Accepted stage**:
+**E2: Patient wants to cancel after acceptance (Accepted stage onward)**:
 
-- **Trigger**: Patient cancels an inquiry with an accepted quote and active appointment slot hold
-- **Outcome**: Quote auto-cancelled; slot hold released; provider notified; booking/payment inaccessible
+- **Trigger**: Patient wants to cancel an inquiry that has an accepted quote (stage Accepted, Confirmed, In Progress or Aftercare)
+- **Outcome**: The patient cannot cancel in the app. The inquiry dashboard shows "Contact support" instead of "Cancel Inquiry". An admin cancels the booking through FR-006 with a mandatory reason and an audit entry. The booking and the inquiry become `Cancelled`, any active appointment hold is released, and the accepted quote keeps the status `accepted`. Any refund or fee follows the payment placeholder, not this FR.
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-    Preflight["Preflight detects Accepted stage + active slot hold"] --> Commit["Commit cancellation (atomic):<br/>cancel accepted quote + release slot hold"]
-    Commit --> Notify["Notify providers of inquiry cancellation + slot release<br/>(reason not shared)"]
-    Notify --> Block["Booking/payment becomes inaccessible for this inquiry"]
+    Want["Patient opens an inquiry in Accepted stage or later"] --> Support["Cancel Inquiry hidden; patient taps Contact support"]
+    Support --> Admin["Admin cancels the booking through FR-006<br/>(mandatory reason + audit)"]
+    Admin --> Result["Booking = Cancelled; inquiry = Cancelled<br/>hold released; accepted quote stays accepted"]
+    Result --> Notify["Patient and provider notified through FR-006 / FR-020"]
 ```
 
 **E3: System cancels inquiry due to account deletion request (DSR)**:
@@ -714,20 +715,21 @@ flowchart TD
 | Quotes Received | list | No | Provider quotes (from FR-004) | Read-only links |
 | Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
 | Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
-| Cancel Inquiry | action | Conditional | "Cancel Inquiry" button; visible only in Inquiry, Quoted, or Accepted stages | Hidden when stage is Confirmed, In Progress, Aftercare, Completed, or Cancelled; triggers Workflow 5 cancellation flow |
+| Cancel Inquiry | action | Conditional | "Cancel Inquiry" button; visible only in Inquiry or Quoted stages | Hidden when stage is Accepted, Confirmed, In Progress, Aftercare, Completed, or Cancelled; triggers Workflow 5 cancellation flow |
+| Contact Support | action | Conditional | "Contact support" action shown in place of "Cancel Inquiry" from the Accepted stage onward | Visible when stage is Accepted, Confirmed, In Progress or Aftercare; opens Help & Support so an admin can act on the request |
 
 **Notes**:
 
 - Dashboard shows: full inquiry summary, provider responses, deadlines, and context-aware next actions
-- "Cancel Inquiry" action appears in Next Actions area only for eligible stages (Inquiry, Quoted, Accepted)
+- "Cancel Inquiry" action appears in Next Actions area only for eligible stages (Inquiry, Quoted). From the Accepted stage onward, Next Actions shows "Contact support" instead, and any booking cancellation is performed by an admin through FR-006
 - If inquiry is in "Cancelled" stage, dashboard is read-only with "Cancelled" badge; no actions available except viewing details
-- Provider-caused cancellation (`ProviderSuspended` or `ProviderDeactivated`) shows a provider-unavailable message with a Contact Admin/Support action instead of patient-cancellation copy. For a still-comparing inquiry, the affected provider's offers show as unavailable while other offers remain actionable (Workflow 2 Alternative Flow B4)
+- A provider-caused status change (`ProviderSuspended` or `ProviderDeactivated`) never shows patient-cancellation copy. For a still-comparing inquiry (Inquiry or Quoted stage), the dashboard shows a provider-unavailable message with a Contact Admin/Support action, and the affected provider's offers show as unavailable while other offers remain actionable. After acceptance, the dashboard keeps the current stage and tells the patient that an admin will arrange a replacement provider within the same inquiry (Workflow 2 Alternative Flow B4)
 
 **Business Rules**:
 
 - Patient can only have one active inquiry at a time
 - Patient can modify inquiry if still in "Inquiry" stage
-- Patient can cancel inquiry if in Inquiry, Quoted, or Accepted stage (see Workflow 5)
+- Patient can cancel inquiry if in Inquiry or Quoted stage (see Workflow 5); from the Accepted stage onward the patient contacts support and an admin cancels through FR-006
 - Patient receives notifications for status changes
 - Inquiry data persists for 7 years minimum
 - Cancelled inquiries are not counted as "active" — patient can create a new inquiry immediately after cancellation
@@ -743,7 +745,7 @@ flowchart TD
 | Warning Icon | icon | Yes | Red warning triangle or alert icon | Displayed at top of modal |
 | Modal Title | text | Yes | "Cancel Inquiry?" | Displayed prominently in red/destructive color |
 | Warning Message | text | Yes | Explanation of consequences: "Canceling this inquiry is irreversible. All quotes you've received will be cancelled and providers will be notified." | Read-only informational text |
-| Current Stage Badge | badge | Yes | Shows inquiry current stage | Enum: "Inquiry", "Quoted", "Accepted"; read-only |
+| Current Stage Badge | badge | Yes | Shows inquiry current stage | Enum: "Inquiry", "Quoted"; read-only |
 | Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; format: HPID + YY + MM + 4-digit sequence |
 | Impact Summary | text | Yes | Summary of cancellation impact based on current stage | Conditional: "X active quotes will be cancelled" OR "No quotes received yet"; derived from associated quote count |
 | Cancellation Reason Selector | select | Yes | Dropdown or radio list of predefined reasons | Must select one option; default options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" (admin-configurable via FR-026 Screen 5a) |
@@ -756,7 +758,7 @@ flowchart TD
 **Business Rules**:
 
 - Modal is triggered from the "Cancel Inquiry" action on Screen 8 (Inquiry Dashboard)
-- Modal is only reachable when inquiry stage is Inquiry, Quoted, or Accepted (Workflow 5 step 1 validates this)
+- Modal is only reachable when inquiry stage is Inquiry or Quoted (Workflow 5 step 1 validates this)
 - Cancellation reason is required before the Confirm button becomes active
 - Cancellation reason is patient-private data (not shared with providers; stored for analytics and audit)
 - On "Confirm Cancellation", system processes Workflow 5 steps 3–5; modal is dismissed and Screen 8b is shown
@@ -782,7 +784,7 @@ flowchart TD
 | Confirmation Message | text | Yes | "Your inquiry has been successfully cancelled." | Read-only |
 | Inquiry Reference | text | Yes | Inquiry ID (HPID format) | Read-only; label: "Reference:" |
 | Cancellation Timestamp | datetime | Yes | Server-side cancellation timestamp | Format: "Cancelled on [Month DD, YYYY] at [HH:MM AM/PM]"; reflects server time, not client |
-| Impact Summary | text | Yes | Summary of what was cancelled | Conditional based on stage: "Your inquiry was cancelled." / "Your inquiry and X active quote(s) were cancelled." / "Your inquiry, accepted quote, and reservation were cancelled." |
+| Impact Summary | text | Yes | Summary of what was cancelled | Conditional based on stage: "Your inquiry was cancelled." or "Your inquiry and X active quote(s) were cancelled." |
 | Provider Notification Status | text | Yes | "All affected providers have been notified of this cancellation." | Read-only |
 | Back to My Inquiries Button | button | Yes | Primary CTA | Default style; label: "Back to My Inquiries"; navigates to Inquiry Dashboard (Screen 8) |
 | Start New Inquiry Button | button | Yes | Secondary CTA | Outlined/secondary style; label: "Start New Inquiry"; navigates to Inquiry Creation flow (Screen 1) |
@@ -792,7 +794,7 @@ flowchart TD
 
 - This screen is shown only after Workflow 5 completes successfully (steps 3–4 finished)
 - Cancellation Timestamp reflects server-side time (not client clock) for audit consistency
-- Impact Summary must match the actual cascade results (number of quotes cancelled, whether slot hold was released)
+- Impact Summary must match the actual cascade results (number of quotes cancelled)
 - Cancelled inquiry is now read-only; "Back to My Inquiries" returns to Screen 8 where it shows "Cancelled" badge
 - "Start New Inquiry" navigates to Screen 1; patient can create immediately (one-active-inquiry rule: cancelled inquiry is no longer "active")
 
@@ -800,7 +802,6 @@ flowchart TD
 
 1. **Given** cancellation completed for Inquiry-stage inquiry with 0 quotes, **When** Screen 8b displays, **Then** Impact Summary shows "Your inquiry was cancelled." with no quote mention
 2. **Given** cancellation completed for Quoted-stage inquiry with 3 quotes, **When** Screen 8b displays, **Then** Impact Summary shows "Your inquiry and 3 active quote(s) were cancelled."
-3. **Given** cancellation completed for Accepted-stage inquiry, **When** Screen 8b displays, **Then** Impact Summary shows reservation cancellation language and slot release confirmation
 
 ### Provider Platform Screens
 
@@ -1029,13 +1030,13 @@ flowchart TD
 
 4. **Cancellation Rules**
    - These rules govern patient- and account-deletion-initiated cancellation. Provider-status cancellation follows Rule 6 and does not use the patient cancellation reason, confirmation, or messaging.
-   - Patient can cancel their own inquiry in stages: Inquiry, Quoted, or Accepted (before Confirmed)
-   - Cancellation is blocked for inquiries in Confirmed, In Progress, Aftercare, or Completed stages — patient must contact support
+   - Patient can cancel their own inquiry in stages: Inquiry or Quoted (before acceptance)
+   - Patient cancellation is blocked for inquiries in Accepted, Confirmed, In Progress, Aftercare, or Completed stages — the patient sees "Contact support"
+   - From acceptance onward, only an admin can cancel, through the FR-006 booking cancellation, from any booking state, with a mandatory reason and an audit entry. The booking and the inquiry become `Cancelled`, any active appointment hold is released, and the accepted quote keeps the status `accepted`. Refunds and fees follow the payment placeholder
    - Cancellation is immediate and irreversible; no grace period, no admin approval required
    - Cancellation reason is required (predefined options; see Workflow 5)
    - System MAY cancel an eligible inquiry as a consequence of a patient account deletion request (FR-001). In that case, the system MUST set a system-generated cancellation reason for audit (e.g., "Account Deleted (System)") and MUST NOT prompt the patient for a cancellation reason.
-   - All associated quotes are auto-cancelled with status "Cancelled (Inquiry Cancelled)" regardless of quote state
-   - If inquiry is in Accepted stage with an active 48-hour appointment slot hold (FR-005/FR-006), the hold is released immediately
+   - All associated draft, sent and expired quotes are auto-cancelled with status "Cancelled (Inquiry Cancelled)" (FR-004)
    - All affected providers receive notification of cancellation; cancellation reason is NOT shared with providers (patient-private analytics data)
    - Cancelled inquiry remains visible in patient dashboard with "Cancelled" badge (read-only)
    - No cooldown period after cancellation — patient can immediately create a new inquiry (one-active-inquiry rule: cancelled inquiry is no longer "active")
@@ -1051,7 +1052,7 @@ flowchart TD
 6. **Provider Status Cancellation Rules** (FR-015 Alternative Flow A5 and Screen 4)
    - A provider's effective `Suspended` or `Deactivated` status blocks new inquiry allocation to that provider; in-flight requests or callbacks MUST NOT revive cancelled participation.
    - An `Active` provider that has not yet set its password (FR-015 `password_set = false`) is not eligible for allocation, explicit patient selection, or reassignment. It becomes eligible once the password is set; inquiries distributed before then are not re-sent to it.
-   - An inquiry whose accepted treatment belongs to the affected provider is not cancelled: its booking is closed with cause `ProviderSuspended` or `ProviderDeactivated`, the inquiry is flagged `supportRequired = true`, and an admin rehomes the patient through FR-006 Alternative Flow B5.
+   - An inquiry whose accepted treatment belongs to the affected provider is not cancelled: its booking carries cause `ProviderSuspended` or `ProviderDeactivated` and the inquiry is flagged `supportRequired = true`. Before treatment starts the booking is closed and an admin rehomes the patient through FR-006 Alternative Flow B5; an `In Progress` booking stays `In Progress` for the admin decision in FR-006 Alternative Flow B7; an `Aftercare` booking follows FR-006 Alternative Flow B6.
    - An inquiry still comparing providers keeps its stage; only the affected provider's ProviderInquiry participation and quotes are cancelled, the inquiry is flagged `supportRequired = true`, and other providers' offers stay available.
    - `supportRequired` is an independent marker, not a lifecycle stage. Clearing it requires an audited admin resolution.
    - Provider-caused causes are distinct from patient cancellation, account-deletion cancellation, and Payment Window Expired, and are never overwritten by later provider status changes.
@@ -1224,11 +1225,11 @@ flowchart TD
 
 ### Cancellation Requirements
 
-- **REQ-003-012**: System MUST allow patients to cancel their own inquiry in Inquiry, Quoted, or Accepted stages with a required cancellation reason; cancellation is immediate and irreversible.
+- **REQ-003-012**: System MUST allow patients to cancel their own inquiry in Inquiry or Quoted stages with a required cancellation reason; cancellation is immediate and irreversible. From the Accepted stage onward, System MUST NOT offer patient cancellation; it MUST show "Contact support", and cancellation is performed only by an admin through FR-006.
 - **REQ-003-013**: System MUST auto-cancel all associated quotes when an inquiry is cancelled by the patient, with distinct cancellation status "Cancelled (Inquiry Cancelled)" and provider notifications via FR-020.
-- **REQ-003-014**: System MUST release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately when an Accepted-stage inquiry is cancelled by the patient.
+- **REQ-003-014**: When an admin cancels a booking through FR-006, System MUST set the inquiry to `Cancelled`, release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately, and leave the accepted quote with the status `accepted`.
 - **REQ-003-019**: System MUST revalidate provider status at allocation, exclusive routing, and reassignment, and MUST NOT allocate inquiries to a `Suspended` or `Deactivated` provider from the effective time, including through in-flight jobs or retries, or to an `Active` provider whose FR-015 `password_set` is false.
-- **REQ-003-020**: When a provider becomes `Suspended` or `Deactivated`, System MUST NOT cancel an inquiry whose accepted treatment belongs to that provider; it MUST keep the inquiry open with `supportRequired = true` while FR-006 Alternative Flow B4 closes the booking with cause `ProviderSuspended` or `ProviderDeactivated` and an admin rehomes the patient through FR-006 Alternative Flow B5; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Patients MUST receive the provider-caused message with Contact Admin/Support, not the patient-cancellation message (FR-015 A5/Screen 4).
+- **REQ-003-020**: When a provider becomes `Suspended` or `Deactivated`, System MUST NOT cancel an inquiry whose accepted treatment belongs to that provider; it MUST keep the inquiry open with `supportRequired = true` while FR-006 Alternative Flow B4 records cause `ProviderSuspended` or `ProviderDeactivated` on the booking; before treatment starts, B4 closes the booking and an admin rehomes the patient through FR-006 Alternative Flow B5, an `In Progress` booking stays `In Progress` for the admin decision in FR-006 Alternative Flow B7, and an `Aftercare` booking follows FR-006 Alternative Flow B6; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Before acceptance, patients MUST receive the offer-unavailability message with Contact Admin/Support; after acceptance and before treatment starts, they MUST receive the `booking.provider_fault_replacement` notice that an admin will arrange a replacement provider within the same inquiry. Patients MUST NOT receive the patient-cancellation message in either case (FR-015 A5/Screen 4).
 
 ### Marking Unclear Requirements
 
@@ -1236,7 +1237,7 @@ flowchart TD
 
 ## Key Entities
 
-- **Inquiry**: patientId, treatmentAreaId, treatmentAreaSnapshot, destinations[], problem details, media[], scanRef, dateRanges[], questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
+- **Inquiry**: patientId, treatmentAreaId, treatmentAreaSnapshot, destinations[], problem details, media[], scanRef, dateRanges[] (each entry carries a stable ID, persisted as `inquiry_date_ranges`, so FR-004 date-price rows can reference the source range), questionnaireSummary, status, createdAt, cancelledAt, cancellationReason, cancellationFeedback
   - Status enum: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, **Cancelled**
   - Provider suspension or deactivation never cancels an inquiry; the causes `ProviderSuspended` and `ProviderDeactivated` are stored on the affected ProviderInquiry and on the FR-006 booking. `supportRequired` (boolean) is an independent admin-support marker with audited resolution, not a stage (Workflow 2 Alternative Flow B4)
   - Relationships: belongsTo Patient; hasMany ProviderInquiry; hasOne Scan; hasMany MedicalAlert
@@ -1394,8 +1395,8 @@ Acceptance Scenarios:
 
 1. Given inquiry in "Inquiry" stage (no quotes), When patient cancels with reason, Then inquiry status becomes Cancelled; no quote cascade; distributed providers notified
 2. Given inquiry in "Quoted" stage with 3 active quotes, When patient cancels, Then inquiry and all 3 quotes are cancelled; all 3 providers notified
-3. Given inquiry in "Accepted" stage with 48h slot hold active, When patient cancels, Then inquiry cancelled; accepted quote cancelled; appointment slot hold released immediately; provider notified of cancellation and slot release
-4. Given inquiry in "Confirmed" stage, When patient taps Cancel Inquiry, Then system blocks with message "Cannot cancel at this stage. Please contact support."
+3. Given inquiry in "Accepted" stage with a slot hold active, When patient opens the inquiry, Then "Cancel Inquiry" is hidden and "Contact support" is shown; When an admin then cancels the booking through FR-006 with a reason, Then booking and inquiry become Cancelled, the hold is released and the accepted quote stays accepted
+4. Given inquiry in "Confirmed" stage, When patient looks for Cancel Inquiry, Then it is not shown and the patient is directed to "Contact support"
 5. Given patient cancels inquiry, When patient returns to Inquiry Dashboard, Then cancelled inquiry visible with "Cancelled" badge (read-only); patient can create new inquiry immediately
 
 ### Edge Cases
@@ -1441,11 +1442,20 @@ Acceptance Scenarios:
 | 2026-10-14 | 2.7 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: Workflow 2 Alternative Flow B4, Distribution and Cancellation Rules notes, new Rule 6, Screen 8 provider-caused messaging, REQ-003-019/020, Inquiry and ProviderInquiry cause/marker notes, FR-015 dependency, and edge cases. See [Change Request](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
 | 2026-10-15 | 2.8 | FR-015 v1.16 alignment: providers with `password_set = false` are excluded from allocation, explicit selection, and reassignment until the password is set (Workflow 2 matching, Rule 6, REQ-003-019). See [Change Request](./change-request-2026-10-15-distribution-requires-password-set.md) | Claude |
 | 2026-10-16 | 2.9 | MTG-002 quote model alignment (decision M18, cross-FR check against FR-006 and FR-015): a provider suspended or deactivated after acceptance no longer cancels the inquiry. Workflow 2 Alternative Flow B4 step 2 and Outcome, the related business rule, and REQ-003-020 now keep the inquiry open with `supportRequired = true` while FR-006 Alternative Flow B4 closes the booking and an admin rehomes the patient through FR-006 Alternative Flow B5. Pre-acceptance participation cancellation is unchanged. See CR-FR003-20261016-01; CR-FR003-20261014-01 is superseded in part. | Product Owner / Documentation |
+| 2026-10-18 | 2.10 | Consolidated verification corrections (CR-FR003-20261016-01; decisions M18, D6, Q9): Workflow 2 Alternative Flow B4 step 4, Screen 8 Notes and REQ-003-020 now separate the patient message by stage. Before acceptance the patient receives the offer-unavailability message with Contact Admin/Support; after acceptance the patient receives the `booking.provider_fault_replacement` notice that an admin will arrange a replacement provider within the same inquiry, with no cancellation copy. B4 step 5 no longer implies that suspension cancels inquiries. Round-two correction (Q45): B4 steps 2 and 4, the Outcome, the provider-status business rule and REQ-003-020 now limit the B5 transfer and the `booking.provider_fault_replacement` notice to bookings before treatment starts; an `In Progress` booking stays `In Progress` for the FR-006 Alternative Flow B7 admin decision, and an `Aftercare` booking follows FR-006 Alternative Flow B6. | AI |
+| 2026-10-18 | 2.11 | Final audit corrections (CR-FR003-20261016-01; decisions Q37 and Q43): patient cancellation is now limited to the Inquiry and Quoted stages. A4, Workflow 5 trigger and diagram, Alternative Flow E2, Screen 8 (new Contact Support action), Screen 8a, Screen 8b, Cancellation Rules, REQ-003-012, REQ-003-014 and User Story 4 now say that from acceptance onward the patient sees "Contact support" and an admin cancels the booking through FR-006 with a mandatory reason and audit, the inquiry becomes Cancelled and the accepted quote stays accepted. The inquiry quote cascade now names draft, sent and expired quotes. Key Entities states that each date range carries a stable ID. Added the Product Owner approval row and a document footer. | Product Owner |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
 | --- | --- | --- | --- |
-| Product Owner | [Name] | [Date] | [Status] |
+| Product Owner | Product Owner | 2026-10-18 | Approved via MTG-002 decision log (documentation only), v2.11 (CR-FR003-20261016-01) |
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |
+
+---
+
+**Template Version**: 2.0.0 (Constitution-Compliant)
+**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
+**Based on**: FR-003 from system-prd.md
+**Last Updated**: 2026-10-18

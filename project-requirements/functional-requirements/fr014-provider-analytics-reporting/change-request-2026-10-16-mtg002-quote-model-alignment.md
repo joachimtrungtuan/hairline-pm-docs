@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-16
 **Decision Date**: 2026-10-16
-**PRD Version Change**: v3.14 to v3.16
+**PRD Version Change**: v3.14 to v3.18 (v3.15 and v3.16 on 2026-10-16; v3.17 consolidated verification corrections and v3.18 final audit corrections on 2026-10-18)
 **Related Commit(s)**: Pending
 
 > Created under decision P1: FR-014 implementation status is unknown, so this delta is recorded as a Change Request to be safe.
@@ -26,9 +26,11 @@ The Product Owner confirmed (decision M7, finding FR-014-2) that provider bookin
 
 ## Approved State
 
-**Target version**: v3.16 — same headings plus REQ-014-116
+**Target version**: v3.18 — same headings plus REQ-014-116 and REQ-014-117
 
-TTFQ ends at the `first_sent_at` of the provider's earliest parent quote for the inquiry, set by FR-004 on first send; a re-send or new version never changes it.
+TTFQ ends at the `first_sent_at` of the provider's earliest parent quote for the inquiry, set by FR-004 on first send; a re-send or new version never changes it. Legacy `quotes.sent_at` is never used as a fallback for first-submission metrics (v3.18).
+
+Admin-authored replacement quotes from an FR-006 provider-fault transfer are excluded from provider quote counts, conversion and TTFQ, and admins see them only as a separate count of provider-fault replacements per provider at fault (v3.18).
 
 Booking load and country booking figures count only FR-006 Bookings in `Confirmed` or `In Progress` status; `Accepted` (held), `Payment Window Expired` and `Cancelled` bookings never count, and no held figure is shown. "Booked" is relabelled "Confirmed bookings" and follows the funnel's inquiry cohort and Confirmed booking stage. TTFQ keeps the inquiry-created cohort; tooltips and exports state each metric's cohort basis. The FR-006 dependency names the audited revive to `Accepted` with a fresh hold.
 
@@ -42,6 +44,8 @@ Booking load and country booking figures count only FR-006 Bookings in `Confirme
 | TTFQ cohort disclosure | Inquiry-created cohort, silently different from response rate's distribution cohort | Same cohort, difference stated as intentional and shown in tooltips and exports | FR-014-3; confirmed by Q16 |
 | TTFQ end point (v3.16) | Earliest parent first-submission `sent_at` | `first_sent_at` of the provider's earliest parent quote for the inquiry, set by FR-004 on first send and never changed by a re-send or new version | Q15 |
 | FR-006 dependency | Payment Window Expired described as terminal | Payment Window Expired outcome and audited admin revive to `Accepted` with a fresh hold | D2 |
+| Legacy `sent_at` fallback (v3.18) | Contract-input table allowed legacy `quotes.sent_at` if it kept the first-send meaning | Legacy `quotes.sent_at` is never a fallback; only `first_sent_at` feeds TTFQ, response volume, acceptance cohorts and provider ramp | Q15 |
+| Admin-authored replacement quotes (v3.18) | Not addressed; a replacement quote could count as a provider response | Excluded from provider quote counts, conversion and TTFQ; reported only as a separate admin count of provider-fault replacements per provider at fault (Screen 8 Widget 1, REQ-014-117) | Q50 |
 
 ## Scope and Impact
 
@@ -59,7 +63,7 @@ Booking load and country booking figures count only FR-006 Bookings in `Confirme
 
 ### Affected Contracts
 
-- **PRD owner**: `prd.md` — Screen 1 B3/B4, Screen 3 Widget 1, Screen 10 Widget 1, Analytics Counting & Time Basis, Dependencies (FR-006), REQ-014-045, REQ-014-116, Key Entities Entity 2
+- **PRD owner**: `prd.md` — Screen 1 B3/B4, Screen 3 Widget 1, Screen 10 Widget 1, Analytics Counting & Time Basis, Dependencies (FR-006), REQ-014-045, REQ-014-116, Key Entities Entity 2, provider ramp data source and Parent-quote acceptance rate (`first_sent_at`, v3.17), contract-input table for implementation reconciliation (no `sent_at` fallback, v3.18)
 - **Related FRs**: FR-006 (Booking statuses `Accepted`, `Confirmed`, `In Progress`, `Payment Window Expired`, `Cancelled`, and the audited revive); FR-005 (AcceptanceEvent, accepted snapshot price as the only amount source); FR-004 (parent quote statuses, no `confirmed` quote status); FR-022 (booking status vocabulary must match FR-006)
 - **System documents**: `system-prd.md` (FR-014 section labels, if "Booked" is used), `system-data-schema.md` (booking status enum used by the intensity aggregate)
 
@@ -77,13 +81,16 @@ Booking load and country booking figures count only FR-006 Bookings in `Confirme
 - No "Booked" label remains on Screens 1, 3 and 10; Screen 8 and exports state the TTFQ and response rate cohorts.
 - Booking states in FR-014 match FR-006, FR-022 and the schema.
 - TTFQ ends at the provider's earliest parent quote `first_sent_at`; a re-send or new version of that quote leaves the TTFQ observation unchanged.
+- No FR-014 formula names the first-submission timestamp `sent_at`; the provider ramp offset and the Parent-quote acceptance rate cohort use `first_sent_at`.
+- No FR-014 text allows legacy `quotes.sent_at` as a fallback for a first-submission metric (v3.18).
+- No provider quote count, conversion rate or TTFQ figure includes an admin-authored replacement quote; Screen 8 shows a separate Provider-fault replacements count (REQ-014-117).
 
 ## Approval and Traceability
 
 - **Requested by**: Product Owner (MTG-002 quote model audit)
 - **Approved by**: Product Owner — documentation approved 2026-10-16 via the decision log; implementation reconciliation required, not assessed
-- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M7, D2, P1; Q-series Q15, Q16); `reports/2026-10-16/mtg002-quote-model-fix-plan-2026-10-16.md` (E014-1)
-- **PRD change log**: v3.15 and v3.16 rows (2026-10-16)
-- **Update log**: Pending (written by the controller for 2026-10-16)
+- **Decision evidence**: `reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md` (M7, D2, P1; Q-series Q15, Q16, Q50); consolidated verification 2026-10-18; final audit 2026-10-18; `reports/2026-10-16/mtg002-quote-model-fix-plan-2026-10-16.md` (E014-1)
+- **PRD change log**: v3.15 and v3.16 rows (2026-10-16); v3.17 row (2026-10-18, consolidated verification corrections); v3.18 row (2026-10-18, final audit corrections)
+- **Update log**: `../../update-logs/2026-10-16/MTG002_QUOTE_MODEL_ALIGNMENT_2026-10-16.md`
 - **Supersedes**: None
 - **Superseded by**: None

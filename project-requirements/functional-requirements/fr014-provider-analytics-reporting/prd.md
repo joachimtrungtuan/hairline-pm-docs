@@ -3,7 +3,7 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.16
+**Version**: 3.18
 **Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
 **Change Request**: [CR-FR014-20261007-01](change-request-2026-10-07-parent-quote-subquote-analytics.md) (amended twice on 2026-10-13); [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessibility.md); [CR-FR014-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) — implementation reconciliation required
@@ -866,6 +866,7 @@ Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessi
 | Avg overall rating | Star rating (from reviews) |
 | Quote response rate | Distinct distributed inquiries answered ÷ distinct inquiries distributed to this provider in the same distribution cohort |
 | vs. Platform | Variance column for conversion rate (+/−%) |
+| Provider-fault replacements | Count of admin-authored replacement quotes created in the selected period for FR-006 provider-fault transfers away from this provider; shown on its own and never added to quote counts, conversion, or TTFQ |
 | Status | Health badge: Red if TTFQ tier is Red or conversion is more than 10% below platform median; Amber if TTFQ tier is Amber or conversion is up to 10% below median; otherwise Green. If the provider has <30 inquiries (Rule 7), the badge uses TTFQ only and shows a low-sample marker |
 
 - Sortable by any column
@@ -913,7 +914,7 @@ Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessi
 | Reference line | Platform average ramp curve |
 | Purpose | Identify new providers who are struggling to get started |
 
-**Data source**: Providers with `created_at` within the selected period; parent first-submission `sent_at − providers.created_at` for days-since-onboarding offset. Count each parent identity once, regardless of later versions, resends, or child record counts.
+**Data source**: Providers with `created_at` within the selected period; parent `first_sent_at − providers.created_at` (`first_sent_at` is set by FR-004 on first send and never changed by a re-send) for days-since-onboarding offset. Count each parent identity once, regardless of later versions, resends, or child record counts.
 
 ###### Widget 5: Engagement Health Summary
 
@@ -932,6 +933,7 @@ Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessi
 - Last-activity data is sourced from `provider_activity_logs.action_at` (canonical activity log); last active = `MAX(action_at)` per provider; last login = `MAX(action_at) WHERE action_type = 'login'` per provider user. Do not use `provider_users.last_login_at` — this field does not exist in the schema.
 - "Inquiry response rate" follows the shared distinct-inquiry distribution cohort definition and MUST stay between 0% and 100%. If authoritative distribution records are unavailable, display "Response rate unavailable — distribution data missing"; do not substitute parent quote count or total platform inquiries as the denominator.
 - Engagement status thresholds (7d / 30d) are configurable by admin
+- Admin-authored replacement quotes are excluded from every quote count, conversion rate, and TTFQ figure on this screen and appear only in the Provider-fault replacements column, attributed to the provider at fault
 
 ---
 
@@ -1422,8 +1424,9 @@ Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessi
 These definitions apply to all provider/admin widgets, drill-downs, aggregates, benchmarks, and exports. A chart's "Quoted" inquiry stage is not the same unit as a submitted-parent volume metric.
 
 - **Parent response grain**: Count a stable FR-004 Parent Quote ID once on its first successful submission. Multiple parent quotes from one provider are separate responses; drafts, edits, resends, aggregate versions, Quote Options, and Option/Date-Price Records are not extra responses. Child-volume or comparison telemetry, when reported, MUST be separately labelled as Quote Option or Subquote counts and never substituted into parent metrics.
+- **Admin-authored replacement quotes**: A quote that an admin authors for a replacement provider during an FR-006 provider-fault transfer (FR-004 Workflow 7, `authorType = admin`) is not a provider response. It is excluded from every provider quote count (parent response volume, inquiry response rate, parent-quote acceptance rate), from booking conversion and the inquiry funnel for the replacement provider, and from TTFQ, together with its replacement acceptance and booking. Admin views report these quotes only as a separate count of provider-fault replacements.
 - **Acceptance grain**: FR-005's immutable AcceptanceEvent identifies the selected Subquote, its Quote Option and Option/Date-Price Record, inherited parent context, and accepted aggregate revision. Deduplicate redelivery of the same acceptance and count each accepted parent once. `acceptedSubquoteVersion = acceptedParentQuoteVersion`; neither a changed package preset nor an unselected alternative may replace the accepted snapshot. Historical acceptance measures patient selection and is retained after cancellation or payment-window expiry; it is not proof of a confirmed booking or captured revenue.
-- **Parent-quote acceptance rate**: Numerator = distinct parents in the selected first-submission cohort with an AcceptanceEvent by the reporting cutoff. Denominator = all distinct submitted parents in that same cohort, including unaccepted, expired, withdrawn, or later-cancelled parents. Use the first `sent_at` to assign each parent to its cohort; do not divide acceptance events occurring in one period by unrelated submissions in another. This is a parent-level rate, not accepted subquotes divided by available subquotes.
+- **Parent-quote acceptance rate**: Numerator = distinct parents in the selected first-submission cohort with an AcceptanceEvent by the reporting cutoff. Denominator = all distinct submitted parents in that same cohort, including unaccepted, expired, withdrawn, or later-cancelled parents. Use the parent's `first_sent_at` (set by FR-004 on first send; never changed by a re-send) to assign each parent to its cohort; do not divide acceptance events occurring in one period by unrelated submissions in another. This is a parent-level rate, not accepted subquotes divided by available subquotes.
 - **Inquiry response rate**: Denominator = distinct `(providerId, inquiryId)` distribution records first assigned to that provider within the selected distribution period. Numerator = those same pairs with at least one submitted parent response by the cutoff. Retries of distribution and multiple parent responses do not multiply either side. Missing authoritative distribution data yields an unavailable metric, not a proxy based on platform inquiries or quote volume.
 - **Inquiry funnel and booking conversion**: Use inquiry `created_at` to select the inquiry cohort. Provider views count distinct `(providerId, inquiryId)` pairs assigned to that provider; platform views count distinct Inquiry IDs across providers, not the sum of provider totals. Quoted means at least one parent was submitted; Accepted means an AcceptanceEvent exists for that inquiry and, in provider views, that provider; Confirmed booking means FR-006 recorded successful deposit or first installment confirmation. Each inquiry contributes at most once to each reached stage and cumulatively to preceding stages. Inquiries have no treatment (the provider chooses it in the parent quote), so treatment segments start at Quoted and use the parent/accepted booking's treatment; unquoted inquiries count only in all-treatments views. Deduplicate within each segment. Later cancellation does not erase a reached milestone; cancellation and no-show metrics remain separate. `In Progress` is a procedure-start milestone, never a synonym for payment confirmation.
 - **Reporting cutoff and empty denominators**: Historical funnel/acceptance/response cohorts are evaluated through the earlier of the selected period end and the pipeline's data-as-of time. Current cohorts show that cutoff and indicate that outcomes may still be pending. A zero denominator is N/A, not 0% or 100%. Tooltips/exports state the unit, cohort timestamp, numerator/denominator, cutoff, and relevant sample sizes; rates based on these distinct-record sets cannot exceed 100%.
@@ -1589,7 +1592,7 @@ The revised analytics entities below are target reporting contracts, not evidenc
 
 | Contract input | Where used | Canonical boundary / legacy constraint |
 |----------------|------------|----------------------------------------|
-| Parent Quote first-submission `first_sent_at` | Response volume, TTFQ, acceptance-rate cohorts, provider ramp | One immutable first send per stable parent identity, set by FR-004 on first send and never changed by a re-send or new version; legacy `quotes.sent_at` is usable only if it preserves this meaning, not draft creation or latest resend |
+| Parent Quote first-submission `first_sent_at` | Response volume, TTFQ, acceptance-rate cohorts, provider ramp | One immutable first send per stable parent identity, set by FR-004 on first send and never changed by a re-send or new version; legacy `quotes.sent_at` is never used as a fallback for these metrics |
 | AcceptanceEvent acceptedAt + accepted snapshot | Acceptance milestones, accepted prices, aging origin | FR-005 event is authoritative; legacy `quotes.accepted_at` alone cannot identify the chosen package/date price or establish an active hold |
 | Parent/subquote IDs and accepted aggregate versions; Quote Option/Option-Date-Price IDs | Drill-downs, accepted-price observations, detailed exports | Resolve the exact accepted version and inherited context; require equal parent/subquote aggregate versions |
 | Booking linkage, confirmation event, hold deadline, and lifecycle | Confirmed funnels, patient journey, pending-payment aging | FR-006 distinguishes Accepted, Confirmed, In Progress, Payment Window Expired, and Cancelled; flat quote status is insufficient |
@@ -1770,6 +1773,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 - **REQ-014-112**: System MUST apply the same revised contracts to provider/admin screens, benchmarks, drill-downs, cached aggregates, PDF/CSV, and scheduled exports without expanding existing permissions or redesigning the locked cockpit.
 - **REQ-014-113**: System MUST send the in-app TTFQ SLA-breach alert (`inquiry.ttfq_sla_breached`) once per distributed inquiry/provider pair when no parent quote is submitted within the FR-026 SLA target, suppressed for cancelled or withdrawn distributions and never repeated for the same pair
 - **REQ-014-116**: System MUST count booking load and country booking figures (Screen 1 B3 and B4, Screen 3 Widget 1, Screen 10 Widget 1) from FR-006 Bookings in `Confirmed` or `In Progress` status only, label them "Confirmed bookings", and never count held (`Accepted`), `Payment Window Expired` or `Cancelled` bookings or show a separate held figure.
+- **REQ-014-117**: System MUST exclude admin-authored replacement quotes (`authorType = admin`) and their replacement acceptances and bookings from provider quote counts, parent-quote acceptance rates, inquiry response rates, booking conversion, the inquiry funnel, and TTFQ on every provider and admin screen and export, and MUST report them to admins only as a separate count of provider-fault replacements per provider at fault (Screen 8 Widget 1).
 
 ### Report History & Accessibility (CR-FR014-20261013-02)
 
@@ -1826,6 +1830,8 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | 2026-10-14 | 3.14 | Sixth verify-fr pass fixes approved by Product Owner on 2026-10-14: new Global Filter Rule 5A defines where the Treatment and country filters apply (Screens 4, 9 and 10 list unfiltered widgets; payout statements are not split by treatment or patient country); Screen 3 Widget 1 Avg rating source defined (Published FR-013 reviews by reviewing patient country); REQ-014-045 wording aligned to quoted inquiries; Screen 1 C4 Type column defined from the FR-017 provider display statuses (definition only, layout unchanged); Screen 7 Tile 5 "active providers" clarified as account status; Screen 6 treatment filter references Rule 5A; system PRD SLA-breach alert wording aligned to once per distributed inquiry/provider pair from distribution | Claude Code |
 | 2026-10-16 | 3.15 | MTG-002 quote model alignment approved by Product Owner on 2026-10-16: Screen 1 B3 booking intensity (`bookings_on_day`, Entity 2) counts only FR-006 `Confirmed` and `In Progress` bookings, with held, Payment Window Expired and Cancelled bookings excluded and no held figure; "Booked" relabelled "Confirmed bookings" on Screen 1 B4, Screen 3 Widget 1 and Screen 10 Widget 1, and REQ-014-045 aligned; new REQ-014-116; TTFQ and response-rate cohort difference stated as intentional and disclosed; FR-006 dependency notes the audited Payment Window Expired revive (FR-014-2 with decision M7, FR-014-3, D2; CR-FR014-20261016-01) | Claude Code |
 | 2026-10-16 | 3.16 | Product Owner Q-series follow-up (Q15, Q16; CR-FR014-20261016-01): TTFQ end point named as the `first_sent_at` of the provider's earliest parent quote for the inquiry, set by FR-004 on first send and never changed by a re-send or new version (Tile 2 formula, Calculation Rules, Data Dependencies, REQ-014-037). Q16 confirmed the existing inquiry-created TTFQ cohort and tooltip/export disclosure with no text change. Status remains pending consolidated verification. | Claude Code |
+| 2026-10-18 | 3.17 | Consolidated verification corrections (CR-FR014-20261016-01; decision Q15): the provider ramp data source (days-since-onboarding offset) and the Parent-quote acceptance rate cohort now use `first_sent_at`, set by FR-004 on first send and never changed by a re-send, instead of `sent_at`. Approvals row added for v3.15 to v3.17. | AI Assist |
+| 2026-10-18 | 3.18 | Final audit corrections (CR-FR014-20261016-01; decision Q15): the contract-input table no longer allows legacy `quotes.sent_at` as a fallback for first-submission metrics; TTFQ, response volume, acceptance-rate cohorts and provider ramp read only the parent quote `first_sent_at`. Later the same day (decision Q50): admin-authored replacement quotes are excluded from provider quote counts, conversion and TTFQ and are reported only as a separate admin count of provider-fault replacements (Analytics Counting rule, Screen 8 Widget 1 column and business rule, REQ-014-117). | Product Owner |
 
 ---
 
@@ -1833,7 +1839,9 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
+| Product Owner — documentation delta v3.18 | Joachim Trung Tuan | 2026-10-18 | ✅ Approved via MTG-002 decision log (documentation only): final audit corrections (CR-FR014-20261016-01) |
 | Product Owner — prior baseline v3.6 | Joachim Trung Tuan | 2026-04-18 | ✅ Approved (historical baseline; approver name corrected 2026-10-13) |
+| Product Owner — documentation delta v3.15 to v3.17 | Joachim Trung Tuan | 2026-10-16 | ✅ Approved: MTG-002 quote-model alignment via the 2026-10-16 decision log (CR-FR014-20261016-01); v3.17 consolidated verification correction on 2026-10-18 applies decision Q15. Implementation reconciliation required; not an implementation sign-off |
 | Product Owner — documentation delta v3.14 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: sixth verify-fr pass resolutions (Issue 1 option 1 global filter rule, Issue 2 option 1 define rating source, Issue 3 align wording, Issue 4 define both). Not an implementation sign-off |
 | Product Owner — documentation delta v3.13 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: fifth verify-fr pass resolutions (Issue 1 revised: treatment comes only from the provider's parent quote; Issue 2 option 1; Issue 3 option 1 with small clinics pooled and low-sample visuals left to UX; Issue 4 fix Screen 4 wording). Not an implementation sign-off |
 | Product Owner — documentation delta v3.12 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: fourth verify-fr pass resolutions (Issue 1 option C, Issues 2–6 option A, Issue 7 add dependencies, Issue 8 reword Rule 11, Issue 9 align dates). Not an implementation sign-off |
@@ -1849,4 +1857,4 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-10-14
+**Last Updated**: 2026-10-18

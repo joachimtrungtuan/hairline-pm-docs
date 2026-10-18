@@ -155,7 +155,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 - **Steps**:
   1. Admin navigates to treatment in catalog
   2. Admin clicks "Deactivate Treatment"
-  3. System checks if any active quotes or scheduled bookings use this treatment
+  3. System checks if any open quotes (draft or sent) or open FR-006 bookings (Accepted, Confirmed, In Progress, Aftercare) use this treatment
   4. System displays warning: "X providers currently offer this treatment, Y active quotes exist"
   5. Admin confirms deactivation
   6. System changes treatment status to "Inactive"
@@ -1012,6 +1012,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | 2026-09-10 | 1.2 | FR-004 v2.6 reconciliation: package versions now provide provenance to Quote Option snapshots rather than a direct reusable-package relationship on new parent Quotes; the legacy QuotePackage link is explicitly deprecated. See [Change Request](./change-request-2026-09-10-quote-option-provenance-alignment.md). | Product Owner / Documentation |
 | 2026-10-16 | 1.3 | MTG-002 quote-model alignment: a package is a full template that seeds one Quote Option (included items, travel services, relative-day plan, standard price; date range, notes, and documents never packaged); each selected package is one alternative option, up to 5, never summed; add-on package types removed; PackageItem and PackagePlanDay added; package and treatment currency removed; QuoteTreatment and QuotePackage removed; Usage Count counts Quote Options on open (draft or sent) quotes; library-edit versioning and inline quote-local edit paths stated separately; stable IDs plus versions, no hard delete, patient fields from the recorded version, no stale-price fallback. Findings FR-024-1, -2, -3, -4, -5, -6, -8, -9 to -14; decisions D17, D18, M1, M8, M10, R7-3. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR024-20261016-01). | Product Owner / Documentation |
 | 2026-10-16 | 1.4 | Product Owner Q-series follow-up (Q20; CR-FR024-20261016-01): Screen 3 treatment Base Price defined as a reference-only, non-binding "starting from" value that may prefill new quote rows only where no other standard value exists and may feed a future post-MVP starting price on provider cards; never binding and never read after a quote is sent. New REQ-024-035. Status remains pending consolidated verification. | Product Owner / Documentation |
+| 2026-10-18 | 1.5 | Consolidated verification corrections (CR-FR024-20261016-01; decision M6): Alternative Flow A2 step 3 now checks open quotes (draft or sent) and open FR-006 bookings (Accepted, Confirmed, In Progress, Aftercare) instead of "scheduled bookings", which is not an FR-006 booking state. Approvals row refreshed to v1.4. | AI |
 
 ---
 
@@ -1022,11 +1023,11 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | Product Owner | Hairline Product Team | 2025-11-28 | ✅ Approved |
 | Technical Lead | Hairline Engineering | 2025-11-28 | ✅ Approved |
 | Stakeholder | Hairline Leadership | 2025-11-28 | ✅ Approved |
-| Product Owner | Hairline Product Team | 2026-10-16 | ✅ Approved (v1.3 documentation; implementation reconciliation required) |
+| Product Owner | Hairline Product Team | 2026-10-16 | ✅ Documentation approved through v1.4 via the MTG-002 decision log (CR-FR024-20261016-01); v1.5 consolidated verification correction on 2026-10-18 applies decision M6; implementation reconciliation required |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18
