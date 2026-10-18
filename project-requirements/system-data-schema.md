@@ -1,10 +1,10 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.9.0  
+**Version**: 1.11.0  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-16
+**Last Updated**: 2026-10-18
 
 ---
 
@@ -14,11 +14,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ### Schema Overview
 
-- **Total Tables**: 112 tables (see Complete Table List)
+- **Total Tables**: 116 tables (see Complete Table List)
 - **Primary Key Type**: UUID (string) for user-facing entities, auto-increment for system tables
 - **Character Set**: utf8mb4_unicode_ci (supports emoji and international characters)
 - **Storage Engine**: InnoDB (supports foreign keys and transactions)
-- **Soft Deletes**: Enabled for critical entities (patients, providers, quotes, treatments)
+- **Soft Deletes**: Enabled for critical entities (patients, providers, treatments). Quotes are not soft-deleted: once an acceptance record references a quote, the quote is retained permanently
 - **Hard Deletes**: PROHIBITED for all medical, financial, and patient data (7-year minimum retention)
 
 ---
@@ -165,7 +165,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Business Rules (FR-015 v1.9, FR-029)**:
 
 - Provider commission settings (model, value, Flat Rate currency, start date) are not stored on `providers`; they live in `provider_commissions` (§2B), which FR-015 Tab 7 and FR-029 Screen 5 read and write. `payout_frequency` stays on `providers`.
-- The commission model, value, and Flat Rate currency are snapshotted onto the booking at confirmation (see §7 Quotes); later provider edits never change a confirmed booking.
+- The commission model, value, and Flat Rate currency are snapshotted onto the booking at confirmation (see §11A Bookings); later provider edits never change a confirmed booking.
 - Every admin edit to provider data requires a change reason stored in the audit log (see Audit Trail).
 - Status change to `suspended` or `deactivated` triggers the provider-status cancellation cascade (see Provider-Status Cancellation Fields under §5 Inquiries) and clears `featured`. Reactivation restores nothing.
 - Retention: data of a `deactivated` provider is kept for at least 7 years and then archived; provider records are never hard-deleted.
@@ -407,7 +407,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
 | problem | VARCHAR(255) | NOT NULL | Main hair loss concern |
 | scan_url | VARCHAR(255) | NOT NULL | S3 path to head scan capture assets (V1 photo set; V2 3D scan) |
-| treatment_schedule | JSON | NOT NULL | Preferred treatment dates (range) |
+| treatment_schedule | JSON | NOT NULL | **Legacy** copy of the preferred treatment date ranges; each patient-requested range is stored with a stable ID in `inquiry_date_ranges` (§5B), which quotes reference |
 | problem_details | TEXT | NOT NULL | Detailed description of concern |
 | nature_of_concern | VARCHAR(255) | NULLABLE | Type of hair loss (genetic, alopecia, etc.) |
 | duration_of_concern | VARCHAR(255) | NULLABLE | How long has problem existed |
@@ -416,12 +416,10 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | lifestyle_factors | VARCHAR(255) | NULLABLE | Relevant lifestyle information |
 | additional_files | VARCHAR(255) | NULLABLE | Additional photos/documents |
 | additional_notes | VARCHAR(255) | NULLABLE | Extra notes from patient |
-| status | VARCHAR(255) | NOT NULL, DEFAULT 'requested' | Treatment case status: `requested`, `offers`, `accepted`, `scheduled`, `confirmed`, `in_progress`, `completed`, `cancelled` (separate from quote statuses; see §7 Case lifecycle note) |
-| cancellation_cause | VARCHAR(255) | NULLABLE | Set by the provider-status cascade: `ProviderSuspended` or `ProviderDeactivated` |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'inquiry' | Inquiry stage (FR-003): `inquiry`, `quoted`, `accepted`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled` (displayed as Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled; separate from quote statuses; see §7 Case lifecycle note) |
+| cancelled_at | TIMESTAMP | NULLABLE | Set when the inquiry moves to `cancelled` (patient cancellation in Inquiry or Quoted, or admin booking cancellation after acceptance) |
+| cancellation_reason | VARCHAR(255) | NULLABLE | Patient cancellation reason, or the mandatory admin reason when an admin cancels the booking |
 | support_required | BOOLEAN | DEFAULT false | Independent `supportRequired` marker (not a status); cleared only by audited admin resolution |
-| provider_status_event_id | UUID | NULLABLE | Reference to the provider status-change event that cancelled the case |
-| provider_status_effective_at | TIMESTAMP | NULLABLE | Effective time of that provider status change |
-| prior_stage | VARCHAR(255) | NULLABLE | Case stage immediately before the cascade cancellation |
 | support_resolved_at | TIMESTAMP | NULLABLE | When an admin resolved the support marker |
 | support_resolved_by | UUID | FOREIGN KEY, NULLABLE | References users.id (resolving admin) |
 | support_resolution_reason | TEXT | NULLABLE | Mandatory admin resolution reason recorded when the marker is cleared |
@@ -433,9 +431,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - PRIMARY: `id`
 - INDEX: `patient_id`, `created_at`
 - INDEX: `status`
-- INDEX: `support_required`, `cancellation_cause`
+- INDEX: `support_required`
 
-**Provider-Status Cancellation Fields (FR-015 v1.9)**: When a provider suspension or deactivation becomes effective, the system auto-cancels that provider's non-terminal Accepted, Confirmed, In Progress, and Aftercare cases (including standalone aftercare) and stores the fields above; the same fields exist on `after_cares` (§13). For a case with an accepted subquote, the booking (§11A) is cancelled with the cause, the AcceptanceEvent is superseded through a linked `acceptance_supersessions` row (§7J), the accepted quote stays `accepted`, and the inquiry is not cancelled: it stays open with `support_required = true` so that an admin can rehome the patient in the same inquiry through the FR-006 provider-fault transfer. Quotes that were not accepted move to `cancelled_provider_status` with the cause in `quotes.cancellation_provenance` (§7). Rules:
+**Inquiry stages**: the stage values follow FR-003. Legacy values are retired: `requested` maps to `inquiry`, `offers` maps to `quoted`, and a row still in `scheduled` maps to the stage of its booking. From acceptance onward the patient cannot cancel in the app; only an admin cancels the booking, from any booking state, with a mandatory reason and an audit entry, and the inquiry then moves to `cancelled` while the accepted quote stays `accepted`.
+
+**Provider-Status Cancellation (FR-015 v1.9)**: Provider suspension or deactivation never cancels an inquiry. The cause fields (`cancellation_cause`, `provider_status_event_id`, `provider_status_effective_at`, `prior_stage`) are stored on the affected provider participation in `inquiry_providers` (§5A), on the booking (§11A), and on standalone aftercare (§13). For an Accepted or Confirmed booking of that provider, the booking (§11A) is cancelled with the cause and `support_required = true`, the accepted quote stays `accepted`, and the inquiry is not cancelled: it stays open with `support_required = true` so that an admin can rehome the patient in the same inquiry through the FR-006 provider-fault transfer. The AcceptanceEvent is superseded only when the replacement acceptance is recorded (§7J). An In Progress booking of that provider is not cancelled automatically: it stays `in_progress` with `support_required = true`, and an admin decides the case on the FR-006 intervention screen (§11A). For a booking in Aftercare, the booking and treatment record stay and an admin reassigns the aftercare provider or team (§13). Quotes that were not accepted move to `cancelled_provider_status` with the cause in `quotes.cancellation_provenance` (§7). Rules:
 
 - `support_required` is a boolean marker, not a status. It is cleared only by an admin resolution that records `support_resolution_reason`, `support_resolved_by`, and `support_resolved_at` in the audit trail.
 - A `ProviderSuspended` cause is never overwritten when the provider is later deactivated; reactivation restores no cancelled case.
@@ -444,10 +444,79 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Relationships**:
 
 - `belongsTo` → `Patient`
-- `hasMany` → `InquiryProvider` (junction table)
+- `hasMany` → `InquiryProvider` (§5A)
+- `hasMany` → `InquiryDateRange` (§5B)
 - `hasMany` → `Quote`
 - `hasOne` → `MedicalHistory`
 - `hasMany` → `WorkflowTimeline`
+
+---
+
+### 5A. Inquiry Providers
+
+**Table**: `inquiry_providers`
+**Description**: One provider's participation in an inquiry (FR-003 ProviderInquiry). It holds the distribution time used by FR-014 and the provider-status cancellation of that provider's participation.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique participation identifier |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| source | VARCHAR(255) | NULLABLE | How the inquiry reached the provider (normal distribution or exclusive routing) |
+| distributed_at | TIMESTAMP | NOT NULL | Set once when the inquiry is distributed to this provider, including release to normal distribution after an exclusive provider declines; retries and re-sends never overwrite it. Start point of FR-014 time to first quote and response rate and of the `inquiry.ttfq_sla_breached` alert |
+| viewed_at | TIMESTAMP | NULLABLE | First time the provider viewed the inquiry |
+| status | VARCHAR(255) | NOT NULL | Participation status; `cancelled` when only this provider's participation is cancelled by its suspension or deactivation (the record is retained and never reopened by reactivation) |
+| cancellation_cause | VARCHAR(255) | NULLABLE | `ProviderSuspended` or `ProviderDeactivated`; a `ProviderSuspended` cause is never overwritten by a later deactivation |
+| provider_status_event_id | UUID | NULLABLE | Reference to the provider status-change event |
+| provider_status_effective_at | TIMESTAMP | NULLABLE | Effective time of that provider status change |
+| prior_stage | VARCHAR(255) | NULLABLE | Inquiry stage when the participation was cancelled |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `(inquiry_id, provider_id)`
+- INDEX: `provider_id`, `distributed_at`, `status`, `cancellation_cause`
+
+**Relationships**:
+
+- `belongsTo` → `Inquiry`
+- `belongsTo` → `Provider`
+
+---
+
+### 5B. Inquiry Date Ranges
+
+**Table**: `inquiry_date_ranges`
+**Description**: One row per treatment date range requested by the patient on an inquiry (FR-003 `dateRanges[]`). The stable ID is what `quote_option_date_prices.source_inquiry_date_range_id` (§7C) references.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique date range identifier |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
+| start_date | DATE | NOT NULL | Range start |
+| end_date | DATE | NOT NULL | Range end; not before `start_date` |
+| sort_order | INTEGER | NOT NULL | Order in which the patient entered the range |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `inquiry_id`
+
+**Business Rules**:
+
+- Ranges are written when the inquiry is submitted and are not edited once a quote references them.
+
+**Relationships**:
+
+- `belongsTo` → `Inquiry`
+- `hasMany` → `QuoteOptionDatePrice` (§7C)
 
 ---
 
@@ -498,12 +567,15 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | id | UUID | PRIMARY KEY | Unique quote identifier |
 | inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| authored_by_type | VARCHAR(255) | NOT NULL, DEFAULT 'provider' | `provider` for a normal quote; `admin` for a replacement quote that an admin authors for the replacement provider during an FR-006 provider-fault transfer |
+| authored_by_admin_id | UUID | FOREIGN KEY, NULLABLE | References users.id; the admin who authored a replacement quote; set only when `authored_by_type` is `admin` |
+| replacement_for_acceptance_event_id | UUID | FOREIGN KEY, NULLABLE | References acceptance_events.id: the closed acceptance this replacement quote replaces; set only when `authored_by_type` is `admin` |
 | treatment_id | UUID | FOREIGN KEY, NOT NULL | References `treatments.id` for the exact immutable Treatment selected under FR-024 |
 | treatment_version | INTEGER | NOT NULL | Version metadata for the immutable record referenced by `treatment_id`; technique and other Treatment-owned data are loaded through this relationship rather than copied onto `quotes` |
 | package_id | UUID | FOREIGN KEY, NULLABLE | References packages.id. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_options.source_package_id`; retained until every consumer migrates |
 | treatment_date | JSON | NOT NULL | Proposed treatment dates. **DEPRECATED (FR-004 v2.2)** — superseded by `quote_option_date_prices`; retained until every consumer migrates |
-| discount_id | UUID | FOREIGN KEY, NULLABLE | References discounts.id. **DEPRECATED (FR-004 v2.6)** — structured promotions are now attached through `quote_option_date_prices.promotion_id`; retained until every consumer migrates |
-| commission | INTEGER | NOT NULL | **Legacy** percentage-only commission value; MUST NOT be read as the commission rule. The binding commission snapshot is stored on `bookings` (§11A) |
+| discount_id | UUID | FOREIGN KEY, NULLABLE | References the legacy `discounts.id` (§25). **DEPRECATED (FR-004 v2.6)** — structured promotions are now attached through `quote_option_date_prices.promotion_id`; retained until every consumer migrates |
+| commission | INTEGER | NULLABLE | **Legacy, deprecated** percentage-only commission value; new quotes leave it NULL, and it MUST NOT be read as the commission rule. The binding commission snapshot is stored on `bookings` (§11A) |
 | commission_model | VARCHAR(255) | NULLABLE | Indicative commission model shown on the quote: `percentage` or `flat_rate` (FR-004, FR-029). Never binding; the binding snapshot is captured at booking confirmation on `bookings` (§11A) |
 | commission_value | DECIMAL(10,2) | NULLABLE | Indicative value: percentage (0-100) for `percentage`, fixed amount (> 0) for `flat_rate`; never binding |
 | commission_currency | VARCHAR(3) | NULLABLE | Indicative Flat Rate currency; NULL for `percentage` |
@@ -520,11 +592,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | expiration_hours | INTEGER | NULLABLE | Quote expiry window in hours, copied read-only from the FR-026 Quote Configuration at first send (default 48); NULL on drafts; never changed per quote and never extended |
 | auto_accepted | BOOLEAN | DEFAULT false | Whether quote was auto-accepted with pre-scheduled appointment |
 | appointment_pre_scheduled | BOOLEAN | DEFAULT false | Whether provider pre-scheduled appointment in quote |
-| sent_at | TIMESTAMP | NULLABLE | Set when status transitions from `draft` → `sent` (exposed as `quote`); feeds TTFQ analytics (FR-014) |
+| sent_at | TIMESTAMP | NULLABLE | Time of the latest send: set at first send and updated each time a new version is sent. MUST NOT feed TTFQ analytics; TTFQ (FR-014) ends at `first_sent_at` |
 | accepted_at | TIMESTAMP | NULLABLE | Set when status transitions to `accepted`; feeds Quote→Payment aging analytics (FR-014) |
 | cancellation_provenance | JSON | NULLABLE | Set with `cancelled_provider_status`: cause (`ProviderSuspended` or `ProviderDeactivated`), provider status event reference, effective time, prior status |
 | version | INTEGER | NOT NULL, DEFAULT 1 | Aggregate quote version; one `quote_versions` row per sent version. Every FR-005 subquote of this quote uses this value as its version (`subquoteVersion = QuoteVersion.version`) |
-| first_sent_at | TIMESTAMP | NULLABLE | NULL on drafts; set once at first send and never overwritten by later versions |
+| first_sent_at | TIMESTAMP | NULLABLE | NULL on drafts; set once at first send and never overwritten by later versions. The end point of TTFQ analytics (FR-014) |
 | quote_config_version | VARCHAR(64) | NULLABLE | FR-026 Quote Configuration version used at first send (source of `currency` and `expiration_hours`); NULL on drafts. A Default Currency change creates a new Quote Configuration version, as does an expiry-hours change, so this version identifies both the hours and the currency used |
 | accepted_total | DECIMAL(10,2) | NULLABLE | Read-only copy written at FR-005 acceptance: accepted subquote price after promotion, in the quote currency, from the acceptance snapshot. The snapshot (`acceptance_events`, §7G) is authoritative |
 | terms_acknowledged_at | TIMESTAMP | NULLABLE | Read-only copy written at FR-005 acceptance from the acceptance snapshot |
@@ -540,6 +612,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 **Note (FR-004 v2.2)**: `(inquiry_id, provider_id)` MUST NOT be unique — the same provider may submit multiple parent quotes for one inquiry, each with an independent lifecycle, expiry, version, and audit history.
 
+**Replacement quote (FR-006 provider-fault transfer)**: once an inquiry has an acceptance, no new quote can be created or sent, with one exception. During an FR-006 provider-fault transfer an admin authors a quote for the replacement provider inside the same inquiry (`authored_by_type = admin`, `authored_by_admin_id`, `replacement_for_acceptance_event_id`). It has the normal options and option/date-price rows, so the replacement acceptance (§7G) references its quote, option, and date-price row like any other acceptance, and `acceptance_events` and `bookings` keep their NOT NULL quote links. Every admin action on the replacement quote is written to `quote_audits` (§7I). No automatic promotion attaches to a replacement quote and no promotion use is reserved at its send (§7M); the admin sets the replacement price directly, and the original acceptance's promotion use is returned or kept under the normal rules (§7L). A replacement quote that is not accepted expires like any other quote; the inquiry keeps `support_required = true`, and the admin may author another replacement quote or cancel the inquiry and booking. The inquiry is never cancelled automatically by that expiry.
+
 **Spec Gap (FR-004 v2.3)**: REQ-004-020 requires a quote-level **common requirements** field shared by every option. No `common_requirements` column exists on `quotes` today and none is present in the implementation, so this is an open schema item, not a documented-but-missing column. It MUST be added as `common_requirements TEXT NULLABLE` before REQ-004-020 can be marked implemented.
 
 **Relationships**:
@@ -551,6 +625,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `hasMany` → `QuoteOption` (one to five, ordered)
 - `hasMany` → `QuoteVersion` (§7H) and `QuoteAudit` (§7I)
 - `hasMany` → `AcceptanceEvent` as the accepted parent quote (§7G)
+- `belongsTo` → `AcceptanceEvent` through `replacement_for_acceptance_event_id` (admin-authored replacement quote only)
 - `belongsToMany` → `Clinician` (one or more shared clinicians, FR-004 REQ-004-027)
 - Promotion relationships are owned by `QuoteOptionDatePrice.promotion_id`; the parent Quote has no new direct Promotion relationship
 - `hasOne` → `Schedule`
@@ -565,30 +640,30 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `expired`: Expiry window elapsed with no patient response
 - `withdrawn`: Provider retracted the quote before the patient responded, or withdrew after acceptance (the case then passes to the FR-006 provider-fault transfer)
 - `archived`: Retained for audit only; excluded from active provider and patient lists
-- `accepted`: Patient accepted one subquote (one option and one date range) of this quote. The quote stays `accepted` after the booking reaches `Payment Window Expired` and after a provider suspension or deactivation that follows acceptance; it is never reopened or expired
+- `accepted`: Patient accepted one subquote (one option and one date range) of this quote. The quote stays `accepted` after the booking reaches `Payment Window Expired`, after an admin cancels the booking, and after a provider suspension or deactivation that follows acceptance; it is never reopened or expired
 - `cancelled_other_accepted`: Auto-cancelled because the patient accepted a subquote of a different quote for the same inquiry; also applied silently (no notice) to drafts
-- `cancelled_inquiry_cancelled`: Auto-cancelled because the patient cancelled the underlying inquiry
-- `cancelled_provider_status`: Auto-cancelled because the provider was suspended or deactivated (display "Cancelled (Provider Unavailable)"); the cause is held in `cancellation_provenance`. Applies only to quotes that were not accepted
+- `cancelled_inquiry_cancelled`: Auto-cancelled because the underlying inquiry was cancelled. Applies only to quotes that were not accepted
+- `cancelled_provider_status`: Auto-cancelled because the provider was suspended or deactivated (labelled "Cancelled (Provider Status)" and shown to the patient as "Offer Unavailable", per FR-004); the cause is held in `cancellation_provenance`. Applies only to quotes that were not accepted
 
 `confirmed` is not a quote status. Booking confirmation is an FR-006 booking status held on `bookings.status` (§11A).
 
 **Status Triggers**:
 
 - `draft` → `sent`: Provider first sends the quote (sets `sent_at` and `first_sent_at`, copies `currency` and `expiration_hours` and records `quote_config_version` from one FR-026 configuration response, computes `expires_at`, writes `quote_versions` version 1). First send is blocked when the configuration cannot be read
-- `sent` → `sent` (new version): Any edit of a sent quote increments `version` and writes a new `quote_versions` row; edits are blocked once a subquote is accepted
+- `sent` → `sent` (new version): Any edit of a sent quote increments `version`, writes a new `quote_versions` row, and updates `sent_at` (never `first_sent_at`); edits are blocked once a subquote is accepted
 - `sent` → `expired`: Expiry job runs after `expires_at`
 - `sent` → `withdrawn`: Provider retracts before a patient response
 - `sent` → `accepted`: Patient accepts one subquote (sets `accepted_at`, `accepted_total`, `terms_acknowledged_at`, `locked_exchange_rate_snapshot`; creates the `acceptance_events` row)
 - `draft` or `sent` → `cancelled_other_accepted`: Patient accepts a subquote of another quote on the same inquiry (no notice for drafts)
-- `sent` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry
-- `accepted` → `cancelled_inquiry_cancelled`: Patient cancels the inquiry after acceptance; the AcceptanceEvent is retained and superseded through an `acceptance_supersessions` row with cause `InquiryCancelled`
+- `draft`, `sent`, or `expired` → `cancelled_inquiry_cancelled`: The inquiry is cancelled (patient cancellation in Inquiry or Quoted)
+- An accepted quote stays `accepted` when an admin cancels the booking and the inquiry moves to `cancelled`; the AcceptanceEvent and its snapshot are retained unchanged
 - `accepted` → `withdrawn`: Provider withdraws after acceptance (FR-004 Workflow 6); the AcceptanceEvent is unchanged and the case passes to the FR-006 provider-fault transfer
-- `draft` or `sent` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective before acceptance (FR-015). After acceptance the quote stays `accepted`: the booking is cancelled with cause `ProviderSuspended` or `ProviderDeactivated`, the AcceptanceEvent is superseded through a linked record, and an admin rehomes the patient through the FR-006 provider-fault transfer
+- `draft` or `sent` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective before acceptance (FR-015). After acceptance the quote stays `accepted`: an Accepted or Confirmed booking is cancelled with cause `ProviderSuspended` or `ProviderDeactivated`, and an admin rehomes the patient through the FR-006 provider-fault transfer (an In Progress booking is not cancelled automatically, see §11A); the AcceptanceEvent is superseded when the replacement acceptance is recorded
 - any terminal state → `archived`: Retention job or provider archive action
 
 **API Divergence (verified in source)**: the database column stores `sent`, while `Quote::getStatusAttribute()` maps it to `quote` on read and the matching mutator maps `quote` back to `sent` on write. Clients therefore see `quote` where the schema stores `sent`. Historical rows were converted by the `align_quote_statuses_with_prd` migration, which also split the legacy single `cancelled` value into `cancelled_other_accepted` and `cancelled_inquiry_cancelled`.
 
-**Case lifecycle is separate**: `requested`, `offers`, `accepted`, `scheduled`, `confirmed`, `in_progress`, `completed`, and `cancelled` are **treatment case statuses** stored on `inquiries.status`, not quote statuses. A quote status change drives a case status change through the inquiry status map; the two enums MUST NOT be merged.
+**Case lifecycle is separate**: `inquiry`, `quoted`, `accepted`, `confirmed`, `in_progress`, `aftercare`, `completed`, and `cancelled` are **inquiry stages** (FR-003) stored on `inquiries.status`, not quote statuses. A quote status change drives a case status change through the inquiry status map; the two enums MUST NOT be merged.
 
 ---
 
@@ -677,13 +752,13 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Stable identifier recorded by FR-005 acceptance |
 | quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
-| source_inquiry_date_range_id | UUID | FOREIGN KEY, NOT NULL | Must reference a patient-requested FR-003 date range |
+| source_inquiry_date_range_id | UUID | FOREIGN KEY, NOT NULL | References `inquiry_date_ranges.id` (§5B), a patient-requested FR-003 date range of the quote's inquiry |
 | start_date | DATE | NOT NULL | Copied from the selected inquiry range |
 | end_date | DATE | NOT NULL | Copied from the selected inquiry range |
 | appointment_at | TIMESTAMP | NOT NULL | Pre-scheduled appointment start; must fall inside the range |
 | appointment_timezone | VARCHAR(64) | NOT NULL | IANA timezone for the appointment |
 | price | DECIMAL(10,2) | NOT NULL, CHECK (price > 0) | Provider price as entered, before any promotion, in the quote currency; must be greater than 0 before send (a date range the clinic cannot do is left out of the option rather than priced at 0) |
-| promotion_id | UUID | FOREIGN KEY, NULLABLE | References a structured promotion program (FR-019), `REUSABLE` or `AD_HOC_QUOTE_BOUND`, selected by the provider or attached automatically at send |
+| promotion_id | UUID | FOREIGN KEY, NULLABLE | References `promotion_programs.id` (§25A), the FR-019 promotion program, `REUSABLE` or `AD_HOC_QUOTE_BOUND`, selected by the provider or attached automatically at send |
 | promotion_terms_snapshot | JSON | NULLABLE | Promotion terms copied at send into the sent quote version; consumers read these copied terms and never resolve live FR-019 terms for a sent quote |
 | discount_amount | DECIMAL(10,2) | NULLABLE | Discount in the quote currency, copied at send with the terms |
 | is_auto_attached_promotion | BOOLEAN | DEFAULT false | Whether the promotion was attached automatically at send |
@@ -700,7 +775,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Relationships**:
 
 - `belongsTo` → `QuoteOption`
-- `belongsTo` → `PromotionProgram`
+- `belongsTo` → `InquiryDateRange` (§5B) through `source_inquiry_date_range_id`
+- `belongsTo` → `PromotionProgram` (§25A) through `promotion_id`
 
 ---
 
@@ -769,7 +845,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique document identifier |
-| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id, cascade delete |
+| quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (RESTRICT; documents are retained with the quote) |
 | document_type | VARCHAR(255) | NOT NULL | Attachment category |
 | file_name | VARCHAR(255) | NOT NULL | Original file name |
 | file_path | VARCHAR(500) | NOT NULL | Stored file path |
@@ -811,8 +887,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
 | option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id |
 | reserved_slot_id | UUID | NOT NULL | Identifier of the fixed slot hold keyed by provider, appointment date/time, and time zone; the hold fields live on the booking (§11A). Not an appointment record |
-| actor_id | UUID | NOT NULL | Patient, or admin for a provider-fault transfer record |
-| actor_type | VARCHAR(255) | NOT NULL | `patient` or `admin` (admin only for a provider-fault transfer record) |
+| actor_id | UUID | NOT NULL | Patient, or admin for a provider-fault replacement acceptance |
+| actor_type | VARCHAR(255) | NOT NULL | `patient` or `admin` (admin only for a provider-fault replacement acceptance, which references the admin-authored replacement quote) |
 | accepted_at | TIMESTAMP | NOT NULL | Acceptance time |
 | acceptance_snapshot | JSON | NOT NULL | Immutable snapshot of the complete subquote and inherited parent context (FR-005 REQ-005-006): IDs and versions, source package ID and version, parent expiry, treatment ID and version, package and service snapshot, date range, appointment date/time and time zone, offered price, promotion and any patient-applied promotion code with the resulting discounted price, currency, exchange rate and its timestamp, treatment plan, grafts, visual plan, clinician IDs, notes, requirements, attachment IDs with versions, actor, and timestamp |
 | offered_price | DECIMAL(10,2) | NOT NULL | Projection of the snapshot: provider price before promotion |
@@ -822,8 +898,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | date_range_end | DATE | NOT NULL | Projection of the snapshot: accepted date range end |
 | appointment_at | TIMESTAMP | NOT NULL | Projection of the snapshot: accepted appointment start |
 | appointment_timezone | VARCHAR(64) | NOT NULL | Projection of the snapshot: IANA time zone |
-| promotion_id | UUID | NULLABLE | Projection of the snapshot: promotion program applied, if any |
-| promotion_code_id | UUID | NULLABLE | Projection of the snapshot: patient-applied promotion code, if any |
+| promotion_id | UUID | FOREIGN KEY, NULLABLE | Projection of the snapshot: promotion program applied, if any; references `promotion_programs.id` (§25A) |
+| promotion_code_id | UUID | FOREIGN KEY, NULLABLE | Projection of the snapshot: patient-applied promotion code, if any; references `promotion_codes.id` (§25B) |
 | exchange_rate | DECIMAL(18,8) | NULLABLE | Projection of the snapshot: exchange rate locked at acceptance (a stale cached rate is accepted and recorded) |
 | exchange_rate_at | TIMESTAMP | NULLABLE | Projection of the snapshot: timestamp of that rate |
 | handoff_metadata | JSON | NULLABLE | FR-006 booking handoff context |
@@ -837,9 +913,9 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Business Rules**:
 
 - Append-only: rows are never updated, deleted, soft-deleted, or restored. Projection columns are written once from the snapshot, and the snapshot is authoritative.
-- Price, currency, date range, appointment, and promotion are the binding money fields; downstream modules (FR-006, FR-007, FR-007b, FR-008, FR-010, FR-017, FR-019, FR-029) read them from this record, never from live quote rows.
+- Price, currency, date range, appointment, and promotion are the binding money fields; downstream modules (FR-006, FR-007, FR-007b, FR-008, FR-010, FR-017, FR-019, FR-029) read them from this record, never from live quote rows. The appointment here is the accepted baseline: an admin appointment change moves the booking's current appointment (§11A) and never edits this record, and booking notices read the booking's current appointment.
 - At most one acceptance event per inquiry has no `acceptance_supersessions` row. The acceptance transaction locks the inquiry and rejects a second acceptance before any event, hold, or booking is created.
-- Supersession and admin notes are separate linked records (§7J, §7K). A provider-fault transfer creates a new admin-authored event linked to the original through `acceptance_supersessions.replacement_acceptance_event_id`.
+- Supersession and admin notes are separate linked records (§7J, §7K). A provider-fault transfer creates a new admin-authored event that references the admin-authored replacement quote (§7), its option, and its date-price row; the same transaction inserts the single `acceptance_supersessions` row that links the closed event to the new one.
 
 **Relationships**:
 
@@ -912,7 +988,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 ### 7J. Acceptance Supersessions
 
 **Table**: `acceptance_supersessions`
-**Description**: Linked, append-only record that marks an AcceptanceEvent superseded without editing it (FR-005 AcceptanceSupersession).
+**Description**: Linked, append-only record that marks an AcceptanceEvent superseded by a replacement acceptance without editing it (FR-005 AcceptanceSupersession).
 
 **Columns**:
 
@@ -920,8 +996,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique supersession identifier |
 | superseded_acceptance_event_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References acceptance_events.id |
-| cause | VARCHAR(255) | NOT NULL | `InquiryCancelled`, `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` |
-| replacement_acceptance_event_id | UUID | FOREIGN KEY, NULLABLE | References the new admin-authored acceptance_events.id; set for a provider-fault transfer only |
+| cause | VARCHAR(255) | NOT NULL | `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`, copied from the closed booking's cancellation cause |
+| replacement_acceptance_event_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References the new admin-authored acceptance_events.id |
 | actor_id | UUID | NOT NULL | Actor recording the supersession |
 | reason | TEXT | NULLABLE | Reason |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
@@ -930,16 +1006,19 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - PRIMARY: `id`
 - UNIQUE: `superseded_acceptance_event_id`
-- INDEX: `replacement_acceptance_event_id`, `cause`
+- UNIQUE: `replacement_acceptance_event_id`
+- INDEX: `cause`
 
 **Business Rules**:
 
-- Append-only. `ProviderFault`, `ProviderSuspended`, and `ProviderDeactivated` follow the FR-006 provider-fault transfer: the booking closes, the inquiry stays open with `support_required`, and an admin rehomes the patient in the same inquiry. Handling of money already paid is out of scope here and follows the later payment documentation.
+- Append-only, single insert. The row is created once, at the replacement acceptance, in the same transaction as the new admin-authored AcceptanceEvent, and is never updated.
+- Closing the original booking (FR-006 Alternative Flow B4) records the closure on the booking (`bookings.cancellation_reason`, `support_required`), not here. A booking cancelled without a replacement (for example an admin cancellation) has no supersession row.
+- Handling of money already paid is out of scope here and follows the later payment documentation.
 
 **Relationships**:
 
 - `belongsTo` → `AcceptanceEvent` (superseded)
-- `belongsTo` → `AcceptanceEvent` (replacement, nullable)
+- `belongsTo` → `AcceptanceEvent` (replacement)
 
 ---
 
@@ -982,8 +1061,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique application identifier |
-| program_id | UUID | NOT NULL | FR-019 PromotionProgram ID |
-| code_id | UUID | NULLABLE | FR-019 PromotionCode ID, when a code was used |
+| program_id | UUID | FOREIGN KEY, NOT NULL | References `promotion_programs.id` (§25A), the FR-019 promotion program |
+| code_id | UUID | FOREIGN KEY, NULLABLE | References `promotion_codes.id` (§25B), when a code was used |
 | source | VARCHAR(255) | NOT NULL | `provider_selected`, `auto_attached`, or `patient_code` |
 | acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id |
@@ -1002,7 +1081,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | applied_at | TIMESTAMP | NOT NULL | Acceptance time |
 | completed_at | TIMESTAMP | NULLABLE | First successful payment time |
 | use_reservation_id | UUID | FOREIGN KEY, NULLABLE | References promotion_use_reservations.id; set for `auto_attached` applications (the send-time reservation consumed at acceptance) |
-| use_returned_at | TIMESTAMP | NULLABLE | When the counted use was returned to the program limit (booking `Payment Window Expired` or cancelled before first payment); cleared if an admin revive re-takes it |
+| use_returned_at | TIMESTAMP | NULLABLE | When the counted use was returned to the program limit (booking `Payment Window Expired` or cancelled before first payment); cleared if an admin revive takes it again |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 
@@ -1014,14 +1093,15 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Business Rules**:
 
 - Usage-limit lifecycle by `source`:
-  - `auto_attached`: one use is reserved at send in `promotion_use_reservations` (at most one per parent quote) and consumed at acceptance, when this row is created with `use_reservation_id`. If the booking ends `Payment Window Expired` or is cancelled before the first successful payment, the use is returned to the limit (`use_returned_at` set). An admin revive re-takes the use only if the limit has room (`use_returned_at` cleared); FR-006 and FR-019 define the revive outcome when it has none.
+  - `auto_attached`: one use is reserved at send in `promotion_use_reservations` (at most one per parent quote) and consumed at acceptance, when this row is created with `use_reservation_id`. If the booking ends `Payment Window Expired` or is cancelled before the first successful payment, the use is returned to the limit (`use_returned_at` set). An admin revive takes the use again only if the limit has room (`use_returned_at` cleared); otherwise the revive is rejected (FR-006, FR-019).
   - `provider_selected` and `patient_code`: one use is reserved at acceptance and consumed at the first successful payment; the reservation is released on `Payment Window Expired` or cancellation before that payment, and reserved again on admin revive only if the limit has room (FR-019).
 - The limit is checked against active reservations in `promotion_use_reservations` plus uses held by applications here that have not been returned, so it can never be exceeded.
 - Promotions are frozen after acceptance: no provider remove or replace and no checkout or booking code entry. The only exception is the replacement application linked through `supersedes_application_id` in a provider-fault transfer.
+- No automatic promotion attaches to an admin-authored replacement quote (`quotes.authored_by_type = admin`) and no new reservation is taken for it; the admin sets the replacement price directly.
 
 **Relationships**:
 
-- `belongsTo` → `AcceptanceEvent`, `Quote`, `QuoteOptionDatePrice`, `Booking`, `Patient`, `Provider`
+- `belongsTo` → `PromotionProgram` (§25A, through `program_id`), `PromotionCode` (§25B, through `code_id`), `AcceptanceEvent`, `Quote`, `QuoteOptionDatePrice`, `Booking`, `Patient`, `Provider`
 
 ---
 
@@ -1035,13 +1115,13 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique reservation identifier |
-| program_id | UUID | NOT NULL | FR-019 PromotionProgram ID whose usage limit is reserved against |
+| program_id | UUID | FOREIGN KEY, NOT NULL | References `promotion_programs.id` (§25A), the FR-019 promotion program whose usage limit is reserved against |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (the sent parent quote carrying the auto-attached promotion) |
 | quote_version | INTEGER | NOT NULL | Quote version whose send created the reservation (unchanged when later versions keep it) |
-| state | VARCHAR(255) | NOT NULL, DEFAULT 'reserved' | `reserved` at send, `released` when the quote expires, is withdrawn, is not selected or a resent version drops the promotion, `consumed` at acceptance |
+| state | VARCHAR(255) | NOT NULL, DEFAULT 'reserved' | `reserved` at send; `released` when the quote expires, is withdrawn, is not selected, is cancelled before acceptance, a resent version drops the promotion, or the accepted row does not carry the promotion; `consumed` when the accepted row carries the promotion |
 | reserved_at | TIMESTAMP | NOT NULL | Send time |
 | released_at | TIMESTAMP | NULLABLE | Release time |
-| release_reason | VARCHAR(255) | NULLABLE | `expired`, `withdrawn`, `not_selected`, or `dropped_on_resend` |
+| release_reason | VARCHAR(255) | NULLABLE | `expired`, `withdrawn`, `not_selected`, `dropped_on_resend`, `cancelled` (the quote was cancelled before acceptance because the inquiry was cancelled or the provider's status changed), or `not_applied` (a subquote of the quote was accepted but the accepted row does not carry the promotion) |
 | consumed_at | TIMESTAMP | NULLABLE | Acceptance time |
 | acceptance_event_id | UUID | FOREIGN KEY, NULLABLE | References acceptance_events.id; set when consumed |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
@@ -1051,17 +1131,18 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - PRIMARY: `id`
 - INDEX: `program_id`, `state`
-- UNIQUE: `quote_id` for rows in state `reserved` (at most one active reservation per parent quote, whatever the promotion)
+- UNIQUE: `quote_id` for rows in state `reserved` (at most one active reservation per parent quote, whatever the promotion); MySQL has no partial unique index, so this is enforced through a unique index on a generated column that holds `quote_id` only while `state = 'reserved'` and NULL otherwise
 
 **Business Rules**:
 
-- Sending a quote that carries an auto-attached promotion reserves one use. The send is blocked if reserved plus consumed uses would exceed the program's usage limit, so the limit can never be exceeded.
+- A parent quote carries at most one automatic promotion. If several automatic programmes qualify, the FR-019 priority order picks one.
+- Sending a quote that carries an auto-attached promotion reserves one use. If reserved plus consumed uses would exceed the program's usage limit, the promotion does not attach and the send proceeds without it, so the limit can never be exceeded.
 - A parent quote holds at most one active reservation. Resending a new version of the same quote keeps the active reservation and never reserves a second use; it creates a reservation only if the new version newly carries the auto-attached promotion, and releases the active reservation (reason `dropped_on_resend`) if the new version no longer carries it.
-- The reservation is released when the quote expires, is withdrawn, or is not selected, and is consumed when a subquote of that quote is accepted. Released and consumed rows are terminal; after consumption, any return of the use to the limit or re-take on admin revive is recorded on the linked `promotion_applications` row.
+- The reservation is released when the quote expires, is withdrawn, is not selected, or is cancelled before acceptance (reason `cancelled`, when the inquiry is cancelled or the provider is suspended or deactivated). When a subquote of that quote is accepted, the reservation is consumed if the accepted row carries the promotion, and released with reason `not_applied` (the use returns to the limit) if it does not. Released and consumed rows are terminal; after consumption, any return of the use to the limit, or the use being taken again on admin revive, is recorded on the linked `promotion_applications` row.
 
 **Relationships**:
 
-- `belongsTo` → `Quote`, `AcceptanceEvent`
+- `belongsTo` → `PromotionProgram` (§25A, through `program_id`), `Quote`, `AcceptanceEvent`
 
 ---
 
@@ -1262,8 +1343,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID |
 | accepted_subquote_version | INTEGER | NOT NULL | MUST equal `accepted_parent_quote_version` |
 | status | VARCHAR(255) | NOT NULL, DEFAULT 'accepted' | `accepted`, `payment_window_expired`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled` (displayed as Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled) |
-| hold_appointment_at | TIMESTAMP | NOT NULL | Hold key: appointment date/time from the acceptance snapshot |
-| hold_appointment_timezone | VARCHAR(64) | NOT NULL | Hold key: IANA time zone from the acceptance snapshot |
+| hold_appointment_at | TIMESTAMP | NOT NULL | Hold key: the booking's current appointment date/time. Set from the acceptance snapshot at acceptance and moved with the booking's appointment when an admin changes it (FR-006, which sends `booking.rescheduled` to patient and provider); the snapshot itself never changes. Booking notices read this current appointment |
+| hold_appointment_timezone | VARCHAR(64) | NOT NULL | Hold key: IANA time zone of the booking's current appointment; set and moved together with `hold_appointment_at` |
 | hold_started_at | TIMESTAMP | NOT NULL | Start of the current fixed hold (acceptance, or admin revive) |
 | hold_expires_at | TIMESTAMP | NOT NULL | `hold_started_at` plus the FR-026 Slot-Hold Duration in effect when the hold was placed (default 48 hours); never extended or restarted by payment failure |
 | hold_released_at | TIMESTAMP | NULLABLE | When the hold was released (expiry, cancellation, provider status cascade, or provider fault) |
@@ -1275,7 +1356,12 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | commission_currency | VARCHAR(3) | NULLABLE | Snapshot Flat Rate currency; NULL for `percentage` |
 | commission_config_id | UUID | FOREIGN KEY, NULLABLE | Source configuration ID: references provider_commissions.id (§2B) resolved at booking confirmation |
 | commission_scope_type | VARCHAR(255) | NULLABLE | `global` or `provider_specific` |
-| cancellation_reason | VARCHAR(255) | NULLABLE | Set with `cancelled`: governed cancellation reason, or cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` |
+| deposit_rate | DECIMAL(5,2) | NULLABLE | Deposit rate snapshot (percentage of `booking_total`) locked at booking confirmation from the FR-029 configuration in effect |
+| installment_settings_snapshot | JSON | NULLABLE | Split payment (instalment) settings locked at booking confirmation from the FR-029 configuration in effect (allowed instalment counts and cutoff rule) |
+| payment_config_id | UUID | NULLABLE | Source FR-029 deposit and instalment configuration resolved at booking confirmation |
+| cancellation_reason | VARCHAR(255) | NULLABLE | Set with `cancelled`: the mandatory admin reason for an admin cancellation, the inquiry cancellation reason when the patient cancelled before acceptance, or cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` |
+| cancelled_at | TIMESTAMP | NULLABLE | When the booking moved to `cancelled` |
+| cancelled_by | UUID | FOREIGN KEY, NULLABLE | References users.id: the admin who cancelled the booking; NULL for a system cascade |
 | support_required | BOOLEAN | DEFAULT false | Marker, not a status; set for provider status and provider-fault closures and cleared only by audited admin resolution |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
@@ -1293,12 +1379,14 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `accepted` → `payment_window_expired`: The hold lapses before the first successful payment; the hold is released and no appointment exists
 - `payment_window_expired` → `accepted`: Audited admin revive only; places a new fixed hold (new `hold_started_at` and `hold_expires_at`)
 - `confirmed` → `in_progress` (FR-010) → `aftercare` (FR-011) → `completed`
-- `accepted` → `cancelled`: Governed cancellation, including patient inquiry cancellation during the hold
-- Any non-terminal status → `cancelled` with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and `support_required = true`, followed by the FR-006 provider-fault transfer (Alternative Flows B4 and B5)
+- `accepted`, `payment_window_expired`, `confirmed`, `in_progress`, or `aftercare` → `cancelled`: Admin cancellation only, with a mandatory reason and an audit entry (sets `cancellation_reason`, `cancelled_at`, `cancelled_by`). The patient cannot cancel a booking in the app and is routed to admin support. The inquiry moves to `cancelled`, the accepted quote stays `accepted`, and any hold or calendar block is released. Refunds and fees follow the payment documentation
+- `accepted` or `confirmed` → `cancelled` with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and `support_required = true` (FR-006 Alternative Flow B4). The inquiry stays open; an admin then completes the FR-006 provider-fault transfer (Alternative Flow B5), which creates a new booking from an admin-authored replacement acceptance
+- Provider fault, suspension, or deactivation while the booking is `in_progress`: the booking is not cancelled automatically. It stays `in_progress` with `support_required = true`, and an admin decides the case on the FR-006 intervention screen: either moves the booking to `aftercare` and reassigns the aftercare provider (§13), or cancels the booking with a mandatory reason through the admin cancellation above. No replacement acceptance is created
+- Provider fault while the booking is `aftercare`: the booking and treatment record stay unchanged; an admin reassigns the aftercare provider or team (§13). No new acceptance, booking, or payment is created
 
 **Business Rules**:
 
-- Money fields come from the acceptance snapshot only. The booking total is the base for commission (FR-029); the exchange rate is locked at acceptance (`acceptance_events`), and commission and deposit settings are locked at booking confirmation.
+- Money fields come from the acceptance snapshot only. The booking total is the base for commission (FR-029); the exchange rate is locked at acceptance (`acceptance_events`), and the commission, deposit rate, and instalment settings are locked at booking confirmation in the snapshot columns above.
 - The Payment Window Expired boundary applies to the first payment only.
 - `confirmed` is a booking status only, never a quote status.
 
@@ -1413,7 +1501,8 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 - `treatment_linked`: quote_id is NOT NULL (linked to treatment booking)
 - `standalone`: quote_id is NULL (purchased separately, assigned by admin)
-- Provider suspension or deactivation cancels both treatment-linked and standalone aftercare for that provider (`status` → `cancelled`) and sets the provider-status cancellation fields; rules as in §5 Inquiries
+- Provider fault, suspension, or deactivation during treatment-linked aftercare does not cancel the aftercare, the booking, or the treatment record: the row stays `active`, `support_required` is set, and an admin reassigns the aftercare provider or team by changing `provider_id` with a mandatory reason and an audit entry (previous provider, new provider, admin, time). The reassignment sends `aftercare.provider_reassigned` (FR-011) to the patient and the new aftercare provider; the notice is mandatory. No new acceptance, booking, or payment is created.
+- Provider suspension or deactivation cancels standalone aftercare for that provider (`status` → `cancelled`) and sets the provider-status cancellation fields; rules as in §5 Inquiries
 
 ---
 
@@ -2022,22 +2111,22 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 ---
 
-### 25. Discounts
+### 25. Discounts (Legacy)
 
 **Table**: `discounts`  
-**Description**: Platform-wide and provider-specific discount codes
+**Description**: **Legacy** discount table. It is not the FR-019 promotion program store: programmes live in `promotion_programs` (§25A) and codes in `promotion_codes` (§25B), which `quote_option_date_prices.promotion_id`, `acceptance_events.promotion_id` and `promotion_code_id`, `promotion_applications.program_id` and `code_id`, and `promotion_use_reservations.program_id` reference. `discounts` is retained only for the deprecated `quotes.discount_id` until every consumer migrates; no new program is written here
 
 **Columns**:
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique discount identifier |
-| discount_code | VARCHAR(255) | UNIQUE, NOT NULL | Discount code |
+| discount_code | VARCHAR(255) | UNIQUE, NULLABLE | **Legacy** discount code |
 | discount_type | ENUM | NOT NULL | Type (percentage, fixed) |
 | discount_value | DECIMAL(10,2) | NOT NULL | Discount amount/percentage |
 | provider_id | UUID | FOREIGN KEY, NULLABLE | If provider-specific, references providers.id |
-| usage_limit | INTEGER | NULLABLE | Maximum uses |
-| usage_count | INTEGER | DEFAULT 0 | Current usage count |
+| usage_limit | INTEGER | NULLABLE | **Legacy** maximum uses |
+| usage_count | INTEGER | DEFAULT 0 | **Legacy** counter; MUST NOT be used for any FR-019 usage-limit check |
 | start_date | DATE | NULLABLE | Valid from |
 | end_date | DATE | NULLABLE | Valid until |
 | status | ENUM | DEFAULT 'active' | Status (active, inactive, expired) |
@@ -2056,6 +2145,97 @@ This document provides a comprehensive overview of the Hairline Platform databas
 **Relationships**:
 
 - `belongsTo` → `Provider` (if provider-specific)
+- `hasMany` → `Quote` through the deprecated `discount_id`
+
+---
+
+### 25A. Promotion Programs
+
+**Table**: `promotion_programs`  
+**Description**: FR-019 PromotionProgram: a promotion defined by an admin or a provider, with its funding model, application mode, discount, limits, and lifecycle. Referenced by `quote_option_date_prices.promotion_id`, `acceptance_events.promotion_id`, `promotion_applications.program_id`, and `promotion_use_reservations.program_id`.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique program identifier |
+| program_type | VARCHAR(255) | NOT NULL | `ADMIN_VIA_PROVIDER`, `PROVIDER_SELF`, or `HAIRLINE_FUNDED_DIRECT_ISSUED` |
+| scope | VARCHAR(255) | NOT NULL, DEFAULT 'REUSABLE' | `REUSABLE` or `AD_HOC_QUOTE_BOUND` (`AD_HOC_QUOTE_BOUND` only for `PROVIDER_SELF`) |
+| bound_quote_id | UUID | FOREIGN KEY, NULLABLE | References quotes.id; set only for `AD_HOC_QUOTE_BOUND` |
+| bound_quote_option_date_price_id | UUID | FOREIGN KEY, NULLABLE | References quote_option_date_prices.id; set only for `AD_HOC_QUOTE_BOUND` |
+| owner_type | VARCHAR(255) | NOT NULL | `admin` or `provider` |
+| owner_id | UUID | NOT NULL | Admin user ID or provider ID that owns the program |
+| name | VARCHAR(255) | NOT NULL | Program name |
+| description | TEXT | NULLABLE | Program description |
+| funding_model | VARCHAR(255) | NOT NULL | `both_fees`, `hairline_only`, or `provider_only`; derived from `program_type` and never set independently |
+| hairline_share_percent | DECIMAL(5,2) | NULLABLE | Hairline share of the discount (0-100) that Hairline reimburses to the provider at payout, on top of the commission effect; required for `both_fees`, NULL otherwise. Payout mechanics follow FR-017 and the payment documentation |
+| application_mode | VARCHAR(255) | NOT NULL | `auto`, `code_only`, `list_selection`, or `either` |
+| discount_type | VARCHAR(255) | NOT NULL | `percentage`, `fixed_amount`, or `package_upgrade` |
+| discount_value | DECIMAL(10,2) | NULLABLE | Percentage (0-100) or fixed amount; NULL for `package_upgrade` |
+| discount_currency | VARCHAR(3) | NULLABLE | Currency of a `fixed_amount` value; NULL otherwise |
+| upgrade_details | JSON | NULLABLE | What a `package_upgrade` adds; NULL otherwise |
+| applies_to | VARCHAR(255) | NOT NULL | `whole_price`, `treatment`, `travel`, or `other` |
+| starts_at | TIMESTAMP | NULLABLE | Start of the active window |
+| ends_at | TIMESTAMP | NULLABLE | End of the active window |
+| usage_limit | INTEGER | NULLABLE | Total usage limit; NULL means unlimited. Enforced against active `promotion_use_reservations` (§7M) plus `promotion_applications` (§7L) uses that have not been returned |
+| per_user_usage_limit | INTEGER | NULLABLE | Maximum uses per patient; NULL means unlimited |
+| targeting | JSON | NULLABLE | Eligibility and targeting rules |
+| issuance_channel | VARCHAR(255) | NULLABLE | Issuance channel for Hairline-funded programs |
+| lifecycle_state | VARCHAR(255) | NOT NULL, DEFAULT 'draft' | `draft`, `pending_approval`, `active`, `paused`, `expired`, or `archived` |
+| created_by | UUID | NOT NULL | Creating admin or provider user |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- INDEX: `program_type`, `lifecycle_state`, `application_mode`
+- INDEX: `owner_type`, `owner_id`
+- INDEX: `bound_quote_id`
+
+**Business Rules**:
+
+- How a promotion reached a quote (`provider_selected`, `auto_attached`, or `patient_code`) is recorded per use on `promotion_applications.source` (§7L), not on the program.
+- One automatic promotion per parent quote; if several automatic programs qualify, the FR-019 priority order picks one (§7M).
+- Terms (type, value, currency, applies-to, funding model, Hairline share) are copied into the quote at send and frozen at acceptance; edits apply only to quotes sent afterwards.
+
+**Relationships**:
+
+- `hasMany` → `PromotionCode` (§25B), `PromotionApplication` (§7L), `PromotionUseReservation` (§7M)
+- `hasMany` → `QuoteOptionDatePrice` (§7C) through `promotion_id`
+
+---
+
+### 25B. Promotion Codes
+
+**Table**: `promotion_codes`  
+**Description**: FR-019 PromotionCode: one code of a promotion program. A program can have many codes.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique code identifier |
+| program_id | UUID | FOREIGN KEY, NOT NULL | References promotion_programs.id |
+| code | VARCHAR(255) | NOT NULL, UNIQUE | Code text |
+| recipient_binding_type | VARCHAR(255) | NOT NULL, DEFAULT 'open' | `open`, `affiliate`, `segment`, or `patient` |
+| recipient_binding_id | UUID | NULLABLE | Affiliate, segment, or patient ID when bound |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'unused' | `unused`, `in_progress` (a use is reserved by an accepted subquote and the first payment has not succeeded), `redeemed`, `revoked`, or `expired` |
+| issued_at | TIMESTAMP | NOT NULL | Issue time |
+| issued_by | UUID | NOT NULL | Issuing admin or provider user |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `code`
+- INDEX: `program_id`, `status`
+
+**Relationships**:
+
+- `belongsTo` → `PromotionProgram` (§25A)
+- `hasMany` → `PromotionApplication` (§7L) through `code_id`
 
 ---
 
@@ -2225,15 +2405,21 @@ This document provides a comprehensive overview of the Hairline Platform databas
 All foreign keys are defined with **ON DELETE** rules to maintain referential integrity:
 
 - **CASCADE**: Child records deleted when parent is deleted
-  - `inquiries.patient_id` → `patients.id` (CASCADE)
-  - `quotes.inquiry_id` → `inquiries.id` (CASCADE)
   - `messages.conversation_id` → `conversations.id` (CASCADE)
 
 - **SET NULL**: Child records set to NULL when parent is deleted
-  - `quotes.discount_id` → `discounts.id` (SET NULL)
-  - `quotes.provider_id` → `providers.id` (SET NULL for soft-deleted providers)
+  - `quotes.discount_id` → `discounts.id` (SET NULL; legacy column)
 
-- **RESTRICT**: Prevent parent deletion if children exist
+
+- **RESTRICT**: Prevent parent deletion if children exist. Patients and providers are soft-deleted, never hard-deleted, so these rules never remove an append-only acceptance, booking, or promotion record
+  - `inquiries.patient_id` → `patients.id` (RESTRICT)
+  - `quotes.provider_id` → `providers.id` (RESTRICT; `provider_id` is NOT NULL and providers are soft-deleted)
+  - `inquiry_providers.inquiry_id` → `inquiries.id`, `inquiry_date_ranges.inquiry_id` → `inquiries.id`, `quote_option_date_prices.source_inquiry_date_range_id` → `inquiry_date_ranges.id` (RESTRICT)
+  - `acceptance_events.inquiry_id` → `inquiries.id`, `bookings.inquiry_id` → `inquiries.id`, `bookings.patient_id` → `patients.id`, `bookings.provider_id` → `providers.id` (RESTRICT)
+  - `quote_documents.quote_id` → `quotes.id` (RESTRICT; quote documents are retained with the quote)
+  - `promotion_applications.program_id`, `promotion_use_reservations.program_id`, `promotion_codes.program_id` → `promotion_programs.id`; `promotion_applications.code_id` → `promotion_codes.id`; `promotion_applications.booking_id` → `bookings.id`; `promotion_use_reservations.quote_id` → `quotes.id` (RESTRICT)
+  - `quotes.replacement_for_acceptance_event_id` → `acceptance_events.id` (RESTRICT)
+  - `quotes.inquiry_id` → `inquiries.id` (RESTRICT; quotes are never cascade-deleted, and accepted quotes referenced by acceptance records are retained)
   - `payments.quote_id` → `quotes.id` (RESTRICT - cannot delete quote with payments)
   - `quote_options.quote_id`, `quote_versions.quote_id`, `quote_audits.quote_id` → `quotes.id` (RESTRICT)
   - `quote_option_items.quote_option_id`, `quote_option_date_prices.quote_option_id`, `quote_option_plan_days.quote_option_id` → `quote_options.id` (RESTRICT)
@@ -2252,13 +2438,17 @@ All foreign keys are defined with **ON DELETE** rules to maintain referential in
 - **Users**: `email`, `username`
 - **Affiliates**: `email`
 - **Discount Codes**: `code`
+- **Promotion Codes**: `code`
+- **Inquiry Providers**: `(inquiry_id, provider_id)`
+- **Promotion Use Reservations**: `quote_id` while `state = 'reserved'` (unique index on a generated column)
 - **Affiliate Discount Codes**: `code`
 - **Quote Option Date Prices**: `(quote_option_id, source_inquiry_date_range_id)`
 - **Quote Versions**: `(quote_id, version)`
 - **Packages**: `(id, version)`
-- **Acceptance Supersessions**: `superseded_acceptance_event_id`
+- **Acceptance Supersessions**: `superseded_acceptance_event_id`, `replacement_acceptance_event_id`
 - **Bookings**: `booking_reference`, `acceptance_event_id`, active hold key (`provider_id`, `hold_appointment_at`, `hold_appointment_timezone`) for `accepted`, `confirmed`, `in_progress`, `aftercare`
 - **Travel Contexts**: `booking_id`
+- **Treatment Records**: `booking_id`, `acceptance_event_id`
 - **Flights**: `(travel_context_id, leg_type, version)`
 
 ### Composite Indexes
@@ -2324,7 +2514,11 @@ Status fields use **VARCHAR** (not native ENUM) for flexibility:
 - Examples:
   - Quote status: `draft`, `sent` (exposed as `quote`), `expired`, `withdrawn`, `archived`, `accepted`, `cancelled_other_accepted`, `cancelled_inquiry_cancelled`, `cancelled_provider_status` (no `confirmed`, no `rejected`)
   - Booking status: `accepted`, `payment_window_expired`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled`
-  - Acceptance supersession cause: `InquiryCancelled`, `ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`
+  - Inquiry status: `inquiry`, `quoted`, `accepted`, `confirmed`, `in_progress`, `aftercare`, `completed`, `cancelled`
+  - Acceptance supersession cause: `ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`
+  - Promotion use reservation state: `reserved`, `consumed`, `released`; release reason includes `not_applied`
+  - Promotion program lifecycle: `draft`, `pending_approval`, `active`, `paused`, `expired`, `archived`
+  - Treatment record status: `awaiting_check_in` (default), `in_progress`, `completed`, `cancelled`
   - Payment status: `pending`, `completed`, `failed`, `refunded`
   - Affiliate status: `draft`, `active`, `inactive`, `suspended`
   - Provider status: `active`, `suspended`, `deactivated` (no `draft`)
@@ -2391,12 +2585,13 @@ Migrations are executed in chronological order based on filename timestamps. Key
    - `providers`, `provider_users`, `patients`
 
 5. **Inquiry & Quote Flow** (2024-02)
-   - `inquiries`, `medical_histories`, `quotes`, `treatments`, `packages`, `package_items`, `package_plan_days`
+   - `promotion_programs`, `promotion_codes` (after `providers`; `bound_quote_id` and `bound_quote_option_date_price_id` foreign keys added after `quotes` and `quote_option_date_prices`)
+   - `inquiries`, `inquiry_providers`, `inquiry_date_ranges`, `medical_histories`, `treatments`, `packages`, `package_items`, `package_plan_days`, `quotes` (after `treatments` and `packages`; `quotes.treatment_id` is NOT NULL)
    - `quote_options`, `quote_option_items`, `quote_option_date_prices`, `quote_option_plan_days`, `quote_versions`, `quote_audits`
-   - `acceptance_events`, `acceptance_supersessions`, `acceptance_annotations`, `promotion_use_reservations` (after `acceptance_events`)
+   - `acceptance_events`, `acceptance_supersessions`, `acceptance_annotations`, `promotion_use_reservations` (after `acceptance_events`); `quotes.replacement_for_acceptance_event_id` foreign key added after `acceptance_events`
 
 6. **Payments & Scheduling** (2024-03+)
-   - `bookings`, `promotion_applications` (after `bookings`; references `booking_id`), `payments`, `schedules`, `after_cares`, `travel_contexts`, `treatment_detail_changes`
+   - `bookings`, `promotion_applications` (after `bookings`; references `booking_id`), `payments`, `schedules`, `after_cares`, `travel_contexts`, `treatment_records`, `treatment_detail_changes` (after `treatment_records`)
    - `passport_details`, `hotels`, `flights` (after `travel_contexts`; keyed by `travel_context_id`)
 
 7. **Communication & Reviews** (2024-07+)
@@ -2404,6 +2599,7 @@ Migrations are executed in chronological order based on filename timestamps. Key
 
 8. **Recent Additions** (2025)
    - `affiliates`, `locations`, `provider_team_members`
+   - `discounts` (legacy; kept for the deprecated `quotes.discount_id`, so it must exist before that foreign key is added)
 
 ### Rolling Back Migrations
 
@@ -2777,20 +2973,20 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique treatment record identifier |
-| inquiry_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References inquiries.id (the confirmed booking's case); one treatment record per booking |
+| inquiry_id | UUID | FOREIGN KEY, NOT NULL | References inquiries.id (the confirmed booking's case). Not unique: a provider-fault transfer creates a second booking in the same inquiry, and each booking has its own treatment record |
 | quote_id | UUID | FOREIGN KEY, NOT NULL | References quotes.id (accepted parent quote; source of treatment for analytics) |
-| booking_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References bookings.id |
-| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL | References acceptance_events.id; the accepted snapshot is the original record and is never edited |
+| booking_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References bookings.id; one treatment record per booking |
+| acceptance_event_id | UUID | FOREIGN KEY, NOT NULL, UNIQUE | References acceptance_events.id; one treatment record per acceptance; the accepted snapshot is the original record and is never edited |
 | accepted_parent_quote_version | INTEGER | NOT NULL | Accepted aggregate quote version |
 | accepted_subquote_id | UUID | NOT NULL | FR-005 subquote ID |
 | accepted_subquote_version | INTEGER | NOT NULL | Same as `accepted_parent_quote_version` |
 | quote_option_id | UUID | FOREIGN KEY, NOT NULL | References quote_options.id |
 | option_date_price_id | UUID | FOREIGN KEY, NOT NULL | References quote_option_date_prices.id |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
-| status | ENUM | NOT NULL, DEFAULT 'in_progress' | `in_progress`, `completed`, `closed` |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'awaiting_check_in' | FR-010 treatment status: `awaiting_check_in` (set at creation), `in_progress` (set at Check In), `completed`, or `cancelled` (displayed as Awaiting Check In, In Progress, Completed, Cancelled). `cancelled` is set when an admin cancels the booking before completion; the cause and `support_required` are held on the booking (§11A) |
 | check_in_at | TIMESTAMP | NULLABLE | Set at patient Check In |
 | completed_at | TIMESTAMP | NULLABLE | Set by Save (Complete Treatment); FR-014 completion and flat-rate commission recognition; FR-011 aftercare trigger |
-| closure_reason | ENUM | NULLABLE | `no_show`, `patient_cancellation`, `medical`, `operational`, `other`; set when the provider uses Cancel/Close Case |
+| closure_reason | ENUM | NULLABLE | `no_show`, `patient_cancellation`, `medical`, `operational`, `other`; set when the provider uses Cancel/Close Case, which records a request and never changes `status` or the booking status by itself |
 | closure_note | TEXT | NULLABLE | Provider free-text note for the closure |
 | closure_requested_by | UUID | FOREIGN KEY, NULLABLE | References provider_users.id |
 | closure_requested_at | TIMESTAMP | NULLABLE | When the closure was requested |
@@ -2800,8 +2996,8 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 **Indexes**:
 
 - PRIMARY: `id`
-- UNIQUE: `inquiry_id`
-- INDEX: `provider_id`, `status`, `completed_at`, `closure_reason`
+- UNIQUE: `booking_id`, `acceptance_event_id`
+- INDEX: `inquiry_id`, `provider_id`, `status`, `completed_at`, `closure_reason`
 
 **Relationships**:
 
@@ -2813,10 +3009,12 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 **Business Rules**:
 
+- The record is created when the booking moves to `confirmed` (first successful payment), so treatment-detail changes from `Confirmed` onward have a record to attach to (§35A). `status` is `awaiting_check_in` from creation until Check In.
 - The current treatment plan (relative plan days seeded from the accepted option's plan days in the snapshot), assigned clinicians, and estimated graft count change only through the audited FR-010 treatment-detail change (§35A); money fields are read from the acceptance snapshot only.
-- `completed_at` and `closure_reason` are mutually exclusive: a completed treatment has no closure reason, and a closed case has no completion timestamp.
+- `completed_at` and `closure_reason` are mutually exclusive: a completed treatment has no closure reason, and a case with a closure request has no completion timestamp.
+- A provider fault during Aftercare leaves the treatment record unchanged; only the aftercare provider is reassigned (§13).
 - No-show is a closure reason (admin-managed case label), not a booking pipeline status. FR-014 counts a booking closed with `no_show` once, as a no-show.
-- Admin handles the resulting case status transition and financial reconciliation (FR-010 Workflow B4).
+- Admin handles any resulting booking change through the FR-006 governed actions (for example admin cancellation); financial reconciliation follows the payment documentation (FR-010 Workflow B4).
 
 ---
 
@@ -2848,7 +3046,7 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 
 **Business Rules**:
 
-- No change is allowed while the booking is `accepted` (unpaid). From `confirmed`, clinic changes are allowed until Check In and admin changes at any later time. At least one clinician must remain. Plan days stay relative day numbers and are never stored as calendar dates.
+- No change is allowed while the booking is `accepted` (unpaid). From `confirmed`, clinic changes are allowed until Check In; admin changes are allowed at any time from `confirmed` onward, each with a mandatory reason, an audit entry, and `treatment.plan_changed`. At least one clinician must remain. Plan days stay relative day numbers and are never stored as calendar dates.
 
 **Relationships**:
 
@@ -3080,7 +3278,8 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 12. provider_bills
 13. provider_resources
 14. inquiries
-15. inquiry_providers (junction)
+14a. inquiry_date_ranges
+15. inquiry_providers
 16. medical_histories
 17. quotes
 18. quote_clinicians
@@ -3125,7 +3324,9 @@ EXPLAIN SELECT * FROM quotes WHERE provider_id = 'xxx' AND status = 'accepted';
 43. affiliates
 44. affiliate_discount_codes
 45. affiliate_commissions
-46. discounts
+46. discounts (legacy)
+46a. promotion_programs
+46b. promotion_codes
 47. fixed_discounts
 48. locations
 49. location_preferences
@@ -3201,6 +3402,7 @@ Schema version tracked via:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.1.0 | 2026-10-14 | Vân Tay Media | Aligned with FR-015 v1.9 verification decisions and FR-029 flat-rate commission: provider status without `draft`, payout and commission fields, `featured` auto-clear, retention rule; new §2A Provider Documents; provider-status cancellation fields on `inquiries` and `after_cares`; quote status `cancelled_provider_status` with `cancellation_provenance`; booking commission snapshot (model, value, currency); provider audit rules |
+| 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
 | 1.3.0 | 2026-10-15 | Vân Tay Media | §2B `provider_commissions` aligned with FR-015 v1.12 and CR-FR029-20261015-01: `pending` status for one scheduled configuration per provider (replace, cancel, and activation rules), partial unique indexes enforcing one active and one pending provider-specific row per provider, and the single-provider split rule |
 | 1.4.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.13, FR-017 v2.10, and FR-026 v1.11 (CR-FR017-20261015-01, CR-FR026-20261015-01): new §38 `provider_pending_status_changes` (one pending row per provider, cancelled by reactivation); new §39 `provider_specialties` and `providers.specialty_id`; `payments.reconciliation_flag` and `provider_status_event_id`; `cancelled` payment status for stopped installments and plan cancellation on provider-status cancellation |
 | 1.5.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.14 and FR-032 v1.8 (CR-FR032-20261015-02): `providers.email` unique only among `active` and `suspended` providers (partial index); email-reuse rules for owner (§3) and team (§4) login emails after deactivation, mechanism subject to reconciliation; confirmed no `deleted` provider status; new §40 `provider_account_closure_requests` (one pending request per provider, approved via FR-015 deactivation) |
@@ -3208,7 +3410,8 @@ Schema version tracked via:
 | 1.7.0 | 2026-10-15 | Vân Tay Media | Aligned with FR-015 v1.16, FR-003 v2.8, FR-029 v1.10, and FR-032 v1.9 (CR-FR003-20261015-01, CR-FR029-20261015-02, CR-FR032-20261015-03): §2 `providers.password_set` with the distribution eligibility rule (`active` and password set) and index; §2 `activation_token_hash` and `activation_token_expires_at` with the one-valid-token rule (FR-015 REQ-015-011); `provider_languages` reference the FR-021 `languages` catalog; §2B provider-specific rows writable only for `active` or `suspended` providers; §38 closure deactivations must notify the provider; §40 rejection notes required (min 20 chars), closure notification events, Screen 1 marker source, resubmission after rejection |
 | 1.8.0 | 2026-10-16 | Vân Tay Media | MTG-002 quote model alignment with FR-004 v3.1, FR-005 v2.5, FR-006 v2.7, FR-007b, FR-008, FR-010, FR-019 v2.2, FR-022 v2.14, FR-024 v1.3, FR-026 v1.12, and FR-029 v1.11 (ESC-1 to ESC-6; S5-1, S5-3, S5-5, S5-6, S5-8, S5-11, FR-024-8, FR-026-4; decisions D4, D6, D6-M, D10, D12, D17, D18, D19, D23, D24, M4, M5, M10, M11, M12, M18): new §7G `acceptance_events` (append-only snapshot with money projections, exchange rate and timestamp, actor type), §7H `quote_versions`, §7I `quote_audits`, §7J `acceptance_supersessions` (causes InquiryCancelled, ProviderFault, ProviderSuspended, ProviderDeactivated), §7K `acceptance_annotations`, §7L `promotion_applications`, §11A `bookings` (hold key, fixed hold, Payment Window Expired, booking total, binding commission snapshot with config ID and scope type), §34A `travel_contexts`, §35A `treatment_detail_changes`, §10A `package_plan_days`; `quotes.version`, `first_sent_at`, `quote_config_version`, `accepted_total`, `terms_acknowledged_at`, `locked_exchange_rate_snapshot`; quote status `confirmed` removed and `rejected` dropped from the enum list; `accepted` → `cancelled_inquiry_cancelled` and `accepted` → `withdrawn` transitions; `cancelled_provider_status` limited to unaccepted quotes; quote commission columns now indicative only; `expiration_hours` copied at first send, not customisable; `quote_option_date_prices.is_accepted` removed and promotion terms snapshot, discount amount, auto-attached flag added; §9 and §10 rewritten to versioned package templates without currency; schedules created at first payment; instalment plan currency and exchange rate; treatment record acceptance identifiers; option tables added to the table list, constraints, and migration order; `passport_details`, `hotels` and `flights` re-keyed from `quote_id` to `travel_context_id` per FR-008 PassportRecord, HotelRecord and FlightRecord, undefined `Itinerary` relationship resolved to the travel context, and FK, unique and migration-order lists updated |
 | 1.9.0 | 2026-10-16 | Vân Tay Media | Product Owner Q-series follow-up (Q3, Q6, Q14, Q15, Q17, Q18, Q21, Q29, Q30; Q2 alignment) with FR-006 v2.8, FR-008 v2.7, and FR-010 v2.3 (CR-FR006-20261016-01, CR-FR008-20261016-01, CR-FR010-20261016-01): §7C `quote_option_date_prices.price` CHECK (price > 0); new §7M `promotion_use_reservations` (reserved at send, at most one active reservation per parent quote kept across resent versions, created only when a new version newly qualifies and released when it drops the promotion; released on expiry, withdrawal or not selected; consumed at acceptance); §7L reconciled with §7M: usage-limit lifecycle stated by source (automatic promotion consumed at acceptance and returned to the limit on `Payment Window Expired` or cancellation before first payment, re-taken on revive only if the limit has room; provider-selected and patient-code promotions reserved at acceptance and consumed at first payment), new `use_reservation_id` and `use_returned_at`; §7 `quote_config_version` note that a Default Currency change creates a new Quote Configuration version; §7 `quotes.first_sent_at` confirmed as the column set once at first send and never changed (no edit); §32 `hotels` and §33 `flights` add `copied_from_*_id`, `travel_date_review_required`, and early-departure acknowledgement fields; §34 passport carry-over on provider-fault transfer; §34A note that there is no `itineraries` table (itinerary is a read view); §35A treatment-detail changes blocked while the booking is `accepted`. Q22 and Q23 confirmed with no change. |
-| 1.2.0 | 2026-10-14 | Vân Tay Media | Product Owner decisions: provider commission settings moved from `providers` to a new §2B `provider_commissions` table (FR-029 Entity 6, rate history kept by archiving); flat model renamed `flat_rate` everywhere; added the missing `inquiries.status` column with the documented treatment case statuses |
+| 1.10.0 | 2026-10-18 | Vân Tay Media | Consolidated verification corrections for the MTG-002 quote model (Q15, Q33; D4, D6, D11, M18; no Change Request, system document): §7 `quotes.sent_at` is the latest send time and no longer feeds TTFQ, which ends at `first_sent_at`; quotes removed from the soft-delete list, `quotes.inquiry_id` changed from CASCADE to RESTRICT, and accepted quotes referenced by acceptance records are retained; §5 provider-status note cancels bookings, not cases; §7M release reason `cancelled` added for quotes cancelled before acceptance by inquiry cancellation or provider status change; §7L revive wording uses "taken again" and a rejected revive when the limit has no room; FR-019 promotion programs stored in §25 `discounts` (Q33): `PromotionProgram` references now point to `discounts.id`, new `source` and `program_kind` columns, `discount_code` nullable for programs without a code, `usage_limit` enforced from reservations and applications, `usage_count` marked legacy; §11A hold key follows the booking's current appointment when an admin changes it; §35 `treatment_records` unique per booking and acceptance, `inquiry_id` no longer unique so a provider-fault transfer can create a second record in the same inquiry; migration order lists `treatments` and `packages` before `quotes`; change log rows sorted by version |
+| 1.11.0 | 2026-10-18 | Vân Tay Media | Final audit corrections (Q31, Q35 to Q44; f1 F5, F6, F8, F10; f2 F2, F4, F5, F8, F10; f3 F5; f4 F3, F5, F6, F8, F9, F11, F13; no Change Request, system document). Revises the 1.10.0 decision that `discounts` stores promotion programs (Q38 supersedes Q33): new §25A `promotion_programs` and §25B `promotion_codes`, `discounts` marked legacy, and every promotion reference repointed. §5 inquiry `status` aligned to the FR-003 stages with `cancelled_at` and `cancellation_reason`; provider-status fields moved to new §5A `inquiry_providers` with `distributed_at`; new §5B `inquiry_date_ranges`. §7 quotes gain `authored_by_type`, `authored_by_admin_id`, and `replacement_for_acceptance_event_id` for the admin-authored replacement quote; an accepted quote stays accepted when an admin cancels the booking. §7J supersession is inserted once at the replacement acceptance, `InquiryCancelled` cause removed, replacement acceptance NOT NULL and unique. §7M adds `not_applied`, one automatic promotion per quote, and limit-full sends proceed without the promotion. §11A admin-only cancellation from any booking state after acceptance, provider-fault transfer limited to Accepted and Confirmed, deposit rate and instalment settings locked at confirmation, cancellation audit fields. §13 aftercare provider reassignment instead of cancellation for treatment-linked aftercare. §35 treatment status `in_progress`, `completed`, `cancelled` and creation at confirmation; §35A clinic changes until Check In and admin changes at any time from Confirmed. FK, unique, migration order, ENUM and table lists updated; total tables 116. Round-2 additions (Q45 to Q49): a provider fault, suspension, or deactivation on an In Progress booking no longer cancels it automatically; the booking stays `in_progress` with `support_required` and an admin either moves it to Aftercare with aftercare-provider reassignment or cancels it with a reason (§5, §7, §11A). §35 `treatment_records.status` is NOT NULL with default `awaiting_check_in` from creation at confirmation. §13 reassignment sends `aftercare.provider_reassigned` to the patient and the new aftercare provider. §7 and §7L: no automatic promotion or reservation on an admin-authored replacement quote, and an unaccepted replacement quote expires normally while the inquiry stays support-required |
 
 ---
 
