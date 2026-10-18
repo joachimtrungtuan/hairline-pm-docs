@@ -4,7 +4,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Approved by Product Owner 2026-10-16 (revision 2). Executed 2026-10-16: Waves 0–4 and final light audit complete; Product Owner Q-series Q1–Q30 applied 2026-10-18; consolidated verification pending. |
+| Status | Approved by Product Owner 2026-10-16 (revision 2). Executed 2026-10-16: Waves 0–4 and final light audit complete; Product Owner Q-series Q1–Q30 applied 2026-10-16; consolidated verification and final audit complete 2026-10-18 (Q31–Q44 applied). |
 | Date | 2026-10-16 (Asia/Saigon) |
 | Inputs | [Verification report](mtg002-quote-model-verification-2026-10-16.md) (sections 4, 5, 7, 8, Appendix B); [Decision log](mtg002-quote-model-decisions-2026-10-16.md) (authoritative: D1 to D24, D6-M, R7-1 to R7-4, M1 to M17, P1 to P3); project `CLAUDE.md` (Template and Requirement Change Control, Update Log Protocol, Navigation and Token Governance, File and Folder Rules) |
 | Scope | Quote/subquote data model: parent quote, Quote Option, option × date-range price row (subquote), AcceptanceEvent and snapshot, slot hold, booking handoff, `Payment Window Expired` (PWE), and the consumers and system documents that read them |
