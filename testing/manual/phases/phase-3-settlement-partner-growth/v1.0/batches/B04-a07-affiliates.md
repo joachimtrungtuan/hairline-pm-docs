@@ -43,7 +43,7 @@ The affiliate's own portal (FR-018 Screens 9 and 10) is outside this phase's adm
 
 - Phase 2 exit gate passed; Admin dashboard reachable (URL in plan.md section 3); `{A1}` can sign in.
 - This batch does not depend on any other Phase 3 batch. Payout rows are team-prepared in their final states, so it can run before B02.
-- All affiliate amounts are in USD (FR-018 Payment Rules). Payout cycles are monthly on the 7th. "Previous month" means the calendar month before the test month (for example, "September 2026" when testing in October 2026); "month before last" is the one before that.
+- All affiliate amounts are in USD (FR-018 Payment Rules, Currency Rule). The referral bookings themselves are in GBP, the system default currency; FR-018 converts each to USD at that booking's locked rate, and the commissions below are the resulting USD amounts. Payout cycles are monthly on the 7th. "Previous month" means the calendar month before the test month (for example, "September 2026" when testing in October 2026); "month before last" is the one before that.
 - Hairline's commission on the referral bookings used here is 15% (for the margin guard).
 - **Setup items.** The team prepares these before the session through real onboarding and real paid, completed referral bookings (patient actions and affiliate activation done by the team; no database edits). Affiliate accounts are listed in plan.md section 3. Required state at the start of the session:
   - `{AF1}` "Phase3 Affiliate A": Status "Active", Activation Status "Active", Country/Region United Kingdom, Affiliate Type Influencer, Commission Percentage 10, complete bank details (Account Number ending "2345"). One completed referral booking in the previous month with commission $100.00.

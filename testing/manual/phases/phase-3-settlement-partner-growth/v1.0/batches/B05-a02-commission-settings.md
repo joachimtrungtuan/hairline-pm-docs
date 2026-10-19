@@ -42,7 +42,7 @@
 - Sign in as `{A1}` (super admin). Keep the `{A1}` password ready for re-authentication.
 - **Team-prepared setup (before the session):**
   - `{V1}` is Active with Percentage 15%, Payout Frequency Weekly, and no Scheduled Configuration.
-  - `{V2}` is Active with Flat Rate €150 (Flat Rate Currency EUR), Payout Frequency Monthly, and no Scheduled Configuration.
+  - `{V2}` is Active with Flat Rate €150 (Flat Rate Currency EUR, an enabled currency per FR-029 Screen 5), Payout Frequency Monthly, and no Scheduled Configuration. Its quotes and bookings are in GBP, the system default currency; EUR is its payout currency and the currency of its Flat Rate only.
   - Neither `{V1}` nor `{V2}` is in an FR-029 commission scope shared with other providers, so no split warning appears. Record each provider's starting Effective Date in the setup reference list.
 - **End state (restore before closing the batch):** `{V1}` 15% Weekly and `{V2}` €150 Monthly, with no Scheduled Configuration on either. A02-FR015-27 and A02-FR015-28 restore these values; the tester confirms them in the last step of A02-FR015-28.
 
