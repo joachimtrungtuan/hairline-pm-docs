@@ -480,7 +480,7 @@ def evidence_entries(cell: str) -> list[str]:
 
 
 def evidence_issue(base: str, cell: str) -> dict | None:
-    """Evidence holds only links to files in the team's cloud evidence folder (TEST-STRATEGY §5)."""
+    """Evidence holds only links to files the tester uploaded to a file-sharing service (TEST-STRATEGY §5)."""
     entries = evidence_entries(cell)
     texty = [e for e in entries if re.search(r"\s", e) and not URL_RE.match(e)]
     if texty:
@@ -488,7 +488,7 @@ def evidence_issue(base: str, cell: str) -> dict | None:
     off = [e for e in entries if not URL_RE.match(e)]
     if off:
         return issue("warning", "evidence_not_link", f"Evidence {off} is not a link; ask the tester to upload the files "
-                     f"(named `{base}-<YYYYMMDD>-<n>.<ext>`) to the cloud evidence folder and record the links")
+                     f"(named `{base}-<YYYYMMDD>-<n>.<ext>`) to any file-sharing service and record the links")
     return None
 
 

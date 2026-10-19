@@ -65,7 +65,7 @@ Create a progress checklist with only the steps the user asked for (intake, log 
    - Rejected cases: explain each (definition edit, bad enum, bad date, missing Last tested, retired case). Offer `--partial` to merge the clean cases now and leave rejected ones for a corrected copy.
    - Conflicts: show hub and tester values side by side and ask per case: `tester`, `hub`, or `reopen` (only for `closed_bug_failed_again`). Re-run `diff` with the `--resolve` answers.
 4. After the user confirms the final preview, run `merge --apply --expect-sha <hub_sha256 from that preview>` with the same flags. The script also refreshes that batch's Batch Summary.
-5. Evidence stays in the team's cloud evidence folder; the batch keeps only the links (TEST-STRATEGY §5). Never store evidence files in the repository. For each `evidence_not_link` warning, ask the tester to upload the files and send the links.
+5. Evidence stays in the file-sharing service the tester chose; the batch keeps only the links (TEST-STRATEGY §5). Never store evidence files in the repository. For each `evidence_not_link` warning, ask the tester to upload the files and send the links.
 6. Report updated, skipped, and proposal items. Tester proposals (definition edits, new cases, edited sections) go to the user as a list for the plan owner; never apply them here.
 
 Retest returns use the same path. When the hub row is `Fixed - retest` and the tester's run is newer, the merge sets `Closed` on Pass and `Reopened` on Fail, keeping the same Bug ID.
