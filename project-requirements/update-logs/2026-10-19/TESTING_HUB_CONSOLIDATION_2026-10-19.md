@@ -84,3 +84,7 @@ Decisions taken with the user on the remaining open items, applied before any pl
 - Totals: Phase 1 117, Phase 2 138 (plus 1 retired), Phase 3 82; 338 unique IDs; 20/20 batches validate with no warnings.
 
 - PO question report: Q-01 decided as deferred until the client's updated payout requirements are in the PRDs (payouts are Phase 3 scope); Q-02 decided as payout currency for FR-017 Screens 9 and 10 (current test handling stands; FR-017 line 1150 wording needs a PRD correction). Q-03 stays open.
+- **Default currency changed to USD** (replaces the GBP setting above). The FR-029 Default Currency stays at its MVP seed, USD (setup item CUR-USD confirms it), with EUR enabled. `{V1}`, `{V3}` and `{V4}` are paid out in USD; `{V2}` in EUR at Phase 3 setup FX-1, the FR-029 USD/EUR pair at 0.90, and the Phase 3 EUR figures were recalculated. PO Q-03 no longer blocks testing and Q-04 is decided (USD).
+- **Accounts and seeded data:** existing test accounts are reused; the tester creates the remaining accounts and mailboxes during the pass and shares logins privately. Seeded data may stay; cases that assumed an empty list now check their own records (Phase 1: 5 cases, Phase 2: 3, Phase 3: 4).
+- **Evidence:** the tester uploads to any file-sharing service and records links (template, every batch, `TEST-STRATEGY.md`, `testing/results/README.md`).
+- **Phase 1 plan marked Ready for testing.**
