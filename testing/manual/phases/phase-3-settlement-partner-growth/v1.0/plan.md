@@ -113,4 +113,4 @@ Update after each test session (the `manual-test-bug-sync` skill can refresh thi
 | B02 | 23 | 0 | 0 | 0 | 23 | 0 | — |
 | B03 | 15 | 0 | 0 | 0 | 15 | 0 | — |
 | B04 | 16 | 0 | 0 | 0 | 16 | 0 | — |
-| **Total** | 73 | 0 | 0 | 0 | 73 | 0 | — |
+| **Total** | **73** | **0** | **0** | **0** | **73** | **0** | **—** |
