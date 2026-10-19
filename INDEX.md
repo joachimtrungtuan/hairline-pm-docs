@@ -165,6 +165,8 @@ For each doc type: where its structure is **defined** (template/source) and the 
 | Sprint readiness / fix backlog | `sprint-readiness-reporting/SKILL.md` (+ `references/reporting-rules.md`) | `product-plans/template/sprint-readiness-fix-backlog-template.md` | §C.5 |
 | Implementation task doc | `create-implementation-tasks/references/task-format.md` | (format spec, not a fill-in) | run skill |
 | Bug task doc | `create-bug-tasks/references/` | — | run skill |
+| Manual test phase plan (`testing/manual/phases/<phase>/v<major>.0/plan.md`) | `testing/TEST-STRATEGY.md` | `testing/templates/manual-phase-plan-template.md` | Template headings |
+| Manual test batch (`.../v<major>.0/batches/B<NN>-<module>-<slug>.md`) | `testing/TEST-STRATEGY.md`; `manual-test-bug-sync` skill (merge and validation rules) | `testing/templates/manual-batch-template.md` | Template headings |
 | Android QA test report / flow script | `android-emulator-qa/SKILL.md` | `android-emulator-qa/assets/test-report-template.md`, `assets/flow-script-template.md` | run skill |
 | Design-layout review report | `verify-design-layout/SKILL.md` | `verify-design-layout/assets/report-template.md` | run skill |
 | Update-log entry | CLAUDE.md → Update Log Protocol | dated exemplars in `update-logs/` | — |

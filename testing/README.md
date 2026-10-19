@@ -9,9 +9,9 @@ Single home for all testing artifacts, manual and automated. Rules: [TEST-STRATE
 | [TEST-STRATEGY.md](TEST-STRATEGY.md) | Tracks, structure, versioning, case IDs, allowed values, tester workflow, bug lifecycle | Everyone; read first |
 | [manual/phases/](manual/phases/) | Manual test plans per release phase, one folder per plan version, split into module batches | Plan owner, external tester |
 | [templates/](templates/) | Blank phase plan and batch templates; copy, never fill in place | Anyone creating a plan or batch |
-| [test-data/credentials/](test-data/credentials/) | Test accounts (`A#`, `S#`, `V#`, `P#` rows). Internal only | Team; shared privately with the tester |
+| [test-data/credentials/](test-data/credentials/) | Test accounts (`A#`, `S#`, `V#`, `P#`, `AF#` rows). Internal only. Placeholder list: `test-data/placeholder-registry.md` | Team; shared privately with the tester |
 | [automated/](automated/README.md) | Web E2E framework and registry, API endpoint and flow material, Android flows | Testing skills, QA |
-| [results/](results/README.md) | Dated reports from the API and Android testing skills | QA |
+| [results/](results/README.md) | Dated reports and screenshots from the Android testing skills (API skills report in the conversation) | QA |
 | [archive/](archive/README.md) | Pre-2026-10-19 plans and reports, kept unchanged | Reference only |
 
 ## Manual Testing Phases

@@ -37,18 +37,22 @@ manual/phases/<phase-folder>/
 - **Batch** = one module slice in that phase (for example PR-01 or A-02). The phase plan defines the end-to-end run order across batches.
 - **Batch file is the living record.** It holds the case definitions and the latest results. Retests overwrite the result columns in place; git keeps the history. There are no separate run copies.
 - **Templates are never filled in place.** Every new plan or batch starts as a copy of a file in `templates/`.
+- **Exit criteria are uniform.** Every phase plan uses the exit-criteria wording of `templates/manual-phase-plan-template.md` §2, plus that phase's roadmap exit gate items. No phase adds stricter generic criteria.
+- **Evidence files** live beside the batches: `v<major>.0/evidence/<batch>/` (for example `v1.0/evidence/B02/`). See §5.
 
 ---
 
 ## 3. Versioning
 
+Versions and revisions protect copies already in a tester's hands. **Before a plan version is first issued to a tester**, edit plan and batches in place with no version or revision bump; new cases still get a `Created` row in the Case Change Log. After issue:
+
 | Change | Action |
 |---|---|
 | Scope or flow change: functions added, removed, or substantially changed in the phase | Create a new major version folder (`v1.0` → `v2.0`). Copy forward unchanged cases with the same IDs. The old folder is frozen and keeps its results. |
-| Small change: wording, steps, data, expected-result clarification | Edit in place. Bump the minor version in `plan.md` (`1.0` → `1.1`) and add a change-log row. |
-| A single case's steps, preconditions, data, or expected result change | Bump that case's revision (`r1` → `r2`) and add a row to the batch's case change log. |
+| Small change to an issued plan or batch: wording, steps, data, expected-result clarification | Edit in place. Bump the plan minor version (`1.0` → `1.1`), add a plan Change Log row naming the changed batches, and set **Phase / plan version** in each changed batch to the new version. Unchanged batches keep their value, so their tester copies still match. |
+| The small change alters a case's steps, preconditions, test data, or expected result | In addition to the minor bump above, bump that case's revision (`r1` → `r2`) and add a Case Change Log row. A changed case always means both bumps; a minor bump that changes no case (for example Flow Overview or data-set wording) bumps no revision. |
 
-Results, notes, and bug statuses never bump a version or revision.
+A batch's **Phase / plan version** is therefore the plan version in which that batch last changed. Results, notes, and bug statuses never bump a version or revision. A returned copy with an older case revision or an older batch version is a stale copy: its results for changed cases are not merged and the tester reruns the current revision.
 
 ---
 
@@ -58,7 +62,7 @@ Format: `<MODULE><NN>-FR<NNN>-<SEQ> r<REV>`; example `PR01-FR002-03 r1`.
 
 | Part | Meaning |
 |---|---|
-| `PR01` | Module code without hyphen (`P01`–`P07`, `PR01`–`PR07`, `A01`–`A10`, `S01`–`S06`) |
+| `PR01` | Module code without hyphen (`P01`–`P07`, `PR01`–`PR07`, `A01`–`A10`, `S01`–`S06`); no letter suffix such as `A09a` |
 | `FR002` | Primary FR under test. Other FRs touched are cited in the **PRD flow ref** column |
 | `03` | Two-digit sequence counting cases for that module and FR pair, starting at `01` |
 | `r1` | Case revision |
@@ -90,15 +94,27 @@ Rules: the base ID (without revision) never changes and is never reused, includi
 | `Closed` | Retest passed | Yes |
 | `Reopened` | Retest failed; same Plane ID reused | Yes |
 
+**Open bug** means Bug status `Found`, `Logged`, `Fixed - retest`, or `Reopened`, plus a `Fail` row whose Bug status is still `Closed` (a regression not yet reopened). `Fixed - retest` stays open until a retest passes. The Batch Summary and plan Progress Summary **Open bugs** columns and every phase's exit criteria use this definition.
+
 **Notes** carry usability observations and any other observation. Write what the user experienced, where, and why it hurts (for example: "No loading indicator after clicking Send Invite; clicked twice and two invites were created").
 
-**Evidence** is a screenshot or recording file name or link. **Last tested** is `YYYY-MM-DD`.
+**Evidence** lists screenshot or recording file names, or links, separated by `, `. Rules:
+
+- **Name:** `<case base ID>-<YYYYMMDD>-<n>.<ext>`, where the date is the run date (the row's Last tested) and `n` counts files for that case on that date, for example `PR02-FR004-03-20261019-1.png`. A retest has a new date, so its files never overwrite earlier evidence.
+- **Storage:** the tester sends the files with the returned batch file. The team stores them in `manual/phases/<phase-folder>/v<major>.0/evidence/<batch>/` (for example `.../v1.0/evidence/B02/`) during the merge and commits them with the merged batch. Earlier files stay when a retest replaces the names in the cell. Recordings over 10 MB are not committed: put them on the team's shared drive and write the link in Evidence.
+- **Bugs:** the Plane bug lists the evidence names with their repository folder (or the shared-drive links).
+
+**Last tested** is `YYYY-MM-DD`.
+
+**Row format:** each case is one table row on one physical line. Use `<br>` for a line break inside a cell (`<br/>` and `<br />` are accepted as the same); a real line break splits the row and the file is rejected. Never type the vertical-bar character inside a cell.
 
 ---
 
 ## 6. Test Data and Accounts
 
-- Batch files reference accounts by placeholder only, for example `{V1}` or `{A1}`. Placeholders map to the row IDs in `test-data/credentials/` (`A#` admin, `S#` provider staff, `V#` provider, `P#` patient).
+- Batch files reference accounts by placeholder only, for example `{V1}` or `{A1}`. Account placeholders map to the row IDs in `test-data/credentials/`: `A#` admin, `S#` provider staff, `V#` provider, `P#` patient, `AF#` affiliate.
+- Mailbox placeholders name inboxes the team controls for emails sent during a test, not login accounts: `{Invite mailbox n}` (staff and team invitations), `{New provider mailbox n}` (provider onboarding and activation), `{Admin invite mailbox}` (admin team invitations).
+- `test-data/placeholder-registry.md` is the single list of every placeholder in use, with its role, phases, and the credentials row or mailbox behind it. Add a placeholder there before using it in a plan or batch; never create a second placeholder for the same account or role.
 - Credentials are internal. They are sent to the external tester privately and are never written into batch files or tester deliverables.
 - Each batch defines its own data sets (`DS-<MODULE><NN>-<NN>`, for example `DS-PR01-02`) in its **Test Data Sets** section. Data sets are designed from PRD business rules: valid values, boundaries, and invalid values.
 
@@ -107,7 +123,7 @@ Rules: the base ID (without revision) never changes and is never reused, includi
 ## 7. Tester Workflow
 
 1. Receive the phase `plan.md`, the batch files to run, and credentials (privately).
-2. Fill **Tester** and **Build tested** in each batch's Batch Control, then follow the plan's run order. In case rows, fill only: **Actual result / data**, **Result**, **Notes**, **Evidence** (files named `<case ID>-<n>`, e.g. `PR02-FR004-03-1.png`), **Bug status** (`Found` when a bug is seen), **Last tested**. The team owns **Bug ID** and every later Bug status.
+2. In each batch's Batch Control, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`). Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`; never delete earlier entries. Then follow the plan's run order. In case rows, fill only: **Actual result / data**, **Result**, **Notes**, **Evidence** (named `<case base ID>-<YYYYMMDD>-<n>.<ext>`, see §5), **Bug status** (`Found` when a bug is seen), **Last tested**. The team owns **Bug ID** and every later Bug status.
 3. Do not change IDs (including the revision suffix), steps, expected results, or table structure. Questions or proposed case changes go in Notes.
 4. Return the filled batch files. They are merged back into the hub by the `manual-test-bug-sync` skill, which validates IDs, columns, and allowed values. Never paste results into the hub by hand.
 
@@ -124,6 +140,8 @@ Fail rows with `Bug status = Found` are logged in Plane (`create-bug-tasks` and 
 | Output | Location |
 |---|---|
 | Manual results | In the batch files themselves |
+| Manual evidence files | `manual/phases/<phase-folder>/v<major>.0/evidence/<batch>/` (see §5) |
 | Web E2E results | `automated/web-e2e/results/` (SQLite and artifacts; see that folder's README) |
-| API and Android skill reports | `results/YYYY-MM-DD/` |
+| Android skill reports and session screenshots (`android-emulator-qa`, `android-flow-test`, `android-flow-register`) | `results/YYYY-MM-DD/` |
+| API skill reports (`api-testing`, `api-flow-testing`) | Returned in the conversation; no file is written. Learnings go to the endpoint and flow profiles under `automated/api/` after user confirmation |
 | Pre-2026-10-19 plans and reports | `archive/` (unchanged; see `archive/README.md`) |

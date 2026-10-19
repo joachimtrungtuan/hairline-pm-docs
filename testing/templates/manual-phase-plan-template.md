@@ -44,15 +44,15 @@
 
 **Exit criteria** (phase passes when):
 
-- {Every High-priority case is Pass}
-- {No open bug with Bug status Found, Logged, or Reopened at High priority}
-- {Roadmap exit gate conditions verified: list each}
+- Every High-priority case is Pass.
+- No open bug (Bug status Found, Logged, Fixed - retest, or Reopened) on a High-priority case.
+- {Roadmap exit gate items for this phase, one bullet each, quoted from the release roadmap}
 
 ## 3. Test Environment and Accounts
 
 | Item | Value |
 |---|---|
-| Provider dashboard URL | {URL} |
+| Provider dashboard URL | https://admin.hairline.app (shared origin with the admin dashboard; sign in with a provider account) |
 | Admin dashboard URL | {URL} |
 | Backend API base URL | {URL} |
 | Build / release under test | {Version or date} |

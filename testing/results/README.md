@@ -1,6 +1,8 @@
 # Testing Results
 
-Dated outputs of the automated API and Android testing skills (`api-testing`, `api-flow-testing`, `android-emulator-qa`, `android-flow-test`, `android-flow-register`) are written to `results/YYYY-MM-DD/`, one folder per run date (reports, plus any session screenshots the skill keeps).
+Dated outputs of the Android testing skills (`android-emulator-qa`, `android-flow-test`, `android-flow-register`) are written to `results/YYYY-MM-DD/`, one folder per run date (reports, plus any session screenshots the skill keeps).
+
+The API testing skills (`api-testing`, `api-flow-testing`) write no result files: they report in the conversation, and confirmed learnings go to the endpoint and flow profiles under `automated/api/`.
 
 Results that live elsewhere:
 
@@ -8,6 +10,7 @@ Results that live elsewhere:
 |---|---|
 | Web E2E results (SQLite and artifacts) | `automated/web-e2e/results/` |
 | Manual test results | In the manual batch files under `manual/phases/` |
+| Manual evidence files | `manual/phases/<phase-folder>/v<major>.0/evidence/<batch>/` |
 | Pre-2026-10-19 reports | `archive/reports/` |
 
 See [../TEST-STRATEGY.md](../TEST-STRATEGY.md) §9.

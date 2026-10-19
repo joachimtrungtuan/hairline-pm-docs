@@ -12,22 +12,23 @@
 | FRs | {FR-002, FR-031} |
 | PRD sources | {Relative links to the PRD sections used} |
 | Platform | {Provider dashboard / Admin dashboard} |
-| Tester | {Name} |
-| Build tested | {Version or date} |
+| Tester | {Name (YYYY-MM-DD)} |
+| Build tested | {Build or version (YYYY-MM-DD)} |
 
 ## How to Fill In This File
 
-1. Before starting, fill **Tester** and **Build tested** in Batch Control.
+1. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
    - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: screenshot or recording file names, named `<case ID>-<n>`, for example `PR02-FR004-03-1.png`. Send the files with the batch.
+   - **Evidence**: screenshot or recording file names or links, separated by `, `. Name each file `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Send the files with the batch; the team stores them in this version's `evidence/{B01}/` folder. Share recordings over 10 MB by link.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
 5. Do not edit IDs (keep the ` r1` suffix), titles, preconditions, test data, steps, or expected results, and do not use the vertical-bar character inside cells. Put questions or proposed changes in **Notes**.
+6. Keep each case row on one physical line. For a line break inside a cell, type `<br>`; pressing Enter splits the row and the file is rejected.
 
 ## Flow Overview
 
