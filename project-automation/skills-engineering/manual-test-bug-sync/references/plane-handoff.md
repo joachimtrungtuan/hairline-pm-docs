@@ -47,11 +47,6 @@ Dry-run `set-bug --batch <hub file> --updates <file>`, show the planned changes,
 {"HAIRL-1600": "Finished", "HAIRL-1601": {"state": "Waiting for Deployment", "group": "completed"}}
 ```
 
-Get the states through `plane-api-commands`. Its hard rules forbid one-off scripts, and as of 2026-10-19 its `scripts/` folder has no read-only work-item state command. So:
-
-1. Check `plane-api-commands/SKILL.md` and its `scripts/` for a mode that reads work-item states by key. If one exists, use it and convert its output to the JSON above.
-2. If none exists, stop this step and tell the user. Offer two options:
-   - Approve a script update to `plane-api-commands` (a frozen folder, so it needs the user's explicit approval). Proposed shape: `fetch-work-item-states.py --env .env --values plane-values.json --keys HAIRL-1600,HAIRL-1601 --output <states.json>`, read-only GET of `/work-items/` by sequence ID, output in the format above.
-   - Paste the current states from Plane (key and state name). Write them to the states file and continue.
+Get the states through `plane-api-commands` mode `read-states` (load and follow its `SKILL.md`): pass every key from the batch files' Bug ID cells as `--keys` and write `--output` to the session scratchpad. Its output is already in the second form above. If it reports missing keys, ask the user whether each bug was deleted or moved and record the agreed status with `set-bug`. If Plane cannot be reached, ask the user to paste the current states (key and state name) and write them to the states file.
 
 Save the states file in the session scratchpad, not under `local-docs/`. Then dry-run `apply-states` with `--values local-docs/project-automation/task-creation/plane-api/plane-values.json`.

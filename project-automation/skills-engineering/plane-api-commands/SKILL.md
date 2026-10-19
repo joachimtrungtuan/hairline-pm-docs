@@ -1,6 +1,6 @@
 ---
 name: plane-api-commands
-description: Execute Plane API operations for Hairline task workflows. Use when asked to refresh Plane metadata values, list Plane resources, create Plane work items from implementation task markdown files, update existing Plane work items, assign parent work items, or add reference links to Plane work item descriptions.
+description: Execute Plane API operations for Hairline task workflows. Use when asked to refresh Plane metadata values, list Plane resources, create Plane work items from implementation task markdown files, update existing Plane work items, read the current state of work items by key, assign parent work items, or add reference links to Plane work item descriptions.
 ---
 
 # Plane API Commands
@@ -31,6 +31,7 @@ Run Plane.so API workflows with reusable scripts. All credentials come from `loc
 - `update-work-item`: update existing work item descriptions from task markdown
 - `set-parent`: assign parent work items for existing Plane work items
 - `add-reference-links`: add raw clickable reference links to existing work item descriptions
+- `read-states`: read the current state name and state group of work items by readable key (read-only)
 
 ## Task File Contract
 
@@ -173,6 +174,21 @@ Use `set-parent-by-sequence.py` only when the parent and children already exist 
 ### 5. Add reference links
 
 Use `add-reference-links-to-work-items.py` with `--link "Label=https://..."` or `--links-json`. The script has no built-in task-specific URLs.
+
+### 6. Read work-item states
+
+Read-only. Use it when another workflow (for example `manual-test-bug-sync`) needs the current state of known work items:
+
+```bash
+cd "local-docs/project-automation/task-creation/plane-api" && \
+python3 "../../skills-engineering/plane-api-commands/scripts/fetch-work-item-states.py" \
+  --env ".env" \
+  --values "plane-values.json" \
+  --keys "HAIRL-1600,HAIRL-1601" \
+  --output "/session/scratchpad/states.json"
+```
+
+Output is `{"HAIRL-1600": {"state": "Finished", "group": "completed"}}`. The script exits with an error listing keys it cannot find (deleted, archived, or in another project), and warns when a state is missing from the values cache; refresh the cache and rerun in that case. Write the output to the session scratchpad, not under `local-docs/`.
 
 ## Validation
 

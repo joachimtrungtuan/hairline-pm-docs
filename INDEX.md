@@ -62,7 +62,7 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 | `create-implementation-tasks` | Generate date-stamped Plane-ready implementation tasks from FR gaps / checklist subflows / PRD coverage. |
 | `create-bug-tasks` | Draft Plane-ready `[BUG]` task markdown from bug reports, readiness backlogs, or pasted bug lists. |
 | `check-progress` | Update one checklist row for a specific MODULE_CODE + FR_CODE pair, verifying FE/BE evidence. |
-| `plane-api-commands` | Any Plane API action: refresh metadata, list resources, create/update work items, set parents, add links. |
+| `plane-api-commands` | Any Plane API action: refresh metadata, list resources, create/update work items, read work-item states, set parents, add links. |
 | `sprint-readiness-reporting` | Start/continue/update sprint readiness reports and fix backlogs from the launch plan or review findings. |
 | `verify-design-layout` | Review Figma layouts (PNG/JPG/JSON) against FR screen specs for missing fields, type mismatches, flow gaps. |
 | `api-testing` | Test a SINGLE API endpoint with detailed reporting (one endpoint, one scenario). |
