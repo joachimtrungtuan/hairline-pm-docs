@@ -20,6 +20,8 @@
 | Version | Date | Change | By |
 |---|---|---|---|
 | 1.0 | 2026-10-19 | Initial plan | Product / QA lead |
+| 1.0 | 2026-10-19 | Before first issue: system Default Currency set to USD (FR-029 seed); {V1} payout currency USD; Phase 3: FX-1 is USD/EUR at 0.90 and EUR figures recalculated | Product / QA lead |
+| 1.0 | 2026-10-19 | Before first issue: existing test accounts reused and remaining accounts and mailboxes created by the tester during the pass; seeded data may stay; evidence links from any file-sharing service | Product / QA lead |
 
 ## 1. Scope
 
@@ -53,17 +55,17 @@
 2. Confirm `{V3}` is Active (Phase 2 reactivated it after its B06) before its first B02 setup cycle, at least 5 weeks before the session.
 3. Settle every provider earning left from Phase 1 and Phase 2 for `{V1}` to `{V4}` before the first B02 setup cycle: pay out or void any statement still in "Pending Approval", "Approved", "Overdue", or "Failed", and make sure no Phase 2 booking completes inside a B02 setup cycle unless B02 lists it. Otherwise extra bookings join the Phase 3 statements and change every expected amount.
 4. Confirm `{S1}` is Active with the system role Clinical Staff in `{V1}`'s team (the base and end state of every phase). Phase 3 does not use `{S2}` (Phase 1 custom role "clinician-front-desk").
-5. Confirm the currency setup. FR-029 Default Currency is GBP, with EUR and USD (the FR-018 affiliate currency) enabled, so every Phase 3 quote, package and treatment price, invoice, patient payment, and refund is in GBP for every provider; providers do not choose a quote currency. Payout currency is per provider: `{V1}` (Percentage 15%, Weekly), `{V3}`, and `{V4}` are paid out in GBP; `{V2}` (Flat Rate €150 with Flat Rate Currency EUR, Monthly) is paid out in EUR at each booking's locked rate. `{V1}` and `{V2}` have no Scheduled Configuration (B05). Prepare B02 setup item FX-1 (locked rate 1 GBP = 1.20 EUR) before any `{V2}` setup quote is accepted.
-6. Use patients with no conflicting history for the Phase 3 setup items. FR-003 allows one active inquiry per patient, and `{P1}` to `{P11}` carry Phase 1 and Phase 2 bookings. End any of their inquiries still open, or create fresh patients for the affected setup items, and record each mapping in the setup reference list.
-7. Prepare the batch setup items with these lead times: the B02 and B01 statements from at least 5 weeks before the session (`{V2}` from the start of the month two months before the session month); BK-19 marked "Completed" right after ST-15 is generated; AFP-6 and AFP-7 within the 30 days before the session; CA-1 on the day before or the day of the session; the B03 and B04 setup data, the `{A3}`, `{S3}`, `{S4}`, and affiliate accounts, and the B06 `{V3}` test bank details at least 2 working days before the session.
+5. Confirm the currency setup. FR-029 Default Currency is USD (setup item CUR-USD: the MVP seed, reset it if changed), with EUR enabled, so every Phase 3 quote, package and treatment price, invoice, patient payment, and refund is in USD for every provider (USD is also the FR-018 affiliate currency); providers do not choose a quote currency. Payout currency is per provider: `{V1}` (Percentage 15%, Weekly), `{V3}`, and `{V4}` are paid out in USD, the same as the quote currency, with no conversion; `{V2}` (Flat Rate €150 with Flat Rate Currency EUR, Monthly) is paid out in EUR at each booking's locked rate. `{V1}` and `{V2}` have no Scheduled Configuration (B05). Prepare B02 setup item FX-1 (FR-029 Screen 2B pair USD/EUR, Rate Mode Manual, Manual Base Rate 0.90, Markup 0%, so each `{V2}` booking locks 1 USD = 0.90 EUR) before any `{V2}` setup quote is accepted.
+6. Use patients with no conflicting history for the Phase 3 setup items. FR-003 allows one active inquiry per patient, and `{P1}` to `{P11}` carry Phase 1 and Phase 2 bookings. End any of their inquiries still open, or ask the tester to register fresh patients in the patient app (setup only, not tested) and share their logins privately, and record each mapping in the setup reference list.
+7. Prepare the batch setup items with these lead times: the B02 and B01 statements from at least 5 weeks before the session (`{V2}` from the start of the month two months before the session month); BK-19 marked "Completed" right after ST-15 is generated; AFP-6 and AFP-7 within the 30 days before the session; CA-1 on the day before or the day of the session; the B03 and B04 setup data and the B06 `{V3}` test bank details at least 2 working days before the session. The tester creates `{S3}`, `{S4}`, `{AF1}` to `{AF12}` (and `{A3}` if Phase 2 did not leave it) at the points in the Team Setup Checklist (Owner Tester).
 
-**End state for Phase 4:** FR-029 Default Currency GBP; `{V1}` to `{V4}` Active; `{V1}` 15% Weekly and `{V2}` €150 Monthly with no Scheduled Configuration (B05); `{V3}` has a bank account on file again (B06); `{S1}` Active, Clinical Staff. The Phase 3 statements, refunds, promotions, affiliates, and audit entries stay in place.
+**End state for Phase 4:** FR-029 Default Currency USD; `{V1}` to `{V4}` Active; `{V1}` 15% Weekly and `{V2}` €150 Monthly with no Scheduled Configuration (B05); `{V3}` has a bank account on file again (B06); `{S1}` Active, Clinical Staff. The Phase 3 statements, refunds, promotions, affiliates, and audit entries stay in place.
 
 **Entry criteria** (all must hold before testing starts):
 
 - Phase 2 exit gate passed and the Phase handoff steps above are done.
 - Build deployed to the test environment; version recorded below.
-- Test accounts `{A1}`, `{A3}`, `{S1}`, `{S3}`, `{S4}`, `{V1}` to `{V4}`, `{P1}` to `{P7}`, and `{AF1}` to `{AF12}` available and verified; the `{AF13}` mailbox available and unused.
+- The existing test accounts `{A1}`, `{S1}`, `{V1}` to `{V4}`, and `{P1}` to `{P7}` are verified and their credentials have been shared privately with the tester. The tester creates the remaining accounts (`{S3}`, `{S4}`, `{AF1}` to `{AF12}`, and `{A3}` if Phase 2 did not leave it) and the fresh `{AF13}` mailbox during the pass, at the points in the Team Setup Checklist (Owner Tester).
 - Stripe connected in test mode; payout and refund webhooks delivered to the test environment.
 - Setup items listed in each batch's **Shared Preconditions** prepared by the team in the exact states stated there, through real bookings, payments, completed treatments, refunds, and payout runs (no database edits), and the setup reference list sent to the tester.
 
@@ -90,55 +92,54 @@
 | Build / release under test | {Record build or release identifier at test start} |
 | Browser(s) | Chrome latest, desktop |
 | Plan owner contact | Trung Dang (trung.dang@vantaymedia.com) |
-| Setup reference list | Sent privately by the plan owner with the credentials: maps each setup item (BK-n, ST-n, QT-n, PROMO-n, RED-n, AFP-n, CA-1) to its real Booking Reference, Payout Reference, quote, or program name, and lists any patient swapped in the Phase handoff, the GBP to EUR rate locked on each `{V2}` booking (FX-1), the `{V1}` and `{V2}` starting commission Effective Dates, the `{V1}` last four account digits, and the `{V3}` test bank details (B05, B06) |
+| Setup reference list | Sent privately by the plan owner with the credentials: maps each setup item (BK-n, ST-n, QT-n, PROMO-n, RED-n, AFP-n, CA-1) to its real Booking Reference, Payout Reference, quote, or program name, and lists any patient swapped in the Phase handoff, the USD/EUR rate locked on each `{V2}` booking (FX-1), the `{V1}` and `{V2}` starting commission Effective Dates, the `{V1}` last four account digits, and the `{V3}` test bank details (B05, B06) |
 
-Accounts used (placeholders; credentials sent privately):
+Accounts used (placeholders). Existing accounts: credentials sent privately to the tester. Accounts and mailboxes marked "Created by the tester": the tester creates them during the pass and shares new login details privately with the plan owner, never in a batch file:
 
 | Placeholder | Role | Used in batches |
 |---|---|---|
 | `{A1}` | Super admin | B01 (setup), B02, B03, B04, B05 |
-| `{A3}` | Admin with the FR-031 Billing Viewer role (read-only billing), same account as Phase 2 | B02 |
+| `{A3}` | Admin with the FR-031 Billing Viewer role (read-only billing), same account as Phase 2 (created by the tester there; if it does not exist, created by the tester before B02) | B02 |
 | `{S1}` | Provider staff with the system role Clinical Staff at `{V1}` (base and end state of every phase) | B01, B06 |
-| `{S3}` | Provider staff with the Manager role at `{V1}`, without financial permission; to be created by the team | B01, B06 |
-| `{S4}` | Provider staff with the Billing Staff role at `{V1}`; to be created by the team | B01, B06 |
-| `{V1}` | Provider owner, payout currency GBP, percentage commission (15%, Weekly) | B01, B02, B03, B05, B06 |
-| `{V2}` | Provider owner, payout currency EUR, flat commission (€150, Flat Rate Currency EUR, Monthly); its quotes and bookings are in GBP like every provider's | B01, B02, B03, B05 |
-| `{V3}` | Provider owner, payout currency GBP, Weekly; bank details removed by the team for B02 and added again by the tester in B06 | B01, B02, B06 |
-| `{V4}` | Provider owner, payout currency GBP, Weekly, with statements for unapprove and the dispute booking; promotion target. Ends Phase 2 Suspended; reactivated in the Phase handoff | B02, B03 |
+| `{S3}` | Provider staff with the Manager role at `{V1}`, without financial permission. Created by the tester before B01 (B01 Shared Preconditions) | B01, B06 |
+| `{S4}` | Provider staff with the Billing Staff role at `{V1}`. Created by the tester before B01 (B01 Shared Preconditions) | B01, B06 |
+| `{V1}` | Provider owner, payout currency USD, percentage commission (15%, Weekly) | B01, B02, B03, B05, B06 |
+| `{V2}` | Provider owner, payout currency EUR, flat commission (€150, Flat Rate Currency EUR, Monthly); its quotes and bookings are in USD like every provider's | B01, B02, B03, B05 |
+| `{V3}` | Provider owner, payout currency USD, Weekly; bank details removed by the team for B02 and added again by the tester in B06 | B01, B02, B06 |
+| `{V4}` | Provider owner, payout currency USD, Weekly, with statements for unapprove and the dispute booking; promotion target. Ends Phase 2 Suspended; reactivated in the Phase handoff | B02, B03 |
 | `{P1}` to `{P7}` | Patients owning the prepared bookings (setup data only) | B01, B02, B03, B04 |
-| `{AF1}` to `{AF12}` | Affiliates prepared in the states listed in B04 Shared Preconditions (`{AF9}` to `{AF12}` also hold the B02 affiliate payouts); to be created by the team | B02, B04 |
-| `{AF13}` | Unused mailbox for the affiliate created during testing; to be created by the team | B04 |
+| `{AF1}` to `{AF12}` | Affiliates prepared in the states listed in B04 Shared Preconditions (`{AF9}` to `{AF12}` also hold the B02 affiliate payouts). Created by the tester about 9 weeks before the session, before the team prepares their states (B04 Shared Preconditions) | B02, B04 |
+| `{AF13}` | Created by the tester: a fresh mailbox the tester controls, never used on Hairline; it becomes the affiliate added in A07-FR018-03 | B04 |
 
 ## Team Setup Checklist
 
-The team completes every item before the first Phase 3 test session. Item IDs (ST-n, BK-n, QT-n, PROMO-n, RED-n, AFP-n, CA-1, FX-1) are defined in the batch Shared Preconditions; Phase handoff steps are in section 2. Lead times count back from the first session.
+The team completes every item except the Tester-owned one before the first Phase 3 test session. Item IDs (ST-n, BK-n, QT-n, PROMO-n, RED-n, AFP-n, CA-1, FX-1) are defined in the batch Shared Preconditions; Phase handoff steps are in section 2. Lead times count back from the first session.
 
 | # | Item | Batches | Owner | Lead time | Done |
 |---|---|---|---|---|---|
 | 1 | Deploy the build under test and record its identifier in section 3 | All | Dev team | Before phase start | [ ] |
-| 2 | Set or confirm FR-029 Default Currency = GBP, with EUR and USD enabled (Phase handoff step 5) | All | Dev team | Before the first B02 setup cycle (at least 9 weeks) | [ ] |
-| 3 | Configure `{V2}`'s payout currency as EUR and confirm `{V1}`, `{V3}`, `{V4}` are paid out in GBP (Phase handoff step 5) | B01, B02 | Dev team | Before the first B02 setup cycle (at least 9 weeks) | [ ] |
-| 4 | Prepare FX-1: GBP to EUR locked rate 1.20 for BK-8, BK-3, BK-4, BK-16; record each locked rate in the setup reference list | B01, B02 | Dev team | Before the first `{V2}` setup quote is accepted (at least 9 weeks) | [ ] |
+| 2 | Setup item CUR-USD: Team confirms FR-029 Default Currency = USD (MVP seed; reset it if changed) and EUR is enabled (Phase handoff step 5) | All | Dev team | Before the first B02 setup cycle (at least 9 weeks) | [ ] |
+| 3 | Configure `{V2}`'s payout currency as EUR and confirm `{V1}`, `{V3}`, `{V4}` are paid out in USD (Phase handoff step 5) | B01, B02 | Dev team | Before the first B02 setup cycle (at least 9 weeks) | [ ] |
+| 4 | Prepare FX-1: FR-029 Screen 2B pair USD/EUR, Rate Mode Manual, Manual Base Rate 0.90, Markup 0%, so BK-8, BK-3, BK-4, BK-16 each lock 1 USD = 0.90 EUR; record each locked rate in the setup reference list | B01, B02 | Dev team | Before the first `{V2}` setup quote is accepted (at least 9 weeks) | [ ] |
 | 5 | Stripe connected in test mode; payout, transfer (paid and failed), and refund webhooks delivered to the test environment | B01, B02, B04 | Dev team | Before phase start | [ ] |
 | 6 | Reactivate `{V4}` (Phase handoff step 1) | B02, B03 | Dev team | At least 5 weeks | [ ] |
 | 7 | Confirm `{V3}` is Active (Phase handoff step 2) | B01, B02, B06 | QA lead | At least 5 weeks | [ ] |
 | 8 | Settle Phase 1 and Phase 2 provider earnings for `{V1}` to `{V4}` and keep unlisted bookings out of the B02 cycles (Phase handoff step 3) | B01, B02 | Dev team | Before the first B02 setup cycle (at least 9 weeks for `{V2}`, 5 weeks for the others) | [ ] |
 | 9 | Confirm `{S1}` is Active with the system role Clinical Staff (Phase handoff step 4) | B01, B06 | QA lead | Before phase start | [ ] |
 | 10 | Confirm `{V1}` 15% Weekly and `{V2}` €150 Monthly, no Scheduled Configuration, neither in a shared FR-029 scope; record both starting Effective Dates (Phase handoff step 5; B05 setup) | B05, B01, B02 | QA lead | Before the first B02 setup cycle | [ ] |
-| 11 | End open inquiries of `{P1}` to `{P11}` or create fresh patients for the setup items, and record each mapping (Phase handoff step 6) | B01, B02, B03, B04 | Dev team | Before the setup item that uses the patient | [ ] |
-| 12 | Create `{S3}` (Manager without financial permission) and `{S4}` (Billing Staff) at `{V1}`; confirm `{A3}` (Billing Viewer, from Phase 2) | B01, B02, B06 | Dev team | At least 2 working days | [ ] |
-| 13 | Create `{AF1}` to `{AF12}` and supply the unused `{AF13}` mailbox | B02, B04 | Dev team | At least 2 working days (earlier where item 20 needs payout history) | [ ] |
-| 14 | `{V1}` statements ST-5, ST-10, ST-7, ST-1, with the BK-6 refund between ST-10 and ST-7 | B02, B01 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
-| 15 | `{V2}` statements ST-8 (BK-8) and ST-2 (BK-3, BK-4) | B02, B01 | Dev team | From the start of the month two months before the session month (about 9 weeks) | [ ] |
-| 16 | `{V3}` statements ST-9, ST-14, ST-13, ST-3, with the BK-13 refund and the removal of `{V3}`'s bank details before ST-3 | B02, B01, B06 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
-| 17 | `{V4}` statements ST-15, ST-6, ST-4 (ST-4 approved by the team) | B02 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
-| 18 | BK-19 marked "Completed" right after ST-15 is generated; confirm before the session that it is in no statement | B02 | Dev team | Same day as ST-15 generation; A05-FR017-35 and A05-FR017-36 run before the next `{V4}` statement generation that could include it | [ ] |
-| 19 | CA-1 currency alert (GBP to EUR, BK-3 and BK-4) | B02 | Dev team | Day before or day of the session | [ ] |
-| 20 | Affiliate states and payouts: `{AF1}` to `{AF8}` states, AFP-1 (month before last), AFP-2 (previous month), AFP-4 and AFP-5 (previous month), AFP-6 and AFP-7 (failed within the 30 days before the session) | B04, B02 | Dev team | AFP-1 from the month before last; AFP-6 and AFP-7 within the 30 days before the session; the rest at least 2 working days | [ ] |
-| 21 | B01 items BK-15, BK-16, BK-17, BK-18 and admin campaigns PROMO-6, PROMO-7, PROMO-8 | B01, B03 | Dev team | Before phase start; BK-15 completed in the session week; PROMO-8 early enough for its Auto-Decline Window to pass | [ ] |
-| 22 | B03 items PROMO-1 to PROMO-4, QT-1, QT-2, QT-4, QT-5 / RED-2, BK-20 / RED-1 | B03, B01 | Dev team | At least 2 working days (PROMO-1 and PROMO-2 Start 7 days before the session) | [ ] |
-| 23 | `{V3}` Stripe test bank details and `{V1}`'s last four account digits in the setup reference list | B06 | Dev team | At least 2 working days | [ ] |
-| 24 | Send the setup reference list (section 3) to the tester with the credentials | All | QA lead | Before phase start | [ ] |
+| 11 | End open inquiries of `{P1}` to `{P11}` or ask the tester for fresh patients for the setup items, and record each mapping (Phase handoff step 6) | B01, B02, B03, B04 | Dev team | Before the setup item that uses the patient | [ ] |
+| 12 | Tester-created accounts and mailboxes (no team action). Mailboxes are fresh addresses the tester controls (plus-addressing is fine). `{S3}` and `{S4}`: before B01, as the `{V1}` owner invite each from the Team tab ("Invite Team Member"), `{S3}` with the Manager role (without financial permission) and `{S4}` with the Billing Staff role, and accept. `{AF1}` to `{AF12}`: about 9 weeks before the session, before the team prepares AFP-1 in the month before last, as `{A1}` add each affiliate on the Affiliate Management Dashboard with the profile in B04 Shared Preconditions and complete activation for all but `{AF3}`. `{A3}`: reuse the Phase 2 Billing Viewer admin; if it does not exist, before B02, as `{A1}` invite it from Settings > User Roles & Permissions > Admin Users with the Billing Viewer role and accept. `{AF13}`: an unused address before B04. Fresh patients for Phase handoff step 6: register them in the patient app when the team asks (setup only, not tested). Share every new login privately with the plan owner so the team can prepare the data; never write it in a batch file. | B01, B02, B04, B06 | Tester | As stated for each account | [ ] |
+| 13 | `{V1}` statements ST-5, ST-10, ST-7, ST-1, with the BK-6 refund between ST-10 and ST-7 | B02, B01 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
+| 14 | `{V2}` statements ST-8 (BK-8) and ST-2 (BK-3, BK-4) | B02, B01 | Dev team | From the start of the month two months before the session month (about 9 weeks) | [ ] |
+| 15 | `{V3}` statements ST-9, ST-14, ST-13, ST-3, with the BK-13 refund and the removal of `{V3}`'s bank details before ST-3 | B02, B01, B06 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
+| 16 | `{V4}` statements ST-15, ST-6, ST-4 (ST-4 approved by the team) | B02 | Dev team | At least 5 weeks (4 weekly cycles) | [ ] |
+| 17 | BK-19 marked "Completed" right after ST-15 is generated; confirm before the session that it is in no statement | B02 | Dev team | Same day as ST-15 generation; A05-FR017-35 and A05-FR017-36 run before the next `{V4}` statement generation that could include it | [ ] |
+| 18 | CA-1 currency alert (USD/EUR pair, BK-3 and BK-4) | B02 | Dev team | Day before or day of the session | [ ] |
+| 19 | Affiliate states and payouts, after the tester creates the affiliates (item 12): `{AF1}` to `{AF8}` states, AFP-1 (month before last), AFP-2 (previous month), AFP-4 and AFP-5 (previous month), AFP-6 and AFP-7 (failed within the 30 days before the session) | B04, B02 | Dev team | AFP-1 from the month before last; AFP-6 and AFP-7 within the 30 days before the session; the rest at least 2 working days | [ ] |
+| 20 | B01 items BK-15, BK-16, BK-17, BK-18 and admin campaigns PROMO-6, PROMO-7, PROMO-8 | B01, B03 | Dev team | Before phase start; BK-15 completed in the session week; PROMO-8 early enough for its Auto-Decline Window to pass | [ ] |
+| 21 | B03 items PROMO-1 to PROMO-4, QT-1, QT-2, QT-4, QT-5 / RED-2, BK-20 / RED-1 | B03, B01 | Dev team | At least 2 working days (PROMO-1 and PROMO-2 Start 7 days before the session) | [ ] |
+| 22 | `{V3}` Stripe test bank details and `{V1}`'s last four account digits in the setup reference list | B06 | Dev team | At least 2 working days | [ ] |
+| 23 | Send the setup reference list (section 3) to the tester with the credentials | All | QA lead | Before phase start | [ ] |
 
 ## 4. Batches and Run Order
 

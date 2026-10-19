@@ -18,10 +18,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
@@ -42,7 +42,7 @@
 - Sign in as `{A1}` (super admin). Keep the `{A1}` password ready for re-authentication.
 - **Team-prepared setup (before the session):**
   - `{V1}` is Active with Percentage 15%, Payout Frequency Weekly, and no Scheduled Configuration.
-  - `{V2}` is Active with Flat Rate €150 (Flat Rate Currency EUR, an enabled currency per FR-029 Screen 5), Payout Frequency Monthly, and no Scheduled Configuration. Its quotes and bookings are in GBP, the system default currency; EUR is its payout currency and the currency of its Flat Rate only.
+  - `{V2}` is Active with Flat Rate €150 (Flat Rate Currency EUR, an enabled currency per FR-029 Screen 5), Payout Frequency Monthly, and no Scheduled Configuration. Its quotes and bookings are in USD, the system default currency; EUR is its payout currency and the currency of its Flat Rate only.
   - Neither `{V1}` nor `{V2}` is in an FR-029 commission scope shared with other providers, so no split warning appears. Record each provider's starting Effective Date in the setup reference list.
 - **End state (restore before closing the batch):** `{V1}` 15% Weekly and `{V2}` €150 Monthly, with no Scheduled Configuration on either. A02-FR015-27 and A02-FR015-28 restore these values; the tester confirms them in the last step of A02-FR015-28.
 

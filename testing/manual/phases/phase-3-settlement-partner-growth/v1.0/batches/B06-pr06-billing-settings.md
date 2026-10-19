@@ -18,10 +18,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
@@ -41,7 +41,7 @@
 - Run PR06-FR032-17 after B05 A02-FR015-26 (the `{V1}` Scheduled Configuration must exist) and before B05 A02-FR015-28. Run the other cases after B01 and B02.
 - `{V1}` has a saved bank account (it receives payouts in B02). Its last four account digits are in the setup reference list.
 - `{V3}` has no bank account on file. This is the B02 setup for ST-3, and PR06-FR032-20 adds it, so run PR06-FR032-19 and PR06-FR032-20 only after B02 and B01 are complete.
-- `{S1}` (Clinical Staff), `{S3}` (Manager), and `{S4}` (Billing Staff) are staff at `{V1}` and can sign in.
+- `{S1}` (Clinical Staff), `{S3}` (Manager), and `{S4}` (Billing Staff) are staff at `{V1}` and can sign in (`{S3}` and `{S4}` are created by the tester before B01; see B01 Shared Preconditions).
 - **Team-prepared setup (before the session):** valid Stripe test-mode bank details for `{V3}` (Account Holder Name in letters and spaces only, Bank Name, Account Number, Routing/SWIFT Code, and IBAN if the bank country needs one), listed in the setup reference list.
 - **End state:** `{V3}` has a bank account on file. `{V1}`'s bank account is unchanged.
 
