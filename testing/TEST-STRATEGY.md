@@ -38,7 +38,7 @@ manual/phases/<phase-folder>/
 - **Batch file is the living record.** It holds the case definitions and the latest results. Retests overwrite the result columns in place; git keeps the history. There are no separate run copies.
 - **Templates are never filled in place.** Every new plan or batch starts as a copy of a file in `templates/`.
 - **Exit criteria are uniform.** Every phase plan uses the exit-criteria wording of `templates/manual-phase-plan-template.md` §2, plus that phase's roadmap exit gate items. No phase adds stricter generic criteria.
-- **Evidence files** live in the team's cloud storage, not in the repository; batch rows hold only the links. See §5.
+- **Evidence files** live in the file-sharing service the tester chooses, not in the repository; batch rows hold only the links. See §5.
 - **One tester per batch run.** A batch file is run by one tester at a time; parallel testers take different batches.
 
 ---
@@ -102,7 +102,7 @@ Rules: the base ID (without revision) never changes and is never reused, includi
 **Evidence** lists screenshot or recording file names, or links, separated by `, `. Rules:
 
 - **Name:** `<case base ID>-<YYYYMMDD>-<n>.<ext>`, where the date is the run date (the row's Last tested) and `n` counts files for that case on that date, for example `PR02-FR004-03-20261019-1.png`. A retest has a new date, so its files never overwrite earlier evidence.
-- **Storage:** the tester uploads every screenshot and recording to the evidence folder the team shares in its cloud storage (one folder per phase, plan version, and batch, for example `phase-1-controlled-commercial-pilot/v1.0/B02/`) and writes only the links in Evidence. No evidence file is committed to the repository or sent with the batch. Earlier files stay in the cloud folder when a retest replaces the links in the cell.
+- **Storage:** the tester uploads every screenshot and recording to any file-sharing service they choose, makes each link openable by the team without a separate request, and writes only the links in Evidence. No evidence file is committed to the repository or sent with the batch. The tester keeps earlier files available when a retest replaces the links in the cell.
 - **Bugs:** the Plane bug lists the evidence links.
 
 **Last tested** is `YYYY-MM-DD`.
@@ -123,7 +123,7 @@ Rules: the base ID (without revision) never changes and is never reused, includi
 
 ## 7. Tester Workflow
 
-1. Receive the phase `plan.md`, the batch files to run, credentials (privately), and access to the cloud evidence folder.
+1. Receive the phase `plan.md`, the batch files to run, and credentials (privately).
 2. Run each batch alone: one tester per batch file at a time. In each batch's Batch Control, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`). Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`; never delete earlier entries. Then follow the plan's run order. In case rows, fill only: **Actual result / data**, **Result**, **Notes**, **Evidence** (named `<case base ID>-<YYYYMMDD>-<n>.<ext>`, see §5), **Bug status** (`Found` when a bug is seen), **Last tested**. The team owns **Bug ID** and every later Bug status.
 3. Do not change IDs (including the revision suffix), steps, expected results, or table structure. Questions or proposed case changes go in Notes.
 4. Return the filled batch files. They are merged back into the hub by the `manual-test-bug-sync` skill, which validates IDs, columns, and allowed values. Never paste results into the hub by hand.
@@ -141,7 +141,7 @@ Fail rows with `Bug status = Found` are logged in Plane (`create-bug-tasks` and 
 | Output | Location |
 |---|---|
 | Manual results | In the batch files themselves |
-| Manual evidence files | Team cloud storage; links in each case row's Evidence (see §5) |
+| Manual evidence files | The tester's chosen file-sharing service; links in each case row's Evidence (see §5) |
 | Web E2E results | `automated/web-e2e/results/` (SQLite and artifacts; see that folder's README) |
 | Android skill reports and session screenshots (`android-emulator-qa`, `android-flow-test`, `android-flow-register`) | `results/YYYY-MM-DD/` |
 | API skill reports (`api-testing`, `api-flow-testing`) | Returned in the conversation; no file is written. Learnings go to the endpoint and flow profiles under `automated/api/` after user confirmation |

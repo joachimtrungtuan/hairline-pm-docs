@@ -10,7 +10,7 @@ Results that live elsewhere:
 |---|---|
 | Web E2E results (SQLite and artifacts) | `automated/web-e2e/results/` |
 | Manual test results | In the manual batch files under `manual/phases/` |
-| Manual evidence files | Team cloud storage; links in the batch Evidence column (see `../TEST-STRATEGY.md` §5) |
+| Manual evidence files | The tester's chosen file-sharing service; links in the batch Evidence column (see `../TEST-STRATEGY.md` §5) |
 | Pre-2026-10-19 reports | `archive/reports/` |
 
 See [../TEST-STRATEGY.md](../TEST-STRATEGY.md) §9.

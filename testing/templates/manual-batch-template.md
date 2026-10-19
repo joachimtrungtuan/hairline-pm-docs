@@ -20,10 +20,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
