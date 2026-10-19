@@ -10,7 +10,7 @@ Register deterministic Hairline web tests while preserving Product Owner authori
 ## Required Boundaries
 
 1. Start at `local-docs/INDEX.md`; locate before reading and read only targeted sections.
-2. Read `local-docs/testing-automation/TESTING-CONSTITUTION.md` and `OPERATIONS.md` before any registration action.
+2. Read `local-docs/testing/automated/web-e2e/TESTING-CONSTITUTION.md` and `OPERATIONS.md` before any registration action.
 3. Never read, import, edit, or depend on `main/`.
 4. Never install Playwright or browsers. Reuse the global Playwright MCP runtime and installed browser defined by the testing framework.
 5. Reference live PRDs; never copy their requirements into the registry.
@@ -35,7 +35,7 @@ Proceed only after Phase 1 approval.
 1. Read the specific PRD requirements and screen sections needed for the approved scope.
 2. Inspect the development dashboard through the existing global Playwright runtime.
 3. Observe live API requests where needed to prepare prerequisites or verify persistence.
-4. Resolve accounts from `local-docs/testing-plans/testing-credentials/`; never print or copy secrets.
+4. Resolve accounts from `local-docs/testing/test-data/credentials/`; never print or copy secrets.
 5. Record discrepancies as observations requiring human review. Do not decide whether the PRD, UI, API, or test is wrong.
 6. Propose function/flow boundaries, case categories, dataset recipes, minimal UI actions, assertions, and regression tiers.
 7. Stop for Product Owner approval of the proposed cases and realistic flow.
@@ -44,7 +44,7 @@ Proceed only after Phase 1 approval.
 
 After case approval:
 
-1. Write under `local-docs/testing-automation/registry/<surface>/<module>/` using existing identifiers and templates.
+1. Write under `local-docs/testing/automated/web-e2e/registry/<surface>/<module>/` using existing identifiers and templates.
 2. Store Markdown flow/traceability, dataset TypeScript, and Playwright case code together under the owning function or flow.
 3. Use API calls only for prerequisites. The browser must perform the action claimed by the case.
 4. Generate retained synthetic data with run/correlation markers. Never use real patient data.

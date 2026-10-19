@@ -5,7 +5,7 @@ description: Run a named multi-screen Hairline app testing flow end-to-end on an
 
 # Android Flow Test
 
-Executes multi-screen Hairline app testing flows end-to-end on the Android emulator/device. Applies `android-emulator-qa` interaction patterns at each step. Flow definitions live in `references/flows/` and are indexed in `references/flow-index.md`.
+Executes multi-screen Hairline app testing flows end-to-end on the Android emulator/device. Applies `android-emulator-qa` interaction patterns at each step. Flow definitions live in `local-docs/testing/automated/android/flows/` and are indexed in `local-docs/testing/automated/android/flows/flow-index.md`.
 
 ## Step 0: Upfront Input Collection
 
@@ -25,13 +25,13 @@ Ask ALL of the following before any device interaction.
 
 **4. Per-step overrides?** Or use the defaults defined in the flow file?
 
-**5. Test data:** after confirming the flow, check `android-emulator-qa/references/datasets.json` for datasets matching each step's screen + scenario. Collect all data decisions upfront — do not interrupt execution to ask.
+**5. Test data:** after confirming the flow, check `local-docs/testing/automated/android/datasets.json` for datasets matching each step's screen + scenario. Collect all data decisions upfront — do not interrupt execution to ask.
 
 ---
 
 ## Flow Lookup with Fuzzy Matching
 
-Read `references/flow-index.md`. Search for the user's query against both the **Flow Name** and **Aliases** columns.
+Read `local-docs/testing/automated/android/flows/flow-index.md`. Search for the user's query against both the **Flow Name** and **Aliases** columns.
 
 **Multiple candidates found** — present the list and ask the user to confirm:
 ```
@@ -54,7 +54,7 @@ Run this flow? (yes / no)
 - Stop. Tell the user: "No flow matching '[name]' is registered."
 - Instruct: "Run `android-flow-register` to record it first, then come back."
 
-**After confirmation:** load the flow file from `references/flows/{flow-id}.md`. Check `recorded` and `status`:
+**After confirmation:** load the flow file from `local-docs/testing/automated/android/flows/{flow-id}.md`. Check `recorded` and `status`:
 - `needs-review` or recorded > 4 weeks ago → warn the user; ask whether to proceed or update first via `android-flow-register`
 
 ---
@@ -122,7 +122,7 @@ After all steps complete: `adb logcat -d` filtered to `com.samasu.hairline`.
 ### Screenshot cleanup
 
 After the summary is confirmed:
-1. Ask: "Delete working screenshots from the session folder in `local-docs/reports/`?"
+1. Ask: "Delete working screenshots from the session folder in `local-docs/testing/results/`?"
 2. On user confirmation: delete the session screenshot folder
 3. Keep only the report `.md` file
 
@@ -130,10 +130,10 @@ After the summary is confirmed:
 
 ## References
 
-- [flow-index.md](references/flow-index.md) — Registered flow index (name, aliases, file paths, status); read during Flow Lookup
-- `references/flows/` — Individual flow definition files; load the matched flow file after user confirmation
+- [flow-index.md](local-docs/testing/automated/android/flows/flow-index.md) — Registered flow index (name, aliases, file paths, status); read during Flow Lookup
+- `local-docs/testing/automated/android/flows/` — Individual flow definition files; load the matched flow file after user confirmation
 - `android-emulator-qa/references/tool-mapping.md` — MCP ↔ ADB command table; read during Platform Detection
 - `android-emulator-qa/references/adb-commands.md` — Raw ADB command reference; read only in Raw ADB mode
 - `android-emulator-qa/references/flutter-notes.md` — Flutter interaction caveats and quality checklist; read before execution and before finalizing the summary
-- `android-emulator-qa/references/datasets.json` — Test data catalogue; read during Step 0 test data coordination
-- Test credentials: `local-docs/testing-plans/testing-credentials/`
+- `local-docs/testing/automated/android/datasets.json` — Test data catalogue; read during Step 0 test data coordination
+- Test credentials: `local-docs/testing/test-data/credentials/`

@@ -55,7 +55,7 @@ Do not proceed to execution until all four items are resolved.
 
 ## Authentication
 
-Every authenticated request requires a valid token. Login first using credentials from `local-docs/testing-plans/testing-credentials/`.
+Every authenticated request requires a valid token. Login first using credentials from `local-docs/testing/test-data/credentials/`.
 
 ```
 POST {{HOST}}/auth/login
@@ -72,11 +72,11 @@ Login test scripts auto-set `PATIENT_TOKEN`, `PATIENT_ID`, `PROVIDER_TOKEN`, `PR
 
 ## Endpoint Registry
 
-Endpoint behavior lives in `references/endpoint-profiles/` and is indexed by `references/endpoint-index.md`.
+Endpoint behavior lives in `local-docs/testing/automated/api/endpoints/endpoint-profiles/` and is indexed by `local-docs/testing/automated/api/endpoints/endpoint-index.md`.
 
 Before testing any endpoint:
 
-1. Read `references/endpoint-index.md`.
+1. Read `local-docs/testing/automated/api/endpoints/endpoint-index.md`.
 2. Match by method + path first, then by keyword/tag if the user gave a description.
 3. Open only the matching endpoint profile.
 4. Use the profile for required fields, dynamic ID resolvers, response expectations, state effects, and live notes.
@@ -93,11 +93,11 @@ Do not create a separate findings file.
 
 ## Test Data Management
 
-Test data is stored in `references/datasets.json`. Each entry is scoped to a specific endpoint + scenario type.
+Test data is stored in `local-docs/testing/automated/api/endpoints/datasets.json`. Each entry is scoped to a specific endpoint + scenario type.
 
 ### Selection workflow (run during Step 0)
 
-1. Read `references/datasets.json`
+1. Read `local-docs/testing/automated/api/endpoints/datasets.json`
 2. Filter entries by the target endpoint and scenario type
 3. Present findings to the user:
    - **If matches found:** List them by name + description. Ask: reuse an existing one, or create a new one for variety?
@@ -114,7 +114,7 @@ When no matching data exists or the user wants a new one:
 3. Propose a dataset payload that complies with the structure and fits the chosen scenario type
 4. For edge/error/auth-boundary cases: propose data that deliberately triggers the target condition
 5. Wait for user confirmation or amendments
-6. On confirmation: append the new entry to `references/datasets.json` using the format below
+6. On confirmation: append the new entry to `local-docs/testing/automated/api/endpoints/datasets.json` using the format below
 
 ### Dataset entry format
 
@@ -135,16 +135,16 @@ When no matching data exists or the user wants a new one:
 
 ### File uploads
 
-For endpoints requiring image or file uploads, use the bundled files from this skill's `assets/` folder unless the user explicitly provides another file:
+For endpoints requiring image or file uploads, use the bundled files from `local-docs/testing/automated/api/endpoints/assets/` unless the user explicitly provides another file:
 
-- `assets/sample-hair-photo.jpg` — default hair photo for inquiry creation, scan uploads, and hair-related image fields
-- `assets/sample-passport.png` — default passport scan for logistics/passport endpoints
+- `local-docs/testing/automated/api/endpoints/assets/sample-hair-photo.jpg` — default hair photo for inquiry creation, scan uploads, and hair-related image fields
+- `local-docs/testing/automated/api/endpoints/assets/sample-passport.png` — default passport scan for logistics/passport endpoints
 
-Resolve asset paths relative to this skill directory (`local-docs/project-automation/skills-engineering/api-testing/`). For example, `assets/sample-hair-photo.jpg` means `local-docs/project-automation/skills-engineering/api-testing/assets/sample-hair-photo.jpg`.
+Resolve asset paths relative to `local-docs/testing/automated/api/endpoints/`. For example, `assets/sample-hair-photo.jpg` means `local-docs/testing/automated/api/endpoints/assets/sample-hair-photo.jpg`.
 
-When an endpoint profile or dataset has `file_refs`, attach those files from `assets/` using the exact multipart field names documented by the endpoint profile. Do not invent remote image URLs for upload fields.
+When an endpoint profile or dataset has `file_refs`, attach those files from `local-docs/testing/automated/api/endpoints/assets/` using the exact multipart field names documented by the endpoint profile. Do not invent remote image URLs for upload fields.
 
-**If these files have not been populated yet:** warn the user and ask them to drop real JPG files into the `assets/` folder before running an upload-dependent test.
+**If these files have not been populated yet:** warn the user and ask them to drop real JPG files into the `local-docs/testing/automated/api/endpoints/assets/` folder before running an upload-dependent test.
 
 ---
 
@@ -152,8 +152,8 @@ When an endpoint profile or dataset has `file_refs`, attach those files from `as
 
 ### Step 1: Locate the endpoint
 
-1. Read [endpoint-index.md](references/endpoint-index.md) and open the matching endpoint profile.
-2. If no profile exists, read [collection-map.md](references/collection-map.md) — search by keyword or path.
+1. Read [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) and open the matching endpoint profile.
+2. If no profile exists, read [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md) — search by keyword or path.
 3. If not found: grep `main/hairline-backend/routes/api.php` for the operation.
 4. If still not found: use Postman `getCollection` to browse the collection structure.
 
@@ -238,7 +238,7 @@ If the run reveals reusable endpoint knowledge, propose updates before finishing
 - Response shape or capture path difference
 - Validation rule or state prerequisite not already documented
 
-Propose updates to `references/endpoint-index.md` and the relevant endpoint profile. Write them only after user confirmation.
+Propose updates to `local-docs/testing/automated/api/endpoints/endpoint-index.md` and the relevant endpoint profile. Write them only after user confirmation.
 
 ---
 
@@ -262,9 +262,9 @@ Always document the expected outcome in the report's Contract Validation section
 
 When the user describes a scenario but doesn't know which endpoint to call:
 
-1. Read [endpoint-index.md](references/endpoint-index.md) — search by keyword/tag.
+1. Read [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) — search by keyword/tag.
 2. Open the matching endpoint profile if found.
-3. If no profile exists, read [collection-map.md](references/collection-map.md).
+3. If no profile exists, read [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md).
 4. Grep `main/hairline-backend/routes/api.php` for the operation name or resource.
 5. Check Postman collection structure with `getCollection`.
 6. Cross-reference the controller to confirm the endpoint does what the user expects.
@@ -275,11 +275,11 @@ For endpoints not yet in the Postman collection: construct the request from the 
 
 ## References
 
-- [collection-map.md](references/collection-map.md) — Full endpoint-to-backend-route mapping
-- [endpoint-index.md](references/endpoint-index.md) — First-pass endpoint profile lookup with concise live notes
-- `references/endpoint-profiles/` — Detailed endpoint profiles; open only matching files
-- [datasets.json](references/datasets.json) — Test data catalogue
-- Test credentials: `local-docs/testing-plans/testing-credentials/` (patient-accounts.md, provider-accounts.md)
+- [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md) — Full endpoint-to-backend-route mapping
+- [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) — First-pass endpoint profile lookup with concise live notes
+- `local-docs/testing/automated/api/endpoints/endpoint-profiles/` — Detailed endpoint profiles; open only matching files
+- [datasets.json](local-docs/testing/automated/api/endpoints/datasets.json) — Test data catalogue
+- Test credentials: `local-docs/testing/test-data/credentials/` (patient-accounts.md, provider-accounts.md)
 - Backend routes: `main/hairline-backend/routes/api.php`
 - Controllers: `main/hairline-backend/app/Http/Controllers/`
 - Models: `main/hairline-backend/app/Models/`

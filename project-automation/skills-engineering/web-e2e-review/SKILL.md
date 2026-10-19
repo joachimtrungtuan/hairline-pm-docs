@@ -9,7 +9,7 @@ Turn deterministic execution evidence into a human-controlled decision without a
 
 ## Required Boundaries
 
-1. Start at `local-docs/INDEX.md` and read `local-docs/testing-automation/TESTING-CONSTITUTION.md` plus `OPERATIONS.md`.
+1. Start at `local-docs/INDEX.md` and read `local-docs/testing/automated/web-e2e/TESTING-CONSTITUTION.md` plus `OPERATIONS.md`.
 2. Never read, import, edit, or depend on `main/`.
 3. Never install Playwright or browsers.
 4. Treat every non-pass as unresolved until a human classifies it.
@@ -18,7 +18,7 @@ Turn deterministic execution evidence into a human-controlled decision without a
 
 ## Phase 1: Select Evidence
 
-1. Run `pnpm test:review-queue` from `local-docs/testing-automation/` or query the canonical SQLite database read-only with narrow filters.
+1. Run `pnpm test:review-queue` from `local-docs/testing/automated/web-e2e/` or query the canonical SQLite database read-only with narrow filters.
 2. Confirm the execution ID, run ID, case ID/revision, module/function, outcome, review status, and attempt count.
 3. Inspect only artifacts referenced by that execution. Do not browse unrelated result folders.
 4. Retrieve the registered case and its live PRD references without copying the PRD text.

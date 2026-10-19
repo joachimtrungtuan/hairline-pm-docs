@@ -43,11 +43,11 @@ Detect once. Use one mode for the entire session. Read [tool-mapping.md](referen
 
 ## Test Data Management
 
-Test data is stored in [datasets.json](references/datasets.json). Each entry is scoped to a screen + scenario type.
+Test data is stored in [datasets.json](local-docs/testing/automated/android/datasets.json). Each entry is scoped to a screen + scenario type.
 
 ### Selection workflow (run during Step 0)
 
-1. Read `references/datasets.json`
+1. Read `local-docs/testing/automated/android/datasets.json`
 2. Filter entries by target screen and scenario type
 3. Present to user:
    - **Matches found:** list by name + description — ask to reuse an existing one, or create new for variety
@@ -58,7 +58,7 @@ Test data is stored in [datasets.json](references/datasets.json). Each entry is 
 1. Ask what inputs the screen requires (or read the relevant FR at `local-docs/project-requirements/functional-requirements/`)
 2. Propose a payload that fits the scenario type — for error/edge cases, propose data that deliberately triggers the condition
 3. For fields requiring files: use files from `assets/` and note the `device_path` where they must be pushed
-4. Wait for user confirmation, then write the entry to `references/datasets.json`
+4. Wait for user confirmation, then write the entry to `local-docs/testing/automated/android/datasets.json`
 
 ### Dataset entry format
 
@@ -96,9 +96,9 @@ Confirm the push succeeded before proceeding.
 - **Never modify app code or backend** — observation only
 - Screenshot BEFORE and AFTER every interaction step
 - On crash → capture logcat immediately → stop → report (do not continue remaining steps)
-- Save screenshots to `local-docs/reports/YYYY-MM-DD/android-qa-{session-id}/`
-- Save test report to `local-docs/reports/YYYY-MM-DD/android-qa-{slug}.md`
-- **Never hard-code credentials** — read from `local-docs/testing-plans/testing-credentials/` only
+- Save screenshots to `local-docs/testing/results/YYYY-MM-DD/android-qa-{session-id}/`
+- Save test report to `local-docs/testing/results/YYYY-MM-DD/android-qa-{slug}.md`
+- **Never hard-code credentials** — read from `local-docs/testing/test-data/credentials/` only
 - **Redact all sensitive data with `[REDACTED]`** in reports
 - One screen per run
 
@@ -149,14 +149,14 @@ On crash → go to Step 6 immediately.
 
 ### Step 7: Write report
 
-Copy `assets/test-report-template.md` → save to `local-docs/reports/YYYY-MM-DD/android-qa-{slug}.md`. Fill in all sections.
+Copy `assets/test-report-template.md` → save to `local-docs/testing/results/YYYY-MM-DD/android-qa-{slug}.md`. Fill in all sections.
 
 Run the quality checklist in [flutter-notes.md](references/flutter-notes.md) before finalizing.
 
 ### Step 8: Screenshot cleanup
 
 After the report is written and confirmed:
-1. Ask: "Delete working screenshots from `local-docs/reports/YYYY-MM-DD/android-qa-{session-id}/`?"
+1. Ask: "Delete working screenshots from `local-docs/testing/results/YYYY-MM-DD/android-qa-{session-id}/`?"
 2. On user confirmation: delete the session screenshot folder
 3. Keep only the report `.md` file
 
@@ -168,6 +168,6 @@ After the report is written and confirmed:
 - [adb-commands.md](references/adb-commands.md) — Raw ADB command reference
 - [flutter-notes.md](references/flutter-notes.md) — Flutter interaction caveats and quality checklist
 - [mcp-setup.md](references/mcp-setup.md) — MCP setup instructions; read only when setting up the MCP server for the first time
-- [datasets.json](references/datasets.json) — Test data catalogue
+- [datasets.json](local-docs/testing/automated/android/datasets.json) — Test data catalogue
 - [flow-script-template.md](assets/flow-script-template.md) — Flow file format template; used by `android-flow-register` when writing individual flow files
-- Test credentials: `local-docs/testing-plans/testing-credentials/`
+- Test credentials: `local-docs/testing/test-data/credentials/`

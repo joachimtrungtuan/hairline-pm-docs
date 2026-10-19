@@ -13,7 +13,7 @@ description: >-
 
 # API Flow Register
 
-Researches the Hairline backend and PRDs, proposes a step-by-step testing flow plus any required endpoint profile updates, confirms with the user, then writes flow profiles under `api-flow-testing/references/flow-profiles/` and endpoint profiles under `api-testing/references/endpoint-profiles/`.
+Researches the Hairline backend and PRDs, proposes a step-by-step testing flow plus any required endpoint profile updates, confirms with the user, then writes flow profiles under `local-docs/testing/automated/api/flows/flow-profiles/` and endpoint profiles under `local-docs/testing/automated/api/endpoints/endpoint-profiles/`.
 
 ## Step 0: Upfront Input Collection
 
@@ -62,21 +62,21 @@ Also identify endpoint-level knowledge that belongs in endpoint profiles:
 ### Phase 2: Research (updates)
 
 For update triggers:
-1. Read `api-flow-testing/references/flow-index.md` and the relevant flow profile if migrated.
-2. If not migrated, read the existing flow entry from `api-flow-testing/references/flow-dictionary.md`.
-3. Read `api-testing/references/endpoint-index.md` and the affected endpoint profile.
+1. Read `local-docs/testing/automated/api/flows/flow-index.md` and the relevant flow profile if migrated.
+2. If not migrated, read the existing flow entry from `local-docs/testing/automated/api/flows/flow-dictionary.md`.
+3. Read `local-docs/testing/automated/api/endpoints/endpoint-index.md` and the affected endpoint profile.
 4. Read the discrepancy description provided in Step 0.
 5. Investigate only the affected steps (routes, controllers, Form Requests) to understand what changed.
 6. Identify the specific flow profile, endpoint profile, and index rows that need modification.
 
 For endpoint-only updates:
-1. Read `api-testing/references/endpoint-index.md`.
+1. Read `local-docs/testing/automated/api/endpoints/endpoint-index.md`.
 2. Read the affected endpoint profile if it exists.
 3. Read the discrepancy description provided in Step 0.
 4. Investigate only the affected endpoint (routes, controllers, Form Requests) to understand what changed.
 5. Identify the endpoint profile and index row changes needed.
 
-For file/image upload endpoints, document the default bundled asset to use from `api-testing/assets/` and the exact multipart field names. Do not require future runs to rediscover sample upload files.
+For file/image upload endpoints, document the default bundled asset to use from `local-docs/testing/automated/api/endpoints/assets/` and the exact multipart field names. Do not require future runs to rediscover sample upload files.
 
 ### Phase 3: Propose the flow
 
@@ -94,11 +94,11 @@ Accept amendments. If the user modifies steps, update the proposal inline and as
 
 On user confirmation, write only the approved files.
 
-**New flow:** create `api-flow-testing/references/flow-profiles/<flow-name>.md` and add a row to `api-flow-testing/references/flow-index.md`.
+**New flow:** create `local-docs/testing/automated/api/flows/flow-profiles/<flow-name>.md` and add a row to `local-docs/testing/automated/api/flows/flow-index.md`.
 
 **Flow update:** update the flow profile and its row in `flow-index.md`. If the flow still only exists in `flow-dictionary.md`, either migrate it to a profile or patch the legacy entry only when the user requests that.
 
-**Endpoint profile:** create or update `api-testing/references/endpoint-profiles/<method-path>.md` and add/update the row in `api-testing/references/endpoint-index.md`.
+**Endpoint profile:** create or update `local-docs/testing/automated/api/endpoints/endpoint-profiles/<method-path>.md` and add/update the row in `local-docs/testing/automated/api/endpoints/endpoint-index.md`.
 
 Use the profile formats from [formats.md](references/formats.md).
 
@@ -115,11 +115,11 @@ After writing:
 ## References
 
 - [formats.md](references/formats.md) — proposal, flow profile, and endpoint profile formats; read during Phase 3 and Phase 4
-- `api-flow-testing/references/flow-index.md` — flow lookup index this skill updates
-- `api-flow-testing/references/flow-profiles/` — flow profiles this skill creates/updates
-- `api-flow-testing/references/flow-dictionary.md` — legacy flow dictionary; read only for unmigrated flows
-- `api-testing/references/endpoint-index.md` — endpoint lookup index this skill updates
-- `api-testing/references/endpoint-profiles/` — endpoint profiles this skill creates/updates
+- `local-docs/testing/automated/api/flows/flow-index.md` — flow lookup index this skill updates
+- `local-docs/testing/automated/api/flows/flow-profiles/` — flow profiles this skill creates/updates
+- `local-docs/testing/automated/api/flows/flow-dictionary.md` — legacy flow dictionary; read only for unmigrated flows
+- `local-docs/testing/automated/api/endpoints/endpoint-index.md` — endpoint lookup index this skill updates
+- `local-docs/testing/automated/api/endpoints/endpoint-profiles/` — endpoint profiles this skill creates/updates
 - `main/hairline-backend/routes/api.php` — backend route list; read during Phase 1 research
 - `main/hairline-backend/app/Http/Controllers/` — controller methods; read during Phase 1 research
 - `main/hairline-backend/app/Http/Requests/` — Form Request validation rules; read during Phase 1 research

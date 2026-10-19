@@ -53,7 +53,7 @@ product-plans/                   # 🗺️ Roadmaps and initiative planning docs
 progress-tracking/               # 📌 Ongoing execution and status trackers
 project-notes/                   # 🧾 Ad hoc notes and decisions
 reports/                         # 📈 Development progress reports
-testing-plans/                   # 🧪 Test planning and validation docs
+testing/                         # 🧪 Testing hub: strategy, manual plans, automated suites, archive
 website-works/                   # 🌐 Website requirements and public website content
 project-automation/task-prompt/  # 📝 Task generation templates
 ```

@@ -40,7 +40,7 @@ For update proposals, show only the changed steps with a before/after diff.
 
 ## Flow Profile Format (Phase 4)
 
-Use this format when writing a confirmed flow profile to `api-flow-testing/references/flow-profiles/<flow-name>.md`.
+Use this format when writing a confirmed flow profile to `local-docs/testing/automated/api/flows/flow-profiles/<flow-name>.md`.
 
 ```markdown
 # Flow: [Flow Name]
@@ -57,7 +57,7 @@ Use this format when writing a confirmed flow profile to `api-flow-testing/refer
 
 | Step | Endpoint | Endpoint Profile | Auth | Captures | Expected Status |
 |---|---|---|---|---|---|
-| 1 | `POST /auth/login` | `api-testing/references/endpoint-profiles/post-auth-login.md` | None | `TOKEN` | 200 |
+| 1 | `POST /auth/login` | `local-docs/testing/automated/api/endpoints/endpoint-profiles/post-auth-login.md` | None | `TOKEN` | 200 |
 
 ## State Transitions
 
@@ -77,12 +77,12 @@ Use this format when writing a confirmed flow profile to `api-flow-testing/refer
 
 ## Related Endpoint Profiles
 
-- `api-testing/references/endpoint-profiles/<profile>.md`
+- `local-docs/testing/automated/api/endpoints/endpoint-profiles/<profile>.md`
 ```
 
 ## Endpoint Profile Format (Phase 4)
 
-Use this format when writing a confirmed endpoint profile to `api-testing/references/endpoint-profiles/<method-path>.md`.
+Use this format when writing a confirmed endpoint profile to `local-docs/testing/automated/api/endpoints/endpoint-profiles/<method-path>.md`.
 
 ```markdown
 # [METHOD] /path
@@ -103,7 +103,7 @@ Use this format when writing a confirmed endpoint profile to `api-testing/refere
 
 ## File Uploads
 
-- Use bundled files from `api-testing/assets/` unless the user provides another file.
+- Use bundled files from `local-docs/testing/automated/api/endpoints/assets/` unless the user provides another file.
 - Document exact multipart field names.
 
 ## Dynamic Resolvers
@@ -136,5 +136,5 @@ Use this format when writing a confirmed endpoint profile to `api-testing/refere
 
 ## Related Flows
 
-- `api-flow-testing/references/flow-profiles/<flow>.md`
+- `local-docs/testing/automated/api/flows/flow-profiles/<flow>.md`
 ```

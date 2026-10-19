@@ -112,7 +112,7 @@ The agent never decides the next step. Always wait for the user's next instructi
 
 **Explicit value** (user says "type test@hairline.com"):
 - Use the value exactly as given
-- Propose to add it to `android-emulator-qa/references/datasets.json` as a dataset entry scoped to this screen
+- Propose to add it to `local-docs/testing/automated/android/datasets.json` as a dataset entry scoped to this screen
 - Wait for user confirmation before writing
 
 **Generated/mock value** (user says "type a valid email", "generate a phone number"):
@@ -131,14 +131,14 @@ The agent never decides the next step. Always wait for the user's next instructi
 
 ### 1. Write the individual flow file
 
-Save to `android-flow-test/references/flows/{flow-id}.md`, using `android-emulator-qa/assets/flow-script-template.md` as the template. Fill in all frontmatter fields (`flow-id`, `flow-name`, `aliases`, `recorded`, `last-tested`, `status`) and populate the Steps table, Test Data Used, and Notes sections from the session just recorded.
+Save to `local-docs/testing/automated/android/flows/{flow-id}.md`, using `android-emulator-qa/assets/flow-script-template.md` as the template. Fill in all frontmatter fields (`flow-id`, `flow-name`, `aliases`, `recorded`, `last-tested`, `status`) and populate the Steps table, Test Data Used, and Notes sections from the session just recorded.
 
 ### 2. Update the flow index
 
-Append or update the entry in `android-flow-test/references/flow-index.md`:
+Append or update the entry in `local-docs/testing/automated/android/flows/flow-index.md`:
 
 ```
-| {Flow Name} | {alias1}, {alias2} | flows/{flow-id}.md | stable | YYYY-MM-DD |
+| {Flow Name} | {alias1}, {alias2} | {flow-id}.md | stable | YYYY-MM-DD |
 ```
 
 If updating an existing entry: find it by flow-id and replace the status and date in place.
@@ -147,15 +147,15 @@ If updating an existing entry: find it by flow-id and replace the status and dat
 
 Tell the user:
 - Flow is registered under the name and aliases provided
-- File written to `android-flow-test/references/flows/{flow-id}.md`
-- Index entry updated in `android-flow-test/references/flow-index.md`
+- File written to `local-docs/testing/automated/android/flows/{flow-id}.md`
+- Index entry updated in `local-docs/testing/automated/android/flows/flow-index.md`
 - "You can now run this flow with `android-flow-test`."
 
 ---
 
 ## Updating an Existing Flow (update trigger)
 
-1. Load the existing flow file from `android-flow-test/references/flows/`
+1. Load the existing flow file from `local-docs/testing/automated/android/flows/`
 2. Show the user the current step definitions for the affected steps
 3. Re-run the interactive recording loop for those steps only
 4. Update the flow file: correct coordinates/descriptions, bump `last-tested`, update per-step `Status`
@@ -167,7 +167,7 @@ Tell the user:
 ## Screenshot Cleanup
 
 After writing the flow and confirming with the user:
-1. Ask: "Delete all screenshots captured during this recording session from `local-docs/reports/`?"
+1. Ask: "Delete all screenshots captured during this recording session from `local-docs/testing/results/`?"
 2. On user confirmation: delete the session screenshot folder
 
 ---
@@ -178,6 +178,6 @@ After writing the flow and confirming with the user:
 - `android-emulator-qa/references/adb-commands.md` — Raw ADB command reference; read only in Raw ADB mode
 - `android-emulator-qa/references/flutter-notes.md` — Flutter interaction caveats; read when encountering Flutter-specific interaction issues during the recording loop
 - `android-emulator-qa/assets/flow-script-template.md` — Flow file format template; read when writing the individual flow file (Writing the Flow, Step 1)
-- `android-flow-test/references/flow-index.md` — Registered flow index; read when updating the index after recording (Writing the Flow, Step 2)
-- `android-emulator-qa/references/datasets.json` — Test data catalogue; read during the recording loop when the user provides or generates test data values
-- Test credentials: `local-docs/testing-plans/testing-credentials/`
+- `local-docs/testing/automated/android/flows/flow-index.md` — Registered flow index; read when updating the index after recording (Writing the Flow, Step 2)
+- `local-docs/testing/automated/android/datasets.json` — Test data catalogue; read during the recording loop when the user provides or generates test data values
+- Test credentials: `local-docs/testing/test-data/credentials/`

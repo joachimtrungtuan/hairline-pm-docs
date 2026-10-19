@@ -1,6 +1,6 @@
 # Android Emulator QA — Skill Feedback Session 2026-04-09
 
-**Session scope:** Live testing run against `local-docs/testing-plans/2026-04-09/mobile-app-manual-testing-plan.md`
+**Session scope:** Live testing run against `local-docs/testing/archive/testing-plans/2026-04-09/mobile-app-manual-testing-plan.md`
 **Build under test:** TBD (APK version)
 **Tester:** Joachim
 

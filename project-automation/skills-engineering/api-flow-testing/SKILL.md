@@ -14,7 +14,7 @@ description: >-
 
 # API Flow Testing
 
-Executes multi-step Hairline API testing flows end-to-end. Each individual step follows the `api-testing` single-endpoint pattern. Migrated flow definitions are indexed in `references/flow-index.md` and stored in `references/flow-profiles/`. `references/flow-dictionary.md` is legacy fallback only.
+Executes multi-step Hairline API testing flows end-to-end. Each individual step follows the `api-testing` single-endpoint pattern. Migrated flow definitions are indexed in `local-docs/testing/automated/api/flows/flow-index.md` and stored in `local-docs/testing/automated/api/flows/flow-profiles/`. `local-docs/testing/automated/api/flows/flow-dictionary.md` is legacy fallback only.
 
 ## Step 0: Upfront Input Collection
 
@@ -46,11 +46,11 @@ Do not proceed to execution until all five items are resolved.
 
 ### Phase 1: Flow lookup
 
-1. Read `references/flow-index.md`.
+1. Read `local-docs/testing/automated/api/flows/flow-index.md`.
 2. Look up the flow by name, purpose, or tag (case-insensitive, partial match acceptable).
-3. Open only the matching file in `references/flow-profiles/`.
-4. Open each endpoint profile referenced by the flow from `api-testing/references/endpoint-profiles/`.
-5. If the flow is not in `flow-index.md`, check `references/flow-dictionary.md` as legacy fallback.
+3. Open only the matching file in `local-docs/testing/automated/api/flows/flow-profiles/`.
+4. Open each endpoint profile referenced by the flow from `local-docs/testing/automated/api/endpoints/endpoint-profiles/`.
+5. If the flow is not in `flow-index.md`, check `local-docs/testing/automated/api/flows/flow-dictionary.md` as legacy fallback.
 
 **If not found:**
 - Stop. Do not attempt to improvise the flow.
@@ -65,10 +65,10 @@ Before starting any API calls, coordinate test data for all steps upfront:
 
 For each step in the flow that requires a request body:
 1. Read that step's endpoint profile for required fields and dynamic resolvers.
-2. Check `api-testing/references/datasets.json` for entries matching that step's endpoint + scenario type.
+2. Check `local-docs/testing/automated/api/endpoints/datasets.json` for entries matching that step's endpoint + scenario type.
 3. If matches found: present them and ask — reuse an existing one, or create a new one for variety?
 4. If no match: offer to add a new dataset using the `api-testing` dataset addition workflow (research the endpoint's required structure, propose a compliant payload, confirm with user, write to datasets.json).
-5. For file/image upload steps, use `api-testing/assets/` files referenced by the endpoint profile or dataset unless the user explicitly provides a different file.
+5. For file/image upload steps, use `local-docs/testing/automated/api/endpoints/assets/` files referenced by the endpoint profile or dataset unless the user explicitly provides a different file.
 
 Collect all test data decisions before running any steps. Do not interrupt mid-flow to ask about data.
 
@@ -153,14 +153,14 @@ For auth-boundary and cross-tenant scenario variants, label the probe clearly:
 
 ## References
 
-- [flow-index.md](references/flow-index.md) — First-pass flow lookup; read during Phase 1
-- `references/flow-profiles/` — Migrated flow definitions; open only the matched profile
-- [flow-dictionary.md](references/flow-dictionary.md) — Legacy flow definitions; fallback while migration is incomplete
+- [flow-index.md](local-docs/testing/automated/api/flows/flow-index.md) — First-pass flow lookup; read during Phase 1
+- `local-docs/testing/automated/api/flows/flow-profiles/` — Migrated flow definitions; open only the matched profile
+- [flow-dictionary.md](local-docs/testing/automated/api/flows/flow-dictionary.md) — Legacy flow definitions; fallback while migration is incomplete
 - `api-testing` skill — single-endpoint execution and reporting logic; applied at every step in Phase 3
-- `api-testing/references/datasets.json` — shared test data catalogue; read during Phase 2 test data coordination
-- `api-testing/references/endpoint-index.md` — endpoint profile lookup and concise live notes
-- `api-testing/references/endpoint-profiles/` — endpoint-level fields, resolvers, response expectations, and live notes
-- `api-testing/references/collection-map.md` — endpoint-to-route mapping; fallback when a profile is missing
-- Test credentials: `local-docs/testing-plans/testing-credentials/`
+- `local-docs/testing/automated/api/endpoints/datasets.json` — shared test data catalogue; read during Phase 2 test data coordination
+- `local-docs/testing/automated/api/endpoints/endpoint-index.md` — endpoint profile lookup and concise live notes
+- `local-docs/testing/automated/api/endpoints/endpoint-profiles/` — endpoint-level fields, resolvers, response expectations, and live notes
+- `local-docs/testing/automated/api/endpoints/collection-map.md` — endpoint-to-route mapping; fallback when a profile is missing
+- Test credentials: `local-docs/testing/test-data/credentials/`
 - Backend routes: `main/hairline-backend/routes/api.php` — read only during error investigation in Phase 3
 - Controllers: `main/hairline-backend/app/Http/Controllers/` — read only during error investigation in Phase 3
