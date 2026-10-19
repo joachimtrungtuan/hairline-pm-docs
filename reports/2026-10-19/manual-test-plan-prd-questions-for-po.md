@@ -12,7 +12,7 @@ Each item lists the PRD references, what the PRDs say, the question, the affecte
 
 ## 1. Cross-phase: Currency
 
-The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-024: every quote, price, invoice and payment is in the FR-029 Default Currency (`fr004-quote-submission/prd.md` line 370; `fr026-app-settings-security/prd.md` lines 629 and 637). For testing, setup item CUR-GBP sets the Default Currency to GBP with EUR enabled. Payouts follow FR-017, where each provider has its own payout currency. The questions below come from that setup.
+The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-024: every quote, price, invoice and payment is in the FR-029 Default Currency (`fr004-quote-submission/prd.md` line 370; `fr026-app-settings-security/prd.md` lines 629 and 637). For testing, the Default Currency stays at the FR-029 seed, USD, with EUR enabled (setup item CUR-USD confirms it). Payouts follow FR-017, where each provider has its own payout currency. The questions below come from that setup.
 
 ### Q-01: Where is a provider's payout currency set?
 
@@ -27,28 +27,28 @@ The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-02
 
 - **PRD refs:** `fr017-admin-billing-finance/prd.md` line 1077 (Screen 9 Gross Amount, "Display: £X,XXX.XX"), line 1082 (Screen 9 Currency column, "Treatment currency"), line 1150 (Screen 10 Currency column, "Booking currency"), line 1160 (Screen 10 rule: amounts in payout currency).
 - **What the PRDs say:** Screen 9 does not say whether Gross Amount, Commission Deducted and Net Earning are in the quote (booking) currency or the payout currency. On Screen 10, the Currency column says "Booking currency", but the Business Rule says that all amounts are shown in the payout currency.
-- **Question:** For a provider paid in a currency other than the booking currency (GBP booking, EUR payout), do the Screen 9 and Screen 10 amounts and Currency column show the booking currency, the payout currency, or both?
+- **Question:** For a provider paid in a currency other than the booking currency (USD booking, EUR payout), do the Screen 9 and Screen 10 amounts and Currency column show the booking currency, the payout currency, or both?
 - **Affected cases:** PR05-FR017-02 (data set DS-PR05-02, setup BK-16); Screen 10 history checks for `{V2}` in Phase 3 B01.
 - **Current handling:** PR05-FR017-02 expects EUR amounts in `{V2}`'s payout currency, converted at the locked rate. This applies the Screen 10 rule to Screen 9.
 - **Decision:** Payout currency (2026-10-19). Screen 9 and Screen 10 amounts and the Currency column show the provider's payout currency. The current handling stands; the FR-017 Screen 10 Currency column wording ("Booking currency", line 1150) needs a PRD correction.
 
-### Q-03: How is a GBP to EUR rate worked out when all currency pairs are based on USD?
+### Q-03: How is a non-USD rate (for example GBP to EUR) worked out when all currency pairs are based on USD?
 
 - **PRD refs:** `fr029-payment-system-config/prd.md` line 526 (Screen 2B Base Currency "Always USD — not editable"), line 530 (Manual Base Rate "units of target currency per 1 USD"); `fr017-admin-billing-finance/prd.md` line 491 (conversion at the rate locked at acceptance) and Screen 8 Currency Alert Detail Modal (line 1008).
-- **What the PRDs say:** Each FR-029 currency pair is USD to a target currency. With GBP as the Default Currency and EUR as a payout currency, a booking needs a GBP to EUR rate. The PRDs do not say how that rate is derived (for example a cross rate through USD, and whether the markup applies once or on both legs). They also do not say which pair a GBP to EUR currency alert watches.
+- **What the PRDs say:** Each FR-029 currency pair is USD to a target currency. If the Default Currency were not USD (for example GBP) and a provider were paid in EUR, a booking would need a GBP to EUR rate. The PRDs do not say how that rate is derived (for example a cross rate through USD, and whether the markup applies once or on both legs). They also do not say which pair a GBP to EUR currency alert watches.
 - **Question:** How is a non-USD rate such as GBP to EUR worked out and locked at acceptance? Does markup apply to each USD leg or to the cross rate? Is the alert threshold checked on the cross rate?
-- **Affected cases:** Phase 3 B02 setup item FX-1 (locked rate 1 GBP = 1.20 EUR); PR05-FR017-02; A05-FR017-19, A05-FR017-20, A05-FR017-27; A05-FR017-37 (CA-1, GBP to EUR alert).
-- **Current handling:** The dev team sets the FR-029 rates (for example Manual mode, Markup 0%) so that each `{V2}` booking locks 1.20, and records the actual locked rate. If the recorded rate is different, the expected EUR figures are recalculated from it.
-- **Decision:**
+- **Affected cases:** Phase 3 B02 setup item FX-1 (locked rate 1 USD = 0.90 EUR); PR05-FR017-02; A05-FR017-19, A05-FR017-20, A05-FR017-27; A05-FR017-37 (CA-1, USD/EUR alert).
+- **Current handling:** The dev team configures the USD/EUR pair on FR-029 Screen 2B (Manual mode, Manual Base Rate 0.90, Markup 0%) and records each `{V2}` booking's locked rate. If a recorded rate is different, the expected EUR figures are recalculated from it.
+- **Decision:** No longer blocks testing (2026-10-19). With USD as the Default Currency, the `{V2}` payouts need only the USD/EUR pair that FR-029 Screen 2B already configures, so no cross rate is involved. The question comes back only if the Default Currency is ever set to a currency other than USD.
 
 ### Q-04 (note only): Default currency seed is USD
 
 - **PRD refs:** `fr029-payment-system-config/prd.md` line 722 (Screen 6 Notes: "the MVP seed value is USD").
-- **What the PRDs say:** The MVP seed Default Currency is USD. The test environment changes it to GBP (setup item CUR-GBP), so the FR-017 Revenue Dashboard reporting currency also starts in GBP.
-- **Question:** No decision is needed unless GBP should also be the production seed. Please confirm that testing with GBP as the Default Currency is acceptable.
-- **Affected cases:** Phase 1 plan.md Team Setup item 2 (CUR-GBP); every Phase 1 and Phase 3 price expectation.
-- **Current handling:** The team sets GBP before B01.
-- **Decision:**
+- **What the PRDs say:** The MVP seed Default Currency is USD. The test environment keeps USD (setup item CUR-USD confirms it), so the FR-017 Revenue Dashboard reporting currency also starts in USD.
+- **Question:** None; kept for the record.
+- **Affected cases:** Phase 1 plan.md Team Setup item 2 (CUR-USD); every Phase 1 and Phase 3 price expectation.
+- **Current handling:** The team confirms USD before B01.
+- **Decision:** Test with USD as the Default Currency (2026-10-19).
 
 ---
 
@@ -208,7 +208,7 @@ The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-02
 - **What the PRDs say:** FR-011 asks for aftercare pricing in all supported currencies; every other price in the system uses the one system quote currency.
 - **Question:** Should aftercare plans be priced in the system quote currency only?
 - **Affected cases:** A03-FR011-12 (Phase 2 B04).
-- **Current handling:** The case expects GBP prices only. If save is blocked only because another currency has no price, the tester copies the message and marks the case Blocked.
+- **Current handling:** The case expects USD prices only. If save is blocked only because another currency has no price, the tester copies the message and marks the case Blocked.
 - **Decision:**
 
 ---
