@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manual Test Bug Sync"
+  short_description: "Merge tester results and sync manual-test bugs with Plane"
+  default_prompt: "Use $manual-test-bug-sync to merge the tester's returned batch files and sync bug status with Plane."
