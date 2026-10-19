@@ -172,15 +172,15 @@ class Formatting(Base):
         _, v = self.pair("validate")
         self.assertIn("column_shift_suspected", self.codes(v["errors"]))
 
-    def test_evidence_naming(self):
-        ok = case(Result="Pass", **{"Last tested": "2026-10-18", "Evidence": "PR01-FR002-01-20261018-1.png, https://x.test/v"})
+    def test_evidence_links_only(self):
+        ok = case(Result="Pass", **{"Last tested": "2026-10-18", "Evidence": "https://x.test/a, https://x.test/b"})
         self.write([case()], [ok])
         _, v = self.pair("validate")
         self.assertTrue(v["valid"], v["errors"])
-        self.assertNotIn("evidence_name", self.codes(v["warnings"]))
-        self.write([case()], [dict(ok, Evidence="shot-1.png")])
+        self.assertNotIn("evidence_not_link", self.codes(v["warnings"]))
+        self.write([case()], [dict(ok, Evidence="PR01-FR002-01-20261018-1.png")])
         _, v = self.pair("validate")
-        self.assertIn("evidence_name", self.codes(v["warnings"]))
+        self.assertIn("evidence_not_link", self.codes(v["warnings"]))
 
 
 class ControlFields(Base):

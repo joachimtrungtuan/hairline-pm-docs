@@ -480,15 +480,15 @@ def evidence_entries(cell: str) -> list[str]:
 
 
 def evidence_issue(base: str, cell: str) -> dict | None:
-    """Evidence holds file names `<case base ID>-<YYYYMMDD>-<n>.<ext>` or links (TEST-STRATEGY §5)."""
+    """Evidence holds only links to files in the team's cloud evidence folder (TEST-STRATEGY §5)."""
     entries = evidence_entries(cell)
     texty = [e for e in entries if re.search(r"\s", e) and not URL_RE.match(e)]
     if texty:
-        return issue("error", "column_shift_suspected", f"Evidence holds text, not file names or links (`{texty[0][:60]}`). {SHIFT_HINT}")
-    name_re = re.compile(re.escape(base) + r"-\d{8}-\d+\.[A-Za-z0-9]+$")
-    off = [e for e in entries if not URL_RE.match(e) and not name_re.match(e)]
+        return issue("error", "column_shift_suspected", f"Evidence holds text, not links (`{texty[0][:60]}`). {SHIFT_HINT}")
+    off = [e for e in entries if not URL_RE.match(e)]
     if off:
-        return issue("warning", "evidence_name", f"Evidence {off} does not follow `{base}-<YYYYMMDD>-<n>.<ext>`; rename the files and the cell before storing them")
+        return issue("warning", "evidence_not_link", f"Evidence {off} is not a link; ask the tester to upload the files "
+                     f"(named `{base}-<YYYYMMDD>-<n>.<ext>`) to the cloud evidence folder and record the links")
     return None
 
 

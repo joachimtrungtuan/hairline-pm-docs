@@ -57,7 +57,7 @@ Other warnings:
 - `tester_bug_status_ignored`: the tester copy shows a team status that differs from the hub; the hub wins.
 - `open_bug_case_passed`: case passed while its bug is still `Logged` or `Reopened`; status kept, confirm with the team.
 - `fail_on_closed_bug`: a `Fail` result on a row whose bug is `Closed` (a regression); paired with the `closed_bug_failed_again` conflict, and reported by `bugs` and `summary` for hub rows.
-- `evidence_name`: an Evidence entry is neither a link nor named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (checked only when Evidence changed).
+- `evidence_not_link`: an Evidence entry is not an `http(s)` link; evidence lives in the team's cloud folder and only links are recorded (checked only when Evidence changed).
 - `control_field_blank`: Tester or Build tested is blank or a `{placeholder}` although the copy has run results.
 - `control_entry_format`: a Tester or Build tested entry is not in `Name (YYYY-MM-DD)` form.
 - `tester_changed`: the copy adds a tester name not seen before in the hub; confirm the new tester.
