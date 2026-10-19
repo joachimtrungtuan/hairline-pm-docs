@@ -17,7 +17,7 @@ Run `bugs` and use each approved `to_log` row as one pasted bug for `create-bug-
 | `Preconditions`, `Test data`, `Steps` | Steps to Reproduce (keep data-set IDs and account placeholders such as `{V1}`; never resolve credentials) |
 | `Actual result / data` | Current Status |
 | `Expected result` | Expectation (Suggestion) |
-| `Evidence` | Evidence |
+| `Evidence` | Evidence: each file name with its folder `local-docs/testing/manual/phases/<phase-folder>/v<major>.0/evidence/<batch>/`, or the shared-drive link |
 | `Notes` | Notes (usability context) |
 | `Priority` | Source priority |
 

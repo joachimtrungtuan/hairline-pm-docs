@@ -60,6 +60,7 @@ Pass `--hold-state "<name>"` for any other Plane state the team uses to mean "fi
 ## Summary Counting
 
 - Batch Summary `Total` excludes `Retired` cases, so Total = Pass + Fail + Blocked + Not tested.
-- `Open bugs` counts rows whose Bug status is `Found`, `Logged`, `Fixed - retest`, or `Reopened` (one per row, even with two keys).
+- `Open bugs` counts rows whose Bug status is `Found`, `Logged`, `Fixed - retest`, or `Reopened`, plus `Fail` rows whose Bug status is still `Closed` (a regression not yet reopened), one per row even with two keys. This is the same "open bug" definition the phase exit criteria use (TEST-STRATEGY §5).
+- `summary` lists each batch's `Fail` plus `Closed` rows as `fail_on_closed_bug`; `bugs` lists them with an action hint; `retest-list` returns them as `needs_reopen`. Ask the user whether to set `Reopened` (same Bug ID) or log a new bug.
 - Plan Progress Summary `Last tested` is the latest valid date in the batch, or `—`. The **Total** row sums counts and takes the latest date.
 - Batches found in `batches/` but missing from the plan table are added before the **Total** row and reported as `added`; plan rows with no matching batch file are reported as `unmatched_rows` and left as they are.

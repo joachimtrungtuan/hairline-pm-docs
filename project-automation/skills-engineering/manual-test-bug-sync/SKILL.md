@@ -36,11 +36,11 @@ python3 -I "$SYNC" <command> --help
 | `validate --hub H --tester F` | No | Errors and warnings only |
 | `diff --hub H --tester F [--resolve CASE=tester/hub/reopen] [--format md]` | No | Per-case preview, conflicts, `hub_sha256` |
 | `merge --hub H --tester F [--partial] [--resolve ...] --apply --expect-sha SHA` | Hub batch | Merge confirmed changes and refresh the Batch Summary |
-| `bugs --batch H` or `--plan P` | No | Rows to log (`Found`), Fail rows without a flag, notes to review |
+| `bugs --batch H` or `--plan P` | No | Rows to log (`Found`), Fail rows without a flag, Fail rows on a `Closed` bug (`fail_on_closed_bug`), notes to review |
 | `set-bug --batch H --updates U.json [--apply]` | Hub batch | Write Bug ID and Bug status with transition checks |
 | `apply-states --plan P --states S.json --values plane-values.json [--apply]` | Hub batch | Map Plane states to `Fixed - retest` |
-| `retest-list --root local-docs/testing/manual/phases [--format md]` | No | Cases with `Fixed - retest` |
-| `summary --plan P [--apply]` | Batches + plan | Recompute Batch Summary and plan Progress Summary |
+| `retest-list --root local-docs/testing/manual/phases [--format md]` | No | Cases with `Fixed - retest`, plus `needs_reopen` (Fail on a `Closed` bug) |
+| `summary --plan P [--apply]` | Batches + plan | Recompute Batch Summary and plan Progress Summary. Exits 2 without writing when the plan has no batch files yet |
 
 Write commands are dry-run unless `--apply` is passed. Exit code 2 with a JSON `error` on stderr means nothing was written.
 
@@ -65,13 +65,14 @@ Create a progress checklist with only the steps the user asked for (intake, log 
    - Rejected cases: explain each (definition edit, bad enum, bad date, missing Last tested, retired case). Offer `--partial` to merge the clean cases now and leave rejected ones for a corrected copy.
    - Conflicts: show hub and tester values side by side and ask per case: `tester`, `hub`, or `reopen` (only for `closed_bug_failed_again`). Re-run `diff` with the `--resolve` answers.
 4. After the user confirms the final preview, run `merge --apply --expect-sha <hub_sha256 from that preview>` with the same flags. The script also refreshes that batch's Batch Summary.
-5. Report updated, skipped, and proposal items. Tester proposals (definition edits, new cases, edited sections) go to the user as a list for the plan owner; never apply them here.
+5. Save the evidence files the tester sent into `<plan version folder>/evidence/<batch>/` (for example `v1.0/evidence/B02/`), keeping their names. Never overwrite an existing file; ask the user when a name already exists. Recordings over 10 MB stay as shared-drive links (TEST-STRATEGY §5).
+6. Report updated, skipped, and proposal items. Tester proposals (definition edits, new cases, edited sections) go to the user as a list for the plan owner; never apply them here.
 
 Retest returns use the same path. When the hub row is `Fixed - retest` and the tester's run is newer, the merge sets `Closed` on Pass and `Reopened` on Fail, keeping the same Bug ID.
 
 ### 2. Log bugs
 
-1. Run `bugs` for the merged batches. `to_log` rows (`Found`) are the candidates. Ask the user about `fail_without_bug_flag` rows and about `notes_to_review` rows whose Notes describe a usability problem; add only the ones the user approves.
+1. Run `bugs` for the merged batches. `to_log` rows (`Found`) are the candidates. Ask the user about `fail_on_closed_bug` rows (set `Reopened` with `set-bug`, or log a new bug), about `fail_without_bug_flag` rows and about `notes_to_review` rows whose Notes describe a usability problem; add only the ones the user approves.
 2. Follow `references/plane-handoff.md` to hand the rows to `create-bug-tasks` (load and follow its `SKILL.md`). It drafts the task file and may split one bug into FE and BE tasks.
 3. Through `plane-api-commands`, dry-run creation, show the per-task result, and create live only after the user confirms.
 4. Build the `set-bug` updates file from the task file's `Source Bug ID` and `Plane Task Key` values, dry-run `set-bug`, show it, then `--apply`. Rows become `Logged` with their Plane key(s).

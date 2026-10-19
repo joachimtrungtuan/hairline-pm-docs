@@ -61,9 +61,13 @@ SUMMARY_COLUMNS = ["Total", "Pass", "Fail", "Blocked", "Not tested", "Open bugs"
 PROGRESS_COLUMNS = ["Batch"] + SUMMARY_COLUMNS + ["Last tested"]
 SKIP_SECTION_COMPARE = {"Batch Control", "Test Cases", "Batch Summary"}
 
-CASE_ID_RE = re.compile(r"^(?P<base>[A-Z]{1,2}\d{2}[a-z]?-FR\d{3}[A-Z]?-\d{2})\s+r(?P<rev>\d+)$")
+# Module codes per TEST-STRATEGY §4: P01-P07, PR01-PR07, A01-A10, S01-S06 (no letter suffixes).
+CASE_ID_RE = re.compile(r"^(?P<base>(?:PR|[PAS])\d{2}-FR\d{3}-\d{2})\s+r(?P<rev>\d+)$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 BUG_KEY_RE = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
+BR_RE = re.compile(r"<br\s*/?>", re.I)
+CONTROL_ENTRY_RE = re.compile(r"^.+\(\d{4}-\d{2}-\d{2}\)$")
+URL_RE = re.compile(r"^https?://\S+$")
 VERSION_RE = re.compile(r"Phase\s*(?P<phase>\d+)\s*/\s*v?(?P<major>\d+)\.(?P<minor>\d+)", re.I)
 
 # Plane state -> action. Group decides by default; names override the group.
@@ -98,8 +102,13 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def canon_br(text: str) -> str:
+    """`<br/>`, `<br />`, `<BR>` are the same line break as `<br>`."""
+    return BR_RE.sub("<br>", text)
+
+
 def norm(text: str) -> str:
-    return re.sub(r"\s+", " ", text.replace("\r", "")).strip()
+    return re.sub(r"\s+", " ", canon_br(text.replace("\r", ""))).strip()
 
 
 def valid_date(value: str) -> bool:
@@ -235,13 +244,15 @@ class Batch:
             if len(cells) != width:
                 self.errors.append(issue(
                     "error", "column_count",
-                    f"Row has {len(cells)} cells, header has {width} (literal `|` in a cell or a broken row)",
+                    f"Row has {len(cells)} cells, header has {width}: a `|` typed inside a cell adds a cell, a deleted cell "
+                    "removes one, and a real line break inside a cell splits the row (use `<br>`). Columns after that "
+                    "point are shifted; fix the row in the tester copy",
                     line=i + 1, row_start=cells[0] if cells else ""))
                 continue
             row = dict(zip(self.header, cells))
             m = CASE_ID_RE.match(row.get("ID", ""))
             if not m:
-                self.errors.append(issue("error", "bad_case_id", f"Case ID `{row.get('ID', '')}` does not match `<MODULE><NN>-FR<NNN>-<SEQ> r<REV>`", line=i + 1))
+                self.errors.append(issue("error", "bad_case_id", f"Case ID `{row.get('ID', '')}` does not match `<MODULE><NN>-FR<NNN>-<SEQ> r<REV>` with MODULE one of P, PR, A, S (for example `PR01-FR002-03 r1`)", line=i + 1))
                 continue
             case = {"id": row["ID"], "base": m.group("base"), "rev": int(m.group("rev")), "cells": row, "line": i}
             if case["base"] in self.index:
@@ -342,6 +353,45 @@ def cmd_find_hub(args) -> dict:
 
 # ----------------------------------------------------------------- compare --
 
+def control_entries(value: str) -> list[str]:
+    v = value.strip()
+    if not v or v.startswith("{"):
+        return []
+    return [e.strip() for e in v.split(";") if e.strip()]
+
+
+def entry_name(entry: str) -> str:
+    return re.sub(r"\s*\(\d{4}-\d{2}-\d{2}\)$", "", entry).strip().lower()
+
+
+def control_entries_update(field: str, hub_value: str, tester_value: str, tester_ran: bool):
+    """Tester and Build tested accumulate `Name (YYYY-MM-DD)` entries joined by `; `; never overwrite."""
+    warns = []
+    hub_e, tes_e = control_entries(hub_value), control_entries(tester_value)
+    if not tes_e:
+        if tester_ran:
+            warns.append(issue("warning", "control_field_blank",
+                               f"Batch Control `{field}` is blank or still a placeholder in the tester copy; ask the tester for it "
+                               "(`Name (YYYY-MM-DD)`); Plane bugs need it", field=field))
+        return None, warns
+    seen = {norm(e).lower() for e in hub_e}
+    new = [e for e in tes_e if norm(e).lower() not in seen]
+    if not new:
+        return None, warns
+    bad = [e for e in new if not CONTROL_ENTRY_RE.match(e)]
+    if bad:
+        warns.append(issue("warning", "control_entry_format",
+                           f"Batch Control `{field}` entries {bad} are not `Name (YYYY-MM-DD)`; appended as written", field=field))
+    if field == "Tester" and hub_e:
+        hub_names = {entry_name(e) for e in hub_e}
+        others = [e for e in new if entry_name(e) not in hub_names]
+        if others:
+            warns.append(issue("warning", "tester_changed",
+                               f"A different tester ({'; '.join(others)}) is merging into a batch already tested by "
+                               f"{'; '.join(hub_e)}; earlier entries are kept and the new ones appended", field=field))
+    return {"field": field, "hub": hub_value, "tester": tester_value, "to": "; ".join(hub_e + new)}, warns
+
+
 def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolutions: dict[str, str]) -> dict:
     res = {
         "hub": str(hub.path), "tester": str(tester.path), "hub_sha256": sha256(hub.path),
@@ -355,6 +405,7 @@ def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolution
     if hub.batch_id != tester.batch_id:
         res["file_errors"].append(issue("error", "batch_mismatch", f"Batch `{tester.batch_id}` does not match hub `{hub.batch_id}`"))
     hv, tv = hub.version, tester.version
+    stale_copy = bool(hv and tv and hv["phase"] == tv["phase"] and hv["major"] == tv["major"] and tv["minor"] < hv["minor"])
     if not hv or not tv:
         res["file_errors"].append(issue("error", "version_unreadable", "`Phase / plan version` unreadable in hub or tester file"))
     elif hv["phase"] != tv["phase"] or hv["major"] != tv["major"]:
@@ -364,23 +415,38 @@ def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolution
         target = res["warnings"] if allow_minor else res["file_errors"]
         target.append(issue(lvl, "minor_version_mismatch", f"Tester file is v{tv['major']}.{tv['minor']}, hub is v{hv['major']}.{hv['minor']}; case revisions are still checked per case"))
 
-    # Non-result sections: report edits as tester proposals, never merged.
+    # Non-result sections: report edits as tester proposals, never merged. A copy issued before the
+    # hub's last minor bump differs because the hub changed, so those differences are not proposals.
+    stale_note = (f"stale copy, plan version v{tv['major']}.{tv['minor']} < hub v{hv['major']}.{hv['minor']}; "
+                  "the difference is most likely the hub's own later edit, not a tester proposal") if stale_copy else ""
     for title in hub.sections:
         if title in SKIP_SECTION_COMPARE:
             continue
         if title not in tester.sections:
             res["warnings"].append(issue("warning", "section_removed", f"Tester copy lacks section `{title}` (not merged)"))
         elif hub.section_text(title) != tester.section_text(title):
-            res["warnings"].append(issue("warning", "section_edited", f"Tester edited section `{title}`; treat as a proposal (not merged)", section=title))
+            if stale_copy:
+                res["warnings"].append(issue("warning", "section_stale", f"Section `{title}` differs ({stale_note}; not merged)", section=title))
+            else:
+                res["warnings"].append(issue("warning", "section_edited", f"Tester edited section `{title}`; treat as a proposal (not merged)", section=title))
     for field, value in tester.control.items():
         hub_value = hub.control.get(field)
         if hub_value is None:
             res["warnings"].append(issue("warning", "control_field_added", f"Tester added Batch Control field `{field}` (not merged)"))
+        elif field in CONTROL_TESTER_FIELDS:
+            continue
         elif norm(value) != norm(hub_value):
-            if field in CONTROL_TESTER_FIELDS and value.strip() and not value.strip().startswith("{"):
-                res["control_updates"].append({"field": field, "hub": hub_value, "tester": value})
-            elif field not in CONTROL_TESTER_FIELDS:
-                res["warnings"].append(issue("warning", "control_field_edited", f"Tester changed Batch Control `{field}` (not merged; proposal)", hub=hub_value, tester=value))
+            if stale_copy and field == "Phase / plan version":
+                continue  # already reported as minor_version_mismatch
+            res["warnings"].append(issue("warning", "control_field_edited", f"Tester changed Batch Control `{field}` (not merged; proposal)", hub=hub_value, tester=value))
+    tester_ran = any(normalize_enum(c["cells"].get("Result", ""), RESULTS, "Not tested")[0] in EXECUTED_RESULTS for c in tester.cases)
+    for field in CONTROL_TESTER_FIELDS:
+        if field not in hub.control_lines:
+            continue
+        upd, warns = control_entries_update(field, hub.control.get(field, ""), tester.control.get(field, ""), tester_ran)
+        res["warnings"] += warns
+        if upd:
+            res["control_updates"].append(upd)
 
     for case in hub.cases:
         if case["base"] not in tester.index:
@@ -405,14 +471,42 @@ def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolution
     return res
 
 
+SHIFT_HINT = ("Columns look shifted: a `|` typed inside a cell plus a deleted cell keeps the cell count but moves values "
+              "into the wrong columns. Fix the row in the tester copy")
+
+
+def evidence_entries(cell: str) -> list[str]:
+    return [e.strip() for e in re.split(r"<br>|[,;]", canon_br(cell)) if e.strip()]
+
+
+def evidence_issue(base: str, cell: str) -> dict | None:
+    """Evidence holds file names `<case base ID>-<YYYYMMDD>-<n>.<ext>` or links (TEST-STRATEGY §5)."""
+    entries = evidence_entries(cell)
+    texty = [e for e in entries if re.search(r"\s", e) and not URL_RE.match(e)]
+    if texty:
+        return issue("error", "column_shift_suspected", f"Evidence holds text, not file names or links (`{texty[0][:60]}`). {SHIFT_HINT}")
+    name_re = re.compile(re.escape(base) + r"-\d{8}-\d+\.[A-Za-z0-9]+$")
+    off = [e for e in entries if not URL_RE.match(e) and not name_re.match(e)]
+    if off:
+        return issue("warning", "evidence_name", f"Evidence {off} does not follow `{base}-<YYYYMMDD>-<n>.<ext>`; rename the files and the cell before storing them")
+    return None
+
+
 def compare_case(h: dict, t: dict, today: str, resolution: str | None) -> dict:
     hc, tc = h["cells"], t["cells"]
     out = {"id": h["id"], "base": h["base"], "status": "unchanged", "changes": [], "issues": [], "bug_status": None}
     errs = out["issues"]
 
-    if t["rev"] != h["rev"]:
-        errs.append(issue("error", "revision_mismatch", f"Tester ran r{t['rev']}, hub is r{h['rev']}"))
-    for col in DEFINITION_COLUMNS:
+    stale = t["rev"] < h["rev"]
+    if stale:
+        # The hub changed the case after this copy was issued: definition differences are the hub's
+        # own edit, not tester proposals.
+        errs.append(issue("error", "stale_revision",
+                          f"Stale copy, revision r{t['rev']} < hub r{h['rev']}: the case changed after this copy was issued. "
+                          f"Results not merged; send the tester r{h['rev']} to rerun"))
+    elif t["rev"] != h["rev"]:
+        errs.append(issue("error", "revision_mismatch", f"Tester copy has r{t['rev']}, hub is r{h['rev']} (the hub never issued r{t['rev']})"))
+    for col in ([] if stale else DEFINITION_COLUMNS):
         if norm(tc[col]) != norm(hc[col]):
             errs.append(issue("error", "definition_changed", f"Definition column `{col}` changed (proposal; not merged)", column=col, hub=hc[col], tester=tc[col]))
     if tc["Bug ID"].strip() and norm(tc["Bug ID"]) != norm(hc["Bug ID"]):
@@ -433,6 +527,13 @@ def compare_case(h: dict, t: dict, today: str, resolution: str | None) -> dict:
         errs.append(issue("error", "bad_date", f"Last tested `{last}` is not a valid YYYY-MM-DD date"))
     elif last and last > today:
         errs.append(issue("warning", "future_date", f"Last tested `{last}` is after today ({today})"))
+    if norm(tc["Evidence"]) != norm(hc["Evidence"]):
+        ev = evidence_issue(h["base"], tc["Evidence"])
+        if ev:
+            errs.append(ev)
+    positional = [i for i in errs if i["code"] in ("bad_result", "bad_bug_status", "bad_date")]
+    if len(positional) >= 2 and not any(i["code"] == "column_shift_suspected" for i in errs):
+        errs.append(issue("error", "column_shift_suspected", SHIFT_HINT))
 
     if hc["Result"] == "Retired":
         if any(norm(tc[c]) != norm(hc[c]) for c in TESTER_COLUMNS):
@@ -456,7 +557,7 @@ def compare_case(h: dict, t: dict, today: str, resolution: str | None) -> dict:
         out["status"] = "rejected"
         return out
 
-    tv = {c: tc[c].strip() for c in RUN_COLUMNS}
+    tv = {c: canon_br(tc[c].strip()) for c in RUN_COLUMNS}
     tv["Result"] = result
     hub_last = hc["Last tested"].strip()
     newer = bool(last) and (not hub_last or last > hub_last)
@@ -474,19 +575,23 @@ def compare_case(h: dict, t: dict, today: str, resolution: str | None) -> dict:
 
     hb = hc["Bug status"].strip()
     new_bs, bs_reason = hb, None
+    # Decisions on team-owned statuses depend on the hub status and the newer run only, never on
+    # what the tester copy shows (a tester who leaves `Closed` on a failing row must not hide it).
     if hb == "Fixed - retest" and newer and result in ("Pass", "Fail"):
         new_bs = "Closed" if result == "Pass" else "Reopened"
         bs_reason = "retest_outcome"
-    elif bstatus == hb:
-        pass
-    elif hb in TESTER_BUG_STATUSES and bstatus in TESTER_BUG_STATUSES:
-        new_bs, bs_reason = bstatus, "tester_flag"
+    elif hb == "Closed" and newer and result == "Fail":
+        conflict_reason = conflict_reason or "closed_bug_failed_again"
+        errs.append(issue("warning", "fail_on_closed_bug",
+                          f"Fail on Closed bug {hc['Bug ID'].strip() or '(no Bug ID)'}: set Reopened (resolve `reopen`, same Bug ID), "
+                          "or keep `hub` and log a new bug if it is a different defect"))
+        bs_reason = "kept_hub_team_status"
     elif hb in TEAM_BUG_STATUSES:
-        if hb == "Closed" and newer and result == "Fail":
-            conflict_reason = conflict_reason or "closed_bug_failed_again"
-        elif hb in ("Logged", "Reopened") and newer and result == "Pass":
+        if hb in ("Logged", "Reopened") and newer and result == "Pass":
             errs.append(issue("warning", "open_bug_case_passed", f"Case passed while bug is `{hb}`; status kept, confirm with the team"))
         bs_reason = "kept_hub_team_status"
+    elif bstatus != hb and hb in TESTER_BUG_STATUSES and bstatus in TESTER_BUG_STATUSES:
+        new_bs, bs_reason = bstatus, "tester_flag"
 
     if conflict_reason and resolution not in ("tester", "hub", "reopen"):
         out["status"] = "conflict"
@@ -546,6 +651,15 @@ def set_control(hub: Batch, field: str, value: str):
 
 # ----------------------------------------------------------------- summary --
 
+def fail_on_closed(cells: dict) -> bool:
+    """A Fail row whose bug is still `Closed` is a regression the team has not reopened yet."""
+    return cells["Bug status"].strip() == "Closed" and cells["Result"].strip() == "Fail"
+
+
+def is_open_bug(cells: dict) -> bool:
+    return cells["Bug status"].strip() in OPEN_BUG_STATUSES or fail_on_closed(cells)
+
+
 def compute_summary(batch: Batch) -> dict:
     s = dict.fromkeys(SUMMARY_COLUMNS, 0)
     last = ""
@@ -555,7 +669,7 @@ def compute_summary(batch: Batch) -> dict:
             s["Total"] += 1
             key = r if r in ("Pass", "Fail", "Blocked") else "Not tested"
             s[key] += 1
-        if c["cells"]["Bug status"].strip() in OPEN_BUG_STATUSES:
+        if is_open_bug(c["cells"]):
             s["Open bugs"] += 1
         lt = c["cells"]["Last tested"].strip()
         if valid_date(lt) and lt > last:
@@ -638,6 +752,10 @@ def batches_for(args) -> list[Path]:
         paths += sorted(Path(args.root).glob("*/v*/batches/*.md"))
     paths += [Path(p) for p in (getattr(args, "batch", None) or [])]
     if not paths:
+        if getattr(args, "plan", None) or getattr(args, "root", None):
+            where = Path(args.plan).parent / "batches" if getattr(args, "plan", None) else Path(args.root) / "*/v*/batches"
+            raise SyncError(f"No batch files found in {where}. The plan has no written batches yet, so there is nothing "
+                            "to summarize or scan; its Progress Summary was left unchanged")
         raise SyncError("Give --batch FILE, --plan plan.md, or --root phases-dir")
     return paths
 
@@ -661,10 +779,14 @@ def cmd_validate(args) -> dict:
     hub, tester = load_hub(args.hub), Batch(Path(args.tester))
     r = compare(hub, tester, today_str(args.today), args.allow_minor_mismatch, {})
     errors = list(r["file_errors"])
+    warnings = list(r["warnings"])
     for c in r["cases"]:
         errors += [dict(i, case=c["id"]) for i in c["issues"] if i["level"] == "error"]
+        warnings += [dict(i, case=c["id"]) for i in c["issues"] if i["level"] == "warning"]
+    conflicts = [{"case": c["id"], "reason": c["conflict"]["reason"], "options": c["conflict"]["options"]}
+                 for c in r["cases"] if c.get("conflict")]
     return {"hub": r["hub"], "tester": r["tester"], "valid": not errors and not r["unknown_in_tester"],
-            "errors": errors, "warnings": r["warnings"], "unknown_in_tester": r["unknown_in_tester"],
+            "errors": errors, "warnings": warnings, "conflicts": conflicts, "unknown_in_tester": r["unknown_in_tester"],
             "missing_in_tester": r["missing_in_tester"]}
 
 
@@ -691,7 +813,7 @@ def cmd_merge(args) -> dict:
     for c in updates:
         apply_case_changes(hub, c)
     for cu in r["control_updates"]:
-        set_control(hub, cu["field"], cu["tester"])
+        set_control(hub, cu["field"], cu["to"])
     summary = compute_summary(hub)
     write_batch_summary(hub, summary)
     hub.write()
@@ -700,7 +822,7 @@ def cmd_merge(args) -> dict:
 
 
 def cmd_bugs(args) -> dict:
-    out = {"to_log": [], "fail_without_bug_flag": [], "notes_to_review": [], "batches": []}
+    out = {"to_log": [], "fail_without_bug_flag": [], "fail_on_closed_bug": [], "notes_to_review": [], "batches": []}
     for p in batches_for(args):
         b = Batch(p)
         ctx = {"batch_file": str(p), "batch": b.batch_id, "phase_version": b.control.get("Phase / plan version", ""),
@@ -716,6 +838,9 @@ def cmd_bugs(args) -> dict:
                 out["to_log"].append({**row, "context": ctx})
             elif result == "Fail" and bs == "—":
                 out["fail_without_bug_flag"].append(row)
+            elif fail_on_closed(cells):
+                out["fail_on_closed_bug"].append({**row, "action": "set Reopened with set-bug (Closed -> Reopened, same Bug ID), "
+                                                  "or log a new bug if it is a different defect"})
             elif result != "Fail" and bs == "—" and cells["Notes"].strip():
                 out["notes_to_review"].append({"case": c["id"], "batch_file": str(p), "Result": result, "Notes": cells["Notes"]})
     return out
@@ -836,15 +961,19 @@ def cmd_apply_states(args) -> dict:
 
 
 def cmd_retest_list(args) -> dict:
-    items = []
+    items, reopen = [], []
     for p in batches_for(args):
         b = Batch(p)
         for c in b.cases:
+            row = {"phase_version": b.control.get("Phase / plan version", ""), "batch": b.batch_id,
+                   "batch_file": str(p), "case": c["id"], "title": c["cells"]["Title"],
+                   "bug_id": c["cells"]["Bug ID"], "last_tested": c["cells"]["Last tested"]}
             if c["cells"]["Bug status"].strip() == "Fixed - retest":
-                items.append({"phase_version": b.control.get("Phase / plan version", ""), "batch": b.batch_id,
-                              "batch_file": str(p), "case": c["id"], "title": c["cells"]["Title"],
-                              "bug_id": c["cells"]["Bug ID"], "last_tested": c["cells"]["Last tested"]})
-    return {"count": len(items), "retest": items}
+                items.append(row)
+            elif fail_on_closed(c["cells"]):
+                reopen.append(row)
+    # Fail rows on a Closed bug are not retest items yet: the team reopens the bug first.
+    return {"count": len(items), "retest": items, "needs_reopen": reopen}
 
 
 def cmd_summary(args) -> dict:
@@ -860,7 +989,11 @@ def cmd_summary(args) -> dict:
         change = write_batch_summary(b, s)
         if args.apply and change["from"] != change["to"]:
             b.write()
-        out["batches"].append({"batch_file": str(p), "batch": b.batch_id, "summary": s, "changed": change["from"] != change["to"]})
+        entry = {"batch_file": str(p), "batch": b.batch_id, "summary": s, "changed": change["from"] != change["to"]}
+        flagged = [c["id"] for c in b.cases if fail_on_closed(c["cells"])]
+        if flagged:
+            entry["fail_on_closed_bug"] = flagged  # counted as open bugs; set Reopened with set-bug
+        out["batches"].append(entry)
     if args.plan:
         lines, report = update_plan(Path(args.plan), summaries)
         if args.apply:
@@ -888,7 +1021,7 @@ def to_markdown(cmd: str, data: dict) -> str:
                 return f": {', '.join(ids)}" if ids else ""
             out.append("### Warnings and tester proposals (not merged)\n" + "\n".join(f"- `{w['code']}`: {w['message']}{cases_of(w)}" for w in data["warnings"]))
         if data.get("control_updates"):
-            out.append("### Batch Control updates\n" + "\n".join(f"- {c['field']}: {md_cell(c['hub'])} -> {md_cell(c['tester'])}" for c in data["control_updates"]))
+            out.append("### Batch Control updates\n" + "\n".join(f"- {c['field']}: {md_cell(c['hub'])} -> {md_cell(c['to'])}" for c in data["control_updates"]))
         table = ["### Per-case preview", "", "| Case | Status | Changes | Issues |", "|---|---|---|---|"]
         for c in data.get("cases", []):
             ch = "<br>".join(f"{x['column']}: {md_cell(x['from'])} -> {md_cell(x['to'])}" for x in c["changes"]) or "—"
@@ -908,6 +1041,9 @@ def to_markdown(cmd: str, data: dict) -> str:
         out.append(f"**Cases awaiting retest:** {data['count']}\n\n| Phase / version | Batch | Case | Title | Bug ID | Last tested |\n|---|---|---|---|---|---|")
         for i in data["retest"]:
             out.append(f"| {md_cell(i['phase_version'])} | {i['batch']} | {i['case']} | {md_cell(i['title'])} | {md_cell(i['bug_id'])} | {md_cell(i['last_tested'])} |")
+        if data.get("needs_reopen"):
+            out.append("\n**Fail on a Closed bug (reopen before retest):** "
+                       + ", ".join(f"{i['case']} ({md_cell(i['bug_id'])})" for i in data["needs_reopen"]))
         return "\n".join(out) + "\n"
     return json.dumps(data, ensure_ascii=False, indent=2) + "\n"
 
