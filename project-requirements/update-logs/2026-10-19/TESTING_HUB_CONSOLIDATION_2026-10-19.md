@@ -37,9 +37,9 @@ Skill SKILL.md files stay in place with path-only edits (api-testing, api-flow-t
 | Phase | Batches | Cases |
 |---|---|---|
 | Phase 1 — Controlled commercial pilot | B01 A-02 onboarding, B02 PR-01 team access, B03 PR-06 profile and pricing, B04 A-09 access and inquiry config, B05 PR-02 inquiry and quote, B06 A-01 oversight | 117 |
-| Phase 2 — Clinical and patient operations | B01 PR-03 treatment, B02 A-01 booking and treatment intervention, B03 PR-04 aftercare, B04 A-03 aftercare, B05 A-04 travel, B06 A-05 invoice and refund, B07 PR-07 messaging, B08 A-10 support and message oversight | 135 |
+| Phase 2 — Clinical and patient operations | B01 PR-03 treatment, B02 A-01 booking and treatment intervention, B03 PR-04 aftercare, B04 A-03 aftercare, B05 A-04 travel, B06 A-05 invoice and refund, B07 PR-07 messaging, B08 A-10 support and message oversight | 138 (plus 1 retired) |
 | Phase 3 — Settlement and partner growth | B01 PR-05 earnings and promotions, B02 A-05 reconciliation and payouts, B03 A-06 promotions, B04 A-07 affiliates, B05 A-02 commission settings, B06 PR-06 billing settings | 82 |
-| Phase 4 — Scale and optimization | Five planned batches limited to the roadmap scope (analytics, monitoring, remaining configuration); plan skeleton only | Not written |
+| Phase 4 — Scale and optimization | Six planned batches: the roadmap scope (analytics, monitoring, remaining configuration) plus B06 A-02 provider management leftovers; plan skeleton only | Not written |
 
 Cases were written fresh from the FR PRDs (Business Workflows, Screen Specifications, Business Rules); nothing was carried over from the old plans or readiness backlogs. The patient mobile app is out of scope.
 
@@ -54,7 +54,7 @@ A second pass of fresh reviewers checked structure, rules, the skill script, eac
 
 - Shared dev environment with persistent data: Phase 2 and Phase 3 plans now start with a Phase handoff (for example reactivating `{V4}` and closing leftover Phase 1 inquiries). Phase 2 messaging uses new patients `{P9}`–`{P11}` with no earlier history.
 - New single placeholder list: `testing/test-data/placeholder-registry.md`. `{S1}` is Clinical Staff in every phase; the Phase 1 custom role moved to new `{S2}`; Billing Viewer is `{A3}` everywhere.
-- Currency is per provider (`{V1}` GBP, `{V2}` EUR) in all phases.
+- Currency (corrected in §7): quotes use the one system quote currency and only payout currencies differ per provider.
 - Phase 3 payout statements are spread across providers and real billing cycles, and refunds deduct the provider share after commission (FR-017).
 - Expectations not backed by a PRD were removed or rewritten as tester observations and flagged.
 - Functions previously tested in no phase now have cases: scheduled status change (Phase 1 B01), FR-012 admin message oversight (Phase 2 B08), commission settings and billing settings (Phase 3 B05 and B06). Totals: 117, 135 and 82 cases, 334 unique IDs.
@@ -65,6 +65,21 @@ A second pass of fresh reviewers checked structure, rules, the skill script, eac
 ## 6. Open Items
 
 - PRD gaps and conflicts found while writing cases are listed in the session report to the Product Owner (for example FR-016 vs FR-031 on Super Admin count, FR-016 vs FR-003 on admin medical edits, FR-009 vs FR-031 on member removal).
-- Test accounts and setup items the team must create are listed in each plan's §3 (for example `{A2}`–`{A7}`, `{S3}`, `{S4}`, `{P8}`, `{V4}`, `{AF1}`–`{AF13}`, invite mailboxes) and in each batch's Shared Preconditions. The plan owner contact and the provider dashboard URL are not yet filled in.
+- Test accounts and setup items the team must create are listed in each plan's §3 (for example `{A2}`–`{A7}`, `{S3}`, `{S4}`, `{P8}`, `{V4}`, `{AF1}`–`{AF13}`, invite mailboxes) and in each batch's Shared Preconditions. Each plan now has a Team Setup Checklist and the plan owner contact.
 - Plane state reads for `manual-test-bug-sync` need a read-only script in `plane-api-commands` (frozen; proposal pending) or states pasted by the user.
-- PRD conflicts surfaced by the fixes, for the Product Owner: FR-024, FR-004 and FR-026 still describe a single system quote currency; FR-004 vs FR-022 on archived quote visibility; FR-019 Resume vs forward-only promotions; several unspecified messages recorded as tester observations in the batches.
+- PRD conflicts and PRD-silent spots for the Product Owner: `reports/2026-10-19/manual-test-plan-prd-questions-for-po.md` (Q-01 to Q-26). Decisions there feed PRD updates and case revisions.
+
+## 7. Open Issue Decisions
+
+Decisions taken with the user on the remaining open items, applied before any plan was issued:
+
+- **Currency follows the PRDs.** Quotes, prices, invoices and refunds use the FR-029 system default currency (FR-026, FR-004, FR-024), set to GBP for testing by setup item CUR-GBP. Payout currency is per provider (FR-017): `{V1}` GBP, `{V2}` EUR at a team-prepared locked rate (Phase 3 setup FX-1). This corrects the earlier per-provider quote currency.
+- **PRD conflicts stay testable.** The soft-deleted quote must leave the default provider list, and the Archived filter is a tester observation (FR-004 vs FR-022). Promotion Resume is still tested (FR-019). Both are on the PO question list.
+- **Evidence is cloud links only.** Testers upload screenshots and recordings to the team's cloud evidence folder and record links. No evidence is committed. `TEST-STRATEGY.md`, the batch template, every batch and `manual-test-bug-sync` (frozen; user-approved) were updated. The script now warns `evidence_not_link` (15 tests pass).
+- **One tester per batch run.**
+- **Phase 2 coverage:** new cases PR03-FR010-20 and -21 (reminders and overdue flag), PR04-FR011-14 (clinician assignment, observation), A04-FR008-13 (passport carry-over after transfer). PR03-FR010-05 is retired because FR-003 prevents its setup (PO Q-21). Patients `{P12}`–`{P28}` take the setup records that broke FR-003's one-active-inquiry rule.
+- **Phase 3 BK-19:** the team completes BK-19 on the day ST-15 is generated, and the missed-booking cases run before a later statement can include it.
+- **Phase 4:** featured providers, provider closure requests and "Login as Provider" moved into Phase 4 as planned batch B06.
+- **Plan owner contact** filled in every plan and the registry. A Team Setup Checklist was added to each of Phase 1 to 3.
+- Totals: Phase 1 117, Phase 2 138 (plus 1 retired), Phase 3 82; 338 unique IDs; 20/20 batches validate with no warnings.
+
