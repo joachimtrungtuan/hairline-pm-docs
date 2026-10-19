@@ -32,8 +32,13 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Checking build/implementation progress | run `check-progress` skill; `progress-tracking/` | — |
 | Sprint readiness / client review report | run `sprint-readiness-reporting` skill; `product-plans/` | date folder |
 | Status reports / analyses | `reports/YYYY-MM-DD/` | locate by date |
-| Test plans / QA | `testing-plans/YYYY-MM-DD/` | — |
-| Automated web E2E architecture, registry, execution framework, statuses, and results | `testing-automation/` | start at `ARCHITECTURE.md`; use `TESTING-CONSTITUTION.md` for governance, `status-taxonomy.json` for all enums, and `OPERATIONS.md` for commands |
+| Any testing work (manual or automated) | `testing/` | start at `testing/README.md`; rules in `testing/TEST-STRATEGY.md` |
+| Manual test plans and batches (per release phase, versioned) | `testing/manual/phases/<phase>/v<major>.0/` | `plan.md` first, then one batch file; new files are copied from `testing/templates/` |
+| Merge tester results, log or sync manual-test bugs | run `manual-test-bug-sync` skill | — |
+| Automated web E2E architecture, registry, execution framework, statuses, and results | `testing/automated/web-e2e/` | start at `ARCHITECTURE.md`; use `TESTING-CONSTITUTION.md` for governance, `status-taxonomy.json` for all enums, and `OPERATIONS.md` for commands |
+| API endpoint and flow test material; Android flows | `testing/automated/api/`, `testing/automated/android/` | read via the owning skill |
+| Test accounts | `testing/test-data/credentials/` | internal only; never copy into batch files |
+| Old (pre-2026-10-19) test plans and mobile test reports | `testing/archive/` | read `archive/README.md`; do not edit |
 | Website / public content | `website-works/` | — |
 | Recent doc changes / audit trail | `project-requirements/update-logs/` | read its README first |
 | Read / review / analyze main/ source code (only when invited) | see §D Code Map | map first → open only the named files |
@@ -68,6 +73,7 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 | `android-flow-register` | Interactively record/update a multi-screen Android testing flow via a live guided session. |
 | `web-e2e-register` | Scout, propose, register, revise, or activate deterministic dashboard Playwright functions/flows and approved frontend changes. |
 | `web-e2e-review` | Inspect SQLite web E2E findings, assemble evidence, obtain human classification, and coordinate approved re-tests or follow-up. |
+| `manual-test-bug-sync` | Merge a tester's filled manual batch files into the hub, log Fail rows as Plane bugs, sync Plane states into Bug status, list retests, refresh progress summaries. |
 | `gen-code-map` | Generate/refresh the three semantic code maps for `main/` (backend/frontend/app) and check folder drift. |
 
 > **Governance note (pending your decision):** CLAUDE.md currently marks skills as
@@ -106,8 +112,8 @@ local-docs/
 ├── progress-tracking/            Ongoing status trackers
 ├── project-notes/                Ad-hoc notes, decisions, dev-related-issues/
 ├── reports/YYYY-MM-DD/           Status reports & analyses
-├── testing-plans/YYYY-MM-DD/     Test plans; testing-credentials/
-├── testing-automation/           Living web E2E architecture, registry, framework & results
+├── testing/                      Testing hub: TEST-STRATEGY.md, manual/phases/, automated/
+│                                 (web-e2e/, api/, android/), templates/, test-data/, results/, archive/
 └── website-works/                website-requirements/, project-static-content/
 ```
 
