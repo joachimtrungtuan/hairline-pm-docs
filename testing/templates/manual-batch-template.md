@@ -17,11 +17,17 @@
 
 ## How to Fill In This File
 
-1. Run cases in table order unless a case says otherwise.
-2. Fill only: **Actual result / data**, **Result**, **Notes**, **Evidence**, **Bug status**, **Last tested**.
-3. **Result** values: `Not tested`, `Pass`, `Fail`, `Blocked`. **Bug status** values: `—`, `Found`, `Logged`, `Fixed - retest`, `Closed`, `Reopened` (set `Found` when you see a bug; the team logs it in Plane).
-4. Put usability observations in **Notes**: what you did, what happened, and why it was confusing or slow, even when the case passes.
-5. Do not edit IDs, steps, or expected results, and do not use the vertical-bar character inside cells. Put questions in **Notes**.
+1. Before starting, fill **Tester** and **Build tested** in Batch Control.
+2. Run cases in table order unless a case says otherwise.
+3. In each case row, fill only these columns:
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
+   - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
+   - **Evidence**: screenshot or recording file names, named `<case ID>-<n>`, for example `PR02-FR004-03-1.png`. Send the files with the batch.
+   - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
+   - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
+4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
+5. Do not edit IDs (keep the ` r1` suffix), titles, preconditions, test data, steps, or expected results, and do not use the vertical-bar character inside cells. Put questions or proposed changes in **Notes**.
 
 ## Flow Overview
 

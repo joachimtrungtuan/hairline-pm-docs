@@ -107,8 +107,8 @@ Rules: the base ID (without revision) never changes and is never reused, includi
 ## 7. Tester Workflow
 
 1. Receive the phase `plan.md`, the batch files to run, and credentials (privately).
-2. Follow the plan's run order. Fill only these columns: **Actual result / data**, **Result**, **Notes**, **Evidence**, **Bug status** (`Found` when a bug is seen), **Last tested**.
-3. Do not change IDs, steps, expected results, or table structure. Questions or proposed case changes go in Notes.
+2. Fill **Tester** and **Build tested** in each batch's Batch Control, then follow the plan's run order. In case rows, fill only: **Actual result / data**, **Result**, **Notes**, **Evidence** (files named `<case ID>-<n>`, e.g. `PR02-FR004-03-1.png`), **Bug status** (`Found` when a bug is seen), **Last tested**. The team owns **Bug ID** and every later Bug status.
+3. Do not change IDs (including the revision suffix), steps, expected results, or table structure. Questions or proposed case changes go in Notes.
 4. Return the filled batch files. They are merged back into the hub by the `manual-test-bug-sync` skill, which validates IDs, columns, and allowed values. Never paste results into the hub by hand.
 
 ---
