@@ -48,9 +48,9 @@
 
 - Phase 2 exit gate passed.
 - Build deployed to the test environment; version recorded below.
-- Test accounts `{A1}`, `{S1}`, `{V1}` to `{V4}`, `{P1}` to `{P7}`, and the Billing Viewer admin account available and verified.
+- Test accounts `{A1}`, `{A5}`, `{S1}`, `{S3}`, `{S4}`, `{V1}` to `{V4}`, `{P1}` to `{P7}`, and `{AF1}` to `{AF12}` available and verified; the `{AF13}` mailbox available and unused.
 - Stripe connected in test mode; payout and refund webhooks delivered to the test environment.
-- Setup data listed in each batch's **Test Data Sets** prepared by the team through real bookings, payments, completed treatments, and payout runs (no database edits).
+- Setup items listed in each batch's **Shared Preconditions** prepared by the team in the exact states stated there, through real bookings, payments, completed treatments, refunds, and payout runs (no database edits), and the setup reference list sent to the tester.
 
 **Exit criteria** (phase passes when):
 
@@ -70,32 +70,38 @@
 | Provider dashboard URL | {Provider dashboard URL} |
 | Admin dashboard URL | https://admin.hairline.app |
 | Backend API base URL | https://backend.hairline.app/api |
-| Build / release under test | |
+| Build / release under test | {Record build or release identifier at test start} |
 | Browser(s) | Chrome latest, desktop |
+| Plan owner contact | {Plan owner contact} |
+| Setup reference list | Sent privately by the plan owner with the credentials: maps each setup item (BK-n, ST-n, QT-n, PROMO-n, RED-n, AFP-n, CA-1) to its real Booking Reference, Payout Reference, quote, or program name |
 
 Accounts used (placeholders; credentials sent privately):
 
 | Placeholder | Role | Used in batches |
 |---|---|---|
 | `{A1}` | Super admin | B01 (setup), B02, B03, B04 |
-| Billing Viewer admin (no placeholder yet) | Admin with FR-031 Billing Viewer role | B02 |
+| `{A5}` | Admin with the FR-031 Billing Viewer role (read-only billing); to be created by the team | B02 |
 | `{S1}` | Provider staff (clinician / front desk) at `{V1}` | B01 |
+| `{S3}` | Provider staff with the Manager role at `{V1}`, without financial permission; to be created by the team | B01 |
+| `{S4}` | Provider staff with the Billing Staff role at `{V1}`; to be created by the team | B01 |
 | `{V1}` | Provider owner, GBP, percentage commission | B01, B02, B03 |
 | `{V2}` | Provider owner, EUR, flat commission | B01, B02, B03 |
 | `{V3}` | Provider with missing bank details | B02 |
-| `{V4}` | Provider with statements for unapprove and void | B02 |
+| `{V4}` | Provider with statements for unapprove, void, and the dispute booking; promotion target | B02, B03 |
 | `{P1}` to `{P7}` | Patients owning the prepared bookings (setup data only) | B01, B02, B03, B04 |
+| `{AF1}` to `{AF12}` | Affiliates prepared in the states listed in B04 Shared Preconditions (`{AF9}` to `{AF12}` also hold the B02 affiliate payouts); to be created by the team | B02, B04 |
+| `{AF13}` | Unused mailbox for the affiliate created during testing; to be created by the team | B04 |
 
 ## 4. Batches and Run Order
 
 | Order | Batch | File | Module | FRs | Cases | Depends on |
 |---|---|---|---|---|---|---|
 | 1 | B03 | [B03-a06-promotions](batches/B03-a06-promotions.md) | A-06 | FR-019 | 15 | — |
-| 2 | B04 | [B04-a07-affiliates](batches/B04-a07-affiliates.md) | A-07 | FR-018 | 16 | B02 for cases A07-FR018-14 and -15 |
-| 3 | B02 | [B02-a05-reconciliation-payouts](batches/B02-a05-reconciliation-payouts.md) | A-05 | FR-017 | 23 | B04 (affiliates exist) |
-| 4 | B01 | [B01-pr05-earnings-payouts-promotions](batches/B01-pr05-earnings-payouts-promotions.md) | PR-05 | FR-017, FR-014, FR-019 | 19 | B02, B03 |
+| 2 | B04 | [B04-a07-affiliates](batches/B04-a07-affiliates.md) | A-07 | FR-018 | 16 | — |
+| 3 | B02 | [B02-a05-reconciliation-payouts](batches/B02-a05-reconciliation-payouts.md) | A-05 | FR-017 | 23 | — |
+| 4 | B01 | [B01-pr05-earnings-payouts-promotions](batches/B01-pr05-earnings-payouts-promotions.md) | PR-05 | FR-017, FR-014, FR-019 | 19 | B02 (`B02-a05-reconciliation-payouts.md` case A05-FR017-26, for PR05-FR017-04) |
 
-**End-to-end journey:** Hairline first sets up its growth levers: admins create and publish promotions and send Both Fees campaigns to providers (B03), then onboard affiliates and give each its own code (B04). Patients book and pay using those promotions and codes (prepared by the team). When treatments complete, finance admins review, approve, and pay provider statements and affiliate commissions, handle refunds made after payout, settle disputes and currency alerts, and prove every action in the audit log (B02); the affiliate payout cases in B04 are completed after B02 has moved the money. Finally, the provider checks that its earnings, payouts, and promotions match what Hairline did (B01).
+**End-to-end journey:** Hairline first sets up its growth levers: admins create and publish promotions and send Both Fees campaigns to providers (B03), then onboard affiliates and give each its own code (B04). Patients book and pay using those promotions and codes (prepared by the team). When treatments complete, finance admins review, approve, and pay provider statements and affiliate commissions, handle refunds made after payout, settle disputes and currency alerts, and prove every action in the audit log (B02). B04 reads affiliate payout rows that the team prepares in their final states, so it does not wait for B02. Finally, the provider checks that its earnings, payouts, and promotions match what Hairline did (B01).
 
 ## 5. Progress Summary
 
