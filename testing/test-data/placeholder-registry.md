@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-10-19
 
-The single list of every account and mailbox placeholder used in the manual test plans. Batch files and plans reference placeholders only. Credentials live in [credentials/](credentials/) (internal; sent to the tester privately). Rules: [TEST-STRATEGY.md §6](../TEST-STRATEGY.md).
+The single list of every account and mailbox placeholder used in the manual test plans. All quotes, prices, invoices and refunds use the system quote currency GBP (setup item CUR-GBP); only payout currencies differ per provider. Batch files and plans reference placeholders only. Credentials live in [credentials/](credentials/) (internal; sent to the tester privately). Rules: [TEST-STRATEGY.md §6](../TEST-STRATEGY.md).
 
 A placeholder keeps one meaning across all phases. The environment is one shared dev environment whose data persists between phases. Each plan's Phase handoff section lists the account state the team restores before that phase starts.
 
@@ -22,13 +22,14 @@ A placeholder keeps one meaning across all phases. The environment is one shared
 | {S2} | Provider staff | {V1} staff, custom role "clinician-front-desk" | 1 | To create |
 | {S3} | Provider staff | {V1} staff, Manager role without financial permission | 3 | To create |
 | {S4} | Provider staff | {V1} staff, Billing Staff role | 3 | To create |
-| {V1} | Provider owner | Primary provider; prices in GBP | 1, 2, 3 | Yes |
-| {V2} | Provider owner | Second provider; prices in EUR | 1, 2, 3 | Yes |
+| {V1} | Provider owner | Primary provider; payout currency GBP | 1, 2, 3 | Yes |
+| {V2} | Provider owner | Second provider; payout currency EUR | 1, 2, 3 | Yes |
 | {V3} | Provider owner | Provider located in Germany; suspended and reactivated within Phase 2; ends Phase 2 Active | 1, 2, 3 | Yes |
 | {V4} | Provider owner | Reserved for status changes. Ends Phase 1 Suspended, reactivated in the Phase 2 handoff, ends Phase 2 Suspended, reactivated in the Phase 3 handoff | 1, 2, 3 | Yes |
 | {P1}–{P7} | Patient | Owners of prepared inquiry, quote, booking and aftercare data | 1, 2, 3 | Yes |
-| {P8} | Patient | No other inquiry; owner of Phase 1 INQ-8, later one Confirmed booking in Phase 2 | 1, 2 | To create |
+| {P8} | Patient | No other inquiry; owner of Phase 1 INQ-8, later one Confirmed booking in Phase 2 (TX-8), also used for the B07 BKG-1 conversation | 1, 2 | To create |
 | {P9}–{P11} | Patient | No history with {V1} before Phase 2 B07 messaging | 2 | To create |
+| {P12}–{P28} | Patient | Team-created, no earlier history; own the Phase 2 setup records moved off {P3}–{P7} so no patient holds two active inquiries or bookings (FR-003); setup data only | 2 | To create |
 | {AF1}–{AF12} | Affiliate | Prepared in the states listed in Phase 3 B04 Shared Preconditions | 3 | To create |
 
 ## Mailboxes
@@ -51,4 +52,4 @@ All mailboxes are team-controlled and fresh (never used on Hairline before the c
 
 | Placeholder | Meaning |
 |---|---|
-| {Plan owner contact} | Person the tester contacts for setup requests and questions; filled in each plan §3 before testing |
+| {Plan owner contact} | Trung Dang (trung.dang@vantaymedia.com): the person the tester contacts for setup requests and questions; written in each plan §3 |
