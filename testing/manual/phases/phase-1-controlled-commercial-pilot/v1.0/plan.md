@@ -85,21 +85,29 @@
 | Backend API base URL | https://backend.hairline.app/api |
 | Build / release under test | {Record build or release identifier at test start} |
 | Browser(s) | Chrome latest, desktop; a second browser or private window for two-session cases |
+| Plan owner contact | {Plan owner contact} (the team supplies it before testing; send every mid-test request for team action, and every question, to this contact) |
 
 Accounts used (placeholders; credentials sent privately):
 
 | Placeholder | Role | Used in batches |
 |---|---|---|
-| {A1} | Super Admin | B01, B02 (seat-limit setup), B03 (suspend/reactivate setup, admin read-only check), B04, B06 |
-| {A2} | Admin with View Providers only, no Onboard, Edit or Suspend Providers (new placeholder; the team must create it if it does not exist) | B01 |
-| {S1} | Provider staff of {V1} (clinician-front-desk; a non-Owner, non-Manager role based on Clinical Staff) | B02, B03, B05 |
-| {V1} | Provider owner, primary pilot provider | B01, B02, B03, B05, B06 |
-| {V2} | Provider owner, second provider for duplicate-email and isolation checks | B01, B02, B03, B05 |
-| {V3} | Provider owner, used for the login-lockout case | B02, B05 |
-| {V4} | Provider owner, reserved for suspend and reactivate cases | B01, B03 |
-| {P1}–{P7} | Patients, referenced only as owners of prepared inquiry and quote setup data | B05, B06 |
-| {New provider mailbox 1}–{New provider mailbox 3} | Team-controlled fresh mailboxes for providers created during testing | B01 |
-| {Invite mailbox 1}–{Invite mailbox 3} | Team-controlled fresh mailboxes for team invitations | B01, B02 |
+| {A1} | Super Admin | B01, B02 (Seat Limit change and restore in PR01-FR009-20), B03 (suspend and reactivate {V4} in PR06-FR032-16; admin read-only package check), B04, B05, B06 |
+| {A2} | Admin with the Support Staff system role (FR-031 default: View Providers only; no Edit, Onboard or Suspend Providers). To be created by the team | B01 |
+| {S1} | {V1} team member with the custom provider role "clinician-front-desk" (FR-009 Rule 8; the PRDs do not define this role, so its base role type is not documented). Team-confirmed permissions before testing: View Inquiries and Respond to Inquiries ticked; View Team Members, Invite Team Members, Edit Profile and Manage Treatments not ticked | B01, B02, B03, B04, B05 |
+| {V1} | Provider owner, primary pilot provider | B01, B02, B03, B04, B05, B06 |
+| {V2} | Provider owner, second provider for duplicate-email and isolation checks | B01, B02, B03, B05, B06 |
+| {V3} | Provider owner; login-lockout case in B02; the provider located in Germany in B05 and B06 | B02, B05, B06 |
+| {V4} | Provider owner reserved for status changes. B01 and B03 suspend and reactivate it within the case and leave it Active. Suspended by the team before B06 (setup item) | B01, B03, B04, B06 |
+| {P1}–{P7} | Patients, referenced only as owners of prepared inquiry and quote setup data | B04 ({P7}), B05, B06 |
+| {P8} | Patient with no other inquiry; owner of setup inquiry INQ-8 (destination USA, no eligible provider). To be created by the team | B06 |
+| {Admin invite mailbox} | Team-controlled fresh mailbox, never used on Hairline, that receives the admin invitation. To be created by the team | B04 |
+| {New provider mailbox 1} | Team-controlled fresh mailbox; login email of QA Pilot Clinic 01, created in B01 | B01 |
+| {New provider mailbox 2} | Team-controlled fresh mailbox with plus-addressing; contact email of QA Pilot Clinic 01, and with "+clinic02" the contact email of QA Pilot Clinic 02 | B01, B03 |
+| {New provider mailbox 3} | Team-controlled fresh mailbox; login email of QA Pilot Clinic 02, created in B01 | B01 |
+| {Invite mailbox 1} | Team-controlled fresh mailbox; admin staff invitation for QA Pilot Clinic 01 (A02-FR015-15, A02-FR015-18) | B01 |
+| {Invite mailbox 2} | Team-controlled fresh mailbox; the {V1} invitee QA InviteeOne | B02 |
+| {Invite mailbox 3} | Team-controlled fresh mailbox with plus-addressing (+val, +rl01 to +rl11) for validation and rate-limit invitations | B02 |
+| {Invite mailbox 4} | Team-controlled mailbox that receives setup invitation INV-EXP-1 (expired {V1} invitation). To be created by the team | B02 |
 
 ## 4. Batches and Run Order
 
@@ -108,9 +116,9 @@ Accounts used (placeholders; credentials sent privately):
 | 1 | B01 | [B01-a02-provider-onboarding](batches/B01-a02-provider-onboarding.md) | A-02 | FR-015; FR-009, FR-020, FR-026, FR-031, FR-032 | 20 | — |
 | 2 | B02 | [B02-pr01-team-access](batches/B02-pr01-team-access.md) | PR-01 | FR-009; FR-026, FR-031 | 20 | B01 |
 | 3 | B03 | [B03-pr06-profile-pricing-packages](batches/B03-pr06-profile-pricing-packages.md) | PR-06 | FR-032, FR-024; FR-015, FR-031 | 18 | B01, B02 |
-| 4 | B04 | [B04-a09-access-inquiry-config](batches/B04-a09-access-inquiry-config.md) | A-09 | FR-031, FR-026, FR-025 | 19 | B01 |
+| 4 | B04 | [B04-a09-access-inquiry-config](batches/B04-a09-access-inquiry-config.md) | A-09 | FR-031, FR-026, FR-025 | 19 | B01–B03 |
 | 5 | B05 | [B05-pr02-inquiry-quote](batches/B05-pr02-inquiry-quote.md) | PR-02 | FR-003, FR-004, FR-022, FR-031 | 19 | B01–B04 |
-| 6 | B06 | [B06-a01-inquiry-quote-oversight](batches/B06-a01-inquiry-quote-oversight.md) | A-01 | FR-003, FR-004, FR-016, FR-031 | 18 | B05 |
+| 6 | B06 | [B06-a01-inquiry-quote-oversight](batches/B06-a01-inquiry-quote-oversight.md) | A-01 | FR-003, FR-004, FR-016, FR-031 | 18 | B04, B05 |
 
 **End-to-end journey:** The pilot starts with a Hairline admin onboarding a clinic (B01): the provider is created, its owner activates the account and logs in, and the admin can suspend, reactivate or deactivate it. The clinic owner then builds a team and controls what each person can do, and the checks confirm that permissions, session revocation and isolation from other clinics hold (B02). Next, the provider completes the public profile, prices its treatments and builds add-on packages to use in quotes (B03). The admin side then confirms the access roles, security settings and inquiry and quote configuration that govern the pilot (B04). With that in place, the provider receives patient inquiries (prepared as setup data), and its permitted team members prepare and send quotes while patient identity stays private before payment (B05). Finally, the admin oversees the same inquiries and quotes and confirms the states match what the provider sees (B06). Run the batches in order, because each one leaves the data the next one uses.
 
