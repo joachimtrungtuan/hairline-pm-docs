@@ -153,9 +153,9 @@ For auth-boundary and cross-tenant scenario variants, label the probe clearly:
 
 ## References
 
-- [flow-index.md](local-docs/testing/automated/api/flows/flow-index.md) — First-pass flow lookup; read during Phase 1
+- [flow-index.md](../../../testing/automated/api/flows/flow-index.md) — First-pass flow lookup; read during Phase 1
 - `local-docs/testing/automated/api/flows/flow-profiles/` — Migrated flow definitions; open only the matched profile
-- [flow-dictionary.md](local-docs/testing/automated/api/flows/flow-dictionary.md) — Legacy flow definitions; fallback while migration is incomplete
+- [flow-dictionary.md](../../../testing/automated/api/flows/flow-dictionary.md) — Legacy flow definitions; fallback while migration is incomplete
 - `api-testing` skill — single-endpoint execution and reporting logic; applied at every step in Phase 3
 - `local-docs/testing/automated/api/endpoints/datasets.json` — shared test data catalogue; read during Phase 2 test data coordination
 - `local-docs/testing/automated/api/endpoints/endpoint-index.md` — endpoint profile lookup and concise live notes

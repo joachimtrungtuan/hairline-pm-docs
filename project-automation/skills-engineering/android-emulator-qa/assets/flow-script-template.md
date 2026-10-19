@@ -14,7 +14,7 @@ status: stable
 - App state: {e.g., logged out / logged in as patient / fresh install}
 - Role: {patient / provider / admin}
 - Required data: {any pre-existing data needed}
-- Test account: {role — credentials loaded at runtime from testing-credentials/}
+- Test account: {role — credentials loaded at runtime from local-docs/testing/test-data/credentials/}
 
 ## Steps
 

@@ -43,7 +43,7 @@ Detect once. Use one mode for the entire session. Read [tool-mapping.md](referen
 
 ## Test Data Management
 
-Test data is stored in [datasets.json](local-docs/testing/automated/android/datasets.json). Each entry is scoped to a screen + scenario type.
+Test data is stored in [datasets.json](../../../testing/automated/android/datasets.json). Each entry is scoped to a screen + scenario type.
 
 ### Selection workflow (run during Step 0)
 
@@ -168,6 +168,6 @@ After the report is written and confirmed:
 - [adb-commands.md](references/adb-commands.md) — Raw ADB command reference
 - [flutter-notes.md](references/flutter-notes.md) — Flutter interaction caveats and quality checklist
 - [mcp-setup.md](references/mcp-setup.md) — MCP setup instructions; read only when setting up the MCP server for the first time
-- [datasets.json](local-docs/testing/automated/android/datasets.json) — Test data catalogue
+- [datasets.json](../../../testing/automated/android/datasets.json) — Test data catalogue
 - [flow-script-template.md](assets/flow-script-template.md) — Flow file format template; used by `android-flow-register` when writing individual flow files
 - Test credentials: `local-docs/testing/test-data/credentials/`

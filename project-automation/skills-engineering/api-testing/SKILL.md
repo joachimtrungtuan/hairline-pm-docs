@@ -152,8 +152,8 @@ When an endpoint profile or dataset has `file_refs`, attach those files from `lo
 
 ### Step 1: Locate the endpoint
 
-1. Read [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) and open the matching endpoint profile.
-2. If no profile exists, read [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md) — search by keyword or path.
+1. Read [endpoint-index.md](../../../testing/automated/api/endpoints/endpoint-index.md) and open the matching endpoint profile.
+2. If no profile exists, read [collection-map.md](../../../testing/automated/api/endpoints/collection-map.md) — search by keyword or path.
 3. If not found: grep `main/hairline-backend/routes/api.php` for the operation.
 4. If still not found: use Postman `getCollection` to browse the collection structure.
 
@@ -262,9 +262,9 @@ Always document the expected outcome in the report's Contract Validation section
 
 When the user describes a scenario but doesn't know which endpoint to call:
 
-1. Read [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) — search by keyword/tag.
+1. Read [endpoint-index.md](../../../testing/automated/api/endpoints/endpoint-index.md) — search by keyword/tag.
 2. Open the matching endpoint profile if found.
-3. If no profile exists, read [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md).
+3. If no profile exists, read [collection-map.md](../../../testing/automated/api/endpoints/collection-map.md).
 4. Grep `main/hairline-backend/routes/api.php` for the operation name or resource.
 5. Check Postman collection structure with `getCollection`.
 6. Cross-reference the controller to confirm the endpoint does what the user expects.
@@ -275,10 +275,10 @@ For endpoints not yet in the Postman collection: construct the request from the 
 
 ## References
 
-- [collection-map.md](local-docs/testing/automated/api/endpoints/collection-map.md) — Full endpoint-to-backend-route mapping
-- [endpoint-index.md](local-docs/testing/automated/api/endpoints/endpoint-index.md) — First-pass endpoint profile lookup with concise live notes
+- [collection-map.md](../../../testing/automated/api/endpoints/collection-map.md) — Full endpoint-to-backend-route mapping
+- [endpoint-index.md](../../../testing/automated/api/endpoints/endpoint-index.md) — First-pass endpoint profile lookup with concise live notes
 - `local-docs/testing/automated/api/endpoints/endpoint-profiles/` — Detailed endpoint profiles; open only matching files
-- [datasets.json](local-docs/testing/automated/api/endpoints/datasets.json) — Test data catalogue
+- [datasets.json](../../../testing/automated/api/endpoints/datasets.json) — Test data catalogue
 - Test credentials: `local-docs/testing/test-data/credentials/` (patient-accounts.md, provider-accounts.md)
 - Backend routes: `main/hairline-backend/routes/api.php`
 - Controllers: `main/hairline-backend/app/Http/Controllers/`

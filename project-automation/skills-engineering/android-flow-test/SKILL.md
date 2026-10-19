@@ -130,7 +130,7 @@ After the summary is confirmed:
 
 ## References
 
-- [flow-index.md](local-docs/testing/automated/android/flows/flow-index.md) — Registered flow index (name, aliases, file paths, status); read during Flow Lookup
+- [flow-index.md](../../../testing/automated/android/flows/flow-index.md) — Registered flow index (name, aliases, file paths, status); read during Flow Lookup
 - `local-docs/testing/automated/android/flows/` — Individual flow definition files; load the matched flow file after user confirmation
 - `android-emulator-qa/references/tool-mapping.md` — MCP ↔ ADB command table; read during Platform Detection
 - `android-emulator-qa/references/adb-commands.md` — Raw ADB command reference; read only in Raw ADB mode
