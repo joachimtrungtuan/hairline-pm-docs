@@ -18,10 +18,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
@@ -62,7 +62,7 @@ Record what you see.
 - Open bookings from the Bookings Management Dashboard (reach via the main menu; record the path you used in Notes), search the patient's full name and click View Details. The Travel section is on that page. Apply Correction opens Screen 12.
 - Provider checks use the provider dashboard: Patient Management > Confirmed list > the booking.
 - With the credentials, the plan owner gives the tester the full name of {P2}, {P3}, {P17}, {P18} and {P19}.
-- The team prepared these setup items before B02 started. {P17}, {P18} and {P19} are team-created patients with no other inquiry or booking:
+- The team prepared these setup items before B02 started. {P17}, {P18} and {P19} are patients the tester created at the start of the pass and shared privately (plan.md Team Setup Checklist item 6), with no other inquiry or booking:
   - TR-1: travel on TX-2 ({P2} with {V1}, 3-day plan, first booked for B01 run day + 5 days). Path B. Outbound flight submitted by {P2}: Turkish Airlines, Flight Number TK1980, London Heathrow (LHR) to Istanbul (IST), departing B01 run day + 4 days at 10:15. Hotel submitted by {P2}: check-in B01 run day + 4 days, check-out B01 run day + 8 days. Return flight not submitted.
   - TR-2: a Confirmed booking for {P17} with {V2}, appointment B02 run day + 40 days at 10:00. Path A (flights and hotel included by the clinic). Passport not submitted (Awaiting). {V2} entered the outbound flight: Turkish Airlines TK1972, LHR to IST, departing the day before the appointment at 09:00.
   - TR-3: a Confirmed booking for {P18} with {V2}, appointment B02 run day + 45 days at 10:00. Path A. Passport submitted by {P18} with Passport Number QA7654321, Date of Birth 15/01/1990, Nationality United Kingdom, Place of Birth London, Date of Issue 01/03/2020, Date of Expiry 01/03/2021 (wrong; {P18} later told support it is 01/03/2030) and a passport photo. Acting as an admin, the team then marked the passport Incomplete (FR-008 Screen 11: Incomplete is set by an admin, not by a missing field). {V2} entered the hotel.

@@ -18,10 +18,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
@@ -75,7 +75,7 @@ Record what you see.
   - AC-1: active milestone template "QA FUE Aftercare 12 months"; Treatment Type FUE; 2 milestones: "Early recovery" (14 days) and "Growth phase" (351 days); each milestone has 3D Scan Frequency Weekly, Questionnaire Set "QA Aftercare Check-in" and Questionnaire Frequency Weekly.
   - AC-2: questionnaire set "QA Aftercare Check-in" in the Aftercare category, and questionnaire set "QA Inquiry Intake" in a non-Aftercare category.
   - AC-3: the medication catalog contains Paracetamol.
-  - AC-4: an active treatment-linked aftercare case for {P15} with {V1}, on {P15}'s only booking, in Aftercare status ({P15} is a team-created patient with no other inquiry or booking); template AC-1; Aftercare Start Date = run day − 30 days; Current Milestone "Growth phase"; 10 tasks in total, 3 Completed (so Overall Progress 30%); one 3D scan task due on run day − 3 days and not done (overdue by more than 48 hours); no escalation yet.
+  - AC-4: an active treatment-linked aftercare case for {P15} with {V1}, on {P15}'s only booking, in Aftercare status ({P15} is a patient the tester created at the start of the pass, plan.md Team Setup Checklist item 6, with no other inquiry or booking); template AC-1; Aftercare Start Date = run day − 30 days; Current Milestone "Growth phase"; 10 tasks in total, 3 Completed (so Overall Progress 30%); one 3D scan task due on run day − 3 days and not done (overdue by more than 48 hours); no escalation yet.
   - AC-5: a paid standalone aftercare request from {P3}, assigned to {V1} by the team, Treatment Type FUE; no aftercare plan yet.
 - With the credentials, the plan owner gives the tester the full name and Patient ID of {P1}, {P3}, {P12} and {P15}.
 - Test upload files listed in the data sets are supplied with this batch by the team. Long texts (201, 501, 1001 and 2001 characters) are supplied as text files with the batch.

@@ -18,10 +18,10 @@
 1. One tester runs a batch at a time; do not share a batch file with another tester during a run. Before starting, add your entry to **Tester** (`Name (YYYY-MM-DD)`) and **Build tested** (`<build> (YYYY-MM-DD)`) in Batch Control. Entries accumulate, separated by `; `, for example `Linh (2026-10-20); Minh (2026-11-02)`. Replace the `{...}` placeholder on the first run; never delete earlier entries.
 2. Run cases in table order unless a case says otherwise.
 3. In each case row, fill only these columns:
-   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 GBP".
+   - **Actual result / data**: what you observed and the exact values you entered, for example "Saved; status shows Draft; total 2,450 USD".
    - **Result**: `Not tested`, `Pass`, `Fail`, or `Blocked` (give the reason in Notes). `Retired` is set by the plan owner only.
    - **Notes**: usability observations (what you did, what happened, why it was confusing or slow), even when the case passes, plus any questions.
-   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to the evidence folder the team shares with you, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
+   - **Evidence**: links to your screenshots or recordings, separated by `, `. Upload each file to any file-sharing service you choose, with a link the team can open, named `<case base ID>-<YYYYMMDD>-<n>.<ext>` (run date, then a counter), for example `PR02-FR004-03-20261019-1.png`, so a retest never overwrites earlier files. Record only the links; do not send files with the batch.
    - **Bug status**: set `Found` when you see a bug; otherwise leave `—`.
    - **Last tested**: the date you ran the case, `YYYY-MM-DD`.
 4. The team fills **Bug ID** and moves Bug status to `Logged`, `Fixed - retest`, `Closed`, or `Reopened`. When you retest a `Fixed - retest` case, update only the result columns.
@@ -74,7 +74,7 @@ Record the text you see.
 - "Run day" is the day you run the batch. Run PR03-FR010-01 to PR03-FR010-19 on the same run day (PR03-FR010-05 is retired and is not run). Run PR03-FR010-20 and PR03-FR010-21 on a later day, after setup item RM-1 and before B02 case A01-FR006-05. The team prepares these setup items, each a separate booking with {V1}, in exactly this state before the run day starts:
   - TX-1: {P1}; Confirmed; procedure date = run day; appointment time 08:00; Payment Status Full paid; treatment plan Day 1, Day 2, Day 3; assigned clinician Clinician 1; Estimated Graft Count 3000.
   - TX-2: {P2}; Confirmed; procedure date = run day + 5 days; Payment Status Full paid; 3-day plan; Clinician 1.
-  - TX-3: {P3}; Confirmed; procedure date = run day; appointment time 08:00; Total Amount £3,000.00 GBP; deposit paid £600.00; Payment Status Deposit only.
+  - TX-3: {P3}; Confirmed; procedure date = run day; appointment time 08:00; Total Amount $3,000.00 USD; deposit paid $600.00; Payment Status Deposit only.
   - TX-4: {P4}; Confirmed; procedure date = run day; appointment time 18:00; Payment Status Full paid; plan Day 1, Day 2; assigned clinician Clinician 2.
   - TX-5: not used (its case PR03-FR010-05 is retired; the ID is kept so the other IDs do not change).
   - TX-6: {P5}; Confirmed; procedure date = run day + 3 days; Payment Status Full paid; plan Day 1, Day 2, Day 3; Clinician 1; Estimated Graft Count 3000.

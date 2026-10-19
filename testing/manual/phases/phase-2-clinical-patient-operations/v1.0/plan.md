@@ -22,6 +22,8 @@
 | 1.0 | 2026-10-19 | Initial plan | QA lead |
 | 1.0 | 2026-10-19 | Review fixes: Phase handoff and Phase 3 end state; B07 uses team-created {P9}–{P11}; B08 adds FR-012 admin oversight cases A10-FR012-01 to A10-FR012-07; template exit criteria | QA lead |
 | 1.0 | 2026-10-19 | Closing fixes: system default currency GBP for all quotes, invoices and refunds (FR-029), payout currency per provider; team-created patients {P12}–{P28} so no patient holds two active inquiries or bookings (FR-003); new cases PR03-FR010-20, PR03-FR010-21, PR04-FR011-14 and A04-FR008-13; PR03-FR010-05 retired; Team Setup Checklist; plan owner contact | QA lead |
+| 1.0 | 2026-10-19 | Before first issue: system Default Currency set to USD (FR-029 seed); {V1} payout currency USD | Product / QA lead |
+| 1.0 | 2026-10-19 | Before first issue: existing test accounts reused and remaining accounts and mailboxes created by the tester during the pass; seeded data may stay; evidence links from any file-sharing service | Product / QA lead |
 
 ## 1. Scope
 
@@ -49,23 +51,23 @@
 
 ## 2. Entry and Exit Criteria
 
-**Phase handoff** (the team completes these steps on the shared test environment after Phase 1 ends and before the entry criteria are checked; Phase 1 data stays in place):
+**Phase handoff** (the team completes steps 1 to 4 on the shared test environment after Phase 1 ends and before the entry criteria are checked; the tester completes step 5 at the start of the pass; Phase 1 data stays in place):
 
 1. Reactivate `{V4}`. Phase 1 leaves it Suspended. The team suspends it again before B02 starts (section 3).
 2. End every Phase 1 inquiry that is still open, because FR-003 allows one active inquiry per patient and the Phase 2 setups create new inquiries and bookings for `{P1}`–`{P8}`. Phase 1 setup items INQ-1 to INQ-8 belong to `{P1}`–`{P8}`. The team cancels each one still active as its patient (FR-003), and cancels the accepted INQ-5 quote of `{P5}` through the admin booking cancellation (FR-006) if it is still open. The team records the final status of INQ-1 to INQ-8 for the plan owner. Phase 2 names its own inquiries with the prefix P2- (for example P2-INQ-1) so they are not confused with Phase 1 items.
 3. Confirm `{S1}` is Active with the system role Clinical Staff in `{V1}`'s team (Phase 1 base and end state). Phase 2 does not use `{S2}` (Phase 1 custom role "clinician-front-desk").
-4. Confirm the quote and payment settings Phase 1 changed are back to their defaults, and that FR-029 Default Currency is GBP with EUR enabled. Every quote, package and treatment price, invoice, patient payment and refund in Phase 2 is in GBP for every provider. Confirm `{V1}`'s payout currency is GBP and `{V2}`'s is EUR; EUR appears only in payout, earnings and statement screens.
-5. Create the patients `{P12}`–`{P28}` (section 3) with no inquiry, quote, booking or conversation. FR-003 allows one active inquiry per patient, and an inquiry stays active until it is Cancelled or Completed, including after it becomes a booking. The setups therefore give each patient at most one active inquiry or booking at a time: a second booking for `{P4}` (INV-10) or `{P5}` (INV-5) is created only after B02 cancels that patient's first booking, `{P9}`'s second inquiry (B07 P2-INQ-2) is submitted only after the first is cancelled, and every other setup that would add a second active record uses its own patient from `{P12}`–`{P28}`. Standalone aftercare requests and support cases are not FR-003 inquiries.
+4. Confirm the quote and payment settings Phase 1 changed are back to their defaults, and that FR-029 Default Currency is USD with EUR enabled. Every quote, package and treatment price, invoice, patient payment and refund in Phase 2 is in USD for every provider. Confirm `{V1}`'s payout currency is USD and `{V2}`'s is EUR; EUR appears only in payout, earnings and statement screens.
+5. The tester creates the patients `{P9}`–`{P28}` (section 3; Team Setup Checklist item 6) by registering them in the patient app, each with no inquiry, quote, booking or conversation, and shares their logins privately with the plan owner so the team can prepare the setup data. FR-003 allows one active inquiry per patient, and an inquiry stays active until it is Cancelled or Completed, including after it becomes a booking. The setups therefore give each patient at most one active inquiry or booking at a time: a second booking for `{P4}` (INV-10) or `{P5}` (INV-5) is created only after B02 cancels that patient's first booking, `{P9}`'s second inquiry (B07 P2-INQ-2) is submitted only after the first is cancelled, and every other setup that would add a second active record uses its own patient from `{P12}`–`{P28}`. Standalone aftercare requests and support cases are not FR-003 inquiries.
 
-**End state for Phase 3:** `{V3}` Active (reactivated after B06); `{V4}` Suspended (suspended before B02; the Phase 3 handoff reactivates it if needed); `{S1}` Active, Clinical Staff; FR-029 Default Currency GBP, `{V1}` payout currency GBP and `{V2}` payout currency EUR unchanged. The B01 to B08 bookings, aftercare cases, conversations, support cases, invoices and refunds stay in place.
+**End state for Phase 3:** `{V3}` Active (reactivated after B06); `{V4}` Suspended (suspended before B02; the Phase 3 handoff reactivates it if needed); `{S1}` Active, Clinical Staff; FR-029 Default Currency USD, `{V1}` payout currency USD and `{V2}` payout currency EUR unchanged. The B01 to B08 bookings, aftercare cases, conversations, support cases, invoices and refunds stay in place.
 
 **Entry criteria** (all must hold before testing starts):
 
 - Phase 1 exit gate passed and the Phase handoff steps above are done.
 - Build deployed to the test environment, with the version recorded in section 3.
-- Test accounts {A1}, {A3}, {A4}, {A6}, {A7}, {S1} and {V1}–{V4} are available and verified, and {S1} has the Clinical Staff role in {V1}'s team.
+- The existing test accounts {A1}, {S1}, {V1}–{V4} and {P1}–{P7} are verified and their credentials shared privately, and {S1} has the Clinical Staff role in {V1}'s team. {P8} was created in Phase 1. The tester creates the remaining accounts ({A3}, {A4}, {A6}, {A7} and {P9}–{P28}) during the pass (Team Setup Checklist item 6).
 - The setup data in each batch's Test Data Sets and Shared Preconditions is in place, including:
-  - The bookings for {P1}–{P8} and {P12}–{P28} in the stated statuses and payment states, and the team-created patients {P9}–{P11} for B07.
+  - The bookings for {P1}–{P8} and {P12}–{P28} in the stated statuses and payment states, and, for B07, the patients {P9}–{P11} the tester created.
   - At least one active aftercare milestone template and an Aftercare questionnaire set.
   - The travel records for B05.
   - The {V4} aftercare cases, created before {V4} is suspended.
@@ -107,29 +109,29 @@
 | Browser(s) | Chrome latest, desktop |
 | Plan owner contact | Trung Dang (trung.dang@vantaymedia.com) |
 
-Accounts used (placeholders; credentials sent privately):
+Accounts used (placeholders; credentials of the existing accounts are sent privately; the tester creates the other accounts during the pass and shares their logins privately with the plan owner, never in a batch file):
 
 | Placeholder | Role | Used in batches |
 |---|---|---|
 | {A1} | Super admin | B01 (checks), B02, B03 (check), B04, B05, B06, B07, B08 |
-| {A3} | Admin with the Billing Viewer role; to be created by the team | B06 |
-| {A4} | Restricted admin 1; to be created by the team | B08 |
-| {A6} | Restricted admin 2; to be created by the team | B08 |
-| {A7} | Second admin with the Support Staff role; to be created by the team. Kept because B08 A10-FR034-12 reassigns a support case from {A1} to another admin, which needs a second admin who can own support cases | B08 |
+| {A3} | Admin with the Billing Viewer role; created by the tester before B06 by admin invite from {A1} | B06 |
+| {A4} | Restricted admin 1 (Support Center access without the "View Internal Notes" permission); created by the tester before B08 by admin invite from {A1} | B08 |
+| {A6} | Restricted admin 2 (no Support Center access); created by the tester before B08 by admin invite from {A1} | B08 |
+| {A7} | Second admin with the Support Staff role; created by the tester before B08 by admin invite from {A1}. Kept because B08 A10-FR034-12 reassigns a support case from {A1} to another admin, which needs a second admin who can own support cases | B08 |
 | {S1} | Provider staff with the system role Clinical Staff in {V1}'s team (base and end state; Phase 2 does not change its role) | B01 |
-| {V1} | Provider (clinic Owner); main treating clinic; payout currency GBP | B01, B02 (checks), B03, B04, B05 (check), B06, B07, B08 |
+| {V1} | Provider (clinic Owner); main treating clinic; payout currency USD | B01, B02 (checks), B03, B04, B05 (check), B06, B07, B08 |
 | {V2} | Provider; second clinic used for isolation, replacement and reassignment; payout currency EUR | B01, B02, B03, B04, B05, B06, B07, B08 |
 | {V3} | Provider; suspended once before B02 starts, during a live treatment (setup data for B02 AD-2 and B06 INV-11); reactivated after B06 | B02, B04 (check), B06 |
 | {V4} | Provider; reactivated in the Phase handoff (section 2), then suspended before B02 starts, with live aftercare cases and an open inquiry (setup data, B02 AD-8); stays Suspended at the end of Phase 2 | B02, B04 |
 | {P1}–{P7} | Patients; booking, aftercare and travel records are setup data only (no patient sign-in) | B01–B06; B08 ({P1}–{P5}) |
-| {P8} | Patient created in Phase 1 (owner of Phase 1 INQ-8); one Confirmed booking (B01 setup item TX-8, also B07 setup item BKG-1), setup data only | B01, B07, B08 |
-| {P9}–{P11} | Patients created by the team for B07, with no earlier inquiry, quote, booking or conversation with {V1}; setup data only (no patient sign-in). B08 reads their conversations | B07, B08 |
-| {P12} | Patient created by the team for Phase 2 with no other inquiry or booking; holds B02 AD-1 ({V2}); setup data only | B02, B03 |
-| {P13}, {P14} | Patients created by the team for Phase 2; {P13} holds B02 AD-3 ({V1}, Payment Window Expired), {P14} holds B02 AD-8 ({V4} inquiry); setup data only | B02 |
-| {P15} | Patient created by the team for Phase 2; holds B03 AC-4 ({V1} aftercare case); setup data only | B03, B04 |
-| {P16} | Patient created by the team for Phase 2; holds B04 AT-2 ({V4} treatment-linked aftercare); setup data only | B04 |
-| {P17}–{P19} | Patients created by the team for Phase 2; hold B05 TR-2, TR-3 and TR-4 ({V2} bookings); setup data only | B05 |
-| {P20}–{P28} | Patients created by the team for Phase 2; hold B06 INV-1 to INV-4, INV-6 to INV-9 and INV-11 in that order; setup data only | B06 |
+| {P8} | Patient created by the tester in Phase 1 (owner of Phase 1 INQ-8); one Confirmed booking (B01 setup item TX-8, also B07 setup item BKG-1), setup data only | B01, B07, B08 |
+| {P9}–{P11} | Patients created by the tester for B07, with no earlier inquiry, quote, booking or conversation with {V1}; setup data only (no patient sign-in). B08 reads their conversations | B07, B08 |
+| {P12} | Patient created by the tester for Phase 2 with no other inquiry or booking; holds B02 AD-1 ({V2}); setup data only | B02, B03 |
+| {P13}, {P14} | Patients created by the tester for Phase 2; {P13} holds B02 AD-3 ({V1}, Payment Window Expired), {P14} holds B02 AD-8 ({V4} inquiry); setup data only | B02 |
+| {P15} | Patient created by the tester for Phase 2; holds B03 AC-4 ({V1} aftercare case); setup data only | B03, B04 |
+| {P16} | Patient created by the tester for Phase 2; holds B04 AT-2 ({V4} treatment-linked aftercare); setup data only | B04 |
+| {P17}–{P19} | Patients created by the tester for Phase 2; hold B05 TR-2, TR-3 and TR-4 ({V2} bookings); setup data only | B05 |
+| {P20}–{P28} | Patients created by the tester for Phase 2; hold B06 INV-1 to INV-4, INV-6 to INV-9 and INV-11 in that order; setup data only | B06 |
 
 Accounts for B06–B08 are also described in those batch files.
 
@@ -137,7 +139,7 @@ Accounts for B06–B08 are also described in those batch files.
 
 ## Team Setup Checklist
 
-The team completes each item by its lead time and ticks Done. Item details are in the section or batch named; this table does not repeat them.
+The team completes each item by its lead time and ticks Done; item 6 is the tester's. Item details are in the section or batch named; this table does not repeat them.
 
 | # | Item | Batches | Owner | Lead time | Done |
 |---|---|---|---|---|---|
@@ -145,26 +147,25 @@ The team completes each item by its lead time and ticks Done. Item details are i
 | 2 | Phase handoff step 1: reactivate {V4} (section 2) | B02, B04 | Dev team | Before phase start | [ ] |
 | 3 | Phase handoff step 2: end the Phase 1 inquiries INQ-1 to INQ-8 still open and report their final status (section 2) | All | Dev team | Before phase start | [ ] |
 | 4 | Phase handoff step 3: confirm {S1} is Active with Clinical Staff in {V1}'s team (section 2) | B01 | QA lead | Before phase start | [ ] |
-| 5 | Phase handoff step 4: quote and payment settings at their defaults; FR-029 Default Currency GBP with EUR enabled; {V1} payout currency GBP, {V2} payout currency EUR (section 2) | All | Dev team | Before phase start | [ ] |
-| 6 | Phase handoff step 5: create patients {P12}–{P28} with no history (sections 2 and 3) | B02–B06 | Dev team | Before phase start | [ ] |
-| 7 | Create admin accounts {A3} (Billing Viewer), {A4}, {A6} and {A7} (Support Staff) (section 3) | B06, B08 | Dev team | Before phase start | [ ] |
-| 8 | Send credentials privately, with the names, Patient IDs, booking references and case references each batch's Shared Preconditions lists | All | QA lead | Before each batch starts | [ ] |
-| 9 | Supply the test upload files and long-text files named in each batch's data sets | B01–B05, B07, B08 | QA lead | Before each batch starts | [ ] |
-| 10 | B01 setup: {V1} has Clinician 1 and Clinician 2; TX-1 to TX-4 and TX-6 to TX-8 in their stated states (TX-5 not used) | B01 | Dev team | Before the B01 run day starts | [ ] |
-| 11 | B01 setup item RM-1: reminder settings at defaults; reminder job run at 12 and 24 hours after TX-4's check-in; give the check-in time | B01 | Dev team | At least 24 hours after TX-4's check-in, before B02 case A01-FR006-05 | [ ] |
-| 12 | B04 setup items AT-1 and AT-2 ({V4} aftercare cases) | B04 | Dev team | Before {V4} is suspended (before B02) | [ ] |
-| 13 | {V3} suspension sequence: AD-2 In Progress, INV-11 deposit started with the webhook held, suspend {V3}, release the webhook (section 3) | B02, B04, B06 | Dev team | Before B02 starts | [ ] |
-| 14 | {V4} suspension: AD-8 quoted, then suspend {V4} | B02, B04 | Dev team | Before B02 starts, after item 12 | [ ] |
-| 15 | B05 setup items TR-1 to TR-5 (travel records) | B02, B05 | Dev team | Before B02 starts | [ ] |
-| 16 | B02 setup items AD-1 to AD-9 | B02 | Dev team | After B01 ends, before B02 starts | [ ] |
-| 17 | Pay {P3}'s replacement booking as {P3} (B05 setup item TR-6) | B05 | Dev team | After B02 case A01-FR006-08, before B05 starts | [ ] |
-| 18 | B03 setup items AC-1 to AC-5 | B03, B04 | Dev team | Before B03 starts | [ ] |
-| 19 | B04 setup items AT-3 and AT-4 (AT-4 submitted the day before the B04 run day) | B04 | Dev team | Before B04 starts | [ ] |
-| 20 | B07 setup: patients {P9}–{P11}; P2-INQ-1, P2-INQ-3, BKG-1 conversation on {P8}'s TX-8, CONV-4; keyword-flag list holds "WhatsApp"; message transport and FR-020 notifications live | B07, B08 | Dev team | Before B07 starts | [ ] |
-| 21 | B07 run support: a team member acts as {P9} and {A1} on request, including cancelling P2-INQ-1 and submitting P2-INQ-2 between PR07-FR012-01 and PR07-FR012-02 | B07 | Dev team | During the B07 run, same day | [ ] |
-| 22 | B08 setup: support cases SUP-1 to SUP-6; PRD default category and priority lists; team-controlled inboxes of {P1}, {P11}, {V1} and {V2} | B08 | Dev team | Before B08 starts, cases created within the 30 days before the run day | [ ] |
-| 23 | B06 setup: Stripe test mode with payment and refund webhooks; invoices INV-1 to INV-10 through real paid bookings; team-controlled patient refund inboxes | B06 | Dev team | Before B06 starts; INV-4, INV-6 and INV-9 lead times as stated in B06; INV-5 after B02 case A01-FR016-04; INV-10 after B02 case A01-FR006-05 | [ ] |
-| 24 | Reactivate {V3} (section 3) | B06 | Dev team | After B06 ends | [ ] |
+| 5 | Phase handoff step 4: quote and payment settings at their defaults; FR-029 Default Currency USD with EUR enabled; {V1} payout currency USD, {V2} payout currency EUR (section 2) | All | Dev team | Before phase start | [ ] |
+| 6 | Tester creates the accounts this phase needs through the normal product flows, each with a fresh mailbox the tester controls, and shares each login privately with the plan owner: patients {P9}–{P28} by registering in the patient app (setup data only; Phase handoff step 5); admins {A3} (Billing Viewer) and {A4}, {A6}, {A7} (roles in section 3) by admin invite from {A1} | B02–B08 | Tester | {P9}–{P28}: start of the pass, before the team setup items that use them; {A3}: before B06; {A4}, {A6}, {A7}: before B08 | [ ] |
+| 7 | Send credentials privately, with the names, Patient IDs, booking references and case references each batch's Shared Preconditions lists | All | QA lead | Before each batch starts | [ ] |
+| 8 | Supply the test upload files and long-text files named in each batch's data sets | B01–B05, B07, B08 | QA lead | Before each batch starts | [ ] |
+| 9 | B01 setup: {V1} has Clinician 1 and Clinician 2; TX-1 to TX-4 and TX-6 to TX-8 in their stated states (TX-5 not used) | B01 | Dev team | Before the B01 run day starts | [ ] |
+| 10 | B01 setup item RM-1: reminder settings at defaults; reminder job run at 12 and 24 hours after TX-4's check-in; give the check-in time | B01 | Dev team | At least 24 hours after TX-4's check-in, before B02 case A01-FR006-05 | [ ] |
+| 11 | B04 setup items AT-1 and AT-2 ({V4} aftercare cases) | B04 | Dev team | Before {V4} is suspended (before B02) | [ ] |
+| 12 | {V3} suspension sequence: AD-2 In Progress, INV-11 deposit started with the webhook held, suspend {V3}, release the webhook (section 3) | B02, B04, B06 | Dev team | Before B02 starts | [ ] |
+| 13 | {V4} suspension: AD-8 quoted, then suspend {V4} | B02, B04 | Dev team | Before B02 starts, after item 11 | [ ] |
+| 14 | B05 setup items TR-1 to TR-5 (travel records) | B02, B05 | Dev team | Before B02 starts | [ ] |
+| 15 | B02 setup items AD-1 to AD-9 | B02 | Dev team | After B01 ends, before B02 starts | [ ] |
+| 16 | Pay {P3}'s replacement booking as {P3} (B05 setup item TR-6) | B05 | Dev team | After B02 case A01-FR006-08, before B05 starts | [ ] |
+| 17 | B03 setup items AC-1 to AC-5 | B03, B04 | Dev team | Before B03 starts | [ ] |
+| 18 | B04 setup items AT-3 and AT-4 (AT-4 submitted the day before the B04 run day) | B04 | Dev team | Before B04 starts | [ ] |
+| 19 | B07 setup: P2-INQ-1, P2-INQ-3, BKG-1 conversation on {P8}'s TX-8, CONV-4; keyword-flag list holds "WhatsApp"; message transport and FR-020 notifications live | B07, B08 | Dev team | Before B07 starts | [ ] |
+| 20 | B07 run support: a team member acts as {P9} and {A1} on request, including cancelling P2-INQ-1 and submitting P2-INQ-2 between PR07-FR012-01 and PR07-FR012-02 | B07 | Dev team | During the B07 run, same day | [ ] |
+| 21 | B08 setup: support cases SUP-1 to SUP-6; PRD default category and priority lists | B08 | Dev team | Before B08 starts, cases created within the 30 days before the run day | [ ] |
+| 22 | B06 setup: Stripe test mode with payment and refund webhooks; invoices INV-1 to INV-10 through real paid bookings | B06 | Dev team | Before B06 starts; INV-4, INV-6 and INV-9 lead times as stated in B06; INV-5 after B02 case A01-FR016-04; INV-10 after B02 case A01-FR006-05 | [ ] |
+| 23 | Reactivate {V3} (section 3) | B06 | Dev team | After B06 ends | [ ] |
 
 ## 4. Batches and Run Order
 
