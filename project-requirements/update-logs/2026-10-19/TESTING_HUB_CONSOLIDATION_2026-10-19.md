@@ -83,3 +83,4 @@ Decisions taken with the user on the remaining open items, applied before any pl
 - **Plan owner contact** filled in every plan and the registry. A Team Setup Checklist was added to each of Phase 1 to 3.
 - Totals: Phase 1 117, Phase 2 138 (plus 1 retired), Phase 3 82; 338 unique IDs; 20/20 batches validate with no warnings.
 
+- PO question report: Q-01 decided as deferred until the client's updated payout requirements are in the PRDs (payouts are Phase 3 scope); Q-02 decided as payout currency for FR-017 Screens 9 and 10 (current test handling stands; FR-017 line 1150 wording needs a PRD correction). Q-03 stays open.

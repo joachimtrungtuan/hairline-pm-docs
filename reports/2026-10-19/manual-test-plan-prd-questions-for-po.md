@@ -21,7 +21,7 @@ The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-02
 - **Question:** Which screen sets a provider's payout currency, and who sets it (admin in FR-015, provider in FR-032, or something derived from the bank account country)? If none is set, should the payout currency fall back to the Flat Rate Currency or the system Default Currency?
 - **Affected cases:** Phase 3 Team Setup Checklist item 3 (`{V2}` paid in EUR); PR05-FR017-02; A05-FR017-19, A05-FR017-20, A05-FR017-27; A02-FR015-24.
 - **Current handling:** The dev team sets `{V2}`'s payout currency to EUR as a setup step outside any tested screen. Cases check only the result (EUR amounts).
-- **Decision:**
+- **Decision:** Deferred (2026-10-19). The payout currency setting comes with the client's updated payout requirements, which will be added to the PRDs first. Payouts are tested in Phase 3, not Phase 1, so this does not block earlier phases. The Phase 3 payout cases will be revised once those requirements are in.
 
 ### Q-02: Which currency do the Earnings Tracker (Screen 9) amount columns use?
 
@@ -30,7 +30,7 @@ The plans follow the system quote currency from FR-029, FR-026, FR-004 and FR-02
 - **Question:** For a provider paid in a currency other than the booking currency (GBP booking, EUR payout), do the Screen 9 and Screen 10 amounts and Currency column show the booking currency, the payout currency, or both?
 - **Affected cases:** PR05-FR017-02 (data set DS-PR05-02, setup BK-16); Screen 10 history checks for `{V2}` in Phase 3 B01.
 - **Current handling:** PR05-FR017-02 expects EUR amounts in `{V2}`'s payout currency, converted at the locked rate. This applies the Screen 10 rule to Screen 9.
-- **Decision:**
+- **Decision:** Payout currency (2026-10-19). Screen 9 and Screen 10 amounts and the Currency column show the provider's payout currency. The current handling stands; the FR-017 Screen 10 Currency column wording ("Booking currency", line 1150) needs a PRD correction.
 
 ### Q-03: How is a GBP to EUR rate worked out when all currency pairs are based on USD?
 
