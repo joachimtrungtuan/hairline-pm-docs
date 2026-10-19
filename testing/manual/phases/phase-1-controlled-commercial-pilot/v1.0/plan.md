@@ -20,7 +20,8 @@
 | Version | Date | Change | By |
 |---|---|---|---|
 | 1.0 | 2026-10-19 | Initial plan | Hairline QA |
-| 1.0 | 2026-10-19 | Review fixes before issue: scheduled status change cases added to B01 (A02-FR015-21 to A02-FR015-23); per-provider currency (GBP for {V1}, EUR for {V2}); {S1} set to Clinical Staff and new account {S2} for the custom-role cases; provider dashboard URL; exit criteria aligned with the template; run-order timing and team lead times | Hairline QA |
+| 1.0 | 2026-10-19 | Review fixes before issue: scheduled status change cases added to B01 (A02-FR015-21 to A02-FR015-23); {S1} set to Clinical Staff and new account {S2} for the custom-role cases; provider dashboard URL; exit criteria aligned with the template; run-order timing and team lead times | Hairline QA |
+| 1.0 | 2026-10-19 | Currency follows the PRDs: every quote and price is in the system default currency GBP (FR-029 Default Currency, EUR enabled; setup item CUR-GBP); plan owner contact filled in; Team Setup Checklist added; Featured management, closure requests and "Login as Provider" moved to Phase 4; PR02-FR004-12 Archived filter kept as an observation | Hairline QA |
 
 ## 1. Scope
 
@@ -41,7 +42,7 @@
 - **A-02, deferred parts.**
   - Commission and financial editing (A-02 profile Tab 7) and payouts: Phase 3 (A-05, A-06).
   - The booking and treatment parts of the suspension cascade, and admin reassignment of bookings: Phase 2 (A-01 booking and treatment).
-  - Featured provider management and the 10-provider cap, provider closure requests and "Login as Provider": Phase 4 or post-MVP.
+  - Featured provider management and the 10-provider cap, provider closure requests and "Login as Provider": tested in Phase 4.
 - **PR-01.** Multi-factor authentication (FR-009 future improvement) and task transfer beyond the reassignment option in the removal modal.
 - **PR-06, deferred parts.**
   - Billing settings: Phase 3 (PR-05 earnings and payout).
@@ -60,7 +61,7 @@
 - The team-controlled mailboxes listed in §3 are fresh, never used on Hairline, and readable by the tester.
 - The patient-side setup data that B05 and B06 need (submitted inquiries, quote states) has been prepared and listed in those batch files.
 - The dev team has confirmed that production fixtures and fallback data have been removed from the build under test.
-- The team-prepared setup items listed in §4 (Scheduling and team lead times) are ready by their lead times.
+- The team-prepared setup items in the Team Setup Checklist and §4 (Scheduling and team lead times) are ready by their lead times.
 
 **Exit criteria** (phase passes when):
 
@@ -85,8 +86,8 @@
 | Backend API base URL | https://backend.hairline.app/api |
 | Build / release under test | {Record build or release identifier at test start} |
 | Browser(s) | Chrome latest, desktop; a second browser or private window for two-session cases |
-| Currency | Set per provider and read-only for providers: {V1} prices, packages and quotes are in GBP; {V2} prices and quotes are in EUR. The team confirms this setup before testing. The FR-024, FR-004 and FR-026 PRDs still describe one system quote currency; cases that read the currency record what is shown |
-| Plan owner contact | {Plan owner contact} (the team supplies it before testing; send every mid-test request for team action, and every question, to this contact) |
+| Currency | System default currency GBP for every provider (setup item CUR-GBP: FR-029 Default Currency = GBP, EUR also enabled). The quote currency is the FR-029 Default Currency, shown read-only in the FR-026 Quote Configuration and copied read-only onto each quote at first send; providers cannot choose a currency (FR-024). All treatment prices, packages and quotes in this plan are in GBP |
+| Plan owner contact | Trung Dang (trung.dang@vantaymedia.com). Send every mid-test request for team action, and every question, to this contact |
 
 Accounts used (placeholders; credentials sent privately):
 
@@ -111,6 +112,28 @@ Accounts used (placeholders; credentials sent privately):
 | {Invite mailbox 3} | Team-controlled fresh mailbox with plus-addressing (+val, +rl01 to +rl11) for validation and rate-limit invitations | B02 |
 | {Invite mailbox 4} | Team-controlled mailbox that receives setup invitation INV-EXP-1 (expired {V1} invitation). To be created by the team | B02 |
 
+## Team Setup Checklist
+
+Every team action this plan needs, in one place. Details are in the batch Shared Preconditions or the §3 rows named in the Item column. Tick Done when the team confirms the item is ready.
+
+| # | Item | Batches | Owner | Lead time | Done |
+|---|---|---|---|---|---|
+| 1 | Deploy the Phase 1 build to the test environment, record its build or release identifier in §3 and confirm production fixtures and fallback data are removed | All | Dev team | Before phase start | [ ] |
+| 2 | Setup item CUR-GBP: FR-029 Default Currency = GBP, EUR also enabled | B01, B03, B04, B05, B06 | Dev team | At least 2 working days before B01 | [ ] |
+| 3 | Create accounts {A2} (Support Staff), {S2} (custom role clinician-front-desk, permissions as in §3) and {P8}, and share credentials privately | B01, B04, B05, B06 | QA lead | At least 2 working days before B01 | [ ] |
+| 4 | Confirm {A1}, {S1} (Active, Clinical Staff), {V1}–{V4} (Active, passwords set, owners not locked out) and {P1}–{P7} exist; {V4} in the B01 starting state (no open quotes or active cases, Featured off) | B01–B06 | QA lead | At least 2 working days before B01 | [ ] |
+| 5 | Create the fresh mailboxes {New provider mailbox 1}–{New provider mailbox 3}, {Invite mailbox 1}–{Invite mailbox 4} and {Admin invite mailbox} (plus-addressing where §3 says so) and give the tester access | B01, B02, B03, B04 | QA lead | At least 2 working days before B01 | [ ] |
+| 6 | Setup item DOC-V1 ({V1} provider-uploaded document) and {V1} team of at least 2 members | B01 | Dev team | At least 2 working days before B01 | [ ] |
+| 7 | Supply the test upload files for each batch | B01, B03, B04, B05 | QA lead | Before phase start | [ ] |
+| 8 | On call during B01 Day 2: check, and if needed trigger, the daily scheduled-change job for A02-FR015-22 | B01 | Dev team | B01 Day 2, from 07:00 Asia/Saigon | [ ] |
+| 9 | Setup item INV-EXP-1 (expired {V1} invitation to {Invite mailbox 4}) | B02 | Dev team | At least 9 days before B02 | [ ] |
+| 10 | Setup item CS-ROLE (Clinical Staff and Manager permissions confirmed) | B02, B03 | Dev team | At least 2 working days before B01 | [ ] |
+| 11 | {V1} Seat Limit at least current seat usage plus 12; login lockout settings at FR-026 defaults (5 attempts, 15 minutes) | B02 | Dev team | Before phase start | [ ] |
+| 12 | Setup item TRT-V1; {V1} has no awards and at least one spoken language; {V2} has no "QA Pilot Comfort Package" | B03 | Dev team | At least 1 working day before B03 | [ ] |
+| 13 | INQ-7 prepared with the active questionnaire set, and the setup sheet naming TA-USED | B04, B05 | Dev team | At least 1 working day before B04 | [ ] |
+| 14 | B05 setup sheet: TRT-1, TRT-2, PKG-1 to PKG-6, CLN-1, CLN-2, INQ-1 to INQ-6 with their quote states (including {V2}'s INQ-5 quote accepted as {P5}), and the Patient IDs | B05, B06 | Dev team | At least 1 working day before B05 | [ ] |
+| 15 | QT-V2-1, INQ-8, {V4} suspended through A-02, and the record of the option {P5} accepted | B06 | Dev team | Between the end of B05 and the start of B06, inside the 48-hour window | [ ] |
+
 ## 4. Batches and Run Order
 
 | Order | Batch | File | Module | FRs | Cases | Depends on |
@@ -127,10 +150,11 @@ Accounts used (placeholders; credentials sent privately):
 - **B01 runs over two days.** A02-FR015-11 starts at least 25 hours after A02-FR015-10 ends. A02-FR015-22 schedules a suspension on Day 1 and is checked on Day 2 after 08:00 Asia/Saigon time (the scheduled-change job runs at 00:00 UTC); A02-FR015-23 follows on Day 2.
 - **B05 and B06 run on consecutive days.** B06 must start within 48 hours of the send time recorded in B05 PR02-FR004-01, because A01-FR004-04 and A01-FR004-06 need the INQ-1 quotes still Sent.
 - **Team-prepared setup, with lead times** (request each item from the team by the time shown):
-  - At least 2 working days before B01: the accounts in §3 ({A2}, {S1} with setup item CS-ROLE, {S2} with its custom role, {P8}), the fresh mailboxes, the per-provider currency setup, and the B01 setup items (DOC-V1; GBP enabled).
+  - At least 2 working days before B01: the accounts in §3 ({A2}, {S1} with setup item CS-ROLE, {S2} with its custom role, {P8}), the fresh mailboxes, and the setup items CUR-GBP and DOC-V1.
   - At least 9 days before B02: INV-EXP-1, because the invitation must be sent at least 8 days before testing.
   - At least 1 working day before B03: TRT-V1.
-  - At least 1 working day before B05: the B05 setup sheet (INQ-1 to INQ-7, PKG-1 to PKG-6 and the prepared quote states).
+  - At least 1 working day before B04: INQ-7 and the setup sheet naming TA-USED (B04 uses INQ-7 before B05).
+  - At least 1 working day before B05: the B05 setup sheet (INQ-1 to INQ-6, PKG-1 to PKG-6 and the prepared quote states).
   - Between the end of B05 and the start of B06 (same or next day, inside the 48-hour window): QT-V2-1, INQ-8, {V4} suspended through A-02, and the record of the option {P5} accepted.
   - On call during B01 Day 2: check, and if needed trigger, the daily scheduled-change job for A02-FR015-22.
 
