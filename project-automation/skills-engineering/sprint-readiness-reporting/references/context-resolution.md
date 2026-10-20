@@ -7,7 +7,7 @@ Use this reference before creating or updating any sprint readiness report.
 Resolve and reuse two files with minimal user friction:
 
 1. readiness report file
-2. launch-plan file
+2. launch-plan file (the product plan: `local-docs/product-plans/v<N>/plan.md`)
 
 ## Path Resolution Rules
 
@@ -18,8 +18,7 @@ Resolve in this order:
 1. Explicit path already named by the user in the current message
 2. Explicit path already used earlier in the same conversation
 3. Search `local-docs/product-plans/` for likely report candidates such as:
-   - `*/sprint-*-readiness-*.md`
-   - `*/sprint-*-fix-backlog*.md`
+   - `v*/phases/*/*-readiness-fix-backlog.md` (one folder per phase or sprint of a plan version, for example `v2/phases/phase-1-controlled-commercial-pilot/2026-09-17-readiness-fix-backlog.md` or `v1/phases/sprint-1/2026-05-29-readiness-fix-backlog.md`)
 4. If exactly one strong candidate matches the current sprint/module context, use it
 5. Ask the user only when:
    - multiple plausible report files exist
@@ -32,8 +31,8 @@ Resolve in this order:
 
 1. Explicit path already named by the user in the current message
 2. Explicit path already used earlier in the same conversation
-3. Search `local-docs/product-plans/` for `launch-plan.md`
-4. If there is one clearly current launch plan, use it
+3. Use the plan of the version that owns the readiness report (`product-plans/v<N>/plan.md`, the folder above `phases/`); for a new report, use the highest version folder in `local-docs/product-plans/`
+4. If there is one clearly current plan version, use it
 5. Ask the user only when multiple launch plans are equally plausible or no candidate exists
 
 ## Reuse Rules

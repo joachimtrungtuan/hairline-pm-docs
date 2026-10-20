@@ -16,7 +16,7 @@
 | Working days | [Copy from launch plan] |
 | Goal | [Copy from launch plan] |
 | Definition of Done | [Copy the sprint-level DoD bullets or summarize without changing meaning] |
-| Source launch plan | `local-docs/product-plans/2026-05-13/launch-plan.md` |
+| Source product plan | `local-docs/product-plans/v{N}/plan.md` |
 | Prepared by | [Name / role / AI agent] |
 | Prepared date | YYYY-MM-DD |
 | Product review date(s) | YYYY-MM-DD |

@@ -26,7 +26,7 @@ Use this exact block structure for every task.
 <ul>
 <li>Source Bug ID: MODULE_CODE-###</li>
 <li>FR PRD: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/project-requirements/functional-requirements/fr025-medical-questionnaire-management/prd.md</a></li>
-<li>Source backlog: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/2026-05-29/sprint-1-readiness-fix-backlog.md</a></li>
+<li>Source backlog: <a href="https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/v1/phases/sprint-1/2026-05-29-readiness-fix-backlog.md">https://github.com/joachimtrungtuan/hairline-pm-docs/blob/main/product-plans/v1/phases/sprint-1/2026-05-29-readiness-fix-backlog.md</a></li>
 <li>Figma: <a href="https://figma.com/example">https://figma.com/example</a></li>
 </ul>
 <h2>Scope Boundary</h2>

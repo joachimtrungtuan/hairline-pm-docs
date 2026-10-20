@@ -15,7 +15,7 @@ Use self-contained references in this skill. Do not depend on reference files fr
 
 At least one of:
 
-1. Source bug file path, such as `local-docs/product-plans/.../sprint-*-readiness-fix-backlog.md`
+1. Source bug file path, such as `local-docs/product-plans/v<N>/phases/<phase>/<YYYY-MM-DD>-readiness-fix-backlog.md`
 2. Pasted bug list or bug report content
 3. Explicit task scope such as `Recorded only` rows in a named backlog file
 

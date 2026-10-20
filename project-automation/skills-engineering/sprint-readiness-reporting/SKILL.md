@@ -21,7 +21,7 @@ Load these files only when needed:
 
 ## Hard Rules
 
-- Treat `local-docs/product-plans/.../sprint-*-readiness-*.md` or equivalent user-confirmed readiness/backlog file as the primary output target
+- Treat `local-docs/product-plans/v<N>/phases/<phase>/<YYYY-MM-DD>-readiness-fix-backlog.md` or equivalent user-confirmed readiness/backlog file as the primary output target. Product plans are versioned: `product-plans/v<N>/plan.md` is the launch plan for that version, and each of its phases (or sprints, in `v1`) has a folder under `phases/`
 - Resolve exactly two context files before substantial work: the readiness report file and the launch-plan file
 - Reuse those two paths for the rest of the same conversation once they have been resolved; do not ask again unless the user changes scope
 - Do not ask for a file path immediately if the conversation already names one or if one obvious candidate can be discovered locally
@@ -65,7 +65,7 @@ Do not keep re-asking for these paths once they are settled in the same conversa
 Use this flow when the user wants to start a new sprint readiness report or when the sprint report does not exist yet.
 
 1. Resolve the target readiness-report path and launch-plan path through Flow 0.
-2. Copy `assets/sprint-readiness-fix-backlog-template.md` into the requested sprint folder under `local-docs/product-plans/YYYY-MM-DD/`.
+2. Copy `assets/sprint-readiness-fix-backlog-template.md` to `local-docs/product-plans/v<N>/phases/<phase-folder>/<YYYY-MM-DD>-readiness-fix-backlog.md`, creating the phase folder when it does not exist yet.
 3. Read only the relevant sprint section from the launch plan.
 4. Fill the scaffold sections that must mirror the launch plan:
    - Document Control & Sprint Summary
