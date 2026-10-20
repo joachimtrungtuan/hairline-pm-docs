@@ -34,5 +34,5 @@ Versioning belongs to the product plan, not to each test phase. Each plan versio
 
 ## Follow-up
 
-- Plane QA tasks HAIRL-1545 to HAIRL-1550 link to the old batch paths; their descriptions and the local task file `project-automation/task-creation/2026-10-19/implementation-tasks-2026-10-19-001.md` are updated after this change is pushed.
+- Plane QA tasks HAIRL-1545 to HAIRL-1550: descriptions updated after the push to link the Phase 1 test guide and batch files at the new paths (all links checked, HTTP 200). The MTG-002 review tasks HAIRL-1539 to HAIRL-1544 link only to unmoved files and were not changed.
 - No test run exists yet. Create `run-01` for Phase 1 with `new-run` before the tester starts.

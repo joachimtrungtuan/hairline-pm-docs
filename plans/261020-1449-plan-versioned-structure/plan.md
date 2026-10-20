@@ -1,6 +1,6 @@
 # Plan-Versioned Structure for Product Plans and Manual Testing
 
-**Status:** Steps 1–4 done; step 5 (commit, push, Plane links) pending user confirmation
+**Status:** Done (2026-10-20)
 **Created:** 2026-10-20
 
 ## Outcome
