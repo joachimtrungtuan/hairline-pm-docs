@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -13,9 +12,11 @@ from plane_api_common import (
     PRIORITIES,
     active_cycle,
     api_request,
+    find_active_cycle,
     iso_now,
     load_config,
     paginated_get,
+    parse_date,
     print_json,
     project_path,
 )
@@ -32,26 +33,77 @@ def compact(items: list[dict[str, Any]], *fields: str) -> list[dict[str, Any]]:
     return out
 
 
-def parse_dt(raw: str | None) -> datetime | None:
-    if not raw:
-        return None
-    return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+def split_spec(raw: str) -> tuple[str, str]:
+    name, _, extra = raw.partition("=")
+    if not name.strip():
+        raise SystemExit(f"ERROR: Empty name in {raw!r}")
+    return name.strip(), extra.strip()
 
 
-def find_active_cycle(cycles: list[dict[str, Any]], now: datetime) -> dict[str, Any] | None:
-    for cycle in cycles:
-        start = parse_dt(cycle.get("start_date"))
-        end = parse_dt(cycle.get("end_date"))
-        if start and end and start <= now <= end:
-            return cycle
-    return None
+def ensure_labels(config, specs: list[str], dry_run: bool) -> None:
+    """Create each missing label (`NAME` or `NAME=#hex`); existing labels are left untouched."""
+    existing = {str(x.get("name", "")).lower() for x in paginated_get(config, project_path(config, "/labels/"))}
+    for spec in specs:
+        name, color = split_spec(spec)
+        if name.lower() in existing:
+            print(f"Label exists: {name}")
+            continue
+        print(f"Label {'would be created' if dry_run else 'created'}: {name}")
+        if dry_run:
+            continue
+        payload = {"name": name, **({"color": color} if color else {})}
+        body, status = api_request(config, "POST", project_path(config, "/labels/"), payload)
+        if status not in (200, 201):
+            raise SystemExit(f"ERROR: Label create failed HTTP {status}: {body}")
+
+
+def ensure_milestones(config, specs: list[str], dry_run: bool) -> None:
+    """Create each missing milestone (`TITLE` or `TITLE=YYYY-MM-DD`); align target date when given."""
+    existing = {
+        str(x.get("title", "")).lower(): x
+        for x in paginated_get(config, project_path(config, "/milestones/"))
+    }
+    for spec in specs:
+        title, raw_date = split_spec(spec)
+        target = parse_date(raw_date, "Milestone target date") if raw_date else None
+        current = existing.get(title.lower())
+        if current and (not target or current.get("target_date") == target):
+            print(f"Milestone exists: {title}")
+            continue
+        verb = "updated" if current else "created"
+        print(f"Milestone {'would be ' + verb if dry_run else verb}: {title} target={target or '(none)'}")
+        if dry_run:
+            continue
+        if current:
+            body, status = api_request(
+                config, "PATCH", project_path(config, f"/milestones/{current['id']}/"), {"target_date": target}
+            )
+        else:
+            payload = {"title": title, **({"target_date": target} if target else {})}
+            body, status = api_request(config, "POST", project_path(config, "/milestones/"), payload)
+        if status not in (200, 201):
+            raise SystemExit(f"ERROR: Milestone {verb[:-1]} failed HTTP {status}: {body}")
+
+
+def fetch_members(config) -> list[dict[str, Any]]:
+    """Project members as id + names only (no emails) for Assignees name lookup."""
+    rows = []
+    for item in paginated_get(config, project_path(config, "/members/")):
+        member = item.get("member") if isinstance(item.get("member"), dict) else item
+        rows.append({
+            "id": member.get("id") or item.get("member_id"),
+            "display_name": member.get("display_name"),
+            "first_name": member.get("first_name"),
+            "last_name": member.get("last_name"),
+        })
+    return [row for row in rows if row["id"]]
 
 
 def diff_by_id(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> dict[str, list[str]]:
     old_by_id = {str(x.get("id")): x for x in old if x.get("id")}
     new_by_id = {str(x.get("id")): x for x in new if x.get("id")}
-    added = [str(new_by_id[k].get("name") or k) for k in sorted(new_by_id.keys() - old_by_id.keys())]
-    removed = [str(old_by_id[k].get("name") or k) for k in sorted(old_by_id.keys() - new_by_id.keys())]
+    added = [str(new_by_id[k].get("name") or new_by_id[k].get("title") or new_by_id[k].get("display_name") or k) for k in sorted(new_by_id.keys() - old_by_id.keys())]
+    removed = [str(old_by_id[k].get("name") or old_by_id[k].get("title") or old_by_id[k].get("display_name") or k) for k in sorted(old_by_id.keys() - new_by_id.keys())]
     changed: list[str] = []
     for key in sorted(old_by_id.keys() & new_by_id.keys()):
         if old_by_id[key] != new_by_id[key]:
@@ -60,7 +112,7 @@ def diff_by_id(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> dict[str
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch Plane labels/modules/cycles/states into a cache file.")
+    parser = argparse.ArgumentParser(description="Fetch Plane labels/modules/cycles/milestones/members/states into a cache file.")
     parser.add_argument("--env", default=".env", help="Path to .env")
     parser.add_argument(
         "--output",
@@ -68,9 +120,19 @@ def main() -> None:
         help="Cache path to write (default: plane-values.json in cwd)",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print fetched data and do not write")
+    parser.add_argument(
+        "--ensure-label", action="append", default=[], metavar="NAME[=#hex]",
+        help="Create the label if missing (repeatable)",
+    )
+    parser.add_argument(
+        "--ensure-milestone", action="append", default=[], metavar="TITLE[=YYYY-MM-DD]",
+        help="Create the milestone if missing, or align its target date (repeatable)",
+    )
     args = parser.parse_args()
 
     config = load_config(Path(args.env))
+    ensure_labels(config, args.ensure_label, args.dry_run)
+    ensure_milestones(config, args.ensure_milestone, args.dry_run)
     project_body, project_status = api_request(
         config,
         "GET",
@@ -109,6 +171,13 @@ def main() -> None:
         "group",
         "color",
     )
+    milestones = compact(
+        paginated_get(config, project_path(config, "/milestones/")),
+        "id",
+        "title",
+        "target_date",
+    )
+    members = fetch_members(config)
     issue_types = compact(
         paginated_get(config, project_path(config, "/issue-types/")),
         "id",
@@ -117,7 +186,6 @@ def main() -> None:
         "is_epic",
     )
 
-    now = datetime.now().astimezone()
     values = {
         "fetched_at": iso_now(),
         "workspace_slug": config.workspace_slug,
@@ -130,7 +198,9 @@ def main() -> None:
         "labels": labels,
         "modules": modules,
         "cycles": cycles,
-        "active_cycle": find_active_cycle(cycles, now),
+        "active_cycle": find_active_cycle(cycles),
+        "milestones": milestones,
+        "members": members,
         "states": states,
         "issue_types": issue_types,
     }
@@ -146,6 +216,8 @@ def main() -> None:
         "cycles": diff_by_id(old_values.get("cycles", []), cycles),
         "states": diff_by_id(old_values.get("states", []), states),
         "issue_types": diff_by_id(old_values.get("issue_types", []), issue_types),
+        "milestones": diff_by_id(old_values.get("milestones", []), milestones),
+        "members": diff_by_id(old_values.get("members", []), members),
         "active_cycle": {
             "old": (active_cycle(old_values) or {}).get("name"),
             "new": (values["active_cycle"] or {}).get("name"),

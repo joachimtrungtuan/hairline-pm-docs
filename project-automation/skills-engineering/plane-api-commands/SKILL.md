@@ -1,6 +1,6 @@
 ---
 name: plane-api-commands
-description: Execute Plane API operations for Hairline task workflows. Use when asked to refresh Plane metadata values, list Plane resources, create Plane work items from implementation task markdown files, update existing Plane work items, read the current state of work items by key, assign parent work items, or add reference links to Plane work item descriptions.
+description: Execute Plane API operations for Hairline task workflows. Use when asked to refresh Plane metadata values, list Plane resources, create Plane labels or milestones, create Plane work items from implementation task markdown files, update existing Plane work items, read the current state of work items by key, assign parent work items, or add reference links to Plane work item descriptions.
 ---
 
 # Plane API Commands
@@ -26,9 +26,9 @@ Run Plane.so API workflows with reusable scripts. All credentials come from `loc
 
 ## Supported Modes
 
-- `refresh-values`: fetch labels, modules, cycles, states, issue types, priorities, and the currently active cycle into `plane-values.json`
-- `create-work-item`: create new Plane work items from task markdown and write `Plane Task ID` / `Plane Task Key` back into the task file
-- `update-work-item`: update existing work item descriptions from task markdown
+- `refresh-values`: fetch labels, modules, cycles, milestones, members (id and names only), states, issue types, priorities, and the currently active cycle into `plane-values.json`; optionally create missing labels and milestones first
+- `create-work-item`: create new Plane work items from task markdown, write `Plane Task ID` / `Plane Task Key` back into the task file, and verify every field persisted
+- `update-work-item`: update selected fields of existing work items from task markdown (description by default)
 - `set-parent`: assign parent work items for existing Plane work items
 - `add-reference-links`: add raw clickable reference links to existing work item descriptions
 - `read-states`: read the current state name and state group of work items by readable key (read-only)
@@ -49,8 +49,13 @@ Preferred metadata block:
 **Product Module**: PR-05
 **Labels**: FE Task
 **Priority**: Medium
+**State**:
+**Assignees**:
+**Start Date**:
+**Due Date**:
 **Plane Module**: [2] Dashboard > Provider
 **Cycle**: 2026_May_C1
+**Milestone**:
 **Parent Task**:
 
 ## TASK_DESCRIPTION_START
@@ -61,16 +66,20 @@ Preferred metadata block:
 
 Backward compatibility: creation and update scripts can parse older task blocks, but new tasks should use the preferred metadata.
 
-Plane metadata is per task block. A single markdown file may legitimately contain different `Parent Task`, `Plane Module`, `Labels`, `Priority`, and `Cycle` values across tasks.
+Plane metadata is per task block. A single markdown file may legitimately contain different `Parent Task`, `Plane Module`, `Labels`, `Priority`, `State`, `Assignees`, dates, `Cycle`, and `Milestone` values across tasks.
 
 ## Field Rules
 
 - `Plane Task ID`: internal UUID returned by Plane. Leave blank before creation. If populated, do not recreate the task.
 - `Plane Task Key`: readable key such as `HAIRL-1131`; informational only.
-- `Labels`: comma-separated Plane label names or UUIDs. If blank, creation infers one label from prefix: `[FE TASK]` -> `FE Task`, `[BE TASK]` -> `BE Task`, `[BUG]` -> `Bugs`, `[UX/UI TASK]` -> `UX/UI`.
+- `Labels`: comma-separated Plane label names or UUIDs. If blank, creation infers one label from prefix: `[FE TASK]` -> `FE Task`, `[BE TASK]` -> `BE Task`, `[BUG]` -> `Bugs`, `[UX/UI TASK]` -> `UX/UI`, `[QA TASK]` -> `QA`. Use `none` for no label.
 - `Priority`: default `Medium`; accepted values are `None`, `Low`, `Medium`, `High`, `Urgent`.
+- `State`: Plane state name or UUID. If blank, the `.env` default state is used.
+- `Assignees`: comma-separated member display names, full names, or UUIDs from the `members` cache. If blank, the `.env` `ASSIGNEE_ID` is used when set; use `none` for no assignee.
+- `Start Date` / `Due Date`: `YYYY-MM-DD`; start must not be after due. Blank leaves the date unset.
 - `Plane Module`: Plane module name or UUID. Leave blank if no matching Plane module is intended.
-- `Cycle`: Plane cycle name or UUID. If blank, the create script uses `active_cycle` from `plane-values.json`.
+- `Cycle`: Plane cycle name or UUID. If blank, the script uses the cycle active on the run date (computed from the cached cycle dates); use `none` for no cycle.
+- `Milestone`: Plane milestone title or UUID. Leave blank for no milestone. A work item belongs to at most one milestone; assigning another moves it.
 - `Parent Task`: user may provide a readable key such as `HAIRL-1131`; the create script resolves it to the internal UUID before creation. Internal UUID is also accepted.
 
 ## Workflow
@@ -86,7 +95,9 @@ python3 "../../skills-engineering/plane-api-commands/scripts/fetch-plane-values.
   --output "plane-values.json"
 ```
 
-The script prints added/removed/changed values and the active cycle. The cache contains no secrets.
+The script prints added/removed/changed values and the active cycle. The cache contains no secrets and no member emails.
+
+To create missing values before the refresh, add repeatable `--ensure-label "NAME[=#hex]"` or `--ensure-milestone "TITLE[=YYYY-MM-DD]"` (an existing milestone gets its target date aligned when a date is given). Combine with `--dry-run` to preview.
 
 ### 2. Create Plane work items
 
@@ -103,7 +114,7 @@ python3 "../../skills-engineering/plane-api-commands/scripts/create-plane-issues
 
 After user approval for live creation, rerun without `--dry-run`. The script writes internal UUIDs to `Plane Task ID` and readable keys to `Plane Task Key`.
 
-Dry-run output must be reviewed per task. It prints resolved labels, module, cycle, and parent identity for each task, so mixed parent/module files are visible before live creation.
+Dry-run output must be reviewed per task. It prints resolved state, priority, labels, assignees, dates, module, cycle, milestone, and parent identity for each task, so mixed parent/module files are visible before live creation.
 
 Creation enforcement order:
 
@@ -112,8 +123,10 @@ Creation enforcement order:
 3. Assign `Plane Module` through Plane's module work-item endpoint when present
 4. Assign `Parent Task` through the work-item update endpoint when present
 5. Assign `Cycle` through Plane's cycle work-item endpoint when present
+6. Assign `Milestone` through Plane's v2 milestone work-items endpoint when present
+7. Read the work item back and verify name, state, priority, type, assignees, labels, dates, parent, cycle, module, and milestone
 
-If any required assignment fails, the script exits with an error instead of reporting success; the task file will still contain the created issue UUID for recovery.
+If any required assignment fails or a field did not persist, the script exits with an error instead of reporting success; the task file will still contain the created issue UUID for recovery (fix with `update-plane-issues.py --fields`).
 
 ### 2A. Interrupted Or Partial Runs
 
@@ -162,8 +175,12 @@ cd "local-docs/project-automation/task-creation/plane-api" && \
 python3 "../../skills-engineering/plane-api-commands/scripts/update-plane-issues.py" \
   --file "/absolute/path/to/implementation-tasks-YYYY-MM-DD-001.md" \
   --env ".env" \
+  --values "plane-values.json" \
+  --fields "description" \
   --dry-run
 ```
+
+`--fields` takes a comma-separated list of `name`, `description`, `state`, `priority`, `type`, `assignees`, `labels`, `dates`, `parent`, `cycle`, `module`, `milestone`, or `all` (default `description`). Non-description fields are read back and verified after the update.
 
 Remove `--dry-run` only after confirming the planned UUID mappings.
 
@@ -200,4 +217,4 @@ Before live writes:
 4. For fresh creation, confirm all selected `Plane Task ID` fields are blank
 5. For partial recovery, use `--resume` or a targeted `--skip` / `--limit` range
 6. Run create/update scripts with `--dry-run`
-7. Confirm the per-task parent/module/cycle distribution before live writes
+7. Confirm the per-task parent/module/cycle/milestone distribution, assignees, and dates before live writes
