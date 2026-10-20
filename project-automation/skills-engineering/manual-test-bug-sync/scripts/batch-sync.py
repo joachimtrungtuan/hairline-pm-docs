@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Deterministic table engine for Hairline manual test batch files.
 
-Parses, validates, diffs, and merges batch files that follow
-`testing/templates/manual-batch-template.md`, writes bug IDs and statuses,
-maps Plane states to bug statuses, builds retest lists, and refreshes the
-Batch Summary and phase plan Progress Summary tables.
+Layout (testing/TEST-STRATEGY.md §2):
+  testing/manual/v<N>/phases/<phase>/batches/*.md                 scaffolds, never filled in
+  testing/manual/v<N>/phases/<phase>/results/run-<NN>-<date>/     one result copy per scaffold + summary.md
+
+Creates test runs from the scaffolds, then parses, validates, diffs, and merges
+tester copies into the run's result files, writes bug IDs and statuses, maps
+Plane states to bug statuses, builds retest lists, and refreshes the Batch
+Summary and run summary Progress Summary tables. Earlier runs are frozen.
 
 This script never talks to Plane or the network. Plane reads and writes are
 done by the plane-api-commands skill; this script only consumes their output.
@@ -68,7 +72,16 @@ BUG_KEY_RE = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
 BR_RE = re.compile(r"<br\s*/?>", re.I)
 CONTROL_ENTRY_RE = re.compile(r"^.+\(\d{4}-\d{2}-\d{2}\)$")
 URL_RE = re.compile(r"^https?://\S+$")
-VERSION_RE = re.compile(r"Phase\s*(?P<phase>\d+)\s*/\s*v?(?P<major>\d+)\.(?P<minor>\d+)", re.I)
+PLAN_PHASE_RE = re.compile(r"^v(?P<plan>\d+)\s*/\s*Phase\s*(?P<phase>\d+)$", re.I)
+BATCH_VERSION_RE = re.compile(r"^v?(?P<major>\d+)\.(?P<minor>\d+)$")
+# Copies made before 2026-10-20 carry one row, `Phase / plan version` (`Phase 1 / v1.0`): plan v2, batch version 1.0.
+LEGACY_VERSION_RE = re.compile(r"Phase\s*(?P<phase>\d+)\s*/\s*v?(?P<major>\d+)\.(?P<minor>\d+)", re.I)
+LEGACY_PLAN_VERSION = 2
+VERSION_FIELDS = {"Plan / phase", "Batch version", "Phase / plan version"}
+RUN_RE = re.compile(r"^run-(?P<n>\d{2,})-(?P<date>\d{4}-\d{2}-\d{2})$")
+RUN_SUMMARY = "summary.md"
+RUN_SUMMARY_TEMPLATE = "manual-run-summary-template.md"
+REL_LINK_RE = re.compile(r"\]\((?!https?:|mailto:|#|/)([^)\s]+)\)")
 
 # Plane state -> action. Group decides by default; names override the group.
 PLANE_GROUP_ACTION = {
@@ -108,6 +121,8 @@ def canon_br(text: str) -> str:
 
 
 def norm(text: str) -> str:
+    # A result copy sits one folder deeper than its scaffold, so relative links differ only in leading `../`.
+    text = re.sub(r"\]\((?:\.\.?/)+", "](", text)
     return re.sub(r"\s+", " ", canon_br(text.replace("\r", ""))).strip()
 
 
@@ -172,9 +187,9 @@ def issue(level: str, code: str, message: str, **extra) -> dict:
 # ----------------------------------------------------------------- parsing --
 
 class Batch:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, text: str | None = None):
         self.path = path
-        raw = path.read_text(encoding="utf-8")
+        raw = path.read_text(encoding="utf-8") if text is None else text
         self.lines = raw.split("\n")
         self.errors: list[dict] = []
         self.sections = self._sections()
@@ -268,10 +283,21 @@ class Batch:
 
     @property
     def version(self) -> dict | None:
-        m = VERSION_RE.search(self.control.get("Phase / plan version", ""))
-        if not m:
-            return None
-        return {k: int(v) for k, v in m.groupdict().items()}
+        pp = PLAN_PHASE_RE.match(plain(self.control.get("Plan / phase", "")))
+        bv = BATCH_VERSION_RE.match(plain(self.control.get("Batch version", "")))
+        if pp and bv:
+            return {"plan": int(pp["plan"]), "phase": int(pp["phase"]), "major": int(bv["major"]), "minor": int(bv["minor"])}
+        m = LEGACY_VERSION_RE.search(self.control.get("Phase / plan version", ""))
+        if m:
+            return {"plan": LEGACY_PLAN_VERSION, "phase": int(m["phase"]), "major": int(m["major"]),
+                    "minor": int(m["minor"]), "legacy": True}
+        return None
+
+    def version_fields(self) -> dict:
+        v = self.version
+        if not v:
+            return {"plan_phase": "", "batch_version": ""}
+        return {"plan_phase": f"v{v['plan']} / Phase {v['phase']}", "batch_version": f"{v['major']}.{v['minor']}"}
 
     def section_text(self, title: str) -> str:
         start, end = self.sections[title]
@@ -303,17 +329,60 @@ def load_hub(path: str) -> Batch:
     return b
 
 
+# ------------------------------------------------------------------ layout --
+
+def plan_number(d: Path) -> int | None:
+    m = re.fullmatch(r"v(\d+)", d.name)
+    return int(m.group(1)) if m else None
+
+
+def phase_dirs(root: Path, newest_only: bool = False) -> list[Path]:
+    """Phase folders `<root>/v<N>/phases/<phase>/`; newest_only keeps the newest plan version (older ones are frozen)."""
+    dirs = sorted(d for d in root.glob("v*/phases/*") if d.is_dir() and plan_number(d.parent.parent) is not None)
+    if newest_only and dirs:
+        newest = max(plan_number(d.parent.parent) for d in dirs)
+        dirs = [d for d in dirs if plan_number(d.parent.parent) == newest]
+    return dirs
+
+
+def runs_in(phase_dir: Path) -> list[Path]:
+    runs = [d for d in (phase_dir / "results").glob("run-*") if d.is_dir() and RUN_RE.match(d.name)]
+    return sorted(runs, key=lambda d: int(RUN_RE.match(d.name)["n"]))
+
+
+def run_files(run_dir: Path) -> list[Path]:
+    return sorted(p for p in run_dir.glob("*.md") if p.name != RUN_SUMMARY)
+
+
+def run_of(path: Path) -> Path | None:
+    """Run folder of a result file, or None when the file is not inside `results/run-*/`."""
+    d = path.resolve().parent
+    return d if RUN_RE.match(d.name) and d.parent.name == "results" else None
+
+
+def superseded(run_dir: Path) -> bool:
+    runs = runs_in(run_dir.parent.parent)
+    return bool(runs) and runs[-1].resolve() != run_dir.resolve()
+
+
+def writable_problem(path: Path, allow_frozen: bool = False) -> str | None:
+    """Writes go only to result files of the latest run: scaffolds are never filled, earlier runs are frozen."""
+    if path.resolve().parent.name == "batches":
+        return f"{path} is a scaffold in batches/; scaffolds are never filled. Write to the run's result copy (new-run creates it)"
+    run = run_of(path)
+    if run and superseded(run) and not allow_frozen:
+        return (f"{path} is in {run.name}, but a newer run exists and earlier runs are frozen. Write to the latest run "
+                "(pass --allow-frozen only on explicit user instruction)")
+    return None
+
+
+def guard_writable(path: Path, allow_frozen: bool = False):
+    problem = writable_problem(path, allow_frozen)
+    if problem:
+        raise SyncError(problem)
+
+
 # ---------------------------------------------------------------- find-hub --
-
-def phase_folder_major(path: Path) -> tuple[str, int] | None:
-    # .../phases/<phase-folder>/v<major>.0/batches/<file>.md
-    try:
-        vdir = path.parent.parent
-        m = re.fullmatch(r"v(\d+)\.\d+", vdir.name)
-        return (vdir.parent.name, int(m.group(1))) if m else None
-    except Exception:  # noqa: BLE001
-        return None
-
 
 def cmd_find_hub(args) -> dict:
     tester = Batch(Path(args.tester))
@@ -323,35 +392,47 @@ def cmd_find_hub(args) -> dict:
         out["status"] = "tester_control_unreadable"
         return out
     root = Path(args.root)
-    majors: dict[str, int] = {}
-    for vdir in root.glob("*/v*"):
-        m = re.fullmatch(r"v(\d+)\.\d+", vdir.name)
-        if m:
-            majors[vdir.parent.name] = max(majors.get(vdir.parent.name, 0), int(m.group(1)))
-    for p in sorted(root.glob("*/v*/batches/*.md")):
-        hub = Batch(p)
-        hv = hub.version
-        if hub.batch_id != tester.batch_id or not hv or hv["phase"] != tv["phase"]:
-            continue
-        folder = phase_folder_major(p)
-        out["matches"].append({
-            "path": str(p), "version": hv, "folder_major": folder[1] if folder else None,
-            "frozen": bool(folder and majors.get(folder[0], 0) > folder[1]),
-            "major_match": hv["major"] == tv["major"], "minor_match": hv["minor"] == tv["minor"],
-        })
-    exact = [m for m in out["matches"] if m["major_match"]]
-    if len(exact) > 1:
+    dirs = phase_dirs(root)
+    newest_plan = max((plan_number(d.parent.parent) for d in dirs), default=0)
+    for phase_dir in dirs:
+        runs = runs_in(phase_dir)
+        for run in runs:
+            for p in run_files(run):
+                hub = Batch(p)
+                hv = hub.version
+                if hub.batch_id != tester.batch_id or not hv or (hv["plan"], hv["phase"]) != (tv["plan"], tv["phase"]):
+                    continue
+                out["matches"].append({
+                    "path": str(p), "run": run.name, "version": hv, "latest_run": run == runs[-1],
+                    "frozen": plan_number(phase_dir.parent.parent) < newest_plan,
+                    "major_match": hv["major"] == tv["major"], "minor_match": hv["minor"] == tv["minor"],
+                })
+    if not out["matches"]:
+        out["hint"] = (f"No run holds batch {tester.batch_id} of v{tv['plan']} / Phase {tv['phase']}; "
+                       "create the run with new-run first")
+        return out
+    current = [m for m in out["matches"] if m["latest_run"]]
+    if len(current) > 1:
         out["status"] = "ambiguous"
-    elif len(exact) == 1:
-        m = exact[0]
-        out["hub"] = m["path"]
-        out["status"] = "frozen_version" if m["frozen"] else ("ok" if m["minor_match"] else "minor_version_mismatch")
-    elif out["matches"]:
+        return out
+    m = current[0] if current else out["matches"][-1]
+    out["hub"], out["run"] = m["path"], m["run"]
+    if m["frozen"]:
+        out["status"] = "frozen_version"
+    elif not m["latest_run"]:
+        out["status"] = "superseded_run"
+    elif not m["major_match"]:
         out["status"] = "major_version_mismatch"
+    else:
+        out["status"] = "ok" if m["minor_match"] else "minor_version_mismatch"
     return out
 
 
 # ----------------------------------------------------------------- compare --
+
+def version_label(v: dict) -> str:
+    return f"v{v['plan']} / Phase {v['phase']}, batch {v['major']}.{v['minor']}"
+
 
 def control_entries(value: str) -> list[str]:
     v = value.strip()
@@ -405,20 +486,23 @@ def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolution
     if hub.batch_id != tester.batch_id:
         res["file_errors"].append(issue("error", "batch_mismatch", f"Batch `{tester.batch_id}` does not match hub `{hub.batch_id}`"))
     hv, tv = hub.version, tester.version
-    stale_copy = bool(hv and tv and hv["phase"] == tv["phase"] and hv["major"] == tv["major"] and tv["minor"] < hv["minor"])
+    same_line = bool(hv and tv and (hv["plan"], hv["phase"], hv["major"]) == (tv["plan"], tv["phase"], tv["major"]))
+    # A legacy-format copy predates the 2026-10-20 instructions, so it is stale against a current hub as well.
+    stale_copy = same_line and (tv["minor"] < hv["minor"] or (tv.get("legacy", False) and not hv.get("legacy", False)))
     if not hv or not tv:
-        res["file_errors"].append(issue("error", "version_unreadable", "`Phase / plan version` unreadable in hub or tester file"))
-    elif hv["phase"] != tv["phase"] or hv["major"] != tv["major"]:
-        res["file_errors"].append(issue("error", "version_mismatch", f"Tester file is Phase {tv['phase']} v{tv['major']}.{tv['minor']}, hub is Phase {hv['phase']} v{hv['major']}.{hv['minor']}"))
+        res["file_errors"].append(issue("error", "version_unreadable",
+                                        "Batch Control `Plan / phase` and `Batch version` unreadable in hub or tester file"))
+    elif (hv["plan"], hv["phase"], hv["major"]) != (tv["plan"], tv["phase"], tv["major"]):
+        res["file_errors"].append(issue("error", "version_mismatch", f"Tester file is {version_label(tv)}, hub is {version_label(hv)}"))
     elif hv["minor"] != tv["minor"]:
         lvl = "warning" if allow_minor else "error"
         target = res["warnings"] if allow_minor else res["file_errors"]
-        target.append(issue(lvl, "minor_version_mismatch", f"Tester file is v{tv['major']}.{tv['minor']}, hub is v{hv['major']}.{hv['minor']}; case revisions are still checked per case"))
+        target.append(issue(lvl, "minor_version_mismatch", f"Tester file is batch {tv['major']}.{tv['minor']}, hub is batch {hv['major']}.{hv['minor']}; case revisions are still checked per case"))
 
     # Non-result sections: report edits as tester proposals, never merged. A copy issued before the
     # hub's last minor bump differs because the hub changed, so those differences are not proposals.
-    stale_note = (f"stale copy, plan version v{tv['major']}.{tv['minor']} < hub v{hv['major']}.{hv['minor']}; "
-                  "the difference is most likely the hub's own later edit, not a tester proposal") if stale_copy else ""
+    stale_note = (f"stale copy, {version_label(tv)}{' (old Batch Control format)' if tv.get('legacy') else ''} is older than "
+                  f"hub {version_label(hv)}; the difference is most likely the hub's own later edit, not a tester proposal") if stale_copy else ""
     for title in hub.sections:
         if title in SKIP_SECTION_COMPARE:
             continue
@@ -431,13 +515,16 @@ def compare(hub: Batch, tester: Batch, today: str, allow_minor: bool, resolution
                 res["warnings"].append(issue("warning", "section_edited", f"Tester edited section `{title}`; treat as a proposal (not merged)", section=title))
     for field, value in tester.control.items():
         hub_value = hub.control.get(field)
+        if field in VERSION_FIELDS:
+            continue  # compared above as a version
         if hub_value is None:
             res["warnings"].append(issue("warning", "control_field_added", f"Tester added Batch Control field `{field}` (not merged)"))
         elif field in CONTROL_TESTER_FIELDS:
             continue
         elif norm(value) != norm(hub_value):
-            if stale_copy and field == "Phase / plan version":
-                continue  # already reported as minor_version_mismatch
+            if stale_copy:
+                res["warnings"].append(issue("warning", "control_field_stale", f"Batch Control `{field}` differs ({stale_note}; not merged)"))
+                continue
             res["warnings"].append(issue("warning", "control_field_edited", f"Tester changed Batch Control `{field}` (not merged; proposal)", hub=hub_value, tester=value))
     tester_ran = any(normalize_enum(c["cells"].get("Result", ""), RESULTS, "Not tested")[0] in EXECUTED_RESULTS for c in tester.cases)
     for field in CONTROL_TESTER_FIELDS:
@@ -695,11 +782,12 @@ def write_batch_summary(batch: Batch, s: dict) -> dict:
     return {"from": old, "to": new}
 
 
-def update_plan(plan_path: Path, summaries: dict[str, dict]) -> tuple[list[str], dict]:
-    lines = plan_path.read_text(encoding="utf-8").split("\n")
+def update_progress(lines: list[str], label: str, summaries: dict[str, dict]) -> tuple[list[str], dict]:
+    """Refresh the run summary Progress Summary table from per-batch summaries."""
+    lines = list(lines)
     head = next((i for i, l in enumerate(lines) if l.startswith("## ") and "Progress Summary" in l), None)
     if head is None:
-        raise SyncError(f"{plan_path}: Progress Summary section not found")
+        raise SyncError(f"{label}: Progress Summary section not found")
     rows, started = [], False
     for i in range(head + 1, len(lines)):
         if lines[i].startswith("## "):
@@ -710,7 +798,7 @@ def update_plan(plan_path: Path, summaries: dict[str, dict]) -> tuple[list[str],
         elif started:
             break
     if len(rows) < 2 or [plain(c) for c in split_row(lines[rows[0]])] != PROGRESS_COLUMNS:
-        raise SyncError(f"{plan_path}: Progress Summary header must be {PROGRESS_COLUMNS}")
+        raise SyncError(f"{label}: Progress Summary header must be {PROGRESS_COLUMNS}")
     report = {"updated": [], "added": [], "unmatched_rows": []}
     total_row, seen = None, set()
     for i in rows[2:]:
@@ -745,18 +833,25 @@ def update_plan(plan_path: Path, summaries: dict[str, dict]) -> tuple[list[str],
 
 
 def batches_for(args) -> list[Path]:
+    """Result files in scope: one run (--run), the latest run of every phase of the newest plan version (--root), or files."""
     paths: list[Path] = []
-    if getattr(args, "plan", None):
-        paths += sorted((Path(args.plan).parent / "batches").glob("*.md"))
-    if getattr(args, "root", None):
-        paths += sorted(Path(args.root).glob("*/v*/batches/*.md"))
+    run, root = getattr(args, "run", None), getattr(args, "root", None)
+    if run:
+        if not Path(run).is_dir():
+            raise SyncError(f"Run folder {run} not found")
+        paths += run_files(Path(run))
+    if root:
+        for phase_dir in phase_dirs(Path(root), newest_only=True):
+            runs = runs_in(phase_dir)
+            if runs:
+                paths += run_files(runs[-1])
     paths += [Path(p) for p in (getattr(args, "batch", None) or [])]
     if not paths:
-        if getattr(args, "plan", None) or getattr(args, "root", None):
-            where = Path(args.plan).parent / "batches" if getattr(args, "plan", None) else Path(args.root) / "*/v*/batches"
-            raise SyncError(f"No batch files found in {where}. The plan has no written batches yet, so there is nothing "
-                            "to summarize or scan; its Progress Summary was left unchanged")
-        raise SyncError("Give --batch FILE, --plan plan.md, or --root phases-dir")
+        if run or root:
+            where = run or f"{root}/v<N>/phases/*/results/run-*"
+            raise SyncError(f"No result files found in {where}. Create the run with new-run first; "
+                            "nothing was summarized or scanned and no summary was changed")
+        raise SyncError("Give --batch FILE, --run RUN_DIR, or --root testing/manual")
     return paths
 
 
@@ -796,6 +891,7 @@ def cmd_diff(args) -> dict:
 
 
 def cmd_merge(args) -> dict:
+    guard_writable(Path(args.hub), args.allow_frozen)
     hub, tester = load_hub(args.hub), Batch(Path(args.tester))
     r = compare(hub, tester, today_str(args.today), args.allow_minor_mismatch, load_resolutions(args.resolve))
     if r["file_errors"]:
@@ -825,7 +921,8 @@ def cmd_bugs(args) -> dict:
     out = {"to_log": [], "fail_without_bug_flag": [], "fail_on_closed_bug": [], "notes_to_review": [], "batches": []}
     for p in batches_for(args):
         b = Batch(p)
-        ctx = {"batch_file": str(p), "batch": b.batch_id, "phase_version": b.control.get("Phase / plan version", ""),
+        run = run_of(p)
+        ctx = {"batch_file": str(p), "batch": b.batch_id, **b.version_fields(), "run": run.name if run else "",
                "module": b.control.get("Module", ""), "frs": b.control.get("FRs", ""),
                "platform": b.control.get("Platform", ""), "build_tested": b.control.get("Build tested", ""),
                "prd_sources": b.control.get("PRD sources", "")}
@@ -854,6 +951,7 @@ def check_bug_value(bug_id: str):
 
 
 def cmd_set_bug(args) -> dict:
+    guard_writable(Path(args.batch[0]), args.allow_frozen)
     hub = load_hub(args.batch[0])
     if hub.errors:
         return {"applied": False, "errors": hub.errors}
@@ -928,6 +1026,10 @@ def cmd_apply_states(args) -> dict:
     hold = {h.lower() for h in args.hold_state or []}
     out = {"set_fixed_retest": [], "ask_user": [], "no_change": [], "applied": []}
     for p in batches_for(args):
+        problem = writable_problem(p, args.allow_frozen)
+        if problem:
+            out["ask_user"].append({"batch_file": str(p), "reason": "not_writable", "message": problem})
+            continue
         b = load_hub(str(p))
         if b.errors:
             out["ask_user"].append({"batch_file": str(p), "reason": "batch_has_errors", "errors": b.errors})
@@ -964,8 +1066,9 @@ def cmd_retest_list(args) -> dict:
     items, reopen = [], []
     for p in batches_for(args):
         b = Batch(p)
+        run = run_of(p)
         for c in b.cases:
-            row = {"phase_version": b.control.get("Phase / plan version", ""), "batch": b.batch_id,
+            row = {**b.version_fields(), "run": run.name if run else "", "batch": b.batch_id,
                    "batch_file": str(p), "case": c["id"], "title": c["cells"]["Title"],
                    "bug_id": c["cells"]["Bug ID"], "last_tested": c["cells"]["Last tested"]}
             if c["cells"]["Bug status"].strip() == "Fixed - retest":
@@ -977,7 +1080,9 @@ def cmd_retest_list(args) -> dict:
 
 
 def cmd_summary(args) -> dict:
-    out = {"batches": [], "plan": None, "applied": bool(args.apply)}
+    out = {"batches": [], "run_summary": None, "applied": bool(args.apply)}
+    if args.apply and args.run:
+        guard_writable(Path(args.run) / RUN_SUMMARY, args.allow_frozen)
     summaries = {}
     for p in batches_for(args):
         b = load_hub(str(p))
@@ -987,18 +1092,144 @@ def cmd_summary(args) -> dict:
         s = compute_summary(b)
         summaries[b.batch_id] = s
         change = write_batch_summary(b, s)
-        if args.apply and change["from"] != change["to"]:
-            b.write()
         entry = {"batch_file": str(p), "batch": b.batch_id, "summary": s, "changed": change["from"] != change["to"]}
+        if args.apply and change["from"] != change["to"]:
+            problem = writable_problem(p, args.allow_frozen)
+            if problem:
+                entry["not_written"] = problem
+            else:
+                b.write()
         flagged = [c["id"] for c in b.cases if fail_on_closed(c["cells"])]
         if flagged:
             entry["fail_on_closed_bug"] = flagged  # counted as open bugs; set Reopened with set-bug
         out["batches"].append(entry)
-    if args.plan:
-        lines, report = update_plan(Path(args.plan), summaries)
+    if args.run:
+        path = Path(args.run) / RUN_SUMMARY
+        if not path.is_file():
+            raise SyncError(f"{path} not found; new-run creates it")
+        lines, report = update_progress(path.read_text(encoding="utf-8").split("\n"), str(path), summaries)
         if args.apply:
-            atomic_write(Path(args.plan), "\n".join(lines))
-        out["plan"] = {"path": args.plan, **report}
+            atomic_write(path, "\n".join(lines))
+        out["run_summary"] = {"path": str(path), **report}
+    return out
+
+
+# ------------------------------------------------------------------ new-run --
+
+def find_template(phase_dir: Path, override: str | None) -> Path:
+    if override:
+        return Path(override)
+    for parent in phase_dir.resolve().parents:
+        cand = parent / "templates" / RUN_SUMMARY_TEMPLATE
+        if cand.is_file():
+            return cand
+    raise SyncError(f"{RUN_SUMMARY_TEMPLATE} not found in a templates/ folder above {phase_dir}; pass --template")
+
+
+def relink(text: str, src_dir: Path, dst_dir: Path) -> str:
+    """Rewrite relative links so a copy one folder deeper than its scaffold still resolves."""
+    def fix(m):
+        path, sep, anchor = m.group(1).partition("#")
+        target = os.path.normpath(os.path.join(src_dir, path))
+        return "](" + os.path.relpath(target, dst_dir) + sep + anchor + ")"
+    return REL_LINK_RE.sub(fix, text)
+
+
+def carry_forward(copy: Batch, previous: Batch | None) -> list[dict]:
+    """Bug ID and Bug status continue from the previous run so the bug lifecycle continues; results start empty."""
+    carried = []
+    for case in copy.cases if previous else []:
+        old = previous.index.get(case["base"])
+        if not old:
+            continue
+        bid, bs = old["cells"]["Bug ID"].strip(), old["cells"]["Bug status"].strip() or "—"
+        if not bid and bs == "—":
+            continue
+        apply_case_changes(copy, {"base": case["base"], "changes": [{"column": "Bug ID", "to": bid}, {"column": "Bug status", "to": bs}]})
+        carried.append({"case": case["id"], "bug_id": bid, "bug_status": bs})
+    return carried
+
+
+def build_run_summary(template: str, title: str, control: dict, batch_rows: list[str], note: str) -> list[str]:
+    out, section = [], ""
+    for line in template.split("\n"):
+        if line.startswith("# "):
+            out.append(title)
+            continue
+        if line.startswith(">") and not section:
+            continue  # template instructions
+        if line.startswith("## "):
+            section = line[3:].strip()
+        cells = split_row(line) if line.lstrip().startswith("|") else None
+        if cells and section == "Run Control" and plain(cells[0]) in control:
+            out.append(render_row([cells[0], control[plain(cells[0])]]))
+        elif cells and cells[0].startswith("{"):
+            if section == "Batches in This Run":
+                out += batch_rows  # Progress Summary rows are added by update_progress
+        elif section == "Run Notes" and line.startswith("- {"):
+            out.append(f"- {note}")
+        else:
+            out.append(line)
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).split("\n")
+
+
+def cmd_new_run(args) -> dict:
+    phase = Path(args.phase)
+    scaffolds = sorted((phase / "batches").glob("*.md"))
+    if not scaffolds:
+        raise SyncError(f"No scaffolds in {phase / 'batches'}; nothing to run")
+    date = args.date or today_str(args.today)
+    if not valid_date(date):
+        raise SyncError(f"--date `{date}` is not a valid YYYY-MM-DD date")
+    runs = runs_in(phase)
+    prev = runs[-1] if runs else None
+    if prev and RUN_RE.match(prev.name)["date"] > date:
+        raise SyncError(f"{date} is before the previous run {prev.name}")
+    run = phase / "results" / f"run-{(int(RUN_RE.match(prev.name)['n']) + 1 if prev else 1):02d}-{date}"
+    previous = {}
+    for p in run_files(prev) if prev else []:
+        b = Batch(p)
+        previous[b.batch_id] = b
+
+    copies, errors, summaries, versions = [], [], {}, set()
+    for s in scaffolds:
+        b = load_hub(str(s))
+        if b.errors or not b.version:
+            errors.append({"scaffold": str(s), "errors": b.errors or [issue("error", "version_unreadable", "Plan / phase or Batch version unreadable")]})
+            continue
+        copy = Batch(run / s.name, relink("\n".join(b.lines), s.parent, run))
+        carried = carry_forward(copy, previous.get(copy.batch_id))
+        summaries[copy.batch_id] = compute_summary(copy)
+        write_batch_summary(copy, summaries[copy.batch_id])
+        versions.add(copy.version_fields()["plan_phase"])
+        copies.append({"batch": copy.batch_id, "file": str(copy.path), "batch_version": copy.version_fields()["batch_version"],
+                       "carried": carried, "obj": copy})
+    if errors:
+        return {"applied": False, "run": str(run), "errors": errors}
+    if len(versions) != 1:
+        raise SyncError(f"Scaffolds in {phase / 'batches'} disagree on Plan / phase: {sorted(versions)}")
+    plan_phase = versions.pop()
+
+    template = find_template(phase, args.template)
+    control = {"Plan / phase": plan_phase, "Run": run.name, "Run type": args.type.capitalize(), "Started": date,
+               "Previous run": prev.name if prev else "—"}
+    rows = [render_row([c["batch"], f"[{Path(c['file']).stem}]({Path(c['file']).name})", c["batch_version"]]) for c in copies]
+    note = ("Retest run: run only the cases on the retest list of the previous run." if args.type == "retest"
+            else "Full run: run every case in table order.")
+    title = f"# {plan_phase.split(' / ', 1)[1]} Test Run {run.name.split('-')[1]} Summary — {date}"
+    lines = build_run_summary(template.read_text(encoding="utf-8"), title, control, rows, note)
+    lines, report = update_progress(lines, str(run / RUN_SUMMARY), summaries)
+
+    out = {"run": str(run), "previous_run": str(prev) if prev else None, "plan_phase": plan_phase, "run_type": args.type,
+           "files": [{k: v for k, v in c.items() if k != "obj"} for c in copies], "totals": report["totals"], "applied": False}
+    if args.apply:
+        if run.exists():
+            raise SyncError(f"{run} already exists")
+        run.mkdir(parents=True)
+        for c in copies:
+            atomic_write(c["obj"].path, "\n".join(c["obj"].lines))
+        atomic_write(run / RUN_SUMMARY, "\n".join(lines))
+        out["applied"] = True
     return out
 
 
@@ -1038,9 +1269,9 @@ def to_markdown(cmd: str, data: dict) -> str:
         out.append("\n".join(table))
         return "\n\n".join(out) + "\n"
     if cmd == "retest-list":
-        out.append(f"**Cases awaiting retest:** {data['count']}\n\n| Phase / version | Batch | Case | Title | Bug ID | Last tested |\n|---|---|---|---|---|---|")
+        out.append(f"**Cases awaiting retest:** {data['count']}\n\n| Plan / phase | Run | Batch | Case | Title | Bug ID | Last tested |\n|---|---|---|---|---|---|---|")
         for i in data["retest"]:
-            out.append(f"| {md_cell(i['phase_version'])} | {i['batch']} | {i['case']} | {md_cell(i['title'])} | {md_cell(i['bug_id'])} | {md_cell(i['last_tested'])} |")
+            out.append(f"| {md_cell(i['plan_phase'])} | {md_cell(i['run'])} | {i['batch']} | {i['case']} | {md_cell(i['title'])} | {md_cell(i['bug_id'])} | {md_cell(i['last_tested'])} |")
         if data.get("needs_reopen"):
             out.append("\n**Fail on a Closed bug (reopen before retest):** "
                        + ", ".join(f"{i['case']} ({md_cell(i['bug_id'])})" for i in data["needs_reopen"]))
@@ -1060,18 +1291,29 @@ def build_parser() -> argparse.ArgumentParser:
             sp.add_argument("--format", choices=["json", "md"], default="json")
 
     def pair(sp):
-        sp.add_argument("--hub", required=True, help="Hub batch file under testing/manual/phases")
-        sp.add_argument("--tester", required=True, help="Tester-returned batch file (any path)")
-        sp.add_argument("--allow-minor-mismatch", action="store_true", help="Accept a minor plan-version difference (user-confirmed)")
+        sp.add_argument("--hub", required=True, help="Result file in the latest run: testing/manual/v<N>/phases/<phase>/results/run-<NN>-<date>/")
+        sp.add_argument("--tester", required=True, help="Tester-returned copy (any path)")
+        sp.add_argument("--allow-minor-mismatch", action="store_true", help="Accept a minor batch-version difference (user-confirmed)")
 
     def scope(sp):
-        sp.add_argument("--batch", action="append", help="Batch file (repeatable)")
-        sp.add_argument("--plan", help="Phase plan.md; uses sibling batches/*.md")
-        sp.add_argument("--root", help="testing/manual/phases (all phases and versions)")
+        sp.add_argument("--batch", action="append", help="Result file (repeatable)")
+        sp.add_argument("--run", help="Run folder results/run-<NN>-<date>/: its result files and summary.md")
+        sp.add_argument("--root", help="testing/manual: latest run of every phase in the newest plan version")
 
-    sp = sub.add_parser("find-hub", help="Locate the hub batch file for a tester copy")
+    def frozen(sp):
+        sp.add_argument("--allow-frozen", action="store_true", help="Write to an earlier (frozen) run; explicit user instruction only")
+
+    sp = sub.add_parser("new-run", help="Create a test run: result copies of every scaffold plus summary.md (dry-run unless --apply)")
+    sp.add_argument("--phase", required=True, help="Phase folder testing/manual/v<N>/phases/<phase>")
+    sp.add_argument("--date", help="Run start date YYYY-MM-DD (default today)")
+    sp.add_argument("--type", choices=["full", "retest"], default="full")
+    sp.add_argument("--template", help="Run summary template (default: templates/manual-run-summary-template.md above the phase)")
+    sp.add_argument("--apply", action="store_true")
+    common(sp)
+
+    sp = sub.add_parser("find-hub", help="Locate the result file (hub) for a tester copy")
     sp.add_argument("--tester", required=True)
-    sp.add_argument("--root", required=True, help="testing/manual/phases")
+    sp.add_argument("--root", required=True, help="testing/manual (plan version folders v<N>)")
     common(sp)
 
     sp = sub.add_parser("validate", help="Validate a tester copy against its hub file")
@@ -1085,6 +1327,7 @@ def build_parser() -> argparse.ArgumentParser:
     pair(sp); common(sp, fmt=True)
     sp.add_argument("--resolve", action="append", help="CASE=tester|hub|reopen for a reported conflict")
     sp.add_argument("--partial", action="store_true", help="Merge clean cases; skip rejected and conflicted ones")
+    frozen(sp)
     sp.add_argument("--apply", action="store_true")
     sp.add_argument("--expect-sha", help="hub_sha256 from the diff the user confirmed (required with --apply)")
 
@@ -1098,12 +1341,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--bug-id")
     sp.add_argument("--updates", help="JSON list of {case, status, bug_id}")
     sp.add_argument("--force", action="store_true", help="Allow a non-standard transition (explicit user instruction only)")
+    frozen(sp)
     sp.add_argument("--apply", action="store_true")
     sp.add_argument("--expect-sha")
     common(sp)
 
     sp = sub.add_parser("apply-states", help="Map Plane states to bug statuses (dry-run unless --apply)")
-    scope(sp); common(sp)
+    scope(sp); common(sp); frozen(sp)
     sp.add_argument("--states", required=True, help='JSON {"HAIRL-1234": "Finished"} or {"HAIRL-1234": {"state": ..., "group": ...}}')
     sp.add_argument("--values", help="plane-values.json to resolve state groups")
     sp.add_argument("--hold-state", action="append", help="Extra Plane state name meaning 'fixed but not deployed'")
@@ -1112,14 +1356,14 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("retest-list", help="List cases with Bug status `Fixed - retest`")
     scope(sp); common(sp, fmt=True)
 
-    sp = sub.add_parser("summary", help="Recompute Batch Summary and plan Progress Summary (dry-run unless --apply)")
-    scope(sp); common(sp)
+    sp = sub.add_parser("summary", help="Recompute Batch Summary and the run summary Progress Summary (dry-run unless --apply)")
+    scope(sp); common(sp); frozen(sp)
     sp.add_argument("--apply", action="store_true")
     return p
 
 
 COMMANDS = {
-    "find-hub": cmd_find_hub, "validate": cmd_validate, "diff": cmd_diff, "merge": cmd_merge,
+    "new-run": cmd_new_run, "find-hub": cmd_find_hub, "validate": cmd_validate, "diff": cmd_diff, "merge": cmd_merge,
     "bugs": cmd_bugs, "set-bug": cmd_set_bug, "apply-states": cmd_apply_states,
     "retest-list": cmd_retest_list, "summary": cmd_summary,
 }

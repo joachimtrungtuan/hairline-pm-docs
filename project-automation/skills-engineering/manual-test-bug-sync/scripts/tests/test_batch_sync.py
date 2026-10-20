@@ -32,11 +32,13 @@ def case(cid="PR01-FR002-01 r1", **cells) -> dict:
     return row
 
 
-def batch_text(rows, tester="{Name}", build="{Version or date}", version="Phase 1 / v1.0", overview="Owner invites staff.",
-               raw_rows: list[str] | None = None) -> str:
+def batch_text(rows, tester="{Name}", build="{Version or date}", plan_phase="v2 / Phase 1", batch_version="1.0",
+               legacy: str | None = None, overview="Owner invites staff.", raw_rows: list[str] | None = None) -> str:
+    version_rows = [f"| Phase / plan version | {legacy} |"] if legacy else [
+        f"| Plan / phase | {plan_phase} |", f"| Batch version | {batch_version} |"]
     lines = [
         "# B01 — PR-01 Team", "", "## Batch Control", "", "| Field | Value |", "|---|---|", "| Batch | B01 |",
-        f"| Phase / plan version | {version} |", "| Module | PR-01 |", "| FRs | FR-002 |", "| PRD sources | x |",
+        *version_rows, "| Module | PR-01 |", "| FRs | FR-002 |", f"| PRD sources | {PRD_LINK} |",
         "| Platform | Provider dashboard |", f"| Tester | {tester} |", f"| Build tested | {build} |", "",
         "## Flow Overview", "", overview, "", "## Test Cases", "",
         "| " + " | ".join(COLS) + " |", "|" + "---|" * len(COLS),
@@ -49,14 +51,57 @@ def batch_text(rows, tester="{Name}", build="{Version or date}", version="Phase 
     return "\n".join(lines)
 
 
-PLAN = """# Phase 1 plan
+# Scaffold depth: batches/ is six folders below local-docs/; a result copy in results/run-*/ is seven.
+PRD_LINK = "[FR-002 PRD](../../../../../../project-requirements/fr002/prd.md#flows)"
 
-## 5. Progress Summary
+SUMMARY = """# Phase 1 Test Run 01 Summary — 2026-10-18
+
+## Run Control
+
+| Field | Value |
+|---|---|
+| Plan / phase | v2 / Phase 1 |
+| Run | run-01-2026-10-18 |
+
+## Progress Summary
 
 | Batch | Total | Pass | Fail | Blocked | Not tested | Open bugs | Last tested |
 |---|---|---|---|---|---|---|---|
 | B01 | 0 | 0 | 0 | 0 | 0 | 0 | — |
 | **Total** | | | | | | | |
+"""
+
+TEMPLATE = """# {Phase N} Test Run {NN} Summary — {YYYY-MM-DD}
+
+> **Template.** Copied by new-run.
+
+## Run Control
+
+| Field | Value |
+|---|---|
+| Plan / phase | {v2 / Phase 1} |
+| Run | {run-01-2026-10-20} |
+| Run type | {Full / Retest} |
+| Started | {YYYY-MM-DD} |
+| Previous run | {run-NN-YYYY-MM-DD or —} |
+| Test guide | [test-guide.md](../../test-guide.md) |
+
+## Batches in This Run
+
+| Batch | Result file | Batch version |
+|---|---|---|
+| {B01} | [{B01-pr01-slug}]({B01-pr01-slug}.md) | {1.0} |
+
+## Progress Summary
+
+| Batch | Total | Pass | Fail | Blocked | Not tested | Open bugs | Last tested |
+|---|---|---|---|---|---|---|---|
+| {B01} | {n} | 0 | 0 | 0 | {n} | 0 | — |
+| **Total** | **{n}** | **0** | **0** | **0** | **{n}** | **0** | **—** |
+
+## Run Notes
+
+- {Build, environment, or scope notes}
 """
 
 
@@ -71,13 +116,19 @@ def run(*argv) -> tuple[int, dict]:
 class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.root = Path(self.tmp.name)
-        self.vdir = self.root / "phases" / "phase-1-x" / "v1.0"
-        (self.vdir / "batches").mkdir(parents=True)
-        self.plan = self.vdir / "plan.md"
-        self.plan.write_text(PLAN, encoding="utf-8")
-        self.hub = self.vdir / "batches" / "B01-pr01-team.md"
-        self.tester = self.root / "returned.md"
+        self.root = Path(self.tmp.name) / "testing"
+        self.manual = self.root / "manual"
+        self.phase = self.manual / "v2" / "phases" / "phase-1-x"
+        (self.phase / "batches").mkdir(parents=True)
+        (self.root / "templates").mkdir()
+        (self.root / "templates" / "manual-run-summary-template.md").write_text(TEMPLATE, encoding="utf-8")
+        self.rundir = self.phase / "results" / "run-01-2026-10-18"
+        self.rundir.mkdir(parents=True)
+        self.summary = self.rundir / "summary.md"
+        self.summary.write_text(SUMMARY, encoding="utf-8")
+        self.hub = self.rundir / "B01-pr01-team.md"
+        self.scaffold = self.phase / "batches" / "B01-pr01-team.md"
+        self.tester = Path(self.tmp.name) / "returned.md"
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -123,17 +174,17 @@ class FailOnClosedBug(Base):
 
     def test_hub_fail_on_closed_counts_open_and_is_listed(self):
         self.write([dict(self.closed, Result="Fail")])
-        _, s = run("summary", "--plan", self.plan)
+        _, s = run("summary", "--run", self.rundir)
         self.assertEqual(s["batches"][0]["summary"]["Open bugs"], 1)
         self.assertEqual(s["batches"][0]["fail_on_closed_bug"], ["PR01-FR002-01 r1"])
-        _, b = run("bugs", "--plan", self.plan)
+        _, b = run("bugs", "--run", self.rundir)
         self.assertEqual([r["case"] for r in b["fail_on_closed_bug"]], ["PR01-FR002-01 r1"])
-        _, r = run("retest-list", "--plan", self.plan)
+        _, r = run("retest-list", "--run", self.rundir)
         self.assertEqual((r["count"], len(r["needs_reopen"])), (0, 1))
 
     def test_fixed_retest_counts_as_open(self):
         self.write([dict(self.closed, Result="Fail", **{"Bug status": "Fixed - retest"})])
-        _, s = run("summary", "--plan", self.plan)
+        _, s = run("summary", "--run", self.rundir)
         self.assertEqual(s["batches"][0]["summary"]["Open bugs"], 1)
 
     def test_open_bug_case_passed_warns_even_when_tester_keeps_status(self):
@@ -215,8 +266,8 @@ class StaleCopies(Base):
         self.assertIn("r1 < hub r2", msg)
 
     def test_older_minor_version_sections_are_stale(self):
-        self.write([case()], [case()], hub_kw={"version": "Phase 1 / v1.1", "overview": "Owner invites staff (edited)."},
-                   tester_kw={"version": "Phase 1 / v1.0"})
+        self.write([case()], [case()], hub_kw={"batch_version": "1.1", "overview": "Owner invites staff (edited)."},
+                   tester_kw={"batch_version": "1.0"})
         _, d = self.pair("diff", "--allow-minor-mismatch")
         codes = self.codes(d["warnings"])
         self.assertIn("section_stale", codes)
@@ -225,11 +276,117 @@ class StaleCopies(Base):
 
 
 class Summary(Base):
-    def test_plan_without_batches_gives_clear_message(self):
-        code, err = run("summary", "--plan", self.plan)
+    def test_run_without_result_files_gives_clear_message(self):
+        code, err = run("summary", "--run", self.rundir)
         self.assertEqual(code, 2)
-        self.assertIn("No batch files found", err["error"])
-        self.assertEqual(self.plan.read_text(encoding="utf-8"), PLAN)
+        self.assertIn("No result files found", err["error"])
+        self.assertEqual(self.summary.read_text(encoding="utf-8"), SUMMARY)
+
+    def test_summary_refreshes_run_summary(self):
+        self.write([case(Result="Pass", **{"Last tested": "2026-10-18"})])
+        code, s = run("summary", "--run", self.rundir, "--apply")
+        self.assertEqual(code, 0, s)
+        self.assertEqual(s["run_summary"]["totals"]["Pass"], 1)
+        self.assertIn("| **Total** | **1** | **1** |", self.summary.read_text(encoding="utf-8"))
+
+
+class NewRun(Base):
+    def setUp(self):
+        super().setUp()
+        self.summary.unlink()
+        self.rundir.rmdir()
+        self.scaffold.write_text(batch_text([case()]), encoding="utf-8")
+
+    def new_run(self, date, *extra):
+        return run("new-run", "--phase", self.phase, "--date", date, *extra)
+
+    def test_dry_run_writes_nothing(self):
+        code, d = self.new_run("2026-10-20")
+        self.assertEqual(code, 0, d)
+        self.assertFalse(d["applied"])
+        self.assertEqual(list((self.phase / "results").iterdir()), [])
+
+    def test_creates_result_copies_and_summary(self):
+        code, d = self.new_run("2026-10-20", "--apply")
+        self.assertEqual(code, 0, d)
+        run_dir = self.phase / "results" / "run-01-2026-10-20"
+        copy = (run_dir / self.scaffold.name).read_text(encoding="utf-8")
+        self.assertIn("](../../../../../../../project-requirements/fr002/prd.md#flows)", copy)
+        summary = (run_dir / "summary.md").read_text(encoding="utf-8")
+        self.assertIn("# Phase 1 Test Run 01 Summary — 2026-10-20", summary)
+        self.assertIn("| Run | run-01-2026-10-20 |", summary)
+        self.assertIn("| Previous run | — |", summary)
+        self.assertIn("| B01 | [B01-pr01-team](B01-pr01-team.md) | 1.0 |", summary)
+        self.assertIn("| B01 | 1 | 0 | 0 | 0 | 1 | 0 | — |", summary)
+        self.assertNotIn("{", summary)
+        self.assertEqual(self.scaffold.read_text(encoding="utf-8"), batch_text([case()]))
+
+    def test_next_run_carries_bugs_forward_and_freezes_earlier_run(self):
+        self.new_run("2026-10-20", "--apply")
+        first = self.phase / "results" / "run-01-2026-10-20" / self.scaffold.name
+        logged = case(Result="Fail", **{"Bug ID": "HAIRL-1600", "Bug status": "Logged", "Last tested": "2026-10-20",
+                                        "Actual result / data": "Invite not sent"})
+        first.write_text(batch_text([logged]), encoding="utf-8")
+        code, d = self.new_run("2026-10-25", "--type", "retest", "--apply")
+        self.assertEqual(code, 0, d)
+        self.assertEqual(d["files"][0]["carried"], [{"case": "PR01-FR002-01 r1", "bug_id": "HAIRL-1600", "bug_status": "Logged"}])
+        second = bs.Batch(self.phase / "results" / "run-02-2026-10-25" / self.scaffold.name)
+        cells = second.index["PR01-FR002-01"]["cells"]
+        self.assertEqual((cells["Bug ID"], cells["Bug status"], cells["Result"]), ("HAIRL-1600", "Logged", "Not tested"))
+        summary = (self.phase / "results" / "run-02-2026-10-25" / "summary.md").read_text(encoding="utf-8")
+        self.assertIn("| Previous run | run-01-2026-10-20 |", summary)
+        self.assertIn("| Run type | Retest |", summary)
+        code, err = run("set-bug", "--batch", first, "--case", "PR01-FR002-01", "--status", "Fixed - retest")
+        self.assertEqual(code, 2)
+        self.assertIn("frozen", err["error"])
+
+    def test_scaffold_is_never_written(self):
+        code, err = run("set-bug", "--batch", self.scaffold, "--case", "PR01-FR002-01", "--status", "Found")
+        self.assertEqual(code, 2)
+        self.assertIn("scaffold", err["error"])
+
+
+class FindHub(Base):
+    def setUp(self):
+        super().setUp()
+        self.write([case()], [case()])
+
+    def find(self):
+        return run("find-hub", "--tester", self.tester, "--root", self.manual)[1]
+
+    def test_latest_run_is_the_hub(self):
+        d = self.find()
+        self.assertEqual((d["status"], d["run"]), ("ok", "run-01-2026-10-18"))
+
+    def test_legacy_copy_matches_plan_v2(self):
+        self.tester.write_text(batch_text([case()], legacy="Phase 1 / v1.0"), encoding="utf-8")
+        self.assertEqual(self.find()["status"], "ok")
+
+    def test_newer_run_supersedes(self):
+        newer = self.phase / "results" / "run-02-2026-10-25"
+        newer.mkdir()
+        self.assertEqual(self.find()["status"], "superseded_run")
+
+    def test_newer_plan_version_freezes(self):
+        (self.manual / "v3" / "phases" / "phase-1-y").mkdir(parents=True)
+        self.assertEqual(self.find()["status"], "frozen_version")
+
+
+class LegacyCopies(Base):
+    def test_legacy_copy_merges_without_proposals(self):
+        ran = case(Result="Pass", **{"Last tested": "2026-10-19"})
+        self.write([case()], [ran], tester_kw={"legacy": "Phase 1 / v1.0", "overview": "Old instructions."})
+        self.tester.write_text(self.tester.read_text(encoding="utf-8").replace("](../../../../../../", "](../../../../../"),
+                               encoding="utf-8")
+        _, v = self.pair("validate")
+        self.assertTrue(v["valid"], v["errors"])
+        codes = self.codes(v["warnings"])
+        self.assertNotIn("section_edited", codes)
+        self.assertNotIn("control_field_added", codes)
+        self.assertNotIn("control_field_edited", codes)
+        self.assertIn("section_stale", codes)
+        _, d = self.pair("diff")
+        self.assertEqual(d["cases"][0]["status"], "update")
 
 
 if __name__ == "__main__":

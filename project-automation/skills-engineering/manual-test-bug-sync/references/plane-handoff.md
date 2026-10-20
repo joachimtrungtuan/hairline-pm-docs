@@ -12,8 +12,8 @@ Run `bugs` and use each approved `to_log` row as one pasted bug for `create-bug-
 | `Title` | Short bug title basis |
 | `context.module` and the case ID's FR (`FR002` becomes `FR-002`) | Product Module and FR |
 | `PRD flow ref` and `context.prd_sources` | PRD reference (`create-bug-tasks` converts `local-docs/` paths to GitHub links) |
-| `batch_file` (as a `local-docs/testing/manual/phases/...` path) | Source report link |
-| `context.phase_version`, `context.batch`, `context.build_tested`, `context.platform` | Notes (traceability and environment) |
+| `batch_file` (as a `local-docs/testing/manual/v<N>/phases/<phase>/results/run-<NN>-<YYYY-MM-DD>/...` path) | Source report link |
+| `context.plan_phase`, `context.batch_version`, `context.run`, `context.batch`, `context.build_tested`, `context.platform` | Notes (traceability and environment) |
 | `Preconditions`, `Test data`, `Steps` | Steps to Reproduce (keep data-set IDs and account placeholders such as `{V1}`; never resolve credentials) |
 | `Actual result / data` | Current Status |
 | `Expected result` | Expectation (Suggestion) |
@@ -37,7 +37,7 @@ From the task file, read each task's `Source Bug ID` and `Plane Task Key`. Group
 ]
 ```
 
-Dry-run `set-bug --batch <hub file> --updates <file>`, show the planned changes, then add `--apply`. One `set-bug` call per batch file.
+Dry-run `set-bug --batch <result file in the latest run> --updates <file>`, show the planned changes, then add `--apply`. One `set-bug` call per batch file.
 
 ## 4. Read Plane States
 

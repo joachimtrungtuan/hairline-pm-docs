@@ -2,6 +2,8 @@
 
 These are the rules `scripts/batch-sync.py` applies in `validate`, `diff`, and `merge`. Use this file to explain results to the user; do not re-implement the checks by hand.
 
+The **hub** is the batch's result file in the latest run: `testing/manual/v<N>/phases/<phase>/results/run-<NN>-<YYYY-MM-DD>/<batch>.md`. Scaffolds in `batches/` are never merged into, and earlier runs are frozen (TEST-STRATEGY §2).
+
 ## Column Ownership
 
 | Owner | Columns | Merge behavior |
@@ -10,8 +12,9 @@ These are the rules `scripts/batch-sync.py` applies in `validate`, `diff`, and `
 | Tester | Actual result / data, Result, Notes, Evidence, Bug status, Last tested | Merged under the rules below |
 | Team | Bug ID | Tester blank is ignored (hub is newer); a different non-blank value rejects the case |
 | Batch Control | Tester, Build tested | Accumulated: tester entries (`Name (YYYY-MM-DD)`, separated by `; `) not already in the hub are appended to the hub value; a `{placeholder}` hub value is replaced. Never overwritten |
-| Batch Control | Every other field | Edits reported as proposals, never merged |
-| Other sections | Title, How to Fill In, Flow Overview, Shared Preconditions, Test Data Sets, Case Change Log | Edits reported as proposals (whitespace-insensitive comparison), never merged. When the tester copy has an older minor version, differences are reported as `section_stale` (the copy predates a team edit), not as proposals |
+| Batch Control | Plan / phase, Batch version | Compared as the version (below); never merged |
+| Batch Control | Every other field | Edits reported as proposals, never merged. Relative links that differ only in leading `../` are equal (a result copy sits one folder deeper than its scaffold) |
+| Other sections | Title, How to Fill In, Flow Overview, Shared Preconditions, Test Data Sets, Case Change Log | Edits reported as proposals (whitespace-insensitive comparison), never merged. When the tester copy has an older batch minor version or the old Batch Control format, differences are reported as `section_stale` or `control_field_stale` (the copy predates a team edit), not as proposals |
 | Computed | Batch Summary | Ignored in the tester copy; recomputed from the hub after merge |
 
 ## File-Level Errors (Nothing Merges)
@@ -23,10 +26,15 @@ These are the rules `scripts/batch-sync.py` applies in `validate`, `diff`, and `
 | `header_changed` | Tester renamed, added, removed, or reordered columns |
 | `column_count`, `pipe_in_cell` | A row has the wrong number of cells: a vertical-bar character (plain or backslash-escaped) typed in a cell, a deleted cell, or a real line break that split the row (use `<br>`) |
 | `bad_case_id`, `duplicate_case` | ID not `<MODULE><NN>-FR<NNN>-<SEQ> r<REV>` (module `P`, `PR`, `A`, or `S` plus two digits, no letter suffix) or repeated |
-| `batch_mismatch`, `version_mismatch` | Different Batch ID, phase, or major version |
-| `minor_version_mismatch` | Same major, different minor. Error unless the user approves `--allow-minor-mismatch` |
+| `version_unreadable` | Batch Control `Plan / phase` (`v2 / Phase 1`) or `Batch version` (`1.0`) missing or malformed |
+| `batch_mismatch`, `version_mismatch` | Different Batch ID, plan version, phase, or batch major version |
+| `minor_version_mismatch` | Same batch major, different minor. Error unless the user approves `--allow-minor-mismatch` |
 
-`find-hub` also reports `frozen_version` when a newer major version folder exists for the phase: the old folder is frozen and must not receive results.
+Copies made before 2026-10-20 carry the single row `Phase / plan version` (`Phase 1 / v1.0`). They are read as plan `v2`, batch version `1.0`, and treated as stale copies: their old fill-in instructions are reported as `section_stale`, not as proposals.
+
+`find-hub` statuses besides `ok` and the version ones: `superseded_run` (the batch's latest result file is in a run that is no longer the newest; earlier runs are frozen), `frozen_version` (a newer plan version folder exists), `ambiguous`, `not_found` (no run holds the batch yet: create one with `new-run`), and `tester_control_unreadable`.
+
+Write commands (`merge`, `set-bug`, `apply-states`, `summary --apply`) refuse scaffold files in `batches/` always, and result files of an earlier run unless the user explicitly asks for `--allow-frozen`.
 
 ## Case-Level Errors (Case Rejected)
 
