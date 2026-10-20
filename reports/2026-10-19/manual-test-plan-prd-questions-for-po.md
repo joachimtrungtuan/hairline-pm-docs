@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-19
 - **Purpose:** One list of the PRD conflicts and PRD-silent spots found while writing the manual test cases. The Product Owner decides each one.
-- **Source:** `testing/manual/phases/*/v1.0` (plan.md and batch files). Phases 1 to 3 are covered (Phase 4 has no cases yet).
+- **Source:** `testing/manual/v2/phases/*` (test guides and batch scaffolds; originally `testing/manual/phases/*/v1.0`). Phases 1 to 3 are covered (Phase 4 has no cases yet).
 - **PRD paths:** All PRD paths are relative to `project-requirements/functional-requirements/`. Line numbers were checked against the PRDs on 2026-10-19.
 - **How to answer:** Write the decision under **Decision** in each item. A short answer is fine (for example "Follow FR-031; FR-016 to be updated"). The team then updates the PRD (Change Log, plus a Change Request if needed) and the affected test cases.
 

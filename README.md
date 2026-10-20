@@ -49,7 +49,7 @@ continue resolving their expected paths; do not maintain independent template co
 ### Supporting Documentation
 
 ```sh
-product-plans/                   # 🗺️ Roadmaps and initiative planning docs
+product-plans/                   # 🗺️ Versioned product plans (v<N>/plan.md + phases/) and planning templates
 progress-tracking/               # 📌 Ongoing execution and status trackers
 project-notes/                   # 🧾 Ad hoc notes and decisions
 reports/                         # 📈 Development progress reports

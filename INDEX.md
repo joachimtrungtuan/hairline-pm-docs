@@ -30,10 +30,10 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Logging bugs as tasks | run `create-bug-tasks` skill | — |
 | Any Plane (issues/cycles/projects) action | run `plane-api-commands` skill | — |
 | Checking build/implementation progress | run `check-progress` skill; `progress-tracking/` | — |
-| Sprint readiness / client review report | run `sprint-readiness-reporting` skill; `product-plans/` | date folder |
+| Product plans (versioned) and readiness / client review reports | `product-plans/v<N>/` (`plan.md`, `phases/<phase>/`); reports via `sprint-readiness-reporting` skill | current version `v2`; reports are `<date>-readiness-fix-backlog.md` inside the phase folder |
 | Status reports / analyses | `reports/YYYY-MM-DD/` | locate by date |
 | Any testing work (manual or automated) | `testing/` | start at `testing/README.md`; rules in `testing/TEST-STRATEGY.md` |
-| Manual test plans and batches (per release phase, versioned) | `testing/manual/phases/<phase>/v<major>.0/` | `plan.md` first, then one batch file; new files are copied from `testing/templates/` |
+| Manual test guides, batch scaffolds, and run results (per product plan version and phase) | `testing/manual/v<N>/phases/<phase>/` | `test-guide.md` first, then one batch scaffold or one file in `results/run-NN-YYYY-MM-DD/`; new files are copied from `testing/templates/` |
 | Merge tester results, log or sync manual-test bugs | run `manual-test-bug-sync` skill | — |
 | Automated web E2E architecture, registry, execution framework, statuses, and results | `testing/automated/web-e2e/` | start at `ARCHITECTURE.md`; use `TESTING-CONSTITUTION.md` for governance, `status-taxonomy.json` for all enums, and `OPERATIONS.md` for commands |
 | API endpoint and flow test material; Android flows | `testing/automated/api/`, `testing/automated/android/` | read via the owning skill |
@@ -63,7 +63,7 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 | `create-bug-tasks` | Draft Plane-ready `[BUG]` task markdown from bug reports, readiness backlogs, or pasted bug lists. |
 | `check-progress` | Update one checklist row for a specific MODULE_CODE + FR_CODE pair, verifying FE/BE evidence. |
 | `plane-api-commands` | Any Plane API action: refresh metadata, list resources, create/update work items, read work-item states, set parents, add links. |
-| `sprint-readiness-reporting` | Start/continue/update sprint readiness reports and fix backlogs from the launch plan or review findings. |
+| `sprint-readiness-reporting` | Start/continue/update sprint readiness reports and fix backlogs from the product plan or review findings. |
 | `verify-design-layout` | Review Figma layouts (PNG/JPG/JSON) against FR screen specs for missing fields, type mismatches, flow gaps. |
 | `api-testing` | Test a SINGLE API endpoint with detailed reporting (one endpoint, one scenario). |
 | `api-flow-testing` | Run a named multi-step API business flow end-to-end (e.g. inquiry creation, quote acceptance). |
@@ -108,11 +108,11 @@ local-docs/
 │   │   └── plane-api/            Plane credentials (.env) & system vars
 │   ├── plans/                    Automation plans
 │   └── notes/                    Automation notes
-├── product-plans/YYYY-MM-DD/     Roadmaps, sprint review/readiness; template/
+├── product-plans/v<N>/           Versioned product plans: plan.md + phases/<phase>/ readiness reports; template/
 ├── progress-tracking/            Ongoing status trackers
 ├── project-notes/                Ad-hoc notes, decisions, dev-related-issues/
 ├── reports/YYYY-MM-DD/           Status reports & analyses
-├── testing/                      Testing hub: TEST-STRATEGY.md, manual/phases/, automated/
+├── testing/                      Testing hub: TEST-STRATEGY.md, manual/v<N>/phases/, automated/
 │                                 (web-e2e/, api/, android/), templates/, test-data/, results/, archive/
 └── website-works/                website-requirements/, project-static-content/
 ```
@@ -165,8 +165,8 @@ For each doc type: where its structure is **defined** (template/source) and the 
 | Sprint readiness / fix backlog | `sprint-readiness-reporting/SKILL.md` (+ `references/reporting-rules.md`) | `product-plans/template/sprint-readiness-fix-backlog-template.md` | §C.5 |
 | Implementation task doc | `create-implementation-tasks/references/task-format.md` | (format spec, not a fill-in) | run skill |
 | Bug task doc | `create-bug-tasks/references/` | — | run skill |
-| Manual test phase plan (`testing/manual/phases/<phase>/v<major>.0/plan.md`) | `testing/TEST-STRATEGY.md` | `testing/templates/manual-phase-plan-template.md` | Template headings |
-| Manual test batch (`.../v<major>.0/batches/B<NN>-<module>-<slug>.md`) | `testing/TEST-STRATEGY.md`; `manual-test-bug-sync` skill (merge and validation rules) | `testing/templates/manual-batch-template.md` | Template headings |
+| Manual test guide (`testing/manual/v<N>/phases/<phase>/test-guide.md`) | `testing/TEST-STRATEGY.md` | `testing/templates/manual-test-guide-template.md` | Template headings |
+| Manual test batch scaffold (`.../<phase>/batches/B<NN>-<module>-<slug>.md`) and run result copy (`.../<phase>/results/run-NN-YYYY-MM-DD/`) | `testing/TEST-STRATEGY.md`; `manual-test-bug-sync` skill (new run, merge and validation rules) | `testing/templates/manual-batch-template.md`; run summary: `testing/templates/manual-run-summary-template.md` | Template headings |
 | Android QA test report / flow script | `android-emulator-qa/SKILL.md` | `android-emulator-qa/assets/test-report-template.md`, `assets/flow-script-template.md` | run skill |
 | Design-layout review report | `verify-design-layout/SKILL.md` | `verify-design-layout/assets/report-template.md` | run skill |
 | Update-log entry | CLAUDE.md → Update Log Protocol | dated exemplars in `update-logs/` | — |
@@ -238,7 +238,7 @@ Matches `project-requirements/templates/prd-template.md` (canonical; also availa
 ## Deployment · ## Monitoring & Logging · ## Appendix
 ```
 
-### C.5 — Sprint report scaffolds (`product-plans/`)
+### C.5 — Sprint / phase report scaffolds (`product-plans/template/`)
 
 Driven by the `sprint-readiness-reporting` skill; copy the template, fill per skill rules.
 

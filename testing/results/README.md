@@ -9,7 +9,7 @@ Results that live elsewhere:
 | Output | Location |
 |---|---|
 | Web E2E results (SQLite and artifacts) | `automated/web-e2e/results/` |
-| Manual test results | In the manual batch files under `manual/phases/` |
+| Manual test results | One result file per batch per run: `manual/v{N}/phases/<phase>/results/run-NN-YYYY-MM-DD/`, plus that run's `summary.md` |
 | Manual evidence files | The tester's chosen file-sharing service; links in the batch Evidence column (see `../TEST-STRATEGY.md` §5) |
 | Pre-2026-10-19 reports | `archive/reports/` |
 

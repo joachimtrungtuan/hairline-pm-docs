@@ -14,7 +14,7 @@
 | Sprint dates | [Copy from launch plan] |
 | Report date | YYYY-MM-DD |
 | Prepared by | [Name / role / AI agent] |
-| Source launch plan | `local-docs/product-plans/2026-05-13/launch-plan.md` |
+| Source product plan | `local-docs/product-plans/v{N}/plan.md` |
 | Product environment reviewed | [Staging / production / build number / app version] |
 
 ---
