@@ -28,6 +28,7 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | Verifying an FR is built correctly | run the `verify-fr` skill | skill is authoritative |
 | Breaking a PRD into implementation tasks | run `create-implementation-tasks` skill | — |
 | Logging bugs as tasks | run `create-bug-tasks` skill | — |
+| Reviewing code against PRDs for a launch-plan phase / module / FR (conformance gaps) | run `code-review-conformance` skill; reports in `testing/code-review/<date>/` | start at `testing/code-review/README.md` |
 | Any Plane (issues/cycles/projects) action | run `plane-api-commands` skill | — |
 | Checking build/implementation progress | run `check-progress` skill; `progress-tracking/` | — |
 | Product plans (versioned) and readiness / client review reports | `product-plans/v<N>/` (`plan.md`, `phases/<phase>/`); reports via `sprint-readiness-reporting` skill | current version `v2`; reports are `<date>-readiness-fix-backlog.md` inside the phase folder |
@@ -62,6 +63,7 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 | `create-implementation-tasks` | Generate date-stamped Plane-ready implementation tasks from FR gaps / checklist subflows / PRD coverage. |
 | `create-bug-tasks` | Draft Plane-ready `[BUG]` task markdown from bug reports, readiness backlogs, or pasted bug lists. |
 | `check-progress` | Update one checklist row for a specific MODULE_CODE + FR_CODE pair, verifying FE/BE evidence. |
+| `code-review-conformance` | Review `main/` backend + dashboard code against FR PRDs for one launch-plan phase, module, or FR (fresh checker per unit, refuting verifier per gap); writes a gaps-only report to `testing/code-review/` that feeds `create-bug-tasks`. |
 | `plane-api-commands` | Any Plane API action: refresh metadata, list resources, create/update work items, read work-item states, set parents, add links. |
 | `sprint-readiness-reporting` | Start/continue/update sprint readiness reports and fix backlogs from the product plan or review findings. |
 | `verify-design-layout` | Review Figma layouts (PNG/JPG/JSON) against FR screen specs for missing fields, type mismatches, flow gaps. |
@@ -113,7 +115,7 @@ local-docs/
 ├── project-notes/                Ad-hoc notes, decisions, dev-related-issues/
 ├── reports/YYYY-MM-DD/           Status reports & analyses
 ├── testing/                      Testing hub: TEST-STRATEGY.md, manual/v<N>/phases/, automated/
-│                                 (web-e2e/, api/, android/), templates/, test-data/, results/, archive/
+│                                 (web-e2e/, api/, android/), templates/, test-data/, code-review/, results/, archive/
 └── website-works/                website-requirements/, project-static-content/
 ```
 

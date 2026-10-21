@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review Conformance"
+  short_description: "Review main/ code against FR PRDs for a phase, module, or FR"
+  default_prompt: "Use $code-review-conformance to review the code against the PRDs for one launch-plan phase, module, or FR and write a gaps-only report."

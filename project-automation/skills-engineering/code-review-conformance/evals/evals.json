@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-review-conformance",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run code-review-conformance for FR-004 under PR-02 in Phase 1 of the v2 plan. This is the pilot, keep staging read-only and no concurrency.",
+      "expected_output": "Preflight resolves product-plans/v2/plan.md, Phase 1, PR-02 › FR-004; derives units from the FR-004 PRD in the fixed order (workflows W1..W7 with their alternative flows, user stories US1..US5 incl. US1A, deduplicated edge cases, uncovered provider/admin screens as SCR-*) plus Phase 1 exit-gate units that have a surface in FR-004; asks four separate AskUserQuestion calls (scope, frozen list with count, concurrency, staging writes with target URL); creates one tracker task per unit; writes testing/code-review/<date>/code-review-v2-phase-1-pr-02-fr-004.md skeleton with every unit Pending; spawns one fresh checker per unit and one verifier per gap; inserts gaps as they settle; never reads main/hairline-app/; header reconciles planned = checked + not checked; final chat summary points to create-bug-tasks for Confirmed gaps.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Review the whole Phase 1 controlled commercial pilot code against the PRDs. Use 4 parallel agents, and you can write test data on staging if needed.",
+      "expected_output": "Preflight builds the Phase › Module › FR tree for PR-01, PR-02, essential PR-06, A-02, A-01 inquiry/quote oversight, essential A-09, and confirms the partial-module FR choices in the scope question; freezes the full unit list with per-FR and total counts; confirms concurrency on with cap 4 as an explicit override of the subagent limit for this run; confirms staging writes on with the target base URL shown; keeps at most 4 subagents in flight; logs every staging write in the header and Evidence appendix without credentials; records failed subagents as Not checked with a reason; produces a gaps-only body plus a Phase exit gates section covering RBAC, session revocation, provider isolation, pre-payment identity privacy, quote-state consistency, scheduling rules, no production fixtures, one authoritative API per flow.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "The code review run crashed halfway. Resume testing/code-review/2026-10-21/code-review-v2-phase-1-pr-02.md.",
+      "expected_output": "Resume mode reads the header and Summary table, treats units with final verdicts as done and Pending units as the remaining queue, asks one AskUserQuestion confirming the remaining count and whether prior concurrency/staging-write approvals still apply, compares current repo SHAs and adds a Resumed line if they changed, recreates tracker tasks only for remaining units with the same stable IDs, continues the checker/verifier loop without further questions, and reconciles planned vs checked + not checked at the end.",
+      "files": []
+    }
+  ]
+}

@@ -11,6 +11,7 @@ Single home for all testing artifacts, manual and automated. Rules: [TEST-STRATE
 | [templates/](templates/) | Blank test guide, batch scaffold, and run summary templates; copy, never fill in place | Anyone creating a test guide, batch, or run |
 | [test-data/credentials/](test-data/credentials/) | Test accounts (`A#`, `S#`, `V#`, `P#`, `AF#` rows). Internal only. Placeholder list: `test-data/placeholder-registry.md` | Team; shared privately with the tester |
 | [automated/](automated/README.md) | Web E2E framework and registry, API endpoint and flow material, Android flows | Testing skills, QA |
+| [code-review/](code-review/README.md) | Code-vs-PRD conformance reviews per launch-plan phase (gaps-only, dated), written by the `code-review-conformance` skill; Confirmed gaps feed `create-bug-tasks` | Plan owner, dev team |
 | [results/](results/README.md) | Dated reports and screenshots from the Android testing skills (API skills report in the conversation) | QA |
 | [archive/](archive/README.md) | Pre-2026-10-19 plans and reports, kept unchanged | Reference only |
 
