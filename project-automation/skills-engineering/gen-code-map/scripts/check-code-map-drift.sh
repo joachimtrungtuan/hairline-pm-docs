@@ -30,6 +30,9 @@
 # on-demand signature command in each map's header — not by this script.)
 
 set -euo pipefail
+# Byte-order collation so `sort` and `comm` agree regardless of the user's locale; otherwise
+# paths with "_" or "-" sort differently and every folder shows up as added and removed.
+export LC_ALL=C
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # scripts/ -> gen-code-map -> skills-engineering -> project-automation -> local-docs -> repo root
