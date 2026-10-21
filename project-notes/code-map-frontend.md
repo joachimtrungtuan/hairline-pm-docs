@@ -1,16 +1,19 @@
-# Code Map — hairline-frontend (React 18 + Vite + Redux Toolkit/RTK Query; serves Provider web + Admin web dashboards)
+# Code Map — hairline-frontend (React 18 + Vite + Redux Toolkit/RTK Query; serves Provider web + Admin web dashboards + Affiliate portal)
 
 Curated folder-group map (folder-level, not file-level — refresh when modules are
 added/restructured, flagged by check-code-map-drift.sh). For the SIGNATURES of one
 subdir on demand (do NOT persist): repomix <subdir> --compress --remove-comments --style markdown -o -
 **Locator, not evidence:** this map tells you WHERE to look; read the actual source for any
 finding. It exists to prevent broad searches, never to replace reading the code.
+**Built from:** `main/hairline-frontend` @ `3e16aae6` (HEAD commit dated 2026-10-19); map refreshed 2026-10-21.
+Compare with `git -C main/hairline-frontend rev-parse --short HEAD` — if HEAD has moved, the code wins.
 
 One React SPA hosting BOTH the Provider dashboard and the Admin (internal "team")
 dashboard, gated by role/route. The platform split runs through three parallel trees:
 `features/hairlineProvider/*` + `pages/providerDashboard/*` + `components/providerComponents/*`
 = Provider (PR-0x); `features/hairlineTeam/*` + `pages/teamDashboard/*` + `components/teamComponents/*`
 = Admin (A-0x); `features/auth` + `features/common` + `components/shared` = cross-cutting (S-0x).
+Standalone activation/portal surfaces sit beside them: `affiliatePortal` (affiliates) and `providerActivation`.
 Data access is RTK Query: every `*ApiSlice` injects endpoints into the root `apiSlice`.
 Module codes: Provider PR-01..PR-07, Admin A-01..A-10, Shared S-01..S-06.
 
@@ -38,6 +41,24 @@ Module codes: Provider PR-01..PR-07, Admin A-01..A-10, Shared S-01..S-06.
 - **FRs:** FR-015, FR-016, FR-017, FR-018, FR-019, FR-021, FR-023..FR-031, FR-034.
 - **Entry points / key files:** `settings/` slices, `reviews/reviewsApiSlice.jsx`, `promotions/promotionsApiSlice.jsx`, `analytics/analyticsApiSlice.jsx`.
 
+## features/affiliatePortal/ + pages/affiliatePortal/ (Affiliate self-service portal)
+- **Purpose:** Third surface in the SPA: the affiliate-facing portal. `pages/affiliatePortal/` = Overview / PromoCodes / Payouts / Profile tabs; `activation/` = affiliate login, activation-token verify, set password, resend activation, welcome (with `fixtures/` for local preview). Data via `affiliatePortalApiSlice` (`affiliate-portal/*` endpoints).
+- **Modules:** A-07.
+- **FRs:** FR-018.
+- **Entry points / key files:** `features/affiliatePortal/affiliatePortalApiSlice.jsx`, `pages/affiliatePortal/activation/AffiliateLogin.jsx`, `pages/affiliatePortal/OverviewTab.jsx`.
+
+## features/providerActivation/ + pages/providerActivation/
+- **Purpose:** Provider account activation landing (`/provider/activate*`): verify invitation/activation token, show clinic identity, set credentials (`provider/verify-activation-token`, `provider/activate-account`).
+- **Modules:** PR-01, A-02.
+- **FRs:** FR-015.
+- **Entry points / key files:** `pages/providerActivation/ProviderActivation.jsx`, `features/providerActivation/providerActivationApiSlice.jsx`.
+
+## features/localization/
+- **Purpose:** Runtime i18n for the web app (`i18n.js`, `LocalizationProvider.jsx`, `useRuntimeLocalization.js`, `localizationApiSlice.jsx`) plus many translation batch inventories / audit JSON-CSV-MD files (dev artifacts, not code).
+- **Modules:** A-09.
+- **FRs:** FR-021.
+- **Entry points / key files:** `features/localization/LocalizationProvider.jsx`, `features/localization/i18n.js`, `features/localization/localizationApiSlice.jsx`.
+
 ## pages/auth/
 - **Purpose:** Login, signup, forgot-password, invitation landing/signup screens (shared by both platforms).
 - **Modules:** S, PR-01.
@@ -51,7 +72,7 @@ Module codes: Provider PR-01..PR-07, Admin A-01..A-10, Shared S-01..S-06.
 - **Entry points / key files:** `pages/providerDashboard/Dashboard.jsx`, `appointments/InquiryDetail.jsx`, `appointments/QuoteDetails.jsx`, `AfterCareDetails.jsx`.
 
 ## pages/teamDashboard/ (Admin screens)
-- **Purpose:** Admin UI screens — the largest page tree. Sub-areas: addProvider/editAffiliate/addAffiliate (multi-step), adminLocalization (json import, machine translation, version history, key inventory/detail), adminReviewsManagement (list/detail/settings/takedown), affiliateManagement, afterCare (standalone aftercare + clinician chat + tabs), analytics (platform overview + financial-health/geographic/patient-acquisition/pricing/provider-performance/treatment-outcomes workspaces + transaction search), billingFinance, hairline-promotions, hairlineFundedCodesManager, packages, patients (detail/billing/communication/payment), promotionAnalyticsApplications, promotionDetail, promotionProgramHub, providerAdoptionManager, providerDetails, providerPromotionPortfolio, providers (payout/billing/staff), settings (very large: currency, questionnaire catalog, support center config, roles/permissions, legal docs, country/discovery, notifications, payment config, provider/patient FAQ & resources & tutorials), support-center (ticketing + chat).
+- **Purpose:** Admin UI screens — the largest page tree. Sub-areas: addProvider/editAffiliate/addAffiliate (multi-step), adminLocalization (json import, machine translation, version history, key inventory/detail; `components/` = add-language modal), adminReviewsManagement (list/detail/settings/takedown), affiliateManagement, afterCare (standalone aftercare + clinician chat + tabs), analytics (platform overview + financial-health/geographic/patient-acquisition/pricing/provider-performance/treatment-outcomes workspaces + transaction search), billingFinance, hairline-promotions, hairlineFundedCodesManager, packages, patients (detail/billing/communication/payment), promotionAnalyticsApplications, promotionDetail, promotionProgramHub, providerAdoptionManager, providerDetails, providerPromotionPortfolio, providers (payout/billing/staff), settings (very large: currency, questionnaire catalog, support center config, roles/permissions, legal docs, country/discovery, notifications, payment config, provider/patient FAQ & resources & tutorials), support-center (ticketing + chat).
 - **Modules:** A-01, A-02, A-03, A-05, A-06, A-07, A-08, A-09, A-10.
 - **FRs:** FR-015..FR-019, FR-021, FR-023..FR-031, FR-033, FR-034, FR-036.
 - **Entry points / key files:** `teamDashboard/analytics/platformOverview/PlatformOverview.jsx`, `adminReviewsManagement/AdminReviewsManagement.jsx`, `settings/SupportCenterConfig.jsx`, `promotionProgramHub/PromotionProgramHub.jsx`.
@@ -69,7 +90,7 @@ Module codes: Provider PR-01..PR-07, Admin A-01..A-10, Shared S-01..S-06.
 - **Entry points / key files:** `createQuoteStep/`, `dashBoardComponent/appointments/`, `afterCare/`.
 
 ## components/teamComponents/ + components/adminComponents/ + components/admin/
-- **Purpose:** Admin-specific UI blocks: addProviderSteps/addAffiliateSteps (wizards), billing, package, providerDetailsComponents, settings (afterCareQuestionnaire, appSettings, notification templates/rules), teamDashboardComponents, treatmentComponents; admin notification dropdown; feature-flag/edit-patient admin widgets.
+- **Purpose:** Admin-specific UI blocks: addProviderSteps/addAffiliateSteps (wizards), billing, package, providerDetailsComponents, settings (afterCareQuestionnaire, appSettings, notification templates/rules), teamDashboardComponents, treatmentComponents; `hairlineOverview/` = admin edit overlays (quote edit, booking correction, treatment-note edit, edit-reason capture + `adminEditRules.js`) mounted inside the provider appointment/progress/aftercare pages when viewed by admin; admin notification dropdown; feature-flag/edit-patient admin widgets.
 - **Modules:** A-01, A-02, A-06, A-07, A-09.
 - **FRs:** FR-015, FR-016, FR-018, FR-019, FR-024, FR-025, FR-030.
 - **Entry points / key files:** `teamComponents/addProviderSteps/`, `teamComponents/settings/`, `adminComponents/notifications/AdminNotificationDropdown.jsx`.
@@ -110,9 +131,17 @@ Module codes: Provider PR-01..PR-07, Admin A-01..A-10, Shared S-01..S-06.
 - **FRs:** FR-012, FR-020.
 - **Entry points / key files:** `App.jsx` (route table), `firebase.js`, `echo.js`.
 
+## contractAudit/
+- **Purpose:** Dev tooling, not app code: Node test harness (`npm run test:contract`, `test:contract-audit`) that checks frontend routes/API calls against a backend Laravel route snapshot (`fixtures/backendApiRoutes.snapshot.json`), route gates, session policy and permission-hydration races. `tools/` = route/AST extractors.
+- **Modules:** — (dev/QA tooling).
+- **FRs:** —.
+- **Entry points / key files:** `contractAudit/routeApiGuards.audit.mjs`, `contractAudit/tools/routeContractAudit.mjs`.
+
 ## Notes / unmapped
 - The tech-spec's `Frontend Architecture (Web)` shows a slimmed structure; the live tree is far broader (many analytics/settings workspaces) — this map supersedes it.
 - Numerous `BACKEND_INTEGRATION*.md` files live inside feature folders (esp. teamDashboard); they are dev integration notes keyed to HAIRL-#### tickets, not code.
 - `.backup`, `copy`, and `*Test`/`*Debug` files (e.g. `Information.jsx.backup`, `AppointmentDetail copy.jsx`, several `TTFQvsSLAChart*Test.jsx`) are stray dev artifacts — do not treat as canonical entry points.
 - The web app does NOT serve patients (patient UI is the Flutter app). Any "patient" pages here are admin/provider views OF patients (PatientDetail, patient management), not the patient client.
+- `components/teamComponents/hairlineOverview/` admin edit overlays (quote/booking/treatment-note corrections) have no FR row stating this admin-override behavior; bound to the admin group without a specific FR.
+- `contractAudit/` is QA tooling and `features/localization/BATCH*`/`*_AUDIT*` files are translation work artifacts — not runtime entry points.
 - FR bindings are best-effort from PRD module codes; `—` = cross-cutting/infra.

@@ -5,6 +5,8 @@ added/restructured, flagged by check-code-map-drift.sh). For the SIGNATURES of o
 subdir on demand (do NOT persist): repomix <subdir> --compress --remove-comments --style markdown -o -
 **Locator, not evidence:** this map tells you WHERE to look; read the actual source for any
 finding. It exists to prevent broad searches, never to replace reading the code.
+**Built from:** `main/hairline-backend` @ `fd7ded98` (HEAD commit dated 2026-10-19); map refreshed 2026-10-21.
+Compare with `git -C main/hairline-backend rev-parse --short HEAD` — if HEAD has moved, the code wins.
 
 Single Laravel codebase exposing one REST API (OAuth2 / Laravel Passport) consumed by
 all three clients. Boundary is by URL prefix in `routes/api.php` (`/auth`, `/patient*`,
@@ -115,8 +117,8 @@ S-01..S-06. Models map to entities in `system-data-schema.md`.
 - **FRs:** FR-031, FR-001, FR-026.
 - **Entry points / key files:** `Authenticate.php`, `CheckProviderAccess.php`, `CheckScopes.php`.
 
-## app/Http/Requests/ (Admin/, Patient/, Provider/, Questionnaire/, Quote/, + root)
-- **Purpose:** Form-request validation classes, namespaced to mirror controllers. Define input contracts per endpoint.
+## app/Http/Requests/ (Admin/, Patient/, Provider/, Questionnaire/, Quote/, Quotes/, + root)
+- **Purpose:** Form-request validation classes, namespaced to mirror controllers. Define input contracts per endpoint. Note two quote folders: `Quote/` (quote update) and `Quotes/` (quote options — store/update option, sync option items, plan days, date prices; FR-004).
 - **Modules:** matches owning controller domain.
 - **FRs:** validation for the FRs of their domain.
 - **Entry points / key files:** browse the subfolder matching the controller you're tracing (e.g. `Requests/Admin/Review/`).
@@ -139,8 +141,8 @@ S-01..S-06. Models map to entities in `system-data-schema.md`.
 - **FRs:** all (logic layer).
 - **Entry points / key files:** `Analytics/PlatformMetricsService.php`, `StripePaymentService.php`, `NotificationDispatchService.php`, `PromotionRedemptionService.php`.
 
-## app/Notifications/ (incl. Notifications/Support/) + app/Mail/ + app/Channels/
-- **Purpose:** Outbound notification classes (~70: quotes, bookings, payments, aftercare, reviews, treatment, support, account lifecycle), Mailables (email bodies), and `FcmChannel` custom push channel.
+## app/Notifications/ (incl. Notifications/Support/, Notifications/Concerns/) + app/Mail/ + app/Channels/
+- **Purpose:** Outbound notification classes (~70: quotes, bookings, payments, aftercare, reviews, treatment, support, account lifecycle), Mailables (email bodies), and `FcmChannel` custom push channel. `Concerns/` = shared notification traits (e.g. `ChecksProviderQuotePreferences` — gates provider quote notifications on provider preferences).
 - **Modules:** S-03.
 - **FRs:** FR-020, FR-030.
 - **Entry points / key files:** `Channels/FcmChannel.php`, `Notifications/NewMessageReceivedNotification.php`, `Mail/NotificationMail.php`.
@@ -181,8 +183,8 @@ S-01..S-06. Models map to entities in `system-data-schema.md`.
 - **FRs:** all (schema).
 - **Entry points / key files:** browse by date prefix; latest = `2025_11_26_*_create_registration_drafts_table.php`.
 
-## database/factories/ + database/seeders/
-- **Purpose:** Model factories (subset: providers, patients, quotes, inquiries, payments, reviews, promotions, translations) and seeders (locations, help-centre, provider billing/team, aftercare data) for tests and local data.
+## database/factories/ + database/seeders/ (incl. seeders/data/)
+- **Purpose:** Model factories (subset: providers, patients, quotes, inquiries, payments, reviews, promotions, translations) and seeders (locations, help-centre, provider billing/team, aftercare data) for tests and local data. `seeders/data/` = seed payloads (e.g. `fr021_translation_registry.json`, the FR-021 translation-key registry).
 - **Modules:** — (testing / data support).
 - **FRs:** FR (testing).
 - **Entry points / key files:** `factories/PatientFactory.php`, `factories/QuoteFactory.php`.

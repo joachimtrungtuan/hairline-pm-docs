@@ -53,6 +53,7 @@ main/hairline-backend/app/Http/Requests/Patient
 main/hairline-backend/app/Http/Requests/Provider
 main/hairline-backend/app/Http/Requests/Questionnaire
 main/hairline-backend/app/Http/Requests/Quote
+main/hairline-backend/app/Http/Requests/Quotes
 main/hairline-backend/app/Http/Resources
 main/hairline-backend/app/Http/Resources/Admin
 main/hairline-backend/app/Http/Schemas
@@ -65,6 +66,7 @@ main/hairline-backend/app/Models
 main/hairline-backend/app/Models/Support
 main/hairline-backend/app/Models/Traits
 main/hairline-backend/app/Notifications
+main/hairline-backend/app/Notifications/Concerns
 main/hairline-backend/app/Notifications/Support
 main/hairline-backend/app/Observers
 main/hairline-backend/app/Providers
@@ -81,4 +83,5 @@ main/hairline-backend/database
 main/hairline-backend/database/factories
 main/hairline-backend/database/migrations
 main/hairline-backend/database/seeders
+main/hairline-backend/database/seeders/data
 main/hairline-backend/routes
