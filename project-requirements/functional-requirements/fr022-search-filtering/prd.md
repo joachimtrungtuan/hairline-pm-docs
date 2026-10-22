@@ -151,7 +151,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  NAV["Admin opens Providers module — full provider list shown by default"] --> CTRL["Search and filter controls available simultaneously"]
+  NAV["Admin opens Providers module — Active providers shown by default (FR-015 Screen 1)"] --> CTRL["Search and filter controls available simultaneously"]
   CTRL --> KEYWORD["Admin enters keyword (provider name, clinic name, email, license number)"]
   CTRL --> FILTER["Admin applies filter (status, featured, commission type, date range)"]
   KEYWORD --> QUERY["System evaluates active keyword AND active filters together in real-time"]
@@ -164,11 +164,11 @@ flowchart TD
   RESULTS --> NEXT{"Next action?"}
   NEXT -- "Update keyword" --> KEYWORD
   NEXT -- "Update or clear filters" --> FILTER
-  NEXT -- "Reset all" --> RESET["Admin clears all inputs — full provider list restored"]
+  NEXT -- "Reset all" --> RESET["Admin clears all inputs — default Active-only list restored"]
   RESET --> CTRL
   NEXT -- "Select record" --> SELECT["Admin selects a provider record"]
   SELECT --> PROFILE["System loads full provider profile (staff, certifications, reviews, financials, performance)"]
-  PROFILE --> ACTION["Admin performs action (review credentials / approve onboarding / adjust commission)"]
+  PROFILE --> ACTION["Admin performs action (review credentials / manage status / adjust commission)"]
 ```
 
 ### Main Flow 3: Patient Provider Search & Filter [P2 - Post-MVP]
@@ -1137,7 +1137,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Status | Multi-select | Draft, Active, Suspended, Deactivated | All | OR (within field) |
+| Status | Multi-select | Active, Suspended, Deactivated | Active | OR (within field); matches FR-015 Screen 1 Default View. Clearing the Status filter shows all statuses |
 | Featured | Checkbox | Featured only | Off | Single flag |
 | Commission Type | Dropdown | All, Percentage, Flat Rate | All | Exact match |
 | Date Range | Date range picker + type toggle | Custom; toggle: Creation Date / Last Activity | All dates — Creation Date | Filters by selected date type |
@@ -2072,9 +2072,9 @@ An admin needs to verify a new provider's credentials during onboarding. They se
 
 1. **Given** an admin is reviewing pending provider onboarding applications, **When** they search for a provider by clinic name, **Then** the system returns matching provider(s) with location, status, and onboarding progress
 2. **Given** an admin needs to find all providers in a specific country, **When** they select "Turkey" from the Location filter, **Then** the system returns only providers whose location matches Turkey
-3. **Given** an admin applies a status filter "Draft", **When** they perform a search, **Then** the system returns only providers whose accounts are in Draft status (setup incomplete / awaiting activation)
+3. **Given** an admin applies a status filter "Suspended", **When** they perform a search, **Then** the system returns only providers whose accounts are Suspended. Providers are created Active per FR-015; there is no Draft status
 4. **Given** search returns a provider, **When** admin clicks on the provider row, **Then** the system displays full provider details including credentials, certifications, staff, and documents
-5. **Given** an admin wants to approve a provider, **When** they view provider details from search results, **Then** they can access "Approve" action directly from the detail view
+5. **Given** an admin opens a provider from search results, **When** the provider detail view loads, **Then** the admin can reach the FR-015 status actions (Suspend, Reactivate, Deactivate) from it; there is no separate Approve action
 
 ---
 
@@ -2277,6 +2277,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-10-16 | 2.15 | Product Owner Q-series alignment (CR-FR022-20261016-01): patient-facing price sorts and price filters convert each price to the display currency at the current rate for ordering only, cards keep their own quote currency, and mixed-currency order is labelled approximate (FR-005 / Screen 1 sort basis, General Module Rule 9, User Story 5 scenario 5, REQ-022-058; Q8). Consolidated verification remains pending. | Product Owner / Documentation |
 | 2026-10-18 | 2.16 | Consolidated verification corrections (CR-FR022-20261016-01): Approvals row refreshed to record Product Owner documentation approval through v2.15 via the MTG-002 decision log. No requirement change. | AI |
 | 2026-10-18 | 2.17 | Final audit corrections (CR-FR022-20261016-01): the 2026-04-13 change log rows for versions 2.4 and 2.5 are now listed in version order. No requirement change; the provider and admin Quote Status filters keep the FR-004 status label Cancelled (Provider Status), while FR-004 owns the patient-facing label Offer Unavailable. | Product Owner |
+| 2026-10-22 | 2.18 | FR-015 alignment for A-02 provider search (B01 manual test findings): FR-015 / Screen 1 Status filter drops the non-existent Draft status and defaults to Active, matching FR-015 Screen 1 Default View; Main Flow 2 and User Story 2 scenarios 3 and 5 no longer reference Draft providers or an Approve action, since FR-015 creates providers Active. Product decision 2026-10-22. | AI |
 
 ---
 
@@ -2296,4 +2297,4 @@ A patient has received two parent quotes from two providers. Each parent quote o
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-022 from system-prd.md
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-10-22
