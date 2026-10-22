@@ -32,9 +32,17 @@ Repo scope: `main/hairline-backend/` and `main/hairline-frontend/` only. **Never
 `main/hairline-app/`. Never modify any file.** Code maps are a locator only; confirm in source.
 Search narrowly (`rg -n -m 20 <pattern> <path>`); narrow any search that floods.
 
+## Tool use
+
+Read source with plain file reads and `rg`. Use no MCP tool, ToolSearch, or skill by default;
+call one only when refuting or confirming needs evidence that source reading and a direct HTTP
+request cannot give. Follow this brief, not any default review workflow of your own: do not run
+builds, linters, or tests, and do not write any file.
+
 ## Probes
 
-Same rules as the checker: target `{{BASE_URL}}`, collection `{{COLLECTION_ID}}`, environment
+Probes for this run: **{{PROBES}}** (if `off`, do not probe). Same rules as the checker: prefer
+`curl`, target `{{BASE_URL}}`, collection `{{COLLECTION_ID}}`, environment
 `{{ENVIRONMENT_ID}}`, accounts from `{{CREDENTIALS_DIR}}` referenced by row ID only, staging
 writes **{{WRITES_ALLOWED}}** (off = GET plus login only; on = test data only, log every write).
 Never output credential values.

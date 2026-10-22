@@ -10,7 +10,9 @@ readable by humans and AI agents, with no sections beyond these.
 - `<scope>`: `all` for a whole phase, the lowercase module (`pr-02`), or module plus FR
   (`pr-02-fr-004`).
 - Example: `testing/code-review/2026-10-21/code-review-v2-phase-1-pr-02-fr-004.md`.
-- A second run on the same date and scope appends `-r2`, `-r3`.
+- One report per scope. A later re-check of the same scope is a Delta run that updates the
+  latest report in place (see `delta-mode.md`); it never creates a second file. A new file is
+  written only for a fresh full run, which goes under its own run-date folder.
 
 **Markdown rule**: never put a literal pipe character inside a table cell (it breaks the
 column). Use `/`, commas, `and`, or `<br>` instead. This matters most in Issue and Evidence
@@ -25,10 +27,12 @@ cells.
 **Plan**: local-docs/product-plans/v<plan>/plan.md, <Phase n — name>
 **Scope**: <Phase › Module › FR tree, one line>
 **Repo commits**: hairline-backend `<sha>`, hairline-frontend `<sha>`
-**Approvals**: concurrency <off / on, cap n>; staging writes <off / on> (target <base URL>)
+**Approvals**: concurrency <off / on, cap n>; probes <on / off>; staging writes <off / on> (target <base URL>)
+**Engine**: checkers <engine, model>; verifiers <engine, model>; fallback <engine, model or none>
 **Units planned / checked / not checked**: <N> / <pending> / <pending>
 **Staging writes made**: none
 **Run state**: In progress
+**Revisions**: none
 
 ## Summary
 
@@ -54,6 +58,8 @@ cells.
 ### Map drift
 
 ## Unresolved questions
+
+## Unit baseline
 ```
 
 Every frozen unit gets one Summary row in derivation order; the Summary doubles as the coverage
@@ -83,7 +89,9 @@ Field rules:
 
 - **Gap ID**: `<unit ID>-G<n>`; stable within the document.
 - **Priority**: P0 to P3 from `rubric.md`.
-- **Status**: exactly `Confirmed`, `Needs runtime`, or `Needs decision`.
+- **Status**: `Confirmed`, `Needs runtime`, or `Needs decision` on a first run. Delta mode may
+  also set `Fixed <date>`, `Retired <date>`, or `Deferred (DEF-nnn)`; those rows stay in the
+  table for history and are skipped by `create-bug-tasks`.
 - **Issue**: what is wrong, in observable terms (this is the actual outcome).
 - **PRD requires**: the expected outcome with the PRD section reference in parentheses.
 - **Steps to reproduce (from PRD)**: the user-facing steps that expose the gap, taken from the
@@ -124,6 +132,31 @@ Staging writes, when approved and made, are counted in the header line
 
 Bullet list at the end: every `Needs decision` gap (by Gap ID, one line each) and any run-level
 open issue (for example, units Not checked and why, or a PRD conflict spanning several units).
+
+## Unit baseline (Step 6, one row per unit as it completes)
+
+The last section of the report. Delta mode uses it to tell which units changed since this run,
+so it records what each verdict was based on.
+
+```markdown
+| Unit | PRD lines | Excerpt hash | Cited files |
+|---|---|---|---|
+| FR-004/W3 | 210-248 | 3f9a1c0b7d2e | hairline-backend/app/Console/Kernel.php, hairline-backend/app/Providers/EventServiceProvider.php |
+```
+
+- **PRD lines**: the excerpt range used for this run (it may shift later; the hash is what is
+  compared).
+- **Excerpt hash**: first 12 characters of the SHA-256 of the excerpt with trailing whitespace
+  stripped from each line (command in `delta-mode.md`).
+- **Cited files**: repo-relative file paths (no line numbers) from the unit's gap evidence and
+  conforming evidence, comma-separated. Delta mode re-checks the unit when any of them changes.
+
+## Revisions line (Delta and Jury mode)
+
+Each Delta or Jury run appends one entry to the `**Revisions**` header line, separated by `;`:
+`<date> delta — repo commits <backend sha>, <frontend sha>; deferred backlog <vNN file>;
+re-checked <n>, fixed <n>, retired <n>, new gaps <n>` or `<date> jury — scope <units / gaps /
+both>, engine <engine, model>; agree <n>, disagree <n>, unsure <n>`.
 
 ## Final header update (Step 7)
 

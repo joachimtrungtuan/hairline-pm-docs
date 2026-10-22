@@ -51,12 +51,22 @@ path. If a search returns more than ~50 matches, narrow it instead of reading th
    parameters, and response shape.
 5. **Side effects**: notifications, audit entries, and cascades the PRD requires.
 
+## Tool use
+
+Read source with plain file reads and `rg`. Use no MCP tool, ToolSearch, or skill by default.
+Call one only when a finding needs evidence that source reading and a direct HTTP request
+cannot give; say why in `notes`. Follow this brief, not any default review workflow of your
+own: do not run builds, linters, or tests, and do not write any file.
+
 ## Runtime probes
 
-Probe only to settle a question static reading cannot settle.
+Probe only to settle a question static reading cannot settle. Probes for this run:
+**{{PROBES}}** (if `off`, do not probe; return `Needs runtime` for anything that needs a live
+call).
 
-- Target: `{{BASE_URL}}` (the run's approved test/staging backend). Use the Postman MCP with
-  collection `{{COLLECTION_ID}}` and environment `{{ENVIRONMENT_ID}}`, or direct HTTP requests.
+- Target: `{{BASE_URL}}` (the run's approved test/staging backend). Prefer direct HTTP requests
+  (`curl`); use the Postman MCP with collection `{{COLLECTION_ID}}` and environment
+  `{{ENVIRONMENT_ID}}` only when a request needs the collection's auth or variable setup.
 - Accounts: test accounts in `{{CREDENTIALS_DIR}}`. Read them yourself when needed. Never write
   a token, password, or credential value into your return; refer to accounts by row ID
   (`V1`, `A2`, `P1`).

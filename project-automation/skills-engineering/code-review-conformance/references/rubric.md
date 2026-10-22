@@ -13,6 +13,7 @@ labels seem to fit, pick the one with the stronger evidence requirement you can 
 | **Needs runtime** | Static reading cannot decide, and no static gap was confirmed; a live check is required. | Ownership is enforced by a policy whose binding depends on runtime config. |
 | **Needs decision** | The PRD is ambiguous or conflicts with another PRD/the plan, so conformance cannot be judged. | Two PRDs give different expiry windows. |
 | **Not checked** | The unit was not reviewed. Always followed by `— <reason>` (subagent failure, malformed return twice, missing from run). | `Not checked — checker timed out` |
+| **Retired** | Delta mode only: the unit no longer exists in the current PRD (section removed or merged). Its row stays for history, with the date retired; its gaps become `Retired` too. | `Retired 2026-11-04 — PRD §Alternative Flows A3 removed` |
 
 A unit's verdict follows its worst surviving gap: any Confirmed gap affecting the core behavior
 gives **Gap**; Confirmed gaps on secondary check points give **Partial**; only Needs runtime /
@@ -25,6 +26,9 @@ Needs decision gaps give that verdict.
 | **Confirmed** | Code evidence (file:line) or a probe shows the PRD requirement is not met, and the verifier could not refute it. | Yes |
 | **Needs runtime** | A plausible defect that only a live run can prove or disprove. | No (skipped) |
 | **Needs decision** | A human must decide what the PRD means or which source wins. | No (skipped) |
+| **Fixed** | Delta mode only: a re-check shows the code now meets the requirement. The row stays with the fix date and the new evidence pointer. | No (skipped) |
+| **Retired** | Delta mode only: the requirement was removed from the PRD, or its unit was retired. | No (skipped) |
+| **Deferred (DEF-nnn)** | The team decided not to fix it now; the item lives in the current `local-docs/deferred-backlog/` version. Delta mode tags matching gaps and does not re-raise them. | No (skipped) |
 
 A gap without a file:line pointer **and** a PRD section reference cannot be Confirmed.
 
@@ -44,3 +48,11 @@ A gap without a file:line pointer **and** a PRD section reference cannot be Conf
 | **Confirmed** | Searched the alternative locations listed in the verifier brief; the gap stands as stated. |
 | **Downgraded** | The gap stands but is weaker: lower severity, or Confirmed becomes Needs runtime because the evidence is indirect. State the new severity/status. |
 | **Refuted** | Found the behavior implemented elsewhere (with file:line), or showed the PRD does not require it. The gap is dropped from the body and logged once in "Refuted findings". |
+
+## Jury outcomes (Jury mode only; annotate, never overwrite)
+
+| Outcome | Meaning |
+|---|---|
+| **Agree** | The juror reached the same verdict (for a unit) or the same status and severity within one level (for a gap). |
+| **Disagree** | The juror reached a different verdict or status, or a severity two or more levels apart, with file:line or PRD evidence. Listed in "Jury disagreements" for the user to settle. |
+| **Unsure** | The juror could not decide statically. Recorded, not escalated. |
