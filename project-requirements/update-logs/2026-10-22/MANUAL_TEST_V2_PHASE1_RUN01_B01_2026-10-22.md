@@ -41,3 +41,8 @@ The tester returned the first filled batch of the v2 Phase 1 manual test plan (B
 - A dated `Triage 2026-10-22` line was added to Notes on 21 cases through `merge` (tester text unchanged): which failure is the bug, what goes to the deferred backlog (01 status tiles, 09 to 11, 17, 18, 21), or why the case is skipped (22, 23 not reliably run; 16 item 6 and 19 items 2 and 3 accepted as recorded; 15 "Add New Staff" naming accepted).
 - Untouched: 05 (Pass) and 20 (Blocked on a missing restricted-admin test account).
 - Deferred backlog (`deferred-backlog` skill): DEF-001 to DEF-007 added to `deferred-backlog/v01-2026-10-22.md`, one per case (01, 09, 10, 11, 17, 18, 21), reason "Not in the current design; not built in this phase", decided by Joachim Trung on 2026-10-22, revisit trigger none. v01 Delta: new 7, open 7.
+
+## Bug Logging (2026-10-22)
+
+- Bug tasks HAIRL-1553 to HAIRL-1630 were created in Plane under the parent HAIRL-1552 (Phase 1 milestone). The source file is `project-automation/task-creation/2026-10-22/implementation-tasks-2026-10-22-001.md`. The six tester tasks HAIRL-1545 to HAIRL-1550 moved under the new manual testing parent HAIRL-1551.
+- `manual-test-bug-sync` `set-bug` set Bug status to `Logged` on 21 cases, with their Plane keys in Bug ID (several keys where a case has FE and BE tasks). Eight rows went from `—` to `Found` first, because `set-bug` does not allow `—` to `Logged` directly. Batch Summary is unchanged: 2 Pass, 17 Fail, 4 Blocked, 21 open bugs.

@@ -14,7 +14,7 @@ This folder contains documentation update reports and verification logs for the 
 
 #### **Manual Test v2 Phase 1 Run 01: B01 Results**
 
-- [MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md](2026-10-22/MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md) - Created `run-01-2026-10-21` for v2 Phase 1 (B01 to B06 result files) and merged the tester's B01 results through `manual-test-bug-sync`: 23 cases, 2 Pass, 17 Fail, 4 Blocked; Bug status left `—` pending bug logging; review items and design gaps listed.
+- [MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md](2026-10-22/MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md) - Created `run-01-2026-10-21` for v2 Phase 1 (B01 to B06 result files) and merged the tester's B01 results through `manual-test-bug-sync`: 23 cases, 2 Pass, 17 Fail, 4 Blocked; 21 cases later set to `Logged` with Plane keys HAIRL-1553 to HAIRL-1630 (parent HAIRL-1552); review items and design gaps listed.
 
 #### **Code Review Engine Choice, Delta and Jury Modes, and Deferred Backlog**
 
