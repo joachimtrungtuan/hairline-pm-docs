@@ -20,7 +20,7 @@ every open item carried forward.
 
 | Version | File | Opened | Frozen | Carried in | New | Resolved | Open at freeze |
 |---|---|---|---|---|---|---|---|
-| v01 | [v01-2026-10-22.md](v01-2026-10-22.md) | 2026-10-22 | - | 0 | 0 | 0 | - |
+| v01 | [v01-2026-10-22.md](v01-2026-10-22.md) | 2026-10-22 | - | 0 | 7 | 0 | - |
 
 ## How items work
 
