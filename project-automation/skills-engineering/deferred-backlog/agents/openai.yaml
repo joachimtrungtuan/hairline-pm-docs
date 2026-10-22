@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deferred Backlog"
+  short_description: "Record, resolve, and version issues the team chose not to fix now"
+  default_prompt: "Use $deferred-backlog to add deferred gaps or bugs with their reason and revisit trigger, resolve items, or cut a new backlog version."

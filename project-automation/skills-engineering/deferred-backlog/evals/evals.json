@@ -1,0 +1,23 @@
+{
+  "skill_name": "deferred-backlog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Defer FR-004/W3-G1 and FR-004/W3-G2 from testing/code-review/2026-10-21/code-review-v2-phase-1-all.md as one item: quote expiry automation is out of scope for the pilot. The product owner decided today; revisit at Phase 2 start.",
+      "expected_output": "One DEF-001 row in the current version's Open table listing both gap IDs, module/FR and severity read from the report, reason, who decided and date, revisit trigger 'Phase 2 start', status Open; Delta line and README row show new 1, open 1; the report is not edited.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Backlog v01 holds DEF-001 to DEF-005 and has just been cut, so v02 is current with those 5 carried. In v02, add 5 new deferrals (use placeholder sources from the Phase 1 code review), resolve DEF-001, DEF-002 and DEF-003 as fixed, then cut a new version.",
+      "expected_output": "v02 frozen with Delta 'carried 5, new 5, resolved 3, open 7'; new items are DEF-006 to DEF-010 with First recorded v02; v03 is current with 7 open rows whose DEF IDs and First recorded values are unchanged and an empty Resolved table; README version table and Current pointer updated; v01 untouched; no DEF ID reused.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Mark DEF-002 resolved \u2014 code review delta says it looks fixed.",
+      "expected_output": "Asks for the resolution evidence and who decided (one question per call) if not given, then moves DEF-002 from Open to Resolved in this version with status Resolved-fixed and the evidence; does not resolve any other item; frozen versions untouched.",
+      "files": []
+    }
+  ]
+}
