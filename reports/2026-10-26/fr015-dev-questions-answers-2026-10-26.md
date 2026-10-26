@@ -9,7 +9,8 @@
 
 **Answer types**:
 - **PRD**: already specified in the docs. Follow the cited line.
-- **PO**: Product Owner decision made on 2026-10-26, now written into the docs.
+- **PO**: Product Owner decision made on 2026-10-26, written into the docs.
+- **Delivery**: a Product Owner decision about sequencing or rollout. It is recorded in this report only, not in a PRD.
 - **BE**: an implementation choice the docs leave to the dev team. A recommendation is given where useful.
 
 Line numbers (`L…`) refer to the files as of 2026-10-26.
@@ -24,6 +25,7 @@ Line numbers (`L…`) refer to the files as of 2026-10-26.
 - **FR-020**: [`fr020-notifications-alerts/prd.md`](../../project-requirements/functional-requirements/fr020-notifications-alerts/prd.md)
 - **FR-032**: [`fr032-provider-dashboard-settings/prd.md`](../../project-requirements/functional-requirements/fr032-provider-dashboard-settings/prd.md)
 - **FR-009**: [`fr009-provider-team-roles/prd.md`](../../project-requirements/functional-requirements/fr009-provider-team-roles/prd.md)
+- **FR-013**: [`fr013-reviews-ratings/prd.md`](../../project-requirements/functional-requirements/fr013-reviews-ratings/prd.md)
 
 ---
 
@@ -130,6 +132,9 @@ The questions from both documents are merged by topic.
 | A2 | `payment_cycle` values. | `payout_frequency` = `weekly`, `twice_monthly` or `monthly`, with UI labels "Weekly", "2x a Month" and "Monthly". Drop `quarterly`. Replace `bi-monthly` with `twice_monthly`, because "bi-monthly" can also mean every two months. Periods are Mon–Sun, the 1st–15th and 16th–end, and the calendar month. | PRD/Schema: [Schema L152](../../project-requirements/system-data-schema.md); [FR-015 L358, L620](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | A3 | Field names and types. | Commission fields: `commission_model`, `commission_percentage` / `flat_rate_amount`, `flat_rate_currency`, and `effective_date` (not `start_date`). Admin change reason: `reason`, 10–500 chars after trim. Re-auth: `password` (MVP). Concurrency token: the PRD doesn't name it, so BE picks `updated_at` or `version`, but it must be **required** on every save. | PRD/Schema: [Schema §2B](../../project-requirements/system-data-schema.md); [FR-015 L439, L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); token name is BE |
 | A4 / HAIRL-1558 | Admin saves through the admin PUT or the self-service route? | The PRD defines **what** an admin may edit: the Tab 1 field table's "Admin/Provider Editable" column, plus Tabs 2, 4, 6 and 7. The route is BE's choice. **Recommendation:** extend the admin route rather than reuse the provider self-service route. Provider self-edits are exempt from the reason rule, so a shared route could let admin saves skip the required reason, audit and optimistic lock. | BE (rule source: [FR-015 Tab 1 L401+, L439](../../project-requirements/functional-requirements/fr015-provider-management/prd.md)) |
+| HAIRL-1558 | Should the admin profile save still send `commission.*`? | No. Commission is edited only in Tab 7, and Tab 1 shows it read-only. The profile save should ignore or reject commission fields. | PRD: [FR-015 L442](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| A4 / HAIRL-1558 | The admin save doesn't store `staff`, `reviews` or `reset_*_image`. | These have separate owners. **Staff** is managed through FR-009 Screen 12, embedded as Tab 3. **Reviews** go through FR-013, via Tab 5. **Profile and cover images** are editable by both admin and provider, so the admin profile save must support removing them. | PRD: [FR-009 L875](../../project-requirements/functional-requirements/fr009-provider-team-roles/prd.md); [FR-015 Tab 5 L521+, L409–410](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| HAIRL-1558 | `awards.*.is_deleted` type. | A BE fix with no PRD impact; added to the BE checklist. | BE |
 | A5 / HAIRL-1582 | Conflict error code and text; what happens after a conflict; merge? | Text: "Provider profile was modified by another admin. Please refresh and re-enter your changes." The stale save is rejected, with no last-write-wins. **No merge**: keeping the admin's input on screen plus a Refresh action is enough. Apply this to every save route: profile, commission, seat limit and document notes. The PRD doesn't fix the HTTP code. **Recommendation: 409** for conflicts, keeping 422 for validation. | PRD: [FR-015 Edge Cases L1149](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); HTTP code is BE |
 
 ### 2.2 Commission (Tab 7, wizard Step 5)
@@ -137,12 +142,12 @@ The questions from both documents are merged by topic.
 | # | Question | Answer | Type / Source |
 |---|---|---|---|
 | HAIRL-1571 | Currency list and default. | The FR-029 enabled currency list, **defaulting to the system default currency**, so it is preselected. It is required only when the model is Flat Rate. | PRD: [FR-015 L357, L621](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| HAIRL-1571 / 1599 | Effective Date rules; backdating in Tab 7? | Today or a future date in both the wizard and Tab 7. **No backdating.** "Today" = **current UTC date**. | PRD [FR-015 L622](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) + PO (UTC) |
-| HAIRL-1571 | Scheduled Configuration in the wizard? | No. The wizard's start date is simply the first configuration's Effective Date. If it is in the future, the FR-029 global default applies until then. The Scheduled Configuration display and cancel action exist **only in Tab 7**. | PRD: [FR-015 L625, L630, L636](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| HAIRL-1571 / 1599 | Value range; is 0% valid? | Percentage **0–100 with 0.1 precision, so 0% is valid.** Flat rate must be > 0 in the currency's minor units. The FE wizard must stop rejecting 0%, and BE's "0 < value" rule should become "0 ≤ value ≤ 100". | PRD: [FR-015 L356, L619](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| HAIRL-1571 / 1599 | Effective Date rules; backdating in Tab 7? | Today or a future date in both the wizard and Tab 7. **No backdating.** "Today" = **current UTC date**. | PRD [FR-015 L359, L622](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) + PO (UTC) |
+| HAIRL-1571 | Scheduled Configuration in the wizard? | No. The wizard's start date is simply the first configuration's Effective Date. If it is in the future, the FR-029 global default applies until then. The Scheduled Configuration display and cancel action exist **only in Tab 7**. | PRD: [FR-015 L625, L636](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema L267](../../project-requirements/system-data-schema.md) (a provider without an active provider-specific row uses the global default) |
+| HAIRL-1571 / 1599 | Value range; is 0% valid? | Percentage **0–100 with 0.1 precision, so 0% is valid.** Flat rate must be > 0 in the currency's minor units. The FE wizard must stop rejecting 0%. BE's commission edit already accepts 0–100; the create and store paths must add the same ≤ 100 cap. The dev team's proposed "0 < value" rule should not be adopted. | PRD: [FR-015 L356, L619](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1599 | Error code and wording (PRD said 400; BE returns 422). | **422 validation error**. The messages are "Percentage must be between 0-100%" and "Flat rate must be greater than 0." The PRD now says 422. | PO, written into [FR-015 L1152](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| HAIRL-1584 | History is wiped on edit; is the reason optional? | Never delete rows. Insert a new configuration and archive the old one (`pending`/`active`/`archived`), and keep Commission History. A reason is **required (10–500)**, and re-authentication by password is required. | PRD: [FR-015 L626, L628, L640, L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema §2B](../../project-requirements/system-data-schema.md) |
-| HAIRL-1584 | Permission. | Admins with provider-management permission. The route must check this; `auth:api` alone is not enough. | PRD: [FR-015 L434](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| HAIRL-1584 | History is wiped on edit; is the reason optional? | Never delete rows. Insert a new configuration and archive the old one (`pending`/`active`/`archived`), and keep Commission History. A reason is **required (10–500)**, and re-authentication by password is required. | PRD: [FR-015 L626, L640, L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema §2B L263](../../project-requirements/system-data-schema.md) ("An edit archives the current row and inserts a new one") |
+| HAIRL-1584 | Permission. | Admins with the FR-031 **Edit Providers** permission, which covers commission, seat limit, documents and the featured flag. The route must check this; `auth:api` alone is not enough. | PRD: [FR-015 L867](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1584 | Gating by status. | Active and Suspended providers are editable, so terms can be fixed before reactivation. Deactivated providers are read-only. FR-029 Screen 5 follows the same rule. | PRD: [FR-015 L631](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1584 | Scheduled configuration behaviour. | At most one pending configuration per provider; a new future edit replaces it and both are logged. Cancelling needs a reason and re-auth. It applies automatically on its date and is shown read-only to the provider in the FR-032 Screen 4 panel. | PRD: [FR-015 L625, L636](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1584 | Shared FR-029 scope. | Saving splits this provider out into its own single-provider scope; the others are unchanged. Warn before saving and log the split in both places. | PRD: [FR-015 L639](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
@@ -154,12 +159,13 @@ The questions from both documents are merged by topic.
 | HAIRL-1573 | Scope of "every admin save needs a reason". | Tabs 1, 2, 4 and 7, plus Tab 6 **notes**. This includes seat limit, awards and languages. **Excluded:** the Featured toggle and quick action (new), document upload, replace and delete, and provider self-edits. Status changes and Login as Provider have their own 20-character reason. | PRD [FR-015 L439, REQ-015-025 L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) + PO (Featured, Replace) |
 | HAIRL-1597 | Clinic Name 100 or 200; min 3? | **Min 3, max 200.** The dev team's "max 100" comes from an outdated copy. | PRD: [FR-015 L332](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1597 | Over-limit behaviour (block typing or show an error). | The PRD doesn't specify. The FE's "block typing + character counter" is acceptable; just keep it consistent. | BE/FE |
-| HAIRL-1597 | Specialty: free text or list? | Select from the managed **Provider Specialties** list (FR-026 Screen 5f), active values only. A stored value that is later deactivated still displays but can't be newly picked. | PRD: [FR-015 L322, L416](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| HAIRL-1597 | Specialty: free text or list? | Select from the managed **Provider Specialties** list (FR-026 Screen 5f), active values only. A stored value that is later deactivated still displays but can't be newly picked. The endpoint that serves the list is a BE choice. | PRD: [FR-015 L322, L416](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1597 | Phone country code; website. | Phone = Country Code dropdown (FR-026) plus a numeric number validated per country, so the code is required when a phone is entered. Website: http/https, auto-prepend `https://`. | PRD: [FR-015 L337, L338](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1597 | Other limits. | The dev team's list is correct: name max 50, years 0–60, licence max 50, bio 50–500, seat 1–500, and the award limits. The owner email follows the FR-009 global identity rule. | PRD: [FR-015 Screen 2 L297+](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1605 | Which Tab 1 fields are editable? Featured cap error? | Use the Tab 1 field table's last column (Admin only / Both / Display only). Featured-cap message: "Maximum of 10 featured providers reached. Unfeature another provider first." It is enforced server-side on every path. | PRD: [FR-015 Tab 1 L401+, Rule 8 L770](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) (copy added by PO) |
+| HAIRL-1605 | `show()` is missing fields: profile and cover images, Contact Phone, Contact Email separate from the owner email, Commission Summary, Featured, Seat Limit, Status, Completed Procedures, Average Rating. | Return every field in the Tab 1 table. Completed Procedures counts the FR-010 treatment-completion milestone. | PRD: [FR-015 L407–432, L441](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); BE checklist |
 | HAIRL-1607 | Last-language rule and message; reorder method. | At least 1 language. Message: "At least one language is required." Reorder by **drag-and-drop**. A reason is required (Tab 2). | PRD: [FR-015 L467, L475](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) (copy added by PO) |
-| HAIRL-1620 | Seat limit below team size: reason, warning text, what happens to extra members? | Re-auth by password. Warning: "Current team size (50) exceeds new seat limit (30). Existing team members will not be removed, but no new invitations can be sent until limit is increased or team size is reduced." The save goes ahead after the admin confirms. Team size = FR-009 seat usage (**members + pending invitations**). Nobody is removed; only new invites are blocked. A reason **is required** because Seat Limit is a Tab 1 save. | PRD: [FR-015 L443, L1154, L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [FR-009 seat usage](../../project-requirements/functional-requirements/fr009-provider-team-roles/prd.md) |
+| HAIRL-1620 | Seat limit below team size: reason, warning text, what happens to extra members? | Re-auth by password. Warning: "Current team size (50) exceeds new seat limit (30). Existing team members will not be removed, but no new invitations can be sent until limit is increased or team size is reduced." The save goes ahead after the admin confirms. Team size = FR-009 seat usage (**members + pending invitations**). Nobody is removed; only new invites are blocked. A reason **is required** because Seat Limit is a Tab 1 save. Use the shared `reason` field (10–500 characters); the existing `justification` field should be renamed or dropped. **Every path that writes Seat Limit** must apply the same rules, including the general admin profile save, which currently checks only 1–500. FR-015 L1154 now defines team size as FR-009 seat usage. | PRD: [FR-015 L443, L1154, L1183](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [FR-009 seat usage](../../project-requirements/functional-requirements/fr009-provider-team-roles/prd.md) |
 | HAIRL-1558 | Which task owns test cases 13/14 (seat-limit password and warning)? | These are seat-limit rules, so they belong to **HAIRL-1620**. | PRD mapping ([FR-015 L443, L1154](../../project-requirements/functional-requirements/fr015-provider-management/prd.md)) |
 
 ### 2.4 Documents and uploads (Tab 6)
@@ -168,8 +174,8 @@ The questions from both documents are merged by topic.
 |---|---|---|---|
 | HAIRL-1602 | Document file types (PRD looked inconsistent). | **PDF, JPG, PNG, DOCX, XLSX**, max 10MB. This is now consistent across the wizard, Tab 6 and the entities. | PRD: [FR-015 L135, L592](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | HAIRL-1602 | Cover image minimum size? | **None**: max 10MB, JPEG/PNG, recommended 1920×300. Profile picture: min 200×200, max 5MB. Server-side minimum-size checks are recommended (BE). | PRD: [FR-015 L309, L310](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| HAIRL-1602 | English and Turkish error copy. | Follows the normal translation workflow (FR-021); not a PRD decision. | Process |
-| HAIRL-1609 | Admin delete or replace of provider-uploaded documents. | Admins can view, download and add notes, but **cannot replace or delete**. Only the provider can, through FR-032. Admin-uploaded documents: full control. | PRD: [FR-015 L586](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| HAIRL-1602 | English and Turkish error copy. | Turkish follows the normal translation workflow (FR-021). The English source wording for the upload errors is not yet supplied; it is a BA follow-up (see §6). | Process / Open |
+| HAIRL-1609 | Admin delete or replace of provider-uploaded documents. | Admins can view, download and add notes, but **cannot replace or delete**. Only the provider can, through FR-032. Admin-uploaded documents: full control. | PRD: [FR-015 L586](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); error code and message are BE (403 recommended) |
 | HAIRL-1609 | Does Replace need a reason? Keep the old file? | **No reason. The old file is archived**: soft-deleted, retained for compliance and logged in Tab 8. The new file becomes current. | PO, written into [FR-015 L588](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 
 ### 2.5 Provider creation and wizard
@@ -193,30 +199,38 @@ The questions from both documents are merged by topic.
 
 | Question | Answer | Type / Source |
 |---|---|---|
-| How does Tab 5 relate to FR-013? | Tab 5 is a provider-scoped view of FR-013. Add, Edit and Remove open FR-013 Screen 8, and **all rules, reasons, removal versus redaction, and audit are owned by FR-013**. FR-015 adds no reason, and Tab 5 is not part of REQ-015-025. | PRD: [FR-015 Tab 5 L521+](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
+| How does Tab 5 relate to FR-013? | Tab 5 is a provider-scoped view of FR-013. Add, Edit and Remove open FR-013 Screen 8, and FR-013's rules apply. FR-015 adds no reason, and Tab 5 is not part of REQ-015-025. | PRD: [FR-015 Tab 5 L521+](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | Keyword search. | Required ("search by keyword"). BE either adds `search` to `get-reviews-by-provider-id` or lets the FE use `admin/reviews?provider_id=` once it is unmocked. | PRD (same); endpoint is BE |
+| Role, removal reason, delete or hide? | **Role:** adding a review needs **review management permission**, which is separate from provider management. **Reason:** an edit or removal reason is required, and a removal reason must be at least 10 characters. **Remove = unpublish and archive**, never a permanent delete. An admin may also redact text or photos after publication. | PRD: [FR-015 L533](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [FR-013 L105, L408, L418, L496](../../project-requirements/functional-requirements/fr013-reviews-ratings/prd.md) |
 | When do the FR-013 mock flags turn off? | A dev planning item for the FR-013 tasks (HAIRL-1249/1250/1252/1254). Not a PRD decision. | Open (dev planning) |
 
 ### 2.8 Lifecycle cascade, scheduled changes, Admin Support Required (BA Q1–Q14)
 
-**Section A** of the BA document lists topics the dev team considered already answered. We checked each one and confirmed it is correct.
+**Section A** of the BA document lists topics the dev team considered already answered. Each row is correct, with two citation updates. FR-015 Rule 3 is now at [L765](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) (not L761). §40 `deactivation_event_id` now references the new §41 `provider_status_events` table ([Schema §40](../../project-requirements/system-data-schema.md)).
+
+**Section C** (what the backend will handle itself):
+- **Interim adapters are not needed.** Item 1 offered temporary routes for "accepted but not paid" cases and a legacy-status adapter. Q2 and Q3 were decided against both: implement booking-at-acceptance and migrate the status values.
+- **The "additive only" principle (Source B, L7) is overridden** for this release. Q2 and Q3 change behaviour for all providers, not only suspended ones. Plan regression testing for Active providers.
+- **The field-name notes in item 3 are correct.** `quotes.cancellation_provenance` is JSON ([Schema L597](../../project-requirements/system-data-schema.md)). The booking cause lives in `bookings.cancellation_reason` ([Schema L1362](../../project-requirements/system-data-schema.md)).
+- **Add `provider_status_events`** (§41) to the list of additive tables.
+
 
 | # | Question | Answer | Type / Source |
 |---|---|---|---|
 | Q1 | What table is the "provider status event"? | Dedicated `provider_status_events`; see §1.1. | PO → [Schema §41](../../project-requirements/system-data-schema.md), [FR-015 Key Entity 5](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| Q2 | Booking at acceptance or at payment? | Align FR-006 first; see §1.2. | PO |
-| Q3 | Legacy status values. | Migrate now and deliver a migration note to FE and Flutter; see §1.4. | PO |
+| Q2 | Booking at acceptance or at payment? | Align FR-006 first; see §1.2. | Delivery |
+| Q3 | Legacy status values. | Migrate now and deliver a migration note to FE and Flutter; see §1.4. | Delivery |
 | Q4 | Standalone aftercare: which table, cancel or not? | `after_cares` is the source; reassign, not cancel; no `cancelled` request status. See §1.5. | PO → [FR-011 D4](../../project-requirements/functional-requirements/fr011-aftercare-recovery-management/prd.md), [Schema §13](../../project-requirements/system-data-schema.md) |
-| Q5 | `cancelled` in `inquiry_providers.status`: does FE know? | Not yet. It is part of the Q3 migration note. The patient sees "Offer Unavailable". | PRD [FR-004 L512](../../project-requirements/functional-requirements/fr004-quote-submission/prd.md); [Schema §5A L455](../../project-requirements/system-data-schema.md) |
-| Q6 | `password_set` on the owner's `provider_users` row instead of `providers`. | Acceptable **if allocation reads the Owner's flag**: the PRD means "the provider's login has set a password". Note the storage difference for later schema reconciliation. Rollout: yes, Active providers without a set password stop receiving new inquiries. This is intended ([FR-003 CR](../../project-requirements/functional-requirements/fr003-inquiry-submission/change-request-2026-10-15-distribution-requires-password-set.md)). Add a release note, and on staging resend activation emails via A1. | PRD: [FR-015 Rule 3 L765](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema L148](../../project-requirements/system-data-schema.md) |
+| Q5 | `cancelled` in `inquiry_providers.status`: does FE know? | Not yet. It is part of the Q3 migration note. The patient sees "Offer Unavailable". For `after_cares.status`, the cascade **never** sets `cancelled`; that value is used only when an admin cancels a case explicitly with a reason ([Schema §13 L1505](../../project-requirements/system-data-schema.md)). | PRD [FR-004 L512](../../project-requirements/functional-requirements/fr004-quote-submission/prd.md); [Schema §5A L455](../../project-requirements/system-data-schema.md) |
+| Q6 | `password_set` on the owner's `provider_users` row instead of `providers`. | Acceptable **if allocation reads the Owner's flag**: the PRD means "the provider's login has set a password". Note the storage difference for later schema reconciliation. Rollout: yes, Active providers without a set password stop receiving new inquiries. This is intended ([FR-003 CR](../../project-requirements/functional-requirements/fr003-inquiry-submission/change-request-2026-10-15-distribution-requires-password-set.md)). Add a release note, and on staging resend activation emails using the Resend Activation Email action ([FR-015 Alternative Flow A1, L169](../../project-requirements/functional-requirements/fr015-provider-management/prd.md)). | PRD: [FR-015 Rule 3 L765](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema L148](../../project-requirements/system-data-schema.md) |
 | Q7 | Can a suspended provider act on an `In Progress` booking? | **No, read-only.** No check-in, End Treatment or treatment-plan edits. The admin decides via FR-006 B7: move to Aftercare with reassignment, or cancel. | PO; PRD [FR-015 L703](../../project-requirements/functional-requirements/fr015-provider-management/prd.md), [FR-032 Rule 6](../../project-requirements/functional-requirements/fr032-provider-dashboard-settings/prd.md), [FR-006 B7 L191](../../project-requirements/functional-requirements/fr006-booking-scheduling/prd.md) |
 | Q8 | Unit of "Unresolved Support Items". | Per affected inquiry/case, linking to the FR-016 list filtered by provider and Admin Support Required. See §1.3. | PO → [FR-015 L744](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
-| Q9 | Do cancelled draft quotes notify the patient? Who gets the admin alert? | **Drafts are silent**: the patient never saw them. `provider.status_cancellation_admin_support` goes to admins, one per affected inquiry/case, as defined in FR-020. | PO; [FR-004 L142](../../project-requirements/functional-requirements/fr004-quote-submission/prd.md); [FR-020 L107–108](../../project-requirements/functional-requirements/fr020-notifications-alerts/prd.md) |
+| Q9 | Do cancelled draft quotes notify the patient? Who gets the admin alert? | **Drafts are silent**: the patient never saw them, so a cancelled draft alone triggers no patient notice. `provider.status_cancellation_admin_support` goes to **admins with View Providers permission**, one per affected inquiry/case. | PO, written into [FR-004 L145](../../project-requirements/functional-requirements/fr004-quote-submission/prd.md) and [FR-020 L107–108](../../project-requirements/functional-requirements/fr020-notifications-alerts/prd.md) |
 | Q10 | "Today": UTC or admin timezone? | **UTC.** | PO → [FR-015 L691, L622](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) |
 | Q10 | A pending deactivation falls due when the provider is already suspended. | Apply it. Cascade any records still non-terminal, but **don't overwrite** an existing `ProviderSuspended` cause or re-cancel terminal records. Write a new status event. | PRD: [FR-015 L1163](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema §41](../../project-requirements/system-data-schema.md) |
 | Q10 | Replace the legacy `POST /suspend/{id}` (`effective_date` TODO)? | Yes. Replace it with the Screen 4 contract: reason, notify flag, password, an optional Effective Date where a future date creates a §38 pending row, and the confirm flag. | PRD: [FR-015 Screen 4 L678+, L720](../../project-requirements/functional-requirements/fr015-provider-management/prd.md); [Schema §38](../../project-requirements/system-data-schema.md) |
 | Q11 | Slot hold and duplicate-slot guard. | Resolved by Q2: the hold lives on the booking, and the unique index sits on `bookings`. | PO (via Q2); [Schema §11A](../../project-requirements/system-data-schema.md) |
-| Q12 | Providers already Suspended or Deactivated before release: run the cascade once? | **Recommendation: no backfill; apply to new events only.** The current backend is a dev/test environment with no production or real patient data, so no live cases need relabelling. Revisit only if production data exists before release. | Recommendation; confirm if production data appears |
+| Q12 | Providers already Suspended or Deactivated before release: run the cascade once? | **No backfill; apply to new events only.** The current backend is a dev/test environment with no production or real patient data, so no live cases need relabelling. Revisit only if production data exists before release. | Delivery (PO confirmed) |
 | Q13 | The repo's `docs/domain/booking-states.md` conflicts with PRD/schema. | **PRD and schema are canonical.** BE updates that doc. | PRD authority |
 | Q14 | Notification content: official templates or BE/FE drafts? | FR-020 defines each event and its required content. Templates are managed by admins in **FR-030**. BE seeds default templates from the FR-020 content descriptions, and final wording can be edited in FR-030 without code changes. | PRD: [FR-020 L105–113, L331–332](../../project-requirements/functional-requirements/fr020-notifications-alerts/prd.md) |
 
@@ -228,18 +242,21 @@ The questions from both documents are merged by topic.
 |---|---|---|
 | 1 | Provider status event | Dedicated `provider_status_events` table |
 | 2 | Standalone aftercare | Reassign, don't cancel |
-| 3 | Booking timing | Align FR-006 (booking at acceptance) before the cascade ships |
-| 4 | Legacy statuses | Migrate in this release; BE delivers a migration note to the FE and Flutter devs |
+| 3 | Booking timing | Align FR-006 (booking at acceptance) before the cascade ships *(delivery decision, report only)* |
+| 4 | Legacy statuses | Migrate in this release; BE delivers a migration note to the FE and Flutter devs *(delivery decision, report only)* |
 | 5 | Suspended provider on In Progress | Read-only; admin decides via FR-006 B7 |
 | 6 | Unresolved Support Items | One per affected inquiry/case |
 | 7 | "Today" | UTC date everywhere |
 | 8 | Validation error code | 422 + PRD wording |
-| 9 | Draft quotes on suspension | Silent to patient |
+| 9 | Draft quotes on suspension | Silent to patient (FR-004, FR-020) |
 | 10 | Login as Provider | New tab; ends on End Session or 30-min inactivity; no absolute cap |
 | 11 | Document Replace | Old file archived; no reason |
 | 12 | Featured toggle | No change reason (still logged) |
 | 13 | Leave-wizard prompt | FR-032 text, Stay / Leave, no drafts; added to PRD |
 | 14 | UI copy (create success, featured cap, empty language) | Approved and added to PRD |
+| 15 | Admin support alert recipient | Admins with View Providers permission (FR-020) |
+| 16 | Seat-limit team size | FR-009 seat usage: members plus pending invitations (FR-015 L1154) |
+| 17 | Pre-release Suspended/Deactivated providers (Q12) | No backfill *(delivery decision, report only)* |
 
 ---
 
@@ -264,12 +281,17 @@ The questions from both documents are merged by topic.
    - Accept multipart `POST` + `_method=PUT`.
    - Require a reason per REQ-015-025, except for Featured.
    - Enforce min 1 language server-side.
+   - Stop accepting `commission.*` on the profile save.
+   - Support removing the profile and cover images.
+   - Send `awards.*.is_deleted` with the right type.
+   - Return every Tab 1 field from `show()` (HAIRL-1605).
 4. **Seat limit:**
    - Allow values below team size after the admin confirms, plus a password and a reason.
    - Count team size as members + pending invitations.
+   - Apply the same rules on every path that writes Seat Limit; replace `justification` with `reason`.
 5. **Documents:**
    - Add a Replace endpoint that archives the old file.
-   - Block admin delete/replace of provider-uploaded documents.
+   - Block admin delete/replace of provider-uploaded documents with a clear error (403 recommended).
    - Return each file's correct MIME type and `uploaded_by`.
 6. **Creation:**
    - Return the clinic name and the activation-email result.
@@ -288,10 +310,16 @@ The questions from both documents are merged by topic.
 
 **FE**
 
+- Send `flat_rate` and `twice_monthly` (not `flat` or `bi-monthly`).
 - Allow 0% commission.
 - Preselect the system currency.
 - Add the leave-wizard prompt.
 - Use the approved copy.
+- Add a reason dialog (10–500 characters) to admin saves in Tabs 1, 2, 4 and 7, Tab 6 notes, and the seat limit.
+- On a save conflict, keep the admin's input and offer Refresh.
+- Reorder languages by drag-and-drop.
+- Use a select list for Specialty.
+- Accept PDF, JPG, PNG, DOCX and XLSX documents.
 - Open Login as Provider in a new tab.
 - Render the new status values from the BE migration note.
 
@@ -301,14 +329,16 @@ The questions from both documents are merged by topic.
 
 | Document | Version | Change |
 |---|---|---|
-| [FR-015 PRD](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) | 1.21 | Key Entity 5 Provider Status Event; Screen 5 count unit; In Progress read-only; UTC "today"; Login as Provider tab and timeout; leave-wizard prompt; success, language and featured-cap copy; Featured and Replace need no reason; Replace archives the old file; 422; REQ-015-025; change log and approval |
+| [FR-015 PRD](../../project-requirements/functional-requirements/fr015-provider-management/prd.md) | 1.21 | Key Entity 5 Provider Status Event; Screen 5 count unit; In Progress read-only; UTC "today"; Login as Provider tab and timeout; leave-wizard prompt; success, language and featured-cap copy; Featured and Replace need no reason; Replace archives the old file; 422; REQ-015-025; UTC on the wizard Commission Start Date; team size as FR-009 seat usage; change log and approval |
 | [FR-011 PRD](../../project-requirements/functional-requirements/fr011-aftercare-recovery-management/prd.md) | 1.6 | Standalone aftercare is reassigned, not cancelled (D4, Rule 4, REQ-011-014, edge case) |
 | [FR-011 Change Request CR-FR011-20261026-01](../../project-requirements/functional-requirements/fr011-aftercare-recovery-management/change-request-2026-10-26-standalone-aftercare-reassignment.md) | — | Records the change from cancel to reassign for standalone aftercare; the 2026-10-14 and 2026-10-16 FR-011 Change Requests are marked partially superseded |
+| [FR-004 PRD](../../project-requirements/functional-requirements/fr004-quote-submission/prd.md) | 3.5 | A draft quote cancelled by provider suspension or deactivation is silent to the patient |
+| [FR-020 PRD](../../project-requirements/functional-requirements/fr020-notifications-alerts/prd.md) | 2.11 | Admin support alert goes to admins with View Providers permission; a cancelled unsent draft triggers no patient notice |
 | [System data schema](../../project-requirements/system-data-schema.md) | 1.12.0 | New §41 `provider_status_events`; FK references updated; §13 standalone rule; table list |
 | [Update log](../../project-requirements/update-logs/2026-10-26/FR015_DEV_QUESTIONS_RESOLUTION_2026-10-26.md) | — | Major-change log and README entries |
 
 ## 6. Still Open
 
 - **FR-013 mock flags (HAIRL-1622):** dev planning decides when the admin review routes are unmocked. Tab 5 Add/Edit/Remove depends on it.
-- **Q12 backfill:** this answer assumes there is no production data before release. Revisit if that changes.
+- **HAIRL-1602 English error copy:** the English wording for the document upload errors still needs to be written. This is a BA follow-up; Turkish follows once English is set.
 - **`password_set` storage (Q6):** the schema says `providers.password_set` while BE uses the Owner's `provider_users.password_set`. Behaviour is equivalent; reconcile the schema or the code during implementation reconciliation.
