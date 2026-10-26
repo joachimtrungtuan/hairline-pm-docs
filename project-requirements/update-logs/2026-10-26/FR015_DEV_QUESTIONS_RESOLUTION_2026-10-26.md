@@ -45,6 +45,12 @@ An independent documentation audit compared the answer report against both dev-t
 - [FR-015 PRD](../../functional-requirements/fr015-provider-management/prd.md) v1.21 (same version): the wizard Commission Start Date uses the UTC date, and the seat-limit edge case defines team size as FR-009 seat usage (members plus pending invitations; PO decision).
 - Answer report: added the missed answers (HAIRL-1558, 1605, 1620, 1622, Q5, Section C), corrected citations, and labelled decisions 3 and 4 and Q12 as delivery decisions recorded only in the report (PO decision). It also extended the BE and FE checklists.
 
+## Open Items Settled (Product Owner, 2026-10-26)
+
+- [FR-015 PRD](../../functional-requirements/fr015-provider-management/prd.md) v1.21 (same version): added the approved English upload error messages (wrong format, too large, image below 200 × 200) for every admin upload (HAIRL-1602). REQ-015-011 now says `password_set` belongs to the owner's login.
+- [System data schema](../../system-data-schema.md) v1.12.0 (same version): `password_set` moved from §2 `providers` to the owner's §4 `provider_users` row to match the backend. The distribution-eligibility and activation-token rules now read the owner's flag, and the `(status, password_set)` index on `providers` is removed. Behaviour is unchanged.
+- Answer report: §6 Still Open is now empty. The FR-013 mock-flag timing is recorded as a delivery dependency for HAIRL-1622, in the report only.
+
 ## Not Changed
 
 - FR-006 and FR-032 already match these decisions; no edits were needed.
