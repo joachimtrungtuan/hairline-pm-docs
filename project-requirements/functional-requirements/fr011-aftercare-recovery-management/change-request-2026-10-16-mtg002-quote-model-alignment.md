@@ -83,4 +83,4 @@ Screen 14 offered "Reassign Provider" as an always-available button with no fiel
 - **PRD change log**: v1.5 final audit corrections (2026-10-18)
 - **Update log**: Combined 2026-10-16 MTG-002 log (controller-owned)
 - **Supersedes**: CR-FR011-20261014-01 in part (cancellation of treatment-linked aftercare cases on provider suspension or deactivation)
-- **Superseded by**: None
+- **Superseded by**: [CR-FR011-20261026-01](change-request-2026-10-26-standalone-aftercare-reassignment.md) in part (standalone aftercare cases are no longer cancelled on provider suspension or deactivation; they are reassigned on Screen 19)

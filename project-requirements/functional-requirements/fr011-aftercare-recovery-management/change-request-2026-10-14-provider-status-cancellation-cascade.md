@@ -84,4 +84,4 @@ FR-015 makes an effective provider suspension or deactivation automatically canc
 - **PRD change log**: [FR-011 Appendix: Change Log](prd.md#appendix-change-log), v1.4 dated 2026-10-14.
 - **Update log**: [FR015_VERIFICATION_ALIGNMENT_2026-10-14.md](../../update-logs/2026-10-14/FR015_VERIFICATION_ALIGNMENT_2026-10-14.md).
 - **Supersedes**: None.
-- **Superseded by**: None.
+- **Superseded by**: [CR-FR011-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) in part (treatment-linked cases) and [CR-FR011-20261026-01](change-request-2026-10-26-standalone-aftercare-reassignment.md) in part (standalone cases). Provider suspension or deactivation no longer cancels any aftercare case; cases are reassigned on Screen 19.
