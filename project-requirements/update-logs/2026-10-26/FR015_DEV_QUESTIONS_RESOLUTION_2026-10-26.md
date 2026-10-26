@@ -36,8 +36,17 @@
 13. Leave-wizard prompt: reuses the FR-032 text and is added to the PRD.
 14. UI copy for creation success, the featured cap, and the empty language list: approved and added to the PRD.
 
+## Follow-up After Independent Review
+
+An independent documentation audit compared the answer report against both dev-team question documents. It found missed sub-questions, weak citations, and three decisions that were not written into any PRD. Fixes:
+
+- [FR-004 PRD](../../functional-requirements/fr004-quote-submission/prd.md) 3.4 → 3.5: a draft quote cancelled by provider suspension or deactivation is silent to the patient (PO decision 9).
+- [FR-020 PRD](../../functional-requirements/fr020-notifications-alerts/prd.md) 2.10 → 2.11: `provider.status_cancellation_admin_support` goes to admins with View Providers permission (PO decision); no patient notice for a cancelled unsent draft.
+- [FR-015 PRD](../../functional-requirements/fr015-provider-management/prd.md) v1.21 (same version): the wizard Commission Start Date uses the UTC date, and the seat-limit edge case defines team size as FR-009 seat usage (members plus pending invitations; PO decision).
+- Answer report: added the missed answers (HAIRL-1558, 1605, 1620, 1622, Q5, Section C), corrected citations, and labelled decisions 3 and 4 and Q12 as delivery decisions recorded only in the report (PO decision). It also extended the BE and FE checklists.
+
 ## Not Changed
 
-- FR-006, FR-020, and FR-032 already match these decisions; no edits were needed.
+- FR-006 and FR-032 already match these decisions; no edits were needed.
 - FR-015: no Change Request. The FR-015 decisions clarify existing contracts (status event entity, UI copy, timing, validation) and do not reverse an approved contract. CR-FR015-20261016-01 already routes standalone aftercare to admin reassignment.
 - Implementation reconciliation is pending.
