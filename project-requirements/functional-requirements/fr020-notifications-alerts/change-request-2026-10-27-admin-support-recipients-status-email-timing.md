@@ -7,7 +7,7 @@
 **Implementation Reconciliation**: Required
 **Requested Date**: 2026-10-26
 **Decision Date**: 2026-10-27
-**PRD Version Change**: v2.11 to v2.12 (FR-016 v1.9 to v1.10; FR-015 v1.21 to v1.22)
+**PRD Version Change**: v2.11 to v2.12 (FR-016 v1.9 to v1.10; FR-015 v1.21 to v1.22; FR-030 v1.15 to v1.16)
 **Related Commit(s)**: Pending
 
 ---
@@ -69,6 +69,7 @@ The same decision fixes when and to whom provider status emails are sent:
   - FR-016 v1.10: Module Scope role model, Flow A7 Access, Screen 2 Resolve Support.
   - FR-015 v1.22: Screen 4 (Admin Support Required, Notification Email, Email timing, Email recipient, Cancel Scheduled Change), Screen 5 Notify Provider, A6, FR-016 dependency.
   - FR-031: owner of the Respond to Support and View Patients permissions and the default roles.
+  - FR-030 v1.16: catalog rows for `provider.status_cancellation_admin_support`, `provider.suspended` / `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled`, the Non-Disableable rules, and the FR-015 / FR-016 integration point mirror the new recipients and email timing.
 - **System documents**: none.
 
 ### Implementation Reconciliation
