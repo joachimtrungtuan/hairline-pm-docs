@@ -254,8 +254,8 @@ The questions from both documents are merged by topic.
 | 12 | Featured toggle | No change reason (still logged) |
 | 13 | Leave-wizard prompt | FR-032 text, Stay / Leave, no drafts; added to PRD |
 | 14 | UI copy (create success, featured cap, empty language) | Approved and added to PRD |
-| 15 | Admin support alert recipient | Admins with View Providers permission (FR-020) |
-| 16 | Seat-limit team size | FR-009 seat usage: members plus pending invitations (FR-015 L1154) |
+| 15 | Admin support alert recipient | Admins with View Providers permission (FR-020). *Superseded 2026-10-27 by §7 F7: Respond to Support.* |
+| 16 | Seat-limit team size | FR-009 seat usage: members plus pending invitations (FR-015 L1154). *Refined 2026-10-27 by §7 F13: the Owner and expired invitations do not count.* |
 | 17 | Pre-release Suspended/Deactivated providers (Q12) | No backfill *(delivery decision, report only)* |
 | 18 | Upload error copy (HAIRL-1602) | English messages approved and added to FR-015 |
 | 19 | FR-013 mock flags (HAIRL-1622) | Tab 5 Add/Edit/Remove waits for the FR-013 tasks to unmock *(delivery decision, report only)* |
@@ -347,3 +347,77 @@ None. The three items left open earlier were settled on 2026-10-26 (§3 items 18
 - **HAIRL-1602 English error copy:** approved and added to FR-015.
 - **FR-013 mock flags (HAIRL-1622):** a delivery dependency; Tab 5 Add/Edit/Remove waits for the FR-013 tasks to unmock.
 - **`password_set` storage (Q6):** BE placement accepted; the schema now matches.
+
+---
+
+## 7. Follow-up Questions (2026-10-27)
+
+**Source answered**: `FR015-BA-FOLLOWUP-QUESTIONS-2026-10-26.md`, items F1–F21.
+**Decisions**: Product Owner, 2026-10-27.
+
+Citations below use section names, not line numbers, because line numbers shift with every edit. PRD paths are under `project-requirements/functional-requirements/`.
+
+### 7.1 Status values and backward compatibility (F1, F2)
+
+The requirement status values in the PRDs and the schema do not change. The legacy values the backend stores today are migrated in the same release that ships the FR-015 provider-status cascade. Internal tester builds count as real consumers, so the old API keeps working during a compatibility window.
+
+- **Old to new (data migration):** `requested` becomes `inquiry` and `offers` becomes `quoted`. An unpaid `scheduled` becomes booking `accepted` while the payment hold is open, otherwise `payment_window_expired`. `confirmed`, `inprogress`, `aftercare` and `completed` become `confirmed`, `in_progress`, `aftercare` and `completed`. `cancelled` on an accepted quote becomes booking and inquiry `cancelled`. `rejected` becomes `cancelled_other_accepted` when the inquiry has another accepted quote, otherwise `expired`. Any unlisted value is listed by BE and mapped by BA before migration.
+- **New to old (legacy `/api/v1` routes):** booking `accepted` is returned as `pending_deposit`. `payment_window_expired` is returned as `cancelled` with reason "Payment window expired". A booking cancelled by provider suspension or deactivation is returned as `cancelled` with the cause as the reason. A cancelled `inquiry_providers` row hides that provider from the legacy list. Other values use their legacy spelling.
+- **Window:** new values only on new-version routes; legacy routes keep legacy values for the BE ADR-003 deprecation window (3 months). BE lists the endpoints that need a new version and confirms them with BA and the Product Owner before building.
+- **Where:** CR-FR003-20261027-01, CR-FR004-20261027-01 (full mapping table), CR-FR006-20261027-01; schema §5 "Legacy status value migration" note and the ENUM Types note.
+
+### 7.2 Decisions by item
+
+| Item | Topic | Decision | Where |
+|---|---|---|---|
+| F1, F2 | Status values | Migrate with a two-way mapping and a 3-month `/v1` window (see §7.1) | Three status CRs; schema §5 |
+| F3 | Booking vs appointment | The booking is created as `accepted` with the AcceptanceEvent and slot hold; the appointment (`schedules`) is created at the first payment. An expired window keeps the booking as Payment Window Expired; no appointment exists | FR-006 Main Flow "Booking Creation", Alternative Flow B1 |
+| F4, F21.3 | Supersession record | The accepted quote keeps `accepted` and the AcceptanceEvent stays unchanged; FR-005 writes the supersession record only when the admin accepts the replacement quote | FR-004 Workflow 3; FR-015 Dependencies (FR-005) |
+| F5 | Suspended provider on open cases | Chat with patients on In Progress and Aftercare cases stays available; clinical notes, photos and aftercare actions are blocked until the admin decides | FR-032 Rule 6; FR-015 Screen 4 |
+| F6 | Status email timing | With Notify Provider checked, email when the scheduled change is created (with the date) and again when it takes effect; unchecked, no email at either point | FR-015 Screen 4; FR-020 catalog and REQ-020-014; CR-FR020-20261027-01 |
+| F7 | Admin support alert and Resolve | Alert goes to admins with FR-031 Respond to Support; Resolve Support needs Respond to Support; the list needs View Patients. Replaces decision 15 | FR-020 catalog; FR-016 Flow A7 and Screen 2; FR-015 Screen 4; CR-FR020-20261027-01 |
+| F8 | Cascade execution | Status change and status event in one transaction; the cascade is an idempotent background job, target 5 minutes; eligibility checks block at once; reactivation does not stop a running cascade | FR-015 Alternative Flow A5, REQ-015-020 |
+| F9 | No live offer left | Before acceptance, if the cancelled offer leaves the patient no live offer, the inquiry is redistributed automatically to eligible providers that have not received it; the patient sees "We are finding new offers for you." If the patient had selected that provider, the patient confirms first | FR-003 Workflow 2 Alternative Flow B4, Rule 6, REQ-003-021; FR-020 `provider.status_cancellation_patient`; CR-FR003-20261027-02 |
+| F10 | Closure request table | No blocking checks; BE migrates `provider_deletion_requests` to `provider_account_closure_requests` and maps statuses, keeping `/v1` compatible | Schema §40; FR-032 closure flow |
+| F11 | Leaving the wizard | Stay / Leave with the FR-032 text, no Save option | FR-015 Screen 2 |
+| F12 | Login as Provider | Allowed for Active and Suspended (session read-only for Suspended); blocked for Deactivated; also covers team members | FR-015 header actions, REQ-015-026; FR-009 Screen 11, REQ-009-023 |
+| F13 | Seat usage | Joined non-Owner members plus pending invitations; the Owner and expired invitations do not count. Refines decision 16 | FR-015 Seat Limit and edge cases; FR-009 Team Size Meter, Screen 12, Rule 6; CR-FR015-20261027-01 |
+| F14 | Admin actions on an inactive provider | Revive Booking, appointment change and replacement-quote acceptance require an Active provider, with a blocking message | FR-006 Screens 7, 8 and 10, REQ-006-020; FR-015 Rule 9, REQ-015-020; CR-FR006-20261027-02 |
+| F15 | Concurrent edits | No optimistic lock; last save wins for admin and provider | FR-015 edge cases; FR-032 Concurrent Edits Rule; CR-FR015-20261027-01 |
+| F16 | Owner email change | Admin re-enters own password; notices to old and new addresses; Owner signed out everywhere; a pending activation link is replaced; no Owner confirmation | FR-015 Tab 1 |
+| F17 | Encryption | No application-level encryption of email, phone or license; database/disk encryption at rest, TLS and access control; partial search and uniqueness keep working | FR-015 Security; CR-FR015-20261027-01 |
+| F18 | Closure with scheduled deactivation | Request stays pending with "Closure requested, deactivation scheduled [date]"; approved when the deactivation applies; a cancelled schedule leaves it pending with no rejection email | FR-015 Alternative Flow A7, Screen 1; FR-032 closure steps; schema §40 |
+| F19 | Commission on deactivation and display | Deactivation cancels pending configurations (logged in Commission History); global-default providers show "15% (Default)" and sort by the effective rate; future-only configurations show the current rate plus "Scheduled" | FR-015 Screen 1, Tab 1, Tab 7 |
+| F20 | Status email recipients | Suspended, deactivated, reactivated and scheduled-change-cancelled emails go to the Owner only | FR-015 Screens 4 and 5; FR-020 catalog |
+| F21.1 | Creation success message | "Provider [Clinic Name] created successfully. An activation email has been sent to [email]." everywhere | FR-015 User Story 1 |
+| F21.2 | Email delay warning | "Notification queued but not yet delivered." everywhere | FR-015 External Service 1, edge cases |
+| F21.4 | Activity log export | CSV of the filtered rows; needs View Providers; IPs unmasked; the export is logged | FR-015 Tab 8 |
+| F21.5 | Resend Activation Email | Needs FR-031 Edit Providers; shown only when Active and the password is not set | FR-015 header actions, Security |
+
+### 7.3 Documentation changes (2026-10-27)
+
+| Document | Version |
+|---|---|
+| FR-003 PRD | 2.11 → 2.12 |
+| FR-004 PRD | 3.5 → 3.6 |
+| FR-006 PRD | 2.10 → 2.11 |
+| FR-009 PRD | 1.5 → 1.6 (proposed) |
+| FR-015 PRD | 1.21 → 1.22 |
+| FR-016 PRD | 1.9 → 1.10 |
+| FR-020 PRD | 2.11 → 2.12 |
+| FR-032 PRD | 1.12 → 1.13 |
+| System data schema | 1.12.0 → 1.13.0 |
+
+New Change Requests: CR-FR003-20261027-01, CR-FR003-20261027-02, CR-FR004-20261027-01, CR-FR006-20261027-01, CR-FR006-20261027-02, CR-FR015-20261027-01, CR-FR020-20261027-01. Update log: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../project-requirements/update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md).
+
+### 7.4 Still Open
+
+These points were filled in while writing F9 and F14. They need Product Owner confirmation:
+
+1. **F9 trigger:** redistribution applies only when the cancelled offer was a sent, unexpired quote. A provider that had only a draft, or no quote yet, does not trigger it.
+2. **F9 no reply:** if the patient had selected the provider and does not confirm, or declines, the inquiry is not redistributed and has no timeout. The patient keeps Contact Support.
+3. **F9 exclusive inquiries (FR-037):** released the same way as the explicit-decline fallback (REQ-003-016).
+4. **F9 data:** the schema has no field for "redistribution waiting for patient confirmation". BE may need one.
+5. **F14 wording:** "accept on behalf" does not exist in FR-005 or FR-006. The check applies to the admin's acceptance of a replacement quote (FR-006 B5), with the message "…choose another replacement provider".
+6. **FR-016 role wording:** Rule 3, Privacy Rule, Authorization, REQ-016-019 and two other lines still describe a single Super Admin role, which conflicts with FR-031.
+7. **FR-030 catalog:** may need the new recipients, email timing and patient variants from FR-020 v2.12.
