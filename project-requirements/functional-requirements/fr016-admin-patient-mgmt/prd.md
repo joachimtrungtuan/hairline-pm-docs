@@ -464,7 +464,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **CRITICAL**: Admin must enter justification before viewing medical data (audit compliance)
 - Justification dialog appears immediately upon clicking "Medical Data" tab
-- All Super Admins have full access to medical data (with mandatory justification)
+- Medical data is available only to admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default), always with mandatory justification; View Patients alone shows the profile without medical data
 - Every access logged with: admin ID, timestamp, justification, data viewed
 - Medical questionnaire responses color-coded by severity:
   - Red (Critical): HIV, blood disorders, heart conditions
@@ -598,7 +598,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Audit log integrates with system-wide audit service (S-06)
 - Tamper-proof checksums ensure log integrity
 - Retention: Audit logs retained for minimum 10 years (compliance requirement)
-- All entries currently originate from the single Super Admin role (no role hierarchy in MVP)
+- Entries can originate from any admin role defined in FR-031; each entry records the acting admin, whose actions are limited to that role's FR-031 permissions
 
 ---
 
@@ -680,8 +680,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Rule 1**: All admin actions on patient accounts MUST be logged in audit trail with timestamp, admin ID, and justification
 - **Rule 2**: Admins MUST NOT modify patient medical data (questionnaire responses, scans); medical data is immutable except by patients
-- **Rule 3**: MVP supports a single Super Admin role with full visibility/edit rights; granular RBAC is deferred
-- **Rule 4**: High-impact actions (account suspension, refunds > $1000, permanent data deletion) MUST require enhanced confirmation + justification, even though the same Super Admin executes them
+- **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Specialist by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Specialist, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving
+- **Rule 4**: High-impact actions (account suspension, refunds > $1000, permanent data deletion) MUST require enhanced confirmation + justification, in addition to the FR-031 permission the action needs (Edit Patients for account suspension, Issue Refunds for refunds, Delete Patients for data deletion)
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance)
 - **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per compliance requirements (7 years)
 - **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST go through the FR-006 Change Appointment or Cancel Booking action and MUST notify both patient and provider within 5 minutes through `booking.rescheduled` or `booking.cancelled`
@@ -691,7 +691,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Privacy Rule 1**: Admin access to patient medical data MUST be logged with justification (Protected Health Information)
 - **Privacy Rule 2**: Patient scans displayed in admin interface MUST be read-only and access-controlled (prevent unauthorized distribution)
-- **Privacy Rule 3**: Super Admins can download patient scans; all downloads are logged in audit trail for compliance
+- **Privacy Rule 3**: Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default) can view and download patient scans; all downloads are logged in audit trail for compliance
 - **Privacy Rule 4**: Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance)
 - **Privacy Rule 5**: Patient data deletion requests (GDPR right to be forgotten) MUST result in anonymization + archival, not permanent deletion
 - **Privacy Rule 6**: Archived patient data accessible only through dedicated archive interface (requires explicit justification and logged access)
@@ -719,7 +719,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 **High-Impact Actions (require extended confirmation + justification)**:
 
-- Account suspension (30+ days or permanent)
+- Account suspension (any duration: 30 days, 90 days, or permanent)
 - Refunds exceeding $1,000
 - Manual booking modifications during active treatment (handled on case detail screen)
 - Bulk patient notifications
@@ -837,7 +837,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Source**: Booking module (P-03), updated throughout booking lifecycle
 
 - **State: Admin Permissions**
-  - **Why needed**: Cannot authenticate Super Admin access without admin authentication configuration
+  - **Why needed**: Cannot authenticate admins or authorize their actions without the admin authentication configuration and the FR-031 role permissions
   - **Source**: Admin authentication and permission module (A-09 System Settings)
 
 - **State: Provider Profiles**
@@ -865,7 +865,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 ### Business Process Assumptions
 
 - **Assumption 1**: Admin team operates during business hours with on-call coverage for emergencies (24/7 monitoring not required initially)
-- **Assumption 2**: Super admin coverage is available within 4 business hours to perform any high-impact confirmations
+- **Assumption 2**: An admin holding the FR-031 permission that a high-impact action needs (for example Issue Refunds, Edit Patients, or Delete Patients) is available within 4 business hours to perform its enhanced confirmation
 - **Assumption 3**: Patient support escalations escalate to admin interventions only when support team cannot resolve via communication (see FR-034)
 - **Assumption 4**: Admin interventions are exceptional; most patient journeys proceed smoothly without admin involvement (< 10% of patients require intervention)
 
@@ -885,7 +885,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Integration 1**: Admin dashboard fetches patient data from patient microservice API via REST
   - **Data format**: JSON payload with patient profile, status, metadata
-  - **Authentication**: Admin JWT token with Super Admin role validation
+  - **Authentication**: Admin JWT token with FR-031 permission validation (View Patients for patient data; Manage Aftercare for medical data and scans)
   - **Error handling**: Display cached data if API unavailable; show warning banner
 
 - **Integration 2**: Medical data tab requests head scan media from media storage service
@@ -909,7 +909,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 ### Security Considerations
 
 - **Authentication**: Admins MUST authenticate via multi-factor authentication (MFA required for production access)
-- **Authorization**: Single Super Admin role validated on every API call; additional RBAC tiers deferred but tracked for future scope
+- **Authorization**: The admin's FR-031 role permissions are validated on every API call; each action requires its matching FR-031 permission
 - **Encryption**: All patient data encrypted in transit (TLS 1.3) and at rest (AES-256)
 - **Audit trail**: Every admin action logged with tamper-proof checksums; audit logs immutable (append-only)
 - **Threat mitigation**: Rate limiting on patient search API (max 100 searches per admin per minute) to prevent data scraping
@@ -1129,8 +1129,8 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 
 ### Security & Privacy Requirements
 
-- **REQ-016-019**: System MUST enforce authenticated Super Admin access with MFA; additional RBAC tiers are out-of-scope for this release
-- **REQ-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (suspensions > 30 days, refunds > $1,000, permanent account deletions) even though the same Super Admin executes them
+- **REQ-016-019**: System MUST enforce authenticated admin access with MFA and MUST authorize each action against the admin's FR-031 role permissions
+- **REQ-016-020**: System MUST require enhanced confirmation + justification for high-impact actions (account suspensions of any duration, refunds > $1,000, permanent data deletion) even when the admin holds the FR-031 permission for the action
 - **REQ-016-021**: System MUST log all admin downloads of patient head scan media in audit trail with timestamp, admin ID, and justification
 - **REQ-016-022**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest (AES-256)
 - **REQ-016-023**: System MUST never display patient payment card details in admin interface (PCI-DSS compliance)
@@ -1151,7 +1151,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
   - **Relationships**: One patient has many inquiries; one patient has many bookings; one patient has many payments; one patient has many communications (with providers, support, aftercare)
 
 - **Entity 2 - Admin Action Log (Audit Trail)**
-  - **Key attributes**: action_id, admin_id, patient_id, action_type (password_reset, booking_modification, refund, suspension), action_description, justification, timestamp, impact_level (low, medium, high), approval_status (approved, pending, rejected) - reserved for future RBAC implementation
+  - **Key attributes**: action_id, admin_id, patient_id, action_type (password_reset, booking_modification, refund, suspension), action_description, justification, timestamp, impact_level (low, medium, high), approval_status (approved, pending, rejected) - reserved for a future approval workflow
   - **Relationships**: One admin performs many actions; one patient account has many admin actions performed on it
 
 - **Entity 3 - Medical Data Access Log**
@@ -1176,7 +1176,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-10-16 | 1.7 | MTG-002 quote model alignment (minor wording, decision M18): the admin-support trigger and its user story now include an accepted booking closed for the FR-006 provider-fault transfer while the inquiry stays open. No CR needed (clarification only). | Vân Tay Media |
 | 2026-10-18 | 1.8 | Consolidated verification corrections (decision D2): admin booking date edits are limited to the FR-006 guarded date change (`Accepted` or `Confirmed`, mandatory reason, slot availability check), and User Story 3 now flags linked travel records for an FR-008 travel-date review instead of stating that travel details remain intact. No CR: this aligns FR-016 with the existing FR-006 rule (CR-FR006-20261016-01) and does not change FR-016 scope. | Vân Tay Media |
 | 2026-10-18 | 1.9 | Final audit corrections (Q37, Q42, Q43): journey stage lists in the Main Flow and Screen 1 now use the FR-003 stage list (Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled); Suspended moves to a new Account Status Filter. New Flow A8 and Screen 9 (Booking Support Requests) route support-routed patient cancellation and change requests to the FR-006 Cancel Booking and Change Appointment actions with outcome, reason and audit entry. Rule 7, Admin Editability, User Story 3, REQ-016-010 and the FR-006 dependency use the FR-006 actions and `booking.rescheduled` or `booking.cancelled`; patient account suspension cancels bookings through FR-006. REQ-016-031 and REQ-016-032 added. See CR-FR016-20261016-01. | Product Owner / Documentation |
-| 2026-10-27 | 1.10 | FR-015 dev-team follow-up decisions (F7), aligned with [CR-FR020-20261027-01](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md): Flow A7 and Screen 2 Resolve Support require the FR-031 Respond to Support permission, and the Admin Support Required list requires View Patients; the admin-support alert goes to admins with Respond to Support. Wording: the Module Scope role-model line now points to the FR-031 admin roles and permissions instead of the outdated single Super Admin role. | Product Owner / Documentation |
+| 2026-10-27 | 1.10 | FR-015 dev-team follow-up decisions (F7), aligned with [CR-FR020-20261027-01](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md): Flow A7 and Screen 2 Resolve Support require the FR-031 Respond to Support permission, and the Admin Support Required list requires View Patients; the admin-support alert goes to admins with Respond to Support. Wording: the Module Scope role-model line now points to the FR-031 admin roles and permissions instead of the outdated single Super Admin role. Later the same day: the remaining single-Super-Admin and deferred-RBAC statements (Screen 4 Medical Data, Screen 7 Admin Actions audit log, General Module Rules 3 and 4, Privacy Rule 3, the Admin Permissions dependency, Assumption 2, Integration 1, Security Considerations, REQ-016-019, REQ-016-020, and the Admin Action Log entity) now name the FR-031 permission that authorizes each action; MFA, mandatory justification, audit logging, and the high-impact enhanced confirmation rules are unchanged. Medical data and scan access require Manage Aftercare (Super Admin and Aftercare Specialist by default), not View Patients (Product Owner decision); patient suspension maps to Edit Patients and permanent deletion to Delete Patients. Enhanced confirmation applies to every account suspension (the only durations are 30 days, 90 days, and permanent); REQ-016-020 and the High-Impact Actions list no longer say "> 30 days" or "30+ days", matching Rule 4. | Product Owner / Documentation |
 
 ---
 
