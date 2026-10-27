@@ -9,6 +9,7 @@
 **Change Request**: [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md) — Account closure as an admin-processed deactivation request
 **Change Request**: [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md) — Closure request notifications and admin marker
 **Change Request**: [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) — Inquiry-cancelled quote notice made mandatory (no provider toggle)
+**Related Change Request**: [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md) — Last-save-wins provider profile saves (no conflict check)
 
 ---
 
@@ -760,7 +761,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 9. System logs closure request in audit trail (user, timestamp, reason)
 10. System sends the FR-020 `provider.closure_requested` notification to admins (mandatory), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter
 11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated."
-12. Provider account remains Active until admin processes the request
+12. Provider account remains Active until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent
 13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
 14. System applies the FR-015 deactivation:
     - Provider account status changed to "Deactivated"
@@ -769,7 +770,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - All non-terminal inquiries, quotes, and bookings cancelled under the FR-015 Screen 4 cascade, with patient and admin-support notifications (FR-020); captured payments reconciled by FR-017
     - All provider data retained in archive (per FR-023 data retention: minimum 7 years)
     - Bank account details encrypted and archived
-15. System sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises
+15. When the deactivation takes effect, the system sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises
 16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later
 
 ### Alternative Flows
@@ -1623,7 +1624,7 @@ Each message in the thread displays:
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
 - **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015.
-  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, and billing are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins.
+  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, and billing are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins. Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4).
   - **Deactivated**: Login is disabled for the Owner and all team members. A login attempt shows "This account has been deactivated. Contact support@hairlineapp.com for assistance." and no session is created.
   - **Reactivated**: The banner is removed on the next page load and normal editing returns; nothing cancelled by the suspension is restored (FR-015 Screen 5).
 
@@ -1635,6 +1636,7 @@ Each message in the thread displays:
 - **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value
 - **GDPR Compliance**: Provider account closure request gives the provider a path to request erasure (FR-015 deactivation with data archival per FR-023, not permanent deletion)
 - **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
+- **Concurrent Edits Rule**: Provider profile saves are last-save-wins. If a provider user and an admin (FR-015), or two provider users, edit the same fields at the same time, the later save overwrites the earlier one; there is no conflict check and no conflict message. Every save is logged in the audit trail with old and new values
 
 ### Admin Editability Rules
 
@@ -2072,6 +2074,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 | 2026-10-16 | 1.10 | MTG-002 notification alignment via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): removed provider control over the inquiry-cancelled quote notice (`quote.cancelled_inquiry`); the Quote Notifications toggle, Disable All and channel preferences no longer suppress it; updated Main Flow step 4, Alternative Flow A5, Screen 3 and Rule 2, and added REQ-032-031. Aligns with FR-020 v2.8 and FR-030 v1.13. Decision Q12. Status reset to pending consolidated verification. | Claude |
 | 2026-10-18 | 1.11 | Consolidated verification corrections via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): User Story 2 scenario 2 now states that "all disabled" still lets critical system alerts and mandatory notices such as `quote.cancelled_inquiry` through (Q12). | Product Owner / Documentation |
 | 2026-10-18 | 1.12 | Final audit corrections via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): the preference exemption now covers every mandatory provider notice (`quote.cancelled_inquiry`, the `quote.accepted` outcomes, `booking.payment_window_expired`, `booking.revived` and the new mandatory `booking.rescheduled`, Q42), not only the inquiry-cancelled notice, in Main Flow step 4, Screen 3 fields and rules, Rule 2 and REQ-032-031. Later the same day (decision Q47): the mandatory FR-011 aftercare reassignment notice `aftercare.provider_reassigned` is added to the mandatory provider notices that preferences cannot suppress (Screen 3 rules, Rule 2, REQ-032-031). | Product Owner / Documentation |
+| 2026-10-27 | 1.13 | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27): added the Concurrent Edits Rule (provider profile saves are last-save-wins, no conflict check), mentioned in [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md); Rule 6 Suspended now keeps chat with patients on open In Progress and Aftercare cases while clinical notes, photos, and aftercare actions stay blocked until the admin decides; Request Account Closure steps 12 and 15: a request with a scheduled deactivation stays Pending Admin Review until the deactivation takes effect, and stays pending if the scheduled change is cancelled. Open bookings and pending payouts already never block a closure request (step 8, User Story 7 scenario 3); no change | Product Owner / Documentation |
 
 ---
 
@@ -2083,10 +2086,11 @@ A provider closing their clinic permanently requests account closure, and an adm
 | Technical Lead | [Name] | 2025-12-03 | ✅ Approved |
 | Stakeholder | [Name] | 2025-12-03 | ✅ Approved |
 | Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-032 v1.10 to v1.12 via MTG-002 decision log (documentation only), including CR-FR032-20261016-01 |
+| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved FR-032 v1.13 (documentation only) |
 
 ---
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-10-27

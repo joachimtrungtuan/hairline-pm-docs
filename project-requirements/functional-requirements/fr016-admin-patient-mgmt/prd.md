@@ -6,6 +6,7 @@
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-016 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
 **Change Request**: [CR-FR016-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md) (previous: [CR-FR016-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
+**Related Change Request**: [CR-FR020-20261027-01 — Admin-support alert recipients and provider status email timing](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md)
 
 ---
 
@@ -34,7 +35,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Patient Platform (P-##)**: No direct patient-facing functionality - patients are unaware of admin oversight
 - **Provider Platform (PR-##)**: No provider-facing functionality - providers don't see admin interventions
 - **Admin Platform (A-01)**: Full patient management interface with search, view, edit, and oversight capabilities
-- **Admin Platform Role Model**: MVP ships with a single Super Admin role; no ranking or tiered permissions are supported yet
+- **Admin Platform Role Model**: Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Specialist, Billing Staff, and Support Staff, plus custom roles
 - **Shared Services (S-##)**: Uses S-03 (Notification Service) for alerts and S-05 (Media Storage Service) for accessing patient scans
 
 ### Multi-Tenant Breakdown
@@ -265,7 +266,8 @@ This is a critical operational module that ensures the platform can provide effe
 
 **A7: Admin resolves provider-caused cancellation support**:
 
-- **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation, or closes an accepted booking for the FR-006 provider-fault transfer while the inquiry stays open, with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert
+- **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation, or closes an accepted booking for the FR-006 provider-fault transfer while the inquiry stays open, with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert (sent to admins with the FR-031 Respond to Support permission)
+- **Access**: Viewing the Admin Support Required list and the patient's Provider-Caused Impacts requires FR-031 View Patients; Resolve Support requires FR-031 Respond to Support (default roles Super Admin, Aftercare Specialist, and Support Staff)
 - **Steps**:
   1. Admin filters Screen 1 by "Admin Support Required: Unresolved" or opens the alert's deep link
   2. Admin reviews the patient's Provider-Caused Impacts (Screen 2): affected inquiry/case references, prior stage, cancellation cause, and any linked FR-034 support case
@@ -384,7 +386,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Cancellation Timestamp | datetime | Conditional (display only) | When the inquiry was cancelled by the patient | Read-only; only shown when Current Status = Cancelled |
 | Flags/Alerts | list | No (display only) | Active warnings or concerns | Clickable to view details |
 | Provider-Caused Impacts | list | Conditional (display only) | One row per affected inquiry/case: inquiry/case reference (deep link), prior stage, cancellation cause, Admin Support Required state (Unresolved/Resolved with reason, admin, timestamp), linked FR-034 support case (if any) | Read-only; shown when any FR-015 A5 impact exists |
-| Resolve Support | action | Conditional | Clears Admin Support Required on one affected record | Resolution reason required (minimum 20 characters); shown only for unresolved records |
+| Resolve Support | action | Conditional | Clears Admin Support Required on one affected record | Resolution reason required (minimum 20 characters); shown only for unresolved records and only to admins with the FR-031 Respond to Support permission |
 
 **Business Rules**:
 
@@ -1174,6 +1176,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-10-16 | 1.7 | MTG-002 quote model alignment (minor wording, decision M18): the admin-support trigger and its user story now include an accepted booking closed for the FR-006 provider-fault transfer while the inquiry stays open. No CR needed (clarification only). | Vân Tay Media |
 | 2026-10-18 | 1.8 | Consolidated verification corrections (decision D2): admin booking date edits are limited to the FR-006 guarded date change (`Accepted` or `Confirmed`, mandatory reason, slot availability check), and User Story 3 now flags linked travel records for an FR-008 travel-date review instead of stating that travel details remain intact. No CR: this aligns FR-016 with the existing FR-006 rule (CR-FR006-20261016-01) and does not change FR-016 scope. | Vân Tay Media |
 | 2026-10-18 | 1.9 | Final audit corrections (Q37, Q42, Q43): journey stage lists in the Main Flow and Screen 1 now use the FR-003 stage list (Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled); Suspended moves to a new Account Status Filter. New Flow A8 and Screen 9 (Booking Support Requests) route support-routed patient cancellation and change requests to the FR-006 Cancel Booking and Change Appointment actions with outcome, reason and audit entry. Rule 7, Admin Editability, User Story 3, REQ-016-010 and the FR-006 dependency use the FR-006 actions and `booking.rescheduled` or `booking.cancelled`; patient account suspension cancels bookings through FR-006. REQ-016-031 and REQ-016-032 added. See CR-FR016-20261016-01. | Product Owner / Documentation |
+| 2026-10-27 | 1.10 | FR-015 dev-team follow-up decisions (F7), aligned with [CR-FR020-20261027-01](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md): Flow A7 and Screen 2 Resolve Support require the FR-031 Respond to Support permission, and the Admin Support Required list requires View Patients; the admin-support alert goes to admins with Respond to Support. Wording: the Module Scope role-model line now points to the FR-031 admin roles and permissions instead of the outdated single Super Admin role. | Product Owner / Documentation |
 
 ---
 
@@ -1182,6 +1185,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
 | Product Owner | Product Owner | 2026-10-18 | Approved v1.9 via MTG-002 decision log (documentation only) |
+| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved v1.10 (documentation only) with CR-FR020-20261027-01 |
 | Technical Lead | [Pending] | [Pending] | [Pending] |
 | Stakeholder | [Pending] | [Pending] | [Pending] |
 
@@ -1190,4 +1194,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-10-27
