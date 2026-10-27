@@ -67,7 +67,7 @@ Before this decision, FR-003 did not redistribute the inquiry: the patient saw t
   - FR-020 owns the `provider.status_cancellation_patient` message, which needs the redistribution and confirmation variants.
   - FR-004 shows the cancelled offer as unavailable; unchanged.
   - FR-014 reads `distributed_at`, which is set on first distribution to each new provider.
-- **System documents**: None. Redistribution creates normal `inquiry_providers` rows.
+- **System documents**: `project-requirements/system-data-schema.md` v1.13.0 §5 `inquiries`: new nullable columns `redistribution_state` (`awaiting_patient_confirmation`, `confirmed`, `declined`, `completed`), `redistribution_state_at`, and `redistribution_provider_status_event_id` (references §41 `provider_status_events`) record the confirmation step and enforce one redistribution per provider status event. Redistribution itself creates normal `inquiry_providers` rows.
 
 ### Implementation Reconciliation
 
