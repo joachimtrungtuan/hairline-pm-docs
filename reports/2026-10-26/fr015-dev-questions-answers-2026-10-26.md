@@ -405,19 +405,22 @@ The requirement status values in the PRDs and the schema do not change. The lega
 | FR-015 PRD | 1.21 → 1.22 |
 | FR-016 PRD | 1.9 → 1.10 |
 | FR-020 PRD | 2.11 → 2.12 |
+| FR-030 PRD | 1.15 → 1.16 |
 | FR-032 PRD | 1.12 → 1.13 |
 | System data schema | 1.12.0 → 1.13.0 |
 
 New Change Requests: CR-FR003-20261027-01, CR-FR003-20261027-02, CR-FR004-20261027-01, CR-FR006-20261027-01, CR-FR006-20261027-02, CR-FR015-20261027-01, CR-FR020-20261027-01. Update log: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../project-requirements/update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md).
 
-### 7.4 Still Open
+### 7.4 Points Settled After the Edits (Product Owner, 2026-10-27)
 
-These points were filled in while writing F9 and F14. They need Product Owner confirmation:
+1. **F9 trigger:** only a sent, unexpired quote counts. A provider with only a draft, or no quote yet, does not trigger redistribution. Already in FR-003.
+2. **F9 no reply:** if the patient had selected the provider and does not answer, nothing happens and there is no timeout; a decline means no redistribution. The patient keeps Contact Support. Already in FR-003.
+3. **F9 exclusive inquiries (FR-037):** the exclusivity is released the same way as the explicit-decline fallback (REQ-003-016). Already in FR-003.
+4. **F9 storage:** schema v1.13.0 §5 `inquiries` gains `redistribution_state` (`awaiting_patient_confirmation`, `confirmed`, `declined`, `completed`; null when never triggered), `redistribution_state_at`, and `redistribution_provider_status_event_id` (one redistribution per provider status event). Recorded in CR-FR003-20261027-02.
+5. **F14 "accept on behalf":** no such admin action exists; only the patient accepts a quote. The one admin acceptance is the replacement quote in the provider-fault transfer (FR-006 B5), which already required an Active provider and now shows an explicit message.
+6. **FR-016 roles:** every single-Super-Admin and deferred-RBAC statement now names the FR-031 permission. Medical data and scan download require Manage Aftercare (Super Admin and Aftercare Specialist by default), not View Patients. Patient suspension maps to Edit Patients and permanent deletion to Delete Patients.
+7. **FR-030:** v1.16 mirrors FR-020 v2.12 (admin support recipients, status email timing, Owner-only recipients, patient redistribution variants).
 
-1. **F9 trigger:** redistribution applies only when the cancelled offer was a sent, unexpired quote. A provider that had only a draft, or no quote yet, does not trigger it.
-2. **F9 no reply:** if the patient had selected the provider and does not confirm, or declines, the inquiry is not redistributed and has no timeout. The patient keeps Contact Support.
-3. **F9 exclusive inquiries (FR-037):** released the same way as the explicit-decline fallback (REQ-003-016).
-4. **F9 data:** the schema has no field for "redistribution waiting for patient confirmation". BE may need one.
-5. **F14 wording:** "accept on behalf" does not exist in FR-005 or FR-006. The check applies to the admin's acceptance of a replacement quote (FR-006 B5), with the message "…choose another replacement provider".
-6. **FR-016 role wording:** Rule 3, Privacy Rule, Authorization, REQ-016-019 and two other lines still describe a single Super Admin role, which conflicts with FR-031.
-7. **FR-030 catalog:** may need the new recipients, email timing and patient variants from FR-020 v2.12.
+### 7.5 Still Open
+
+None.

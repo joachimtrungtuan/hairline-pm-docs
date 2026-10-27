@@ -34,6 +34,17 @@
 - Decision 15 (admin support alert to View Providers) is replaced by F7 (Respond to Support).
 - Decision 16 (seat usage) is refined by F13 (Owner and expired invitations excluded).
 
-## Open Items
+## Later the Same Day: Open Items Settled
 
-Listed in the answer report §7.4: four F9 details, the F14 replacement-acceptance wording, leftover single-Super-Admin wording in FR-016, and a possible FR-030 catalog sync.
+The seven open points in the answer report §7.4 were settled by the Product Owner. Same-day follow-ups extend the existing 2026-10-27 change-log rows instead of bumping versions again.
+
+| Document | Version | Change |
+|---|---|---|
+| [System data schema](../../system-data-schema.md) | 1.13.0 (same day) | §5 `inquiries`: `redistribution_state`, `redistribution_state_at`, `redistribution_provider_status_event_id`; new rule and ENUM entry. |
+| [FR-003 PRD](../../functional-requirements/fr003-inquiry-submission/prd.md) | 2.12 (same day) | Change log names the new schema columns; CR-FR003-20261027-02 affected contracts updated. |
+| [FR-016 PRD](../../functional-requirements/fr016-admin-patient-mgmt/prd.md) | 1.10 (same day) | Single-Super-Admin and deferred-RBAC wording replaced with FR-031 permissions; medical data and scans require Manage Aftercare. |
+| [FR-030 PRD](../../functional-requirements/fr030-notification-rules-config/prd.md) | 1.15 → 1.16 | Catalog, business rules and integration point mirror FR-020 v2.12; listed in CR-FR020-20261027-01. |
+
+- FR-016 (same day, minor): REQ-016-020 and the High-Impact Actions list now apply enhanced confirmation to every account suspension, matching Rule 4. The old "> 30 days" wording excluded the 30-day option.
+
+No open items remain.
