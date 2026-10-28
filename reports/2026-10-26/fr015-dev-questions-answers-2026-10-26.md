@@ -424,3 +424,268 @@ New Change Requests: CR-FR003-20261027-01, CR-FR003-20261027-02, CR-FR004-202610
 ### 7.5 Still Open
 
 None.
+
+## 8. BA Confirmations (2026-10-28)
+
+**Source answered**: `FR015-BA-CONFIRMATIONS-2026-10-28.md`, items V1–V9. The backend asked for **Correct** or **Wrong** on each rule it built.
+**Decisions**: Product Owner, 2026-10-28.
+
+Each item below follows the order of the backend document. The answer comes first; the explanation follows. Where the answer differs by case, each case is answered separately.
+
+### 8.1 Summary of answers
+
+| Item | Question | Answer |
+|---|---|---|
+| V1.1 | Legacy `accepted` quote treated as unpaid `scheduled` | **Correct** |
+| V1.2 | Active aftercare wins over `quotes.status` | **Correct** (aftercare wins, row listed for review) |
+| V1.3 | Legacy `cancelled` quote never accepted becomes `withdrawn` | **Wrong** as a single rule. It depends on why it was cancelled (see below) |
+| V1.4 | Legacy `rejected` quote | Normal rule **Correct**. A rejected quote with aftercare: **Wrong** to map it; it is invalid data |
+| V1.5 | Inquiry still `offers` while its quote has progressed | **Correct** |
+| V2 | Booking for legacy rows without AcceptanceEvent | (a) **Wrong**. (b) Clean or recreate the staging rows; keep the schema strict |
+| V3 | Seat usage | (a) **Correct**. (b) **Correct in effect**, but the invited-person model is clarified. Known limitation: **Wrong**, these people must count |
+| V4 | Provider not Active | (a) **Correct**, except the payment message after acceptance. (b) Exact wording now in FR-005. (c) **Correct** |
+| V5 | Distribution only to eligible providers | (a) **Correct**. (b) **Wrong** to skip silently; return an error |
+| V6 | Last save wins | **Correct**, a save writes only changed fields. No soft warning |
+| V7 | Owner email change | (a) **Correct**. (b) Event added. (c) **Wrong** to defer; the reason is required now |
+| V8 | API versions | (a) **Correct**. (b) `v2`. (c) Accepted as a first draft, not final. (d) Exclude webhooks from the alias |
+| V9 | Inquiry cancel keeps the provider cause | **Correct** |
+
+### 8.2 V1. Legacy status migration rules
+
+**V1.1: Correct.**
+A legacy quote marked `accepted` means the patient accepted it but has not paid the deposit. That is the same situation as the legacy `scheduled` row in the mapping table. Result: quote `accepted`; booking `accepted` if the payment-window hold is still open, otherwise `payment_window_expired`; inquiry `accepted`. The staging example (2 quotes, hold expired, no deposit) gives booking `payment_window_expired`, which is right.
+
+**V1.2: Correct. The aftercare record wins.**
+The old app often moved a case into aftercare without updating the quote label, so `quotes.status` can still say `accepted` or `confirmed` while an active aftercare record exists. The aftercare record is the better evidence that the treatment happened. Result: booking `aftercare`, inquiry `aftercare`, and the row goes on the review list. Do not change the aftercare record itself.
+
+**V1.3: Wrong as one rule. Decide by context.**
+A cancelled quote that was never accepted can mean three different things:
+
+| Situation | New status |
+|---|---|
+| The patient cancelled the whole inquiry | `cancelled_inquiry_cancelled` |
+| The patient accepted another quote on the same inquiry | `cancelled_other_accepted` |
+| Neither of the above (the provider pulled the offer) | `withdrawn` |
+
+No booking is created in any of these cases. The staging example (no AcceptanceEvent, inquiry has no chosen quote, inquiry not cancelled) falls in the third row, so `withdrawn` is right for that one row.
+
+**V1.4: the normal rule is Correct. The aftercare case is invalid data, not a mapping case.**
+
+- **Normal rule (Correct):** a rejected quote becomes `cancelled_other_accepted` if another quote on the same inquiry was accepted, otherwise `expired`. No booking.
+- **Rejected quote that has an aftercare record:** this cannot happen in a valid system. Do not add mapping logic for it. List it in the dry-run report, and fix or delete it in the staging cleanup. If such a row ever appears in production, treat it as a data error and raise it with the BA.
+
+**Why a declined quote can never have aftercare.** Hairline has two separate ways into aftercare, and they never mix:
+
+1. **Treatment-linked aftercare.** The provider builds the treatment and its aftercare into one quote. Aftercare starts only after the patient accepted that quote, paid, and was treated, and the provider marked the treatment complete (FR-011 Workflow 1). The aftercare record points to that one accepted quote. A quote that was turned down, expired, withdrawn, or cancelled never reaches treatment, so it can never reach aftercare.
+   - The **post-treatment add-on** (FR-011 Workflow 2b) is also this route. A patient treated through Hairline who did not buy aftercare in the quote can buy it later, within 90 days. It still points to the accepted quote of that completed treatment; it is only activated later and paid separately.
+2. **Standalone aftercare.** A patient treated at an outside clinic buys aftercare directly from Hairline (FR-011 Workflow 2). There is no inquiry and no quote; `quote_id` is empty. It has nothing to do with any quote.
+
+An "admin assignment" (for example, Hairline staff taking over aftercare from the provider) is a step inside one of these two routes. It is not a third way in.
+
+So the rejected-quote-with-aftercare row on staging is either test data created by hand or a bug in the old app. In both cases the fix is to clean the data, not to map it.
+
+**Docs made clearer:** three passages could be read as allowing aftercare outside an accepted quote. They are now fixed:
+- The schema aftercare table now states that treatment-linked aftercare must point to the accepted quote of a booking that reached aftercare, and that standalone aftercare has no quote.
+- FR-011 Entry Points listed "Admin-Managed" as a third entry point. It now lists two routes, with admin assignment as a step inside them.
+- FR-011 Workflow 2b now states that the add-on is treatment-linked, not standalone.
+
+**V1.5: Correct.**
+When an inquiry is still `offers` but its quote has moved on (`scheduled`, `accepted`, `confirmed`, `inprogress`, `aftercare` or `completed`), the inquiry takes the stage of its booking after migration, as the `scheduled` row already does. This case is now an explicit row in CR-FR003-20261027-01.
+
+### 8.3 V2. Bookings for legacy rows without an AcceptanceEvent
+
+**(a) Wrong. (b) Clean or recreate the staging data.**
+
+- Keep the schema strict. `acceptance_event_id`, the hold fields, and `booking_total` (copied from the acceptance snapshot) stay required. Do not add a `legacy_migrated` flag or nullable columns.
+- The 11 staging quotes come from before the option model. Staging has no real patient data. Delete these rows, or recreate them through the current accept flow, before running the migration.
+- If rows like this ever appear in production data, the BA decides each row before migration.
+
+Recorded in the CR-FR006-20261027-01 addendum.
+
+### 8.4 V3. Seat usage
+
+**(a) Suspended staff take a seat: Correct.** Suspending a team member does not free the seat; only removing them from the team does.
+
+**(b) People with status `pending` count: Correct in effect, but the model is clarified.**
+An invited person and the member they later become are the same person, so they must be counted once. FR-009 now separates the two objects clearly:
+
+- **Invitation:** exists from the moment someone is invited until they accept. Statuses: Pending, Accepted, Expired, Cancelled. The team list shows a Pending invitation as a row with the badge "Invited".
+- **Team member:** created only when the invitation is accepted. Statuses: Active, Suspended, Removed. "Invited" and "Pending" are not member statuses.
+- **Seat usage** = non-Owner members who are Active or Suspended, plus invitations that are Pending and not past their expiry date. Each person counts once. The Owner, Removed members, and Expired, Cancelled or Accepted invitations do not count.
+
+If the backend keeps both a member row and an invitation row for one invited person, it must not count that person twice.
+
+**Known limitation (old flow creates invited people as `inactive` members): Wrong. They must count.**
+Under the model above, these people are pending invitations. They take a seat while their invitation is valid. Otherwise a provider can invite past its seat limit.
+
+**Messages:** the admin message is fine. "Team seat limit reached." is fine as a fallback for the provider; the provider form is already blocked and shows a "Request more seats" action.
+
+**Staging example re-checked:** 2 Active + 1 Suspended + 1 valid Pending invitation = **4** of 5. Correct.
+
+Recorded in CR-FR009-20261028-01 (new) and FR-009.
+
+### 8.5 V4. Provider not Active (Suspended or Deactivated)
+
+**(a) Answered by situation:**
+
+| Situation | Answer |
+|---|---|
+| 1. Patient tries to accept a quote from that provider | **Correct** to block. Note: the example "the quote stays `sent`" holds only because the cascade is not built yet. In the final system the cascade cancels the quote (`cancelled_provider_status`); this block is the safety net |
+| 2. Patient tries to pay after accepting (create booking, payment intent, deposit, saved card) | **Correct** to block, **Wrong message**. After acceptance the patient must see the after-acceptance message below |
+| 3. Stripe already captured a payment (late capture) | **Correct** to record it (FR-017 handles it) |
+| 4. Generic payment intent not tied to a quote or provider | **Correct** not to block |
+| 5. Admin invites staff for that provider | **Correct** to block |
+
+**(b) Patient messages.** These are on-screen errors, not FR-020 notifications. They are translated through FR-021 like other screen text. FR-005 now has the exact wording:
+
+- **Before acceptance** (Accept blocked): "This provider is no longer available. Please contact support." with a Contact Support action.
+- **After acceptance** (payment blocked): "This clinic can no longer perform your treatment. An admin will arrange a replacement clinic within the same inquiry."
+
+**(c) A Suspended provider cannot invite its own staff: Correct.** A Suspended provider's portal is view-only (FR-032), and admin invites are already blocked (REQ-009-024). FR-009 now states this explicitly.
+
+### 8.6 V5. Inquiry distribution
+
+**(a) Correct.** Only providers that are Active and whose Owner has set a password receive inquiries. This applies to automatic matching by country, providers the patient selects, and providers the admin adds. The staging impact (1 provider stops receiving inquiries) is expected.
+
+**(b) Wrong to skip silently.** Two parts:
+
+- The provider selection screen (FR-003 Screen 7a) shows only eligible providers, so in normal use the patient cannot select an ineligible one.
+- If a selected provider becomes ineligible between selection and Submit, the API returns a validation error naming that provider. The app returns the patient to provider selection with: "[Provider name] is no longer available. Please choose another provider." Nothing is dropped without telling the patient.
+
+Recorded in FR-003 Screen 7a.
+
+### 8.7 V6. Profile save, last save wins
+
+**Correct. No soft warning.**
+
+- **Same field:** if two people change the same field, the later save wins, with no conflict check and no message. Both saves are in the audit log. Your example (final name "Clinic Z") is right.
+- **Different fields:** a save writes only the fields the person actually changed. If Admin A changes the name and Admin B changes the phone number, both changes are kept. A save must not rewrite untouched fields with the stale values from the form.
+- Accepting and ignoring `updated_at` from old clients is fine.
+
+Recorded in FR-015 and FR-032.
+
+### 8.8 V7. Owner login email change
+
+**(a) Correct, by situation:**
+
+| Situation | Answer |
+|---|---|
+| 1. Admin enters the correct password | **Correct**: email changes, all Owner sessions and tokens are revoked, notices go to the old and new address |
+| 2. Admin enters a wrong password | **Correct**: nothing changes (403) |
+| 3. Owner has not set a password yet | **Correct**: the old activation link is replaced by a new one sent to the new address |
+| 4. New address already used by another provider account | **Backend to confirm**: the global email check (REQ-015-014) must run on every change, not only on creation |
+
+**(b) Event added: `provider.login_email_changed`** in FR-020 and FR-030.
+
+- **Recipients:** the old address and the new address.
+- **Channel:** email. **Mandatory:** it is a security notice and cannot be turned off.
+- **To the old address:** "The login email for [clinic] was changed to [new address, partly hidden] by a Hairline admin on [date and time]. If you did not expect this, contact support."
+- **To the new address:** "This address is now the login email for [clinic]."
+- If the Owner has not set a password, `provider.activation` is also sent to the new address (existing event).
+
+**(c) Wrong to defer. The admin change reason (10 to 500 characters) is required now** for this save, as for every other Tab 1 save (FR-015, admin change reason rule).
+
+### 8.9 V8. API versions
+
+| Question | Answer |
+|---|---|
+| (a) `/api/...` unchanged, `/api/v1/...` alias, `api.status_values` defaults to legacy, only `/api/v2/...` returns new values | **Correct** |
+| (b) Is the new version `v2` or `v3`? | **`v2`**. The existing v2 accept-quote route joins it |
+| (c) Endpoint list (WS1 inventory §2) | **Accepted as a first draft, not approved as final.** See below |
+| (d) The `/api/v1` alias also duplicates webhook routes | **Exclude webhooks from the alias.** Each webhook keeps one registered address, so the payment provider cannot reach the same handler twice |
+
+Recorded in the CR-FR004 and CR-FR006 legacy migration addenda.
+
+**(c) The endpoint list in detail.** The approach is right, but the list is not complete enough to build from yet:
+
+1. **Finish the scan.** The first draft searched controller code only. The JSON an app receives is often built in other layers too: API resources, services, models, transformers, data exports, and notification or push messages that carry a status. Scan those as well, and add any endpoint whose status value comes from them.
+2. **Add one row per endpoint** with: the app that calls it (patient app, provider portal or admin portal); the field that carries the status; the old value and the new value; and whether the request accepts a status value, for example a filter such as `?status=scheduled`.
+3. **Which endpoints get a v2 address:**
+   - **Read endpoints:** v2 when the response returns a status value.
+   - **Write endpoints** (start treatment, end treatment, pay deposit, schedule quote, cancel booking, and similar): v2 when the request accepts a status value or the response returns one. If neither does, the endpoint keeps its route and only the stored value changes internally.
+   - **Analytics and dashboard endpoints:** v2 when any app shows, groups by, or filters by a status value, for example a count labelled "scheduled". If the status is only used internally to compute a number, no v2 is needed.
+4. **Approval:** the BA reviews the completed list and the BA and Product Owner sign it off before any v2 route or presentation layer is built (as CR-FR004-20261027-01 requires).
+
+The data findings in WS1 inventory §1.2 are already answered above: rows without an AcceptanceEvent (V2), aftercare in conflict with the quote status (V1.2), a rejected quote with aftercare (V1.4), inquiries stuck at `offers` (V1.5), and the never-accepted `cancelled` quote (V1.3).
+
+### 8.10 V9. Inquiry cancel keeps the provider cause
+
+**Correct.** When the patient cancels an inquiry:
+
+- Quotes in `draft`, `sent` or `expired` become `cancelled_inquiry_cancelled`.
+- Quotes already in `cancelled_provider_status`, `withdrawn`, `cancelled_other_accepted`, `accepted` or `archived` keep their status and reason.
+
+Your example (A keeps `cancelled_provider_status`, B becomes `cancelled_inquiry_cancelled`) is right. The schema quote transitions now say this in one sentence. Until the cascade is built, this can only be tested with hand-made data.
+
+### 8.11 Documentation changes (2026-10-28)
+
+| Document | Version | Change |
+|---|---|---|
+| System data schema | 1.13.0 → 1.13.1 | Aftercare linkage rule (§13); inquiry cancel keeps other quote causes (§7); team member created only on acceptance, legacy `inactive` invitees count toward seats (§4) |
+| FR-003 PRD | 2.12 → 2.13 | Screen 7a shows only eligible providers; submit-time error for a provider that became ineligible |
+| FR-004 PRD | 3.6 → 3.7 | Inquiry cancellation cancels only draft, sent and expired quotes |
+| FR-005 PRD | 2.8 → 2.9 | Exact before-acceptance and after-acceptance messages for a provider that is not Active |
+| FR-009 PRD | 1.6 → 1.7 (proposed) | Invitation and team member model; seat usage; a Suspended provider cannot invite staff |
+| FR-011 PRD | 1.6 → 1.7 | Two aftercare entry routes only; Workflow 2b add-on is treatment-linked |
+| FR-015 PRD | 1.22 → 1.23 | Seat usage wording; a save writes only changed fields; Owner login email change names its event and runs the global email check |
+| FR-020 PRD | 2.12 → 2.13 | New mandatory event `provider.login_email_changed` |
+| FR-030 PRD | 1.16 → 1.17 | Same event in the rules catalog, cannot be disabled |
+| FR-032 PRD | 1.13 → 1.14 | Concurrent Edits Rule: a save writes only changed fields; Rule 6 lists team management as view-only while Suspended |
+| System technical spec | 1.4.0 → 1.4.1 | Standalone aftercare is moved to admin reassignment, not cancelled, when its provider is suspended |
+
+The follow-up in §8.12 added, at the same versions: schema §4A `provider_staff_invitations` and the legacy invitee migration (§4); FR-003 cancel scope, Screen 8 banners, Screen 8a warning text and the Screen 12 admin picker; FR-009 Rule 10 (Suspended Team page view-only); and further addenda to CR-FR004-20261027-01 and CR-FR006-20261027-01.
+
+New Change Request: CR-FR009-20261028-01 (invitation and team member model). Dated 2026-10-28 addenda added to CR-FR003-20261027-01, CR-FR004-20261027-01 (including the API version and endpoint list rules) and CR-FR006-20261027-01; clarification lines added to CR-FR015-20261027-01. Update log: [FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md](../../project-requirements/update-logs/2026-10-28/FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md).
+
+### 8.12 Review Follow-up (Product Owner, 2026-10-28)
+
+An independent review of the changes and a second pass over both backend documents found points the first answers did not cover. The Product Owner decided them as follows.
+
+**Team members and invitations (refines V3)**
+
+1. **Removed members keep the stored value `inactive`.** The stored team member statuses are `active`, `suspended` and `inactive`, where `inactive` means Removed. A Removed member never takes a seat. This matches what the backend already does.
+2. **Old-style invitees become invitations.** The old invite flow created an `inactive` (or `pending`) team member row before the person accepted. Migration converts each such row into an invitation: Pending if its link has not expired, otherwise Expired. It then deletes the placeholder member row. To tell the two kinds of `inactive` apart: a person who never set a password and never accepted is an old invitee; a person who had activated is a Removed member. After migration, `inactive` means Removed only.
+3. **The invitations table (`provider_staff_invitations`) is now defined in the schema.** The backend compares it with its actual table and reports differences.
+4. **"Pending Send" is not a separate invitation status.** It is a Pending invitation whose email is still being retried. It takes a seat.
+5. **A Suspended clinic's Team page is view-only.** No invite, resend, role change, suspend or remove. The page shows: "Your account is suspended. Team changes are unavailable. Please contact support."
+
+**Migration (refines V1 and V2)**
+
+6. **Legacy `accepted` quote with a paid deposit:** quote `accepted`, booking `confirmed`, inquiry `confirmed`, the same as the legacy `confirmed` row. V1.1 covers only the unpaid case.
+7. **Aftercare state decides (extends V1.2):** when a legacy quote has a treatment-linked aftercare record, active aftercare gives booking and inquiry `aftercare`; completed aftercare gives `completed`; cancelled aftercare goes on the BA review list. A quote labelled `aftercare` with no aftercare record follows the mapping table (booking `aftercare`); the provider may not have set the aftercare up yet.
+8. **Staging cleanup covers the whole case (extends V2):** delete or recreate the inquiry, its quotes, booking, appointments, payments and aftercare together, never only the quote, so no record points at a deleted one. Non-production only.
+9. **Only 2 bookings exist on staging (WS1 inventory §1.2 item 2):** expected. The old app did not create bookings. Migration creates a booking for each quote at `scheduled` or later that has acceptance data. On staging that is only the 2 quotes with an AcceptanceEvent; every other such case is cleaned up or recreated under point 8.
+10. **Values with no change (WS1 inventory §1.2 item 5):** `draft`, `sent`, `withdrawn` and `cancelled_other_accepted` keep their value. Correct.
+
+**Screens and messages (refines V4 and V5)**
+
+11. **Patient dashboard before acceptance (FR-003 Screen 8):** when one provider becomes unavailable and other offers remain open, the banner reads "[Clinic] is no longer available. Your other offers are still open." When no offers remain and the inquiry is redistributed: "[Clinic] is no longer available. We are finding new offers for you." Both carry the Contact Admin/Support action.
+12. **Admin adds a provider to an inquiry by hand:** ineligible providers are hidden from the picker. If one becomes ineligible before saving, the save is blocked with: "[Provider] can't receive inquiries right now (not active or activation not completed)."
+
+**Corrections to other documents**
+
+13. **Inquiry cancellation in FR-003 and FR-004:** both said it cancels "all" quotes. They now match V9: only `draft`, `sent` and `expired` quotes are cancelled, and only those providers receive `quote.cancelled_inquiry`.
+14. **Technical spec:** the standalone-aftercare rule now matches the 2026-10-26 decision (moved to admin reassignment on provider suspension, not cancelled).
+
+**Final decisions after the review**
+
+17. **Suspended clinic, FR-032:** FR-032 Rule 6 now lists team management among the view-only areas, matching FR-009 Rule 10.
+18. **Paused (`suspended`) aftercare in migration:** treated like active aftercare. The booking and inquiry become `aftercare`, and the aftercare record keeps its `suspended` status.
+19. **Invitations table rules:** (a) one email can have only one Pending invitation at a time, across all clinics that are not deactivated; (b) a Pending invitation past its expiry date counts as Expired at once, even if the nightly job has not updated its status, so it stops taking a seat immediately.
+20. **Inquiry cancel warning (FR-003 Screen 8a):** now reads "Canceling this inquiry is irreversible. All open quotes you've received will be cancelled and providers will be notified."
+
+**Endpoint list grouping (WS1 inventory §2.1)**
+
+15. The backend's group "no contract change" (`PatientPaymentMethodController::destroy`, `PassportDetailsController::store`, `TreatmentExecutionController::getInProgressList`) is correct only if their responses return no status value. Check each response under the §8.9 rules before excluding it.
+
+**Dry-run figures to reconcile (V1 summary)**
+
+16. The backend's figures do not agree. The dry-run reports 23 quotes, but the WS1 inventory rows add up to 28. V1.2 says 3 quotes have aftercare that conflicts with the quote status, but the inventory shows 6 (4 `accepted` and 2 `confirmed`). The backend should re-run the dry-run after the decisions above and send counts that reconcile with the inventory.
+
+### 8.13 Still Open
+
+1. **V8(c) endpoint list:** the backend completes the list under the rules in §8.9; the BA reviews it, and the BA and Product Owner sign it off before any v2 route is built.
+2. **V7 situation 4:** the backend confirms that the global login email check (REQ-015-014) runs on every Owner email change.
+3. **Cascade not built yet:** V4 situation 1 and V9 can only be tested with hand-made data until the FR-015 provider-status cascade exists.
+4. **Dry-run figures:** the backend re-runs the dry-run and sends counts that reconcile with the inventory (§8.12 point 16).
+5. **Invitations table:** the backend compares the new schema definition of `provider_staff_invitations` with its actual table and reports differences.
