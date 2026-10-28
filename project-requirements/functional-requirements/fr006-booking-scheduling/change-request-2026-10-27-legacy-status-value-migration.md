@@ -66,6 +66,31 @@ Where no booking row exists, the migration creates it with the status above. The
 - Before building, the backend team lists the endpoints whose returned values or structure change and need a new version, and confirms that list with the BA and the Product Owner.
 - Internal tester builds count as consumers of legacy routes (Product Owner decision).
 
+### Addendum 2026-10-28 (Product Owner)
+
+This addendum extends the Approved State above; the 2026-10-27 tables are unchanged.
+
+#### Legacy quote status and aftercare record disagree
+
+- When a legacy quote that migrates to quote status `accepted` has a treatment-linked aftercare record, the aftercare record's status decides the booking and inquiry, whatever the legacy `quotes.status` says (follow-up decision, 2026-10-28):
+  - active aftercare: the booking and the inquiry become `aftercare`;
+  - suspended (paused) aftercare: the booking and the inquiry become `aftercare`, and the aftercare record keeps its `suspended` status;
+  - completed aftercare: the booking and the inquiry become `completed`;
+  - cancelled aftercare: the row is listed for BA review, and the BA decides it before the migration runs.
+- The quote becomes `accepted` in each case. Every such row is listed in the dry-run report.
+- A non-accepted legacy quote with an aftercare record remains invalid data under the CR-FR004-20261027-01 Addendum 2026-10-28.
+
+#### Legacy rows with no acceptance data
+
+- Some legacy rows have no quote options, no option date prices, and no AcceptanceEvent (rows on staging). The schema is not relaxed for them: `acceptance_event_id`, the NOT NULL hold fields (`hold_appointment_at`, `hold_appointment_timezone`, `hold_started_at`, `hold_expires_at`), and `booking_total` (copied from the acceptance snapshot) stay NOT NULL.
+- In non-production environments (`backend.hairline.app` is a dev/test environment with no real patient data), these rows are deleted, or recreated through the current flow, before the migration runs.
+- Cleanup deletes or recreates the whole case together: the inquiry, its quotes, the booking, appointments and schedules, payments, and aftercare. It never deletes only the quote, so no remaining record points at a deleted one. The dry-run report lists the dependent records of each case before cleanup. This cleanup applies to non-production environments only.
+- If such rows ever appear in production data, the BA decides each row before the migration runs.
+
+#### API versions
+
+The API version rules (legacy values on unversioned `/api/...` and `/api/v1/...` routes, new values only on `v2` routes, webhook routes excluded from the `v1` alias) and the endpoint list completion rules are in the CR-FR004-20261027-01 Addendum 2026-10-28; they apply to booking values as well.
+
 ## Requirement Delta
 
 | Contract Area | Before | After | Reason |
@@ -111,6 +136,6 @@ Where no booking row exists, the migration creates it with the status above. The
 - **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-27.
 - **Decision evidence**: Product Owner decisions dated 2026-10-27 on `FR015-BA-FOLLOWUP-QUESTIONS-2026-10-26.md` F1 and F2.
 - **PRD change log**: [FR-006 Appendix: Change Log](prd.md#appendix-change-log), v2.11 dated 2026-10-27.
-- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md).
+- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md). Addendum 2026-10-28: [FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md](../../update-logs/2026-10-28/FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md).
 - **Supersedes**: None.
 - **Superseded by**: None.

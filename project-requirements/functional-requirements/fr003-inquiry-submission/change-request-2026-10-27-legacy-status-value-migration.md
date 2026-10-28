@@ -62,6 +62,20 @@ Existing `inquiry_providers` participation rows keep their values. `cancelled` i
 - Before building, the backend team lists the endpoints whose returned values or structure change and need a new version, and confirms that list with the BA and the Product Owner.
 - Internal tester builds count as consumers of legacy routes (Product Owner decision).
 
+### Addendum 2026-10-28 (Product Owner)
+
+This addendum extends the Approved State above; the 2026-10-27 tables are unchanged.
+
+#### Legacy `offers` inquiry whose quote has progressed
+
+| Legacy `inquiries.status` | Migrated inquiry stage |
+|---|---|
+| `offers`, and a quote of the inquiry has already progressed (legacy quote status `accepted`, `confirmed`, `inprogress`, `aftercare`, or `completed`) | The stage of its booking after migration, as for the `scheduled` row (CR-FR006-20261027-01, CR-FR004-20261027-01) |
+
+#### API versions
+
+The API version rules (legacy values on unversioned `/api/...` and `/api/v1/...` routes, new values only on `v2` routes, webhook routes excluded from the `v1` alias) and the endpoint list completion rules are in the CR-FR004-20261027-01 Addendum 2026-10-28; they apply to inquiry stage values as well.
+
 ## Requirement Delta
 
 | Contract Area | Before | After | Reason |
@@ -110,6 +124,6 @@ Existing `inquiry_providers` participation rows keep their values. `cancelled` i
 - **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-27.
 - **Decision evidence**: Product Owner decisions dated 2026-10-27 on `FR015-BA-FOLLOWUP-QUESTIONS-2026-10-26.md` F1 and F2.
 - **PRD change log**: [FR-003 Appendix: Change Log](prd.md#appendix-change-log), v2.12 dated 2026-10-27.
-- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md).
+- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md). Addendum 2026-10-28: [FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md](../../update-logs/2026-10-28/FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md).
 - **Supersedes**: None.
 - **Superseded by**: None.

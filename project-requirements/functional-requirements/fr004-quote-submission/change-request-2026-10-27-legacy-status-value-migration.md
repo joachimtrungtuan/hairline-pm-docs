@@ -64,6 +64,38 @@ Where a legacy `scheduled` quote has no booking row, the migration creates the b
 - Before building, the backend team lists the endpoints whose returned values or structure change and need a new version, and confirms that list with the BA and the Product Owner.
 - Internal tester builds count as consumers of legacy routes (Product Owner decision).
 
+### Addendum 2026-10-28 (Product Owner)
+
+This addendum extends the Approved State above; the 2026-10-27 tables are unchanged.
+
+#### Legacy values not covered by the table
+
+| Legacy `quotes.status` | New quote status | New booking status | New inquiry stage |
+|---|---|---|---|
+| `accepted` (treated like `scheduled` with no paid deposit), payment-window hold still open | `accepted` | `accepted` | `accepted` |
+| `accepted` (treated like `scheduled` with no paid deposit), payment-window hold no longer open | `accepted` | `payment_window_expired` | `accepted` |
+| `accepted` with a paid deposit (same as the legacy `confirmed` row; follow-up decision, 2026-10-28) | `accepted` | `confirmed` | `confirmed` |
+| `cancelled` on a quote never accepted, and the inquiry was cancelled | `cancelled_inquiry_cancelled` | None | Migrated by CR-FR003-20261027-01 |
+| `cancelled` on a quote never accepted, and another quote on the inquiry was accepted | `cancelled_other_accepted` | None | Migrated by CR-FR003-20261027-01 |
+| `cancelled` on a quote never accepted, any other case | `withdrawn` | None | Migrated by CR-FR003-20261027-01 |
+
+- A legacy quote with status `rejected`, or any other non-accepted value, that has an aftercare record is invalid data: aftercare can only be linked to an accepted quote whose booking reached Aftercare (system data schema v1.13.1 §13). The migration has no mapping logic for it. The dry-run report lists these rows, and they are cleaned up in the non-production cleanup.
+- A legacy quote that migrates to `accepted` and has a treatment-linked aftercare record takes its booking and inquiry stage from the aftercare record's status (active or suspended aftercare gives `aftercare`, completed aftercare gives `completed`, cancelled aftercare goes to BA review). The rule and the dry-run listing are in the CR-FR006-20261027-01 Addendum 2026-10-28; they take precedence over the table rows above.
+
+#### API versions
+
+- Unversioned `/api/...` routes and `/api/v1/...` routes both serve legacy values. The new version is `v2`; the existing v2 accept-quote route joins it.
+- New values are returned only by `v2` routes, and only once the endpoint list below is signed off.
+- Webhook routes are excluded from the `v1` alias and keep their single registered URL.
+- Endpoint list: the backend WS1 inventory §2 (38 methods across 20 controllers, from a controller-only scan) is accepted by the Product Owner as a first draft, not as final. To complete it:
+  1. The backend team finishes the scan beyond controllers: API resources, services, models, transformers, data exports, and notification or push payloads that carry a status value.
+  2. The list has one row per endpoint, giving the calling app (patient app, provider portal, or admin portal), the status field, the old value, the new value, and whether the request accepts a status value (for example a `?status=` filter).
+  3. `v2` rules:
+     - A read endpoint gets `v2` when its response returns a status value.
+     - A write endpoint gets `v2` when its request accepts a status value or its response returns one. Otherwise it keeps its route, and only the stored values change internally.
+     - An analytics or dashboard endpoint gets `v2` when any app shows, groups by, or filters by a status value. It does not get `v2` when the status is used only internally to compute a number.
+  4. The BA reviews the completed list, and the BA and the Product Owner sign it off before any `v2` route or presentation layer is built.
+
 ## Requirement Delta
 
 | Contract Area | Before | After | Reason |
@@ -110,6 +142,6 @@ Where a legacy `scheduled` quote has no booking row, the migration creates the b
 - **Approved by**: Product Owner, Joachim Trung Tuan, 2026-10-27.
 - **Decision evidence**: Product Owner decisions dated 2026-10-27 on `FR015-BA-FOLLOWUP-QUESTIONS-2026-10-26.md` F1 and F2.
 - **PRD change log**: [FR-004 Appendix: Change Log](prd.md#appendix-change-log), v3.6 dated 2026-10-27.
-- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md).
+- **Update log**: [FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md](../../update-logs/2026-10-27/FR015_FOLLOWUP_QUESTIONS_RESOLUTION_2026-10-27.md). Addendum 2026-10-28: [FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md](../../update-logs/2026-10-28/FR015_BE_CONFIRMATIONS_RESOLUTION_2026-10-28.md).
 - **Supersedes**: None.
 - **Superseded by**: None.
