@@ -33,8 +33,10 @@ The Product Owner changed three verified FR-015 contracts after the dev team rai
 **Target version**: FR-015 v1.22, same headings; FR-009 v1.6; FR-032 v1.13.
 
 - Admin and provider profile saves are last-save-wins. No conflict check runs and no conflict message is shown. Every save stays in the Tab 8 and FR-032 audit trail, so an overwritten value can be traced.
+- Clarification 2026-10-28 (Product Owner): a save applies only the fields the user changed; untouched fields are not rewritten. Last save wins therefore applies only when two people change the same field. No conflict check or conflict message is added (FR-015 v1.23, FR-032 v1.14).
 - Provider email, phone and medical license number are stored in the database protected by database/disk encryption at rest, HTTPS/TLS in transit and access control. They are not encrypted at application level. Uploaded documents keep AES-256 encryption at rest.
 - Seat usage counts accepted non-Owner team members plus invitations still pending. The Owner and expired invitations do not count. The Seat Limit blocks invitations when seat usage reaches it.
+- Clarification 2026-10-28 (Product Owner): "accepted non-Owner team members" means non-Owner team members with status Active or Suspended, and "invitations still pending" means invitations with status Pending that are not past expiry. The invitation and team member model behind this count is recorded in [CR-FR009-20261028-01](../fr009-provider-team-roles/change-request-2026-10-28-invitation-member-model.md).
 
 ## Requirement Delta
 
