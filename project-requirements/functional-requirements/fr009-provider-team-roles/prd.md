@@ -3,9 +3,9 @@
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`
 **Created**: 2025-11-11
-**Status**: Proposed revision (v1.6); prior v1.2 document marked Verified & Approved
+**Status**: Proposed revision (v1.7); prior v1.2 document marked Verified & Approved
 **Source**: FR-009 from system-prd.md
-**Related Change Request**: [CR-FR015-20261027-01 — Last-save-wins edits, at-rest encryption of provider contact data, and seat usage](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md) — seat usage excludes the Owner and expired invitations
+**Related Change Request**: [CR-FR009-20261028-01 — Invitation and team member model, seat usage](change-request-2026-10-28-invitation-member-model.md) — an invited person exists only as an invitation until acceptance; seat usage counts Active and Suspended non-Owner members plus valid pending invitations (previous: [CR-FR015-20261027-01 — Last-save-wins edits, at-rest encryption of provider contact data, and seat usage](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md) — seat usage excludes the Owner and expired invitations)
 
 ---
 
@@ -107,17 +107,17 @@ The provider platform starts with four protected clinic-side roles that directly
 3. Provider Owner clicks "Invite Team Member" button
 4. System presents invitation form with fields: email address, first name, last name, role selection
 5. Provider Owner enters team member details and selects a non-Owner system role or an active global custom provider role from FR-031. Owner is not assignable from this flow and is reserved for the single primary account holder.
-6. System validates email format and checks for duplicate email within organization
+6. System validates email format and checks for duplicate email within organization. The invitation is blocked while the provider organization is Suspended, because the Team page is view-only for a Suspended provider (Rule 10)
 7. Provider Owner reviews invitation details and clicks "Send Invitation"
 8. System generates secure invitation token (expires in 7 days)
 9. System sends email to invitee with invitation link, provider organization name, and role being offered
-10. System creates pending invitation record with status "Invited"
+10. System creates an invitation record with status "Pending". No team member record exists yet; the team list shows the pending invitation with the "Invited" badge
 11. System displays confirmation message to Provider Owner
 12. New Team Member receives email and clicks invitation link
 13. System validates invitation token (not expired, not already used)
 14. System presents account creation form pre-filled with email, first name, last name
 15. New Team Member sets password and accepts terms of service
-16. System creates team member account and links to provider organization with assigned role
+16. System creates the team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member
 17. System marks invitation as "Accepted"
 18. System sends confirmation email to both Provider Owner and new team member
 19. System logs all actions in audit trail
@@ -180,7 +180,7 @@ The provider platform starts with four protected clinic-side roles that directly
   1. System attempts to send invitation email
   2. Email service returns error
   3. System logs error and retries up to 3 times with exponential backoff
-  4. If all retries fail, system marks invitation as "Pending Send"
+  4. If all retries fail, the invitation stays Pending and the system sets its delivery state to "Pending Send". "Pending Send" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6)
   5. System displays warning to Provider Owner: "Invitation created but email failed. We'll retry automatically."
   6. Background job retries sending every 10 minutes for 24 hours
   7. If still failing after 24 hours, system alerts admin team
@@ -310,18 +310,19 @@ The provider platform starts with four protected clinic-side roles that directly
 | Email | Display (email) | N/A | Team member's email address | Display only |
 | Role | Display (badge/tag) | N/A | Current protected or custom provider role | Display only |
 | Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only |
-| Status | Display (badge) | N/A | Active, Invited, Suspended | Display only |
+| Status | Display (badge) | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge (an invitation, not a member status) | Display only |
 | Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time |
 | Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only |
 | Actions | Button group | N/A | Edit, Remove, View Activity | Hidden for Owner rows |
-| Team Size Meter | Progress bar | N/A | Seat usage (accepted non-Owner team members plus pending invitations; see Rule 6) vs centrally approved limit | Turns amber at 90%, red at 100% |
+| Team Size Meter | Progress bar | N/A | Seat usage (non-Owner team members with status Active or Suspended plus pending invitations not past expiry; see Rule 6) vs centrally approved limit | Turns amber at 90%, red at 100% |
 
 **Business Rules**:
 
 - Only Owners and authorized Manager-base users can access the dashboard; non-Owner users have read-only visibility into Owner rows.
 - Owner rows display lock badge with tooltip: "Primary Owner role cannot be changed."
-- "Invited" status rows show "Resend Invitation" and "Cancel Invitation."
+- Pending invitation rows (badge "Invited") show "Resend Invitation" and "Cancel Invitation."
 - "Suspended" rows show "Reactivate."
+- While the provider organization is Suspended, the dashboard is view-only (Rule 10): invite, resend, cancel invitation, role change, suspend, reactivate, and remove actions are unavailable, and the page shows "Your account is suspended. Team changes are unavailable. Please contact support."
 - Current logged-in user's row highlighted with "(You)."
 - Sorting: Owners (locked) first, then other roles alphabetically.
 - Search/filter by name, email, role, status.
@@ -330,7 +331,7 @@ The provider platform starts with four protected clinic-side roles that directly
 **Notes**:
 
 - Pagination/infinite scroll for >50 members.
-- Quick stats: Total, Active, Pending, Suspended, Seats Remaining.
+- Quick stats: Total, Active, Pending Invitations (count of invitations with status Pending), Suspended, Seats Remaining.
 - CSV export for audit.
 
 ---
@@ -354,6 +355,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - Email uniqueness is global (global provider email identity rule, REQ-009-008). An email already on this team or pending here prompts the "View member / Resend invitation" CTA (B2). An email used by another provider organization (Owner, member, or pending invitation) shows the A3 blocking error; emails freed by a Deactivated provider can be invited.
 - Role dropdown includes inline permission summary from FR-031's current matrix; Owner option is always disabled in this screen and annotated: "Primary Owner cannot be set or changed from this screen."
+- Form unavailable while the provider organization is Suspended (Team page view-only, Rule 10); admin invitations are blocked separately (Screen 12, REQ-009-024).
 - Form blocked when seat limit reached; CTA changes to "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request (FR-015 Rule 7); the admin edits Seat Limit in FR-015 Screen 3 Tab 1.
 - SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
 
@@ -463,7 +465,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Full Name | display (text) | N/A | First name + Last name | Read-only; click to edit in modal |
 | Email | display (email) | N/A | Primary email address | Read-only |
 | Role Badge | badge | N/A | Current role with lock icon if Owner | Color-coded by role |
-| Status Indicator | badge | N/A | Active / Invited / Suspended | Real-time status |
+| Status Indicator | badge | N/A | Active / Suspended for team members; "Invited" for a pending invitation | Real-time status |
 | Last Active | display (timestamp) | N/A | Last login or action timestamp | Relative time with tooltip |
 | Quick Actions | button group | N/A | Edit Role, Remove Member, View Activity Log | Context-aware based on actor permissions |
 
@@ -502,7 +504,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period.
 - If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify).
 - Suspended members show banner: "This member is suspended. Reactivate to restore access."
-- Invited (pending) members show limited data: only Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
+- A pending invitation (badge "Invited") is not yet a team member and shows limited data: only the Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
 
 ---
 
@@ -520,7 +522,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Validation**:
 
-- Token validity, seat availability (double-check), invitation status (Pending only).
+- Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only).
 
 ---
 
@@ -588,7 +590,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Email | display | N/A | Team member email | Read-only |
 | Role | badge | N/A | Protected or custom provider role | Owner rows show lock icon |
 | Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
-| Status | badge | N/A | Active, Invited, Suspended | Color-coded |
+| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
 | Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) |
 | Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select |
@@ -624,7 +626,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Email | display (email) | N/A | Primary email address | Read-only; clickable to send admin email |
 | Provider Organization | display (link) | N/A | Provider name this member belongs to | Click to view provider detail in admin console |
 | Role Badge | badge | N/A | Current role with ownership indicator | Color-coded by role |
-| Status Indicator | badge | N/A | Active / Invited / Suspended / Flagged | Real-time status; "Flagged" shown if compliance alert exists |
+| Status Indicator | badge | N/A | Active / Suspended / Flagged for team members; "Invited" for a pending invitation | Real-time status; "Flagged" shown if compliance alert exists |
 | Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
 | Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
 | Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
@@ -700,7 +702,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Current Provider | display (link) | N/A | Provider organization name | Click to view provider profile |
-| Membership Status | badge | N/A | Active / Pending / Suspended / Removed | Current status |
+| Membership Status | badge | N/A | Active / Suspended / Removed | Current team member status; a pending invitation is not a membership and appears only in Invitation History |
 | Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status |
 | Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason |
 | Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event |
@@ -746,9 +748,9 @@ The provider platform starts with four protected clinic-side roles that directly
 | Email | display | N/A | Team member email | Read-only |
 | Role | badge | N/A | Protected or custom provider role | Owner row shows lock icon |
 | Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
-| Status | badge | N/A | Active, Invited, Suspended | Color-coded |
+| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
-| Seat Usage | display | N/A | Accepted non-Owner team members plus invitations still pending, against the provider's Seat Limit (FR-015); the Owner and expired invitations do not count (Rule 6) | Example: "12 / 100 seats used" |
+| Seat Usage | display | N/A | Non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, against the provider's Seat Limit (FR-015); the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (Rule 6) | Example: "12 / 100 seats used" |
 | Row Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11 |
 | Invite Staff Member | button | N/A | Opens the admin invite form for this provider | Hidden or disabled without FR-031 "Edit Providers"; disabled with reason when blocked (see Business Rules) |
 
@@ -780,9 +782,11 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Rule 3 (Global Provider Email Identity)**: An email belongs to at most one provider organization at a time, across all forms of membership: Owner (created via FR-015), team member, or pending invitation. When a provider is Deactivated (FR-015), its Owner, team member, and pending-invitation emails are freed for reuse; the old records stay archived and are not reactivated by reuse. FR-015 provider creation and owner login-email edits apply this same rule.
 - **Rule 4**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
 - **Rule 5**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
-- **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Seat usage counts accepted non-Owner team members plus invitations still pending; the Owner and expired invitations do not count. Providers can request limit increases through support per FR-015; invitations must be blocked when seat usage reaches the limit.
+- **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, and each person is counted once. The Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count. A Suspended member keeps the seat; only removal frees it. Providers can request limit increases through support per FR-015; invitations must be blocked when seat usage reaches the limit.
 - **Rule 7**: FR-031 defines provider roles and their permission matrices centrally; FR-009 handles team assignment and consumes those definitions without allowing clinics to edit them.
 - **Rule 8**: Super Admin-defined global custom provider roles are assignable to non-Owner staff. Their Manager, Clinical Staff, or Billing Staff base type preserves eligibility for existing role-limited actions; an explicit permission grant is also required. Custom roles never satisfy the primary Owner requirement or gain Owner-only actions.
+- **Rule 9 (Invitation and Team Member Model)**: An invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until they accept. A team member record is created only when the invitation is accepted. Team member statuses are Active, Suspended, and Removed, stored as `active`, `suspended`, and `inactive` (`inactive` means Removed and is kept for compatibility). A Removed member never takes a seat. "Invited" is only the badge that team lists show for a Pending invitation row; it is not a team member status. Legacy invitees that the old invite flow stored as team member rows (status `inactive` or `pending`, never accepted and no password set) are migrated into invitations: Pending if their invite or activation link has not expired, otherwise Expired. The placeholder member row is then deleted, so after migration `inactive` means Removed only (CR-FR009-20261028-01).
+- **Rule 10 (Suspended Provider Team Management)**: While the provider organization is Suspended (FR-015; banner per FR-032 Rule 6), the provider Team page and team member detail pages are view-only. Provider users cannot invite, resend or cancel an invitation, change a role, suspend, reactivate, or remove a member. The Team page shows "Your account is suspended. Team changes are unavailable. Please contact support." Admin invitations to a Suspended or Deactivated provider are blocked by REQ-009-024.
 
 ### Data & Privacy Rules
 
@@ -901,7 +905,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - **External Service 1**: SendGrid/AWS SES (Email Service)
   - **Purpose**: Deliver invitation emails, role change notifications, removal notifications
   - **Integration**: RESTful API calls to send transactional emails with secure token links
-  - **Failure handling**: Queue emails for retry (up to 3 attempts with exponential backoff), mark invitation as "Pending Send", background job retries for 24 hours
+  - **Failure handling**: Queue emails for retry (up to 3 attempts with exponential backoff), set the Pending invitation's delivery state to "Pending Send" (not an invitation status; the invitation still takes a seat), background job retries for 24 hours
 
 - **External Service 2**: MaxMind GeoIP (Optional)
   - **Purpose**: Geolocation of IP addresses for security monitoring in activity logs
@@ -1143,7 +1147,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 > Note: This section summarizes the normative requirements already described in Business Workflows, Screen Specifications, and Business Rules. In case of conflict, the Business Rules section prevails.
 
-- **REQ-009-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry)
+- **REQ-009-001**: System MUST allow provider owners to invite team members via email with secure, time-limited invitation links (7-day expiry), and MUST make provider-side team management view-only while the provider organization is Suspended, blocking invite, resend, role change, suspend, and remove (Rule 10)
 - **REQ-009-002**: System MUST support the four protected provider roles (Owner, Manager, Clinical Staff, Billing Staff) and global custom provider roles defined in FR-031; a custom role MUST have a non-Owner base type and be assignable only to non-Owner staff
 - **REQ-009-003**: System MUST enforce role-based access control for all provider platform features and data
 - **REQ-009-004**: System MUST allow Owners and eligible Manager-base actors with the required permission to modify non-Owner team member roles with immediate permission updates
@@ -1156,8 +1160,8 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 > Note: Data requirements are summarized here for traceability; field-level definitions and provenance are specified in Screen Specifications and Key Entities.
 
-- **REQ-009-009**: System MUST maintain team member records with: name, email, role, status (Active/Invited/Suspended), invitation date, acceptance date, last activity timestamp
-- **REQ-009-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), sender, recipient email, role offered
+- **REQ-009-009**: System MUST maintain team member records with: name, email, role, status (Active/Suspended/Removed), invitation date, acceptance date, last activity timestamp. A team member record is created only when an invitation is accepted
+- **REQ-009-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), email delivery state (a failed send is "Pending Send" on a Pending invitation, not a status), sender, recipient email, role offered. Until acceptance an invited person exists only as an invitation; "Invited" is the display badge for a Pending invitation, not a team member status
 - **REQ-009-011**: System MUST consume the protected and custom provider role permission definitions configured centrally in FR-031
 - **REQ-009-012**: System MUST maintain team member-to-provider organization relationships with role assignment per organization
 
@@ -1189,7 +1193,8 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 ## Key Entities
 
 - **Entity 1 - Team Member**:
-  - **Key attributes**: user_id, email, first_name, last_name, status (Active/Invited/Suspended), created_at, last_active_at
+  - **Key attributes**: user_id, email, first_name, last_name, status (Active/Suspended/Removed), created_at, last_active_at
+  - **Lifecycle**: Created only when an invitation is accepted. An invited person who has not accepted has no team member record.
   - **Relationships**: One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. One team member has many audit log entries.
 
 - **Entity 2 - Team Member Organization Role**:
@@ -1197,8 +1202,8 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
   - **Relationships**: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
 
 - **Entity 3 - Invitation**:
-  - **Key attributes**: invitation_id, token (secure random), email, first_name, last_name, role, provider_org_id, invited_by, status (Pending/Accepted/Expired/Cancelled), expires_at, accepted_at
-  - **Relationships**: One invitation belongs to one provider organization. One invitation invited by one existing team member (owner/admin). One invitation may result in one team member account.
+  - **Key attributes**: invitation_id, token (secure random), email, first_name, last_name, role, provider_org_id, invited_by, status (Pending/Accepted/Expired/Cancelled), delivery state ("Pending Send" when the email failed), expires_at, accepted_at
+  - **Relationships**: One invitation belongs to one provider organization. One invitation invited by one existing team member (owner/admin). One invitation may result in one team member account, created when the invitation becomes Accepted. A Pending invitation is shown in team lists with the "Invited" badge and counts toward seat usage until it expires, is cancelled, or is accepted (Rule 6).
 
 - **Entity 4 - Role Permission Definition**:
   - **Key attributes**: role_id, role_name, is_system_role, base_type (for custom roles), permissions[] (array of permission strings like "inquiries.view", "quotes.create", "team.manage")
@@ -1222,6 +1227,8 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 | 2026-10-15 | 1.4 (proposed) | Minor alignment with FR-015 v1.14 Rule 7: "Request more seats" (Screen 2 banner and invite form) opens an FR-034 support case pre-filled as a seat-increase request; the admin edits Seat Limit in FR-015 Screen 3 Tab 1. Clarified the Screen 2 invite-form email rule: uniqueness is global per REQ-009-008 and A3 (matches `provider_users.email` UNIQUE), not per org; same-team duplicates get the View/Resend CTA | Claude |
 | 2026-10-15 | 1.5 (proposed) | **Global provider email identity rule**: Rule 3 and REQ-009-008 now cover Owners, team members, and pending invitations across all provider organizations, and FR-015 provider creation and owner login-email edits apply the same rule. Emails of a Deactivated provider (FR-015) are freed for reuse; old records stay archived. Updated A3 trigger, Screen 2 and Screen 12 email validation, and the FR-015 dependency note. See [CR-FR009-20261015-02](change-request-2026-10-15-global-provider-email-identity.md). | Claude |
 | 2026-10-27 | 1.6 (proposed) | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27). Seat usage counts accepted non-Owner team members plus pending invitations; the Owner and expired invitations do not count (Rule 6, Screen 2 Team Size Meter, Screen 12 Seat Usage), per [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md). Impersonation (Screen 11 rules, REQ-009-023) is blocked for a Deactivated provider and read-only under FR-032 Rule 6 for a Suspended provider. | Product Owner / Documentation |
+| 2026-10-28 | 1.7 (proposed) | Product Owner decision 2026-10-28 (FR-015 backend confirmations). Invitation and team member model: an invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until acceptance; a team member record is created only on acceptance; team member statuses are Active, Suspended, Removed; "Invited" is only the display badge for a Pending invitation (Main Flow steps 10 and 16, Screens 1, 6, 10, 11 and 12 status fields, Screen 6 and Screen 7 notes, Screen 11 Tab 5 Membership Status, new Rule 9, REQ-009-009, REQ-009-010, Key Entities 1 and 3). Seat usage counts non-Owner members with status Active or Suspended plus Pending invitations not past expires_at, each person once; a Suspended member keeps the seat (Rule 6, Screen 1 Team Size Meter, Screen 12 Seat Usage). Screen 1 quick stats label Pending Invitations. A Suspended provider organization cannot send staff invitations (Main Flow step 6, Screen 2, new Rule 10, REQ-009-001). See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
+| 2026-10-28 | 1.7 (proposed) | Product Owner decisions 2026-10-28 (follow-up) and review fixes. Stored team member statuses are `active`, `suspended`, and `inactive` (= Removed, kept for compatibility); a Removed member never takes a seat; legacy invitee member rows (`inactive` or `pending`, never accepted) are migrated into Pending or Expired invitations and the placeholder row is deleted (Rule 9). "Pending Send" is a delivery state of a Pending invitation that takes a seat, not an invitation status (Alternative Flow B4, External Dependencies, REQ-009-010, Key Entity 3). A Suspended provider's Team page is view-only with no invite, resend, role change, suspend, or remove, and shows the suspended message (Main Flow step 6, Screens 1 and 2, Rule 10 renamed Suspended Provider Team Management, REQ-009-001); the rule is stated in FR-009 because FR-032 Rule 6 does not list team management. See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
 
 ---
 
@@ -1231,6 +1238,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 |------|------|------|--------------------|
 | Product Owner | [Name] | [Date] | [Status] |
 | Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved v1.6 seat usage and impersonation alignment (documentation only), with CR-FR015-20261027-01 |
+| Product Owner | Joachim Trung Tuan | 2026-10-28 | Approved v1.7 invitation and team member model and seat usage (documentation only), with CR-FR009-20261028-01 |
 | Technical Lead | [Name] | [Date] | [Status] |
 | Stakeholder | [Name] | [Date] | [Status] |
 
@@ -1239,4 +1247,4 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-10-27 (proposed revision v1.6; prior approval status unchanged)
+**Last Updated**: 2026-10-28 (proposed revision v1.7; prior approval status unchanged)
