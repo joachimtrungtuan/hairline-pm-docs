@@ -1,10 +1,10 @@
 # Hairline Platform - Database Schema
 
-**Version**: 1.13.0  
+**Version**: 1.13.1  
 **Document Type**: System-Level Data Schema  
 **Created**: 2025-10-23  
 **Status**: Active  
-**Last Updated**: 2026-10-27
+**Last Updated**: 2026-10-28
 
 ---
 
@@ -334,7 +334,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | password_set | BOOLEAN | NOT NULL, DEFAULT false | Whether this user has set a password. For the provider owner it is set through the FR-015 activation link (REQ-015-011) and turns true when the password is first saved; the owner's value drives provider inquiry distribution eligibility (§2) |
 | phone_number | VARCHAR(255) | NULLABLE | Contact phone |
 | profile_image | VARCHAR(255) | NULLABLE | S3 path to profile image |
-| status | VARCHAR(255) | DEFAULT 'active' | Account status (active, inactive, suspended) |
+| status | VARCHAR(255) | DEFAULT 'active' | Team member status: `active`, `suspended`, or `inactive`. `inactive` means Removed (FR-009) and is kept for compatibility; a Removed member never takes a seat. Legacy invitee rows are migrated out; see Business Rules |
 | created_at | TIMESTAMP | AUTO | Record creation timestamp |
 | updated_at | TIMESTAMP | AUTO | Record update timestamp |
 | deleted_at | TIMESTAMP | NULLABLE | Soft delete timestamp |
@@ -345,8 +345,11 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - UNIQUE: `email`
 - INDEX: `provider_id`, `status`
 
-**Business Rules (FR-015 v1.15, FR-009 v1.5)**:
+**Business Rules (FR-015 v1.15, FR-009 v1.7)**:
 
+- A `provider_users` team member row is created only when a staff invitation is accepted (FR-009 v1.7 Rule 9, CR-FR009-20261028-01). Until then the invited person exists only as a `provider_staff_invitations` row. FR-009 team member statuses are stored as `active` (Active), `suspended` (Suspended), and `inactive` (Removed); "Invited" is a display badge for a pending invitation, not a stored member status.
+- **Legacy invitee migration**: the old invite flow created a member row before acceptance. Every such row (status `inactive` or `pending`, whose person never set a password or accepted the invitation) is migrated into a §4A `provider_staff_invitations` row: status `pending` if its invite or activation link has not expired, otherwise `expired`. The placeholder member row is then deleted. After migration, `inactive` means Removed only, and no `pending` member status remains (CR-FR009-20261028-01).
+- Seat usage (FR-009 Rule 6) counts non-Owner team members with status `active` or `suspended` plus §4A invitations with status `pending` not past `expires_at`, each person once. Removed (`inactive`) members never count.
 - Team member emails follow the global provider email identity rule in §3: a `provider_users.email` must not match another non-deactivated provider's owner login, team member, or pending invitation. Team member and pending-invitation emails of a `deactivated` provider are freed for reuse (same reconciliation note as §3); the global UNIQUE on `email` must be scoped accordingly.
 
 **Relationships**:
@@ -390,6 +393,60 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `belongsTo` → `ProviderUser`
 
 **Analytics usage**: Last active date for a provider = `MAX(action_at)` from this table filtered by `provider_id`. Last login = `MAX(action_at) WHERE action_type = 'login'` filtered by `provider_user_id`.
+
+---
+
+### 4A. Provider Staff Invitations
+
+**Table**: `provider_staff_invitations`
+**Description**: Staff invitations to a provider team (FR-009 Key Entity 3). An invited person exists only as an invitation until acceptance; accepting creates the §4 `provider_users` row.
+
+**Columns**:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | UUID | PRIMARY KEY | Unique invitation identifier |
+| provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id |
+| email | VARCHAR(255) | NOT NULL | Invitee email address; subject to the global provider email identity rule (§3) |
+| firstname | VARCHAR(255) | NOT NULL | Invitee first name (FR-009 Screen 2) |
+| lastname | VARCHAR(255) | NOT NULL | Invitee last name (FR-009 Screen 2) |
+| role_id | BIGINT | FOREIGN KEY, NOT NULL | References roles.id: a non-Owner protected role or an active global custom provider role (FR-031) |
+| personal_message | VARCHAR(500) | NULLABLE | Optional note included in the invitation email |
+| token_hash | VARCHAR(255) | NOT NULL | Hash of the single-use invitation token; the raw token is never stored. Replaced on resend, which invalidates the old token |
+| status | VARCHAR(255) | NOT NULL, DEFAULT 'pending' | `pending`, `accepted`, `expired`, or `cancelled` (FR-009 Rule 9) |
+| delivery_status | VARCHAR(255) | NOT NULL, DEFAULT 'sent' | Email delivery state of the invitation: `sent` or `pending_send`. `pending_send` ("Pending Send") is set when the immediate retries fail and the background job keeps retrying (FR-009 B4); it is not an invitation status |
+| expires_at | TIMESTAMP | NOT NULL | Token expiry, 7 days after the latest send (FR-009 Rule 5); reset on resend |
+| last_sent_at | TIMESTAMP | NULLABLE | Time of the latest send or resend |
+| invited_by_type | VARCHAR(255) | NOT NULL | `provider_user` (provider platform, FR-009 Screen 2) or `admin` (FR-009 Screen 12, REQ-009-024) |
+| invited_by_id | UUID | NOT NULL | References provider_users.id or users.id, according to `invited_by_type` |
+| provider_user_id | UUID | FOREIGN KEY, NULLABLE | References provider_users.id: the team member created on acceptance |
+| accepted_at | TIMESTAMP | NULLABLE | Acceptance timestamp |
+| cancelled_at | TIMESTAMP | NULLABLE | Cancellation timestamp |
+| created_at | TIMESTAMP | AUTO | Record creation timestamp |
+| updated_at | TIMESTAMP | AUTO | Record update timestamp |
+
+**Indexes**:
+
+- PRIMARY: `id`
+- UNIQUE: `token_hash`
+- INDEX: `email`
+- COMPOSITE: `(provider_id, status)`, `(provider_id, email)`
+
+**Business Rules (FR-009 v1.7, CR-FR009-20261028-01)**:
+
+- An invitation is the only record of an invited person until acceptance. Accepting sets `status` = `accepted`, `accepted_at`, and `provider_user_id`, and creates the §4 team member with status `active`.
+- A `pending` invitation counts toward seat usage while it is not past `expires_at`, whatever its `delivery_status`; `accepted`, `expired`, and `cancelled` invitations never count (FR-009 Rule 6). A `pending` row past `expires_at` is treated as expired even before its status is updated.
+- At most one `pending` invitation exists per email across non-deactivated providers (global provider email identity rule, §3; FR-009 B2 and A3). Pending invitations of a `deactivated` provider are freed for reuse.
+- Resending an invitation (FR-009 A2) replaces `token_hash`, resets `expires_at` and `last_sent_at`, and keeps the same row.
+- Invitations are blocked while seat usage is at the provider's Seat Limit, while the provider is `suspended` (provider-side, FR-009 Rule 10), and for a `suspended` or `deactivated` provider (admin-side, REQ-009-024).
+- Legacy invitee member rows are migrated into this table as described in §4 Business Rules.
+- **Reconciliation**: this definition is derived from FR-009. The backend's actual invitation table must be compared with it and any difference reconciled (CR-FR009-20261028-01 Implementation Reconciliation).
+
+**Relationships**:
+
+- `belongsTo` → `Provider`
+- `belongsTo` → `Role`
+- `belongsTo` → `ProviderUser` (created on acceptance)
 
 ---
 
@@ -660,7 +717,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 - `sent` → `withdrawn`: Provider retracts before a patient response
 - `sent` → `accepted`: Patient accepts one subquote (sets `accepted_at`, `accepted_total`, `terms_acknowledged_at`, `locked_exchange_rate_snapshot`; creates the `acceptance_events` row)
 - `draft` or `sent` → `cancelled_other_accepted`: Patient accepts a subquote of another quote on the same inquiry (no notice for drafts)
-- `draft`, `sent`, or `expired` → `cancelled_inquiry_cancelled`: The inquiry is cancelled (patient cancellation in Inquiry or Quoted)
+- `draft`, `sent`, or `expired` → `cancelled_inquiry_cancelled`: The inquiry is cancelled (patient cancellation in Inquiry or Quoted). When an inquiry is cancelled, only `draft`, `sent`, and `expired` quotes become `cancelled_inquiry_cancelled`; quotes already in `cancelled_provider_status`, `withdrawn`, `cancelled_other_accepted`, `accepted`, or `archived` keep their status and cause
 - An accepted quote stays `accepted` when an admin cancels the booking and the inquiry moves to `cancelled`; the AcceptanceEvent and its snapshot are retained unchanged
 - `accepted` → `withdrawn`: Provider withdraws after acceptance (FR-004 Workflow 6); the AcceptanceEvent is unchanged and the case passes to the FR-006 provider-fault transfer
 - `draft` or `sent` → `cancelled_provider_status`: Provider suspension or deactivation becomes effective before acceptance (FR-015). After acceptance the quote stays `accepted`: an Accepted or Confirmed booking is cancelled with cause `ProviderSuspended` or `ProviderDeactivated`, and an admin rehomes the patient through the FR-006 provider-fault transfer (an In Progress booking is not cancelled automatically, see §11A); the AcceptanceEvent is superseded when the replacement acceptance is recorded
@@ -1463,7 +1520,7 @@ This document provides a comprehensive overview of the Hairline Platform databas
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | id | UUID | PRIMARY KEY | Unique aftercare identifier |
-| quote_id | UUID | FOREIGN KEY, NULLABLE | References quotes.id (NULL for standalone aftercare) |
+| quote_id | UUID | FOREIGN KEY, NULLABLE | References quotes.id: the accepted quote of the treated booking for treatment-linked aftercare; NULL for standalone aftercare |
 | provider_id | UUID | FOREIGN KEY, NOT NULL | References providers.id (assigned provider) |
 | patient_id | UUID | FOREIGN KEY, NOT NULL | References patients.id |
 | aftercare_type | VARCHAR(255) | NOT NULL | Type: treatment_linked, standalone |
@@ -1504,8 +1561,9 @@ This document provides a comprehensive overview of the Hairline Platform databas
 
 **Business Rules**:
 
-- `treatment_linked`: quote_id is NOT NULL (linked to treatment booking)
-- `standalone`: quote_id is NULL (purchased separately, assigned by admin)
+- `treatment_linked`: quote_id is NOT NULL and MUST reference the patient's accepted quote whose FR-006 booking reached Aftercare. A quote that was turned down, expired, withdrawn, or cancelled can never carry aftercare.
+- `standalone`: quote_id is NULL. Standalone aftercare is for patients treated at an outside clinic who buy aftercare directly; it never relates to an inquiry or quote. An admin assigns the delivering provider.
+- The FR-011 Workflow 2b post-treatment add-on (a Hairline-treated patient buys aftercare later, within 90 days) is `treatment_linked`: quote_id references the accepted quote of that completed treatment. It is only activated later and paid separately.
 - Provider fault, suspension, or deactivation during treatment-linked aftercare does not cancel the aftercare, the booking, or the treatment record: the row stays `active`, `support_required` is set, and an admin reassigns the aftercare provider or team by changing `provider_id` with a mandatory reason and an audit entry (previous provider, new provider, admin, time). The reassignment sends `aftercare.provider_reassigned` (FR-011) to the patient and the new aftercare provider; the notice is mandatory. No new acceptance, booking, or payment is created.
 - Provider suspension or deactivation does not cancel standalone aftercare either: the row keeps its status, the provider-status cause fields and `support_required` are set, and an admin reassigns it through the same FR-011 Screen 19 reassignment (FR-015 v1.21, FR-011 v1.6). `cancelled` is used only when an admin explicitly cancels with a reason. `after_cares` is the source of truth for the cascade; `standalone_aftercare_requests` (§21) is intake only and does not need a `cancelled` request status
 
@@ -3467,6 +3525,7 @@ Schema version tracked via:
 | 1.12.0 | 2026-10-26 | Vân Tay Media | FR-015 dev-team question resolution (FR-015 v1.21, FR-011 v1.6; no Change Request, system document): new §41 `provider_status_events` (append-only provider status event) as the target of `inquiry_providers.provider_status_event_id`, `after_cares.provider_status_event_id`, `payments.provider_status_event_id`, and `provider_account_closure_requests.deactivation_event_id`; §13 standalone aftercare is no longer cancelled by provider suspension or deactivation and moves to admin reassignment; total tables 117. Follow-up: `password_set` moved from §2 `providers` to the owner's §4 `provider_users` row to match the backend (Product Owner decision; behaviour unchanged) |
 | 1.11.0 | 2026-10-18 | Vân Tay Media | Final audit corrections (Q31, Q35 to Q44; f1 F5, F6, F8, F10; f2 F2, F4, F5, F8, F10; f3 F5; f4 F3, F5, F6, F8, F9, F11, F13; no Change Request, system document). Revises the 1.10.0 decision that `discounts` stores promotion programs (Q38 supersedes Q33): new §25A `promotion_programs` and §25B `promotion_codes`, `discounts` marked legacy, and every promotion reference repointed. §5 inquiry `status` aligned to the FR-003 stages with `cancelled_at` and `cancellation_reason`; provider-status fields moved to new §5A `inquiry_providers` with `distributed_at`; new §5B `inquiry_date_ranges`. §7 quotes gain `authored_by_type`, `authored_by_admin_id`, and `replacement_for_acceptance_event_id` for the admin-authored replacement quote; an accepted quote stays accepted when an admin cancels the booking. §7J supersession is inserted once at the replacement acceptance, `InquiryCancelled` cause removed, replacement acceptance NOT NULL and unique. §7M adds `not_applied`, one automatic promotion per quote, and limit-full sends proceed without the promotion. §11A admin-only cancellation from any booking state after acceptance, provider-fault transfer limited to Accepted and Confirmed, deposit rate and instalment settings locked at confirmation, cancellation audit fields. §13 aftercare provider reassignment instead of cancellation for treatment-linked aftercare. §35 treatment status `in_progress`, `completed`, `cancelled` and creation at confirmation; §35A clinic changes until Check In and admin changes at any time from Confirmed. FK, unique, migration order, ENUM and table lists updated; total tables 116. Round-2 additions (Q45 to Q49): a provider fault, suspension, or deactivation on an In Progress booking no longer cancels it automatically; the booking stays `in_progress` with `support_required` and an admin either moves it to Aftercare with aftercare-provider reassignment or cancels it with a reason (§5, §7, §11A). §35 `treatment_records.status` is NOT NULL with default `awaiting_check_in` from creation at confirmation. §13 reassignment sends `aftercare.provider_reassigned` to the patient and the new aftercare provider. §7 and §7L: no automatic promotion or reservation on an admin-authored replacement quote, and an unaccepted replacement quote expires normally while the inquiry stays support-required |
 | 1.13.0 | 2026-10-27 | Vân Tay Media | Product Owner decisions on the FR-015 follow-up questions (F1, F2, F10, F18; FR-003 v2.12, FR-004 v3.6, FR-006 v2.11): §5 Inquiry stages and the ENUM Types list now point to CR-FR003-20261027-01, CR-FR004-20261027-01, and CR-FR006-20261027-01 for the legacy status value migration and legacy-route compatibility, with the schema values unchanged. §40 `provider_account_closure_requests`: a scheduled deactivation keeps the request `pending_admin_review` with the marker "Closure requested, deactivation scheduled [date]" until it takes effect, when the request becomes `approved` with `deactivation_event_id`; a cancelled scheduled deactivation leaves the request `pending_admin_review` with no rejection email; the legacy table `provider_deletion_requests` migrates to this table with mapped statuses; open bookings and pending payouts never block a closure request. Later the same day: §5 `inquiries` gains `redistribution_state` (`awaiting_patient_confirmation`, `confirmed`, `declined`, `completed`), `redistribution_state_at`, and `redistribution_provider_status_event_id` for pre-acceptance redistribution after a provider-status cascade, with no confirmation timeout and at most one redistribution per provider status event; the ENUM Types list adds the redistribution state (FR-003 v2.12, CR-FR003-20261027-02) |
+| 1.13.1 | 2026-10-28 | Vân Tay Media | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarifications; §4 change per CR-FR009-20261028-01. §13 `after_cares`: treatment-linked aftercare references the patient's accepted quote whose FR-006 booking reached Aftercare, and a turned-down, expired, withdrawn, or cancelled quote can never carry aftercare; standalone aftercare (outside-clinic patients) has `quote_id` NULL and never relates to an inquiry or quote; the FR-011 Workflow 2b post-treatment add-on is treatment-linked to the accepted quote of the completed treatment. §7 Status Triggers: inquiry cancellation moves only `draft`, `sent`, and `expired` quotes to `cancelled_inquiry_cancelled`; quotes in any other status keep their status and cause. §4 `provider_users`: a team member row is created only when a staff invitation is accepted; seat usage rule restated (FR-009 v1.7, CR-FR009-20261028-01). Follow-up the same day (Product Owner decisions, review fixes): §4 stored statuses are `active`, `suspended`, and `inactive`, where `inactive` means Removed and never takes a seat; legacy invitee rows (`inactive` or `pending`, never accepted) are migrated into invitations, Pending or Expired by their original link expiry, and the placeholder member row is deleted; §4 Business Rules header now cites FR-009 v1.7; new §4A `provider_staff_invitations` definition derived from FR-009 (statuses, `pending_send` delivery state, inviter type, seat and email identity rules, reconciliation note); the table was already in the table list, so the total is unchanged |
 
 ---
 
