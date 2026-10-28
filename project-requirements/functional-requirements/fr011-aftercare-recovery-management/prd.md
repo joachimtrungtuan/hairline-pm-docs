@@ -3,7 +3,7 @@
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
-**Status**: 🟡 Revised 2026-10-26 (standalone aftercare reassignment on provider suspension/deactivation) — Pending Consolidated Verification  
+**Status**: 🟡 Revised 2026-10-28 (v1.7: aftercare entry routes and treatment-linked quote link clarified); previously revised 2026-10-26 (standalone aftercare reassignment on provider suspension/deactivation) — Pending Consolidated Verification  
 **Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
 **Change Request**: [CR-FR011-20261026-01 — Standalone aftercare reassignment](change-request-2026-10-26-standalone-aftercare-reassignment.md) (previous: [CR-FR011-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md), [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
@@ -63,9 +63,12 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### Entry Points
 
-1. **Treatment-Linked Aftercare**: Automatic activation after Hairline platform treatment completion
-2. **Standalone Aftercare**: Patient-purchased service for external clinic treatments
-3. **Admin-Managed**: Direct assignment by admin team
+Aftercare has exactly two entry routes:
+
+1. **Treatment-Linked Aftercare**: Starts from the patient's accepted Hairline quote whose treatment was performed (the FR-006 booking reached Aftercare). It covers Workflow 1 (set up at treatment completion) and the Workflow 2b post-treatment add-on (bought later within 90 days). The aftercare record is linked to that accepted quote.
+2. **Standalone Aftercare**: Bought directly by patients treated at an outside clinic (Workflow 2). It has no inquiry or quote.
+
+Admin assignment is not a separate entry route. It is a step inside these two routes that decides who delivers the aftercare, for example the Workflow 2 provider assignment, the Workflow 1 A2 Hairline aftercare team takeover, and Workflow 4 reassignment.
 
 ## Business Workflows
 
@@ -186,6 +189,8 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 **Trigger**: Hairline-treated patient requests aftercare service after treatment completion (within 90 days)
 
 **Outcome**: Aftercare plan is configured, activated, and patient receives ongoing monitoring
+
+**Linkage**: The add-on creates treatment-linked aftercare (`treatment_linked`), linked to the accepted quote of the completed Hairline treatment. It is not standalone aftercare; it is only activated later and paid separately (system data schema §13).
 
 **Main Flow**:
 
@@ -1708,6 +1713,7 @@ Acceptance Scenarios:
 | 2026-10-14 | 1.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Workflow 4 D4, General Module Rule 4 (Provider Status Cancellation), REQ-011-014, mid-aftercare suspension edge case, and AftercarePlan cancellationReason/supportRequired attributes; admin reassignment/recovery workflow unchanged. See [CR-FR011-20261014-01](change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification.. Product Owner confirmed (2026-10-14) that standalone aftercare (Workflow 2) is inside the cascade scope | Vân Tay Media |
 | 2026-10-26 | 1.6 | Product Owner decision on FR-015 dev-team questions: Workflow 4 D4, General Module Rule 4, REQ-011-014, and the mid-aftercare edge case no longer cancel standalone aftercare on provider suspension/deactivation; standalone cases get the provider-status cause and `supportRequired` and move to Screen 19 reassignment, matching FR-015 v1.20/v1.21. Change Request: CR-FR011-20261026-01 | Claude (AI Assistant) |
 | 2026-10-18 | 1.5 | Final audit corrections (Q36, Q43): new Workflow 4 Alternative Flow D5 and Admin Screen 19 (Reassign Aftercare Provider) let an admin reassign only the aftercare provider or team for a provider fault during `Aftercare`, with fields, validation, mandatory reason, confirmation, audit entry and notice; the FR-006 booking stays `Aftercare` and the treatment record stays unchanged, with no new quote, acceptance or payment. D4, General Module Rule 4, the mid-aftercare suspension edge case and REQ-011-014 now cancel only standalone cases on provider suspension or deactivation; treatment-linked cases stay active for reassignment. Screen 14 Reassign Provider opens Screen 19. REQ-011-015 added. Round-two corrections (Q45, Q47): Screen 19, Alternative Flow D5 and REQ-011-015 now send the new mandatory FR-030 event `aftercare.provider_reassigned` (FR-011 producer) to the patient and the new aftercare provider, with no admin alert and no notice to the previous provider, replacing the note that the event was not registered; D5 and Screen 19 also accept a booking moved from `In Progress` to `Aftercare` by the FR-006 In-Progress provider-fault decision. See CR-FR011-20261016-01. | Product Owner / Documentation |
+| 2026-10-28 | 1.7 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Entry Points now list exactly two entry routes, treatment-linked (from an accepted and treated Hairline quote, including the Workflow 2b add-on) and standalone (outside-clinic patients, no inquiry or quote); admin assignment is described as a step inside those routes, not a third entry point. Workflow 2b states that the add-on creates treatment-linked aftercare linked to the accepted quote of the completed treatment. Matches system data schema v1.13.1 §13. Review follow-up (same day): header Status line updated to this revision | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
@@ -1719,4 +1725,4 @@ Acceptance Scenarios:
 
 ---
 
-**Last Updated**: 2026-10-26
+**Last Updated**: 2026-10-28
