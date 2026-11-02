@@ -689,3 +689,182 @@ An independent review of the changes and a second pass over both backend documen
 3. **Cascade not built yet:** V4 situation 1 and V9 can only be tested with hand-made data until the FR-015 provider-status cascade exists.
 4. **Dry-run figures:** the backend re-runs the dry-run and sends counts that reconcile with the inventory (§8.12 point 16).
 5. **Invitations table:** the backend compares the new schema definition of `provider_staff_invitations` with its actual table and reports differences.
+
+## 9. Booking Hold, API v2 Endpoint List and Commission (2026-10-29)
+
+**Sources answered** (one batch):
+
+- `BA-CONFIRM-BOOKING-HOLD-AND-STATUS-2026-10-29.md`: §1 items 1 to 8 ("done") and §2 questions 1, 2, 3, 5 and 6.
+- `FR015-BA-QUESTIONS-V2-AND-COMMISSION-2026-10-29.md`: A1, A2, B1 to B6, C1 to C4, and the internal notes at the end of the file.
+- `FR015-ENDPOINT-LIST-V2-2026-10-28.md`: the 112-row endpoint list, which replaces WS1 inventory §2. Reviewed under B1.
+- `FR015-WS1-INVENTORY-AND-ENDPOINTS-2026-10-28.md`: the first draft, already answered in §8.9 and §8.12.
+
+**Decisions**: Product Owner, 2026-10-29.
+
+Each item follows the order of the backend documents. The answer comes first; the explanation follows.
+
+### 9.1 Summary of answers
+
+| Item | Question | Answer |
+|---|---|---|
+| Hold §1.1 | Hold length 24 to 168 hours, default 48, versioned and audited | **Correct** |
+| Hold §1.2 | One "expiring soon" reminder, default 12 hours before expiry | **Correct** |
+| Hold §1.3 | Expiry moves the booking to Payment Window Expired and releases the slot | **Correct** |
+| Hold §1.4 | One active booking per provider per date and time, enforced in the database | **Correct** |
+| Hold §1.5 | Admin revive | **Partly wrong**: the promotion usage-limit check is missing |
+| Hold §1.6 | Booking status names | **Correct** |
+| Hold §1.7 | Old apps still see `pending_deposit` | **Wrong**: old apps must see `cancelled` with the reason "Payment window expired", the stored value must be the new one, and `prd_status` must not appear on old routes |
+| Hold §1.8 | Expiry, reminder and revive run only when the E0 flag is on | **Correct**, but the schema hold columns are needed first |
+| Hold Q1 | 48 hours, 24 to 168, reminder 12 hours | **Correct** |
+| Hold Q2 | Keep `pending_deposit` for old apps | **Wrong**, same as §1.7 |
+| Hold Q3 | Revive does not charge again or change the price | **Correct** |
+| Hold Q5 | Maximum number of revives | **No limit**. Every revive is audited |
+| Hold Q6 | The expiry job releases only bookings with no deposit paid | **Correct** |
+| Hold §2b | PRD cross-check | **Correct** |
+| A1 | Who decides flagged rows from the production dry-run | **BA with the Product Owner, within 3 working days** |
+| A2 | Who approves the migration runs | **Staging: BA. Production: BA and Product Owner.** App teams are told before production |
+| B1 | Approve the endpoint list | **Not approved yet.** The list must be completed (see §9.4) |
+| B2 | Which apps call shared routes | Answered by rule; `get-after-care` gets v2. Frontend confirms the other shared routes |
+| B3 | Analytics endpoints | v2 only where an app shows, groups or filters by a status value |
+| B4 | Exports and saved daily statistics | **New names in exports; saved statistics are recalculated once after migration** |
+| B5 | Patient status on the provider patient list | **Follows the booking stage**, with new names in v2. The rule for several bookings is pending |
+| B6 | Three endpoints with no v2 | **Correct**, as their responses carry no status value |
+| C1 (a) | Flat rate on bookings confirmed before switch-on | **Once, at completion** |
+| C1 (b) | Closed payout statements | **Not edited**; differences become separate adjustments |
+| C2 | Accepted quotes not yet confirmed | **Correct**: the configuration in effect at booking confirmation applies, not `quotes.commission` |
+| C3 | Two different sources for one provider | **The latest change wins** |
+| C4 | Release scope for commission phase 2 | **This release** |
+
+### 9.2 Booking hold and booking status
+
+**§1.1, §1.2, §1.3, §1.4, §1.6 and Q1: Correct.**
+These match FR-026 A7 and FR-006. A hold already running is not changed when an admin later changes the configuration.
+
+**§1.5 Admin revive: partly wrong.**
+FR-006 Screen 7 lists the checks before a revive: a reason of 10 to 500 characters, a confirm checkbox, an Active provider, a free slot, and **room left under the promotion usage limit** if the booking used a promotion. The backend list is missing the promotion check. Without it, a revive could let a patient use a promotion that has already reached its limit. Add it.
+
+The two extra checks the backend added (the appointment date has not passed, the inquiry is not cancelled) are fine to keep.
+
+After a revive, the booking returns to Accepted with a new hold of the FR-026 length. The AcceptanceEvent and the price snapshot stay the same. The revive is audited and sends `booking.revived` to the patient and the provider.
+
+**§1.7 and Q2: Wrong.**
+CR-FR006-20261027-01 sets two rules that the backend has reversed:
+
+1. **What is stored:** the database stores the new values, `accepted` and `payment_window_expired`. It does not keep storing `pending_deposit`.
+2. **What old apps see:** old routes show the old meaning. An Accepted booking shows as `pending_deposit`. A Payment Window Expired booking shows as `cancelled` with the reason "Payment window expired", because the old app has no "expired" screen and the patient can no longer pay.
+
+Example: a patient accepts on Monday and does not pay within 48 hours. On Wednesday the stored status becomes `payment_window_expired`. The new app (v2) shows "Payment Window Expired". The old app shows "Cancelled, Payment window expired", not "Waiting for deposit". Showing "Waiting for deposit" would invite the patient to pay for a slot that has already been released.
+
+**The extra `prd_status` field must not appear on old routes.** The CR says new values are returned only on new-version routes, and old routes keep returning old values. A `prd_status` field on an old route would send the new values to old apps, so remove it there. On v2 routes it adds nothing, because the `status` field already carries the new value.
+
+**Q3: Correct.** A revive charges nothing again and changes no price.
+
+**Q5: No limit.** An admin can revive as many times as needed. Each revive needs its own reason and is audited.
+
+**Q6: Correct.** The expiry job must release only bookings with no deposit paid. Releasing a paid booking was a bug, and the fix is right.
+
+**§1.8: Correct, with a precondition.** Nothing in this section is live until the E0 flag (booking created at Accept) is turned on. Before it is turned on, the hold columns in schema §11A (`hold_appointment_at`, `hold_expires_at` and the rest) must exist.
+
+**The document contradicts its own notes.** §1 lists revive, expiry and the reminder as "done". The notes at the end of the second file say revive, the `booking.payment_window_expired` notice and the §11A hold columns are not built yet. The backend confirms which is true and updates §1.
+
+**Endpoints need BA sign-off.** The first file says the endpoint changes are for the backend to decide alone. Under CR-FR004-20261027-01, the BA and Product Owner sign off the v2 endpoint list before it is built (§8.9).
+
+**§2b PRD cross-check: Correct.** It matches FR-006 (REQ-006-005, REQ-006-011, REQ-006-013, REQ-006-017) and FR-026 A7. Payment Window Expired does not reopen the parent quote. The admin then either revives or cancels the booking. After a cancellation, the patient starts a new inquiry.
+
+### 9.3 Migration on real data (A1, A2)
+
+**A1. Flagged rows from the production dry-run.**
+The backend runs the dry-run on a copy of production. Rows that need a person to decide are those with no AcceptanceEvent and those with cancelled aftercare. The BA decides them with the Product Owner, within 3 working days of receiving the list.
+
+This review applies to production data only. On staging and other non-production data, rows with no AcceptanceEvent are deleted or recreated through the current accept flow before migration, as decided in §8.3 and §8.12 point 8. They do not go to the BA.
+
+**A2. Approving the migration runs.**
+
+- **Staging:** the BA approves.
+- **Production:** the BA and the Product Owner both approve.
+- The patient app and portal teams are told before the production run.
+- **Maintenance window:** the backend recommends whether one is needed and how long it should be. The BA and Product Owner decide it as part of approving the production run.
+
+### 9.4 B1. The v2 endpoint list (`FR015-ENDPOINT-LIST-V2-2026-10-28.md`)
+
+**Not approved yet.** The list is complete in count: 112 rows, none missing and none repeated. But most rows do not yet say what will happen, so the BA and Product Owner cannot sign it off. The backend completes the following.
+
+1. **A yes or no for every row.** All 65 write rows and all 12 analytics rows only repeat the rule ("v2 if the request accepts or the response returns a status value"). Each row needs an actual **Yes** or **No**.
+2. **A field column.** §8.9 asked for the field that carries the status, for example `booking.status` or `quote.status`. Without it, the app teams cannot tell what changes.
+3. **Real new values.** 27 rows show "check constant" instead of the new value: rows 3, 6, 38 to 42, 44, 52, 55, 58, 66, 67, 73 to 80, 82, 84 to 86, 108 and 112. They point to `Quote::STATUS_CONFIRMED`, `Quote::STATUS_ACCEPTED`, `Booking::STATUS_DEPOSIT_PAID` and similar. Each must name the actual old and new value.
+4. **Rows that are not about case status.** The scan matched words, not status values. Remove these rows or mark them "not affected". For example:
+   - "aftercare" as a feature name: aftercare templates (rows 89, 91, 92), resources (97), questionnaire types (94), and the patient aftercare purchase routes (61, 62, 63).
+   - "requested": translation bundles (14, 111), settings (88), activation resend (72). Row 111 is also wrongly grouped as Analytics.
+   - "scheduled": help-centre service status (51), admin invitation accept (8), and the provider account status-change routes (10, 11).
+   - Other rows whose handler has nothing to do with case status: 13, 15, 47, 60, 64, 65, 90, 93, 95, 96, 98, 99, 107 and 109.
+   - The backend re-checks every row whose only match is a bare word, not a status field, and keeps only rows that carry a case status.
+   - Chat rows 45 and 46 carry `invitation_status`, which appears to be chat participation. The backend confirms it is not a case status.
+5. **Two wrong mappings in the code notes (§3 of the list).**
+   - The inquiry model maps `scheduled` to `confirmed`. That is wrong. Under CR-FR003-20261027-01, a `scheduled` inquiry takes the stage of its booking: `accepted` if the deposit is not paid (including when the payment window expired), and `confirmed` only once the deposit is paid.
+   - The inquiry model maps `aftercare` to `in_progress`. That is wrong. For inquiries and bookings, `aftercare` stays `aftercare`. Only a quote labelled `aftercare` becomes `accepted`. As written, the Aftercare stage would disappear from inquiries.
+6. **Other places a status can reach an app.**
+   - Push and notification messages: the backend confirms whether any carries a status value. If one does, it follows the same old-app and v2 rules.
+   - The notification `aftercare` category, maintenance status, provider deposit rate and anonymisation are probably not case statuses. The backend confirms each.
+   - The analytics services (`Services/Analytics/*`), `HairlineDashboardService` and `ProviderEarningsTrackerService` follow the B3 rule: any endpoint they feed gets v2 only if an app shows, groups or filters by a status value. `Models/Booking.php` follows the stored-value and old-route rules in §9.2.
+7. **Frontend confirmation.**
+   - Analytics rows 4, 5, 36, 37, 48, 49, 50 and 68 to 71: does any screen show, group or filter by a status value? Rows 48 and 49 (dashboard overview) carry `quote_status`.
+   - The 68 rows marked "provider portal, admin portal": which apps actually call each one?
+8. **Table fix.** Rows 92 and 97 break the table because "PUT|PATCH" contains a `|`. Use "PUT/PATCH".
+
+The questions in §4 of the list repeat B2, B3, B5 and B6 and are answered in §9.5.
+
+The first draft (`FR015-WS1-INVENTORY-AND-ENDPOINTS-2026-10-28.md`) §2.1 suggested write endpoints might need only a conversion layer. That is replaced by the approved rule in §8.9: a write endpoint gets v2 when its request accepts or its response returns a status value.
+
+### 9.5 B2 to B6
+
+**B2. Routes used by several apps.** By the rule, `/api/after-care/get-after-care` returns a status value, so it gets v2. For the other shared routes, the frontend confirms which apps really call them (§9.4 point 7).
+
+**B3. Analytics.** A route gets v2 only if an app shows, groups or filters by a status value. For `/api/analytics/treatment-outcomes`: if `aftercare` appears as a group label on screen, it gets v2. If it is only used to calculate a number, it does not. The frontend confirms.
+
+**B4. Exports and saved statistics.** Exports use the **new** status names. The saved daily statistics (`AggregateProviderDailyMetrics`) are **recalculated once** after migration, so old and new figures use the same names and can be compared.
+
+**B5. Patient status on the provider patient list.** The patient status (`scheduled`, `inprogress`, `aftercare` in `Models/Patient.php`) is not a separate status. It follows the stage of the patient's booking with that clinic, using the new names in v2 and the legacy mapping on old routes. The list filter uses the same values.
+
+No PRD yet says which booking to use when a patient has several bookings with the same clinic. The BA proposes the stage of the most recent booking that is not cancelled. This is pending Product Owner confirmation (§9.8).
+
+**B6. Correct.** `PatientPaymentMethodController::destroy`, `PassportDetailsController::store` and `TreatmentExecutionController::getInProgressList` return no status value, so they keep their route.
+
+### 9.6 Commission phase 2 (C1 to C4)
+
+**C4 first, because it shapes the rest: this release.** Commission phase 2 ships with this FR-015 release, not later. Payout testing (FR-017) must cover C1, C2 and C3 before release.
+
+**C1 (a). Bookings confirmed before switch-on: flat rate deducted once, at completion.**
+This follows FR-017 and FR-029: a flat rate is deducted once per completed procedure, not on every payment. The old snapshot holds only a percentage, so for these bookings the backend fills in the missing parts (model, currency, configuration reference) from the configuration in effect on the booking's confirmation date. If the backend has no record of the configuration in effect on that date, it lists the affected bookings and the BA decides each one.
+
+Example: a provider has a flat rate of 200 USD. A 3,000 USD booking was paid in 2 instalments and is not yet complete. Nothing is deducted per instalment. 200 USD is deducted once when the treatment is completed.
+
+**C1 (b). Closed payout statements are not edited.** Any difference is recorded as a separate financial adjustment on the next statement, with a reason. A closed statement is one in FR-017 status Approved or Paid. Pending Approval and Overdue statements are still open. This is a Product Owner decision for the switch-over; FR-017 has no "closed statement" rule.
+
+**C2. Correct.** A quote accepted but not yet confirmed at switch-on does not use `quotes.commission`. The commission snapshot is taken when the booking is confirmed (deposit paid), from the configuration in effect at that moment. The commission shown on a quote is only an estimate.
+
+**C3. The latest change wins.** Where one provider has both an FR-029 override and an FR-015 Tab 7 setting with different values, the one changed most recently is kept, with no manual review. The two become one record from then on. The backend sends a list of the affected clinics, showing the value kept and the value dropped, so the change is on record.
+
+**Correction to the internal notes.** The note "use `quotes.commission` for payout" is wrong. Payout uses the commission snapshot taken at booking confirmation (FR-017, FR-029).
+
+### 9.7 Decisions (Product Owner, 2026-10-29)
+
+1. **Revive limit:** none. Every revive is audited with its own reason.
+2. **Migration approval (A2):** the BA approves staging; the BA and Product Owner approve production, including any maintenance window the backend recommends; app teams are told before production.
+3. **Flagged dry-run rows (A1):** the BA with the Product Owner decides them within 3 working days.
+4. **Exports and statistics (B4):** new status names in exports; saved daily statistics recalculated once after migration.
+5. **Patient list status (B5):** follows the booking stage, with new names in v2.
+6. **Two commission sources (C3):** the latest change wins automatically.
+7. **Commission phase 2 (C4):** ships in this release.
+
+### 9.8 Still Open
+
+1. **Endpoint list (B1):** the backend completes the list under §9.4; the BA reviews it, and the BA and Product Owner sign it off before any v2 route is built. This replaces §8.13 item 1.
+2. **Booking status values (§1.7):** the backend stores `accepted` and `payment_window_expired`, maps them for old routes as in §9.2, and removes `prd_status` from old routes.
+3. **Revive (§1.5):** the backend adds the promotion usage-limit check.
+4. **Built or not built:** the backend confirms whether revive, the `booking.payment_window_expired` notice and the §11A hold columns exist, and updates the "done" list.
+5. **Inquiry model mappings:** the backend corrects `scheduled` and `aftercare` as in §9.4 point 5.
+6. **Commission sources (C3):** the backend sends the list of affected clinics with the kept and dropped values.
+7. **Frontend confirmations:** shared routes, analytics routes and push messages (§9.4 points 6 and 7).
+8. **Patient list with several bookings (B5):** the Product Owner confirms the BA proposal to show the stage of the most recent booking that is not cancelled.
+9. **Commission back-fill (C1):** the backend lists bookings where the configuration in effect on the confirmation date cannot be found.
+10. **Items from §8.13 still open:** 2 (global email check), 3 (cascade not built), 4 (dry-run figures) and 5 (invitations table).
