@@ -65,3 +65,7 @@ No Change Request was created for the new FR-020 event: FR-015 v1.22 already req
 3. The provider-status cascade is not built yet, so V4 situation 1 and V9 can be tested only with hand-made data.
 4. The backend team reconciles the dry-run counts with the WS1 inventory: the dry-run reports 23 quotes while the inventory rows total 28, and V1.2 reports 3 aftercare conflicts while the inventory shows 6.
 5. The backend team compares its actual invitation table with the new schema §4A `provider_staff_invitations` definition (CR-FR009-20261028-01).
+
+## Follow-up (2026-11-02)
+
+- Added §9 to the [FR-015 dev questions report](../../../reports/2026-10-26/fr015-dev-questions-answers-2026-10-26.md#9-booking-hold-api-v2-endpoint-list-and-commission-2026-10-29). It answers the 2026-10-29 backend files on booking hold and status, the v2 endpoint list and commission phase 2, and records seven Product Owner decisions: no revive limit, migration approvals, flagged-row turnaround, export names and statistics recalculation, patient list status, latest commission change wins, and commission phase 2 in this release. No PRD, CR or schema was changed.
