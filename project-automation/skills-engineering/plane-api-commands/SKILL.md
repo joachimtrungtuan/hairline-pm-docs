@@ -26,7 +26,7 @@ Run Plane.so API workflows with reusable scripts. All credentials come from `loc
 
 ## Supported Modes
 
-- `refresh-values`: fetch labels, modules, cycles, milestones, members (id and names only), states, issue types, priorities, and the currently active cycle into `plane-values.json`; optionally create missing labels and milestones first
+- `refresh-values`: fetch labels, modules, cycles, milestones, members (id and names only), states, issue types, priorities, and the currently active cycle into `plane-values.json`; optionally create missing labels, milestones and cycles first
 - `create-work-item`: create new Plane work items from task markdown, write `Plane Task ID` / `Plane Task Key` back into the task file, and verify every field persisted
 - `update-work-item`: update selected fields of existing work items from task markdown (description by default)
 - `set-parent`: assign parent work items for existing Plane work items
@@ -98,6 +98,8 @@ python3 "../../skills-engineering/plane-api-commands/scripts/fetch-plane-values.
 The script prints added/removed/changed values and the active cycle. The cache contains no secrets and no member emails.
 
 To create missing values before the refresh, add repeatable `--ensure-label "NAME[=#hex]"` or `--ensure-milestone "TITLE[=YYYY-MM-DD]"` (an existing milestone gets its target date aligned when a date is given). Combine with `--dry-run` to preview.
+
+To create weekly cycles, add repeatable `--ensure-cycle "NAME=START..END"`, with dates in `YYYY-MM-DD` and END set to the last working day (for example `--ensure-cycle "2026_Nov_C1=2026-11-02..2026-11-06"`). The script stores the same bounds as cycles made in the Plane UI: Mon 07:00:01 to Sat 06:59 (+07). It handles Plane storing an end date one day late when a cycle is created. If a cycle with that name already exists and its end date is different, the script corrects the end date and leaves the start unchanged.
 
 ### 2. Create Plane work items
 

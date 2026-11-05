@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -85,6 +86,58 @@ def ensure_milestones(config, specs: list[str], dry_run: bool) -> None:
             raise SystemExit(f"ERROR: Milestone {verb[:-1]} failed HTTP {status}: {body}")
 
 
+def ensure_cycles(config, specs: list[str], dry_run: bool) -> None:
+    """Create each missing cycle (`NAME=START..END`, dates YYYY-MM-DD, END = last working day).
+
+    Stored bounds match cycles created in the Plane UI: START 00:00:01Z and END 23:59:00Z (UTC).
+    On create, Plane stores the submitted end date one day later, so END - 1 day is POSTed; PATCH
+    stores the value as sent. An existing cycle (matched by name) whose stored end differs is
+    realigned with PATCH; its start is left untouched.
+    """
+    existing = {
+        str(x.get("name", "")).lower(): x
+        for x in paginated_get(config, project_path(config, "/cycles/"))
+    }
+    for spec in specs:
+        name, raw_range = split_spec(spec)
+        start_raw, sep, end_raw = raw_range.partition("..")
+        if not sep:
+            raise SystemExit(f"ERROR: Cycle spec must be NAME=START..END, got {spec!r}")
+        start = parse_date(start_raw, "Cycle start date")
+        end = parse_date(end_raw, "Cycle end date")
+        if start > end:
+            raise SystemExit(f"ERROR: Cycle {name!r} start {start} is after end {end}")
+        send_end = (date.fromisoformat(end) - timedelta(days=1)).isoformat() + "T23:59:00Z"
+        current = existing.get(name.lower())
+        if current:
+            stored_end = datetime.fromisoformat(str(current.get("end_date"))).astimezone(timezone.utc)
+            if stored_end.date().isoformat() == end:
+                print(f"Cycle exists: {name}")
+                continue
+            print(f"Cycle end {'would be realigned' if dry_run else 'realigned'}: {name} -> {end}")
+            if dry_run:
+                continue
+            body, status = api_request(
+                config, "PATCH", project_path(config, f"/cycles/{current['id']}/"), {"end_date": f"{end}T23:59:00Z"}
+            )
+            if status not in (200, 201):
+                raise SystemExit(f"ERROR: Cycle update failed HTTP {status}: {body}")
+            continue
+        print(f"Cycle {'would be created' if dry_run else 'created'}: {name} {start}..{end}")
+        if dry_run:
+            continue
+        payload = {
+            "name": name,
+            "start_date": f"{start}T00:00:01Z",
+            "end_date": send_end,
+            "project_id": config.project_id,
+            **({"owned_by": config.assignee_id} if config.assignee_id else {}),
+        }
+        body, status = api_request(config, "POST", project_path(config, "/cycles/"), payload)
+        if status not in (200, 201):
+            raise SystemExit(f"ERROR: Cycle create failed HTTP {status}: {body}")
+
+
 def fetch_members(config) -> list[dict[str, Any]]:
     """Project members as id + names only (no emails) for Assignees name lookup."""
     rows = []
@@ -128,11 +181,16 @@ def main() -> None:
         "--ensure-milestone", action="append", default=[], metavar="TITLE[=YYYY-MM-DD]",
         help="Create the milestone if missing, or align its target date (repeatable)",
     )
+    parser.add_argument(
+        "--ensure-cycle", action="append", default=[], metavar="NAME=START..END",
+        help="Create the cycle if missing; dates YYYY-MM-DD, END is the last working day (repeatable)",
+    )
     args = parser.parse_args()
 
     config = load_config(Path(args.env))
     ensure_labels(config, args.ensure_label, args.dry_run)
     ensure_milestones(config, args.ensure_milestone, args.dry_run)
+    ensure_cycles(config, args.ensure_cycle, args.dry_run)
     project_body, project_status = api_request(
         config,
         "GET",
