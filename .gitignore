@@ -6,3 +6,5 @@ task-creation/
 
 # Python cache
 __pycache__/
+# Requirements graph local DB snapshots (graph.db itself is tracked)
+project-requirements/graph/backups/
