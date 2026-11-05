@@ -330,12 +330,12 @@ def replace_metadata_value(content: str, task_name: str, key: str, value: str) -
     if not match:
         raise SystemExit(f"ERROR: Could not locate task block for {task_name!r}")
     block = match.group(0)
-    line_pattern = re.compile(rf"^\*\*{re.escape(key)}\*\*:\s*.*$", re.MULTILINE)
+    line_pattern = re.compile(rf"^\*\*{re.escape(key)}\*\*:[ \t]*.*$", re.MULTILINE)
     replacement_line = f"**{key}**: {value}"
     if line_pattern.search(block):
         new_block = line_pattern.sub(replacement_line, block, count=1)
     else:
-        insert_after = re.search(r"^\*\*Status\*\*:\s*.*$", block, re.MULTILINE)
+        insert_after = re.search(r"^\*\*Status\*\*:[ \t]*.*$", block, re.MULTILINE)
         if not insert_after:
             raise SystemExit(f"ERROR: Task {task_name!r} has no Status metadata")
         pos = insert_after.end()
