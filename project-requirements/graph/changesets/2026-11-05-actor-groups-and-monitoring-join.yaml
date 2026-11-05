@@ -1,0 +1,13 @@
+# Two model decisions. Every Actor now records which side of the platform it works on (admin,
+# provider or patient). The monitoring timeline joins the main treatment case at its last Stage,
+# Conversion, not at Baseline; aftercare can also be entered from the main Aftercare stage.
+reason: "Set the group of every Actor; move the monitoring join to Conversion; let aftercare enter from main Aftercare"
+by: fullstack-developer
+operations:
+  - {op: "update_node", id: "ACT-platform-admin", attrs: {group: "admin"}}
+  - {op: "update_node", id: "ACT-provider", attrs: {group: "provider"}}
+  - {op: "update_node", id: "ACT-aftercare-specialist", attrs: {group: "provider"}}
+  - {op: "update_node", id: "ACT-patient", attrs: {group: "patient"}}
+  - {op: "remove_edge", from: "STG-monitoring-01-baseline", verb: "joins", to: "STG-main-01-inquiry"}
+  - {op: "add_edge", from: "STG-monitoring-03-conversion", verb: "joins", to: "STG-main-01-inquiry"}
+  - {op: "add_edge", from: "STG-aftercare-01-recovery-plan", verb: "enters from", to: "STG-main-07-aftercare"}

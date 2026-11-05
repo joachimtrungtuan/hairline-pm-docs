@@ -1,0 +1,31 @@
+# mtg002 quote-model CR reconciliation: decided-by links for landed FR-004/FR-005 Rules and Entities.
+# Each edge was checked absent from graph.db before this file was written. Proposed for review; not applied.
+# Basis is the meeting item text in project-requirements/sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md:
+#   - SRC-MTG-002-D11: "provider-initiated cancellation needs an explicit consequence and reassignment/refund treatment".
+#     These targets are already decided by O01; D11 is added as the second basis for the provider-fault / replacement path.
+#   - SRC-MTG-002-O01: "parent quote, option, package, date-price, acceptance, expiration, editing, and audit model",
+#     including "version history, and audit history" and "option/date prices and promotions" (2026-09-09 clarification)
+#     and "The patient accepts exactly one subquote per inquiry" (2026-09-15 clarification).
+reason: "Reconcile the mtg002 quote-model CRs: link landed FR-004/FR-005 rules and entities to the SRC-MTG-002 meeting item that decided them"
+by: docs-manager
+source_id: SRC-MTG-002
+operations:
+  # --- D11: provider-initiated cancellation needs consequence and reassignment/refund treatment
+  - {"op": "add_edge", "from": "REQ-004-004", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-004-012", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-004-048", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-004-050", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-005-024", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-005-045", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "REQ-005-046", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  - {"op": "add_edge", "from": "ENT-acceptance-supersession", "verb": "decided by", "to": "SRC-MTG-002-D11"}
+  # --- O01: acceptance, expiration, editing and audit model
+  - {"op": "add_edge", "from": "REQ-004-007", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-004-099", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-004-100", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-034", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-035", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-040", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-056", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-063", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "ENT-audit-entry", "verb": "decided by", "to": "SRC-MTG-002-O01"}
