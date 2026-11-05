@@ -955,7 +955,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - **Architecture**: Role-based access control (RBAC) model with permissions cached in user session tokens to avoid database lookups on every request
 - **Performance**: Team member permissions denormalized into session JWT claims for fast permission checks without database roundtrips
-- **Caching**: Team member role changes must invalidate all active sessions for that user within 5 seconds (pub/sub pattern)
+- **Caching**: Team member role changes must invalidate the cached permissions for all of that user's active sessions within 5 seconds (pub/sub pattern), so the next request uses the new role without forcing logout
 - **Storage**: Audit logs stored in append-only ledger for immutability and compliance
 
 ### Integration Points
@@ -968,7 +968,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Integration 2**: Authentication service validates team member credentials and builds session with role context
   - **Data format**: JWT tokens with claims: user_id, provider_org_id, role, permissions[]
   - **Authentication**: Session token refresh on role change events
-  - **Error handling**: Force re-authentication if role change detected
+  - **Error handling**: If a role change is detected, refresh the session's role and permission claims on the next request instead of forcing re-authentication
 
 - **Integration 3**: Audit logging service receives events from all team management actions
   - **Data format**: Structured log events with timestamp, actor, action type, target, changes
@@ -992,7 +992,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Threat mitigation**:
   - Rate limiting on invitation sends (max 10 invitations per hour per provider to prevent abuse)
   - Invitation tokens single-use and time-limited (7 days) to prevent replay attacks
-  - Session invalidation on role change to prevent privilege escalation
+  - Permission refresh on role change (previous permissions stop applying; the session stays active) to prevent privilege escalation
 - **Compliance**: GDPR right-to-access and right-to-deletion supported for team members
 
 ---
@@ -1170,7 +1170,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 > Note: Security and privacy requirements extend the platform-wide Constitution; see Business Rules and the Constitution for non-negotiable baselines.
 
 - **REQ-009-013**: System MUST log all team management actions in audit trail with: timestamp, actor, action type, target team member, old values, new values, IP address
-- **REQ-009-014**: System MUST invalidate all active sessions for a team member within 5 seconds of role change or removal
+- **REQ-009-014**: System MUST apply a team member's role change to their active sessions within 5 seconds without forcing logout: the previous permissions stop applying, and the member's next request uses the refreshed permissions. System MUST invalidate all active sessions for a team member within 5 seconds of removal
 - **REQ-009-015**: System MUST validate actor permissions before allowing any team management action (invite, role change, removal)
 - **REQ-009-016**: System MUST generate cryptographically secure, single-use invitation tokens that expire after 7 days
 - **REQ-009-017**: System MUST encrypt all team member data at rest (AES-256) and in transit (TLS 1.3)
@@ -1229,6 +1229,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 | 2026-10-27 | 1.6 (proposed) | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27). Seat usage counts accepted non-Owner team members plus pending invitations; the Owner and expired invitations do not count (Rule 6, Screen 2 Team Size Meter, Screen 12 Seat Usage), per [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md). Impersonation (Screen 11 rules, REQ-009-023) is blocked for a Deactivated provider and read-only under FR-032 Rule 6 for a Suspended provider. | Product Owner / Documentation |
 | 2026-10-28 | 1.7 (proposed) | Product Owner decision 2026-10-28 (FR-015 backend confirmations). Invitation and team member model: an invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until acceptance; a team member record is created only on acceptance; team member statuses are Active, Suspended, Removed; "Invited" is only the display badge for a Pending invitation (Main Flow steps 10 and 16, Screens 1, 6, 10, 11 and 12 status fields, Screen 6 and Screen 7 notes, Screen 11 Tab 5 Membership Status, new Rule 9, REQ-009-009, REQ-009-010, Key Entities 1 and 3). Seat usage counts non-Owner members with status Active or Suspended plus Pending invitations not past expires_at, each person once; a Suspended member keeps the seat (Rule 6, Screen 1 Team Size Meter, Screen 12 Seat Usage). Screen 1 quick stats label Pending Invitations. A Suspended provider organization cannot send staff invitations (Main Flow step 6, Screen 2, new Rule 10, REQ-009-001). See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
 | 2026-10-28 | 1.7 (proposed) | Product Owner decisions 2026-10-28 (follow-up) and review fixes. Stored team member statuses are `active`, `suspended`, and `inactive` (= Removed, kept for compatibility); a Removed member never takes a seat; legacy invitee member rows (`inactive` or `pending`, never accepted) are migrated into Pending or Expired invitations and the placeholder row is deleted (Rule 9). "Pending Send" is a delivery state of a Pending invitation that takes a seat, not an invitation status (Alternative Flow B4, External Dependencies, REQ-009-010, Key Entity 3). A Suspended provider's Team page is view-only with no invite, resend, role change, suspend, or remove, and shows the suspended message (Main Flow step 6, Screens 1 and 2, Rule 10 renamed Suspended Provider Team Management, REQ-009-001); the rule is stated in FR-009 because FR-032 Rule 6 does not list team management. See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
+| 2026-11-04 | 1.7 (proposed) | Minor correction (Product Owner decision, manual test PR01-FR009-12): a role change refreshes the member's permissions in place on their next request without forcing logout; the previous permissions stop applying within 5 seconds. Removal still invalidates all active sessions. Aligned REQ-009-014, Implementation Notes (Caching, Integration 2 error handling, Security threat mitigation) with User Story 2 scenario 4. | Documentation |
 
 ---
 
