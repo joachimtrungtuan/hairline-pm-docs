@@ -1,0 +1,130 @@
+# Requirements graph schema. The write script validates every change against this file.
+# Changing node types, verbs or enum values is a schema migration: back up graph.db first.
+
+# Schema version, stored in graph.db as PRAGMA user_version.
+version: 4
+
+# Closed value lists. Attribute specs below may name one of these as their type.
+enums:
+  # Lifecycle of every node; nodes are retired, never deleted.
+  node_status: [active, retired]
+  # Lifecycle of a Source, taken from the stakeholder source register status key.
+  source_lifecycle: [pending review, partially incorporated, validated, incorporated, superseded]
+  # Where a value shown on a Screen comes from; matches the verify-fr provenance table.
+  provenance:
+    - user input
+    - system calculated
+    - retrieved
+    - carried from previous screen
+    - inherited from another FR
+    - default
+    - session
+  # Timelines that Stages belong to: the treatment case plus the parallel timelines.
+  timeline: [main, aftercare, monitoring, provider-account, patient-account]
+  # Which side of the platform an Actor works on: Hairline staff, a clinic, or the patient.
+  actor_group: [admin, provider, patient]
+
+# Scalar attribute types available besides enum names.
+attr_types: [text, int, bool, date]
+
+# Node types. owner_fr: required, optional or forbidden. attrs lists keys allowed in nodes.attrs JSON
+# (name: type). detail_table names the table holding the type's structured columns.
+node_types:
+  FR:
+    id_pattern: '^FR-\d{3}[A-Z]?$'
+    owner_fr: forbidden
+    attrs:
+      required: {}
+      optional: {module: text, prd_path: text, summary: text}
+  Stage:
+    id_pattern: '^STG-[a-z0-9]+(-[a-z0-9]+)*$'
+    owner_fr: forbidden
+    attrs:
+      required: {timeline: timeline, sequence: int}
+      optional: {standalone_entry: bool, description: text}
+  Actor:
+    id_pattern: '^ACT-[a-z0-9]+(-[a-z0-9]+)*$'
+    owner_fr: forbidden
+    attrs:
+      required: {group: actor_group}
+      optional: {description: text}
+  Entity:
+    id_pattern: '^ENT-[a-z0-9]+([_-][a-z0-9]+)*$'
+    owner_fr: required
+    attrs:
+      required: {}
+      optional: {description: text, table: text}
+  Field:
+    id_pattern: '^ENT-[a-z0-9]+([_-][a-z0-9]+)*\.[a-z0-9]+(_[a-z0-9]+)*$'
+    owner_fr: required
+    detail_table: fields
+    attrs:
+      required: {}
+      optional: {description: text}
+  Rule:
+    id_pattern: '^REQ-\d{3}-\d{3}$'
+    owner_fr: required
+    attrs:
+      required: {statement: text}
+      optional: {rationale: text}
+  Event:
+    id_pattern: '^EVT-[a-z0-9]+(-[a-z0-9]+)*$'
+    owner_fr: required
+    attrs:
+      required: {}
+      optional: {description: text, payload: text}
+  Setting:
+    id_pattern: '^SET-[a-z0-9]+(-[a-z0-9]+)*$'
+    owner_fr: required
+    attrs:
+      required: {}
+      optional: {description: text, default: text, unit: text}
+  Screen:
+    id_pattern: '^SCR-\d{3}-\d{2,}$'
+    owner_fr: required
+    attrs:
+      required: {}
+      optional: {platform: text, description: text}
+  Source:
+    id_pattern: '^SRC-[A-Za-z0-9]+(-[A-Za-z0-9]+)*$'
+    owner_fr: forbidden
+    detail_table: sources
+    attrs:
+      required: {}
+      optional: {summary: text}
+
+# Edge verbs. pairs lists the allowed [from_type, to_type] combinations; attrs lists keys allowed in edges.attrs.
+edge_verbs:
+  follows:
+    pairs: [[Stage, Stage]]
+  acts in:
+    pairs: [[Actor, Stage]]
+  reads:
+    pairs: [[Stage, Entity]]
+  writes:
+    pairs: [[Stage, Entity]]
+  applies at:
+    pairs: [[Rule, Stage]]
+  governed by:
+    pairs: [[Rule, Setting]]
+  emits:
+    pairs: [[Stage, Event]]
+  decided by:
+    pairs: [[Rule, Source], [Entity, Source]]
+  # Timelines are not nodes: a Stage of a parallel timeline enters from, or joins, a Stage of another to link the two.
+  enters from:
+    pairs: [[Stage, Stage]]
+  joins:
+    pairs: [[Stage, Stage]]
+  belongs to:
+    pairs: [[Screen, Stage]]
+  uses:
+    pairs: [[Actor, Screen]]
+  shows:
+    pairs: [[Screen, Field]]
+    attrs:
+      required: {provenance: provenance}
+      optional: {label: text, editable: bool}
+  # Mirrors fields.calculated_by so impact queries can traverse it like any other edge.
+  calculated by:
+    pairs: [[Field, Rule]]
