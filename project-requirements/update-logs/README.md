@@ -10,7 +10,7 @@ This folder contains documentation update reports and verification logs for the 
 
 #### **Web App and Website Progress Deck**
 
-- [WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md](2026-11-05/WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md) - Created a navigable 12-slide client progress deck covering the website refresh and the Admin/Provider web apps: current state, Phase 1 manual test and code-review results, root causes, six proposed changes, a 5 Nov to 10 Dec plan with a provisional mid-December pilot, and decisions requested.
+- [WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md](2026-11-05/WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md) - Created a navigable 12-slide client progress deck covering the website refresh and the Admin/Provider web apps: current state, Phase 1 manual test and code-review results, root causes, six proposed changes, a 5 Nov to 20 Dec system-wide fix-and-verify plan with a provisional December launch, and decisions requested.
 
 ### 2026-10-28/ (1 file)
 
@@ -1168,7 +1168,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Verification Reports
 
-- **2026-11-05**: [WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md](2026-11-05/WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md) - 12-slide client progress deck built from the Phase 1 manual test run and code-review results, with root causes, proposed changes, and a provisional mid-December pilot plan.
+- **2026-11-05**: [WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md](2026-11-05/WEBAPP_WEBSITE_PROGRESS_DECK_2026-11-05.md) - 12-slide client progress deck built from the Phase 1 manual test run and code-review results, with root causes, proposed changes, and a provisional December launch plan.
 - **2026-10-22**: [MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md](2026-10-22/MANUAL_TEST_V2_PHASE1_RUN01_B01_2026-10-22.md) - v2 Phase 1 manual test run 01, B01 (A-02 Provider Onboarding) results: 2 Pass, 17 Fail, 4 Blocked.
 - **2026-10-21**: [CODE_REVIEW_V2_PHASE1_2026-10-21.md](2026-10-21/CODE_REVIEW_V2_PHASE1_2026-10-21.md) - v2 Phase 1 code review conformance report: 327 units, 1,039 Confirmed gaps (78 P0), feeds `create-bug-tasks`.
 

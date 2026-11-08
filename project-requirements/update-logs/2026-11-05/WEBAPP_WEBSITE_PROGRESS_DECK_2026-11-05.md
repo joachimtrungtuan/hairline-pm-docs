@@ -7,7 +7,7 @@
 
 Created `local-docs/reports/2026-11-05/webapp-website-progress-deck/index.html` as a navigable 12-slide meeting deck for the client progress update covering the website refresh and the Admin and Provider dashboard web apps.
 
-The deck reuses the established Hairline report-deck HTML structure and visual language (same engine as the 2026-09-07 release roadmap deck). Its sequence is: executive summary (including the November launch slip and a provisional mid-December Phase 1 pilot); website status; web app current state; how the apps were checked; results overview; results by area; what we found (four symptom patterns); root cause (four reasons); proposed changes (six changes); upcoming plan (5 Nov to 10 Dec, with 26 Nov date confirmation and 10 Dec go/no-go); decisions requested; summary.
+The deck reuses the established Hairline report-deck HTML structure and visual language (same engine as the 2026-09-07 release roadmap deck). Its sequence is: executive summary (including the November launch slip and a provisional December launch); website status; web app current state; how the apps were checked; results overview; results by area; what we found (four symptom patterns); root cause (four reasons); proposed changes (six changes); upcoming plan (5 Nov to 20 Dec, system-wide fix and verification, with 26 Nov date confirmation and 10 Dec go/no-go); decisions requested; summary.
 
 ## Sources
 
@@ -20,5 +20,7 @@ The deck reuses the established Hairline report-deck HTML structure and visual l
 
 - No functional requirement or product contract was changed.
 - No implementation source was modified.
-- Dates on the plan and decision slides are proposals for the meeting, not accepted commitments; Phases 2 to 4 are deliberately left unestimated.
+- Dates on the plan and decision slides are proposals for the meeting, not accepted commitments. The tested feature group is presented as a representative sample; fixes and verification are framed system-wide with a single December launch.
 - The deck is a meeting-support artifact; the manual test summary and code-review report remain the detailed evidence.
+
+- Slide 11 (decisions) rewritten from "four questions for the client" into an informing / approval-request narrative ("We have started on this path. We ask you to confirm it today."): four items state what the team is doing and what approval is asked (provisional December date with 26 Nov / 10 Dec checkpoints, alignment week and senior review, fix priorities, mobile app quote-change scope). Layout fixed to an even 2×2 grid with block titles.
