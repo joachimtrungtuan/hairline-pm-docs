@@ -76,7 +76,7 @@ END=$(date +%s)
 REPORT_LINES=0; [ -f "$OUT/report.md" ] && REPORT_LINES=$(wc -l < "$OUT/report.md" | tr -d ' ')
 STATUS="ok"; [ $RC -eq 124 ] && STATUS="timeout"; { [ $RC -ne 0 ] && [ $RC -ne 124 ]; } && STATUS="error"
 [ "$REPORT_LINES" -eq 0 ] && [ "$STATUS" = "ok" ] && STATUS="no-report"
-DENIED=$(grep -c '"permission' "$OUT/opencode.jsonl" 2>/dev/null || echo 0)
+DENIED=$(grep -c '"permission' "$OUT/opencode.jsonl" 2>/dev/null); DENIED=${DENIED:-0}
 USAGE=$("$PY" "$GRAPH_DIR/scripts/opencode_usage.py" "$OUT/opencode.jsonl" 2>/dev/null || echo '{}')
 cat > "$OUT/status.json" <<JSON
 {"fr":"$FR","model":"$MODEL","checklist":"$CHECKLIST","status":"$STATUS","exit_code":$RC,"seconds":$((END-START)),"report_lines":$REPORT_LINES,"permission_events":$DENIED,"prd_lines":$PRD_LINES,"graph_exported":"$EXPORTED","usage":$USAGE}
