@@ -22,6 +22,13 @@ Operations and their keys (? marks optional keys):
     add_edge          from, verb, to, attrs?
     remove_edge       from, verb, to
     add_source        id, title, kind, ref, lifecycle, section?, date?, attrs?
+    merge_node        survivor, loser                                  (same type, both active, type allows `aliases`)
+
+merge_node folds a duplicate into the node that stays. Every edge of the loser, in either direction,
+moves to the survivor; an edge the survivor already has, or one that would join the survivor to
+itself, is dropped instead of duplicated. The loser's id and its own aliases are appended to the
+survivor's `aliases` attribute (comma-separated, no repeats), and the loser is retired. A `calculated
+by` edge moves together with its fields.calculated_by column. Each step is a normal change row.
 
 Every operation is validated against schema.yaml before anything is written. The whole
 change-set is rejected if any operation is invalid.
@@ -62,7 +69,9 @@ OP_KEYS: dict[str, tuple[set[str], set[str]]] = {
     "add_edge": ({"from", "verb", "to"}, {"attrs"}),
     "remove_edge": ({"from", "verb", "to"}, set()),
     "add_source": ({"id", "title", "kind", "ref", "lifecycle"}, {"section", "date", "attrs"}),
+    "merge_node": ({"survivor", "loser"}, set()),
 }
+ALIASES = "aliases"
 
 # Keys that look like updates but would break an invariant; named so the error explains why.
 IMMUTABLE_KEYS = {
@@ -222,6 +231,15 @@ class GraphView:
             "SELECT label, sort_order FROM enum_values WHERE field_id = ? AND value = ?", key,
             lambda r: {"label": r[0], "sort_order": r[1]},
         )
+
+    def edges_of(self, node_id: str) -> list[tuple[tuple[str, str, str], dict[str, Any]]]:
+        """Every current edge with node_id at either end, committed rows overlaid with this change-set's edits."""
+        rows = self.conn.execute(
+            "SELECT from_id, verb, to_id, attrs FROM edges WHERE from_id = ? OR to_id = ? ORDER BY rowid", (node_id, node_id)
+        )
+        for from_id, verb, to_id, attrs in rows:
+            self._edges.setdefault((from_id, verb, to_id), json.loads(attrs))
+        return [(k, v) for k, v in self._edges.items() if v is not None and node_id in (k[0], k[2])]
 
     def next_sort_order(self, field_id: str) -> int:
         """One past the field's highest sort_order, counting values added or retired earlier in this change-set."""
@@ -638,6 +656,55 @@ class Planner:
         for column in SOURCE_COLUMNS:
             self.plan.record(source_id, f"source.{column}", None, src[column])
         return []
+
+    def _merge_node(self, op: dict[str, Any]) -> list[str]:
+        survivor, p1 = self._existing(op.get("survivor"), "survivor")
+        loser, p2 = self._existing(op.get("loser"), "loser")
+        problems = [p for p in (p1, p2) if p]
+        if problems:
+            return problems
+        keep, drop = op["survivor"], op["loser"]
+        if keep == drop:
+            return ["survivor and loser are the same node"]
+        for key, node in (("survivor", survivor), ("loser", loser)):
+            if node["status"] != "active":
+                problems.append(f"{key} {op[key]!r} is {node['status']}, not active")
+        if survivor["type"] != loser["type"]:
+            problems.append(f"survivor is a {survivor['type']} but loser is a {loser['type']}; only nodes of one type merge")
+        else:
+            spec = self.schema.node_types[survivor["type"]].attrs
+            if ALIASES not in {**spec.required, **spec.optional}:
+                problems.append(f"{survivor['type']} nodes have no {ALIASES!r} attribute in schema.yaml, so they cannot be merged")
+        if problems:
+            return problems
+
+        for (from_id, verb, to_id), attrs in sorted(self.view.edges_of(drop), key=lambda item: item[0]):
+            moved = (keep if from_id == drop else from_id, verb, keep if to_id == drop else to_id)
+            keep_edge = moved[0] != moved[2] and self.view.edge(moved) is None
+            if verb == CALCULATED_BY:
+                # The loser is the Rule end; a Field has one calculated_by, so the survivor cannot already hold it.
+                self._set_calculated_by(from_id, to_id, moved[2])
+                continue
+            self.view.set_edge((from_id, verb, to_id), None)
+            self.plan.run("DELETE FROM edges WHERE from_id = ? AND verb = ? AND to_id = ?", from_id, verb, to_id)
+            self.plan.record(from_id, f"edge:{verb}:{to_id}", attrs, None)
+            if keep_edge:
+                self.view.set_edge(moved, dict(attrs))
+                self.plan.run("INSERT INTO edges (from_id, verb, to_id, attrs) VALUES (?, ?, ?, ?)", *moved, json.dumps(attrs, ensure_ascii=False))
+                self.plan.record(moved[0], f"edge:{verb}:{moved[2]}", None, attrs)
+
+        def split(value: Any) -> list[str]:
+            return [part.strip() for part in value.split(",") if part.strip()] if isinstance(value, str) else []
+
+        aliases: list[str] = []
+        for alias in split(survivor["attrs"].get(ALIASES)) + [drop] + split(loser["attrs"].get(ALIASES)):
+            if alias != keep and alias not in aliases:
+                aliases.append(alias)
+        new = {**survivor, "attrs": {**survivor["attrs"], ALIASES: ", ".join(aliases)}}
+        self.view.set_node(keep, new)
+        self.plan.run("UPDATE nodes SET attrs = ? WHERE id = ?", json.dumps(new["attrs"], ensure_ascii=False), keep)
+        self.plan.record(keep, f"attrs.{ALIASES}", survivor["attrs"].get(ALIASES), new["attrs"][ALIASES])
+        return self._retire_node({"id": drop})
 
     # ---- change-set ----------------------------------------------------------------------
 

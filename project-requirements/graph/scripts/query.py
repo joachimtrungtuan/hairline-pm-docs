@@ -10,6 +10,9 @@ Usage: query.py <command> [args] [--db DB_PATH] [--json]
   history <node-id>              change rows for the node, newest first
   at <node-id> <ISO-timestamp>   the node's attributes at that time, replayed from its change rows
   changeset <changeset-id>       every change row of one change-set
+  duplicates [--text STATEMENT]  with --text, active Rules whose statement equals or is near STATEMENT;
+                                 without it, every pair of active Rules that duplicate each other.
+                                 Matching is lint.py's L12: normalised text, difflib ratio >= 0.8
 
 Output is a plain table, or JSON with --json. Exit codes: 0 ok, 1 not found or bad argument, 2 database error.
 """
@@ -24,7 +27,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
-from common import DEFAULT_DB_PATH, Schema, SchemaError, load_schema, open_db
+from common import DEFAULT_DB_PATH, Schema, SchemaError, load_graph, load_schema, open_db
+from lint import duplicate_pairs, match_statement, rule_statements
 
 # Field-to-Entity membership lives in fields.entity_id, not in edges, but a change to either side
 # affects the other, so impact traverses it like an edge.
@@ -198,6 +202,35 @@ def changeset(conn: sqlite3.Connection, changeset_id: str) -> Result:
     return Result([c for c in CHANGE_COLUMNS if c != "changeset_id"], [{k: v for k, v in r.items() if k != "changeset_id"} for r in rows])
 
 
+def duplicates(conn: sqlite3.Connection, text: str | None = None) -> Result:
+    """Rules matching text, or with text None every duplicate pair; scores are rounded to two places."""
+    g = load_graph(conn)
+    statements = rule_statements(g)
+
+    def describe(rule_id: str) -> tuple[str | None, str]:
+        node = g.nodes[rule_id]
+        return node.owner_fr, node.attrs.get("statement", "")
+
+    if text is not None:
+        if not text.strip():
+            raise QueryError("--text must be a non-empty statement")
+        columns = ["score", "match", "id", "owner_fr", "statement"]
+        rows = []
+        for m in match_statement(text, statements):
+            owner, statement = describe(m.rule_id)
+            rows.append({"score": round(m.score, 2), "match": "exact" if m.exact else "similar",
+                         "id": m.rule_id, "owner_fr": owner, "statement": statement})
+        return Result(columns, rows)
+    columns = ["score", "match", "rule_a", "owner_a", "rule_b", "owner_b", "statement_a", "statement_b"]
+    rows = []
+    for m in duplicate_pairs(statements):
+        (owner_a, statement_a), (owner_b, statement_b) = describe(m.rule_id), describe(m.other)
+        rows.append({"score": round(m.score, 2), "match": "exact" if m.exact else "similar",
+                     "rule_a": m.rule_id, "owner_a": owner_a, "rule_b": m.other, "owner_b": owner_b,
+                     "statement_a": statement_a, "statement_b": statement_b})
+    return Result(columns, rows)
+
+
 def _cell(value: Any) -> str:
     if value is None:
         return "-"
@@ -233,6 +266,8 @@ def run(conn: sqlite3.Connection, schema: Schema, args: argparse.Namespace) -> R
         return history(conn, args.node_id)
     if args.command == "at":
         return at(conn, args.node_id, args.timestamp)
+    if args.command == "duplicates":
+        return duplicates(conn, args.text)
     return changeset(conn, args.changeset_id)
 
 
@@ -253,6 +288,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("node_id")
     p.add_argument("timestamp")
     sub.add_parser("changeset", parents=[shared], help="rows of one change-set").add_argument("changeset_id")
+    sub.add_parser("duplicates", parents=[shared], help="duplicate or near-duplicate Rule statements").add_argument(
+        "--text", help="candidate statement to check before adding a Rule")
     return parser
 
 

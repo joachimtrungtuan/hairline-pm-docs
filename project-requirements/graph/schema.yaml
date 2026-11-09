@@ -66,7 +66,8 @@ node_types:
     owner_fr: required
     attrs:
       required: {statement: text}
-      optional: {rationale: text}
+      # aliases: comma-separated ids of Rules merged into this one by write.py merge_node, so old citations resolve.
+      optional: {rationale: text, aliases: text}
   Event:
     id_pattern: '^EVT-[a-z0-9]+(-[a-z0-9]+)*$'
     owner_fr: required
