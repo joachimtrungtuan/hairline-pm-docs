@@ -1,0 +1,257 @@
+reason: "FR-021 completeness fixes (D37 review step 1): applies to edges from every FR-021 Rule to the objects it acts on, four Rules whose statements are verbatim PRD text, references edges to the Rules of FR-024, FR-030, FR-031 and FR-032 that the PRD cites, and the human-performed Steps of the update-translations main flow and the C1 machine-translation flow with their Flows. System-performed Steps, Steps reachable only through them, and the missing-translation emits edges are in 2026-11-10-fr021-completeness-held.yaml."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "REQ-021-001", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-002", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-021-002", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-003", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-021-003", "verb": "applies to", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "REQ-021-004", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-004", "verb": "applies to", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "REQ-021-005", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-005", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-005", "verb": "applies to", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "REQ-021-005", "verb": "applies to", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "REQ-021-006", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-006", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-006", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "REQ-021-006", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-007", "verb": "applies to", "to": "SCR-021-06"}
+  - {"op": "add_edge", "from": "REQ-021-007", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-007", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-008", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-008", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-008", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-008", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-009", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-009", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-009", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-010", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-010", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-010", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-011", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-011", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-011", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-012", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-012", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-013", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-014", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-015", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-016", "verb": "applies to", "to": "EVT-missing-translation-logged"}
+  - {"op": "add_edge", "from": "REQ-021-016", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-016", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-017", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-018", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-019", "verb": "applies to", "to": "ENT-currency-config"}
+  - {"op": "add_edge", "from": "REQ-021-020", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-020", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-020", "verb": "applies to", "to": "ENT-translation-key.source_value"}
+  - {"op": "add_edge", "from": "REQ-021-021", "verb": "applies to", "to": "ENT-translation-audit-log"}
+  - {"op": "add_edge", "from": "REQ-021-022", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-022", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-023", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-024", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-025", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-026", "verb": "applies to", "to": "ENT-currency-config"}
+  - {"op": "add_edge", "from": "REQ-021-027", "verb": "applies to", "to": "ENT-mt-provider-credential"}
+  - {"op": "add_edge", "from": "REQ-021-027", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-028", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-028", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-029", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-029", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-030", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-031", "verb": "applies to", "to": "ENT-mt-provider-credential"}
+  - {"op": "add_edge", "from": "REQ-021-032", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-033", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-034", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-034", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-034", "verb": "applies to", "to": "ENT-translation-key.source_value"}
+  - {"op": "add_edge", "from": "REQ-021-035", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-036", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-036", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-036", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-037", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-038", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-038", "verb": "applies to", "to": "ENT-locale.direction"}
+  - {"op": "add_edge", "from": "REQ-021-039", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-039", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-040", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-041", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-042", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-043", "verb": "applies to", "to": "ENT-translation-audit-log"}
+  - {"op": "add_edge", "from": "REQ-021-044", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-044", "verb": "applies to", "to": "ENT-translation-audit-log"}
+  - {"op": "add_edge", "from": "REQ-021-045", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-046", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-046", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-046", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "REQ-021-046", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-047", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-048", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-049", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-049", "verb": "applies to", "to": "ENT-locale.is_default"}
+  - {"op": "add_edge", "from": "REQ-021-050", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-050", "verb": "applies to", "to": "ENT-translation-audit-log"}
+  - {"op": "add_edge", "from": "REQ-021-051", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-052", "verb": "applies to", "to": "ENT-currency-config"}
+  - {"op": "add_edge", "from": "REQ-021-053", "verb": "applies to", "to": "ENT-currency-config"}
+  - {"op": "add_edge", "from": "REQ-021-054", "verb": "applies to", "to": "ENT-currency-config"}
+  - {"op": "add_edge", "from": "REQ-021-055", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-055", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-056", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-057", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-058", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-058", "verb": "applies to", "to": "ENT-patient.preferred_language"}
+  - {"op": "add_edge", "from": "REQ-021-059", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-021-059", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-060", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-021-060", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-061", "verb": "applies to", "to": "ENT-patient.preferred_timezone"}
+  - {"op": "add_edge", "from": "REQ-021-061", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-062", "verb": "applies to", "to": "ENT-patient.preferred_timezone"}
+  - {"op": "add_edge", "from": "REQ-021-063", "verb": "applies to", "to": "ENT-patient.preferred_region"}
+  - {"op": "add_edge", "from": "REQ-021-064", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-021-065", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-021-065", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-066", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-021-066", "verb": "applies to", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "REQ-021-067", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-021-067", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-068", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-068", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-069", "verb": "applies to", "to": "SCR-021-06"}
+  - {"op": "add_edge", "from": "REQ-021-069", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-070", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-070", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-071", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-071", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-072", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-072", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "REQ-021-073", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-074", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-075", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-076", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-076", "verb": "applies to", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "REQ-021-076", "verb": "applies to", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "REQ-021-076", "verb": "applies to", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "REQ-021-077", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-078", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-079", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-079", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-079", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-080", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-081", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-082", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-083", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-084", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-085", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-085", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-086", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-086", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-086", "verb": "applies to", "to": "ENT-translation-key.source_value"}
+  - {"op": "add_edge", "from": "REQ-021-087", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-088", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-089", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-090", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-090", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-091", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-092", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-093", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-093", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-094", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-094", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-095", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-096", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-096", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-097", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-098", "verb": "applies to", "to": "ENT-translation-version"}
+  - {"op": "add_edge", "from": "REQ-021-098", "verb": "applies to", "to": "ENT-translation-audit-log"}
+  - {"op": "add_edge", "from": "REQ-021-099", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-100", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-101", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-102", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-103", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-104", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-105", "verb": "applies to", "to": "ENT-translation-value"}
+  - {"op": "add_edge", "from": "REQ-021-106", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-107", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_edge", "from": "REQ-021-107", "verb": "applies to", "to": "ENT-mt-provider-credential"}
+  - {"op": "add_edge", "from": "REQ-021-108", "verb": "applies to", "to": "ENT-mt-provider-credential"}
+  - {"op": "add_edge", "from": "REQ-021-109", "verb": "applies to", "to": "ENT-mt-provider-credential"}
+  - {"op": "add_edge", "from": "REQ-021-110", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-111", "verb": "applies to", "to": "ENT-mt-job"}
+  - {"op": "add_node", "id": "REQ-021-112", "type": "Rule", "title": "Protected endpoints return HTTP 403 to non-Super-Admin", "owner_fr": "FR-021", "attrs": {"statement": "Protected endpoints (publish, rollback, English source edit, default locale change) must return HTTP 403 with the platform-standard error format when called by a non-Super-Admin role.", "rationale": "PRD Integration Points, Admin Platform localization management (prd.md line 879)."}}
+  - {"op": "add_edge", "from": "REQ-021-112", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-021-112", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_node", "id": "REQ-021-113", "type": "Rule", "title": "Runtime clients fetch published bundles on defined triggers", "owner_fr": "FR-021", "attrs": {"statement": "Runtime clients fetch published translation bundles on app start, language change, cache revalidation, or version change.", "rationale": "PRD Entry Points (prd.md line 102)."}}
+  - {"op": "add_edge", "from": "REQ-021-113", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_node", "id": "REQ-021-114", "type": "Rule", "title": "Bundle fetch falls back to cached bundle or default locale", "owner_fr": "FR-021", "attrs": {"statement": "Fall back to cached bundle or default locale where allowed.", "rationale": "PRD Integration Points, Patient App and Provider Dashboard bundle fetch (prd.md lines 869 and 874)."}}
+  - {"op": "add_edge", "from": "REQ-021-114", "verb": "applies to", "to": "ENT-translation-bundle"}
+  - {"op": "add_edge", "from": "REQ-021-114", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_node", "id": "REQ-021-115", "type": "Rule", "title": "Notification delivery uses fallback locale template", "owner_fr": "FR-021", "attrs": {"statement": "Use fallback locale template/content when recipient locale is missing.", "rationale": "PRD Integration Points, Notification Service (prd.md line 884)."}}
+  - {"op": "add_edge", "from": "REQ-021-115", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-030-154"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-032-002"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-024-081"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-031-004"}
+  - {"op": "add_node", "id": "STP-021-001", "type": "Step", "title": "Admin opens Localization Management", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "on", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "applies", "to": "REQ-021-055"}
+  - {"op": "add_node", "id": "STP-021-002", "type": "Step", "title": "Admin selects prior published version from Version History", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 3R"}}
+  - {"op": "add_edge", "from": "STP-021-002", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-002", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-002", "verb": "applies", "to": "REQ-021-012"}
+  - {"op": "add_node", "id": "STP-021-003", "type": "Step", "title": "Admin selects a key from Translation Key Inventory and edits values in the editor", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 4P"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "applies", "to": "REQ-021-007"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "applies", "to": "REQ-021-008"}
+  - {"op": "add_node", "id": "STP-021-004", "type": "Step", "title": "Admin uploads JSON package for selected locale, tenant/surface, and group", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 4J"}}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "applies", "to": "REQ-021-009"}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "applies", "to": "REQ-021-090"}
+  - {"op": "add_node", "id": "STP-021-005", "type": "Step", "title": "Admin opens Machine Translation Provider and Draft Generation", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 4M"}}
+  - {"op": "add_edge", "from": "STP-021-005", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-005", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-005", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-005", "verb": "applies", "to": "REQ-021-079"}
+  - {"op": "add_node", "id": "STP-021-006", "type": "Step", "title": "Admin selects provider, target non-English language, tenant/surface scope, and generation mode", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 5M"}}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "applies", "to": "REQ-021-104"}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "applies", "to": "REQ-021-110"}
+  - {"op": "add_node", "id": "STP-021-007", "type": "Step", "title": "Admin opens Machine Translation Provider and Draft Generation", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 1"}}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "applies", "to": "REQ-021-079"}
+  - {"op": "add_node", "id": "STP-021-008", "type": "Step", "title": "Admin adds provider, API key, supported languages, and usage notes", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 3 (no active provider)"}}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "applies", "to": "REQ-021-027"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "applies", "to": "REQ-021-031"}
+  - {"op": "add_node", "id": "STP-021-009", "type": "Step", "title": "Admin selects target language, tenant/surface scope, and generation mode", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 3 (active provider)"}}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "applies", "to": "REQ-021-040"}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "applies", "to": "REQ-021-104"}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-002", "attrs": {"label": "Rollback published version"}}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-003", "attrs": {"label": "Individual text patching"}}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-004", "attrs": {"label": "JSON package import"}}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-005", "attrs": {"label": "Machine translation"}}
+  - {"op": "add_edge", "from": "STP-021-005", "verb": "next", "to": "STP-021-006"}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-008", "attrs": {"label": "No active provider key"}}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-009", "attrs": {"label": "Active provider key configured"}}
+  - {"op": "add_node", "id": "FLW-021-update-translations", "type": "Flow", "title": "Main Flow: Admin updates or rolls back translations", "attrs": {"kind": "main", "description": "Main Flow: Admin updates or rolls back translations", "prd_ref": "Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-021-update-translations", "verb": "starts at", "to": "STP-021-001"}
+  - {"op": "add_node", "id": "FLW-021-mt-draft-generation", "type": "Flow", "title": "C1: Machine Translation Draft Generation", "attrs": {"kind": "alternative", "description": "C1: Machine Translation Draft Generation", "prd_ref": "Alternative Flows, C1"}}
+  - {"op": "add_edge", "from": "FLW-021-mt-draft-generation", "verb": "starts at", "to": "STP-021-007"}
