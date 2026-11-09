@@ -176,3 +176,15 @@ python3 -m http.server 8765
 ```
 
 and open http://localhost:8765/viewer/ . You can also open `viewer/index.html` straight from disk. The browser will block the automatic load, so drop `graph.json` onto the page or pick it with the file picker. The URL hash holds the selected node id (for example `#STG-main-06-treatment`), so browser back and forward move between the nodes you have opened.
+
+### 3D viewer
+
+`viewer/3d.html` shows every node and edge of `graph.json` as an orbitable 3D graph. Open it from `viewer/index.html` ("3D view") or directly. From disk the browser blocks the automatic load of `../graph.json`, so drop the file onto the page or pick it, as in the 2D viewer; with `python3 -m http.server 8765` it loads by itself. Nothing is fetched from the network.
+
+- **Look:** colour by node type (the legend lists the colours and has a toggle and a shown/total count per type), FR and Stage nodes largest. Hover a node or an edge for its label. Derived edges (FR active in Stage, computed by `export.py`) are dashed orange; the "Derived" box and the "Edge verbs" list switch edges on and off.
+- **Click a node** to open the side panel: attributes, field detail and enum values, the Source records behind it, and every in-edge and out-edge as a link. The URL hash holds the selected node id, so browser back and forward work.
+- **Filters** combine (a node must pass all that are set): **FR** shows exactly the nodes that FR owns, the same set as `scripts/query.py fr <FR>`; **Timeline** shows that timeline's Stages and every node one edge away; **Source** shows the nodes decided by it; **Flow** shows the Flow and its path of Steps from the start Step through `next` links, with each Step's actor, stage, screen and rules. "Add one hop of context" widens any scope by one edge. **Neighbourhood** replaces the scope filters with the selected node and everything within 1 to 4 hops.
+- **Start state:** the page opens on FR-005 (or the first FR), not on all 8,000+ nodes. "Whole graph" shows everything; it draws, but slowly at first, and reads as a dense cloud until you narrow it with type toggles or edge verbs. Deep links: `3d.html?fr=FR-005`, `?tl=main`, `?src=SRC-…`, `?flow=FLW-…`, `?ctx=1`, `?nbr=1&hops=2#NODE-ID`, `?all=1`.
+- **Search** by id or title, as in the 2D viewer. A node outside the current filters is added to the picture when you open it.
+
+Libraries (in `viewer/vendor/`, single-file builds, each with its licence): `3d-force-graph` 1.80.1 (published 2026-09-29; its bundle includes three.js r186 for its own drawing) and `three` 0.186.1 (published 2026-09-24; `three.min.js`, an IIFE build of `three.module.js` made with esbuild 0.28.2: `esbuild three-entry.js --bundle --format=iife --global-name=THREE --minify`, where the entry is `export * from 'three'`). The separate `three.min.js` is used only to draw the dashed derived edges, because the 3d-force-graph bundle has no dash option; the browser console shows one "Multiple instances of Three.js" warning for this. The library files were chosen at least two weeks after their release. To upgrade, rebuild with newer versions and replace the files in `vendor/`.

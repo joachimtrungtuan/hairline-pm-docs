@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requirements graph 3D viewer</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: #e6edf3; background: #0b1020; display: flex; flex-direction: column; }
+  a { color: #79b8ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .muted { color: #8b98a9; }
+  .hidden { display: none !important; }
+  header { display: flex; align-items: center; gap: 14px; padding: 6px 12px; background: #111a2e; border-bottom: 1px solid #243049; flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0; }
+  #meta, #status { font-size: 12px; color: #8b98a9; }
+  #status strong { color: #e6edf3; }
+  #layout { flex: 1; display: flex; min-height: 0; }
+  #side { width: 290px; flex: none; overflow-y: auto; padding: 10px 12px; background: #111a2e; border-right: 1px solid #243049; }
+  #panel { width: 340px; flex: none; overflow-y: auto; padding: 10px 14px; background: #111a2e; border-left: 1px solid #243049; }
+  #stage { flex: 1; position: relative; min-width: 0; }
+  #graph { position: absolute; inset: 0; }
+  h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #8b98a9; margin: 14px 0 5px; }
+  h3:first-child { margin-top: 0; }
+  h2 { font-size: 14px; margin: 0 0 4px; word-break: break-all; }
+  label.row { display: flex; align-items: center; gap: 6px; margin: 2px 0; cursor: pointer; }
+  label.f { display: block; font-size: 12px; color: #8b98a9; margin-top: 6px; }
+  select, input[type=search], input[type=number] { width: 100%; padding: 4px 6px; background: #0b1020; color: #e6edf3; border: 1px solid #2b3a55; border-radius: 5px; font: inherit; }
+  select:disabled { opacity: .5; }
+  button { font: inherit; padding: 4px 9px; background: #1d2b47; color: #e6edf3; border: 1px solid #2b3a55; border-radius: 5px; cursor: pointer; }
+  button:hover { background: #26375a; }
+  .sw { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .cnt { margin-left: auto; font-size: 11px; color: #8b98a9; }
+  .dash { width: 22px; border-top: 2px dashed #f97316; flex: none; }
+  #searchWrap { position: relative; }
+  #results { position: absolute; z-index: 5; left: 0; right: 0; top: 100%; max-height: 320px; overflow-y: auto; background: #0b1020; border: 1px solid #2b3a55; border-radius: 5px; }
+  #results .head { padding: 4px 8px; font-size: 11px; color: #8b98a9; }
+  #results a.hit { display: block; padding: 4px 8px; border-top: 1px solid #1d2b47; color: #e6edf3; }
+  #results a.hit:hover { background: #1d2b47; text-decoration: none; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { text-align: left; vertical-align: top; padding: 2px 6px 2px 0; border-bottom: 1px solid #1d2b47; }
+  th { color: #8b98a9; font-weight: 600; white-space: nowrap; width: 1%; }
+  td.v { word-break: break-word; }
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  li.edge { padding: 2px 0; border-bottom: 1px solid #1d2b47; font-size: 12px; word-break: break-word; }
+  .verb { color: #c4b5fd; font-weight: 600; }
+  .derived-tag { color: #f97316; font-size: 11px; }
+  .badge { display: inline-block; font-size: 10px; padding: 0 6px; border-radius: 8px; background: #1d2b47; color: #c9d4e2; margin-left: 4px; vertical-align: 1px; }
+  details > summary { cursor: pointer; color: #8b98a9; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; margin: 14px 0 5px; }
+  #drop { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0b1020; text-align: center; padding: 20px; }
+  #drop.over { background: #14203a; }
+  #drop .err { color: #ff8b82; margin-bottom: 12px; white-space: pre-wrap; max-width: 640px; }
+  .note { font-size: 12px; color: #f0b429; margin: 6px 0 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Requirements graph 3D</h1>
+  <div id="meta"></div>
+  <div id="status"></div>
+  <a href="index.html" style="margin-left:auto">2D review viewer</a>
+</header>
+<div id="layout">
+  <aside id="side" class="hidden">
+    <div id="searchWrap">
+      <input id="search" type="search" placeholder="Search id or title" autocomplete="off" aria-label="Search nodes by id or title">
+      <div id="results" class="hidden"></div>
+    </div>
+
+    <h3>Scope (filters combine)</h3>
+    <label class="f" for="fFr">FR (nodes owned by it)</label>
+    <select id="fFr"></select>
+    <label class="f" for="fTl">Timeline (its stages and what touches them)</label>
+    <select id="fTl"></select>
+    <label class="f" for="fSrc">Source (nodes decided by it)</label>
+    <select id="fSrc"></select>
+    <label class="f" for="fFlow">Flow (path from its start step)</label>
+    <select id="fFlow"></select>
+    <label class="row" style="margin-top:8px"><input type="checkbox" id="fCtx"> Add one hop of context</label>
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" id="btnAll">Whole graph</button>
+      <button type="button" id="btnClear">Clear filters</button>
+      <button type="button" id="btnFit">Fit view</button>
+    </div>
+    <p class="note hidden" id="bigNote"></p>
+
+    <h3>Neighbourhood</h3>
+    <label class="row"><input type="checkbox" id="nbr"> Only the selected node and nodes within</label>
+    <label class="f" for="hops">hops (replaces the scope filters above)</label>
+    <select id="hops"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+
+    <h3>Node types (legend)</h3>
+    <div id="types"></div>
+
+    <h3>Edges</h3>
+    <label class="row"><span class="dash"></span><input type="checkbox" id="showDerived" checked> Derived (FR active in Stage)</label>
+    <details>
+      <summary>Edge verbs</summary>
+      <div id="verbs"></div>
+    </details>
+    <p class="muted" style="font-size:11px;margin-top:12px">Drag to orbit, scroll to zoom, right-drag to pan. Hover a node or edge for its label, click a node to open it.</p>
+  </aside>
+  <div id="stage">
+    <div id="graph"></div>
+    <div id="drop" class="hidden">
+      <div class="err" id="dropErr"></div>
+      <p><strong>Drop graph.json here</strong></p>
+      <p class="muted">or</p>
+      <input type="file" id="file" accept=".json,application/json">
+      <p class="muted" style="margin-top:16px;font-size:12px;max-width:520px">The page could not fetch <code>../graph.json</code>. This happens when the file is opened directly from disk. Pick <code>graph.json</code> from the graph folder, or run <code>python3 -m http.server 8765</code> in the graph folder and open http://localhost:8765/viewer/3d.html</p>
+    </div>
+  </div>
+  <aside id="panel" class="hidden"></aside>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/3d-force-graph.min.js"></script>
+<script>
+'use strict';
+
+const TYPE_ORDER = ['FR', 'Stage', 'Actor', 'Entity', 'Field', 'Rule', 'Event', 'Setting', 'Screen', 'Step', 'Flow', 'Source'];
+const TIMELINE_ORDER = ['main', 'aftercare', 'monitoring', 'provider-account', 'patient-account'];
+const TYPE_COLOR = {
+  FR: '#ef4444', Stage: '#3b82f6', Actor: '#06b6d4', Entity: '#8b5cf6', Field: '#c4b5fd', Rule: '#f59e0b',
+  Event: '#fb923c', Setting: '#84cc16', Screen: '#22c55e', Step: '#ec4899', Flow: '#f0abfc', Source: '#94a3b8',
+};
+const OTHER_COLOR = '#cbd5e1';
+const TYPE_SIZE = { FR: 60, Stage: 25, Flow: 20, Actor: 8, Entity: 6, Screen: 5, Step: 4, Event: 3, Setting: 3, Source: 3, Rule: 2, Field: 1.5 };
+const BIG_GRAPH = 3000; // nodes; above this the page warns and draws cheaper nodes
+const DERIVED_COLOR = '#f97316';
+
+const $ = (id) => document.getElementById(id);
+const S = {
+  g: null, byId: new Map(), out: new Map(), inc: new Map(), fieldRow: new Map(), fieldsByEntity: new Map(),
+  enumsByField: new Map(), sourceRow: new Map(), ownedBy: new Map(),
+  frs: [], timelines: [], sources: [], flows: [], verbs: [],
+  types: new Set(), verbsOn: new Set(), extra: new Set(),
+  selected: null, visible: new Set(), links: [], pendingFit: false,
+};
+let Graph = null;
+
+/* ---------- helpers ---------- */
+
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function fmt(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  if (typeof v === 'boolean') return v ? 'yes' : 'no';
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+function push(map, key, item) { if (!map.has(key)) map.set(key, []); map.get(key).push(item); }
+function trunc(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n - 1) + '…' : t; }
+function byId(a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; }
+function colorOf(type) { return TYPE_COLOR[type] || OTHER_COLOR; }
+function edgeKey(e) { return `${e.from_id}\u0000${e.verb}\u0000${e.to_id}`; }
+
+/* ---------- loading (same contract as the 2D viewer) ---------- */
+
+function validate(g) {
+  if (!g || typeof g !== 'object' || Array.isArray(g)) throw new Error('The file is not a JSON object.');
+  if (!Array.isArray(g.nodes) || !Array.isArray(g.edges)) throw new Error('This does not look like a graph export: nodes[] or edges[] is missing.');
+  for (const n of g.nodes) if (!n || typeof n.id !== 'string' || typeof n.type !== 'string') throw new Error('A node is missing its id or type.');
+  for (const e of g.edges) if (!e || typeof e.from_id !== 'string' || typeof e.to_id !== 'string' || typeof e.verb !== 'string') throw new Error('An edge is missing from_id, verb or to_id.');
+  for (const key of ['fields', 'enum_values', 'sources']) {
+    if (g[key] !== undefined && !Array.isArray(g[key])) throw new Error(`${key} must be a list.`);
+    g[key] = g[key] || [];
+  }
+  return g;
+}
+
+function index(g) {
+  for (const m of [S.byId, S.out, S.inc, S.fieldRow, S.fieldsByEntity, S.enumsByField, S.sourceRow, S.ownedBy]) m.clear();
+  S.g = g;
+  for (const n of g.nodes) {
+    n.attrs = n.attrs && typeof n.attrs === 'object' ? n.attrs : {};
+    S.byId.set(n.id, n);
+    if (n.owner_fr) push(S.ownedBy, n.owner_fr, n);
+  }
+  // Edges to a node that is not in the export cannot be drawn; they are skipped here and counted once.
+  S.skippedEdges = 0;
+  const edges = [];
+  for (const e of g.edges) {
+    e.attrs = e.attrs && typeof e.attrs === 'object' ? e.attrs : {};
+    if (!S.byId.has(e.from_id) || !S.byId.has(e.to_id)) { S.skippedEdges++; continue; }
+    edges.push(e);
+    push(S.out, e.from_id, e);
+    push(S.inc, e.to_id, e);
+  }
+  S.edges = edges;
+  for (const f of g.fields) { S.fieldRow.set(f.id, f); push(S.fieldsByEntity, f.entity_id, f); }
+  for (const v of g.enum_values) push(S.enumsByField, v.field_id, v);
+  for (const l of S.enumsByField.values()) l.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  for (const s of g.sources) S.sourceRow.set(s.id, s);
+
+  S.frs = g.nodes.filter((n) => n.type === 'FR').sort(byId);
+  S.sources = g.nodes.filter((n) => n.type === 'Source').sort(byId);
+  S.flows = g.nodes.filter((n) => n.type === 'Flow').sort(byId);
+  const tls = new Set(g.nodes.filter((n) => n.type === 'Stage' && n.attrs.timeline).map((n) => n.attrs.timeline));
+  S.timelines = TIMELINE_ORDER.filter((t) => tls.has(t)).concat([...tls].filter((t) => !TIMELINE_ORDER.includes(t)).sort());
+  S.verbs = [...new Set(S.edges.map((e) => e.verb))].sort();
+  const types = new Set(g.nodes.map((n) => n.type));
+  S.typeList = TYPE_ORDER.filter((t) => types.has(t)).concat([...types].filter((t) => !TYPE_ORDER.includes(t)).sort());
+  S.types = new Set(S.typeList);
+  S.verbsOn = new Set(S.verbs);
+  S.extra.clear();
+  S.selected = null;
+}
+
+function showDrop(msg) {
+  for (const id of ['side', 'panel']) $(id).classList.add('hidden');
+  $('dropErr').textContent = msg || '';
+  $('drop').classList.remove('hidden');
+}
+
+function load(raw, origin) {
+  try {
+    validate(raw);
+    index(raw);
+  } catch (err) {
+    showDrop(`Could not use ${origin}: ${err.message}`);
+    return;
+  }
+  $('drop').classList.add('hidden');
+  $('side').classList.remove('hidden');
+  $('panel').classList.remove('hidden');
+  $('meta').innerHTML = `generated <strong>${esc(fmt(raw.generated_at))}</strong> · schema v<strong>${esc(fmt(raw.schema_version))}</strong> · <code>${esc(origin)}</code> · <a href="#" id="pick">open another file</a>`;
+  $('pick').addEventListener('click', (e) => { e.preventDefault(); $('file').value = ''; $('file').click(); });
+  buildControls();
+  applyUrlParams();
+  if (!Graph && !createGraph()) return;
+  rebuild({ fit: true });
+  route();
+}
+
+async function readFile(file) {
+  if (!file) return;
+  let raw;
+  try { raw = JSON.parse(await file.text()); } catch (err) { showDrop(`Could not read ${file.name}: ${err.message}`); return; }
+  load(raw, file.name);
+}
+
+async function boot() {
+  if (typeof ForceGraph3D === 'undefined' || typeof THREE === 'undefined') {
+    showDrop('The 3D libraries did not load. Check that viewer/vendor/three.min.js and viewer/vendor/3d-force-graph.min.js exist next to this page.');
+    return;
+  }
+  const drop = $('drop');
+  $('file').addEventListener('change', (e) => readFile(e.target.files[0]));
+  window.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
+  window.addEventListener('dragleave', () => drop.classList.remove('over'));
+  window.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('over'); readFile(e.dataTransfer && e.dataTransfer.files[0]); });
+  let raw;
+  try {
+    const res = await fetch('../graph.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    raw = await res.json();
+  } catch (err) {
+    showDrop(`Could not load ../graph.json (${err.message}). Pick the file instead.`);
+    return;
+  }
+  load(raw, '../graph.json');
+}
+
+/* ---------- controls ---------- */
+
+function opt(value, label) { return `<option value="${esc(value)}">${esc(label)}</option>`; }
+
+function buildControls() {
+  const typeCounts = new Map();
+  for (const n of S.g.nodes) typeCounts.set(n.type, (typeCounts.get(n.type) || 0) + 1);
+  $('fFr').innerHTML = opt('', '(any FR)') + S.frs.map((n) => opt(n.id, `${n.id} ${trunc(n.title, 40)}`)).join('');
+  $('fTl').innerHTML = opt('', '(any timeline)') + S.timelines.map((t) => opt(t, t)).join('');
+  $('fSrc').innerHTML = opt('', '(any source)') + S.sources.map((n) => opt(n.id, `${n.id} ${trunc(n.title, 40)}`)).join('');
+  $('fFlow').innerHTML = S.flows.length ? opt('', '(any flow)') + S.flows.map((n) => opt(n.id, `${n.id} ${trunc(n.title, 40)}`)).join('') : opt('', '(no Flow nodes in this export)');
+  $('fFlow').disabled = !S.flows.length;
+  $('types').innerHTML = S.typeList.map((t) =>
+    `<label class="row"><span class="sw" style="background:${colorOf(t)}"></span><input type="checkbox" data-type="${esc(t)}" checked> ${esc(t)}<span class="cnt" data-cnt="${esc(t)}">0 / ${typeCounts.get(t)}</span></label>`).join('');
+  const verbCounts = new Map();
+  for (const e of S.edges) if (!e.derived) verbCounts.set(e.verb, (verbCounts.get(e.verb) || 0) + 1);
+  $('verbs').innerHTML = S.verbs.filter((v) => verbCounts.has(v)).map((v) =>
+    `<label class="row"><input type="checkbox" data-verb="${esc(v)}" checked> ${esc(v)}<span class="cnt">${verbCounts.get(v)}</span></label>`).join('');
+  $('showDerived').checked = true;
+  $('fCtx').checked = false;
+  $('nbr').checked = false;
+  $('fFr').value = $('fTl').value = $('fSrc').value = $('fFlow').value = '';
+}
+
+/* Deep links: ?fr=FR-005&tl=main&src=SRC-..&flow=FLW-..&ctx=1&nbr=1&hops=2&all=1 and #NODE-ID. */
+function applyUrlParams() {
+  const q = new URLSearchParams(location.search);
+  const setSel = (el, v) => { if (v && [...el.options].some((o) => o.value === v)) el.value = v; };
+  setSel($('fFr'), q.get('fr')); setSel($('fTl'), q.get('tl')); setSel($('fSrc'), q.get('src')); setSel($('fFlow'), q.get('flow'));
+  $('fCtx').checked = q.get('ctx') === '1';
+  $('nbr').checked = q.get('nbr') === '1';
+  setSel($('hops'), q.get('hops'));
+  if (q.get('all') === '1') return;
+  // Start filtered: the whole graph is thousands of nodes. FR-005 when present, otherwise the first FR.
+  if (!q.has('fr') && !q.has('tl') && !q.has('src') && !q.has('flow') && !currentHashId()) {
+    const start = S.byId.has('FR-005') ? 'FR-005' : (S.frs[0] && S.frs[0].id);
+    if (start) $('fFr').value = start;
+  }
+}
+
+function filters() {
+  return { fr: $('fFr').value, tl: $('fTl').value, src: $('fSrc').value, flow: $('fFlow').value, ctx: $('fCtx').checked, nbr: $('nbr').checked, hops: Number($('hops').value) || 1 };
+}
+
+/* ---------- visibility ---------- */
+
+function edgeUsable(e) {
+  return S.verbsOn.has(e.verb) && (!e.derived || $('showDerived').checked);
+}
+
+function expand(set, hops) {
+  let frontier = [...set];
+  const seen = new Set(set);
+  for (let h = 0; h < hops && frontier.length; h++) {
+    const next = [];
+    for (const id of frontier) {
+      for (const e of (S.out.get(id) || [])) if (edgeUsable(e) && !seen.has(e.to_id)) { seen.add(e.to_id); next.push(e.to_id); }
+      for (const e of (S.inc.get(id) || [])) if (edgeUsable(e) && !seen.has(e.from_id)) { seen.add(e.from_id); next.push(e.from_id); }
+    }
+    frontier = next;
+  }
+  return seen;
+}
+
+function timelineSet(tl) {
+  const stages = S.g.nodes.filter((n) => n.type === 'Stage' && n.attrs.timeline === tl).map((n) => n.id);
+  return expand(new Set(stages), 1);
+}
+
+function sourceSet(src) {
+  const set = new Set([src]);
+  for (const e of (S.inc.get(src) || [])) if (e.verb === 'decided by') set.add(e.from_id);
+  return set;
+}
+
+/* A Flow's path: the Flow, every Step reachable from its start Step through 'next' links, and what each Step is done by, at, on or applies. */
+function flowSet(flowId) {
+  const set = new Set([flowId]);
+  const queue = [];
+  for (const e of (S.out.get(flowId) || [])) if (e.verb === 'starts at') queue.push(e.to_id);
+  const steps = new Set();
+  while (queue.length) {
+    const id = queue.shift();
+    if (steps.has(id)) continue;
+    steps.add(id);
+    for (const e of (S.out.get(id) || [])) if (e.verb === 'next') queue.push(e.to_id);
+  }
+  for (const id of steps) {
+    set.add(id);
+    for (const e of (S.out.get(id) || [])) if (['done by', 'at', 'on', 'applies'].includes(e.verb)) set.add(e.to_id);
+  }
+  return set;
+}
+
+function computeVisible() {
+  const f = filters();
+  let set = null;
+  const meet = (s) => { set = set ? new Set([...set].filter((x) => s.has(x))) : s; };
+  if (f.nbr && S.selected && S.byId.has(S.selected)) {
+    set = expand(new Set([S.selected]), f.hops);
+  } else {
+    if (f.fr) meet(new Set((S.ownedBy.get(f.fr) || []).map((n) => n.id)));
+    if (f.tl) meet(timelineSet(f.tl));
+    if (f.src) meet(sourceSet(f.src));
+    if (f.flow) meet(flowSet(f.flow));
+    if (set && f.ctx) {
+      if (f.fr) set.add(f.fr);
+      set = expand(set, 1);
+    }
+  }
+  const ids = set ? [...set] : S.g.nodes.map((n) => n.id);
+  const vis = new Set(ids.filter((id) => S.types.has(S.byId.get(id).type)));
+  for (const id of S.extra) if (S.byId.has(id)) vis.add(id);
+  return vis;
+}
+
+/* ---------- graph ---------- */
+
+function nodeColor(n) { return n.id === S.selected ? '#ffffff' : colorOf(n.type); }
+function nodeVal(n) { const v = TYPE_SIZE[n.type] || 2; return n.id === S.selected ? Math.max(v * 3, 8) : v; }
+function nodeLabel(n) {
+  return `<div style="background:#000c;padding:4px 7px;border-radius:5px;max-width:360px"><b>${esc(n.id)}</b> <span style="color:${colorOf(n.type)}">${esc(n.type)}</span><br>${esc(trunc(n.title, 140))}</div>`;
+}
+function linkLabel(l) {
+  const a = Object.keys(l.attrs || {}).map((k) => `${esc(k)}: ${esc(fmt(l.attrs[k]))}`).join(', ');
+  return `<div style="background:#000c;padding:4px 7px;border-radius:5px"><b>${esc(l.verb)}</b>${l.derived ? ' <span style="color:' + DERIVED_COLOR + '">derived</span>' : ''}<br>${esc(l.source.id || l.source)} → ${esc(l.target.id || l.target)}${a ? '<br>' + a : ''}</div>`;
+}
+function linkColor(l) {
+  const s = l.source.id || l.source, t = l.target.id || l.target;
+  if (S.selected && (s === S.selected || t === S.selected)) return '#ffffff';
+  return l.derived ? DERIVED_COLOR : '#64748b';
+}
+
+/* Derived edges are dashed: a dashed line object replaces the default solid one. The 3d-force-graph bundle has no dash option. */
+function dashedLink(l) {
+  if (!l.derived) return null;
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+  const line = new THREE.Line(geom, new THREE.LineDashedMaterial({ color: DERIVED_COLOR, dashSize: 5, gapSize: 4, transparent: true, opacity: 0.9 }));
+  line.frustumCulled = false;
+  return line;
+}
+function dashedLinkUpdate(obj, coords, l) {
+  if (!l.derived) return false;
+  const p = obj.geometry.attributes.position;
+  p.setXYZ(0, coords.start.x, coords.start.y, coords.start.z);
+  p.setXYZ(1, coords.end.x, coords.end.y, coords.end.z);
+  p.needsUpdate = true;
+  obj.computeLineDistances();
+  return true;
+}
+
+function createGraph() {
+  try {
+    Graph = ForceGraph3D()($('graph'))
+      .backgroundColor('#0b1020')
+      .nodeId('id')
+      .nodeColor(nodeColor)
+      .nodeVal(nodeVal)
+      .nodeRelSize(4)
+      .nodeOpacity(0.95)
+      .nodeLabel(nodeLabel)
+      .linkLabel(linkLabel)
+      .linkColor(linkColor)
+      .linkOpacity(0.5)
+      .linkWidth(0)
+      .linkHoverPrecision(4)
+      .linkThreeObject(dashedLink)
+      .linkThreeObjectExtend(false)
+      .linkPositionUpdate(dashedLinkUpdate)
+      .onNodeClick((n) => go(n.id))
+      .onBackgroundClick(() => { $('results').classList.add('hidden'); })
+      .onEngineStop(() => { if (S.pendingFit) { S.pendingFit = false; Graph.zoomToFit(500, 60); } });
+  } catch (err) {
+    showDrop(`The 3D view could not start (${err.message}). Check that WebGL is enabled in this browser.`);
+    return false;
+  }
+  // Limit repulsion range so nodes with no visible edge (an FR filter on its own) stay near the rest instead of drifting away.
+  Graph.d3Force('charge').distanceMax(160);
+  const resize = () => { const r = $('stage').getBoundingClientRect(); Graph.width(r.width).height(r.height); };
+  window.addEventListener('resize', resize);
+  resize();
+  return true;
+}
+
+function rebuild({ fit = false, keepExtra = false } = {}) {
+  if (!keepExtra) S.extra.clear();
+  S.visible = computeVisible();
+  const links = [];
+  for (const e of S.edges) {
+    if (edgeUsable(e) && S.visible.has(e.from_id) && S.visible.has(e.to_id)) {
+      links.push({ source: e.from_id, target: e.to_id, verb: e.verb, attrs: e.attrs, derived: !!e.derived });
+    }
+  }
+  S.links = links;
+  const nodes = [...S.visible].map((id) => S.byId.get(id));
+  const big = nodes.length > BIG_GRAPH;
+  Graph.nodeResolution(big ? 3 : 8).cooldownTicks(big ? 120 : 300).cooldownTime(big ? 20000 : 15000);
+  S.pendingFit = fit;
+  Graph.graphData({ nodes, links });
+  updateStatus(nodes.length, links.length);
+}
+
+function updateStatus(nNodes, nLinks) {
+  const counts = new Map();
+  for (const id of S.visible) { const t = S.byId.get(id).type; counts.set(t, (counts.get(t) || 0) + 1); }
+  for (const el of document.querySelectorAll('[data-cnt]')) {
+    const total = el.textContent.split(' / ')[1];
+    el.textContent = `${counts.get(el.dataset.cnt) || 0} / ${total}`;
+  }
+  $('status').innerHTML = `showing <strong>${nNodes}</strong> of ${S.g.nodes.length} nodes · <strong>${nLinks}</strong> of ${S.edges.length} edges`;
+  const note = $('bigNote');
+  if (nNodes > BIG_GRAPH) {
+    note.textContent = `${nNodes} nodes is a lot to lay out and draw; expect a slow first few seconds. Narrow the scope or switch off node types or edge verbs for a smoother view.`;
+    note.classList.remove('hidden');
+  } else note.classList.add('hidden');
+}
+
+/* ---------- selection and routing ---------- */
+
+function hrefFor(id) { return '#' + encodeURIComponent(id); }
+function currentHashId() {
+  const raw = location.hash.slice(1);
+  if (!raw) return null;
+  try { return decodeURIComponent(raw); } catch (err) { return raw; }
+}
+
+/* Move to a node: the hash is the single source of truth, so back and forward work. */
+function go(id) {
+  if (currentHashId() === id) route(); else location.hash = hrefFor(id);
+}
+
+function route() {
+  if (!S.g) return;
+  const id = currentHashId();
+  const n = id && S.byId.get(id);
+  S.selected = n ? id : null;
+  let rebuilt = false;
+  if (n && $('nbr').checked) { rebuild({ keepExtra: false }); rebuilt = true; }
+  else if (n && !S.visible.has(id)) {
+    S.extra.add(id);
+    rebuild({ keepExtra: true });
+    rebuilt = true;
+  }
+  renderPanel(id);
+  if (Graph) {
+    Graph.refresh();
+    if (n) setTimeout(() => focusNode(n), rebuilt ? 700 : 0);
+  }
+}
+
+function focusNode(n) {
+  if (!Graph || !Number.isFinite(n.x)) return;
+  const dist = 110;
+  const len = Math.hypot(n.x, n.y, n.z) || 1;
+  const k = 1 + dist / len;
+  Graph.cameraPosition({ x: n.x * k, y: n.y * k, z: n.z * k }, { x: n.x, y: n.y, z: n.z }, 700);
+}
+
+/* ---------- panel ---------- */
+
+function nodeLink(id, withTitle = true) {
+  const n = S.byId.get(id);
+  if (!n) return `<code>${esc(id)}</code> <span class="muted">(not in this export)</span>`;
+  const title = withTitle && n.title ? ` <span class="muted">${esc(trunc(n.title, 90))}</span>` : '';
+  const badge = n.status && n.status !== 'active' ? `<span class="badge">${esc(n.status)}</span>` : '';
+  return `<a href="${hrefFor(id)}" data-id="${esc(id)}"><code>${esc(id)}</code></a> <span class="badge" style="color:${colorOf(n.type)}">${esc(n.type)}</span>${title}${badge}`;
+}
+function kv(pairs) { return `<table><tbody>${pairs.map(([k, v]) => `<tr><th>${esc(k)}</th><td class="v">${v}</td></tr>`).join('')}</tbody></table>`; }
+function enumList(fid) {
+  const vals = S.enumsByField.get(fid) || [];
+  return vals.length ? vals.map((v) => `<code>${esc(v.value)}</code>${v.label && v.label !== v.value ? ' ' + esc(v.label) : ''}`).join(', ') : '—';
+}
+function fieldsTable(entityId) {
+  const rows = (S.fieldsByEntity.get(entityId) || []).slice().sort(byId);
+  if (!rows.length) return '<p class="muted">No fields in this export.</p>';
+  return `<table><thead><tr><th>field</th><th>type</th><th>req</th></tr></thead><tbody>${rows.map((f) =>
+    `<tr><td><a href="${hrefFor(f.id)}" data-id="${esc(f.id)}"><code>${esc(f.name)}</code></a></td><td>${esc(fmt(f.data_type))}</td><td>${esc(fmt(typeof f.required === 'number' ? Boolean(f.required) : f.required))}</td></tr>`).join('')}</tbody></table>`;
+}
+function edgeList(edges, outgoing) {
+  if (!edges.length) return '<p class="muted">None.</p>';
+  const key = (e) => (outgoing ? e.to_id : e.from_id);
+  const sorted = edges.slice().sort((a, b) => a.verb.localeCompare(b.verb) || key(a).localeCompare(key(b)));
+  return `<ul class="plain">${sorted.map((e) => {
+    const attrs = Object.keys(e.attrs).length ? ` <span class="muted">(${Object.keys(e.attrs).map((k) => `${esc(k)}: ${esc(fmt(e.attrs[k]))}`).join(', ')})</span>` : '';
+    const tag = e.derived ? ' <span class="derived-tag">derived</span>' : '';
+    return `<li class="edge"><span class="verb">${esc(e.verb)}</span>${tag} ${outgoing ? '→' : '←'} ${nodeLink(key(e))}${attrs}</li>`;
+  }).join('')}</ul>`;
+}
+
+function renderPanel(id) {
+  const panel = $('panel');
+  const n = id && S.byId.get(id);
+  if (!id) { panel.innerHTML = '<p class="muted">Click a node, or search, to see its attributes, sources and edges here.</p>'; return; }
+  if (!n) { panel.innerHTML = `<p class="muted">No node <code>${esc(id)}</code> in this export.</p>`; return; }
+  const group = n.type === 'Actor' && n.attrs.group ? `${n.title} (${n.attrs.group})` : n.title;
+  let html = `<h2><span class="sw" style="background:${colorOf(n.type)};display:inline-block;margin-right:6px"></span><code>${esc(n.id)}</code></h2><p style="margin:0 0 8px">${esc(group)}</p>`;
+  html += kv([['type', esc(n.type)], ['owner', n.owner_fr ? nodeLink(n.owner_fr) : '—'], ['status', esc(fmt(n.status))], ['version', esc(fmt(n.version))], ['on screen', S.visible.has(n.id) ? 'yes' : 'no (hidden by the filters)']]);
+  const keys = Object.keys(n.attrs).sort();
+  html += '<h3>Attributes</h3>' + (keys.length ? kv(keys.map((k) => [k, esc(fmt(n.attrs[k]))])) : '<p class="muted">None.</p>');
+  if (n.type === 'Field') {
+    const f = S.fieldRow.get(n.id);
+    html += '<h3>Field detail</h3>' + (f ? kv([['entity', nodeLink(f.entity_id)], ['name', `<code>${esc(f.name)}</code>`], ['data type', esc(fmt(f.data_type))],
+      ['required', esc(fmt(typeof f.required === 'number' ? Boolean(f.required) : f.required))], ['calculated by', f.calculated_by ? nodeLink(f.calculated_by) : '—'], ['enum values', enumList(f.id)]]) : '<p class="muted">No fields row in the export.</p>');
+  }
+  if (n.type === 'Entity') html += '<h3>Fields</h3>' + fieldsTable(n.id);
+  if (n.type === 'Source') {
+    const s = S.sourceRow.get(n.id);
+    html += '<h3>Source detail</h3>' + (s ? kv(['kind', 'ref', 'section', 'date', 'lifecycle'].map((k) => [k, esc(fmt(s[k]))])) : '<p class="muted">No sources row in the export.</p>');
+  }
+  const out = S.out.get(n.id) || [], inc = S.inc.get(n.id) || [];
+  const srcs = out.filter((e) => e.verb === 'decided by');
+  if (n.type !== 'Source') {
+    html += `<h3>Sources (${srcs.length})</h3>` + (srcs.length ? `<ul class="plain">${srcs.map((e) => {
+      const r = S.sourceRow.get(e.to_id);
+      return `<li class="edge">${nodeLink(e.to_id)}${r ? `<br><span class="muted">${esc(r.kind)} · ${esc(trunc(r.ref, 70))}${r.section ? ' · ' + esc(r.section) : ''}</span>` : ''}</li>`;
+    }).join('')}</ul>` : '<p class="muted">None.</p>');
+  }
+  html += `<h3>Out-edges (${out.length})</h3>${edgeList(out, true)}<h3>In-edges (${inc.length})</h3>${edgeList(inc, false)}`;
+  panel.innerHTML = html;
+  panel.scrollTop = 0;
+}
+
+/* ---------- search ---------- */
+
+function renderSearch() {
+  const box = $('results');
+  const q = $('search').value.trim().toLowerCase();
+  if (!q || !S.g) { box.classList.add('hidden'); return; }
+  const hits = S.g.nodes.filter((n) => n.id.toLowerCase().includes(q) || String(n.title || '').toLowerCase().includes(q)).sort(byId);
+  const shown = hits.slice(0, 100);
+  box.innerHTML = `<div class="head">${hits.length} match${hits.length === 1 ? '' : 'es'}${hits.length > shown.length ? `, first ${shown.length} shown` : ''}</div>` +
+    shown.map((n) => `<a class="hit" href="${hrefFor(n.id)}" data-id="${esc(n.id)}"><code>${esc(n.id)}</code> <span class="badge" style="color:${colorOf(n.type)}">${esc(n.type)}</span><br><span class="muted">${esc(trunc(n.title, 80))}</span></a>`).join('');
+  box.classList.remove('hidden');
+}
+
+/* ---------- wiring ---------- */
+
+function refilter() { rebuild({ fit: true }); renderPanel(S.selected); }
+
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-id]');
+  if (link && link.matches('a')) { e.preventDefault(); $('results').classList.add('hidden'); go(link.dataset.id); return; }
+  if (!e.target.closest('#searchWrap')) $('results').classList.add('hidden');
+});
+$('search').addEventListener('input', renderSearch);
+$('search').addEventListener('focus', renderSearch);
+$('search').addEventListener('keydown', (e) => { if (e.key === 'Escape') $('results').classList.add('hidden'); });
+for (const id of ['fFr', 'fTl', 'fSrc', 'fFlow', 'fCtx', 'showDerived']) $(id).addEventListener('change', refilter);
+$('nbr').addEventListener('change', () => {
+  if ($('nbr').checked && !S.selected) { $('nbr').checked = false; alert('Select a node first (click one, or search), then switch on the neighbourhood.'); return; }
+  refilter();
+});
+$('hops').addEventListener('change', () => { if ($('nbr').checked) refilter(); });
+$('types').addEventListener('change', (e) => {
+  const t = e.target.dataset.type;
+  if (!t) return;
+  if (e.target.checked) S.types.add(t); else S.types.delete(t);
+  rebuild({ keepExtra: true });
+});
+$('verbs').addEventListener('change', (e) => {
+  const v = e.target.dataset.verb;
+  if (!v) return;
+  if (e.target.checked) S.verbsOn.add(v); else S.verbsOn.delete(v);
+  rebuild({ keepExtra: true });
+});
+$('btnAll').addEventListener('click', () => {
+  $('fFr').value = $('fTl').value = $('fSrc').value = $('fFlow').value = '';
+  $('nbr').checked = false;
+  $('status').textContent = 'loading the whole graph…';
+  setTimeout(refilter, 30);
+});
+$('btnClear').addEventListener('click', () => {
+  $('fFr').value = $('fTl').value = $('fSrc').value = $('fFlow').value = '';
+  $('fCtx').checked = false; $('nbr').checked = false;
+  for (const c of document.querySelectorAll('[data-type],[data-verb]')) c.checked = true;
+  $('showDerived').checked = true;
+  S.types = new Set(S.typeList); S.verbsOn = new Set(S.verbs);
+  const start = S.byId.has('FR-005') ? 'FR-005' : (S.frs[0] && S.frs[0].id);
+  if (start) $('fFr').value = start;
+  refilter();
+});
+$('btnFit').addEventListener('click', () => { if (Graph) Graph.zoomToFit(500, 60); });
+window.addEventListener('hashchange', route);
+
+/* Read-only handle for checks and screenshots. */
+window.graphViewer = {
+  visibleIds: () => [...S.visible].sort(),
+  visibleLinks: () => S.links.length,
+  state: S,
+};
+
+boot();
+</script>
+</body>
+</html>
