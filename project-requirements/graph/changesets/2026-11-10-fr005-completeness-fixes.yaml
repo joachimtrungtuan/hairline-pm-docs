@@ -1,0 +1,171 @@
+reason: "FR-005 completeness fixes (D37 review step 1): add the flow model (Steps for the patient-facing Main Flow steps 1 to 5 and Alternative Flows A1 to A6 and A8, Flows, next links) and an applies to edge from each FR-005 Rule to the Screens, Entities, Fields, Events and Actors its line names. System-executed Main Flow steps 6 to 11 are not modelled because the graph has no System Actor; see the report. Operations that wait on a user decision are in 2026-11-10-fr005-completeness-held.yaml."
+by: tester
+operations:
+  - {"op": "add_node", "id": "STP-005-001", "type": "Step", "title": "Patient views parent quotes grouped by provider on the Inquiry Dashboard", "owner_fr": "FR-005", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_node", "id": "STP-005-002", "type": "Step", "title": "Patient expands a parent quote and reviews its subquotes", "owner_fr": "FR-005", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_node", "id": "STP-005-003", "type": "Step", "title": "Patient compares eligible subquotes across and within parent quotes", "owner_fr": "FR-005", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_node", "id": "STP-005-004", "type": "Step", "title": "Patient opens a subquote and taps Accept", "owner_fr": "FR-005", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_node", "id": "STP-005-005", "type": "Step", "title": "Patient confirms the subquote with terms acknowledgment and a selection summary", "owner_fr": "FR-005", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_node", "id": "STP-005-006", "type": "Step", "title": "Patient sees Accept disabled and an Expired badge when the parent quote countdown reaches zero", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "STP-005-007", "type": "Step", "title": "Patient attempts a second acceptance and is told another subquote is already accepted", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "STP-005-008", "type": "Step", "title": "Patient confirms while the provider has withdrawn the parent quote and is blocked with an explanation", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-005-009", "type": "Step", "title": "Patient cancels the inquiry during quote review and the dashboard becomes read-only", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A4"}}
+  - {"op": "add_node", "id": "STP-005-010", "type": "Step", "title": "Patient sees Contact support instead of a cancel action after acceptance", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A4 (after acceptance)"}}
+  - {"op": "add_node", "id": "STP-005-011", "type": "Step", "title": "Patient confirms a subquote whose appointment slot is already held and sees the slot-taken error", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A5"}}
+  - {"op": "add_node", "id": "STP-005-012", "type": "Step", "title": "Patient returns to the inquiry dashboard to choose another eligible subquote", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A1, A3 and A5 outcome"}}
+  - {"op": "add_node", "id": "STP-005-013", "type": "Step", "title": "Patient tries to accept a subquote of a Suspended or Deactivated provider and sees the provider-unavailable error", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A6"}}
+  - {"op": "add_node", "id": "STP-005-015", "type": "Step", "title": "Patient enters a promotion code on the named subquote before acceptance", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A8"}}
+  - {"op": "add_node", "id": "FLW-005-main", "type": "Flow", "title": "Main flow: patient reviews, compares, opens, accepts and confirms one subquote", "attrs": {"kind": "main", "description": "Main flow: patient reviews, compares, opens, accepts and confirms one subquote", "prd_ref": "Main Flow"}}
+  - {"op": "add_node", "id": "FLW-005-parent-quote-expires", "type": "Flow", "title": "Parent quote expires while the patient reviews a subquote", "attrs": {"kind": "alternative", "description": "Parent quote expires while the patient reviews a subquote", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "FLW-005-second-acceptance", "type": "Flow", "title": "Second acceptance attempt is prevented", "attrs": {"kind": "alternative", "description": "Second acceptance attempt is prevented", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "FLW-005-provider-withdraws", "type": "Flow", "title": "Provider withdraws the parent quote before the acceptance completes", "attrs": {"kind": "alternative", "description": "Provider withdraws the parent quote before the acceptance completes", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_node", "id": "FLW-005-patient-cancels-inquiry", "type": "Flow", "title": "Patient cancels the inquiry during quote review", "attrs": {"kind": "alternative", "description": "Patient cancels the inquiry during quote review", "prd_ref": "Alternative Flow A4"}}
+  - {"op": "add_node", "id": "FLW-005-cancel-after-acceptance", "type": "Flow", "title": "After acceptance the patient sees Contact support and an admin cancels through FR-006", "attrs": {"kind": "alternative", "description": "After acceptance the patient sees Contact support and an admin cancels through FR-006", "prd_ref": "Alternative Flow A4 (after acceptance)"}}
+  - {"op": "add_node", "id": "FLW-005-slot-already-reserved", "type": "Flow", "title": "Appointment slot is already reserved", "attrs": {"kind": "alternative", "description": "Appointment slot is already reserved", "prd_ref": "Alternative Flow A5"}}
+  - {"op": "add_node", "id": "FLW-005-provider-suspended", "type": "Flow", "title": "Owning provider becomes Suspended or Deactivated", "attrs": {"kind": "alternative", "description": "Owning provider becomes Suspended or Deactivated", "prd_ref": "Alternative Flow A6"}}
+  - {"op": "add_node", "id": "FLW-005-promotion-code", "type": "Flow", "title": "Patient applies a promotion code before acceptance", "attrs": {"kind": "alternative", "description": "Patient applies a promotion code before acceptance", "prd_ref": "Alternative Flow A8"}}
+  - {"op": "add_edge", "from": "STP-005-001", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-001", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-001", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-001", "verb": "applies", "to": "REQ-005-001"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "applies", "to": "REQ-005-001"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "applies", "to": "REQ-005-018"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "applies", "to": "REQ-005-012"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "applies", "to": "REQ-005-013"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "applies", "to": "REQ-005-014"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "applies", "to": "REQ-005-047"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "on", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "applies", "to": "REQ-005-004"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "applies", "to": "REQ-005-049"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "applies", "to": "REQ-005-054"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "applies", "to": "REQ-005-055"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "on", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "applies", "to": "REQ-005-035"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "applies", "to": "REQ-005-056"}
+  - {"op": "add_edge", "from": "STP-005-006", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-006", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-006", "verb": "on", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "STP-005-006", "verb": "applies", "to": "REQ-005-040"}
+  - {"op": "add_edge", "from": "STP-005-007", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-007", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-007", "verb": "on", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "STP-005-007", "verb": "applies", "to": "REQ-005-002"}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "on", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "applies", "to": "REQ-005-004"}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "applies", "to": "REQ-005-019"}
+  - {"op": "add_edge", "from": "STP-005-009", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-009", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-009", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-009", "verb": "applies", "to": "REQ-005-041"}
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "applies", "to": "REQ-005-030"}
+  - {"op": "add_edge", "from": "STP-005-011", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-011", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-011", "verb": "on", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "STP-005-011", "verb": "applies", "to": "REQ-005-021"}
+  - {"op": "add_edge", "from": "STP-005-012", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-012", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-012", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-012", "verb": "applies", "to": "REQ-005-002"}
+  - {"op": "add_edge", "from": "STP-005-013", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-013", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-013", "verb": "on", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "STP-005-013", "verb": "applies", "to": "REQ-005-022"}
+  - {"op": "add_edge", "from": "STP-005-013", "verb": "applies", "to": "REQ-005-043"}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "on", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "applies", "to": "REQ-005-026"}
+  - {"op": "add_edge", "from": "STP-005-001", "verb": "next", "to": "STP-005-002"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "next", "to": "STP-005-003"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "next", "to": "STP-005-004"}
+  - {"op": "add_edge", "from": "STP-005-004", "verb": "next", "to": "STP-005-005"}
+  - {"op": "add_edge", "from": "STP-005-006", "verb": "next", "to": "STP-005-012", "attrs": {"label": "another eligible subquote exists"}}
+  - {"op": "add_edge", "from": "STP-005-008", "verb": "next", "to": "STP-005-012", "attrs": {"label": "patient chooses another subquote"}}
+  - {"op": "add_edge", "from": "STP-005-011", "verb": "next", "to": "STP-005-012", "attrs": {"label": "patient chooses another subquote"}}
+  - {"op": "add_edge", "from": "STP-005-012", "verb": "next", "to": "STP-005-003", "attrs": {"label": "patient compares the remaining subquotes"}}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "next", "to": "STP-005-005", "attrs": {"label": "code valid, discounted price carried into the confirmation summary"}}
+  - {"op": "add_edge", "from": "FLW-005-main", "verb": "starts at", "to": "STP-005-001"}
+  - {"op": "add_edge", "from": "FLW-005-parent-quote-expires", "verb": "starts at", "to": "STP-005-006"}
+  - {"op": "add_edge", "from": "FLW-005-second-acceptance", "verb": "starts at", "to": "STP-005-007"}
+  - {"op": "add_edge", "from": "FLW-005-provider-withdraws", "verb": "starts at", "to": "STP-005-008"}
+  - {"op": "add_edge", "from": "FLW-005-patient-cancels-inquiry", "verb": "starts at", "to": "STP-005-009"}
+  - {"op": "add_edge", "from": "FLW-005-cancel-after-acceptance", "verb": "starts at", "to": "STP-005-010"}
+  - {"op": "add_edge", "from": "FLW-005-slot-already-reserved", "verb": "starts at", "to": "STP-005-011"}
+  - {"op": "add_edge", "from": "FLW-005-provider-suspended", "verb": "starts at", "to": "STP-005-013"}
+  - {"op": "add_edge", "from": "FLW-005-promotion-code", "verb": "starts at", "to": "STP-005-015"}
+  - {"op": "add_edge", "from": "REQ-005-001", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-001", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-002", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-002", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-003", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-003", "verb": "applies to", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "REQ-005-004", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-004", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-005", "verb": "applies to", "to": "EVT-booking-handoff"}
+  - {"op": "add_edge", "from": "REQ-005-006", "verb": "applies to", "to": "ENT-acceptance-event.snapshot"}
+  - {"op": "add_edge", "from": "REQ-005-007", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-005-008", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-005-011", "verb": "applies to", "to": "EVT-booking-handoff"}
+  - {"op": "add_edge", "from": "REQ-005-012", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-013", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-014", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-015", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-017", "verb": "applies to", "to": "ENT-acceptance-event.snapshot"}
+  - {"op": "add_edge", "from": "REQ-005-018", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-022", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-005-023", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-005-023", "verb": "applies to", "to": "ENT-acceptance-annotation"}
+  - {"op": "add_edge", "from": "REQ-005-024", "verb": "applies to", "to": "ENT-acceptance-supersession"}
+  - {"op": "add_edge", "from": "REQ-005-026", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-027", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-029", "verb": "applies to", "to": "EVT-booking-scheduled"}
+  - {"op": "add_edge", "from": "REQ-005-029", "verb": "applies to", "to": "EVT-quote-accepted"}
+  - {"op": "add_edge", "from": "REQ-005-030", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-031", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-032", "verb": "applies to", "to": "SCR-005-04"}
+  - {"op": "add_edge", "from": "REQ-005-033", "verb": "applies to", "to": "SCR-005-05"}
+  - {"op": "add_edge", "from": "REQ-005-034", "verb": "applies to", "to": "ENT-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-005-035", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-035", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-039", "verb": "applies to", "to": "SCR-005-04"}
+  - {"op": "add_edge", "from": "REQ-005-040", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-041", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-041", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-043", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-043", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-044", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-005-045", "verb": "applies to", "to": "ENT-acceptance-supersession"}
+  - {"op": "add_edge", "from": "REQ-005-046", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-005-047", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-048", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-049", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-049", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-052", "verb": "applies to", "to": "ENT-subquote.acceptance_state"}
+  - {"op": "add_edge", "from": "REQ-005-053", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-054", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-055", "verb": "applies to", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "REQ-005-055", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-056", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-057", "verb": "applies to", "to": "SCR-005-03"}
+  - {"op": "add_edge", "from": "REQ-005-058", "verb": "applies to", "to": "SCR-005-04"}
+  - {"op": "add_edge", "from": "REQ-005-059", "verb": "applies to", "to": "SCR-005-05"}
+  - {"op": "add_edge", "from": "REQ-005-059", "verb": "applies to", "to": "ENT-acceptance-event.oversight_status"}
+  - {"op": "add_edge", "from": "REQ-005-062", "verb": "applies to", "to": "ENT-acceptance-event.snapshot"}
+  - {"op": "add_edge", "from": "REQ-005-063", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "REQ-005-063", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-005-064", "verb": "applies to", "to": "ENT-acceptance-annotation"}

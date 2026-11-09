@@ -1,0 +1,41 @@
+reason: "FR-005 completeness fixes held for a user decision (decisions 1, 4, 5 and 6 in tester-261110-fr005-completeness.md): the payment-window-expires and replacement-acceptance Steps and Flows, and applies to edges that depend on the line 561 reading or on the promotion_code placement. Apply after the clean file 2026-11-10-fr005-completeness-fixes.yaml."
+by: tester
+operations:
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_node", "id": "STP-005-014", "type": "Step", "title": "Patient sees Contact support with admin recovery routes after the payment window expires", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A7"}}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_node", "id": "STP-005-016", "type": "Step", "title": "Admin records the replacement acceptance and supersession for a provider-fault transfer", "owner_fr": "FR-005", "attrs": {"prd_ref": "Alternative Flow A9", "handoff_from": "FR-006: Alternative Flow B4"}}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_node", "id": "FLW-005-payment-window-expires", "type": "Flow", "title": "Payment window expires after acceptance", "attrs": {"kind": "alternative", "description": "Payment window expires after acceptance", "prd_ref": "Alternative Flow A7"}}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_node", "id": "FLW-005-replacement-acceptance", "type": "Flow", "title": "Admin-authored replacement acceptance after a provider fault", "attrs": {"kind": "alternative", "description": "Admin-authored replacement acceptance after a provider fault", "prd_ref": "Alternative Flow A9"}}
+  # waits on Decision 1 (line 561 contradiction: whether admin cancellation writes a supersession record)
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "applies", "to": "REQ-005-042"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "done by", "to": "ACT-patient"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "applies", "to": "REQ-005-025"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "applies", "to": "REQ-005-030"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "applies", "to": "REQ-005-042"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "applies", "to": "REQ-005-024"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "applies", "to": "REQ-005-029"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "FLW-005-payment-window-expires", "verb": "starts at", "to": "STP-005-014"}
+  # waits on Decision 5 (stage of STP-005-014 and STP-005-016; STP-005-016 also decision 4 and its FR-006 hand-off)
+  - {"op": "add_edge", "from": "FLW-005-replacement-acceptance", "verb": "starts at", "to": "STP-005-016"}
+  # waits on Decision 6 (placement of promotion_code on the AcceptanceEvent)
+  - {"op": "add_edge", "from": "REQ-005-026", "verb": "applies to", "to": "ENT-acceptance-event.promotion_code"}
+  # waits on Decision 1 (line 561 contradiction: whether admin cancellation writes a supersession record)
+  - {"op": "add_edge", "from": "REQ-005-042", "verb": "applies to", "to": "ENT-acceptance-event"}
+  # waits on Decision 1 (line 561 contradiction: whether admin cancellation writes a supersession record)
+  - {"op": "add_edge", "from": "REQ-005-042", "verb": "applies to", "to": "ENT-acceptance-supersession"}

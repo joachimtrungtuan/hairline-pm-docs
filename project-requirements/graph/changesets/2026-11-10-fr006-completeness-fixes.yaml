@@ -1,0 +1,180 @@
+reason: "FR-006 completeness fixes (D37 review step 1): an applies to link from each of the 70 FR-006 Rules to the Screens, Entities, Fields, Events and Actors the PRD names them acting on, plus the flow model for the steps a human performs and that stay reachable from a Flow (Main Flow steps 1 and 2, Alternative Flows B2 steps 1 and 2, B3 step 1). System-performed steps are held (no System Actor)."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "REQ-006-001", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-001", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-001", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-002", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-002", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-003", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-003", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-004", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-004", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-004", "verb": "applies to", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "REQ-006-004", "verb": "applies to", "to": "EVT-booking-cancelled"}
+  - {"op": "add_edge", "from": "REQ-006-005", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-005", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-006", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-007", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-008", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-008", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-009", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-010", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-scheduled"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-rescheduled"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-cancelled"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-payment-window-expired"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-revived"}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement"}
+  - {"op": "add_edge", "from": "REQ-006-012", "verb": "applies to", "to": "ENT-booking.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-006-012", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-013", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-014", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-014", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-015", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-015", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-016", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-016", "verb": "applies to", "to": "EVT-booking-payment-window-expired"}
+  - {"op": "add_edge", "from": "REQ-006-017", "verb": "applies to", "to": "SCR-006-07"}
+  - {"op": "add_edge", "from": "REQ-006-017", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-017", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-017", "verb": "applies to", "to": "EVT-booking-revived"}
+  - {"op": "add_edge", "from": "REQ-006-018", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-018", "verb": "applies to", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "REQ-006-018", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement"}
+  - {"op": "add_edge", "from": "REQ-006-018", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-019", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-019", "verb": "applies to", "to": "SCR-006-11"}
+  - {"op": "add_edge", "from": "REQ-006-019", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-020", "verb": "applies to", "to": "SCR-006-07"}
+  - {"op": "add_edge", "from": "REQ-006-020", "verb": "applies to", "to": "SCR-006-08"}
+  - {"op": "add_edge", "from": "REQ-006-020", "verb": "applies to", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "REQ-006-021", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-021", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-022", "verb": "applies to", "to": "SCR-006-03"}
+  - {"op": "add_edge", "from": "REQ-006-022", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-023", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-023", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-023", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-024", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-024", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-025", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-026", "verb": "applies to", "to": "EVT-booking-scheduled"}
+  - {"op": "add_edge", "from": "REQ-006-026", "verb": "applies to", "to": "EVT-booking-rescheduled"}
+  - {"op": "add_edge", "from": "REQ-006-026", "verb": "applies to", "to": "EVT-booking-cancelled"}
+  - {"op": "add_edge", "from": "REQ-006-026", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon"}
+  - {"op": "add_edge", "from": "REQ-006-027", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-028", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-028", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-029", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-029", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-030", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-030", "verb": "applies to", "to": "ENT-booking.deposit_amount"}
+  - {"op": "add_edge", "from": "REQ-006-031", "verb": "applies to", "to": "ENT-booking.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-006-031", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-032", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-032", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-033", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-033", "verb": "applies to", "to": "ENT-booking.payment_option"}
+  - {"op": "add_edge", "from": "REQ-006-034", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-034", "verb": "applies to", "to": "ENT-booking.payment_schedule"}
+  - {"op": "add_edge", "from": "REQ-006-035", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-035", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-036", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon"}
+  - {"op": "add_edge", "from": "REQ-006-036", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-037", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-038", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-039", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-040", "verb": "applies to", "to": "SCR-006-02"}
+  - {"op": "add_edge", "from": "REQ-006-041", "verb": "applies to", "to": "SCR-006-02"}
+  - {"op": "add_edge", "from": "REQ-006-042", "verb": "applies to", "to": "SCR-006-02"}
+  - {"op": "add_edge", "from": "REQ-006-043", "verb": "applies to", "to": "SCR-006-04"}
+  - {"op": "add_edge", "from": "REQ-006-043", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-043", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-044", "verb": "applies to", "to": "SCR-006-03"}
+  - {"op": "add_edge", "from": "REQ-006-045", "verb": "applies to", "to": "SCR-006-05"}
+  - {"op": "add_edge", "from": "REQ-006-046", "verb": "applies to", "to": "SCR-006-03"}
+  - {"op": "add_edge", "from": "REQ-006-047", "verb": "applies to", "to": "SCR-006-04"}
+  - {"op": "add_edge", "from": "REQ-006-047", "verb": "applies to", "to": "SCR-006-06"}
+  - {"op": "add_edge", "from": "REQ-006-048", "verb": "applies to", "to": "SCR-006-06"}
+  - {"op": "add_edge", "from": "REQ-006-048", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-006-049", "verb": "applies to", "to": "SCR-006-06"}
+  - {"op": "add_edge", "from": "REQ-006-049", "verb": "applies to", "to": "ENT-booking.internal_notes"}
+  - {"op": "add_edge", "from": "REQ-006-050", "verb": "applies to", "to": "SCR-006-07"}
+  - {"op": "add_edge", "from": "REQ-006-050", "verb": "applies to", "to": "SCR-006-08"}
+  - {"op": "add_edge", "from": "REQ-006-050", "verb": "applies to", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "REQ-006-050", "verb": "applies to", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "REQ-006-050", "verb": "applies to", "to": "SCR-006-11"}
+  - {"op": "add_edge", "from": "REQ-006-051", "verb": "applies to", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "REQ-006-051", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-052", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-053", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-054", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-055", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-055", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-056", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-056", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-006-057", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-058", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-058", "verb": "applies to", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "REQ-006-059", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-059", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-060", "verb": "applies to", "to": "ENT-booking.status"}
+  - {"op": "add_edge", "from": "REQ-006-061", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-062", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-062", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-063", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-064", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-065", "verb": "applies to", "to": "EVT-booking-scheduled"}
+  - {"op": "add_edge", "from": "REQ-006-065", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon"}
+  - {"op": "add_edge", "from": "REQ-006-066", "verb": "applies to", "to": "ENT-booking.payment_option"}
+  - {"op": "add_edge", "from": "REQ-006-067", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-067", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-006-067", "verb": "applies to", "to": "SCR-006-08"}
+  - {"op": "add_edge", "from": "REQ-006-067", "verb": "applies to", "to": "EVT-booking-rescheduled"}
+  - {"op": "add_edge", "from": "REQ-006-068", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-069", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-069", "verb": "applies to", "to": "ENT-slot-hold"}
+  - {"op": "add_edge", "from": "REQ-006-070", "verb": "applies to", "to": "ENT-booking.remaining_balance"}
+  - {"op": "add_edge", "from": "REQ-006-070", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_node", "id": "FLW-006-main", "type": "Flow", "title": "Subquote acceptance to booking confirmation", "attrs": {"kind": "main", "description": "Subquote acceptance to booking confirmation", "prd_ref": "Main Flow"}}
+  - {"op": "add_node", "id": "FLW-006-b2", "type": "Flow", "title": "Admin booking cancellation", "attrs": {"kind": "alternative", "description": "Admin booking cancellation", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_node", "id": "FLW-006-b3", "type": "Flow", "title": "Support-routed cancellation during the slot hold", "attrs": {"kind": "alternative", "description": "Support-routed cancellation during the slot hold", "prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_node", "id": "STP-006-001", "type": "Step", "title": "Patient opens the Accepted Subquote detail view and reviews the immutable accepted selection", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "on", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "applies", "to": "REQ-006-001"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "applies", "to": "REQ-006-014"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "applies", "to": "REQ-006-029"}
+  - {"op": "add_node", "id": "STP-006-002", "type": "Step", "title": "Patient proceeds directly to the payment screen", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "on", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "applies", "to": "REQ-006-001"}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "applies", "to": "REQ-006-033"}
+  - {"op": "add_node", "id": "STP-006-301", "type": "Step", "title": "Admin opens Cancel Booking on Screen 9, selects the request source and enters a mandatory reason", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 1"}}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "on", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "applies", "to": "REQ-006-004"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "applies", "to": "REQ-006-050"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "applies", "to": "REQ-006-052"}
+  - {"op": "add_node", "id": "STP-006-302", "type": "Step", "title": "Admin confirms the cancellation in a confirmation dialog that states the effects", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-006-302", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-006-302", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-006-302", "verb": "on", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "STP-006-302", "verb": "applies", "to": "REQ-006-004"}
+  - {"op": "add_node", "id": "STP-006-401", "type": "Step", "title": "Admin cancels the booking through Alternative Flow B2 on Screen 9 with a mandatory reason", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B3 step 1"}}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "on", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "applies", "to": "REQ-006-004"}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "applies", "to": "REQ-006-050"}
+  - {"op": "add_edge", "from": "STP-006-401", "verb": "applies", "to": "REQ-006-062"}
+  - {"op": "add_edge", "from": "FLW-006-main", "verb": "starts at", "to": "STP-006-001"}
+  - {"op": "add_edge", "from": "FLW-006-b2", "verb": "starts at", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "FLW-006-b3", "verb": "starts at", "to": "STP-006-401"}
+  - {"op": "add_edge", "from": "STP-006-001", "verb": "next", "to": "STP-006-002"}
+  - {"op": "add_edge", "from": "STP-006-301", "verb": "next", "to": "STP-006-302"}

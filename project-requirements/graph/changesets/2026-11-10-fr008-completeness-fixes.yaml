@@ -1,0 +1,421 @@
+reason: "FR-008 completeness fixes (D37 review step 1): add the flow model (Steps, Flows, next links, hand-offs) for Main Flows 1 and 2 and Alternative Flows A1, A2, B1 and B2 for the steps a human Actor performs, an applies to edge from every FR-008 Rule that names objects to those objects, and decided by edges to the Product Owner decisions the PRD cites (D7, M2, Q17, Q18, Q21). System-executed steps (no System Actor in the graph) are not modelled; see the report."
+by: tester
+operations:
+  - {"op": "add_node", "id": "STP-008-001", "type": "Step", "title": "Patient submits the passport photo and form", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A3 (and A1S1)", "handoff_from": "FR-006: Main Flow, booking becomes Confirmed (travel path A)"}}
+  - {"op": "add_node", "id": "STP-008-002", "type": "Step", "title": "Provider reviews the passport and books travel externally", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A7"}}
+  - {"op": "add_node", "id": "STP-008-003", "type": "Step", "title": "Provider enters the outbound flight", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 steps A8-A9"}}
+  - {"op": "add_node", "id": "STP-008-004", "type": "Step", "title": "Provider enters the return flight", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 steps A10-A11"}}
+  - {"op": "add_node", "id": "STP-008-005", "type": "Step", "title": "Provider enters the hotel stay", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 steps A12-A13"}}
+  - {"op": "add_node", "id": "STP-008-006", "type": "Step", "title": "Patient views the read-only itinerary", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A16; Main Flow 2 step B11 (patient)"}}
+  - {"op": "add_node", "id": "STP-008-007", "type": "Step", "title": "Patient answers the travel requirement check", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B3 (and B1S2)", "handoff_from": "FR-006: Main Flow, booking becomes Confirmed (travel path B)"}}
+  - {"op": "add_node", "id": "STP-008-008", "type": "Step", "title": "Patient states that no travel is required", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B4; Alternative Flow B1 steps B1S4-B1S6"}}
+  - {"op": "add_node", "id": "STP-008-009", "type": "Step", "title": "Patient submits the outbound flight", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B5"}}
+  - {"op": "add_node", "id": "STP-008-010", "type": "Step", "title": "Patient submits the return flight", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 steps B6-B7"}}
+  - {"op": "add_node", "id": "STP-008-011", "type": "Step", "title": "Patient submits the hotel stay", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B8"}}
+  - {"op": "add_node", "id": "STP-008-012", "type": "Step", "title": "Provider reviews the patient-submitted travel details", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B10"}}
+  - {"op": "add_node", "id": "STP-008-013", "type": "Step", "title": "Provider views the combined itinerary", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B11 (provider); Main Flow 1 step A14 view"}}
+  - {"op": "add_node", "id": "STP-008-014", "type": "Step", "title": "Patient corrects the errors and resubmits the passport", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A1 steps A1S1-A1S4; Main Flow 1 steps A4-A5"}}
+  - {"op": "add_node", "id": "STP-008-015", "type": "Step", "title": "Patient attempts to edit a submitted record", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 steps A2S1-A2S4"}}
+  - {"op": "add_node", "id": "STP-008-016", "type": "Step", "title": "Provider attempts to edit a submitted record", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 steps A2S1-A2S4"}}
+  - {"op": "add_node", "id": "STP-008-017", "type": "Step", "title": "Patient contacts admin for a correction", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 step A2S4"}}
+  - {"op": "add_node", "id": "STP-008-018", "type": "Step", "title": "Provider contacts admin for a correction", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 step A2S4"}}
+  - {"op": "add_node", "id": "STP-008-019", "type": "Step", "title": "Admin applies the correction on the admin travel record screen", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 step A2S5"}}
+  - {"op": "add_node", "id": "STP-008-020", "type": "Step", "title": "Admin confirms or corrects the copied flight and hotel dates", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S7", "handoff_from": "FR-006: Alternative Flow B5, provider-fault transfer to a replacement booking"}}
+  - {"op": "add_node", "id": "FLW-008-main-provider-included", "type": "Flow", "title": "Main Flow 1: provider-included travel path (Path A)", "attrs": {"kind": "main", "description": "Main Flow 1: provider-included travel path (Path A)", "prd_ref": "Main Flow 1"}}
+  - {"op": "add_node", "id": "FLW-008-main-patient-self-booked", "type": "Flow", "title": "Main Flow 2: patient self-booked travel path (Path B)", "attrs": {"kind": "main", "description": "Main Flow 2: patient self-booked travel path (Path B)", "prd_ref": "Main Flow 2"}}
+  - {"op": "add_node", "id": "FLW-008-passport-rejected", "type": "Flow", "title": "Alternative Flow A1: passport submission rejected", "attrs": {"kind": "alternative", "description": "Alternative Flow A1: passport submission rejected", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "FLW-008-edit-blocked", "type": "Flow", "title": "Alternative Flow A2: edit of a submitted record blocked", "attrs": {"kind": "alternative", "description": "Alternative Flow A2: edit of a submitted record blocked", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "FLW-008-no-travel-required", "type": "Flow", "title": "Alternative Flow B1: patient needs no travel", "attrs": {"kind": "alternative", "description": "Alternative Flow B1: patient needs no travel", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_node", "id": "FLW-008-provider-fault-transfer", "type": "Flow", "title": "Alternative Flow B2: provider-fault transfer carries the travel records", "attrs": {"kind": "alternative", "description": "Alternative Flow B2: provider-fault transfer carries the travel records", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "on", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-001"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-046"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-047"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-048"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-042"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-002"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "applies", "to": "REQ-008-074"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "on", "to": "SCR-008-07"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "applies", "to": "REQ-008-050"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "applies", "to": "REQ-008-003"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "applies", "to": "REQ-008-002"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "applies", "to": "REQ-008-042"}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "applies", "to": "REQ-008-057"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "on", "to": "SCR-008-08"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-007"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-008"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-053"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-054"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-009"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-010"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-064"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "applies", "to": "REQ-008-018"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "on", "to": "SCR-008-08"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "applies", "to": "REQ-008-054"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "applies", "to": "REQ-008-006"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "applies", "to": "REQ-008-008"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "applies", "to": "REQ-008-053"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "on", "to": "SCR-008-09"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-011"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-055"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-012"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-013"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-008"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-064"}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "applies", "to": "REQ-008-019"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "on", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-014"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-015"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-056"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-044"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-057"}
+  - {"op": "add_edge", "from": "STP-008-006", "verb": "applies", "to": "REQ-008-033"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "on", "to": "SCR-008-02"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "applies", "to": "REQ-008-058"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "applies", "to": "REQ-008-034"}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "applies", "to": "REQ-008-046"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "on", "to": "SCR-008-02"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "applies", "to": "REQ-008-058"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "applies", "to": "REQ-008-059"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "on", "to": "SCR-008-03"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-007"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-006"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-008"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-053"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-054"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-009"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-010"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "on", "to": "SCR-008-03"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "applies", "to": "REQ-008-054"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "applies", "to": "REQ-008-006"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "applies", "to": "REQ-008-008"}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "on", "to": "SCR-008-04"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-011"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-055"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-012"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-013"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-031"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "on", "to": "SCR-008-10"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "applies", "to": "REQ-008-057"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "applies", "to": "REQ-008-064"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "applies", "to": "REQ-008-052"}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "applies", "to": "REQ-008-056"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "on", "to": "SCR-008-06"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "applies", "to": "REQ-008-015"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "applies", "to": "REQ-008-057"}
+  - {"op": "add_edge", "from": "STP-008-013", "verb": "applies", "to": "REQ-008-014"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "on", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "applies", "to": "REQ-008-047"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "applies", "to": "REQ-008-048"}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "applies", "to": "REQ-008-046"}
+  - {"op": "add_edge", "from": "STP-008-015", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-015", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-015", "verb": "applies", "to": "REQ-008-052"}
+  - {"op": "add_edge", "from": "STP-008-015", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-016", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-016", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-016", "verb": "applies", "to": "REQ-008-052"}
+  - {"op": "add_edge", "from": "STP-008-016", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-017", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-008-017", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-017", "verb": "applies", "to": "REQ-008-052"}
+  - {"op": "add_edge", "from": "STP-008-017", "verb": "applies", "to": "REQ-008-065"}
+  - {"op": "add_edge", "from": "STP-008-018", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-008-018", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-018", "verb": "applies", "to": "REQ-008-052"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "on", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-024"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-066"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-016"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-021"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-022"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "applies", "to": "REQ-008-067"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "on", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "applies", "to": "REQ-008-030"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "applies", "to": "REQ-008-072"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "applies", "to": "REQ-008-062"}
+  - {"op": "add_edge", "from": "STP-008-020", "verb": "applies", "to": "REQ-008-066"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "next", "to": "STP-008-002", "attrs": {"label": "Passport accepted"}}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "next", "to": "STP-008-014", "attrs": {"label": "Passport fails validation", "condition": "REQ-008-047"}}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "next", "to": "STP-008-002", "attrs": {"label": "Passport accepted"}}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "next", "to": "STP-008-003", "attrs": {"label": "Flight included", "condition": "REQ-008-019"}}
+  - {"op": "add_edge", "from": "STP-008-002", "verb": "next", "to": "STP-008-005", "attrs": {"label": "Hotel included, no flight", "condition": "REQ-008-019"}}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "next", "to": "STP-008-004", "attrs": {"label": "Return flight applies", "condition": "REQ-008-054"}}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "next", "to": "STP-008-005", "attrs": {"label": "Hotel included, no return", "condition": "REQ-008-019"}}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Nothing further included"}}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "next", "to": "STP-008-005", "attrs": {"label": "Hotel included", "condition": "REQ-008-019"}}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "next", "to": "STP-008-006", "attrs": {"label": "No hotel included"}}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Itinerary complete"}}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "next", "to": "STP-008-009", "attrs": {"label": "Travel needed", "condition": "REQ-008-058"}}
+  - {"op": "add_edge", "from": "STP-008-007", "verb": "next", "to": "STP-008-008", "attrs": {"label": "No travel needed", "condition": "REQ-008-058"}}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Itinerary shows No travel required"}}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "next", "to": "STP-008-010", "attrs": {"label": "Return flight needed", "condition": "REQ-008-054"}}
+  - {"op": "add_edge", "from": "STP-008-009", "verb": "next", "to": "STP-008-011", "attrs": {"label": "One-way trip"}}
+  - {"op": "add_edge", "from": "STP-008-010", "verb": "next", "to": "STP-008-011", "attrs": {"label": "Hotel needed"}}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "next", "to": "STP-008-012", "attrs": {"label": "Records stored and provider notified", "condition": "REQ-008-022"}}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Patient views the itinerary"}}
+  - {"op": "add_edge", "from": "STP-008-012", "verb": "next", "to": "STP-008-013", "attrs": {"label": "Provider views the itinerary"}}
+  - {"op": "add_edge", "from": "STP-008-015", "verb": "next", "to": "STP-008-017", "attrs": {"label": "Patient contacts admin"}}
+  - {"op": "add_edge", "from": "STP-008-016", "verb": "next", "to": "STP-008-018", "attrs": {"label": "Provider contacts admin"}}
+  - {"op": "add_edge", "from": "STP-008-017", "verb": "next", "to": "STP-008-019", "attrs": {"label": "Admin handles the request"}}
+  - {"op": "add_edge", "from": "STP-008-018", "verb": "next", "to": "STP-008-019", "attrs": {"label": "Admin handles the request"}}
+  - {"op": "add_edge", "from": "FLW-008-main-provider-included", "verb": "starts at", "to": "STP-008-001"}
+  - {"op": "add_edge", "from": "FLW-008-main-patient-self-booked", "verb": "starts at", "to": "STP-008-007"}
+  - {"op": "add_edge", "from": "FLW-008-passport-rejected", "verb": "starts at", "to": "STP-008-001"}
+  - {"op": "add_edge", "from": "FLW-008-edit-blocked", "verb": "starts at", "to": "STP-008-015"}
+  - {"op": "add_edge", "from": "FLW-008-edit-blocked", "verb": "starts at", "to": "STP-008-016"}
+  - {"op": "add_edge", "from": "FLW-008-no-travel-required", "verb": "starts at", "to": "STP-008-007"}
+  - {"op": "add_edge", "from": "FLW-008-provider-fault-transfer", "verb": "starts at", "to": "STP-008-020"}
+  - {"op": "add_edge", "from": "REQ-008-001", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-001", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-001", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-002", "verb": "applies to", "to": "ENT-passport-record.passport_number"}
+  - {"op": "add_edge", "from": "REQ-008-002", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-002", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-002", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-003", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-003", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-003", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-003", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-004", "verb": "applies to", "to": "EVT-travel-record-submitted"}
+  - {"op": "add_edge", "from": "REQ-008-004", "verb": "applies to", "to": "EVT-travel-record-corrected"}
+  - {"op": "add_edge", "from": "REQ-008-004", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-005", "verb": "applies to", "to": "EVT-travel-request-sent"}
+  - {"op": "add_edge", "from": "REQ-008-005", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-005", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-005", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-006", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-006", "verb": "applies to", "to": "ENT-flight-record.leg_type"}
+  - {"op": "add_edge", "from": "REQ-008-007", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-007", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-007", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "applies to", "to": "ENT-flight-record.arrival_date"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "applies to", "to": "ENT-flight-record.departure_date"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "applies to", "to": "ENT-hotel-record.check_in_date"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "applies to", "to": "ENT-hotel-record.check_out_date"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "applies to", "to": "ENT-travel-context.accepted_appointment_date_time"}
+  - {"op": "add_edge", "from": "REQ-008-009", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-010", "verb": "applies to", "to": "ENT-flight-record.baggage_allowance"}
+  - {"op": "add_edge", "from": "REQ-008-011", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-011", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-011", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-012", "verb": "applies to", "to": "ENT-hotel-record.check_in_date"}
+  - {"op": "add_edge", "from": "REQ-008-012", "verb": "applies to", "to": "ENT-hotel-record.check_out_date"}
+  - {"op": "add_edge", "from": "REQ-008-013", "verb": "applies to", "to": "ENT-hotel-record.transportation"}
+  - {"op": "add_edge", "from": "REQ-008-014", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-014", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-015", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-015", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-015", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-015", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-016", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-016", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-016", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-017", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-017", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-017", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-018", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-018", "verb": "applies to", "to": "ENT-travel-context.travel_path"}
+  - {"op": "add_edge", "from": "REQ-008-018", "verb": "applies to", "to": "ENT-travel-context.included_services_snapshot"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "SCR-008-06"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "ENT-travel-context.passport_status"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "ENT-travel-context.outbound_flight_status"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "ENT-travel-context.return_flight_status"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "ENT-travel-context.hotel_status"}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-020", "verb": "applies to", "to": "EVT-travel-request-sent"}
+  - {"op": "add_edge", "from": "REQ-008-020", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-021", "verb": "applies to", "to": "EVT-travel-record-entered"}
+  - {"op": "add_edge", "from": "REQ-008-021", "verb": "applies to", "to": "EVT-travel-record-corrected"}
+  - {"op": "add_edge", "from": "REQ-008-021", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-022", "verb": "applies to", "to": "EVT-travel-record-submitted"}
+  - {"op": "add_edge", "from": "REQ-008-022", "verb": "applies to", "to": "EVT-travel-record-corrected"}
+  - {"op": "add_edge", "from": "REQ-008-022", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-023", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-023", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-024", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-024", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-025", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-025", "verb": "applies to", "to": "ENT-travel-context.booking_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.acceptance_event_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.accepted_subquote_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.accepted_parent_quote_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.accepted_parent_quote_version"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.accepted_subquote_version"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.quote_option_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.option_date_price_id"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.accepted_appointment_date_time"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "applies to", "to": "ENT-travel-context.included_services_snapshot"}
+  - {"op": "add_edge", "from": "REQ-008-027", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-027", "verb": "applies to", "to": "EVT-travel-request-sent"}
+  - {"op": "add_edge", "from": "REQ-008-028", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-028", "verb": "applies to", "to": "ENT-travel-context.status"}
+  - {"op": "add_edge", "from": "REQ-008-028", "verb": "applies to", "to": "EVT-travel-date-review-required"}
+  - {"op": "add_edge", "from": "REQ-008-029", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-029", "verb": "applies to", "to": "ENT-travel-context.booking_id"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "ENT-travel-context.status"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "EVT-travel-date-review-required"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "ENT-travel-context.review_cleared_at"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "applies to", "to": "ENT-travel-context.review_cleared_by"}
+  - {"op": "add_edge", "from": "REQ-008-031", "verb": "applies to", "to": "ENT-flight-record.early_departure_acknowledged_at"}
+  - {"op": "add_edge", "from": "REQ-008-031", "verb": "applies to", "to": "ENT-flight-record.early_departure_acknowledged_by"}
+  - {"op": "add_edge", "from": "REQ-008-031", "verb": "applies to", "to": "ENT-hotel-record.early_departure_acknowledged_at"}
+  - {"op": "add_edge", "from": "REQ-008-031", "verb": "applies to", "to": "ENT-hotel-record.early_departure_acknowledged_by"}
+  - {"op": "add_edge", "from": "REQ-008-032", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-032", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-032", "verb": "applies to", "to": "ENT-flight-record.copied_from_flight_id"}
+  - {"op": "add_edge", "from": "REQ-008-032", "verb": "applies to", "to": "ENT-hotel-record.copied_from_hotel_id"}
+  - {"op": "add_edge", "from": "REQ-008-033", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-033", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-034", "verb": "applies to", "to": "EVT-travel-request-sent"}
+  - {"op": "add_edge", "from": "REQ-008-034", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-034", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-041", "verb": "applies to", "to": "SCR-008-06"}
+  - {"op": "add_edge", "from": "REQ-008-041", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-041", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-041", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-042", "verb": "applies to", "to": "ENT-passport-record.passport_image"}
+  - {"op": "add_edge", "from": "REQ-008-042", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-042", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-043", "verb": "applies to", "to": "ENT-travel-context.travel_path"}
+  - {"op": "add_edge", "from": "REQ-008-043", "verb": "applies to", "to": "ENT-travel-context.included_services_snapshot"}
+  - {"op": "add_edge", "from": "REQ-008-044", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-044", "verb": "applies to", "to": "ENT-travel-context.included_services_snapshot"}
+  - {"op": "add_edge", "from": "REQ-008-044", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-045", "verb": "applies to", "to": "ENT-hotel-record.transportation"}
+  - {"op": "add_edge", "from": "REQ-008-046", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-046", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-046", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-047", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-047", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-048", "verb": "applies to", "to": "ENT-passport-record.passport_image"}
+  - {"op": "add_edge", "from": "REQ-008-048", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-049", "verb": "applies to", "to": "ENT-passport-record.passport_number"}
+  - {"op": "add_edge", "from": "REQ-008-049", "verb": "applies to", "to": "ENT-passport-record.passport_image"}
+  - {"op": "add_edge", "from": "REQ-008-050", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-050", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-050", "verb": "applies to", "to": "SCR-008-07"}
+  - {"op": "add_edge", "from": "REQ-008-051", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-051", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-052", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-052", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-052", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-052", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-052", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-053", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-054", "verb": "applies to", "to": "ENT-flight-record.leg_type"}
+  - {"op": "add_edge", "from": "REQ-008-054", "verb": "applies to", "to": "SCR-008-03"}
+  - {"op": "add_edge", "from": "REQ-008-054", "verb": "applies to", "to": "SCR-008-08"}
+  - {"op": "add_edge", "from": "REQ-008-055", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-055", "verb": "applies to", "to": "SCR-008-09"}
+  - {"op": "add_edge", "from": "REQ-008-056", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-056", "verb": "applies to", "to": "ENT-travel-context.passport_status"}
+  - {"op": "add_edge", "from": "REQ-008-057", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-057", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-057", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-058", "verb": "applies to", "to": "ENT-travel-context.travel_required"}
+  - {"op": "add_edge", "from": "REQ-008-058", "verb": "applies to", "to": "SCR-008-02"}
+  - {"op": "add_edge", "from": "REQ-008-058", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "applies to", "to": "ENT-travel-context.travel_required"}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "applies to", "to": "ENT-travel-context.travel_required_set_at"}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "applies to", "to": "ENT-travel-context.travel_required_set_by"}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-060", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-060", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-061", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-061", "verb": "applies to", "to": "ENT-travel-context.status"}
+  - {"op": "add_edge", "from": "REQ-008-061", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "applies to", "to": "ENT-travel-context.status"}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "applies to", "to": "SCR-008-06"}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "applies to", "to": "EVT-travel-date-review-required"}
+  - {"op": "add_edge", "from": "REQ-008-063", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "SCR-008-06"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "ENT-travel-context.passport_status"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "ENT-travel-context.outbound_flight_status"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "ENT-travel-context.return_flight_status"}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "applies to", "to": "ENT-travel-context.hotel_status"}
+  - {"op": "add_edge", "from": "REQ-008-065", "verb": "applies to", "to": "ENT-passport-record.status"}
+  - {"op": "add_edge", "from": "REQ-008-065", "verb": "applies to", "to": "ENT-travel-context.passport_status"}
+  - {"op": "add_edge", "from": "REQ-008-065", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-066", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-066", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-067", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-067", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-068", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-068", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-068", "verb": "applies to", "to": "ENT-travel-context.passport_status"}
+  - {"op": "add_edge", "from": "REQ-008-069", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-069", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-069", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-070", "verb": "applies to", "to": "ENT-passport-record"}
+  - {"op": "add_edge", "from": "REQ-008-070", "verb": "applies to", "to": "ENT-flight-record"}
+  - {"op": "add_edge", "from": "REQ-008-070", "verb": "applies to", "to": "ENT-hotel-record"}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "applies to", "to": "EVT-travel-request-sent"}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "applies to", "to": "EVT-travel-record-submitted"}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "applies to", "to": "EVT-travel-record-entered"}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "applies to", "to": "EVT-travel-record-corrected"}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "applies to", "to": "EVT-travel-date-review-required"}
+  - {"op": "add_edge", "from": "REQ-008-072", "verb": "applies to", "to": "EVT-travel-date-review-required"}
+  - {"op": "add_edge", "from": "REQ-008-072", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-072", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-072", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-073", "verb": "applies to", "to": "ENT-travel-context"}
+  - {"op": "add_edge", "from": "REQ-008-074", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-075", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-030", "verb": "decided by", "to": "SRC-PO-001-D7"}
+  - {"op": "add_edge", "from": "REQ-008-026", "verb": "decided by", "to": "SRC-PO-001-M2"}
+  - {"op": "add_edge", "from": "REQ-008-063", "verb": "decided by", "to": "SRC-PO-001-M2"}
+  - {"op": "add_edge", "from": "REQ-008-031", "verb": "decided by", "to": "SRC-PO-001-Q17"}
+  - {"op": "add_edge", "from": "REQ-008-008", "verb": "decided by", "to": "SRC-PO-001-Q17"}
+  - {"op": "add_edge", "from": "REQ-008-032", "verb": "decided by", "to": "SRC-PO-001-Q18"}
+  - {"op": "add_edge", "from": "REQ-008-014", "verb": "decided by", "to": "SRC-PO-001-Q21"}
+  - {"op": "add_edge", "from": "REQ-008-033", "verb": "decided by", "to": "SRC-PO-001-Q21"}
+  - {"op": "add_edge", "from": "REQ-008-025", "verb": "decided by", "to": "SRC-PO-001-Q21"}

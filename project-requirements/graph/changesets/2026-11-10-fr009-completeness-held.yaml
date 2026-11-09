@@ -1,0 +1,125 @@
+reason: "FR-009 completeness held operations: Change Team Member Role and Remove Team Member main flows, held until the user rules on who performs them (Needs user decision 3 in plans/reports/tester-261110-fr009-completeness.md). Apply after 2026-11-10-fr009-completeness-fixes.yaml."
+by: tester
+operations:
+  # waits on: no System Actor (system-performed steps lie between this step and the previous human step; no bridging next edge in the fixes file)
+  - {"op": "add_node", "id": "STP-009-002", "type": "Step", "title": "Provider Owner clicks Invite Team Member", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 3"}}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "on", "to": "SCR-009-01"}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "applies", "to": "REQ-009-087"}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "applies", "to": "REQ-009-101"}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "applies", "to": "REQ-009-153"}
+  - {"op": "add_node", "id": "STP-009-003", "type": "Step", "title": "Provider Owner enters the details and selects a non-Owner role", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 5"}}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "on", "to": "SCR-009-02"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "applies", "to": "REQ-009-038"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "applies", "to": "REQ-009-100"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "applies", "to": "REQ-009-147"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "applies", "to": "REQ-009-002"}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "applies", "to": "REQ-009-039"}
+  - {"op": "add_node", "id": "STP-009-004", "type": "Step", "title": "Provider Owner reviews the details and clicks Send Invitation", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 7"}}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "on", "to": "SCR-009-02"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "applies", "to": "REQ-009-039"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "applies", "to": "REQ-009-008"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "applies", "to": "REQ-009-018"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "applies", "to": "REQ-009-148"}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "applies", "to": "REQ-009-101"}
+  - {"op": "add_node", "id": "STP-009-005", "type": "Step", "title": "New team member clicks the invitation link", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 12"}}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "done by", "to": "ACT-team-invitee"}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "on", "to": "SCR-009-07"}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "applies", "to": "REQ-009-043"}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "applies", "to": "REQ-009-016"}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "applies", "to": "REQ-009-112"}
+  - {"op": "add_node", "id": "STP-009-006", "type": "Step", "title": "New team member sets a password and accepts the terms of service", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 15"}}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "done by", "to": "ACT-team-invitee"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "on", "to": "SCR-009-08"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "applies", "to": "REQ-009-044"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "applies", "to": "REQ-009-113"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "applies", "to": "REQ-009-114"}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "applies", "to": "REQ-009-045"}
+  - {"op": "add_node", "id": "STP-009-007", "type": "Step", "title": "New team member logs in with the new credentials", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Invite step 20"}}
+  - {"op": "add_edge", "from": "STP-009-007", "verb": "done by", "to": "ACT-team-invitee"}
+  - {"op": "add_edge", "from": "STP-009-007", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-007", "verb": "applies", "to": "REQ-009-047"}
+  - {"op": "add_edge", "from": "STP-009-007", "verb": "applies", "to": "REQ-009-045"}
+  - {"op": "add_edge", "from": "STP-009-001", "verb": "next", "to": "STP-009-002", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-002", "verb": "next", "to": "STP-009-003", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "next", "to": "STP-009-004", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "next", "to": "STP-009-005", "attrs": {"label": "Invitation sent, invitee opens the link"}}
+  - {"op": "add_edge", "from": "STP-009-005", "verb": "next", "to": "STP-009-006", "attrs": {"label": "Token valid", "condition": "REQ-009-043"}}
+  - {"op": "add_edge", "from": "STP-009-006", "verb": "next", "to": "STP-009-007", "attrs": {}}
+  - {"op": "add_node", "id": "STP-009-009", "type": "Step", "title": "Provider Owner clicks Resend Invitation", "owner_fr": "FR-009", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "on", "to": "SCR-009-01"}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "applies", "to": "REQ-009-048"}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "applies", "to": "REQ-009-089"}
+  - {"op": "add_edge", "from": "STP-009-009", "verb": "applies", "to": "REQ-009-016"}
+  - {"op": "add_edge", "from": "STP-009-008", "verb": "next", "to": "STP-009-009", "attrs": {"label": "Invitation shown as Expired"}}
+  - {"op": "add_edge", "from": "STP-009-003", "verb": "next", "to": "STP-009-010", "attrs": {"label": "Email format invalid", "condition": "REQ-009-050"}}
+  - {"op": "add_edge", "from": "STP-009-004", "verb": "next", "to": "STP-009-011", "attrs": {"label": "Email already in this team", "condition": "REQ-009-051"}}
+  # Waits on Needs user decision 3 (who performs role change and removal: "authorized actor" and "Owner/Admin" are modelled as Owner only)
+  - {"op": "add_node", "id": "STP-009-013", "type": "Step", "title": "Authorized actor views the team management dashboard to change a role", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Change Role step 1"}}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "on", "to": "SCR-009-01"}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "applies", "to": "REQ-009-087"}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "applies", "to": "REQ-009-015"}
+  - {"op": "add_node", "id": "STP-009-014", "type": "Step", "title": "Authorized actor clicks Edit on a team member row", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Change Role step 3"}}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "on", "to": "SCR-009-01"}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "applies", "to": "REQ-009-088"}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "applies", "to": "REQ-009-104"}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "applies", "to": "REQ-009-004"}
+  - {"op": "add_node", "id": "STP-009-015", "type": "Step", "title": "Authorized actor selects a non-Owner or custom role", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Change Role step 5"}}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "on", "to": "SCR-009-03"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "applies", "to": "REQ-009-063"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "applies", "to": "REQ-009-060"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "applies", "to": "REQ-009-056"}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "applies", "to": "REQ-009-061"}
+  - {"op": "add_node", "id": "STP-009-016", "type": "Step", "title": "Authorized actor reviews the comparison and clicks Update Role", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Change Role step 7"}}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "on", "to": "SCR-009-03"}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "applies", "to": "REQ-009-056"}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "applies", "to": "REQ-009-062"}
+  - {"op": "add_edge", "from": "STP-009-016", "verb": "applies", "to": "REQ-009-015"}
+  - {"op": "add_node", "id": "FLW-009-change-team-member-role", "type": "Flow", "title": "Main Flow: Change Team Member Role", "attrs": {"kind": "main", "description": "Main Flow: Change Team Member Role", "prd_ref": "Main Flow: Change Team Member Role"}}
+  - {"op": "add_edge", "from": "FLW-009-change-team-member-role", "verb": "starts at", "to": "STP-009-013"}
+  - {"op": "add_edge", "from": "STP-009-013", "verb": "next", "to": "STP-009-014", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-014", "verb": "next", "to": "STP-009-015", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-015", "verb": "next", "to": "STP-009-016", "attrs": {}}
+  # Waits on Needs user decision 3 (who performs role change and removal: "authorized actor" and "Owner/Admin" are modelled as Owner only)
+  - {"op": "add_node", "id": "STP-009-017", "type": "Step", "title": "Owner or Admin clicks Remove on a team member row", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Remove step 1"}}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "on", "to": "SCR-009-01"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "applies", "to": "REQ-009-005"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "applies", "to": "REQ-009-079"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "applies", "to": "REQ-009-087"}
+  - {"op": "add_node", "id": "STP-009-018", "type": "Step", "title": "Owner or Admin selects a reassignment target or Archive unassigned", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Remove step 5"}}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "on", "to": "SCR-009-04"}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "applies", "to": "REQ-009-068"}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "applies", "to": "REQ-009-080"}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "applies", "to": "REQ-009-067"}
+  - {"op": "add_node", "id": "STP-009-019", "type": "Step", "title": "Owner or Admin confirms the removal", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Remove step 6"}}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "done by", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "on", "to": "SCR-009-04"}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "applies", "to": "REQ-009-005"}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "applies", "to": "REQ-009-083"}
+  - {"op": "add_node", "id": "FLW-009-remove-team-member", "type": "Flow", "title": "Main Flow: Remove Team Member", "attrs": {"kind": "main", "description": "Main Flow: Remove Team Member", "prd_ref": "Main Flow: Remove Team Member"}}
+  - {"op": "add_edge", "from": "FLW-009-remove-team-member", "verb": "starts at", "to": "STP-009-017"}
+  - {"op": "add_edge", "from": "STP-009-017", "verb": "next", "to": "STP-009-018", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-018", "verb": "next", "to": "STP-009-019", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-009-019", "verb": "next", "to": "STP-009-012", "attrs": {"label": "Member has active patient conversations", "condition": "REQ-009-077"}}
