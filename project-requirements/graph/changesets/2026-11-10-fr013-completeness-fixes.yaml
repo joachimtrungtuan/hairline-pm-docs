@@ -1,0 +1,324 @@
+reason: "FR-013 completeness fixes: applies to links for all 74 Rules, the verbatim takedown retention notice as REQ-013-075, references to the FR-022, FR-020, FR-030, FR-014, FR-032 and FR-015 Rules the PRD cites, and the human-performed Steps of the Main Flow and flows A1 to A4 and B1 with their Flows. Steps the PRD gives to the system are in the held file."
+by: tester
+operations:
+  - {"op": "add_node", "id": "REQ-013-075", "type": "Rule", "owner_fr": "FR-013", "title": "Takedown retention notice text", "attrs": {"statement": "Review content will be removed from public view but archived for a 7-year minimum (medical-records retention). Audit records of this takedown are retained for 10 years (audit-log policy).", "rationale": "Verbatim from the frozen PRD: Screen 3 Retention notice (PRD line 246). REQ-013-020 requires the notice; this Rule carries its text, including the 10-year audit sentence."}}
+  - {"op": "add_edge", "from": "REQ-013-075", "verb": "applies at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-001", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-001", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-001", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-002", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-002", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-002", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-003", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-003", "verb": "applies to", "to": "EVT-review-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-004", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-004", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-004", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-005", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-005", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-005", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-005", "verb": "applies to", "to": "EVT-takedown-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-005", "verb": "applies to", "to": "EVT-takedown-decided", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-006", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-006", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-006", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-006", "verb": "applies to", "to": "ENT-provider-review-summary", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-006", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-007", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-008", "verb": "applies to", "to": "ENT-provider-review-summary", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-008", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-008", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-009", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-009", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-009", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-009", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-010", "verb": "applies to", "to": "ENT-review.patient_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-010", "verb": "applies to", "to": "ENT-review.provider_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-010", "verb": "applies to", "to": "ENT-review.procedure_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-011", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-012", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-013", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-013", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-013", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-013", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-014", "verb": "applies to", "to": "ENT-review.reviewer_name", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-014", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-014", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-014", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-015", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-015", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-016", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-016", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-016", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-016", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-review-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-provider-response-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-review-removed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-takedown-decided", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-review-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-017", "verb": "applies to", "to": "EVT-takedown-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-018", "verb": "applies to", "to": "ENT-provider-review-summary", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-019", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-019", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-019", "verb": "applies to", "to": "ENT-review.admin_removal_reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-020", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-020", "verb": "applies to", "to": "ENT-takedown-request.reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-020", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-021", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-021", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-021", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-022", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-022", "verb": "applies to", "to": "ENT-review-settings", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-022", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-023", "verb": "applies to", "to": "ENT-provider-treatment-review-summary", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-024", "verb": "applies to", "to": "EVT-review-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-025", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-025", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-025", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-026", "verb": "applies to", "to": "ENT-review.rating", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-026", "verb": "applies to", "to": "ENT-review.review_text", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-026", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-027", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-028", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-028", "verb": "applies to", "to": "ENT-review.photos", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-028", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-029", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-029", "verb": "applies to", "to": "ENT-review-settings.photo_guidelines", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-030", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-030", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-030", "verb": "applies to", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-030", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-031", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-031", "verb": "applies to", "to": "ENT-provider-review-summary", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-031", "verb": "applies to", "to": "EVT-review-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-032", "verb": "applies to", "to": "ENT-review.last_edited_at", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-032", "verb": "applies to", "to": "ENT-review.edit_count", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-032", "verb": "applies to", "to": "EVT-review-edited", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-032", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-032", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "ENT-review.last_edited_at", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-033", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-034", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-034", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-034", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-034", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-035", "verb": "applies to", "to": "ENT-review.source_type", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-035", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-035", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-035", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-036", "verb": "applies to", "to": "ENT-review-source-metadata", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-036", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-036", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-037", "verb": "applies to", "to": "ENT-review-source-metadata", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-037", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-037", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-038", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-038", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-038", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-039", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-039", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-039", "verb": "applies to", "to": "ENT-review.admin_removal_reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-039", "verb": "applies to", "to": "ENT-admin-action.reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-040", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-040", "verb": "applies to", "to": "ENT-takedown-request.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-040", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-041", "verb": "applies to", "to": "SCR-013-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-041", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-042", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-042", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-043", "verb": "applies to", "to": "ENT-takedown-request.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-043", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-044", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-044", "verb": "applies to", "to": "EVT-takedown-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-045", "verb": "applies to", "to": "ENT-takedown-request.reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-045", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-046", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-046", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-046", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-046", "verb": "applies to", "to": "EVT-takedown-decided", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-046", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-047", "verb": "applies to", "to": "ENT-takedown-request.decision_note", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-047", "verb": "applies to", "to": "ENT-review.admin_removal_reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-047", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-048", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-048", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-048", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-048", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-049", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-050", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-050", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-050", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-050", "verb": "applies to", "to": "ENT-review-settings", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-050", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-051", "verb": "applies to", "to": "ENT-review.review_text", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-051", "verb": "applies to", "to": "ENT-review.photos", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-051", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-051", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "ENT-review.reviewer_name", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "ENT-review-source-metadata.reviewer_display_name", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "ENT-review-settings.display_policy", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-052", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-053", "verb": "applies to", "to": "ENT-review.rating", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-053", "verb": "applies to", "to": "ENT-provider-review-summary.average_rating", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-054", "verb": "applies to", "to": "ENT-provider-response.response_text", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-054", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-055", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-055", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-055", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-055", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-056", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-056", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-056", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-057", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-057", "verb": "applies to", "to": "ENT-provider-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-057", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-057", "verb": "applies to", "to": "EVT-provider-response-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-058", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-058", "verb": "applies to", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-058", "verb": "applies to", "to": "ENT-review.procedure_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-059", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-059", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-059", "verb": "applies to", "to": "ENT-review.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-060", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-061", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-062", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-063", "verb": "applies to", "to": "SCR-013-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-064", "verb": "applies to", "to": "SCR-013-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-064", "verb": "applies to", "to": "ENT-review-photo", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-065", "verb": "applies to", "to": "SCR-013-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-065", "verb": "applies to", "to": "ENT-review", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-066", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-066", "verb": "applies to", "to": "ENT-review-settings", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-066", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-066", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-067", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-067", "verb": "applies to", "to": "ENT-review-settings", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-068", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-068", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-069", "verb": "applies to", "to": "ENT-review-settings.flagging_thresholds", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-069", "verb": "applies to", "to": "ENT-review-settings.takedown_sla", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-069", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "ENT-review-settings.category_labels", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "ENT-review-settings.photo_guidelines", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "ENT-review-settings.removal_reasons", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "ENT-review-settings.display_policy", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "SCR-013-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-070", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-071", "verb": "applies to", "to": "ENT-review-settings.photo_guidelines", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-071", "verb": "applies to", "to": "ENT-admin-action", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-072", "verb": "applies to", "to": "ENT-review-settings.removal_reasons", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-073", "verb": "applies to", "to": "ENT-review.flagged_status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-073", "verb": "applies to", "to": "ENT-review.flag_reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-073", "verb": "applies to", "to": "SCR-013-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-073", "verb": "applies to", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-073", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-074", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-074", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-074", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-075", "verb": "applies to", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-075", "verb": "applies to", "to": "ENT-takedown-request", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-013-075", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-022-092", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-022-093", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-020-131", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-020-132", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-020-133", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-020-134", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-020-135", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-030-086", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-030-087", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-030-088", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-030-089", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-030-090", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-014-207", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-014-284", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-032-050", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-015-117", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-013-main", "type": "Flow", "title": "Main Flow: Patient Submits a Review", "attrs": {"kind": "main", "description": "Main Flow: Patient Submits a Review", "prd_ref": "Main Flow"}}
+  - {"op": "add_node", "id": "FLW-013-admin-inserts-authenticated-review", "type": "Flow", "title": "A1: Admin Inserts Authenticated Review", "attrs": {"kind": "alternative", "description": "A1: Admin Inserts Authenticated Review", "prd_ref": "A1"}}
+  - {"op": "add_node", "id": "FLW-013-admin-edits-review", "type": "Flow", "title": "A2: Admin Edits Existing Review", "attrs": {"kind": "alternative", "description": "A2: Admin Edits Existing Review", "prd_ref": "A2"}}
+  - {"op": "add_node", "id": "FLW-013-patient-submits-takedown-request", "type": "Flow", "title": "A3: Patient Submits Takedown Request", "attrs": {"kind": "alternative", "description": "A3: Patient Submits Takedown Request", "prd_ref": "A3"}}
+  - {"op": "add_node", "id": "FLW-013-admin-processes-takedown-request", "type": "Flow", "title": "A4: Admin Processes Takedown Request", "attrs": {"kind": "alternative", "description": "A4: Admin Processes Takedown Request", "prd_ref": "A4"}}
+  - {"op": "add_node", "id": "FLW-013-provider-responds-to-review", "type": "Flow", "title": "B1: Provider Response", "attrs": {"kind": "alternative", "description": "B1: Provider Response", "prd_ref": "B1"}}
+  - {"op": "add_node", "id": "STP-013-001", "type": "Step", "owner_fr": "FR-013", "title": "Patient completes ratings, feedback and optional photos", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "on", "to": "SCR-013-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "applies", "to": "REQ-013-001", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "applies", "to": "REQ-013-026", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "applies", "to": "REQ-013-028", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-011", "type": "Step", "owner_fr": "FR-013", "title": "Admin enters the review payload with source evidence", "attrs": {"prd_ref": "A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "applies", "to": "REQ-013-035", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "applies", "to": "REQ-013-036", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "applies", "to": "REQ-013-037", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-021", "type": "Step", "owner_fr": "FR-013", "title": "Admin opens review detail and applies edits or redactions", "attrs": {"prd_ref": "A2 step 1"}}
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "applies", "to": "REQ-013-038", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "applies", "to": "REQ-013-039", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-031", "type": "Step", "owner_fr": "FR-013", "title": "Patient taps Request Takedown and the confirmation sheet opens", "attrs": {"prd_ref": "A3 step 1"}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "on", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "applies", "to": "REQ-013-005", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "applies", "to": "REQ-013-020", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "applies", "to": "REQ-013-042", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-032", "type": "Step", "owner_fr": "FR-013", "title": "Patient enters the required takedown reason and confirms", "attrs": {"prd_ref": "A3 step 2"}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "on", "to": "SCR-013-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "applies", "to": "REQ-013-020", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "applies", "to": "REQ-013-045", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "applies", "to": "REQ-013-075", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-041", "type": "Step", "owner_fr": "FR-013", "title": "Admin reviews the request reason, review content and compliance context", "attrs": {"prd_ref": "A4 step 1"}}
+  - {"op": "add_edge", "from": "STP-013-041", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-041", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-041", "verb": "on", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-041", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-042", "type": "Step", "owner_fr": "FR-013", "title": "Admin approves or rejects the request with a decision note", "attrs": {"prd_ref": "A4 step 2"}}
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "on", "to": "SCR-013-09", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "applies", "to": "REQ-013-047", "attrs": {}}
+  - {"op": "add_node", "id": "STP-013-051", "type": "Step", "owner_fr": "FR-013", "title": "Provider opens Review Detail and taps Respond as Provider", "attrs": {"prd_ref": "B1 step 1"}}
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "applies", "to": "REQ-013-021", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "applies", "to": "REQ-013-057", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-main", "verb": "starts at", "to": "STP-013-001", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-admin-inserts-authenticated-review", "verb": "starts at", "to": "STP-013-011", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-admin-edits-review", "verb": "starts at", "to": "STP-013-021", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-patient-submits-takedown-request", "verb": "starts at", "to": "STP-013-031", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-admin-processes-takedown-request", "verb": "starts at", "to": "STP-013-041", "attrs": {}}
+  - {"op": "add_edge", "from": "FLW-013-provider-responds-to-review", "verb": "starts at", "to": "STP-013-051", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-013-031", "verb": "next", "to": "STP-013-032", "attrs": {"label": "patient confirms the takedown sheet"}}
+  - {"op": "add_edge", "from": "STP-013-041", "verb": "next", "to": "STP-013-042", "attrs": {"label": "admin reviews the request"}}

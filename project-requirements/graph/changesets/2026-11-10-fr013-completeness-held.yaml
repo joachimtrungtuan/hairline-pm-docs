@@ -1,0 +1,243 @@
+reason: "FR-013 completeness fixes held: system-performed Steps (no System Actor in the graph), human Steps reachable only through them, the flagged-content Flow, every link touching them, and the takedown queue filter Rule that waits on wording review."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "FLW-013-flagged-content-review", "type": "Flow", "title": "B2: Flagging/Inappropriate Content", "attrs": {"kind": "alternative", "description": "B2: Flagging/Inappropriate Content", "prd_ref": "B2"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-002", "type": "Step", "owner_fr": "FR-013", "title": "System validates inputs and verifies eligibility", "attrs": {"prd_ref": "Main Flow step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "applies", "to": "REQ-013-002", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "applies", "to": "REQ-013-025", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "applies", "to": "REQ-013-026", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "applies", "to": "REQ-013-028", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-003", "type": "Step", "owner_fr": "FR-013", "title": "System publishes or republishes the review and recalculates provider rating metrics", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "applies", "to": "REQ-013-003", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "applies", "to": "REQ-013-008", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "applies", "to": "REQ-013-018", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "applies", "to": "REQ-013-031", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-004", "type": "Step", "owner_fr": "FR-013", "title": "System re-runs flagging, tracks the edit, writes the audit record and notifies the provider on edit", "attrs": {"prd_ref": "Main Flow step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "applies", "to": "REQ-013-017", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "applies", "to": "REQ-013-032", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "applies", "to": "REQ-013-050", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "applies", "to": "REQ-013-073", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-005", "type": "Step", "owner_fr": "FR-013", "title": "Patient sees the confirmation and the live review with the Edited marker", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-005", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-005", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-005", "verb": "applies", "to": "REQ-013-033", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-005", "verb": "applies", "to": "REQ-013-034", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-012", "type": "Step", "owner_fr": "FR-013", "title": "System validates fields and stores source provenance", "attrs": {"prd_ref": "A1 step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-012", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-012", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-012", "verb": "applies", "to": "REQ-013-036", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-012", "verb": "applies", "to": "REQ-013-038", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-013", "type": "Step", "owner_fr": "FR-013", "title": "System publishes the review flagged Verified Off-platform", "attrs": {"prd_ref": "A1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-013", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-013", "verb": "applies", "to": "REQ-013-003", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-013", "verb": "applies", "to": "REQ-013-035", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-022", "type": "Step", "owner_fr": "FR-013", "title": "System records before and after values, reason and admin identity", "attrs": {"prd_ref": "A2 step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-022", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-022", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-022", "verb": "applies", "to": "REQ-013-038", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-022", "verb": "applies", "to": "REQ-013-050", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-033", "type": "Step", "owner_fr": "FR-013", "title": "System records the reason, creates the Pending takedown request and links it to the review and case", "attrs": {"prd_ref": "A3 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-033", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-033", "verb": "applies", "to": "REQ-013-043", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-033", "verb": "applies", "to": "REQ-013-044", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-034", "type": "Step", "owner_fr": "FR-013", "title": "System notifies the admin takedown queue", "attrs": {"prd_ref": "A3 step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-034", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-034", "verb": "applies", "to": "REQ-013-017", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-034", "verb": "applies", "to": "REQ-013-044", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-043", "type": "Step", "owner_fr": "FR-013", "title": "System applies the decision: unpublish and recalculate, or keep the review published", "attrs": {"prd_ref": "A4 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "applies", "to": "REQ-013-016", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "applies", "to": "REQ-013-031", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "applies", "to": "REQ-013-043", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-044", "type": "Step", "owner_fr": "FR-013", "title": "System notifies the patient of the decision and reason", "attrs": {"prd_ref": "A4 step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-044", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-044", "verb": "applies", "to": "REQ-013-017", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-044", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-052", "type": "Step", "owner_fr": "FR-013", "title": "System opens the inline response composer within Screen 6", "attrs": {"prd_ref": "B1 step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-052", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-052", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-052", "verb": "applies", "to": "REQ-013-021", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-053", "type": "Step", "owner_fr": "FR-013", "title": "Provider writes the response", "attrs": {"prd_ref": "B1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "applies", "to": "REQ-013-054", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-054", "type": "Step", "owner_fr": "FR-013", "title": "System validates response length and policy", "attrs": {"prd_ref": "B1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-054", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-054", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-054", "verb": "applies", "to": "REQ-013-054", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-054", "verb": "applies", "to": "REQ-013-055", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-055", "type": "Step", "owner_fr": "FR-013", "title": "Provider confirms the response submission", "attrs": {"prd_ref": "B1 step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-055", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-055", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-055", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-055", "verb": "applies", "to": "REQ-013-057", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-056", "type": "Step", "owner_fr": "FR-013", "title": "System publishes the response under provider identity", "attrs": {"prd_ref": "B1 step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "on", "to": "SCR-013-06", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "applies", "to": "REQ-013-055", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "applies", "to": "REQ-013-056", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "applies", "to": "REQ-013-057", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-056", "verb": "applies", "to": "REQ-013-017", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-061", "type": "Step", "owner_fr": "FR-013", "title": "System queues flagged content for admin review", "attrs": {"prd_ref": "B2 steps"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-061", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-061", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-061", "verb": "applies", "to": "REQ-013-069", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-061", "verb": "applies", "to": "REQ-013-073", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-013-062", "type": "Step", "owner_fr": "FR-013", "title": "Admin redacts, unpublishes or upholds the flagged content", "attrs": {"prd_ref": "B2 steps"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "on", "to": "SCR-013-08", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "applies", "to": "REQ-013-016", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "applies", "to": "REQ-013-050", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "applies", "to": "REQ-013-051", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-062", "verb": "applies", "to": "REQ-013-073", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "FLW-013-flagged-content-review", "verb": "starts at", "to": "STP-013-061", "attrs": {}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "next", "to": "STP-013-002", "attrs": {"label": "patient submits"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-002", "verb": "next", "to": "STP-013-003", "attrs": {"label": "inputs valid and patient eligible"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "next", "to": "STP-013-004", "attrs": {"label": "the action is an edit of a published review"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-003", "verb": "next", "to": "STP-013-005", "attrs": {"label": "initial submission"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-004", "verb": "next", "to": "STP-013-005", "attrs": {"label": "edit republished"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-011", "verb": "next", "to": "STP-013-012", "attrs": {"label": "admin submits the payload"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-012", "verb": "next", "to": "STP-013-013", "attrs": {"label": "fields valid"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-021", "verb": "next", "to": "STP-013-022", "attrs": {"label": "admin saves the edit"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-032", "verb": "next", "to": "STP-013-033", "attrs": {"label": "patient confirms the request"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-033", "verb": "next", "to": "STP-013-034", "attrs": {"label": "request created"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-042", "verb": "next", "to": "STP-013-043", "attrs": {"label": "admin approves or rejects"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-043", "verb": "next", "to": "STP-013-044", "attrs": {"label": "decision applied"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-051", "verb": "next", "to": "STP-013-052", "attrs": {"label": "provider taps Respond as Provider"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-052", "verb": "next", "to": "STP-013-053", "attrs": {"label": "composer opened"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "next", "to": "STP-013-054", "attrs": {"label": "provider enters text"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-054", "verb": "next", "to": "STP-013-055", "attrs": {"label": "response valid"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-055", "verb": "next", "to": "STP-013-056", "attrs": {"label": "provider confirms"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-013-061", "verb": "next", "to": "STP-013-062", "attrs": {"label": "content flagged by the system"}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-013-076", "type": "Rule", "owner_fr": "FR-013", "title": "Takedown request queue filter", "attrs": {"statement": "The takedown request queue is filterable by status and date.", "rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 436); wording awaits user review."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.status", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.created_at", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
