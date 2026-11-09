@@ -1,6 +1,6 @@
 # Review checklists
 
-Version: 1.3 (2026-11-09)
+Version: 1.5 (2026-11-10)
 
 Every repeated review or migration task in the requirements graph programme runs from a checklist file in this folder. The checklists exist so that quality does not depend on what is still in a conversation: an agent that has lost its context after compaction or a handoff re-reads the file and continues with the same rules.
 
@@ -40,3 +40,5 @@ From `plans/261108-1040-requirements-graph-programme/plan.md`: the DB is the onl
 - 1.1 (2026-11-08): `completeness-check.md` and `agent-brief-template.md` to 1.1 after the FR-005 dry run; `migrate-fr.md` and `source-priority.md` stay at 1.0.
 - 1.2 (2026-11-09): `migrate-fr.md` to 1.1 (CRs no longer read during migration; PRD is the only source).
 - 1.3 (2026-11-09): `prd-audit.md` and `prd-structure.md` listed; `prd-structure.md` approved at 1.0 (compressed PRD model, D35).
+- 1.4 (2026-11-09): `migrate-fr.md` and `completeness-check.md` to 1.2 for schema v5 (D38): `applies to` links, `scope: global`, `references`, system PRD home FR-SYS.
+- 1.5 (2026-11-10): `migrate-fr.md` and `completeness-check.md` to 1.3 for schema v6 (D42): flow Steps, Flows and hand-offs; several emitting stages per Event; Product Owner decision Sources; the completeness check writes the D37 review step 1 fix change-set.
