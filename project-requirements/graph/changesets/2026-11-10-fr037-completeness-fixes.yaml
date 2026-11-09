@@ -1,0 +1,423 @@
+reason: "FR-037 completeness fixes: human-performed Steps and four entry-point Flows for the Unified Flow, applies to links for all 85 Rules, and two shows links for the superseding window. Steps the PRD gives to the system are in the held file."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "REQ-037-001", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-001", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-001", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-002", "verb": "applies to", "to": "ENT-monitoring-case.mode", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-002", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-002", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-003", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-003", "verb": "applies to", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-003", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-004", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-004", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-004", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-005", "verb": "applies to", "to": "ENT-monitoring-case.medical_questionnaire_snapshot", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-005", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-005", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-006", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-006", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-006", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-006", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-007", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-007", "verb": "applies to", "to": "SCR-037-13", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-007", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-007", "verb": "applies to", "to": "EVT-monitoring-provider-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-008", "verb": "applies to", "to": "ENT-monitoring-case.cadence_at_creation", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-008", "verb": "applies to", "to": "ENT-monitoring-advice-window.cadence_snapshot", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-008", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-008", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-009", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-009", "verb": "applies to", "to": "SCR-037-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-009", "verb": "applies to", "to": "SCR-037-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-009", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-010", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-010", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-010", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-011", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-011", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-011", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-012", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-012", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-012", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-013", "verb": "applies to", "to": "ENT-monitoring-advice-window", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-013", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-013", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-014", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-014", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-014", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-014", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-015", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-015", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-015", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-016", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-016", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-016", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-016", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-11", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-16", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "SCR-037-17", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-017", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-018", "verb": "applies to", "to": "ENT-monitoring-case-preview", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-018", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-018", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-018", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-019", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-019", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-020", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-020", "verb": "applies to", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-021", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-021", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-021", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-022", "verb": "applies to", "to": "ENT-monitoring-conversion.selected_scan_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-022", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-022", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-022", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-023", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-023", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-023", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-023", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-024", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-024", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-024", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-025", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-025", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-025", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-025", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-026", "verb": "applies to", "to": "ENT-monitoring-audit-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-027", "verb": "applies to", "to": "ENT-monitoring-audit-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-027", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "ENT-patient.anonymized_id", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "SCR-037-10", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "SCR-037-11", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "SCR-037-13", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-028", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-029", "verb": "applies to", "to": "ENT-monitoring-conversion.provider_routing", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-029", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-029", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-029", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-030", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-030", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-030", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-030", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-030", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-031", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-032", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-032", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-033", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-033", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-033", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "SCR-003-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-034", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-035", "verb": "applies to", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-035", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-035", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-036", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-036", "verb": "applies to", "to": "EVT-monitoring-assignment-pending", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-037", "verb": "applies to", "to": "ENT-monitoring-case.mode", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-037", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-037", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-038", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-038", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-038", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-039", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-039", "verb": "applies to", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-040", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-040", "verb": "applies to", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-040", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-041", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-041", "verb": "applies to", "to": "ENT-monitoring-case.logged_days", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-041", "verb": "applies to", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-042", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-042", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-042", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-042", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-043", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-043", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-043", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-044", "verb": "applies to", "to": "SCR-037-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-044", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-044", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-045", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-045", "verb": "applies to", "to": "SCR-037-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-046", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-046", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-046", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-047", "verb": "applies to", "to": "ENT-medical-questionnaire-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-048", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-049", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-050", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-050", "verb": "applies to", "to": "SCR-037-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-051", "verb": "applies to", "to": "ENT-monitoring-case-preview", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-051", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-051", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-052", "verb": "applies to", "to": "SCR-037-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-052", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-053", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-053", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-053", "verb": "applies to", "to": "SCR-037-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-054", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-054", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-055", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-055", "verb": "applies to", "to": "SCR-037-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-056", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-056", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-057", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-057", "verb": "applies to", "to": "SCR-037-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-057", "verb": "applies to", "to": "SCR-037-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-058", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-058", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-058", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-059", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-059", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-059", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-060", "verb": "applies to", "to": "SCR-037-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-060", "verb": "applies to", "to": "ENT-monitoring-conversion.provider_routing", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-061", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-061", "verb": "applies to", "to": "ENT-medical-questionnaire-response", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-061", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-062", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-062", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-062", "verb": "applies to", "to": "ENT-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-063", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-063", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-064", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-064", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-064", "verb": "applies to", "to": "SCR-037-08", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-064", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-065", "verb": "applies to", "to": "ENT-monitoring-export", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-065", "verb": "applies to", "to": "ENT-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-066", "verb": "applies to", "to": "ENT-monitoring-provider-assignment.withdrawal_reason", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-066", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-067", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-067", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-067", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-067", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-067", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-068", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-068", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-068", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-069", "verb": "applies to", "to": "ENT-monitoring-conversion.provider_routing", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-069", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-070", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-070", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-071", "verb": "applies to", "to": "ENT-monitoring-case-preview", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-071", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-071", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-scan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "SCR-037-15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "SCR-037-16", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "SCR-037-17", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-072", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-073", "verb": "applies to", "to": "ENT-monitoring-case.mode", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-073", "verb": "applies to", "to": "ENT-monitoring-conversion", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-074", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-074", "verb": "applies to", "to": "SCR-037-17", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-074", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-075", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-075", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-075", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-076", "verb": "applies to", "to": "ENT-monitoring-entry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-076", "verb": "applies to", "to": "SCR-037-11", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-076", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-077", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-077", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-077", "verb": "applies to", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-077", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "EVT-monitoring-provider-assigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "EVT-monitoring-provider-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "EVT-monitoring-provider-reassigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "EVT-monitoring-advice-posted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-078", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-advice-posted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-assignment-pending", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-converted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-export-ready", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-provider-assigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-provider-reassigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-079", "verb": "applies to", "to": "EVT-monitoring-provider-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-080", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-080", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-081", "verb": "applies to", "to": "ENT-monitoring-advice-window.availability", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-081", "verb": "applies to", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-081", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-082", "verb": "applies to", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-082", "verb": "applies to", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-083", "verb": "applies to", "to": "ENT-monitoring-advice", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-083", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-084", "verb": "applies to", "to": "ENT-monitoring-case", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-084", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-037-085", "verb": "applies to", "to": "ENT-monitoring-provider-assignment", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-001", "type": "Step", "owner_fr": "FR-037", "title": "Patient selects Monitor Your Hair Loss", "attrs": {"prd_ref": "Unified Flow: patient chooses Monitor Your Hair Loss"}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "on", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "applies", "to": "REQ-037-034", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "applies", "to": "REQ-037-001", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-002", "type": "Step", "owner_fr": "FR-037", "title": "Patient completes the concern intake and selects a monitoring mode", "attrs": {"prd_ref": "Unified Flow: concern intake and mode"}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "on", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "applies", "to": "REQ-037-035", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "applies", "to": "REQ-037-002", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "applies", "to": "REQ-037-024", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-003", "type": "Step", "owner_fr": "FR-037", "title": "Patient completes the FR-025 Inquiry medical questionnaire for provider-advice mode", "attrs": {"prd_ref": "Unified Flow: provider-advice mode questionnaire"}}
+  - {"op": "add_edge", "from": "STP-037-003", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-003", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-003", "verb": "on", "to": "SCR-037-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-003", "verb": "applies", "to": "REQ-037-005", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-004", "type": "Step", "owner_fr": "FR-037", "title": "Patient opens the active case dashboard and calendar", "attrs": {"prd_ref": "Unified Flow: case hub"}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "on", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "applies", "to": "REQ-037-004", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "applies", "to": "REQ-037-012", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "applies", "to": "REQ-037-080", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "applies", "to": "REQ-037-042", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "applies", "to": "REQ-037-043", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-005", "type": "Step", "owner_fr": "FR-037", "title": "Patient adds a log entry", "attrs": {"prd_ref": "Unified Flow: log entry"}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "on", "to": "SCR-037-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "applies", "to": "REQ-037-003", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "applies", "to": "REQ-037-039", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "applies", "to": "REQ-037-040", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "applies", "to": "REQ-037-041", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "applies", "to": "REQ-037-020", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-006", "type": "Step", "owner_fr": "FR-037", "title": "Patient captures a head scan photo set", "attrs": {"prd_ref": "Unified Flow: head scan"}}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "on", "to": "SCR-037-04", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "applies", "to": "REQ-037-044", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "applies", "to": "REQ-037-045", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-007", "type": "Step", "owner_fr": "FR-037", "title": "Patient selects End Monitoring", "attrs": {"prd_ref": "Unified Flow: end monitoring"}}
+  - {"op": "add_edge", "from": "STP-037-007", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-007", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-007", "verb": "on", "to": "SCR-037-05", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-007", "verb": "applies", "to": "REQ-037-052", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-007", "verb": "applies", "to": "REQ-037-080", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-008", "type": "Step", "owner_fr": "FR-037", "title": "Patient selects Request Treatment", "attrs": {"prd_ref": "Unified Flow: request treatment"}}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "on", "to": "SCR-037-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "applies", "to": "REQ-037-080", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "applies", "to": "REQ-037-058", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-009", "type": "Step", "owner_fr": "FR-037", "title": "Provider opens an assigned case from the queue", "attrs": {"prd_ref": "Unified Flow: provider opens case"}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "on", "to": "SCR-037-09", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-038", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-016", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-028", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-025", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-010", "type": "Step", "owner_fr": "FR-037", "title": "Provider reviews the case", "attrs": {"prd_ref": "Unified Flow: provider reviews case"}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "on", "to": "SCR-037-10", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "applies", "to": "REQ-037-017", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "applies", "to": "REQ-037-046", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "applies", "to": "REQ-037-076", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "applies", "to": "REQ-037-028", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-011", "type": "Step", "owner_fr": "FR-037", "title": "Provider posts one advice paragraph", "attrs": {"prd_ref": "Unified Flow: provider posts advice"}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "on", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "applies", "to": "REQ-037-013", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "applies", "to": "REQ-037-014", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "applies", "to": "REQ-037-075", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-011", "verb": "applies", "to": "REQ-037-077", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-012", "type": "Step", "owner_fr": "FR-037", "title": "Provider edits submitted advice", "attrs": {"prd_ref": "Unified Flow: provider edits advice"}}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "on", "to": "SCR-037-12", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "applies", "to": "REQ-037-015", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "applies", "to": "REQ-037-077", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-013", "type": "Step", "owner_fr": "FR-037", "title": "Provider withdraws with a reason", "attrs": {"prd_ref": "Unified Flow: provider withdraws"}}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "on", "to": "SCR-037-13", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "applies", "to": "REQ-037-007", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "applies", "to": "REQ-037-066", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-014", "type": "Step", "owner_fr": "FR-037", "title": "Admin opens a case awaiting assignment or reassignment", "attrs": {"prd_ref": "Unified Flow: admin assignment gate"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "on", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "applies", "to": "REQ-037-016", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "applies", "to": "REQ-037-070", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-015", "type": "Step", "owner_fr": "FR-037", "title": "Admin shares a read-only case preview with a candidate provider", "attrs": {"prd_ref": "Unified Flow: admin shares preview"}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "on", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "applies", "to": "REQ-037-018", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "applies", "to": "REQ-037-019", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "applies", "to": "REQ-037-051", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "applies", "to": "REQ-037-071", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-016", "type": "Step", "owner_fr": "FR-037", "title": "Admin selects the eligible provider for the initial assignment", "attrs": {"prd_ref": "Unified Flow: admin selects provider"}}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "on", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "applies", "to": "REQ-037-006", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "applies", "to": "REQ-037-068", "attrs": {}}
+  - {"op": "add_node", "id": "STP-037-017", "type": "Step", "owner_fr": "FR-037", "title": "Admin reviews withdrawal history and assigns a replacement provider", "attrs": {"prd_ref": "Unified Flow: admin reassigns provider"}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "on", "to": "SCR-037-14", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "applies", "to": "REQ-037-006", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "applies", "to": "REQ-037-067", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-017", "verb": "applies", "to": "REQ-037-068", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "next", "to": "STP-037-002", "attrs": {"label": "no active case exists"}}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "next", "to": "STP-037-003", "attrs": {"label": "provider-advice mode selected", "condition": "REQ-037-005"}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "next", "to": "STP-037-005", "attrs": {"label": "patient adds a log"}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "next", "to": "STP-037-007", "attrs": {"label": "patient ends monitoring"}}
+  - {"op": "add_edge", "from": "STP-037-004", "verb": "next", "to": "STP-037-008", "attrs": {"label": "patient requests treatment"}}
+  - {"op": "add_edge", "from": "STP-037-005", "verb": "next", "to": "STP-037-006", "attrs": {"label": "patient adds a head scan"}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-010", "attrs": {"label": "provider reviews the case"}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-011", "attrs": {"label": "provider posts advice"}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-012", "attrs": {"label": "provider edits advice"}}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-013", "attrs": {"label": "provider withdraws"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-015", "attrs": {"label": "admin shares a preview"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-016", "attrs": {"label": "admin selects a provider for the initial assignment"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-017", "attrs": {"label": "admin assigns a replacement"}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "next", "to": "STP-037-016", "attrs": {"label": "candidate accepts"}}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "next", "to": "STP-037-014", "attrs": {"label": "candidate declines or the link expires"}}
+  - {"op": "add_node", "id": "FLW-037-main", "type": "Flow", "title": "Patient starts monitoring and completes intake", "attrs": {"kind": "main", "description": "Entry branch: patient selects Monitor Your Hair Loss and completes the concern intake.", "prd_ref": "Unified Flow, Entry Points"}}
+  - {"op": "add_edge", "from": "FLW-037-main", "verb": "starts at", "to": "STP-037-001", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-037-active-case", "type": "Flow", "title": "Patient works an active monitoring case", "attrs": {"kind": "main", "description": "Entry branch: patient opens an existing active case from the dashboard and logs, scans, ends monitoring or requests treatment.", "prd_ref": "Unified Flow, Entry Points"}}
+  - {"op": "add_edge", "from": "FLW-037-active-case", "verb": "starts at", "to": "STP-037-004", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-037-provider-advice", "type": "Flow", "title": "Provider works an assigned monitoring case", "attrs": {"kind": "main", "description": "Entry branch: an assigned provider opens the case from the queue and reviews, advises, edits advice or withdraws.", "prd_ref": "Unified Flow, Entry Points"}}
+  - {"op": "add_edge", "from": "FLW-037-provider-advice", "verb": "starts at", "to": "STP-037-009", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-037-admin-assignment", "type": "Flow", "title": "Admin assigns or reassigns the provider", "attrs": {"kind": "main", "description": "Entry branch: admin opens a case awaiting assignment or reassignment, shares a preview and selects the provider.", "prd_ref": "Unified Flow, Entry Points"}}
+  - {"op": "add_edge", "from": "FLW-037-admin-assignment", "verb": "starts at", "to": "STP-037-014", "attrs": {}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice-window.superseded_window_id", "attrs": {"provenance": "retrieved", "label": "Advice Window Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice-window.superseded_window_id", "attrs": {"provenance": "retrieved", "label": "Advice Window Stack"}}

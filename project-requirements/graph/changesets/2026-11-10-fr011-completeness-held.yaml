@@ -1,0 +1,170 @@
+reason: "FR-011 completeness, held operations: Steps the PRD assigns to the system (the graph has no System Actor), the human Steps reachable only through them, their next links and the Flows that start at a system Step. Apply on top of 2026-11-10-fr011-completeness-fixes.yaml once the System Actor decision is made."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-004", "type": "Step", "title": "System generates the plan and dashboard and notifies the patient and aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 1 Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-011-004", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-004", "verb": "applies", "to": "REQ-011-055"}
+  - {"op": "add_edge", "from": "STP-011-004", "verb": "applies", "to": "REQ-011-017"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-006", "type": "Step", "title": "System moves the patient status to Completed after the instructions are delivered", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A1"}}
+  - {"op": "add_edge", "from": "STP-011-006", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-006", "verb": "applies", "to": "REQ-011-056"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-011", "type": "Step", "title": "System processes the payment through FR-007 and moves the request to Pending Assignment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 2", "handoff_to": "FR-007: payment processing of the aftercare order"}}
+  - {"op": "add_edge", "from": "STP-011-011", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-011", "verb": "applies", "to": "REQ-011-063"}
+  - {"op": "add_edge", "from": "STP-011-011", "verb": "applies", "to": "REQ-011-048"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-012", "type": "Step", "title": "Admin reviews the request and assigns a provider", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "on", "to": "SCR-011-15"}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "applies", "to": "REQ-011-048"}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "applies", "to": "REQ-011-069"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-013", "type": "Step", "title": "Assigned provider selects a template, customizes the plan and activates it", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 4; Workflow 2b Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "on", "to": "SCR-011-10"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "applies", "to": "REQ-011-049"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "applies", "to": "REQ-011-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-014", "type": "Step", "title": "System sends the activation notice and gives the patient dashboard access", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 5; Workflow 2b Main Flow step 5"}}
+  - {"op": "add_edge", "from": "STP-011-014", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-014", "verb": "applies", "to": "REQ-011-049"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-015", "type": "Step", "title": "Aftercare team begins monitoring the patient", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 5; Workflow 2b Main Flow step 5"}}
+  - {"op": "add_edge", "from": "STP-011-015", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-015", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-015", "verb": "applies", "to": "REQ-011-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-017", "type": "Step", "title": "System expires the request after 48 hours without successful payment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B1; Workflow 2b Alternative Flow B1b"}}
+  - {"op": "add_edge", "from": "STP-011-017", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-017", "verb": "applies", "to": "REQ-011-050"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-019", "type": "Step", "title": "System refunds the payment automatically", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "STP-011-019", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-019", "verb": "applies", "to": "REQ-011-037"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-024", "type": "Step", "title": "System processes the payment through FR-007 and starts automatic assignment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Main Flow step 2", "handoff_to": "FR-007: payment processing of the aftercare order"}}
+  - {"op": "add_edge", "from": "STP-011-024", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-024", "verb": "applies", "to": "REQ-011-063"}
+  - {"op": "add_edge", "from": "STP-011-024", "verb": "applies", "to": "REQ-011-054"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-025", "type": "Step", "title": "System assigns the original treatment provider or the Hairline aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-011-025", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-025", "verb": "applies", "to": "REQ-011-054"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-026", "type": "Step", "title": "System assigns the case to the Hairline aftercare team after the original provider declines", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Alternative Flow B1a"}}
+  - {"op": "add_edge", "from": "STP-011-026", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-026", "verb": "applies", "to": "REQ-011-054"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-027", "type": "Step", "title": "Aftercare team provider configures and activates the plan", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Alternative Flow B1a"}}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "on", "to": "SCR-011-10"}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "applies", "to": "REQ-011-054"}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "applies", "to": "REQ-011-049"}
+  - {"op": "add_edge", "from": "STP-011-027", "verb": "applies", "to": "REQ-011-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-031", "type": "Step", "title": "System validates the scan quality and stores the scan for the aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 2"}}
+  - {"op": "add_edge", "from": "STP-011-031", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-031", "verb": "applies", "to": "REQ-011-059"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-032", "type": "Step", "title": "System processes the questionnaire responses and flags concerning answers", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-011-032", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-032", "verb": "applies", "to": "REQ-011-060"}
+  - {"op": "add_edge", "from": "STP-011-032", "verb": "applies", "to": "REQ-011-028"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-033", "type": "Step", "title": "Aftercare team reviews the questionnaire responses", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-011-033", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-033", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-033", "verb": "applies", "to": "REQ-011-060"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-034", "type": "Step", "title": "System tracks task completion and calculates the overall progress", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow steps 1 and 4"}}
+  - {"op": "add_edge", "from": "STP-011-034", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-034", "verb": "applies", "to": "REQ-011-027"}
+  - {"op": "add_edge", "from": "STP-011-034", "verb": "applies", "to": "REQ-011-007"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-035", "type": "Step", "title": "Patient views the progress dashboard", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-011-035", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-011-035", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-035", "verb": "on", "to": "SCR-011-01"}
+  - {"op": "add_edge", "from": "STP-011-035", "verb": "applies", "to": "REQ-011-027"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-036", "type": "Step", "title": "System sends a reminder and flags the task Overdue after 24 hours", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C1"}}
+  - {"op": "add_edge", "from": "STP-011-036", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-036", "verb": "applies", "to": "REQ-011-026"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-037", "type": "Step", "title": "Aftercare team contacts the patient about the missed task", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C1"}}
+  - {"op": "add_edge", "from": "STP-011-037", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-037", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-037", "verb": "applies", "to": "REQ-011-026"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-038", "type": "Step", "title": "System flags the case Urgent for concerning symptoms", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_edge", "from": "STP-011-038", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-038", "verb": "applies", "to": "REQ-011-028"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-039", "type": "Step", "title": "Aftercare team contacts the patient immediately", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "applies", "to": "REQ-011-028"}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "applies", "to": "REQ-011-029"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-040", "type": "Step", "title": "System triggers the escalation workflow", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_edge", "from": "STP-011-040", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-040", "verb": "applies", "to": "REQ-011-028"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-011-052", "type": "Step", "title": "System records the provider-status cause and sets the supportRequired marker", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D4", "handoff_from": "FR-015: Alternative Flow A5, provider suspension or deactivation becomes effective"}}
+  - {"op": "add_edge", "from": "STP-011-052", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-052", "verb": "applies", "to": "REQ-011-014"}
+  - {"op": "add_edge", "from": "STP-011-052", "verb": "applies", "to": "REQ-011-073"}
+  - {"op": "add_edge", "from": "STP-011-052", "verb": "applies", "to": "REQ-011-074"}
+  # waits on: no System Actor (reachable only through a system Step)
+  - {"op": "add_node", "id": "STP-011-053", "type": "Step", "title": "Admin reassigns the case on Screen 19, assigns the Hairline team or keeps it cancelled, and resolves the marker", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D4"}}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "on", "to": "SCR-011-19"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "applies", "to": "REQ-011-014"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "applies", "to": "REQ-011-073"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "applies", "to": "REQ-011-074"}
+  - {"op": "add_edge", "from": "STP-011-053", "verb": "applies", "to": "REQ-011-076"}
+  - {"op": "add_edge", "from": "STP-011-003", "verb": "next", "to": "STP-011-004"}
+  - {"op": "add_edge", "from": "STP-011-005", "verb": "next", "to": "STP-011-006"}
+  - {"op": "add_edge", "from": "STP-011-010", "verb": "next", "to": "STP-011-011"}
+  - {"op": "add_edge", "from": "STP-011-011", "verb": "next", "to": "STP-011-012"}
+  - {"op": "add_edge", "from": "STP-011-012", "verb": "next", "to": "STP-011-013"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "next", "to": "STP-011-014"}
+  - {"op": "add_edge", "from": "STP-011-014", "verb": "next", "to": "STP-011-015"}
+  - {"op": "add_edge", "from": "STP-011-016", "verb": "next", "to": "STP-011-017"}
+  - {"op": "add_edge", "from": "STP-011-018", "verb": "next", "to": "STP-011-019"}
+  - {"op": "add_edge", "from": "STP-011-023", "verb": "next", "to": "STP-011-024"}
+  - {"op": "add_edge", "from": "STP-011-024", "verb": "next", "to": "STP-011-025"}
+  - {"op": "add_edge", "from": "STP-011-025", "verb": "next", "to": "STP-011-013", "attrs": {"label": "Provider activates the plan"}}
+  - {"op": "add_edge", "from": "STP-011-026", "verb": "next", "to": "STP-011-027"}
+  - {"op": "add_edge", "from": "STP-011-029", "verb": "next", "to": "STP-011-031"}
+  - {"op": "add_edge", "from": "STP-011-030", "verb": "next", "to": "STP-011-032"}
+  - {"op": "add_edge", "from": "STP-011-032", "verb": "next", "to": "STP-011-033"}
+  - {"op": "add_edge", "from": "STP-011-028", "verb": "next", "to": "STP-011-034"}
+  - {"op": "add_edge", "from": "STP-011-034", "verb": "next", "to": "STP-011-035"}
+  - {"op": "add_edge", "from": "STP-011-036", "verb": "next", "to": "STP-011-037"}
+  - {"op": "add_edge", "from": "STP-011-038", "verb": "next", "to": "STP-011-039"}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "next", "to": "STP-011-040"}
+  - {"op": "add_edge", "from": "STP-011-052", "verb": "next", "to": "STP-011-053"}
+  - {"op": "add_node", "id": "FLW-011-w2b-provider-declines", "type": "Flow", "title": "Workflow 2b Alternative Flow B1a: original provider declines", "attrs": {"kind": "alternative", "description": "Workflow 2b Alternative Flow B1a: original provider declines", "prd_ref": "Workflow 2b Alternative Flow B1a"}}
+  - {"op": "add_edge", "from": "FLW-011-w2b-provider-declines", "verb": "starts at", "to": "STP-011-026"}
+  - {"op": "add_node", "id": "FLW-011-w3-missed-task", "type": "Flow", "title": "Workflow 3 Alternative Flow C1: patient misses a task", "attrs": {"kind": "alternative", "description": "Workflow 3 Alternative Flow C1: patient misses a task", "prd_ref": "Workflow 3 Alternative Flow C1"}}
+  - {"op": "add_edge", "from": "FLW-011-w3-missed-task", "verb": "starts at", "to": "STP-011-036"}
+  - {"op": "add_node", "id": "FLW-011-w3-concerning-symptoms", "type": "Flow", "title": "Workflow 3 Alternative Flow C2: concerning symptoms reported", "attrs": {"kind": "alternative", "description": "Workflow 3 Alternative Flow C2: concerning symptoms reported", "prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_edge", "from": "FLW-011-w3-concerning-symptoms", "verb": "starts at", "to": "STP-011-038"}
+  - {"op": "add_node", "id": "FLW-011-w4-provider-suspended", "type": "Flow", "title": "Workflow 4 Alternative Flow D4: provider suspended or deactivated", "attrs": {"kind": "alternative", "description": "Workflow 4 Alternative Flow D4: provider suspended or deactivated", "prd_ref": "Workflow 4 Alternative Flow D4"}}
+  - {"op": "add_edge", "from": "FLW-011-w4-provider-suspended", "verb": "starts at", "to": "STP-011-052"}
+  # waits on: field type change text to enum (user review, PRD line 1047)
+  - {"op": "update_field", "id": "ENT-aftercare-request.payment_status", "data_type": "enum"}
+  # waits on: field type change text to enum (user review, PRD line 1047)
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "paid", "label": "Paid", "sort_order": 0}
+  # waits on: field type change text to enum (user review, PRD line 1047)
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "pending", "label": "Pending", "sort_order": 1}
+  # waits on: field type change text to enum (user review, PRD line 1047)
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "failed", "label": "Failed", "sort_order": 2}
