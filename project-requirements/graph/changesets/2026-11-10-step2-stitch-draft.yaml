@@ -1,0 +1,11 @@
+reason: "D37 step 2 draft (not applied): stitch the cross-FR hand-offs whose two ends are unambiguous. Each add_edge adds one next link from the sending Step to the receiving Step; the paired update_node clears the handoff_to or handoff_from attr that the link resolves. Three links come from a hand-off that names an existing Step id (STP-006-002, STP-006-301) or one PRD location that matches exactly one Step in the named FR (FR-004 Main Flow step 1, FR-003 provider reviews medical alerts). The other 30 open hand-offs wait in 2026-11-10-step2-stitch-held.yaml."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "STP-003-029", "verb": "next", "to": "STP-004-001"}
+  - {"op": "update_node", "id": "STP-003-029", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "next", "to": "STP-007-001"}
+  - {"op": "update_node", "id": "STP-007-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-016-093", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-016-093", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-025-032", "verb": "next", "to": "STP-003-028"}
+  - {"op": "update_node", "id": "STP-025-032", "attrs": {"handoff_to": null}}

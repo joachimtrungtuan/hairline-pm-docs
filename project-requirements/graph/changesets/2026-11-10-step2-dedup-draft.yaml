@@ -1,0 +1,3 @@
+reason: "D37 step 2 draft (not applied): no merge_node is drafted. Of the 92 active Rule pairs lint L12 reports, only 4 are textually identical (REQ-037-009/REQ-038-005, REQ-037-021/REQ-038-008, REQ-037-022/REQ-038-009, REQ-037-027/REQ-038-014), and they have different owners (FR-037, FR-038) with no citation either way, so the identical-and-same-owner-or-copy condition is not met. Every pair is a decision row in plans/reports/tester-261110-step2-draft.md."
+by: tester
+operations: []
