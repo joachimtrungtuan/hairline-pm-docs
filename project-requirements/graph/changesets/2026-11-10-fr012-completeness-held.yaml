@@ -1,0 +1,183 @@
+# FR-012 completeness fixes, held. Checker: tester. Checklist: project-requirements/graph/checklists/completeness-check.md v1.3
+# Apply after 2026-11-10-fr012-completeness-fixes.yaml. Every op here waits on a decision in the report (no System Actor, or the Screen 4 flag indicator reading).
+reason: "FR-012 completeness fixes held (D37 review step 1): Steps the PRD assigns to the system, the human Steps and Flows reachable only through them, every edge touching them, and the Screen 4 flag-indicator shows edge"
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-012-001", "type": "Step", "title": "Create or reuse the pair conversation when a quote is submitted", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_node", "id": "STP-012-002", "type": "Step", "title": "Show the conversation in both inboxes", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_node", "id": "STP-012-003", "type": "Step", "title": "Patient opens the inbox and taps the conversation", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_node", "id": "STP-012-004", "type": "Step", "title": "Patient composes a message and sends it", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_node", "id": "STP-012-005", "type": "Step", "title": "System validates content and records the message", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_node", "id": "STP-012-006", "type": "Step", "title": "System notifies the provider and updates unread counts", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_node", "id": "STP-012-007", "type": "Step", "title": "Provider opens and reads the message", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 7"}}
+  - {"op": "add_node", "id": "STP-012-008", "type": "Step", "title": "Provider replies with clarification", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 8"}}
+  - {"op": "add_node", "id": "STP-012-009", "type": "Step", "title": "Patient opens the conversation and the unread badge clears", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 9"}}
+  - {"op": "add_node", "id": "STP-012-010", "type": "Step", "title": "System logs sent, delivered and read events", "owner_fr": "FR-012", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_node", "id": "STP-012-011", "type": "Step", "title": "System validates attachment file type and size", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_node", "id": "STP-012-012", "type": "Step", "title": "System validates the attachment count", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_node", "id": "STP-012-013", "type": "Step", "title": "System stores the media and generates thumbnails", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  - {"op": "add_node", "id": "STP-012-014", "type": "Step", "title": "System blocks the upload and shows the specific error", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_node", "id": "STP-012-017", "type": "Step", "title": "System prompts for a flag type", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  - {"op": "add_node", "id": "STP-012-018", "type": "Step", "title": "Admin optionally adds internal notes", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
+  - {"op": "add_node", "id": "STP-012-019", "type": "Step", "title": "System marks the conversation with a flag badge", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
+  - {"op": "add_node", "id": "STP-012-020", "type": "Step", "title": "Flagged conversation appears in the Flagged filter", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 6"}}
+  - {"op": "add_node", "id": "STP-012-021", "type": "Step", "title": "System logs the flag action", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 7"}}
+  - {"op": "add_node", "id": "STP-012-024", "type": "Step", "title": "System shows the emergency warning banner", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 3"}}
+  - {"op": "add_node", "id": "STP-012-025", "type": "Step", "title": "Admin selects the emergency reason and optional justification", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 4"}}
+  - {"op": "add_node", "id": "STP-012-026", "type": "Step", "title": "Admin reviews the conversation and flag history", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 5"}}
+  - {"op": "add_node", "id": "STP-012-027", "type": "Step", "title": "Admin composes the intervention message", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 6"}}
+  - {"op": "add_node", "id": "STP-012-028", "type": "Step", "title": "Admin reviews the preview and sends", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 7"}}
+  - {"op": "add_node", "id": "STP-012-029", "type": "Step", "title": "System adds the Hairline Admin badge", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 8"}}
+  - {"op": "add_node", "id": "STP-012-030", "type": "Step", "title": "System logs the intervention", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 9"}}
+  - {"op": "add_node", "id": "STP-012-031", "type": "Step", "title": "System updates the flag status to Intervention Completed", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 10"}}
+  - {"op": "add_node", "id": "STP-012-032", "type": "Step", "title": "System returns the admin to Screen 6A", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 11"}}
+  - {"op": "add_node", "id": "STP-012-033", "type": "Step", "title": "System validates the attachment before upload", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  - {"op": "add_node", "id": "STP-012-034", "type": "Step", "title": "System blocks the upload and shows the specific error", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_node", "id": "STP-012-035", "type": "Step", "title": "User retries with valid content", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  - {"op": "add_node", "id": "STP-012-036", "type": "Step", "title": "System queues the message locally and shows pending", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow B2 step 1"}}
+  - {"op": "add_node", "id": "STP-012-037", "type": "Step", "title": "System retries on reconnect and prompts resend on failure", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_node", "id": "FLW-012-main", "type": "Flow", "title": "Patient-provider messaging main flow", "attrs": {"kind": "main", "prd_ref": "Main Flow"}}
+  - {"op": "add_node", "id": "FLW-012-attachment", "type": "Flow", "title": "Attachment alternative flow", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "FLW-012-invalid-content", "type": "Flow", "title": "Invalid content alternative flow", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_node", "id": "FLW-012-connectivity", "type": "Flow", "title": "Intermittent connectivity alternative flow", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow B2"}}
+  # waits on: no System Actor (edges touching held Steps and Flows; human Steps among them are reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-012-001", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-012-003", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-012-007", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-012-008", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-012-009", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-012-018", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-025", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-026", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-027", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-028", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-035", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-012-001", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-002", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-003", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-005", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-006", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-007", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-008", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-009", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-010", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-011", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-012", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-013", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-014", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-017", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-018", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-019", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-020", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-021", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-024", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-025", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-026", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-027", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-028", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-029", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-030", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-031", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-032", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-033", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-034", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-035", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-036", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-037", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-003", "verb": "on", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-007", "verb": "on", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "STP-012-008", "verb": "on", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "STP-012-009", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-011", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-012", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-013", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-014", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-017", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-018", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-019", "verb": "on", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "STP-012-020", "verb": "on", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "STP-012-024", "verb": "on", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "STP-012-025", "verb": "on", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "STP-012-026", "verb": "on", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "STP-012-027", "verb": "on", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "STP-012-028", "verb": "on", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "STP-012-032", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-033", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-034", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-035", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-036", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-037", "verb": "on", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "STP-012-001", "verb": "applies", "to": "REQ-012-001"}
+  - {"op": "add_edge", "from": "STP-012-001", "verb": "applies", "to": "REQ-012-025"}
+  - {"op": "add_edge", "from": "STP-012-002", "verb": "applies", "to": "REQ-012-001"}
+  - {"op": "add_edge", "from": "STP-012-003", "verb": "applies", "to": "REQ-012-002"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "applies", "to": "REQ-012-006"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "applies", "to": "REQ-012-037"}
+  - {"op": "add_edge", "from": "STP-012-005", "verb": "applies", "to": "REQ-012-009"}
+  - {"op": "add_edge", "from": "STP-012-006", "verb": "applies", "to": "REQ-012-007"}
+  - {"op": "add_edge", "from": "STP-012-007", "verb": "applies", "to": "REQ-012-008"}
+  - {"op": "add_edge", "from": "STP-012-008", "verb": "applies", "to": "REQ-012-006"}
+  - {"op": "add_edge", "from": "STP-012-009", "verb": "applies", "to": "REQ-012-048"}
+  - {"op": "add_edge", "from": "STP-012-010", "verb": "applies", "to": "REQ-012-010"}
+  - {"op": "add_edge", "from": "STP-012-011", "verb": "applies", "to": "REQ-012-009"}
+  - {"op": "add_edge", "from": "STP-012-012", "verb": "applies", "to": "REQ-012-009"}
+  - {"op": "add_edge", "from": "STP-012-013", "verb": "applies", "to": "REQ-012-039"}
+  - {"op": "add_edge", "from": "STP-012-014", "verb": "applies", "to": "REQ-012-040"}
+  - {"op": "add_edge", "from": "STP-012-017", "verb": "applies", "to": "REQ-012-011"}
+  - {"op": "add_edge", "from": "STP-012-018", "verb": "applies", "to": "REQ-012-011"}
+  - {"op": "add_edge", "from": "STP-012-019", "verb": "applies", "to": "REQ-012-095"}
+  - {"op": "add_edge", "from": "STP-012-020", "verb": "applies", "to": "REQ-012-095"}
+  - {"op": "add_edge", "from": "STP-012-021", "verb": "applies", "to": "REQ-012-023"}
+  - {"op": "add_edge", "from": "STP-012-024", "verb": "applies", "to": "REQ-012-081"}
+  - {"op": "add_edge", "from": "STP-012-025", "verb": "applies", "to": "REQ-012-082"}
+  - {"op": "add_edge", "from": "STP-012-026", "verb": "applies", "to": "REQ-012-070"}
+  - {"op": "add_edge", "from": "STP-012-027", "verb": "applies", "to": "REQ-012-082"}
+  - {"op": "add_edge", "from": "STP-012-028", "verb": "applies", "to": "REQ-012-013"}
+  - {"op": "add_edge", "from": "STP-012-029", "verb": "applies", "to": "REQ-012-014"}
+  - {"op": "add_edge", "from": "STP-012-030", "verb": "applies", "to": "REQ-012-023"}
+  - {"op": "add_edge", "from": "STP-012-031", "verb": "applies", "to": "REQ-012-085"}
+  - {"op": "add_edge", "from": "STP-012-032", "verb": "applies", "to": "REQ-012-086"}
+  - {"op": "add_edge", "from": "STP-012-033", "verb": "applies", "to": "REQ-012-040"}
+  - {"op": "add_edge", "from": "STP-012-034", "verb": "applies", "to": "REQ-012-040"}
+  - {"op": "add_edge", "from": "STP-012-035", "verb": "applies", "to": "REQ-012-040"}
+  - {"op": "add_edge", "from": "STP-012-036", "verb": "applies", "to": "REQ-012-038"}
+  - {"op": "add_edge", "from": "STP-012-037", "verb": "applies", "to": "REQ-012-038"}
+  - {"op": "add_edge", "from": "STP-012-001", "verb": "next", "to": "STP-012-002"}
+  - {"op": "add_edge", "from": "STP-012-002", "verb": "next", "to": "STP-012-003"}
+  - {"op": "add_edge", "from": "STP-012-003", "verb": "next", "to": "STP-012-004"}
+  - {"op": "add_edge", "from": "STP-012-004", "verb": "next", "to": "STP-012-005"}
+  - {"op": "add_edge", "from": "STP-012-005", "verb": "next", "to": "STP-012-006"}
+  - {"op": "add_edge", "from": "STP-012-006", "verb": "next", "to": "STP-012-007"}
+  - {"op": "add_edge", "from": "STP-012-007", "verb": "next", "to": "STP-012-008"}
+  - {"op": "add_edge", "from": "STP-012-008", "verb": "next", "to": "STP-012-009"}
+  - {"op": "add_edge", "from": "STP-012-009", "verb": "next", "to": "STP-012-010"}
+  - {"op": "add_edge", "from": "STP-012-011", "verb": "next", "to": "STP-012-012"}
+  - {"op": "add_edge", "from": "STP-012-012", "verb": "next", "to": "STP-012-013", "attrs": {"label": "valid attachment", "condition": "REQ-012-009"}}
+  - {"op": "add_edge", "from": "STP-012-012", "verb": "next", "to": "STP-012-014", "attrs": {"label": "invalid attachment", "condition": "REQ-012-040"}}
+  - {"op": "add_edge", "from": "STP-012-016", "verb": "next", "to": "STP-012-017"}
+  - {"op": "add_edge", "from": "STP-012-017", "verb": "next", "to": "STP-012-018"}
+  - {"op": "add_edge", "from": "STP-012-018", "verb": "next", "to": "STP-012-019"}
+  - {"op": "add_edge", "from": "STP-012-019", "verb": "next", "to": "STP-012-020"}
+  - {"op": "add_edge", "from": "STP-012-020", "verb": "next", "to": "STP-012-021"}
+  - {"op": "add_edge", "from": "STP-012-023", "verb": "next", "to": "STP-012-024"}
+  - {"op": "add_edge", "from": "STP-012-024", "verb": "next", "to": "STP-012-025"}
+  - {"op": "add_edge", "from": "STP-012-025", "verb": "next", "to": "STP-012-026"}
+  - {"op": "add_edge", "from": "STP-012-026", "verb": "next", "to": "STP-012-027"}
+  - {"op": "add_edge", "from": "STP-012-027", "verb": "next", "to": "STP-012-028"}
+  - {"op": "add_edge", "from": "STP-012-028", "verb": "next", "to": "STP-012-029"}
+  - {"op": "add_edge", "from": "STP-012-029", "verb": "next", "to": "STP-012-030"}
+  - {"op": "add_edge", "from": "STP-012-030", "verb": "next", "to": "STP-012-031"}
+  - {"op": "add_edge", "from": "STP-012-031", "verb": "next", "to": "STP-012-032"}
+  - {"op": "add_edge", "from": "STP-012-033", "verb": "next", "to": "STP-012-034"}
+  - {"op": "add_edge", "from": "STP-012-034", "verb": "next", "to": "STP-012-035"}
+  - {"op": "add_edge", "from": "STP-012-036", "verb": "next", "to": "STP-012-037"}
+  - {"op": "add_edge", "from": "FLW-012-main", "verb": "starts at", "to": "STP-012-001"}
+  - {"op": "add_edge", "from": "FLW-012-attachment", "verb": "starts at", "to": "STP-012-011"}
+  - {"op": "add_edge", "from": "FLW-012-invalid-content", "verb": "starts at", "to": "STP-012-033"}
+  - {"op": "add_edge", "from": "FLW-012-connectivity", "verb": "starts at", "to": "STP-012-036"}
+  # waits on: Screen 4 flag indicator reading (decision: manual vs keyword flag)
+  - {"op": "add_edge", "from": "SCR-012-04", "verb": "shows", "to": "ENT-conversation.keyword_flags", "attrs": {"provenance": "retrieved", "label": "Flag indicator (warning icon if keyword-flagged)"}}

@@ -1,0 +1,113 @@
+reason: "FR-020 completeness fixes held for user decisions: the flow model (every Step is performed by the system or the Notification Service, so no System Actor), the Stage placement of those Steps, the next, starts at, at and applies edges touching them, and the catalog Rules whose Event link depends on which producer Event carries the catalog key. Apply after 2026-11-10-fr020-completeness-fixes.yaml."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-001", "type": "Step", "title": "Event is emitted with payload type, actor, subject and recipient id", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-002", "type": "Step", "title": "Notification Service evaluates preferences and throttling", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-003", "type": "Step", "title": "Notification Service builds the message from the template and routes it to enabled channels", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-004", "type": "Step", "title": "Notification Service records the delivery attempt and status and exposes the audit", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-005", "type": "Step", "title": "SMS path is included when SMS is enabled and the event is urgent, otherwise email and push only", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-006", "type": "Step", "title": "Channel is suppressed and delivery is attempted on the remaining enabled channels", "owner_fr": "FR-020", "attrs": {"prd_ref": "A1 outcome"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-007", "type": "Step", "title": "Notifications are coalesced or deferred per policy and the suppression is recorded in the audit", "owner_fr": "FR-020", "attrs": {"prd_ref": "B1 outcome"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-020-008", "type": "Step", "title": "Delivery is retried with backoff, failover is used when configured, and the status reflects the failure cause", "owner_fr": "FR-020", "attrs": {"prd_ref": "B2 outcome"}}
+  # waits on: no System Actor (start Step is held)
+  - {"op": "add_node", "id": "FLW-020-main", "type": "Flow", "title": "Event to notification dispatch", "attrs": {"kind": "main", "description": "Main Flow: Event to Notification Dispatch", "prd_ref": "Main Flow"}}
+  # waits on: no System Actor (start Step is held)
+  - {"op": "add_node", "id": "FLW-020-preference-disabled", "type": "Flow", "title": "Preference disabled", "attrs": {"kind": "alternative", "description": "A1: Preference Disabled", "prd_ref": "A1"}}
+  # waits on: no System Actor (start Step is held)
+  - {"op": "add_node", "id": "FLW-020-throttling", "type": "Flow", "title": "Throttling", "attrs": {"kind": "alternative", "description": "B1: Throttling", "prd_ref": "B1"}}
+  # waits on: no System Actor (start Step is held)
+  - {"op": "add_node", "id": "FLW-020-channel-failure", "type": "Flow", "title": "Channel failure", "attrs": {"kind": "alternative", "description": "B2: Channel Failure", "prd_ref": "B2"}}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-001", "verb": "applies", "to": "REQ-020-034"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "applies", "to": "REQ-020-035"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "applies", "to": "REQ-020-006"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-003", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-003", "verb": "applies", "to": "REQ-020-035"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-003", "verb": "applies", "to": "REQ-020-005"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-004", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-004", "verb": "applies", "to": "REQ-020-036"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-004", "verb": "applies", "to": "REQ-020-007"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-005", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-005", "verb": "applies", "to": "REQ-020-037"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-006", "verb": "applies", "to": "REQ-020-038"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-007", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-007", "verb": "applies", "to": "REQ-020-039"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-007", "verb": "applies", "to": "REQ-020-042"}
+  # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
+  - {"op": "add_edge", "from": "STP-020-008", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-008", "verb": "applies", "to": "REQ-020-040"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-008", "verb": "applies", "to": "REQ-020-043"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "FLW-020-main", "verb": "starts at", "to": "STP-020-001"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "FLW-020-preference-disabled", "verb": "starts at", "to": "STP-020-006"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "FLW-020-throttling", "verb": "starts at", "to": "STP-020-007"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "FLW-020-channel-failure", "verb": "starts at", "to": "STP-020-008"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-001", "verb": "next", "to": "STP-020-002"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "next", "to": "STP-020-003"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-003", "verb": "next", "to": "STP-020-004"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-020-004", "verb": "next", "to": "STP-020-005"}
+  # waits on: no System Actor; branch point for the alternative flow is read from the PRD trigger
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "next", "to": "STP-020-006", "attrs": {"label": "Recipient has disabled Email or Push", "condition": "REQ-020-038"}}
+  # waits on: no System Actor; branch point for the alternative flow is read from the PRD trigger
+  - {"op": "add_edge", "from": "STP-020-002", "verb": "next", "to": "STP-020-007", "attrs": {"label": "Excessive events in short time window", "condition": "REQ-020-039"}}
+  # waits on: no System Actor; branch point for the alternative flow is read from the PRD trigger
+  - {"op": "add_edge", "from": "STP-020-004", "verb": "next", "to": "STP-020-008", "attrs": {"label": "Email, push or SMS provider unavailable", "condition": "REQ-020-040"}}
+  # waits on: catalog event identity (catalog key account.email_verification_code vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-072", "verb": "applies to", "to": "EVT-verification-otp-sent"}
+  # waits on: catalog event identity (catalog key account.password_reset vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-073", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  # waits on: catalog event identity (catalog key payment.received vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-100", "verb": "applies to", "to": "EVT-billing-payment-received"}
+  # waits on: catalog event identity (catalog key payment.failed vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-101", "verb": "applies to", "to": "EVT-billing-payment-failed"}
+  # waits on: catalog event identity (catalog key payout.provider_processed vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-103", "verb": "applies to", "to": "EVT-billing-provider-payout-processed"}
+  # waits on: catalog event identity (catalog key payout.affiliate_processed vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-104", "verb": "applies to", "to": "EVT-billing-affiliate-payout-processed"}
+  # waits on: catalog event identity (catalog key payout.failed vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-105", "verb": "applies to", "to": "EVT-billing-payout-failed"}
+  # waits on: catalog event identity (catalog key message.received vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-106", "verb": "applies to", "to": "EVT-message-sent"}
+  # waits on: catalog event identity (catalog key review.response_posted vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-133", "verb": "applies to", "to": "EVT-provider-response-published"}
+  # waits on: catalog event identity (catalog key review.removed_by_admin vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-134", "verb": "applies to", "to": "EVT-review-removed"}
+  # waits on: catalog event identity (catalog key review.takedown_decided vs producer Event name differs)
+  - {"op": "add_edge", "from": "REQ-020-135", "verb": "applies to", "to": "EVT-takedown-decided"}

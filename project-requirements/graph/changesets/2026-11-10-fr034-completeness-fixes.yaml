@@ -1,0 +1,205 @@
+# FR-034 completeness fixes. Checker: tester. Checklist: project-requirements/graph/checklists/completeness-check.md v1.3
+# Adds applies to edges for the FR-034 Rules, the missing emits edges, and the leading human Steps of each Flow that start with a human Step.
+reason: "FR-034 completeness fixes (D37 review step 1): applies to edges from FR-034 Rules to the Screens, Entities and Events the PRD names, emits edges for support-case events at the stage the PRD fires them, and the flow model (Steps, Flows, next links) for the human-performed steps that do not depend on a system step. Operations that wait on a user decision are in 2026-11-10-fr034-completeness-held.yaml."
+by: tester
+operations:
+  # applies to edges for the Rules
+  - {"op": "add_edge", "from": "REQ-034-001", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-002", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-003", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-004", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-005", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-006", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-007", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-008", "verb": "applies to", "to": "ENT-support-case-timeline-event"}
+  - {"op": "add_edge", "from": "REQ-034-009", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-010", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-011", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-034-014", "verb": "applies to", "to": "ENT-support-case-message"}
+  - {"op": "add_edge", "from": "REQ-034-015", "verb": "applies to", "to": "ENT-support-case-message"}
+  - {"op": "add_edge", "from": "REQ-034-016", "verb": "applies to", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "REQ-034-016", "verb": "applies to", "to": "EVT-support-case-assigned"}
+  - {"op": "add_edge", "from": "REQ-034-017", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-017", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_edge", "from": "REQ-034-018", "verb": "applies to", "to": "ENT-support-case-category"}
+  - {"op": "add_edge", "from": "REQ-034-019", "verb": "applies to", "to": "ENT-support-case-priority"}
+  - {"op": "add_edge", "from": "REQ-034-020", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-030", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-031", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-032", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-033", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-034", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-035", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-036", "verb": "applies to", "to": "ENT-support-case-attachment"}
+  - {"op": "add_edge", "from": "REQ-034-037", "verb": "applies to", "to": "ENT-support-case-attachment"}
+  - {"op": "add_edge", "from": "REQ-034-038", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_edge", "from": "REQ-034-039", "verb": "applies to", "to": "ENT-support-case-resolution"}
+  - {"op": "add_edge", "from": "REQ-034-052", "verb": "applies to", "to": "ENT-support-case-timeline-event"}
+  - {"op": "add_edge", "from": "REQ-034-054", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-055", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-056", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-057", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-059", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-059", "verb": "applies to", "to": "EVT-support-case-resolved"}
+  - {"op": "add_edge", "from": "REQ-034-060", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-061", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-062", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-062", "verb": "applies to", "to": "EVT-support-case-closed"}
+  - {"op": "add_edge", "from": "REQ-034-063", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-063", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_edge", "from": "REQ-034-064", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-064", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_edge", "from": "REQ-034-066", "verb": "applies to", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "REQ-034-067", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-080", "verb": "applies to", "to": "ENT-support-case-message"}
+  - {"op": "add_edge", "from": "REQ-034-080", "verb": "applies to", "to": "EVT-support-case-user-reply"}
+  - {"op": "add_edge", "from": "REQ-034-082", "verb": "applies to", "to": "ENT-support-case-timeline-event"}
+  - {"op": "add_edge", "from": "REQ-034-087", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-096", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-103", "verb": "applies to", "to": "EVT-support-case-escalated"}
+  - {"op": "add_edge", "from": "REQ-034-114", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-115", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-116", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-117", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-118", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-119", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-120", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-121", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-122", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-123", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-124", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-125", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-126", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-127", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-128", "verb": "applies to", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "REQ-034-131", "verb": "applies to", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "REQ-034-132", "verb": "applies to", "to": "ENT-support-case-message"}
+  - {"op": "add_edge", "from": "REQ-034-132", "verb": "applies to", "to": "EVT-support-case-user-reply"}
+  - {"op": "add_edge", "from": "REQ-034-133", "verb": "applies to", "to": "ENT-support-case-timeline-event"}
+  - {"op": "add_edge", "from": "REQ-034-134", "verb": "applies to", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "REQ-034-134", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-034-135", "verb": "applies to", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "REQ-034-136", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-137", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-138", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-139", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-140", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-141", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "REQ-034-142", "verb": "applies to", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "REQ-034-142", "verb": "applies to", "to": "EVT-support-case-assigned"}
+  - {"op": "add_edge", "from": "REQ-034-143", "verb": "applies to", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "REQ-034-144", "verb": "applies to", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "REQ-034-145", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-145", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_edge", "from": "REQ-034-146", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-147", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-148", "verb": "applies to", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "REQ-034-149", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-150", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-151", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-152", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-153", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-154", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-155", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-156", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-157", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-158", "verb": "applies to", "to": "SCR-034-07"}
+  - {"op": "add_edge", "from": "REQ-034-159", "verb": "applies to", "to": "SCR-034-07"}
+  # emits edges the PRD fires at the stage
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-created"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-status-changed"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-resolved"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-closed"}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "emits", "to": "EVT-support-case-reopened"}
+  # flow model: human Steps reachable from a Flow start
+  - {"op": "add_node", "id": "STP-034-001", "type": "Step", "title": "Admin Staff receives patient inquiry via email, phone, or other external channel", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-034-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-001", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "STP-034-002", "type": "Step", "title": "Admin Staff logs into Admin Platform and navigates to Support Center module", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_edge", "from": "STP-034-002", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-002", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-002", "verb": "on", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "STP-034-001", "verb": "next", "to": "STP-034-002"}
+  - {"op": "add_node", "id": "STP-034-003", "type": "Step", "title": "Admin Staff clicks \"Create New Support Case\" button", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-034-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-003", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-003", "verb": "on", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "STP-034-003", "verb": "applies", "to": "REQ-034-001"}
+  - {"op": "add_edge", "from": "STP-034-002", "verb": "next", "to": "STP-034-003"}
+  - {"op": "add_node", "id": "FLW-034-patient-case-lifecycle", "type": "Flow", "title": "Main Flow: Patient Support Case Lifecycle", "attrs": {"kind": "main", "description": "Main Flow: Patient Support Case Lifecycle", "prd_ref": "Main Flow: Patient Support Case Lifecycle"}}
+  - {"op": "add_edge", "from": "FLW-034-patient-case-lifecycle", "verb": "starts at", "to": "STP-034-001"}
+  - {"op": "add_node", "id": "STP-034-021", "type": "Step", "title": "Admin clicks \"Escalate Case\" button", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-021", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-021", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-021", "verb": "applies", "to": "REQ-034-103"}
+  - {"op": "add_node", "id": "FLW-034-escalation", "type": "Flow", "title": "Alternative Flow A1: Case Requires Escalation", "attrs": {"kind": "alternative", "description": "Alternative Flow A1: Case Requires Escalation", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_edge", "from": "FLW-034-escalation", "verb": "starts at", "to": "STP-034-021"}
+  - {"op": "add_node", "id": "STP-034-027", "type": "Step", "title": "Admin clicks \"View Patient Record\" link in support case", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "applies", "to": "REQ-034-011"}
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "applies", "to": "REQ-034-074"}
+  - {"op": "add_node", "id": "FLW-034-patient-account-intervention", "type": "Flow", "title": "Alternative Flow A2: Case Requires Patient Account Intervention", "attrs": {"kind": "alternative", "description": "Alternative Flow A2: Case Requires Patient Account Intervention", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_edge", "from": "FLW-034-patient-account-intervention", "verb": "starts at", "to": "STP-034-027"}
+  - {"op": "add_node", "id": "STP-034-032", "type": "Step", "title": "Provider navigates to Help Centre and selects \"Contact Support\" subscreen (FR-032 Screen 5.5)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 1", "handoff_from": "FR-032: Contact Support subscreen (Screen 5.5)"}}
+  - {"op": "add_edge", "from": "STP-034-032", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-032", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-032", "verb": "applies", "to": "REQ-034-022"}
+  - {"op": "add_node", "id": "FLW-034-provider-contact-support", "type": "Flow", "title": "Alternative Flow A3: Provider Submits Contact Support Request via Help Centre", "attrs": {"kind": "alternative", "description": "Alternative Flow A3: Provider Submits Contact Support Request via Help Centre", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "FLW-034-provider-contact-support", "verb": "starts at", "to": "STP-034-032"}
+  - {"op": "add_node", "id": "STP-034-046", "type": "Step", "title": "Provider navigates to Help Centre and selects \"Feedback & Suggestions\" subscreen (FR-032 Screen 5.6)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 1", "handoff_from": "FR-032: Feedback and Suggestions subscreen (Screen 5.6)"}}
+  - {"op": "add_edge", "from": "STP-034-046", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-046", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-046", "verb": "applies", "to": "REQ-034-023"}
+  - {"op": "add_node", "id": "FLW-034-provider-feedback", "type": "Flow", "title": "Alternative Flow A4: Provider Submits Feedback and Suggestions via Help Centre", "attrs": {"kind": "alternative", "description": "Alternative Flow A4: Provider Submits Feedback and Suggestions via Help Centre", "prd_ref": "Alternative Flow A4"}}
+  - {"op": "add_edge", "from": "FLW-034-provider-feedback", "verb": "starts at", "to": "STP-034-046"}
+  - {"op": "add_node", "id": "STP-034-060", "type": "Step", "title": "Patient navigates to Help Center in patient mobile app and selects \"Contact Support\" or \"Submit Feedback\" (FR-035)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 1", "handoff_from": "FR-035: Help Center Contact Support or Submit Feedback"}}
+  - {"op": "add_edge", "from": "STP-034-060", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-034-060", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-060", "verb": "applies", "to": "REQ-034-021"}
+  - {"op": "add_node", "id": "FLW-034-patient-submission", "type": "Flow", "title": "Alternative Flow A5: Patient Submits Support Request or Feedback via Patient App", "attrs": {"kind": "alternative", "description": "Alternative Flow A5: Patient Submits Support Request or Feedback via Patient App", "prd_ref": "Alternative Flow A5"}}
+  - {"op": "add_edge", "from": "FLW-034-patient-submission", "verb": "starts at", "to": "STP-034-060"}
+  - {"op": "add_node", "id": "STP-034-075", "type": "Step", "title": "Admin views provider support case in Support Center", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-075", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-075", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-075", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-075", "verb": "applies", "to": "REQ-034-012"}
+  - {"op": "add_node", "id": "STP-034-076", "type": "Step", "title": "Admin clicks \"View Provider Record\" link in support case (only available if case is linked to provider record)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-076", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-076", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-076", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-076", "verb": "applies", "to": "REQ-034-012"}
+  - {"op": "add_edge", "from": "STP-034-075", "verb": "next", "to": "STP-034-076"}
+  - {"op": "add_node", "id": "FLW-034-provider-account-intervention", "type": "Flow", "title": "Alternative Flow A6: Case Requires Provider Account Intervention", "attrs": {"kind": "alternative", "description": "Alternative Flow A6: Case Requires Provider Account Intervention", "prd_ref": "Alternative Flow A6"}}
+  - {"op": "add_edge", "from": "FLW-034-provider-account-intervention", "verb": "starts at", "to": "STP-034-075"}
+  - {"op": "add_node", "id": "STP-034-085", "type": "Step", "title": "Admin manager or colleague opens case", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-085", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-085", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-085", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-085", "verb": "applies", "to": "REQ-034-016"}
+  - {"op": "add_node", "id": "STP-034-086", "type": "Step", "title": "Admin clicks \"Reassign Case\" button", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-086", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-086", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-086", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-086", "verb": "applies", "to": "REQ-034-016"}
+  - {"op": "add_edge", "from": "STP-034-085", "verb": "next", "to": "STP-034-086"}
+  - {"op": "add_node", "id": "FLW-034-reassignment", "type": "Flow", "title": "Alternative Flow B2: Case Reassignment", "attrs": {"kind": "alternative", "description": "Alternative Flow B2: Case Reassignment", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "FLW-034-reassignment", "verb": "starts at", "to": "STP-034-085"}
+  - {"op": "add_node", "id": "STP-034-091", "type": "Step", "title": "Admin receives patient email reply", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-091", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-091", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "STP-034-092", "type": "Step", "title": "Admin locates closed case by case ID", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-092", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-092", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-092", "verb": "on", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "STP-034-091", "verb": "next", "to": "STP-034-092"}
+  - {"op": "add_node", "id": "STP-034-093", "type": "Step", "title": "Admin clicks \"Reopen Case\" button", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "applies", "to": "REQ-034-017"}
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "applies", "to": "REQ-034-063"}
+  - {"op": "add_edge", "from": "STP-034-092", "verb": "next", "to": "STP-034-093"}
+  - {"op": "add_node", "id": "FLW-034-reopening", "type": "Flow", "title": "Alternative Flow B3: Patient Requests Case Reopening", "attrs": {"kind": "alternative", "description": "Alternative Flow B3: Patient Requests Case Reopening", "prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_edge", "from": "FLW-034-reopening", "verb": "starts at", "to": "STP-034-091"}

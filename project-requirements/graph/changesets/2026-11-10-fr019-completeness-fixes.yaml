@@ -1,0 +1,212 @@
+reason: "FR-019 completeness fixes (checker review step 1): applies to links for every Rule, references to the cited Rules of other FRs, four Rules copied verbatim from the PRD, and the two Steps a human performs with their Flows. System-performed Steps and the Rule wording that needs review are in the held file, as are the decided by links (moved there by the controller)."
+by: tester
+operations:
+  # applies to links: every FR-019 Rule gets the Actor, Screen, Entity, Field or Event the PRD line names it acting on (REQ-019-024 names no object)
+  - {"op": "add_edge", "from": "REQ-019-001", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-001", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-002", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-002", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-003", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-003", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-019-004", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-005", "verb": "applies to", "to": "ENT-promotion-report-snapshot"}
+  - {"op": "add_edge", "from": "REQ-019-006", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-007", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-008", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-008", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-009", "verb": "applies to", "to": "ENT-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-019-010", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-011", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-012", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-013", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "applies to", "to": "ENT-promotion-usage-reservation"}
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "applies to", "to": "ENT-promotion-usage-reservation"}
+  - {"op": "add_edge", "from": "REQ-019-016", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-017", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-017", "verb": "applies to", "to": "ENT-promotion-program.hairline_share_percent"}
+  - {"op": "add_edge", "from": "REQ-019-018", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-019", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-020", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-020", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-021", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-021", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-022", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-022", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-023", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-025", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-026", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-026", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-026", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-027", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-027", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-027", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-028", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-028", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-028", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_edge", "from": "REQ-019-029", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-029", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-030", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-030", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-031", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-031", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-032", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-032", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-033", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-033", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-034", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-034", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-035", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-036", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-037", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-039", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-039", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-039", "verb": "applies to", "to": "ENT-subquote"}
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-019-042", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-043", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-043", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-044", "verb": "applies to", "to": "SCR-019-01"}
+  - {"op": "add_edge", "from": "REQ-019-045", "verb": "applies to", "to": "SCR-019-04"}
+  - {"op": "add_edge", "from": "REQ-019-045", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-046", "verb": "applies to", "to": "SCR-019-01"}
+  - {"op": "add_edge", "from": "REQ-019-047", "verb": "applies to", "to": "SCR-019-01"}
+  - {"op": "add_edge", "from": "REQ-019-048", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-049", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-050", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-051", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-051", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-052", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-052", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "applies to", "to": "ENT-promotion-program.hairline_share_percent"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-054", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-055", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-055", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-056", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-057", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-057", "verb": "applies to", "to": "ENT-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-019-058", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-058", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-059", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-059", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_edge", "from": "REQ-019-060", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-060", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_edge", "from": "REQ-019-061", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-061", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_edge", "from": "REQ-019-062", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-062", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_edge", "from": "REQ-019-063", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-063", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-064", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-064", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-065", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-065", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-066", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-066", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-067", "verb": "applies to", "to": "SCR-019-05"}
+  - {"op": "add_edge", "from": "REQ-019-067", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-068", "verb": "applies to", "to": "EVT-affiliate-incentive-triggered"}
+  - {"op": "add_edge", "from": "REQ-019-068", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-071", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-071", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-073", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-073", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-074", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-074", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-075", "verb": "applies to", "to": "SCR-019-08"}
+  - {"op": "add_edge", "from": "REQ-019-075", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-076", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-077", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-078", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-079", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-080", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-080", "verb": "applies to", "to": "ENT-promotion-code"}
+  - {"op": "add_edge", "from": "REQ-019-081", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-082", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-083", "verb": "applies to", "to": "SCR-019-10"}
+  - {"op": "add_edge", "from": "REQ-019-083", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-019-084", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-084", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-085", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-085", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-086", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-087", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-088", "verb": "applies to", "to": "ENT-promotion-usage-reservation"}
+  - {"op": "add_edge", "from": "REQ-019-088", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "applies to", "to": "ENT-promotion-usage-reservation"}
+  - {"op": "add_edge", "from": "REQ-019-090", "verb": "applies to", "to": "ENT-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-019-090", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-091", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-092", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-095", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-096", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-096", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-019-097", "verb": "applies to", "to": "ENT-treatment-record"}
+  - {"op": "add_edge", "from": "REQ-019-098", "verb": "applies to", "to": "ENT-promotion-application"}
+  - {"op": "add_edge", "from": "REQ-019-098", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-099", "verb": "applies to", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "REQ-019-099", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-019-093", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-094", "verb": "applies to", "to": "ENT-promotion-program.value"}
+  - {"op": "add_edge", "from": "REQ-019-094", "verb": "applies to", "to": "ENT-promotion-program.auto_decline_window_days"}
+  # references: the other FRs' Rules that the PRD Internal Dependencies (lines 766-778) cite
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-004-100"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-004-035"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-005-026"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-017-099"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-020-136"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-029-054"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-006-063"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-015-041"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-018-048"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-022-106"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-031-108"}
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-010-058"}
+  # new Rules whose statement is verbatim PRD text
+  - {"op": "add_node", "id": "REQ-019-101", "type": "Rule", "owner_fr": "FR-019", "title": "Admin program form hides sections that do not apply to the program type", "attrs": {"statement": "The form must hide irrelevant sections based on Program Type to reduce cognitive load (e.g., no Approval Routing for Hairline-Funded).", "rationale": "prd.md line 320 (Screen 2 notes)."}}
+  - {"op": "add_edge", "from": "REQ-019-101", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-101", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_node", "id": "REQ-019-102", "type": "Rule", "owner_fr": "FR-019", "title": "Drilling from an Overview KPI card filters the Applications tab", "attrs": {"statement": "Drilling from a KPI card on the Overview tab filters the Applications tab accordingly.", "rationale": "prd.md line 495 (Screen 6 business rules)."}}
+  - {"op": "add_edge", "from": "REQ-019-102", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-102", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_node", "id": "REQ-019-103", "type": "Rule", "owner_fr": "FR-019", "title": "Auto-applied mode on a Both-Fees program is rejected with an inline error", "attrs": {"statement": "Given the admin sets `Application Mode = Auto-applied` on an Admin-via-Provider program and attempts to save, then the system rejects the submission with an inline validation error: \"Auto-applied is not permitted for Both-Fees programs.\"", "rationale": "prd.md line 315 (Screen 2 acceptance criterion 4)."}}
+  - {"op": "add_edge", "from": "REQ-019-103", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-103", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_node", "id": "REQ-019-108", "type": "Rule", "owner_fr": "FR-019", "title": "An edited program value applies only from then on; prior redemptions keep their original values in audit", "attrs": {"statement": "Given the admin edits the Value of a Paused program and republishes, then the new value applies only to quotes sent and patient codes validated from that point forward; quotes already sent keep the terms copied at send, and prior redemptions retain their original values in audit.", "rationale": "prd.md line 314 (Screen 2 acceptance criterion 3)."}}
+  - {"op": "add_edge", "from": "REQ-019-108", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-108", "verb": "applies to", "to": "SCR-019-02"}
+  # Screen 1 Scope filter (PRD line 210) is not shown on the screen
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.scope", "attrs": {"provenance": "user input", "label": "Filter: Scope"}}
+  # human Steps and their Flows (system-performed Steps are in the held file)
+  - {"op": "add_node", "id": "STP-019-001", "type": "Step", "owner_fr": "FR-019", "title": "Admin defines the discount (type, value, Hairline share %, dates, usage limit, targeted providers)", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "on", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "applies", "to": "REQ-019-001"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "applies", "to": "REQ-019-027"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "applies", "to": "REQ-019-048"}
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "applies", "to": "REQ-019-053"}
+  - {"op": "add_node", "id": "FLW-019-main", "type": "Flow", "title": "Admin creates a platform discount (Both-Fees)", "attrs": {"kind": "main", "description": "Admin defines a Both-Fees discount, targeted providers accept or decline, and the discount becomes eligible for their option/date-price rows.", "prd_ref": "Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-019-main", "verb": "starts at", "to": "STP-019-001"}
+  - {"op": "add_node", "id": "STP-019-002", "type": "Step", "owner_fr": "FR-019", "title": "Provider enters name, type, value, applies-to and optional code in the inline mini-form for one option/date-price row", "attrs": {"prd_ref": "Alternative Flow A1b", "handoff_from": "FR-004: Screen 1 inline promotion creator"}}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "on", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "applies", "to": "REQ-019-031"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "applies", "to": "REQ-019-077"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "applies", "to": "REQ-019-078"}
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "applies", "to": "REQ-019-082"}
+  - {"op": "add_node", "id": "FLW-019-provider-inline", "type": "Flow", "title": "Provider-only inline discount from the quote", "attrs": {"kind": "alternative", "description": "Provider opens the inline promotion creator from FR-004 Screen 1 and creates an ad-hoc promotion bound to one option/date-price row.", "prd_ref": "Alternative Flow A1b"}}
+  - {"op": "add_edge", "from": "FLW-019-provider-inline", "verb": "starts at", "to": "STP-019-002"}

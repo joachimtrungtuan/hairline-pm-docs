@@ -1,0 +1,649 @@
+# FR-034 completeness held operations. Apply after 2026-11-10-fr034-completeness-fixes.yaml.
+# System-performed Steps, the human Steps reachable only through them, and the Flows that start with one are held; system Steps have no done by edge (the graph has no System Actor), so lint L17 flags them until one exists.
+reason: "FR-034 completeness held operations: system-performed Steps and the human Steps behind them (Needs user decision: no System Actor), new Rules whose wording needs review, and the provider-stage emits edges removed under review-queue row F8. See plans/reports/tester-261110-fr034-completeness.md."
+by: tester
+operations:
+  # waits on: no System Actor  (Main step 4)
+  - {"op": "add_node", "id": "STP-034-004", "type": "Step", "title": "System displays case creation form", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-034-004", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-004", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-004", "verb": "applies", "to": "REQ-034-001"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-003", "verb": "next", "to": "STP-034-004"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 5)
+  - {"op": "add_node", "id": "STP-034-005", "type": "Step", "title": "Admin Staff enters case details: case title, category, priority, patient identifier, description and attachments", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-001"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-009"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-018"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-019"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-020"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-035"}
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "applies", "to": "REQ-034-036"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-004", "verb": "next", "to": "STP-034-005"}
+  # waits on: no System Actor  (Main step 6)
+  - {"op": "add_node", "id": "STP-034-006", "type": "Step", "title": "System validates inputs and creates support case record with status \"Open\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_edge", "from": "STP-034-006", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-006", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-006", "verb": "applies", "to": "REQ-034-003"}
+  - {"op": "add_edge", "from": "STP-034-006", "verb": "applies", "to": "REQ-034-096"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-005", "verb": "next", "to": "STP-034-006"}
+  # waits on: no System Actor  (Main step 7)
+  - {"op": "add_node", "id": "STP-034-007", "type": "Step", "title": "System assigns unique case ID (e.g., \"CASE-2025-12345\")", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 7"}}
+  - {"op": "add_edge", "from": "STP-034-007", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-007", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-007", "verb": "applies", "to": "REQ-034-002"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-006", "verb": "next", "to": "STP-034-007"}
+  # waits on: no System Actor  (Main step 8)
+  - {"op": "add_node", "id": "STP-034-008", "type": "Step", "title": "System records case creation timestamp and admin user who created it", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 8"}}
+  - {"op": "add_edge", "from": "STP-034-008", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-008", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-008", "verb": "applies", "to": "REQ-034-097"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-007", "verb": "next", "to": "STP-034-008"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 9)
+  - {"op": "add_node", "id": "STP-034-009", "type": "Step", "title": "Admin Staff assigns case to appropriate team member or department", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 9"}}
+  - {"op": "add_edge", "from": "STP-034-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-009", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-009", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-009", "verb": "applies", "to": "REQ-034-007"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-008", "verb": "next", "to": "STP-034-009"}
+  # waits on: no System Actor  (Main step 10)
+  - {"op": "add_node", "id": "STP-034-010", "type": "Step", "title": "System sends email notification to assigned admin staff member", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_edge", "from": "STP-034-010", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-010", "verb": "applies", "to": "REQ-034-071"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-009", "verb": "next", "to": "STP-034-010"}
+  # waits on: no System Actor  (Main step 11)
+  - {"op": "add_node", "id": "STP-034-011", "type": "Step", "title": "System optionally sends confirmation email to patient (via S-03) acknowledging case creation", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_edge", "from": "STP-034-011", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-011", "verb": "applies", "to": "REQ-034-090"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-010", "verb": "next", "to": "STP-034-011"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 12)
+  - {"op": "add_node", "id": "STP-034-012", "type": "Step", "title": "Assigned Admin Staff reviews case details and changes status to \"In Progress\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 12"}}
+  - {"op": "add_edge", "from": "STP-034-012", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-012", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-012", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-012", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-011", "verb": "next", "to": "STP-034-012"}
+  # waits on: no System Actor  (Main step 13)
+  - {"op": "add_node", "id": "STP-034-013", "type": "Step", "title": "System logs status change in case timeline", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 13"}}
+  - {"op": "add_edge", "from": "STP-034-013", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-013", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-013", "verb": "applies", "to": "REQ-034-008"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-012", "verb": "next", "to": "STP-034-013"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 14)
+  - {"op": "add_node", "id": "STP-034-014", "type": "Step", "title": "Assigned Admin Staff investigates issue and communicates with patient via email", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 14"}}
+  - {"op": "add_edge", "from": "STP-034-014", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-014", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-014", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-014", "verb": "applies", "to": "REQ-034-014"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-013", "verb": "next", "to": "STP-034-014"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 15)
+  - {"op": "add_node", "id": "STP-034-015", "type": "Step", "title": "Admin Staff adds internal notes to case (e.g., \"Password reset completed\")", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 15"}}
+  - {"op": "add_edge", "from": "STP-034-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-015", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-015", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-015", "verb": "applies", "to": "REQ-034-013"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-014", "verb": "next", "to": "STP-034-015"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 16)
+  - {"op": "add_node", "id": "STP-034-016", "type": "Step", "title": "Admin Staff updates case status to \"Resolved\" once issue is fixed", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 16"}}
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "on", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "applies", "to": "REQ-034-003"}
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "applies", "to": "REQ-034-059"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-015", "verb": "next", "to": "STP-034-016"}
+  # waits on: no System Actor  (Main step 17)
+  - {"op": "add_node", "id": "STP-034-017", "type": "Step", "title": "System logs resolution timestamp and sends email to patient with resolution summary (via S-03)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 17"}}
+  - {"op": "add_edge", "from": "STP-034-017", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-017", "verb": "on", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "STP-034-017", "verb": "applies", "to": "REQ-034-008"}
+  - {"op": "add_edge", "from": "STP-034-017", "verb": "applies", "to": "REQ-034-060"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-016", "verb": "next", "to": "STP-034-017"}
+  # waits on: no System Actor (reachable only through a held system step)  (Main step 18)
+  - {"op": "add_node", "id": "STP-034-018", "type": "Step", "title": "Admin Staff closes case after confirming patient satisfaction or after 7-day auto-close period", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 18"}}
+  - {"op": "add_edge", "from": "STP-034-018", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-018", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-018", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-018", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-017", "verb": "next", "to": "STP-034-018"}
+  # waits on: no System Actor  (Main step 19)
+  - {"op": "add_node", "id": "STP-034-019", "type": "Step", "title": "System sets case status to \"Closed\" and marks case lifecycle complete", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 19"}}
+  - {"op": "add_edge", "from": "STP-034-019", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-019", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-019", "verb": "applies", "to": "REQ-034-061"}
+  - {"op": "add_edge", "from": "STP-034-019", "verb": "applies", "to": "REQ-034-062"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-018", "verb": "next", "to": "STP-034-019"}
+  # waits on: no System Actor  (Main step 20)
+  - {"op": "add_node", "id": "STP-034-020", "type": "Step", "title": "System archives case data with immutable audit trail for compliance retention", "owner_fr": "FR-034", "attrs": {"prd_ref": "Main Flow step 20"}}
+  - {"op": "add_edge", "from": "STP-034-020", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-020", "verb": "applies", "to": "REQ-034-038"}
+  - {"op": "add_edge", "from": "STP-034-020", "verb": "applies", "to": "REQ-034-045"}
+  - {"op": "add_edge", "from": "STP-034-020", "verb": "applies", "to": "REQ-034-082"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-019", "verb": "next", "to": "STP-034-020"}
+  # waits on: no System Actor  (A1 step 2)
+  - {"op": "add_node", "id": "STP-034-022", "type": "Step", "title": "System displays escalation form with reason field", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-022", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-022", "verb": "applies", "to": "REQ-034-103"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-021", "verb": "next", "to": "STP-034-022"}
+  # waits on: no System Actor (reachable only through a held system step)  (A1 step 3)
+  - {"op": "add_node", "id": "STP-034-023", "type": "Step", "title": "Admin selects escalation recipient (senior admin or technical team)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-023", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-023", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-023", "verb": "applies", "to": "REQ-034-103"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-022", "verb": "next", "to": "STP-034-023"}
+  # waits on: no System Actor  (A1 step 4)
+  - {"op": "add_node", "id": "STP-034-024", "type": "Step", "title": "System updates case priority to \"High\" or \"Urgent\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-024", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-024", "verb": "applies", "to": "REQ-034-103"}
+  - {"op": "add_edge", "from": "STP-034-024", "verb": "applies", "to": "REQ-034-031"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-023", "verb": "next", "to": "STP-034-024"}
+  # waits on: no System Actor  (A1 step 5)
+  - {"op": "add_node", "id": "STP-034-025", "type": "Step", "title": "System sends escalation notification to selected recipient", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-025", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-025", "verb": "applies", "to": "REQ-034-103"}
+  - {"op": "add_edge", "from": "STP-034-025", "verb": "applies", "to": "REQ-034-092"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-024", "verb": "next", "to": "STP-034-025"}
+  # waits on: no System Actor  (A1 step 6)
+  - {"op": "add_node", "id": "STP-034-026", "type": "Step", "title": "System logs escalation action in case timeline", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-026", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-026", "verb": "applies", "to": "REQ-034-103"}
+  - {"op": "add_edge", "from": "STP-034-026", "verb": "applies", "to": "REQ-034-008"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-025", "verb": "next", "to": "STP-034-026"}
+  # waits on: no System Actor  (A2 step 2)
+  - {"op": "add_node", "id": "STP-034-028", "type": "Step", "title": "System deep-links to patient management module (A-01) with patient HPID pre-filled", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-028", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-028", "verb": "applies", "to": "REQ-034-011"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-027", "verb": "next", "to": "STP-034-028"}
+  # waits on: no System Actor (reachable only through a held system step)  (A2 step 3)
+  - {"op": "add_node", "id": "STP-034-029", "type": "Step", "title": "Admin performs account intervention (password reset, account unlock, data correction)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-029", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-029", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-029", "verb": "applies", "to": "REQ-034-074"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-028", "verb": "next", "to": "STP-034-029"}
+  # waits on: no System Actor (reachable only through a held system step)  (A2 step 4)
+  - {"op": "add_node", "id": "STP-034-030", "type": "Step", "title": "Admin returns to support case and adds note documenting intervention", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "applies", "to": "REQ-034-013"}
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "applies", "to": "REQ-034-074"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-029", "verb": "next", "to": "STP-034-030"}
+  # waits on: no System Actor  (A2 step 5)
+  - {"op": "add_node", "id": "STP-034-031", "type": "Step", "title": "System logs intervention in both support case timeline and patient account audit trail", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-031", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-031", "verb": "applies", "to": "REQ-034-074"}
+  - {"op": "add_edge", "from": "STP-034-031", "verb": "applies", "to": "REQ-034-008"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-030", "verb": "next", "to": "STP-034-031"}
+  # waits on: no System Actor  (A3 step 2)
+  - {"op": "add_node", "id": "STP-034-033", "type": "Step", "title": "System displays support request form (subject, category, message, priority, optional attachment)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-033", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-033", "verb": "applies", "to": "REQ-034-022"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-032", "verb": "next", "to": "STP-034-033"}
+  # waits on: no System Actor (reachable only through a held system step)  (A3 step 3)
+  - {"op": "add_node", "id": "STP-034-034", "type": "Step", "title": "Provider completes form with support request details and submits", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-034", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-034", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-034", "verb": "applies", "to": "REQ-034-022"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-033", "verb": "next", "to": "STP-034-034"}
+  # waits on: no System Actor  (A3 step 4)
+  - {"op": "add_node", "id": "STP-034-035", "type": "Step", "title": "System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-035", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-035", "verb": "applies", "to": "REQ-034-002"}
+  - {"op": "add_edge", "from": "STP-034-035", "verb": "applies", "to": "REQ-034-022"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-034", "verb": "next", "to": "STP-034-035"}
+  # waits on: no System Actor  (A3 step 5)
+  - {"op": "add_node", "id": "STP-034-036", "type": "Step", "title": "System links case to provider record (provider ID automatically linked from logged-in provider session)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-036", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-036", "verb": "applies", "to": "REQ-034-025"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-035", "verb": "next", "to": "STP-034-036"}
+  # waits on: no System Actor  (A3 step 6)
+  - {"op": "add_node", "id": "STP-034-037", "type": "Step", "title": "System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-037", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-037", "verb": "applies", "to": "REQ-034-030"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-036", "verb": "next", "to": "STP-034-037"}
+  # waits on: no System Actor  (A3 step 7)
+  - {"op": "add_node", "id": "STP-034-038", "type": "Step", "title": "System sets case priority based on provider's selection (Low, Medium, High, Urgent)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 7"}}
+  - {"op": "add_edge", "from": "STP-034-038", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-038", "verb": "applies", "to": "REQ-034-031"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-037", "verb": "next", "to": "STP-034-038"}
+  # waits on: no System Actor  (A3 step 8)
+  - {"op": "add_node", "id": "STP-034-039", "type": "Step", "title": "System sets case status to \"Open\" and assigns to default provider support team", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 8"}}
+  - {"op": "add_edge", "from": "STP-034-039", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-039", "verb": "applies", "to": "REQ-034-100"}
+  - {"op": "add_edge", "from": "STP-034-039", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-038", "verb": "next", "to": "STP-034-039"}
+  # waits on: no System Actor  (A3 step 9)
+  - {"op": "add_node", "id": "STP-034-040", "type": "Step", "title": "System sets Ticket Source to \"Provider Portal\" and Submitter Type to \"Provider\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 9"}}
+  - {"op": "add_edge", "from": "STP-034-040", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-040", "verb": "applies", "to": "REQ-034-004"}
+  - {"op": "add_edge", "from": "STP-034-040", "verb": "applies", "to": "REQ-034-005"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-039", "verb": "next", "to": "STP-034-040"}
+  # waits on: no System Actor  (A3 step 10)
+  - {"op": "add_node", "id": "STP-034-041", "type": "Step", "title": "System displays confirmation to provider: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 10"}}
+  - {"op": "add_edge", "from": "STP-034-041", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-041", "verb": "applies", "to": "REQ-034-098"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-040", "verb": "next", "to": "STP-034-041"}
+  # waits on: no System Actor  (A3 step 11)
+  - {"op": "add_node", "id": "STP-034-042", "type": "Step", "title": "System sends confirmation email to provider with case reference number (via S-03)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 11"}}
+  - {"op": "add_edge", "from": "STP-034-042", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-042", "verb": "applies", "to": "REQ-034-099"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-041", "verb": "next", "to": "STP-034-042"}
+  # waits on: no System Actor  (A3 step 12)
+  - {"op": "add_node", "id": "STP-034-043", "type": "Step", "title": "System sends notification to assigned admin team member", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 12"}}
+  - {"op": "add_edge", "from": "STP-034-043", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-043", "verb": "applies", "to": "REQ-034-071"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-042", "verb": "next", "to": "STP-034-043"}
+  # waits on: no System Actor (reachable only through a held system step)  (A3 step 13)
+  - {"op": "add_node", "id": "STP-034-044", "type": "Step", "title": "Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 13"}}
+  - {"op": "add_edge", "from": "STP-034-044", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-044", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-044", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-044", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-043", "verb": "next", "to": "STP-034-044"}
+  # waits on: no System Actor (reachable only through a held system step)  (A3 step 14)
+  - {"op": "add_node", "id": "STP-034-045", "type": "Step", "title": "Provider can view case status and admin responses in their Contact Support subscreen (FR-032 Screen 5.5)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 14"}}
+  - {"op": "add_edge", "from": "STP-034-045", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-045", "verb": "applies", "to": "REQ-034-027"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-044", "verb": "next", "to": "STP-034-045"}
+  # waits on: no System Actor  (A4 step 2)
+  - {"op": "add_node", "id": "STP-034-047", "type": "Step", "title": "System displays feedback submission form (feedback type, title, description, priority)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-047", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-047", "verb": "applies", "to": "REQ-034-023"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-046", "verb": "next", "to": "STP-034-047"}
+  # waits on: no System Actor (reachable only through a held system step)  (A4 step 3)
+  - {"op": "add_node", "id": "STP-034-048", "type": "Step", "title": "Provider completes form with feedback details and submits", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-048", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-048", "verb": "applies", "to": "REQ-034-023"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-047", "verb": "next", "to": "STP-034-048"}
+  # waits on: no System Actor  (A4 step 4)
+  - {"op": "add_node", "id": "STP-034-049", "type": "Step", "title": "System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-049", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-049", "verb": "applies", "to": "REQ-034-002"}
+  - {"op": "add_edge", "from": "STP-034-049", "verb": "applies", "to": "REQ-034-023"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-048", "verb": "next", "to": "STP-034-049"}
+  # waits on: no System Actor  (A4 step 5)
+  - {"op": "add_node", "id": "STP-034-050", "type": "Step", "title": "System links case to provider record (provider ID automatically linked from logged-in provider session)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-050", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-050", "verb": "applies", "to": "REQ-034-025"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-049", "verb": "next", "to": "STP-034-050"}
+  # waits on: no System Actor  (A4 step 6)
+  - {"op": "add_node", "id": "STP-034-051", "type": "Step", "title": "System sets case category based on feedback type (Feature Request, Bug Report, Suggestion, Other)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-051", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-051", "verb": "applies", "to": "REQ-034-030"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-050", "verb": "next", "to": "STP-034-051"}
+  # waits on: no System Actor  (A4 step 7)
+  - {"op": "add_node", "id": "STP-034-052", "type": "Step", "title": "System sets case priority based on provider's suggested priority (Low, Medium, High, Urgent)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 7"}}
+  - {"op": "add_edge", "from": "STP-034-052", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-052", "verb": "applies", "to": "REQ-034-031"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-051", "verb": "next", "to": "STP-034-052"}
+  # waits on: no System Actor  (A4 step 8)
+  - {"op": "add_node", "id": "STP-034-053", "type": "Step", "title": "System sets case status to \"Open\" and assigns to product/feedback team", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 8"}}
+  - {"op": "add_edge", "from": "STP-034-053", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-053", "verb": "applies", "to": "REQ-034-100"}
+  - {"op": "add_edge", "from": "STP-034-053", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-052", "verb": "next", "to": "STP-034-053"}
+  # waits on: no System Actor  (A4 step 9)
+  - {"op": "add_node", "id": "STP-034-054", "type": "Step", "title": "System sets Ticket Source to \"Provider Portal\" and Submitter Type to \"Provider\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 9"}}
+  - {"op": "add_edge", "from": "STP-034-054", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-054", "verb": "applies", "to": "REQ-034-004"}
+  - {"op": "add_edge", "from": "STP-034-054", "verb": "applies", "to": "REQ-034-005"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-053", "verb": "next", "to": "STP-034-054"}
+  # waits on: no System Actor  (A4 step 10)
+  - {"op": "add_node", "id": "STP-034-055", "type": "Step", "title": "System displays confirmation to provider: \"Thank you for your feedback! Case #[number]. We'll review your submission.\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 10"}}
+  - {"op": "add_edge", "from": "STP-034-055", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-055", "verb": "applies", "to": "REQ-034-098"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-054", "verb": "next", "to": "STP-034-055"}
+  # waits on: no System Actor  (A4 step 11)
+  - {"op": "add_node", "id": "STP-034-056", "type": "Step", "title": "System sends confirmation email to provider with case reference number (via S-03)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 11"}}
+  - {"op": "add_edge", "from": "STP-034-056", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-056", "verb": "applies", "to": "REQ-034-099"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-055", "verb": "next", "to": "STP-034-056"}
+  # waits on: no System Actor  (A4 step 12)
+  - {"op": "add_node", "id": "STP-034-057", "type": "Step", "title": "System sends notification to assigned admin team member", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 12"}}
+  - {"op": "add_edge", "from": "STP-034-057", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-057", "verb": "applies", "to": "REQ-034-071"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-056", "verb": "next", "to": "STP-034-057"}
+  # waits on: no System Actor (reachable only through a held system step)  (A4 step 13)
+  - {"op": "add_node", "id": "STP-034-058", "type": "Step", "title": "Admin reviews feedback in Support Center, updates status (Open → In Progress → Resolved → Closed), sets Feedback Resolution (Implemented, Planned, Declined, Under Review), and optionally responds", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 13"}}
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "on", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "applies", "to": "REQ-034-003"}
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "applies", "to": "REQ-034-006"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-057", "verb": "next", "to": "STP-034-058"}
+  # waits on: no System Actor (reachable only through a held system step)  (A4 step 14)
+  - {"op": "add_node", "id": "STP-034-059", "type": "Step", "title": "Provider can view submission status and feedback resolution in their Feedback & Suggestions subscreen (FR-032 Screen 5.6)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A4 step 14"}}
+  - {"op": "add_edge", "from": "STP-034-059", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-034-059", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-059", "verb": "applies", "to": "REQ-034-027"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-058", "verb": "next", "to": "STP-034-059"}
+  # waits on: no System Actor  (A5 step 2)
+  - {"op": "add_node", "id": "STP-034-061", "type": "Step", "title": "System displays submission form (subject, category, message, priority, optional attachment)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-061", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-061", "verb": "applies", "to": "REQ-034-021"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-060", "verb": "next", "to": "STP-034-061"}
+  # waits on: no System Actor (reachable only through a held system step)  (A5 step 3)
+  - {"op": "add_node", "id": "STP-034-062", "type": "Step", "title": "Patient completes form with support request or feedback details and submits", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-062", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-034-062", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-062", "verb": "applies", "to": "REQ-034-021"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-061", "verb": "next", "to": "STP-034-062"}
+  # waits on: no System Actor  (A5 step 4)
+  - {"op": "add_node", "id": "STP-034-063", "type": "Step", "title": "System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-063", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-063", "verb": "applies", "to": "REQ-034-002"}
+  - {"op": "add_edge", "from": "STP-034-063", "verb": "applies", "to": "REQ-034-021"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-062", "verb": "next", "to": "STP-034-063"}
+  # waits on: no System Actor  (A5 step 5)
+  - {"op": "add_node", "id": "STP-034-064", "type": "Step", "title": "System links case to patient record (patient ID automatically linked from logged-in patient session)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-064", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-064", "verb": "applies", "to": "REQ-034-024"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-063", "verb": "next", "to": "STP-034-064"}
+  # waits on: no System Actor  (A5 step 6)
+  - {"op": "add_node", "id": "STP-034-065", "type": "Step", "title": "System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-065", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-065", "verb": "applies", "to": "REQ-034-101"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-064", "verb": "next", "to": "STP-034-065"}
+  # waits on: no System Actor  (A5 step 7)
+  - {"op": "add_node", "id": "STP-034-066", "type": "Step", "title": "System sets case priority based on patient's selection (Low, Medium, High, Urgent)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 7"}}
+  - {"op": "add_edge", "from": "STP-034-066", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-066", "verb": "applies", "to": "REQ-034-031"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-065", "verb": "next", "to": "STP-034-066"}
+  # waits on: no System Actor  (A5 step 8)
+  - {"op": "add_node", "id": "STP-034-067", "type": "Step", "title": "System sets case status to \"Open\" and assigns to patient support team", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 8"}}
+  - {"op": "add_edge", "from": "STP-034-067", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-067", "verb": "applies", "to": "REQ-034-100"}
+  - {"op": "add_edge", "from": "STP-034-067", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-066", "verb": "next", "to": "STP-034-067"}
+  # waits on: no System Actor  (A5 step 9)
+  - {"op": "add_node", "id": "STP-034-068", "type": "Step", "title": "System sets Ticket Source to \"Patient App\" and Submitter Type to \"Patient\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 9"}}
+  - {"op": "add_edge", "from": "STP-034-068", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-068", "verb": "applies", "to": "REQ-034-004"}
+  - {"op": "add_edge", "from": "STP-034-068", "verb": "applies", "to": "REQ-034-005"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-067", "verb": "next", "to": "STP-034-068"}
+  # waits on: no System Actor  (A5 step 10)
+  - {"op": "add_node", "id": "STP-034-069", "type": "Step", "title": "System displays confirmation to patient: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 10"}}
+  - {"op": "add_edge", "from": "STP-034-069", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-069", "verb": "applies", "to": "REQ-034-098"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-068", "verb": "next", "to": "STP-034-069"}
+  # waits on: no System Actor  (A5 step 11)
+  - {"op": "add_node", "id": "STP-034-070", "type": "Step", "title": "System sends confirmation email to patient with case reference number (via S-03)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 11"}}
+  - {"op": "add_edge", "from": "STP-034-070", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-070", "verb": "applies", "to": "REQ-034-099"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-069", "verb": "next", "to": "STP-034-070"}
+  # waits on: no System Actor  (A5 step 12)
+  - {"op": "add_node", "id": "STP-034-071", "type": "Step", "title": "System sends notification to assigned admin team member", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 12"}}
+  - {"op": "add_edge", "from": "STP-034-071", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-071", "verb": "applies", "to": "REQ-034-071"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-070", "verb": "next", "to": "STP-034-071"}
+  # waits on: no System Actor (reachable only through a held system step)  (A5 step 13)
+  - {"op": "add_node", "id": "STP-034-072", "type": "Step", "title": "Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds to patient", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 13"}}
+  - {"op": "add_edge", "from": "STP-034-072", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-072", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-072", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-072", "verb": "applies", "to": "REQ-034-003"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-071", "verb": "next", "to": "STP-034-072"}
+  # waits on: no System Actor (reachable only through a held system step)  (A5 step 14)
+  - {"op": "add_node", "id": "STP-034-073", "type": "Step", "title": "For feedback submissions, admin sets Feedback Resolution (Implemented, Planned, Declined, Under Review) as appropriate", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 14"}}
+  - {"op": "add_edge", "from": "STP-034-073", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-073", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-073", "verb": "on", "to": "SCR-034-04"}
+  - {"op": "add_edge", "from": "STP-034-073", "verb": "applies", "to": "REQ-034-006"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-072", "verb": "next", "to": "STP-034-073"}
+  # waits on: no System Actor (reachable only through a held system step)  (A5 step 15)
+  - {"op": "add_node", "id": "STP-034-074", "type": "Step", "title": "Patient can view case status, feedback resolution, and admin responses in their Help Center (FR-035)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A5 step 15"}}
+  - {"op": "add_edge", "from": "STP-034-074", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-034-074", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-074", "verb": "applies", "to": "REQ-034-026"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-073", "verb": "next", "to": "STP-034-074"}
+  # waits on: no System Actor  (A6 step 3)
+  - {"op": "add_node", "id": "STP-034-077", "type": "Step", "title": "System deep-links to provider management module (A-02) with provider ID pre-filled", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-077", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-077", "verb": "applies", "to": "REQ-034-012"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-076", "verb": "next", "to": "STP-034-077"}
+  # waits on: no System Actor (reachable only through a held system step)  (A6 step 4)
+  - {"op": "add_node", "id": "STP-034-078", "type": "Step", "title": "Admin performs provider account intervention if needed", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-078", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-078", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-078", "verb": "applies", "to": "REQ-034-012"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-077", "verb": "next", "to": "STP-034-078"}
+  # waits on: no System Actor (reachable only through a held system step)  (A6 step 5)
+  - {"op": "add_node", "id": "STP-034-079", "type": "Step", "title": "Admin returns to support case and adds note documenting resolution", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-079", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-079", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-079", "verb": "on", "to": "SCR-034-03"}
+  - {"op": "add_edge", "from": "STP-034-079", "verb": "applies", "to": "REQ-034-013"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-078", "verb": "next", "to": "STP-034-079"}
+  # waits on: no System Actor  (A6 step 6)
+  - {"op": "add_node", "id": "STP-034-080", "type": "Step", "title": "System logs intervention in both support case timeline and provider account audit trail", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow A6 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-080", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-034-080", "verb": "applies", "to": "REQ-034-012"}
+  - {"op": "add_edge", "from": "STP-034-080", "verb": "applies", "to": "REQ-034-008"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-079", "verb": "next", "to": "STP-034-080"}
+  # waits on: no System Actor  (B1 step 1)
+  - {"op": "add_node", "id": "STP-034-081", "type": "Step", "title": "System validates patient identifier against patient database", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-081", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-081", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-081", "verb": "applies", "to": "REQ-034-104"}
+  - {"op": "add_edge", "from": "STP-034-081", "verb": "applies", "to": "REQ-034-009"}
+  # waits on: no System Actor  (B1 step 2)
+  - {"op": "add_node", "id": "STP-034-082", "type": "Step", "title": "System displays error message: \"Patient not found. Please verify identifier or create case without patient link.\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-082", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-082", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-082", "verb": "applies", "to": "REQ-034-104"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-081", "verb": "next", "to": "STP-034-082"}
+  # waits on: no System Actor (reachable only through a held system step)  (B1 step 3)
+  - {"op": "add_node", "id": "STP-034-083", "type": "Step", "title": "Admin corrects identifier or selects \"No Patient Link\" option for anonymous inquiries", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-083", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-083", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-083", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-083", "verb": "applies", "to": "REQ-034-104"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-082", "verb": "next", "to": "STP-034-083"}
+  # waits on: no System Actor  (B1 step 4)
+  - {"op": "add_node", "id": "STP-034-084", "type": "Step", "title": "System allows case creation without patient linkage", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-084", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-084", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-084", "verb": "applies", "to": "REQ-034-104"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-083", "verb": "next", "to": "STP-034-084"}
+  # waits on: no System Actor (flow starts at a held step; held whole)
+  - {"op": "add_node", "id": "FLW-034-invalid-patient-identifier", "type": "Flow", "title": "Alternative Flow B1: Invalid Patient Identifier", "attrs": {"kind": "alternative", "description": "Alternative Flow B1: Invalid Patient Identifier", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_edge", "from": "FLW-034-invalid-patient-identifier", "verb": "starts at", "to": "STP-034-081"}
+  # waits on: no System Actor  (B2 step 3)
+  - {"op": "add_node", "id": "STP-034-087", "type": "Step", "title": "System displays team member list with availability indicators", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-087", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-087", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "STP-034-087", "verb": "applies", "to": "REQ-034-105"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-086", "verb": "next", "to": "STP-034-087"}
+  # waits on: no System Actor (reachable only through a held system step)  (B2 step 4)
+  - {"op": "add_node", "id": "STP-034-088", "type": "Step", "title": "Admin selects new assignee and enters reassignment reason", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "applies", "to": "REQ-034-016"}
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "applies", "to": "REQ-034-144"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-087", "verb": "next", "to": "STP-034-088"}
+  # waits on: no System Actor  (B2 step 5)
+  - {"op": "add_node", "id": "STP-034-089", "type": "Step", "title": "System updates case assignment and notifies new assignee", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-089", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-089", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "STP-034-089", "verb": "applies", "to": "REQ-034-142"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-088", "verb": "next", "to": "STP-034-089"}
+  # waits on: no System Actor  (B2 step 6)
+  - {"op": "add_node", "id": "STP-034-090", "type": "Step", "title": "System logs reassignment action in case timeline", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B2 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-090", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-090", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "add_edge", "from": "STP-034-090", "verb": "applies", "to": "REQ-034-142"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-089", "verb": "next", "to": "STP-034-090"}
+  # waits on: no System Actor  (B3 step 4)
+  - {"op": "add_node", "id": "STP-034-094", "type": "Step", "title": "System prompts for reopening reason", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-094", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-094", "verb": "on", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "STP-034-094", "verb": "applies", "to": "REQ-034-064"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-093", "verb": "next", "to": "STP-034-094"}
+  # waits on: no System Actor  (B3 step 5)
+  - {"op": "add_node", "id": "STP-034-095", "type": "Step", "title": "System changes case status from \"Closed\" to \"Open\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-095", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-095", "verb": "on", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "STP-034-095", "verb": "applies", "to": "REQ-034-145"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-094", "verb": "next", "to": "STP-034-095"}
+  # waits on: no System Actor  (B3 step 6)
+  - {"op": "add_node", "id": "STP-034-096", "type": "Step", "title": "System logs reopening action with timestamp and reason", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 6"}}
+  - {"op": "add_edge", "from": "STP-034-096", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-096", "verb": "on", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "STP-034-096", "verb": "applies", "to": "REQ-034-064"}
+  - {"op": "add_edge", "from": "STP-034-096", "verb": "applies", "to": "REQ-034-145"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-095", "verb": "next", "to": "STP-034-096"}
+  # waits on: no System Actor (reachable only through a held system step)  (B3 step 7)
+  - {"op": "add_node", "id": "STP-034-097", "type": "Step", "title": "Admin reassigns or continues investigation", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B3 step 7"}}
+  - {"op": "add_edge", "from": "STP-034-097", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-097", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-097", "verb": "on", "to": "SCR-034-06"}
+  - {"op": "add_edge", "from": "STP-034-097", "verb": "applies", "to": "REQ-034-148"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-096", "verb": "next", "to": "STP-034-097"}
+  # waits on: no System Actor  (B4 step 1)
+  - {"op": "add_node", "id": "STP-034-098", "type": "Step", "title": "System validates file size (max 10MB per file) and format (images, PDFs, documents)", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B4 step 1"}}
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "applies", "to": "REQ-034-106"}
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "applies", "to": "REQ-034-036"}
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "applies", "to": "REQ-034-037"}
+  # waits on: no System Actor  (B4 step 2)
+  - {"op": "add_node", "id": "STP-034-099", "type": "Step", "title": "System displays error: \"File exceeds 10MB limit\" or \"Unsupported file format\"", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B4 step 2"}}
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "applies", "to": "REQ-034-106"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-098", "verb": "next", "to": "STP-034-099"}
+  # waits on: no System Actor (reachable only through a held system step)  (B4 step 3)
+  - {"op": "add_node", "id": "STP-034-100", "type": "Step", "title": "Admin compresses file or converts format", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
+  - {"op": "add_edge", "from": "STP-034-100", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-100", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-100", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-100", "verb": "applies", "to": "REQ-034-106"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "next", "to": "STP-034-100"}
+  # waits on: no System Actor (reachable only through a held system step)  (B4 step 4)
+  - {"op": "add_node", "id": "STP-034-101", "type": "Step", "title": "Admin retries upload", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B4 step 4"}}
+  - {"op": "add_edge", "from": "STP-034-101", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-034-101", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-101", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-101", "verb": "applies", "to": "REQ-034-106"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-100", "verb": "next", "to": "STP-034-101"}
+  # waits on: no System Actor  (B4 step 5)
+  - {"op": "add_node", "id": "STP-034-102", "type": "Step", "title": "System accepts valid file and attaches to case", "owner_fr": "FR-034", "attrs": {"prd_ref": "Alternative Flow B4 step 5"}}
+  - {"op": "add_edge", "from": "STP-034-102", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-034-102", "verb": "on", "to": "SCR-034-02"}
+  - {"op": "add_edge", "from": "STP-034-102", "verb": "applies", "to": "REQ-034-106"}
+  - {"op": "add_edge", "from": "STP-034-102", "verb": "applies", "to": "REQ-034-044"}
+  # waits on: no System Actor (next link touches a held step)
+  - {"op": "add_edge", "from": "STP-034-101", "verb": "next", "to": "STP-034-102"}
+  # waits on: no System Actor (flow starts at a held step; held whole)
+  - {"op": "add_node", "id": "FLW-034-attachment-failure", "type": "Flow", "title": "Alternative Flow B4: Attachment Upload Failure", "attrs": {"kind": "alternative", "description": "Alternative Flow B4: Attachment Upload Failure", "prd_ref": "Alternative Flow B4"}}
+  - {"op": "add_edge", "from": "FLW-034-attachment-failure", "verb": "starts at", "to": "STP-034-098"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-034-160", "type": "Rule", "owner_fr": "FR-034", "title": "Case list truncates long case titles", "attrs": {"statement": "Truncated with ellipsis if >50 chars; full title shown on hover", "rationale": "Screen 1, Table Column 3 (PRD line 371)."}}
+  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies to", "to": "SCR-034-01"}
+  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies to", "to": "ENT-support-case.title"}
+  - {"op": "add_node", "id": "REQ-034-161", "type": "Rule", "owner_fr": "FR-034", "title": "Send Resolution Email defaults to checked", "attrs": {"statement": "Send Resolution Email: default checked", "rationale": "Screen 4 (PRD line 572)."}}
+  - {"op": "add_edge", "from": "REQ-034-161", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-161", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-161", "verb": "applies to", "to": "SCR-034-04"}
+  - {"op": "add_node", "id": "REQ-034-162", "type": "Rule", "owner_fr": "FR-034", "title": "Notify New Assignee defaults to checked", "attrs": {"statement": "Notify New Assignee: default checked", "rationale": "Screen 5 (PRD line 611)."}}
+  - {"op": "add_edge", "from": "REQ-034-162", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-162", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-162", "verb": "applies to", "to": "SCR-034-05"}
+  - {"op": "add_node", "id": "REQ-034-163", "type": "Rule", "owner_fr": "FR-034", "title": "Notify Patient/Provider on reopening defaults to checked", "attrs": {"statement": "Notify Patient/Provider: default checked", "rationale": "Screen 6 (PRD line 645)."}}
+  - {"op": "add_edge", "from": "REQ-034-163", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-163", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-163", "verb": "applies to", "to": "SCR-034-06"}
+  # waits on: ruling on the earlier removal of provider-stage emits for these three events (queue row F8)
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-assigned"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-admin-reply"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-escalated"}

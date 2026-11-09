@@ -1,0 +1,176 @@
+# FR-012 completeness fixes. Checker: tester. Checklist: project-requirements/graph/checklists/completeness-check.md v1.3
+# Adds applies to edges from FR-012 Rules to the Actors, Screens, Entities, Fields and Events the PRD names, shows edges so Screen 6B carries the same flag panels as Screen 6A, and the human Steps that open Alternative Flows A2 and A3.
+reason: "FR-012 completeness fixes (D37 review step 1): applies to placement for the FR-012 Rules, Screen 6B flag-panel shows edges, and the leading human Steps of the manual-flagging and emergency-intervention flows"
+by: tester
+operations:
+  # applies to: placement of FR-012 Rules
+  - {"op": "add_edge", "from": "REQ-012-001", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-002", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-003", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-004", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-005", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-005", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-006", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-006", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-006", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-006", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-007", "verb": "applies to", "to": "EVT-message-sent"}
+  - {"op": "add_edge", "from": "REQ-012-008", "verb": "applies to", "to": "ENT-message"}
+  - {"op": "add_edge", "from": "REQ-012-008", "verb": "applies to", "to": "ENT-message.read_at"}
+  - {"op": "add_edge", "from": "REQ-012-008", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-009", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-010", "verb": "applies to", "to": "ENT-messaging-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-012-011", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-012", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-012", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-013", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-013", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-014", "verb": "applies to", "to": "ENT-message.admin_badge"}
+  - {"op": "add_edge", "from": "REQ-012-015", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-016", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-017", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-018", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-019", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-019", "verb": "applies to", "to": "ENT-message"}
+  - {"op": "add_edge", "from": "REQ-012-020", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-021", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-021", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-022", "verb": "applies to", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "REQ-012-023", "verb": "applies to", "to": "ENT-messaging-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-012-024", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-024", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-025", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-026", "verb": "applies to", "to": "EVT-admin-intervention-sent"}
+  - {"op": "add_edge", "from": "REQ-012-026", "verb": "applies to", "to": "EVT-message-sent"}
+  - {"op": "add_edge", "from": "REQ-012-027", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-028", "verb": "applies to", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "REQ-012-029", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-029", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-029", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-031", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-032", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-032", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-033", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-034", "verb": "applies to", "to": "EVT-message-sent"}
+  - {"op": "add_edge", "from": "REQ-012-035", "verb": "applies to", "to": "ENT-message.text"}
+  - {"op": "add_edge", "from": "REQ-012-036", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-037", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-037", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-038", "verb": "applies to", "to": "ENT-message.delivery_status"}
+  - {"op": "add_edge", "from": "REQ-012-039", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-040", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-041", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-041", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-042", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-043", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-043", "verb": "applies to", "to": "ENT-attachment.thumbnail_metadata"}
+  - {"op": "add_edge", "from": "REQ-012-044", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-045", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-046", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-047", "verb": "applies to", "to": "ENT-conversation.last_message_preview"}
+  - {"op": "add_edge", "from": "REQ-012-047", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-048", "verb": "applies to", "to": "ENT-conversation.unread_count"}
+  - {"op": "add_edge", "from": "REQ-012-048", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-049", "verb": "applies to", "to": "ENT-conversation.admin_intervened"}
+  - {"op": "add_edge", "from": "REQ-012-050", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-051", "verb": "applies to", "to": "SCR-012-01"}
+  - {"op": "add_edge", "from": "REQ-012-052", "verb": "applies to", "to": "SCR-012-02"}
+  - {"op": "add_edge", "from": "REQ-012-053", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-054", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-055", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-056", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-057", "verb": "applies to", "to": "SCR-012-03"}
+  - {"op": "add_edge", "from": "REQ-012-058", "verb": "applies to", "to": "ENT-conversation.quote_references"}
+  - {"op": "add_edge", "from": "REQ-012-059", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-060", "verb": "applies to", "to": "ENT-message.sender"}
+  - {"op": "add_edge", "from": "REQ-012-061", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-062", "verb": "applies to", "to": "SCR-012-04"}
+  - {"op": "add_edge", "from": "REQ-012-063", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-012-064", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-065", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-066", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-067", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-067", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-068", "verb": "applies to", "to": "SCR-012-05"}
+  - {"op": "add_edge", "from": "REQ-012-069", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-070", "verb": "applies to", "to": "ENT-conversation.inquiry_ids"}
+  - {"op": "add_edge", "from": "REQ-012-070", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-070", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-071", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-072", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-072", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-073", "verb": "applies to", "to": "ENT-flag.status"}
+  - {"op": "add_edge", "from": "REQ-012-073", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-074", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-074", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-075", "verb": "applies to", "to": "ENT-messaging-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-012-076", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-077", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-078", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-079", "verb": "applies to", "to": "ENT-conversation.created_at"}
+  - {"op": "add_edge", "from": "REQ-012-080", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-080", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-081", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-082", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-083", "verb": "applies to", "to": "ENT-message.emergency_justification"}
+  - {"op": "add_edge", "from": "REQ-012-084", "verb": "applies to", "to": "ENT-message"}
+  - {"op": "add_edge", "from": "REQ-012-085", "verb": "applies to", "to": "ENT-flag.status"}
+  - {"op": "add_edge", "from": "REQ-012-086", "verb": "applies to", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "REQ-012-087", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-088", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-089", "verb": "applies to", "to": "SCR-012-07"}
+  - {"op": "add_edge", "from": "REQ-012-090", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-091", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-091", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-012-092", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-012-093", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-012-094", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-095", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-096", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-097", "verb": "applies to", "to": "ENT-flag.status"}
+  - {"op": "add_edge", "from": "REQ-012-098", "verb": "applies to", "to": "EVT-provider-response-escalated"}
+  - {"op": "add_edge", "from": "REQ-012-098", "verb": "applies to", "to": "EVT-provider-response-reminder"}
+  - {"op": "add_edge", "from": "REQ-012-100", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-101", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-012-101", "verb": "applies to", "to": "ENT-messaging-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-012-102", "verb": "applies to", "to": "ENT-messaging-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-012-104", "verb": "applies to", "to": "ENT-message"}
+  - {"op": "add_edge", "from": "REQ-012-105", "verb": "applies to", "to": "ENT-flag"}
+  - {"op": "add_edge", "from": "REQ-012-106", "verb": "applies to", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "REQ-012-107", "verb": "applies to", "to": "ACT-platform-admin"}
+  # shows: Screen 6B flag panels are 'Same as Screen 6A' (PRD Screen 6B fields)
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-conversation.keyword_flags", "attrs": {"provenance": "retrieved", "label": "Keyword flags panel (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-conversation.manual_observation_flags", "attrs": {"provenance": "retrieved", "label": "Manual flags panel (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.admin_user", "attrs": {"provenance": "retrieved", "label": "Manual flags panel: admin user (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.category", "attrs": {"provenance": "retrieved", "label": "Flag type (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.context_snippet", "attrs": {"provenance": "retrieved", "label": "Keyword flags panel: context snippet (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.internal_notes", "attrs": {"provenance": "retrieved", "label": "Flag notes (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.status", "attrs": {"provenance": "retrieved", "label": "Flag history: status (same as Screen 6A)"}}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-flag.resolved_timestamp", "attrs": {"provenance": "retrieved", "label": "Flag history: resolved (same as Screen 6A)"}}
+  # flow: human Steps of A2 and A3 (system Steps and everything reachable only through them are in the held file)
+  - {"op": "add_node", "id": "STP-012-015", "type": "Step", "title": "Admin reviews a conversation and identifies a concern", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  - {"op": "add_node", "id": "STP-012-016", "type": "Step", "title": "Admin selects Flag for Observation", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  - {"op": "add_node", "id": "STP-012-022", "type": "Step", "title": "Admin identifies an emergency", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 1"}}
+  - {"op": "add_node", "id": "STP-012-023", "type": "Step", "title": "Admin enables emergency intervention and confirms", "owner_fr": "FR-012", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  - {"op": "add_node", "id": "FLW-012-manual-flag", "type": "Flow", "title": "Admin manual flagging alternative flow", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "FLW-012-emergency-intervention", "type": "Flow", "title": "Admin emergency intervention alternative flow", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "STP-012-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-016", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-022", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-023", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-012-015", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-016", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-022", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-023", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-012-015", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-016", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-022", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-023", "verb": "on", "to": "SCR-012-06"}
+  - {"op": "add_edge", "from": "STP-012-015", "verb": "applies", "to": "REQ-012-021"}
+  - {"op": "add_edge", "from": "STP-012-016", "verb": "applies", "to": "REQ-012-011"}
+  - {"op": "add_edge", "from": "STP-012-022", "verb": "applies", "to": "REQ-012-090"}
+  - {"op": "add_edge", "from": "STP-012-023", "verb": "applies", "to": "REQ-012-080"}
+  - {"op": "add_edge", "from": "STP-012-015", "verb": "next", "to": "STP-012-016"}
+  - {"op": "add_edge", "from": "STP-012-022", "verb": "next", "to": "STP-012-023"}
+  - {"op": "add_edge", "from": "FLW-012-manual-flag", "verb": "starts at", "to": "STP-012-015"}
+  - {"op": "add_edge", "from": "FLW-012-emergency-intervention", "verb": "starts at", "to": "STP-012-022"}

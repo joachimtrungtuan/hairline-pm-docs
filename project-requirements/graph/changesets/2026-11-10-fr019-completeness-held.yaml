@@ -1,0 +1,195 @@
+reason: "FR-019 completeness fixes held: Steps the PRD says the system performs (no System Actor exists), every Step reachable only through them, the Flows that start at them, and four new Rules whose wording is a paraphrase of the PRD table cells. Apply only after the decisions named per operation. See the report, Needs user decision."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-003", "type": "Step", "owner_fr": "FR-019", "title": "System saves the discount as Pending Approval and notifies the targeted providers", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "on", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "applies", "to": "REQ-019-027"}
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "applies", "to": "REQ-019-010"}
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "applies", "to": "REQ-019-051"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_node", "id": "STP-019-004", "type": "Step", "owner_fr": "FR-019", "title": "Providers accept or decline; the system logs the responses", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "on", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "applies", "to": "REQ-019-028"}
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "applies", "to": "REQ-019-021"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-005", "type": "Step", "owner_fr": "FR-019", "title": "When a provider accepts, the discount becomes eligible for that provider's option/date-price rows during the active window", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-019-005", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-005", "verb": "applies", "to": "REQ-019-029"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-006", "type": "Step", "owner_fr": "FR-019", "title": "System tracks usage and financial impact per provider", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_edge", "from": "STP-019-006", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-019-006", "verb": "applies", "to": "REQ-019-005"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-007", "type": "Step", "owner_fr": "FR-019", "title": "System validates inputs, persists the program with scope REUSABLE and activates it per dates and limits", "attrs": {"prd_ref": "Alternative Flow A1a"}}
+  - {"op": "add_edge", "from": "STP-019-007", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-007", "verb": "on", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "STP-019-007", "verb": "applies", "to": "REQ-019-030"}
+  - {"op": "add_edge", "from": "STP-019-007", "verb": "applies", "to": "REQ-019-048"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-008", "type": "Step", "owner_fr": "FR-019", "title": "System creates the ad-hoc PromotionProgram bound to the parent quote and the option/date-price row", "attrs": {"prd_ref": "Alternative Flow A1b step 2"}}
+  - {"op": "add_edge", "from": "STP-019-008", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-008", "verb": "applies", "to": "REQ-019-031"}
+  - {"op": "add_edge", "from": "STP-019-008", "verb": "applies", "to": "REQ-019-078"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_node", "id": "STP-019-009", "type": "Step", "owner_fr": "FR-019", "title": "Provider may toggle Save as reusable program for future quotes", "attrs": {"prd_ref": "Alternative Flow A1b step 3"}}
+  - {"op": "add_edge", "from": "STP-019-009", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-019-009", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-009", "verb": "on", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "STP-019-009", "verb": "applies", "to": "REQ-019-081"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-010", "type": "Step", "owner_fr": "FR-019", "title": "System applies the Hairline-only discount to the patient's price; the program stays hidden from providers", "attrs": {"prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_edge", "from": "STP-019-010", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-010", "verb": "applies", "to": "REQ-019-032"}
+  - {"op": "add_edge", "from": "STP-019-010", "verb": "applies", "to": "REQ-019-016"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-011", "type": "Step", "owner_fr": "FR-019", "title": "System returns the reason and prevents application of an invalid, expired or limit-reached code", "attrs": {"prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_edge", "from": "STP-019-011", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-011", "verb": "on", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "STP-019-011", "verb": "applies", "to": "REQ-019-033"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-012", "type": "Step", "owner_fr": "FR-019", "title": "System blocks the second discount and prompts the user to confirm replacement or keep the existing one", "attrs": {"prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "STP-019-012", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-012", "verb": "on", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "STP-019-012", "verb": "applies", "to": "REQ-019-034"}
+  - {"op": "add_edge", "from": "STP-019-012", "verb": "applies", "to": "REQ-019-004"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-013", "type": "Step", "owner_fr": "FR-019", "title": "System silently resolves the automatic-promotion conflict by priority and records applied and superseded programs", "attrs": {"prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_edge", "from": "STP-019-013", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-013", "verb": "applies", "to": "REQ-019-035"}
+  - {"op": "add_edge", "from": "STP-019-013", "verb": "applies", "to": "REQ-019-036"}
+  - {"op": "add_edge", "from": "STP-019-013", "verb": "applies", "to": "REQ-019-004"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-014", "type": "Step", "owner_fr": "FR-019", "title": "System validates the Hairline-funded or direct-issued code against its binding and records the redemption against the issuing channel", "attrs": {"prd_ref": "Alternative Flow C1"}}
+  - {"op": "add_edge", "from": "STP-019-014", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-014", "verb": "on", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "STP-019-014", "verb": "applies", "to": "REQ-019-037"}
+  - {"op": "add_edge", "from": "STP-019-014", "verb": "applies", "to": "REQ-019-016"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-015", "type": "Step", "owner_fr": "FR-019", "title": "System attaches the automatic promotion to every eligible option/date-price row of the sent quote and copies its terms", "attrs": {"prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "STP-019-015", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-015", "verb": "applies", "to": "REQ-019-038"}
+  - {"op": "add_edge", "from": "STP-019-015", "verb": "applies", "to": "REQ-019-012"}
+  - {"op": "add_edge", "from": "STP-019-015", "verb": "applies", "to": "REQ-019-015"}
+  - {"op": "add_edge", "from": "STP-019-015", "verb": "applies", "to": "REQ-019-019"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-016", "type": "Step", "owner_fr": "FR-019", "title": "System validates the code for the named subquote only and shows the discounted price or the reason", "attrs": {"prd_ref": "Alternative Flow A4", "handoff_from": "STP-005-015"}}
+  - {"op": "add_edge", "from": "STP-019-016", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-016", "verb": "on", "to": "SCR-019-11"}
+  - {"op": "add_edge", "from": "STP-019-016", "verb": "applies", "to": "REQ-019-039"}
+  - {"op": "add_edge", "from": "STP-019-016", "verb": "applies", "to": "REQ-019-033"}
+  - {"op": "add_edge", "from": "STP-019-016", "verb": "applies", "to": "REQ-019-084"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-017", "type": "Step", "owner_fr": "FR-019", "title": "System creates one Application and reserves or consumes one use in the same atomic step as the acceptance", "attrs": {"prd_ref": "Alternative Flow A5"}}
+  - {"op": "add_edge", "from": "STP-019-017", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-017", "verb": "applies", "to": "REQ-019-040"}
+  - {"op": "add_edge", "from": "STP-019-017", "verb": "applies", "to": "REQ-019-007"}
+  - {"op": "add_edge", "from": "STP-019-017", "verb": "applies", "to": "REQ-019-096"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-019-018", "type": "Step", "owner_fr": "FR-019", "title": "System rejects a promotion change on an accepted subquote, leaves the Application and snapshot unchanged and logs the attempt", "attrs": {"prd_ref": "Alternative Flow B4"}}
+  - {"op": "add_edge", "from": "STP-019-018", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-019-018", "verb": "applies", "to": "REQ-019-041"}
+  - {"op": "add_edge", "from": "STP-019-018", "verb": "applies", "to": "REQ-019-013"}
+  # waits on: no System Actor (links the human Main Flow step 1 to the held system Step)
+  - {"op": "add_edge", "from": "STP-019-001", "verb": "next", "to": "STP-019-003"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_edge", "from": "STP-019-003", "verb": "next", "to": "STP-019-004"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_edge", "from": "STP-019-004", "verb": "next", "to": "STP-019-005"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_edge", "from": "STP-019-005", "verb": "next", "to": "STP-019-006"}
+  # waits on: no System Actor (links the human A1b step 1 to the held system Step)
+  - {"op": "add_edge", "from": "STP-019-002", "verb": "next", "to": "STP-019-008"}
+  # waits on: no System Actor (reachable only through a held system Step)
+  - {"op": "add_edge", "from": "STP-019-008", "verb": "next", "to": "STP-019-009"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-provider-reusable", "type": "Flow", "title": "Provider-only reusable discount", "attrs": {"kind": "alternative", "description": "Provider creates a reusable provider-only discount from Screen 9; it activates with no approval and is available for list selection.", "prd_ref": "Alternative Flow A1a"}}
+  - {"op": "add_edge", "from": "FLW-019-provider-reusable", "verb": "starts at", "to": "STP-019-007"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-hairline-only", "type": "Flow", "title": "Hairline-only discount", "attrs": {"kind": "alternative", "description": "Admin creates a Hairline-funded discount that the patient's price reflects and providers never see.", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_edge", "from": "FLW-019-hairline-only", "verb": "starts at", "to": "STP-019-010"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-code-invalid", "type": "Flow", "title": "Code validation failure", "attrs": {"kind": "alternative", "description": "A patient or provider enters an invalid, expired or limit-reached code; the reason is shown and no discount applies.", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_edge", "from": "FLW-019-code-invalid", "verb": "starts at", "to": "STP-019-011"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-user-conflict", "type": "Flow", "title": "User-initiated single-discount conflict", "attrs": {"kind": "alternative", "description": "A user enters a second discount on a row that already has one and chooses replace or keep.", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "FLW-019-user-conflict", "verb": "starts at", "to": "STP-019-012"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-auto-conflict", "type": "Flow", "title": "Auto-applied single-discount conflict", "attrs": {"kind": "alternative", "description": "Several automatic promotions are eligible at send; priority silently picks one.", "prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_edge", "from": "FLW-019-auto-conflict", "verb": "starts at", "to": "STP-019-013"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-direct-code", "type": "Flow", "title": "Hairline-funded or direct-issued code redemption", "attrs": {"kind": "alternative", "description": "Patient enters an admin-issued code on one named subquote before acceptance.", "prd_ref": "Alternative Flow C1"}}
+  - {"op": "add_edge", "from": "FLW-019-direct-code", "verb": "starts at", "to": "STP-019-014"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-auto-attach", "type": "Flow", "title": "Automatic promotion attachment at send", "attrs": {"kind": "alternative", "description": "A provider sends a quote while an auto-applied program is active and eligible.", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "FLW-019-auto-attach", "verb": "starts at", "to": "STP-019-015"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-patient-code", "type": "Flow", "title": "Patient applies a code before acceptance", "attrs": {"kind": "alternative", "description": "Patient enters a code on one named subquote before confirming acceptance.", "prd_ref": "Alternative Flow A4"}}
+  - {"op": "add_edge", "from": "FLW-019-patient-code", "verb": "starts at", "to": "STP-019-016"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-accepted", "type": "Flow", "title": "Subquote accepted with a promotion", "attrs": {"kind": "alternative", "description": "Patient accepts a subquote that carries a promotion; the Application and reservation are created atomically.", "prd_ref": "Alternative Flow A5"}}
+  - {"op": "add_edge", "from": "FLW-019-accepted", "verb": "starts at", "to": "STP-019-017"}
+  # waits on: no System Actor (the Flow starts at a held system Step)
+  - {"op": "add_node", "id": "FLW-019-post-acceptance", "type": "Flow", "title": "Promotion change attempted after acceptance", "attrs": {"kind": "alternative", "description": "Any actor tries to change a promotion on an accepted subquote; the system rejects it.", "prd_ref": "Alternative Flow B4"}}
+  - {"op": "add_edge", "from": "FLW-019-post-acceptance", "verb": "starts at", "to": "STP-019-018"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-104", "type": "Rule", "owner_fr": "FR-019", "title": "Bulk Revoke of selected codes requires a mandatory reason", "attrs": {"statement": "Bulk Revoke of selected codes requires a mandatory reason.", "rationale": "prd.md line 418 (Screen 5 data fields: Bulk Revoke, validation Mandatory reason)."}}
+  - {"op": "add_edge", "from": "REQ-019-104", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-104", "verb": "applies to", "to": "SCR-019-05"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-105", "type": "Rule", "owner_fr": "FR-019", "title": "The Code-only application mode requires a Code", "attrs": {"statement": "An Application Mode of Code-only requires the Code field to be filled.", "rationale": "prd.md line 590 (Screen 9 fields: Code-only requires Code field)."}}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies to", "to": "SCR-019-09"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-106", "type": "Rule", "owner_fr": "FR-019", "title": "The adoption decision comment is optional and at most 500 characters", "attrs": {"statement": "The deciding actor's comment on an adoption is optional and at most 500 characters.", "rationale": "prd.md line 344 (Screen 3 adoption columns: Comment, 500 characters)."}}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies to", "to": "ENT-promotion-adoption.comment"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-107", "type": "Rule", "owner_fr": "FR-019", "title": "Hub search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching", "attrs": {"statement": "Hub code or keyword search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching.", "rationale": "prd.md line 208 (Screen 1 data fields: Code / keyword search)."}}
+  - {"op": "add_edge", "from": "REQ-019-107", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-107", "verb": "applies to", "to": "SCR-019-01"}
+  # waits on: which Rule each Product Owner code decided; the PRD names these codes only in Change Log rows 2.2 to 2.4, by topic, so each link is a reading (controller moved these from the fixes file)
+  - {"op": "add_edge", "from": "REQ-019-003", "verb": "decided by", "to": "SRC-PO-001-D8"}
+  - {"op": "add_edge", "from": "REQ-019-039", "verb": "decided by", "to": "SRC-PO-001-D8"}
+  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  - {"op": "add_edge", "from": "REQ-019-012", "verb": "decided by", "to": "SRC-PO-001-D10"}
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D11"}
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D2"}
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-M14"}
+  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-D12"}
+  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  - {"op": "add_edge", "from": "REQ-019-032", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  - {"op": "add_edge", "from": "REQ-019-037", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q29"}
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q39"}
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q39"}
+  - {"op": "add_edge", "from": "REQ-019-004", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  - {"op": "add_edge", "from": "REQ-019-035", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q41"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q41"}
+  - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q43"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q43"}
+  - {"op": "add_edge", "from": "REQ-019-019", "verb": "decided by", "to": "SRC-PO-001-Q48"}
+  - {"op": "add_edge", "from": "REQ-019-052", "verb": "decided by", "to": "SRC-PO-001-Q48"}
+  - {"op": "add_edge", "from": "ENT-promotion-program", "verb": "decided by", "to": "SRC-PO-001-Q38"}
+  - {"op": "add_edge", "from": "ENT-promotion-code", "verb": "decided by", "to": "SRC-PO-001-Q38"}
