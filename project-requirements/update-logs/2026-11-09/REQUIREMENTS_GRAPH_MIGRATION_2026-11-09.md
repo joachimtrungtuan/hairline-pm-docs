@@ -60,6 +60,25 @@ All 36 FRs: FR-001 to FR-007, FR-007B, FR-008 to FR-035, FR-037, FR-038.
 - `graph/checklists/prd-structure.md` 0.1 proposal to 1.0: the user answered all seven questions. Compressed PRDs keep their reviewed wording, state each rule once, and tag field rows with graph field ids; Success Criteria, Assumptions, technical sections (after a re-check), Key Entities and open questions leave; Edge Cases stay; three pass checks (completeness, class list, FR position). Recorded as D35 in `plans/reports/advise-261105-0843-graph-model-decisions.md`.
 - `graph/checklists/README.md` 1.3 lists `prd-audit.md` and `prd-structure.md`.
 - Plan `plans/261108-1040-requirements-graph-programme/`: Phase 6 completed; Phase 9 re-scoped from rendering to compression with an FR-005 pilot; Phase 8 gains the PRD flow alignment check; Phase 5 records the missing Rule-to-Screen verb.
+- Checklist set approved by the user (README 1.3, `migrate-fr.md` 1.1, `completeness-check.md` 1.1, `source-priority.md` 1.0, `prd-audit.md` 1.0, `prd-structure.md` 1.0, `agent-brief-template.md` 1.1); plan Phase 1 completed.
+
+## Schema v5 applied (2026-11-09, later session)
+
+User decision D38: a Rule can act on any object, not only a Stage, and a rule shared across FRs can be homed in the system PRD.
+
+- `graph/schema.yaml` to version 5:
+  - new verb `applies to` (Rule to Actor, Screen, Entity, Field or Event; any number per Rule);
+  - new verb `references` (FR to Rule), for an FR that uses a Rule homed elsewhere;
+  - new Rule attribute `scope: global`;
+  - FR id pattern accepts `FR-SYS` (the system PRD) and Rule ids accept `REQ-SYS-NNN`.
+- `graph/scripts/migrate_schema_v5.py` rebuilds the edge verb check. DB backed up to `graph/backups/graph-20261109-233301.db`, then migrated (user_version 5). No nodes or edges changed.
+- `graph/scripts/lint.py`: L02 and L13 count `applies to` as well as `applies at` and skip global rules.
+- Tests: 164 pass (`cd graph/scripts && /usr/bin/python3 -m unittest -q`); new tests cover `applies to`, global scope and FR-SYS homing.
+- Lint unchanged at 4,322 findings (L10 4,144, L12 178). Export regenerated: 8,205 nodes, 13,046 edges.
+- Checklists: `migrate-fr.md` and `completeness-check.md` to 1.2 (fill `applies to` links; `cited` needs a `references` edge); README to 1.4. `migrate-fr.md` also loses a dedup step that named an invalid `shows` edge to a Rule.
+- The Phase 5 schema gap (no Rule-to-Screen link) is resolved; links are filled as the completeness checks run.
+- Review queue routing and lint (D40, same session): Rule gains optional `distinct_from` (pairs reviewed and kept apart; L12 skips them; no DB change, schema stays at version 5). L02 now fires only when a Rule's placing edges all end at retired nodes; a Rule with no edge is L13 only. Lint total unchanged at 4,322; 165 tests pass. `completeness-check.md` 1.2 also rules on the FR's kind B and C queue rows. Queue rows E1 to E8, E10, F1 to F8 and F10 closed with evidence; 364 rows routed to the D37 steps and a product-owner list.
+- Model decisions D41 (same session): schema v6 will add a Flow node (ordered steps pointing at Stage, Screen, Rules; flow wording stays in the PRD) before the 34 completeness checks; filter, search and sort criteria are Rules that `applies to` the Screen, translation keys stay out; user stories stay PRD text and cite their Flow; partial and missing rows are fixed right after each FR's check. E9 fixed in `migrate-fr.md` 1.2 (pass condition allows listed L12 pairs).
 
 ## Related
 
