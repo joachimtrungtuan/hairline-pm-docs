@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T19:27:44Z",
+  "generated_at": "2026-11-09T19:29:26Z",
   "schema_version": 6,
   "nodes": [
     {
@@ -34810,6 +34810,123 @@
       }
     },
     {
+      "id": "FLW-018-a1",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin adds another discount code to an existing affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A1: Multiple Discount Codes Per Affiliate",
+        "prd_ref": "A1"
+      }
+    },
+    {
+      "id": "FLW-018-a2",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits an affiliate commission structure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A2: Edit Affiliate Commission Structure",
+        "prd_ref": "A2"
+      }
+    },
+    {
+      "id": "FLW-018-a3",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Affiliate checks payout information in the portal",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A3: Affiliate-Requested Payout Information",
+        "prd_ref": "A3"
+      }
+    },
+    {
+      "id": "FLW-018-a4",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin generates codes for a filtered group of affiliates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A4: Bulk Affiliate Code Generation for Filtered Group",
+        "prd_ref": "A4"
+      }
+    },
+    {
+      "id": "FLW-018-a5",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Affiliate resends the activation email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A5: Affiliate Activation & Resend",
+        "prd_ref": "A5"
+      }
+    },
+    {
+      "id": "FLW-018-b1",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Patient enters an invalid discount code at checkout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B1: Invalid Discount Code Application",
+        "prd_ref": "B1"
+      }
+    },
+    {
+      "id": "FLW-018-b3",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin suspends an affiliate account",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B3: Affiliate Account Suspension",
+        "prd_ref": "B3"
+      }
+    },
+    {
+      "id": "FLW-018-b5",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin offboards an affiliate at the end of the partnership",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B5: Affiliate Offboarding / Deactivation",
+        "prd_ref": "B5"
+      }
+    },
+    {
+      "id": "FLW-018-main",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin onboards an affiliate and creates the first code; the affiliate activates and logs in",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Main Flow: Affiliate Onboarding and Code Creation",
+        "prd_ref": "Main Flow"
+      }
+    },
+    {
       "id": "FLW-019-main",
       "type": "Flow",
       "owner_fr": null,
@@ -36798,7 +36915,7 @@
       "owner_fr": null,
       "title": "Affiliate Management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "module": "fr018-affiliate-management",
         "prd_path": "project-requirements/functional-requirements/fr018-affiliate-management/prd.md",
@@ -61856,7 +61973,7 @@
       "owner_fr": "FR-018",
       "title": "allow admins to onboard affiliates with unique email, bank account details, and commission structure...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST allow admins to onboard affiliates with unique email, bank account details, and commission structure (percentage or fixed amount)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1588"
@@ -61868,7 +61985,7 @@
       "owner_fr": "FR-018",
       "title": "generate unique affiliate discount codes with configurable parameters (discount amount, expiration date, usage limits)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST generate unique affiliate discount codes with configurable parameters (discount amount, expiration date, usage limits)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1589"
@@ -61880,7 +61997,7 @@
       "owner_fr": "FR-018",
       "title": "validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount from Hairline's...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount from Hairline's commission when it is the final price discount, and preserve valid affiliate referral attribution for commission/reporting when another higher-priority discount controls the final price",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1590"
@@ -61892,7 +62009,7 @@
       "owner_fr": "FR-018",
       "title": "track discount code applications separately as \"applied\" (code entered) and \"completed\" (booking paid), and...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST track discount code applications separately as \"applied\" (code entered) and \"completed\" (booking paid), and MUST decrement code usage caps (Maximum Usage Count, Per-Patient Usage Limit) on \"completed\" redemptions only, with a separate soft rate limit guarding \"applied\" events against spam",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1591"
@@ -61904,7 +62021,7 @@
       "owner_fr": "FR-018",
       "title": "calculate affiliate commission automatically when booking completes with payment confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST calculate affiliate commission automatically when booking completes with payment confirmation",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1592"
@@ -61916,7 +62033,7 @@
       "owner_fr": "FR-018",
       "title": "provide affiliates with real-time dashboard showing referral count, revenue generated, commission earned, and pending...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide affiliates with real-time dashboard showing referral count, revenue generated, commission earned, and pending payout",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1593"
@@ -61928,7 +62045,7 @@
       "owner_fr": "FR-018",
       "title": "generate monthly payout list automatically on 7th of each month for previous month's completed...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST generate monthly payout list automatically on 7th of each month for previous month's completed bookings",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1594"
@@ -61940,7 +62057,7 @@
       "owner_fr": "FR-018",
       "title": "expose affiliate commission payout data to FR-017 / A-05 for Stripe transfer execution to...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST expose affiliate commission payout data to FR-017 / A-05 for Stripe transfer execution to the affiliate's bank account (no PayPal or other payout method)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1595"
@@ -61952,7 +62069,7 @@
       "owner_fr": "FR-018",
       "title": "send payout confirmation emails to affiliates with transaction details within 24 hours of payment...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST send payout confirmation emails to affiliates with transaction details within 24 hours of payment processing",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1596"
@@ -61964,7 +62081,7 @@
       "owner_fr": "FR-018",
       "title": "enforce single discount code per booking rule for the patient's final price (priority: Patient...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST enforce single discount code per booking rule for the patient's final price (priority: Patient code > Provider code > Affiliate code) while preserving valid affiliate referral attribution separately for commission and reporting when a provider-side or other higher-priority promotion supersedes the affiliate discount line",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1597"
@@ -61976,7 +62093,7 @@
       "owner_fr": "FR-018",
       "title": "maintain affiliate account records with contact details, payment information (encrypted), commission structure, and status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST maintain affiliate account records with contact details, payment information (encrypted), commission structure, and status",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1618"
@@ -61988,7 +62105,7 @@
       "owner_fr": "FR-018",
       "title": "link discount codes to affiliate accounts with one-to-many relationship (one affiliate can have multiple...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST link discount codes to affiliate accounts with one-to-many relationship (one affiliate can have multiple codes)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1619"
@@ -62000,7 +62117,7 @@
       "owner_fr": "FR-018",
       "title": "store booking records with affiliate code reference for commission tracking",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST store booking records with affiliate code reference for commission tracking",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1620"
@@ -62012,7 +62129,7 @@
       "owner_fr": "FR-018",
       "title": "maintain payout history with transaction ID, date, amount, status for minimum 7 years (audit...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST maintain payout history with transaction ID, date, amount, status for minimum 7 years (audit compliance)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1621"
@@ -62024,7 +62141,7 @@
       "owner_fr": "FR-018",
       "title": "encrypt affiliate bank account details at rest using AES-256",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST encrypt affiliate bank account details at rest using AES-256",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1627"
@@ -62036,7 +62153,7 @@
       "owner_fr": "FR-018",
       "title": "mask affiliate bank account numbers in UI (display last 4 digits only)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST mask affiliate bank account numbers in UI (display last 4 digits only)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1628"
@@ -62048,7 +62165,7 @@
       "owner_fr": "FR-018",
       "title": "anonymize patient identity in affiliate dashboard (affiliates see only aggregated statistics, not patient names)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST anonymize patient identity in affiliate dashboard (affiliates see only aggregated statistics, not patient names)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1629"
@@ -62060,7 +62177,7 @@
       "owner_fr": "FR-018",
       "title": "log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type, in an immutable (append-only) audit trail retained for a minimum of 10 years (per constitution)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1630"
@@ -62072,7 +62189,7 @@
       "owner_fr": "FR-018",
       "title": "require secure authentication for affiliate dashboard access (username/password with optional MFA — MFA is...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST require secure authentication for affiliate dashboard access (username/password with optional MFA — MFA is a future / non-MVP control pending the shared MFA stack FR-026 / FR-031 per constitution Principle II)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1631"
@@ -62084,7 +62201,7 @@
       "owner_fr": "FR-018",
       "title": "expose API for discount code validation during patient checkout (response time <500ms)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST expose API for discount code validation during patient checkout (response time <500ms)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1635"
@@ -62096,7 +62213,7 @@
       "owner_fr": "FR-018",
       "title": "integrate with FR-017 / A-05 payout execution status so FR-018 read-only payout views reflect...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST integrate with FR-017 / A-05 payout execution status so FR-018 read-only payout views reflect Stripe transfer status, transaction references, and failure reasons without initiating transfers directly",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1636"
@@ -62108,7 +62225,7 @@
       "owner_fr": "FR-018",
       "title": "integrate with email service provider to send affiliate notifications (activation, onboarding, payouts, code creation)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST integrate with email service provider to send affiliate notifications (activation, onboarding, payouts, code creation)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1637"
@@ -62120,7 +62237,7 @@
       "owner_fr": "FR-018",
       "title": "emit booking completion events to trigger affiliate commission calculation asynchronously",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST emit booking completion events to trigger affiliate commission calculation asynchronously",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1638"
@@ -62132,7 +62249,7 @@
       "owner_fr": "FR-018",
       "title": "allow admins to bulk-generate affiliate promo codes for selected affiliates or filtered affiliate segments",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST allow admins to bulk-generate affiliate promo codes for selected affiliates or filtered affiliate segments",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1598"
@@ -62144,7 +62261,7 @@
       "owner_fr": "FR-018",
       "title": "create one distinct unique code per affiliate during bulk affiliate code generation; one shared...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST create one distinct unique code per affiliate during bulk affiliate code generation; one shared affiliate payout code across multiple affiliates is not supported",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1599"
@@ -62156,7 +62273,7 @@
       "owner_fr": "FR-018",
       "title": "publish generated active affiliate codes to each assigned affiliate's dashboard immediately after successful creation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST publish generated active affiliate codes to each assigned affiliate's dashboard immediately after successful creation",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1600"
@@ -62168,7 +62285,7 @@
       "owner_fr": "FR-018",
       "title": "provide an admin Affiliate Detail screen consolidating account details, assigned codes, and payout history/upcoming...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide an admin Affiliate Detail screen consolidating account details, assigned codes, and payout history/upcoming payout for a single affiliate",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1601"
@@ -62180,7 +62297,7 @@
       "owner_fr": "FR-018",
       "title": "provide a system-wide Promo Code Management list and a shared per-code Promo Code Detail...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide a system-wide Promo Code Management list and a shared per-code Promo Code Detail screen (reachable from both the management list and the Affiliate Detail codes list) showing the assigned affiliate and code performance",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1602"
@@ -62192,7 +62309,7 @@
       "owner_fr": "FR-018",
       "title": "provide a shared Payout / Transaction Detail screen reachable from both the global payout...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide a shared Payout / Transaction Detail screen reachable from both the global payout list and an affiliate's payout list, with identical layout and capabilities from both entry points",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1603"
@@ -62204,7 +62321,7 @@
       "owner_fr": "FR-018",
       "title": "onboard affiliates via a one-time secure activation link (set password, expires 24 hours) mirroring...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST onboard affiliates via a one-time secure activation link (set password, expires 24 hours) mirroring the provider activation flow, including activation-email resend (self-service and admin-triggered) rate-limited to 3 requests per hour per email",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1604"
@@ -62216,7 +62333,7 @@
       "owner_fr": "FR-018",
       "title": "provide affiliates a portal with Overview, Promo Codes, Payouts, and Profile tabs, where affiliates...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide affiliates a portal with Overview, Promo Codes, Payouts, and Profile tabs, where affiliates can self-edit only non-sensitive profile fields (phone, language) while name (legal/payout name), payment details, commission, and status remain read-only/admin-controlled",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1605"
@@ -62228,7 +62345,7 @@
       "owner_fr": "FR-018",
       "title": "present a Code Generation Results view after bulk generation showing created/skipped/failed counts with per-row...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST present a Code Generation Results view after bulk generation showing created/skipped/failed counts with per-row reasons and a retry-failed-only action that never duplicates successful codes",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1606"
@@ -62240,7 +62357,7 @@
       "owner_fr": "FR-018",
       "title": "provide a Suspend/Reinstate action (with required reason and confirmation) that disables the affiliate's codes...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide a Suspend/Reinstate action (with required reason and confirmation) that disables the affiliate's codes and holds pending payouts on suspension",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1607"
@@ -62252,7 +62369,7 @@
       "owner_fr": "FR-018",
       "title": "capture an effective date for commission-structure changes and apply new rates only to bookings...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST capture an effective date for commission-structure changes and apply new rates only to bookings completed on/after that date (no retroactive recalculation)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1608"
@@ -62264,7 +62381,7 @@
       "owner_fr": "FR-018",
       "title": "expose monthly affiliate payout cycle data to FR-017 / A-05, including total amount, affiliate...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST expose monthly affiliate payout cycle data to FR-017 / A-05, including total amount, affiliate count, threshold exclusions below $50, payout readiness, and reconciliation metadata before A-05 initiates Stripe transfers",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1609"
@@ -62276,7 +62393,7 @@
       "owner_fr": "FR-018",
       "title": "record affiliate activation state (Invited until password set, Active after) and last login timestamp",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST record affiliate activation state (Invited until password set, Active after) and last login timestamp",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1622"
@@ -62288,7 +62405,7 @@
       "owner_fr": "FR-018",
       "title": "collect affiliate bank details for payouts (account holder name, bank name, account number, routing/SWIFT...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST collect affiliate bank details for payouts (account holder name, bank name, account number, routing/SWIFT code, optional IBAN), mirroring provider billing details (FR-032), with format validation via S-02, encryption at rest, and last-4 masking in the UI",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1623"
@@ -62300,7 +62417,7 @@
       "owner_fr": "FR-018",
       "title": "provide affiliate onboarding/activation screens — Set Password (activation landing), Resend Activation, and Welcome /...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide affiliate onboarding/activation screens — Set Password (activation landing), Resend Activation, and Welcome / Get Started (first login) — mirroring the provider activation flow (FR-015)",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1610"
@@ -62312,7 +62429,7 @@
       "owner_fr": "FR-018",
       "title": "provide an Offboarding / Deactivation action (Screen 3.3, with required reason and confirmation) that...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide an Offboarding / Deactivation action (Screen 3.3, with required reason and confirmation) that moves an affiliate to the terminal Inactive state: disabling all the affiliate's codes, converting portal access to read-only, retaining historical data, and performing explicit final settlement — pay net balance ≥ $50, forfeit a residual below $50, or write off a negative balance — each recorded in the audit trail. Inactive is distinct from Suspended (temporary, reversible) and is not silently reinstated",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1611"
@@ -62324,7 +62441,7 @@
       "owner_fr": "FR-018",
       "title": "denominate all affiliate amounts (commission, balances, thresholds, payouts) in USD (platform base currency) and...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST denominate all affiliate amounts (commission, balances, thresholds, payouts) in USD (platform base currency) and MUST source every non-USD-to-USD conversion and exchange rate exclusively from FR-029 (Payment System Configuration) using the rate locked for the underlying booking — FR-018 MUST NOT define, cache, or override its own FX rate",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1612"
@@ -62336,7 +62453,7 @@
       "owner_fr": "FR-018",
       "title": "validate at affiliate code creation/generation that the combined Hairline-funded cost on a booking (patient-facing...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST validate at affiliate code creation/generation that the combined Hairline-funded cost on a booking (patient-facing affiliate discount + affiliate commission) does not exceed Hairline's own commission on that booking (Rule 15); percentage breaches MUST be blocked (override requires documented, audited business approval) and fixed-amount configurations MUST raise a review warning",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1613"
@@ -62348,7 +62465,7 @@
       "owner_fr": "FR-018",
       "title": "provide affiliates read-only access to externally hosted marketing materials (banners, templates, campaign assets) linked...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST provide affiliates read-only access to externally hosted marketing materials (banners, templates, campaign assets) linked to assigned codes/campaigns, while creation, editing, approval, and hosting of those materials remain outside FR-018 scope",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1614"
@@ -62360,7 +62477,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings)",
         "rationale": "PRD General Module Rules, prd.md line 1163"
@@ -62372,7 +62489,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate discount codes apply ONLY to Hairline's commission (does NOT reduce provider...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate discount codes apply ONLY to Hairline's commission (does NOT reduce provider payout)",
         "rationale": "PRD General Module Rules, prd.md line 1164"
@@ -62384,7 +62501,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate commissions are deducted from Hairline's commission, NOT from provider's payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate commissions are deducted from Hairline's commission, NOT from provider's payout",
         "rationale": "PRD General Module Rules, prd.md line 1166"
@@ -62396,7 +62513,7 @@
       "owner_fr": "FR-018",
       "title": "Payout processing occurs monthly on the 7th of each month (fixed schedule...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Payout processing occurs monthly on the 7th of each month (fixed schedule, per client policy — not admin-configurable) for the previous month's completed bookings",
         "rationale": "PRD General Module Rules, prd.md line 1167"
@@ -62408,7 +62525,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliates can have multiple active discount codes simultaneously for different campaigns",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliates can have multiple active discount codes simultaneously for different campaigns",
         "rationale": "PRD General Module Rules, prd.md line 1168"
@@ -62420,7 +62537,7 @@
       "owner_fr": "FR-018",
       "title": "FR-018 is the source of truth for affiliate-specific promo code generation and...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "FR-018 is the source of truth for affiliate-specific promo code generation and assignment; FR-019 provides the shared promotion rules, validation, redemption state lifecycle, and financial-impact logging",
         "rationale": "PRD General Module Rules, prd.md line 1169"
@@ -62432,7 +62549,7 @@
       "owner_fr": "FR-018",
       "title": "Admins MAY create open Hairline-funded marketing codes in FR-019, but those codes...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admins MAY create open Hairline-funded marketing codes in FR-019, but those codes do not create affiliate payout attribution unless they are generated or linked as affiliate-bound codes through FR-018",
         "rationale": "PRD General Module Rules, prd.md line 1171"
@@ -62444,7 +62561,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate onboarding uses a one-time secure activation link (set password, expires 24...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate onboarding uses a one-time secure activation link (set password, expires 24 hours) mirroring the provider activation flow; raw credentials are never emailed",
         "rationale": "PRD General Module Rules, prd.md line 1172"
@@ -62456,7 +62573,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate referral attribution is preserved separately from price discount priority",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation, even if the final price discount applied at checkout is a higher-priority patient or provider promotion under Rule 3. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does not erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line.",
         "rationale": "PRD General Module Rules, prd.md line 1173"
@@ -62468,7 +62585,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate lifecycle states",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "An affiliate moves through Pending (account created, password not yet set) → Active (password set, transacting) and may then be Suspended (temporary, reversible, codes disabled, pending commissions held pending investigation — B3) or Inactive (permanent terminal end-of-partnership, codes disabled, portal read-only, final balance settled/forfeited/written off — B5). Active ⇄ Suspended is reversible via Screen 3.1; Active → Inactive is terminal via Screen 3.3 and is not silently reversed (resuming requires re-onboarding).",
         "rationale": "PRD General Module Rules, prd.md line 1174"
@@ -62480,7 +62597,7 @@
       "owner_fr": "FR-018",
       "title": "Usage-limit basis",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "A code's `Maximum Usage Count` and `Per-Patient Usage Limit` are decremented on \"completed\" (paid) redemptions only, never on \"applied\" events — so abandoned or abusive checkouts cannot exhaust a code's cap. A separate soft anti-abuse rate limit on \"applied\" events (per patient / per IP / per time window) guards against application spam without consuming the usage cap.",
         "rationale": "PRD General Module Rules, prd.md line 1175"
@@ -62492,7 +62609,7 @@
       "owner_fr": "FR-018",
       "title": "Commission base",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Percentage commissions are calculated as a percentage of the completed booking's revenue (booking total, in USD per the Currency Rule) — not as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is funded from (deducted from) Hairline's commission, never the provider's payout (Rule 4). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking.",
         "rationale": "PRD General Module Rules, prd.md line 1176"
@@ -62504,7 +62621,7 @@
       "owner_fr": "FR-018",
       "title": "Hairline-funded cost ceiling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "On any single booking, the combined Hairline-funded cost — the patient-facing affiliate discount (Rule 2) plus the affiliate commission (Rule 14) — MUST NOT exceed Hairline's own commission earned on that booking; the affiliate program never makes a booking net-negative for Hairline. The system enforces this at affiliate code creation/generation (Screen 4): when both the discount and the commission are percentage-based, it validates that `discount % + commission % ≤ Hairline's commission % on the booking` and blocks the save with the shortfall shown; an admin with documented business approval may override with an audited confirmation. Fixed-amount configurations (where the ceiling depends on booking value) raise a review warning rather than a hard block, since the breach can only be evaluated per booking. This rule complements Assumption 4 (aggregate program cost ≤ 10% of Hairline commission revenue) by preventing per-booking negative margin.",
         "rationale": "PRD General Module Rules, prd.md line 1177"
@@ -62516,7 +62633,7 @@
       "owner_fr": "FR-018",
       "title": "Performance tier from trailing-12-month revenue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Performance Tier (system-calculated, read-only): a band derived from the affiliate's trailing-12-month revenue generated (USD) by completed referrals, recalculated monthly. Default bands (admin-tunable): Bronze < $5,000 · Silver $5,000–$24,999 · Gold $25,000–$99,999 · Platinum ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically.",
         "rationale": "PRD Affiliate Segmentation Rules, prd.md line 1181"
@@ -62528,7 +62645,7 @@
       "owner_fr": "FR-018",
       "title": "Campaign eligibility needs Active status, activation and bank details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Campaign Eligibility (system-calculated, read-only): an affiliate is Eligible for bulk/campaign code generation only when all of the following hold — Status = Active (not Pending, Suspended, or Inactive); Activation Status = Active (password set); and complete bank/payout details on file. Otherwise the affiliate is Ineligible and the specific failing reason is surfaced (e.g., \"Pending activation\", \"Incomplete payout setup\", \"Suspended/Inactive\"). These reasons are the same ones reported per row in bulk generation (B4) and drive Screen 1's eligibility gating.",
         "rationale": "PRD Affiliate Segmentation Rules, prd.md line 1182"
@@ -62540,7 +62657,7 @@
       "owner_fr": "FR-018",
       "title": "Patient identity never shared with affiliates",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Patient identity is NEVER shared with affiliates (affiliates see only aggregated statistics, not individual patient names)",
         "rationale": "PRD Data and Privacy Rules, prd.md line 1186"
@@ -62552,7 +62669,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate bank account numbers masked in the UI",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate bank account numbers are masked in UI (show last 4 digits only)",
         "rationale": "PRD Data and Privacy Rules, prd.md line 1187"
@@ -62564,7 +62681,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate dashboard requires secure login",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate dashboard access requires secure login (username/password + optional MFA — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II)",
         "rationale": "PRD Data and Privacy Rules, prd.md line 1188"
@@ -62576,7 +62693,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate actions audit-logged, append-only, retained 10 years",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Audit Rule: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only) and retained for 10 years per the platform constitution (financial/payout records are retained 7 years minimum)",
         "rationale": "PRD Data and Privacy Rules, prd.md line 1189"
@@ -62588,7 +62705,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate personal data deletable on request",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "GDPR: Affiliate personal data (contact info, payment details) can be deleted upon request (historical commission data retained for accounting)",
         "rationale": "PRD Data and Privacy Rules, prd.md line 1190"
@@ -62600,7 +62717,7 @@
       "owner_fr": "FR-018",
       "title": "Fields an admin may edit on affiliates and codes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Editable by Admin: Affiliate account details (name, email, phone, language, country, type, tax/VAT ID, bank account details, commission structure); Discount code parameters (expiration date, usage limits, active/inactive status); Bulk code generation criteria (selected affiliates, filtered segment, code pattern, campaign settings); Commission percentage/fixed amount per affiliate (with effective date for changes, via Screen 3.2); Affiliate status (Active/Suspended/Inactive, via Screen 3.1)",
         "rationale": "PRD Admin Editability Rules, prd.md lines 1196-1200"
@@ -62612,7 +62729,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate self-service edits non-sensitive fields only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Editable by Affiliate (Self-Service): Non-sensitive profile fields only: phone, language(s); Affiliates CANNOT edit name (legal/payout name, admin-controlled), payment details, commission structure, status, or assigned codes (admin-controlled, read-only to affiliate)",
         "rationale": "PRD Admin Editability Rules, prd.md lines 1204-1205"
@@ -62624,7 +62741,7 @@
       "owner_fr": "FR-018",
       "title": "Fixed in codebase, not admin-editable",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Fixed in Codebase (Not Editable): Affiliate commission calculation logic (percentage of booking revenue OR fixed amount per booking); One-affiliate-per-code attribution model; Discount code uniqueness validation rules; Payout workflow status transitions (Pending → Processing → Paid/Failed); Audit trail retention period (10 years, per constitution); financial/payout records retained 7 years minimum; Activation link expiry (24 hours) and resend rate limit (3 per hour per email); Payout schedule (monthly on the 7th — fixed per client business policy; frequency and date are not configurable)",
         "rationale": "PRD Admin Editability Rules, prd.md lines 1209-1215"
@@ -62636,7 +62753,7 @@
       "owner_fr": "FR-018",
       "title": "Commission changes apply to future bookings only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Configurable with Restrictions: Commission structure changes apply ONLY to future bookings (historical commissions cannot be retroactively modified)",
         "rationale": "PRD Admin Editability Rules, prd.md line 1219"
@@ -62648,7 +62765,7 @@
       "owner_fr": "FR-018",
       "title": "If patient refunds booking, affiliate commission is reversed (deducted from next payout)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "If patient refunds booking, affiliate commission is reversed (deducted from next payout)",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1224"
@@ -62660,7 +62777,7 @@
       "owner_fr": "FR-018",
       "title": "Minimum payout threshold: $50 (commissions below $50 roll over to next month)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Minimum payout threshold: $50 (commissions below $50 roll over to next month)",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1225"
@@ -62672,7 +62789,7 @@
       "owner_fr": "FR-018",
       "title": "All affiliate amounts in USD; FX only through FR-029",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Currency Rule: All affiliate amounts (commission accrual, pending balances, thresholds, and payouts) are denominated in USD — the platform base currency owned by FR-029 (Payment System Configuration). When a booking is transacted in a non-USD currency, its value is converted to USD using FR-029's currency service, supported-currency list, and locked exchange-rate/markup logic — FR-018 never defines, caches, or overrides its own FX rate. The conversion rate applied to a commission is the rate locked for that booking per FR-029 (no discrepancy with billing/finance figures). Affiliates are responsible for any onward conversion from USD on their side. Note on client figures: GBP amounts in the client transcription (e.g., \"£50\", \"£200\") are illustrative of intended incentive magnitudes; the platform base currency is USD (per FR-029), so this PRD's literal thresholds and minimums (e.g., the $50 minimum fixed commission and $50 payout threshold) are stated in USD and are not a direct GBP→USD conversion of those examples.",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1226"
@@ -62684,7 +62801,7 @@
       "owner_fr": "FR-018",
       "title": "Hairline covers Stripe payout/transfer fees (not deducted from affiliate commission)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Hairline covers Stripe payout/transfer fees (not deducted from affiliate commission)",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1228"
@@ -62696,7 +62813,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliates must provide complete bank details (account holder name, bank name, account...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliates must provide complete bank details (account holder name, bank name, account number, routing/SWIFT code, optional IBAN) before a payout can be processed, mirroring provider billing setup in FR-032",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1229"
@@ -62708,7 +62825,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Sorting",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Sorting: Default sort by \"Total Revenue\" descending (highest performers first)",
         "rationale": "PRD Screen 1, prd.md line 345"
@@ -62720,7 +62837,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Filtering",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Filtering: Admin can filter by status, country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup completeness; admin can also search by affiliate name/email",
         "rationale": "PRD Screen 1, prd.md line 346"
@@ -62732,7 +62849,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Pagination",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Pagination: Display 25 affiliates per page with pagination controls",
         "rationale": "PRD Screen 1, prd.md line 347"
@@ -62744,7 +62861,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Quick Actions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Quick Actions: Inline \"Generate Report\" button exports affiliate performance to PDF",
         "rationale": "PRD Screen 1, prd.md line 348"
@@ -62756,7 +62873,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Bulk Code Action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Bulk Code Action: Admin can select one or more affiliates from the filtered list and generate one distinct affiliate-bound code per selected affiliate",
         "rationale": "PRD Screen 1, prd.md line 350"
@@ -62768,7 +62885,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Ineligible affiliates blocked from bulk generation with reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Given admin selects ineligible affiliates, when admin clicks \"Generate Codes\", then system blocks or excludes those rows and displays the specific eligibility reason.",
         "rationale": "PRD Screen 1, prd.md line 357"
@@ -62780,7 +62897,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Email Uniqueness",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Email Uniqueness: System validates email is not already registered as affiliate or admin user",
         "rationale": "PRD Screen 2, prd.md line 401"
@@ -62792,7 +62909,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Payment Masking",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Payment Masking: Bank account number masked in UI after initial entry (show last 4 digits only) and encrypted at rest; S-02 validates bank-detail format on save (same handling as provider bank details in FR-032)",
         "rationale": "PRD Screen 2, prd.md line 402"
@@ -62804,7 +62921,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Commission Validation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Commission Validation: If percentage type, system calculates preview of commission for an example booking (e.g., \"For a $1,000 booking at 15% of booking revenue, affiliate earns $150\")",
         "rationale": "PRD Screen 2, prd.md line 404"
@@ -62816,7 +62933,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Default Values",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Default Values: Payout schedule is fixed at \"Monthly on the 7th\" (not editable); commission type defaults to \"Percentage\"",
         "rationale": "PRD Screen 2, prd.md line 405"
@@ -62828,7 +62945,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Edit Restrictions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Edit Restrictions: Email cannot be changed after account creation (must create new account if email change needed)",
         "rationale": "PRD Screen 2, prd.md line 406"
@@ -62840,7 +62957,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Activation State",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Activation State: On create, Status is \"Pending\" and Activation Status is \"Invited\" until the affiliate completes the set-password flow; completing it flips Status to \"Active\" and Activation Status to \"Active\" together (per Rule 12). An admin \"Resend Activation Email\" action is available while Activation Status is \"Invited\"",
         "rationale": "PRD Screen 2, prd.md line 408"
@@ -62852,7 +62969,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Warning above 20 percent commission",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Display warning message if commission percentage > 20%: \"High commission rate - please confirm business approval\"",
         "rationale": "PRD Screen 2, prd.md line 413"
@@ -62864,7 +62981,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Draft autosave every 30 seconds",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Auto-save draft every 30 seconds to prevent data loss on accidental navigation away",
         "rationale": "PRD Screen 2, prd.md line 414"
@@ -62876,7 +62993,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3: Single Source View",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Single Source View: All affiliate-scoped data (codes, payouts, audit) is read from the same records surfaced elsewhere; this screen aggregates, it does not duplicate",
         "rationale": "PRD Screen 3, prd.md line 441"
@@ -62888,7 +63005,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3: Resend Activation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Resend Activation: \"Resend Activation Email\" is enabled only while Activation Status is \"Invited\" (password not yet set); it follows the A5 rate-limit and security rules",
         "rationale": "PRD Screen 3, prd.md line 443"
@@ -62900,7 +63017,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.1: Suspension Effects",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Suspension Effects: On suspend, all of the affiliate's codes are disabled (invalid at checkout), pending unpaid commissions are held pending investigation, and historical data is retained",
         "rationale": "PRD Screen 3.1, prd.md line 478"
@@ -62912,7 +63029,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.1: Reinstatement",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Reinstatement: On reinstate, status returns to \"Active\"; held payouts resume per investigation outcome",
         "rationale": "PRD Screen 3.1, prd.md line 479"
@@ -62924,7 +63041,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.1: Notification",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Notification: System emails the affiliate about suspension with the reason",
         "rationale": "PRD Screen 3.1, prd.md line 480"
@@ -62936,7 +63053,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.1: Confirmation Gate",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Confirmation Gate: \"Submit\" is disabled until the confirmation checkbox is checked (prevents accidental suspension)",
         "rationale": "PRD Screen 3.1, prd.md line 481"
@@ -62948,7 +63065,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.2: Future-Only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Future-Only: New rates apply only to bookings completed on/after the effective date; historical commissions are never recalculated",
         "rationale": "PRD Screen 3.2, prd.md line 507"
@@ -62960,7 +63077,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.2: Past Date Blocked",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Past Date Blocked: System rejects an effective date in the past with a clear error",
         "rationale": "PRD Screen 3.2, prd.md line 508"
@@ -62972,7 +63089,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.2: Notification",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Notification: System emails the affiliate the old rate, new rate, and effective date",
         "rationale": "PRD Screen 3.2, prd.md line 509"
@@ -62984,7 +63101,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.2: Audit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Audit: Change is logged with admin user ID, timestamp, old and new values, and effective date",
         "rationale": "PRD Screen 3.2, prd.md line 510"
@@ -62996,7 +63113,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Terminal State",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Terminal State: Sets `Status: Inactive`; this is a permanent end-of-partnership state, not a temporary hold",
         "rationale": "PRD Screen 3.3, prd.md line 535"
@@ -63008,7 +63125,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Final Settlement",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Final Settlement: Net final balance ≥ $50 is queued for the next (or an admin-initiated final) payout; a residual below $50 is forfeited with an audit entry; a negative balance is written off with an audit entry (no future payouts exist to net against)",
         "rationale": "PRD Screen 3.3, prd.md line 536"
@@ -63020,7 +63137,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Code Disablement",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Code Disablement: All of the affiliate's codes are disabled (invalid at checkout)",
         "rationale": "PRD Screen 3.3, prd.md line 537"
@@ -63032,7 +63149,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Portal Access",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Portal Access: Affiliate retains read-only portal access (historical views only); no new activity is possible",
         "rationale": "PRD Screen 3.3, prd.md line 538"
@@ -63044,7 +63161,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Data Retention",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Data Retention: Historical referrals, commissions, payouts, and audit trail are retained for the audit-retention period",
         "rationale": "PRD Screen 3.3, prd.md line 539"
@@ -63056,7 +63173,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: No Silent Reactivation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "No Silent Reactivation: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding (new activation)",
         "rationale": "PRD Screen 3.3, prd.md line 540"
@@ -63068,7 +63185,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Confirmation Gate",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Confirmation Gate: \"Submit\" is disabled until the reason is valid and the confirmation checkbox is checked",
         "rationale": "PRD Screen 3.3, prd.md line 541"
@@ -63080,7 +63197,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Code Uniqueness",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Code Uniqueness: System validates discount code is unique across all affiliates (case-insensitive check)",
         "rationale": "PRD Screen 4, prd.md line 579"
@@ -63092,7 +63209,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: One Affiliate Per Code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "One Affiliate Per Code: Every affiliate-bound code belongs to exactly one affiliate; the same affiliate payout code cannot be assigned to multiple affiliates",
         "rationale": "PRD Screen 4, prd.md line 580"
@@ -63104,7 +63221,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Bulk Generation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Bulk Generation: Bulk generation creates one distinct unique code per selected affiliate using the same campaign settings",
         "rationale": "PRD Screen 4, prd.md line 581"
@@ -63116,7 +63233,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Bulk Filter Snapshot",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Bulk Filter Snapshot: System records the selected affiliates at generation time; later filter membership changes do not retroactively add or remove codes",
         "rationale": "PRD Screen 4, prd.md line 582"
@@ -63128,7 +63245,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Code Format",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Code Format: System automatically converts code to uppercase on save",
         "rationale": "PRD Screen 4, prd.md line 583"
@@ -63140,7 +63257,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Expiration Logic",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Expiration Logic: If expiration date set, system automatically deactivates code at midnight (UTC) on that date",
         "rationale": "PRD Screen 4, prd.md line 584"
@@ -63152,7 +63269,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Usage Limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Usage Limit: The usage cap counts \"completed\" (paid) redemptions only; once completed redemptions reach the maximum, the system automatically deactivates the code. \"Applied\" (entered-but-not-paid) events never consume the cap; a separate soft rate limit on applied events guards against application spam (Rule 13)",
         "rationale": "PRD Screen 4, prd.md line 585"
@@ -63164,7 +63281,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Generation Outcome",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Generation Outcome: On submit, Selected Affiliates and Filtered Segment modes open Screen 4.1 (Code Generation Results) showing created/skipped/failed counts; Single mode confirms inline and routes to Screen 6",
         "rationale": "PRD Screen 4, prd.md line 586"
@@ -63176,7 +63293,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Margin Guard (Rule 15)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Margin Guard (Rule 15): System validates that the configured discount plus the affiliate's commission does not exceed Hairline's commission on the booking. Percentage configurations that breach the ceiling (`discount % + commission % > Hairline's commission %`) are blocked with the shortfall shown (override requires documented, audited business approval); fixed-amount configurations raise a review warning since the breach is booking-value dependent",
         "rationale": "PRD Screen 4, prd.md line 587"
@@ -63188,7 +63305,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Dashboard Visibility",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Dashboard Visibility: Active issued codes appear in the assigned affiliate's dashboard immediately after creation; inactive, expired, or revoked codes remain visible in historical views with status labels",
         "rationale": "PRD Screen 4, prd.md line 588"
@@ -63200,7 +63317,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4.1: No Duplicate Creation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "No Duplicate Creation: Retrying failed rows never re-creates already-successful codes",
         "rationale": "PRD Screen 4.1, prd.md line 625"
@@ -63212,7 +63329,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4.1: Per-Row Reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Per-Row Reason: Each skipped/failed row records a specific reason (duplicate generated code, inactive affiliate, incomplete payout setup, FR-019 registration failure, notification failure)",
         "rationale": "PRD Screen 4.1, prd.md line 626"
@@ -63224,7 +63341,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4.1: Idempotent Retry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Idempotent Retry: \"Retry Failed Only\" re-runs generation for the failed subset under the same campaign settings and snapshot",
         "rationale": "PRD Screen 4.1, prd.md line 627"
@@ -63236,7 +63353,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 4.1: Export",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Export: Results downloadable as CSV for record-keeping",
         "rationale": "PRD Screen 4.1, prd.md line 628"
@@ -63248,7 +63365,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 5: System-Wide Scope",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System-Wide Scope: Lists codes across all affiliates, campaigns, and generation modes (single and bulk)",
         "rationale": "PRD Screen 5, prd.md line 666"
@@ -63260,7 +63377,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 5: Filtering",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Filtering: Filter by status, campaign, linked affiliate, discount type, application method, created date range; search by code text or campaign",
         "rationale": "PRD Screen 5, prd.md line 667"
@@ -63272,7 +63389,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 5: Pagination",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Pagination: Display 50 codes per page with pagination controls",
         "rationale": "PRD Screen 5, prd.md line 668"
@@ -63284,7 +63401,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 5: Bulk Actions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Bulk Actions: Admin can multi-select codes to bulk activate/deactivate (subject to status rules)",
         "rationale": "PRD Screen 5, prd.md line 669"
@@ -63296,7 +63413,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 5: Read-Through Counts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-Through Counts: Applied/completed and conversion stats are sourced from FR-019 redemption lifecycle",
         "rationale": "PRD Screen 5, prd.md line 671"
@@ -63308,7 +63425,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 6: One Affiliate",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "One Affiliate: The linked affiliate is always exactly one; reassignment to another affiliate is not supported (create a new code instead)",
         "rationale": "PRD Screen 6, prd.md line 707"
@@ -63320,7 +63437,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 6: Editable Subset",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Editable Subset: Admin may edit expiration date, usage limits, and active/inactive status; discount value and linked affiliate are fixed after creation",
         "rationale": "PRD Screen 6, prd.md line 708"
@@ -63332,7 +63449,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 6: Lifecycle Source",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Lifecycle Source: Applied/completed/conversion and revenue/commission figures are read from FR-019 and commission calculation; this screen does not recompute them",
         "rationale": "PRD Screen 6, prd.md line 709"
@@ -63344,7 +63461,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 6: Status Transitions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Status Transitions: Deactivation revokes checkout validity immediately; expired/revoked codes remain visible with status labels and cannot be copied as active codes",
         "rationale": "PRD Screen 6, prd.md line 710"
@@ -63356,7 +63473,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Automated Generation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Automated Generation: System automatically generates the payout list on the 7th of each month for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution",
         "rationale": "PRD Screen 7, prd.md line 750"
@@ -63368,7 +63485,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Overview Sub-view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Overview Sub-view: Shows overall performance for the selected month (total owed, total paid, affiliate count, failed count) at the top",
         "rationale": "PRD Screen 7, prd.md line 751"
@@ -63380,7 +63497,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Current Cycle Sub-view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Current Cycle Sub-view: Current cycle list is read-only in FR-018; payout processing actions are performed in FR-017 Screen 6 (Affiliate Billing - Commission Payouts)",
         "rationale": "PRD Screen 7, prd.md line 752"
@@ -63392,7 +63509,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Billing History Sub-view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Billing History Sub-view: Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; records retained for 7 years minimum",
         "rationale": "PRD Screen 7, prd.md line 754"
@@ -63404,7 +63521,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Status Workflow",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Status Workflow: Pending → Processing (payment initiated by FR-017) → Paid (payment confirmed) OR Failed (payment error)",
         "rationale": "PRD Screen 7, prd.md line 755"
@@ -63416,7 +63533,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 7: Retry Logic",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Retry Logic: If a payout fails, retry is handled in FR-017 Screen 6; FR-018 displays the latest failed/retried status and failure reason",
         "rationale": "PRD Screen 7, prd.md line 756"
@@ -63428,7 +63545,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 8: Breakdown Integrity",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Breakdown Integrity: The included-bookings list must reconcile to the net commission amount (gross minus reversals/refunds)",
         "rationale": "PRD Screen 8, prd.md line 800"
@@ -63440,7 +63557,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 8: Receipt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Receipt: \"Download Receipt\" generates a PDF receipt for the payout (affiliate records)",
         "rationale": "PRD Screen 8, prd.md line 802"
@@ -63452,7 +63569,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9: Real-Time Updates",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Real-Time Updates: Portal data refreshes every 5 minutes (or on manual refresh)",
         "rationale": "PRD Screen 9, prd.md line 837"
@@ -63464,7 +63581,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9: Referral Link",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Referral Link: The affiliate's unique referral link (auto-apply code URL) is available with a one-click copy action",
         "rationale": "PRD Screen 9, prd.md line 839"
@@ -63476,7 +63593,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.1: Payout Calculation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Payout Calculation: \"Pending Payout\" includes commissions from completed bookings in previous month (not yet paid)",
         "rationale": "PRD Screen 9.1, prd.md line 872"
@@ -63488,7 +63605,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.1: Conversion Funnel",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Conversion Funnel: Overview shows the funnel Code Applied → Checkout Started → Payment Completed",
         "rationale": "PRD Screen 9.1, prd.md line 873"
@@ -63500,7 +63617,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.1: Monthly Breakdown",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Monthly Breakdown: Affiliate can toggle between \"All-Time\" and \"Current Month\"",
         "rationale": "PRD Screen 9.1, prd.md line 874"
@@ -63512,7 +63629,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.1: Export Report",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Export Report: Affiliate can download a performance report as PDF",
         "rationale": "PRD Screen 9.1, prd.md line 875"
@@ -63524,7 +63641,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.2: Issued Code Visibility",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Issued Code Visibility: All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, active window, and status",
         "rationale": "PRD Screen 9.2, prd.md line 927"
@@ -63536,7 +63653,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.2: Marketing Materials Access",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Marketing Materials Access: If a campaign has externally hosted marketing materials, affiliates can view/download those links from the relevant code detail. Asset creation, editing, approval, and hosting remain outside FR-018 scope.",
         "rationale": "PRD Screen 9.2, prd.md line 930"
@@ -63548,7 +63665,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.2: Sorting/Filtering",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Sorting/Filtering: Affiliate can sort by performance (revenue/commission) and filter by status (Active / Inactive / Expired / Revoked)",
         "rationale": "PRD Screen 9.2, prd.md line 931"
@@ -63560,7 +63677,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.3: Upcoming Payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Upcoming Payout: The next scheduled payout (amount, date, included bookings count) is shown at the top alongside the history list",
         "rationale": "PRD Screen 9.3, prd.md line 986"
@@ -63572,7 +63689,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.3: Minimum Threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Minimum Threshold: When the pending amount is below the $50 minimum, the panel notes it will roll over to the next cycle (Payment Rule 3)",
         "rationale": "PRD Screen 9.3, prd.md line 987"
@@ -63584,7 +63701,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.3: Read-Only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-Only: Affiliates view payout status only; processing is admin-side (Screen 7) and execution is via Stripe transfer",
         "rationale": "PRD Screen 9.3, prd.md line 988"
@@ -63596,7 +63713,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.3: Receipt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Receipt: A PDF receipt is downloadable for each Paid payout",
         "rationale": "PRD Screen 9.3, prd.md line 990"
@@ -63608,7 +63725,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.4: Self-Service Edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Self-Service Edit: Affiliate may edit non-sensitive fields (phone, language) and manage their own account security (password, optional MFA — future / non-MVP, pending FR-026 / FR-031); changes sync to the admin view (Screen 2 / Screen 3)",
         "rationale": "PRD Screen 9.4, prd.md line 1040"
@@ -63620,7 +63737,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.4: Admin-Controlled Fields",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admin-Controlled Fields: Name (legal/payout name used for attribution and Stripe transfers), email, country/region, affiliate type, tax/VAT ID, bank details, commission structure, payout schedule, and status are read-only to the affiliate and changed only by admins",
         "rationale": "PRD Screen 9.4, prd.md line 1041"
@@ -63632,7 +63749,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.4: Email Immutable",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Email Immutable: Contact email (login username) cannot be changed (a new account is required), consistent with admin Screen 2 rules",
         "rationale": "PRD Screen 9.4, prd.md line 1042"
@@ -63644,7 +63761,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10: Token Handling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Token Handling: One-time set-password link expires in 24 hours; generating a new link invalidates the previous one",
         "rationale": "PRD Screen 10, prd.md line 1062"
@@ -63656,7 +63773,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.1: On Success",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "On Success: System saves the encrypted password, flips Status from \"Pending\" to \"Active\" and Activation Status to \"Active\" (per Rule 12), and redirects to the Affiliate Portal login (Screen 9)",
         "rationale": "PRD Screen 10.1, prd.md line 1090"
@@ -63668,7 +63785,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.1: Expired / Used Link",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Expired / Used Link: System shows an explanatory message and a link to request a new one (Screen 10.2)",
         "rationale": "PRD Screen 10.1, prd.md line 1091"
@@ -63680,7 +63797,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.1: Security",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Security: Password strength is enforced server-side; the email field is fixed (cannot be changed here)",
         "rationale": "PRD Screen 10.1, prd.md line 1092"
@@ -63692,7 +63809,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.2: Rate Limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Rate Limit: Maximum 3 resend requests per hour per email address",
         "rationale": "PRD Screen 10.2, prd.md line 1116"
@@ -63704,7 +63821,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.2: Generic Messaging",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Generic Messaging: System always shows \"If an account exists with this email, an activation link will be sent.\" regardless of whether the email exists or is already activated (does not reveal account existence)",
         "rationale": "PRD Screen 10.2, prd.md line 1118"
@@ -63716,7 +63833,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.2: Eligibility",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Eligibility: A link is only generated for accounts created but not yet activated (password not set)",
         "rationale": "PRD Screen 10.2, prd.md line 1119"
@@ -63728,7 +63845,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.3: Shown Once",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Shown Once: Displayed only at first login; afterwards the affiliate lands directly on Overview (Screen 9.1). It is dismissible.",
         "rationale": "PRD Screen 10.3, prd.md line 1147"
@@ -63740,7 +63857,7 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.3: Privacy",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Privacy: Only the affiliate's own codes, commission, and payout schedule are shown",
         "rationale": "PRD Screen 10.3, prd.md line 1149"
@@ -63752,7 +63869,7 @@
       "owner_fr": "FR-018",
       "title": "A1: Several discount codes under one affiliate account",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Single affiliate can promote multiple discount codes, all tracked under same affiliate account for commission calculation",
         "rationale": "PRD Alternative Flow A1, prd.md line 145"
@@ -63764,7 +63881,7 @@
       "owner_fr": "FR-018",
       "title": "A3: Affiliate sees full performance without admin intervention",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate has full visibility into performance metrics and earnings without admin intervention",
         "rationale": "PRD Alternative Flow A3, prd.md line 180"
@@ -63776,7 +63893,7 @@
       "owner_fr": "FR-018",
       "title": "A4: One campaign across many affiliates without a shared code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admin launches one campaign across many affiliates without creating a shared affiliate code; each affiliate receives their own trackable code under the same campaign settings",
         "rationale": "PRD Alternative Flow A4, prd.md line 202"
@@ -63788,7 +63905,7 @@
       "owner_fr": "FR-018",
       "title": "A5: Admin can resend activation from Affiliate Detail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admin can also resend the activation email from the Affiliate Detail screen (button: \"Resend Activation Email\"), mirroring FR-015",
         "rationale": "PRD Alternative Flow A5, prd.md line 222"
@@ -63800,7 +63917,7 @@
       "owner_fr": "FR-018",
       "title": "B1: Invalid code shows a message and tracks no referral",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System displays error message: \"This discount code is no longer valid. Please check the code or contact support.\"; Patient can proceed with checkout without discount OR enter different valid code; System does NOT track this as affiliate referral (no commission triggered)",
         "rationale": "PRD Alternative Flow B1, prd.md lines 234-236"
@@ -63812,7 +63929,7 @@
       "owner_fr": "FR-018",
       "title": "FR-018 exposes the payout cycle data and readiness status to FR-017 /...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "FR-018 exposes the payout cycle data and readiness status to FR-017 / A-05",
         "rationale": "PRD Alternative Flow B2, prd.md line 245"
@@ -63824,7 +63941,7 @@
       "owner_fr": "FR-018",
       "title": "System logs error with affiliate ID, amount, and error message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System logs error with affiliate ID, amount, and error message",
         "rationale": "PRD Alternative Flow B2, prd.md line 248"
@@ -63836,7 +63953,7 @@
       "owner_fr": "FR-018",
       "title": "FR-017 marks payout as \"Failed\"; FR-018 displays the failed status in read-only...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "FR-017 marks payout as \"Failed\"; FR-018 displays the failed status in read-only payout views",
         "rationale": "PRD Alternative Flow B2, prd.md line 249"
@@ -63848,7 +63965,7 @@
       "owner_fr": "FR-018",
       "title": "System sends alert notification to admin team with failed payout details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System sends alert notification to admin team with failed payout details",
         "rationale": "PRD Alternative Flow B2, prd.md line 250"
@@ -63860,7 +63977,7 @@
       "owner_fr": "FR-018",
       "title": "Admin manually triggers retry from FR-017 once payment details corrected",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admin manually triggers retry from FR-017 once payment details corrected",
         "rationale": "PRD Alternative Flow B2, prd.md line 252"
@@ -63872,7 +63989,7 @@
       "owner_fr": "FR-018",
       "title": "System prompts admin for suspension reason (required field)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System prompts admin for suspension reason (required field)",
         "rationale": "PRD Alternative Flow B3, prd.md line 262"
@@ -63884,7 +64001,7 @@
       "owner_fr": "FR-018",
       "title": "System retains historical data (referrals, commissions, payouts) but prevents new activity (audit...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System retains historical data (referrals, commissions, payouts) but prevents new activity (audit trail retained 10 years; financial records 7 years minimum)",
         "rationale": "PRD Alternative Flow B3, prd.md line 267"
@@ -63896,7 +64013,7 @@
       "owner_fr": "FR-018",
       "title": "System displays a generation summary: created count, skipped count, and failed count",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System displays a generation summary: created count, skipped count, and failed count",
         "rationale": "PRD Alternative Flow B4, prd.md line 278"
@@ -63908,7 +64025,7 @@
       "owner_fr": "FR-018",
       "title": "System sends the affiliate an offboarding notification (with final-settlement outcome) and records...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System sends the affiliate an offboarding notification (with final-settlement outcome) and records the action in the audit log",
         "rationale": "PRD Alternative Flow B5, prd.md line 299"
@@ -63920,7 +64037,7 @@
       "owner_fr": "FR-018",
       "title": "How does system handle duplicate discount codes across different affiliates? System validates...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "How does system handle duplicate discount codes across different affiliates? System validates uniqueness across ALL affiliates; if code exists, displays error \"Code already exists for affiliate [name]\".",
         "rationale": "PRD Edge Cases, prd.md line 1570"
@@ -63932,7 +64049,7 @@
       "owner_fr": "FR-018",
       "title": "What happens if admin tries to assign the same code to multiple...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "What happens if admin tries to assign the same code to multiple affiliates? System blocks the action and requires one unique code per affiliate, or redirects admin to create a non-attributed open marketing code in FR-019.",
         "rationale": "PRD Edge Cases, prd.md line 1571"
@@ -63944,7 +64061,7 @@
       "owner_fr": "FR-018",
       "title": "What occurs if patient applies affiliate code but cancels booking before payment?...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "What occurs if patient applies affiliate code but cancels booking before payment? System tracks code as \"applied\" but NOT \"completed\"; no commission credited to affiliate.",
         "rationale": "PRD Edge Cases, prd.md line 1573"
@@ -63956,7 +64073,7 @@
       "owner_fr": "FR-018",
       "title": "How does system handle booking refund after affiliate payout has been processed?...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "How does system handle booking refund after affiliate payout has been processed? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward).",
         "rationale": "PRD Edge Cases, prd.md line 1576"
@@ -63968,7 +64085,7 @@
       "owner_fr": "FR-018",
       "title": "What happens when a patient referred by an affiliate uses or receives...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "What happens when a patient referred by an affiliate uses or receives a higher-priority patient/provider discount code instead? The higher-priority discount controls the patient's final price under the one-discount rule, but the affiliate referral attribution is preserved internally if the affiliate-bound code/link was validly captured for the booking journey. When the booking completes with payment confirmation, affiliate commission and referral credit are still counted for that affiliate per Rule 11.",
         "rationale": "PRD Edge Cases, prd.md line 1580"
@@ -63980,7 +64097,7 @@
       "owner_fr": "FR-018",
       "title": "Module Scope: Provider Platform (PR-05)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Provider Platform (PR-05): No direct provider interaction; providers see bookings with affiliate codes applied",
         "rationale": "PRD Module Scope, prd.md line 28"
@@ -63992,7 +64109,7 @@
       "owner_fr": "FR-018",
       "title": "Patients can enter affiliate discount codes during booking checkout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Patients can enter affiliate discount codes during booking checkout",
         "rationale": "PRD Module Scope, prd.md line 37"
@@ -64004,7 +64121,7 @@
       "owner_fr": "FR-018",
       "title": "Booking confirmation shows affiliate discount applied (code name displayed)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Booking confirmation shows affiliate discount applied (code name displayed)",
         "rationale": "PRD Module Scope, prd.md line 39"
@@ -64016,7 +64133,7 @@
       "owner_fr": "FR-018",
       "title": "Patients do NOT see affiliate commission structure or payout information",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Patients do NOT see affiliate commission structure or payout information",
         "rationale": "PRD Module Scope, prd.md line 40"
@@ -64028,7 +64145,7 @@
       "owner_fr": "FR-018",
       "title": "Providers see bookings with affiliate codes in their dashboard (read-only view)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Providers see bookings with affiliate codes in their dashboard (read-only view)",
         "rationale": "PRD Module Scope, prd.md line 44"
@@ -64040,7 +64157,7 @@
       "owner_fr": "FR-018",
       "title": "Providers understand that affiliate discounts come from Hairline's commission (not their payout)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Providers understand that affiliate discounts come from Hairline's commission (not their payout)",
         "rationale": "PRD Module Scope, prd.md line 45"
@@ -64052,7 +64169,7 @@
       "owner_fr": "FR-018",
       "title": "No provider action required for affiliate-referred bookings",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "No provider action required for affiliate-referred bookings",
         "rationale": "PRD Module Scope, prd.md line 46"
@@ -64064,7 +64181,7 @@
       "owner_fr": "FR-018",
       "title": "Module Scope: Performance Tracking",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Performance Tracking: View real-time statistics on referral counts, booking conversions, revenue generated per affiliate",
         "rationale": "PRD Module Scope, prd.md line 52"
@@ -64076,7 +64193,7 @@
       "owner_fr": "FR-018",
       "title": "Module Scope: Reporting",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Reporting: Generate affiliate performance reports for analysis and optimization",
         "rationale": "PRD Module Scope, prd.md line 55"
@@ -64088,7 +64205,7 @@
       "owner_fr": "FR-018",
       "title": "Email notifications to affiliates when discount codes are created or updated",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Email notifications to affiliates when discount codes are created or updated",
         "rationale": "PRD Communication Structure, prd.md line 67"
@@ -64100,7 +64217,7 @@
       "owner_fr": "FR-018",
       "title": "Email notifications to affiliates when monthly payouts are processed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Email notifications to affiliates when monthly payouts are processed",
         "rationale": "PRD Communication Structure, prd.md line 68"
@@ -64112,7 +64229,7 @@
       "owner_fr": "FR-018",
       "title": "Admin-to-affiliate communication via notes in admin dashboard (internal only)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Admin-to-affiliate communication via notes in admin dashboard (internal only)",
         "rationale": "PRD Communication Structure, prd.md line 69"
@@ -64124,7 +64241,7 @@
       "owner_fr": "FR-018",
       "title": "System-generated payout confirmations with transaction breakdown",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System-generated payout confirmations with transaction breakdown",
         "rationale": "PRD Communication Structure, prd.md line 70"
@@ -64136,7 +64253,7 @@
       "owner_fr": "FR-018",
       "title": "Read-only access to externally hosted affiliate marketing materials (banners, templates, and campaign...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only access to externally hosted affiliate marketing materials (banners, templates, and campaign assets) from the affiliate portal",
         "rationale": "PRD Communication Structure, prd.md line 71"
@@ -64148,7 +64265,7 @@
       "owner_fr": "FR-018",
       "title": "Out of scope: patient-affiliate messaging, asset hosting, training calls",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Out of Scope: Direct messaging between patients and affiliates (handled outside platform); Marketing material creation or asset hosting (affiliates use externally hosted materials linked from the portal); Affiliate training or onboarding calls (manual process outside platform)",
         "rationale": "PRD Communication Structure, prd.md lines 75-77"
@@ -64160,7 +64277,7 @@
       "owner_fr": "FR-018",
       "title": "Entry points to affiliate management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Entry Points: Admins access Affiliate Management section in admin dashboard to onboard new affiliates; Admins select affiliates manually or through filters, then generate one unique affiliate-bound promo code per selected affiliate; After the admin creates their account, affiliates complete a one-time activation link to set their password, then log into the dedicated affiliate portal to view their performance dashboard; Patients enter affiliate codes during booking checkout, triggering tracking and commission calculation; Automated monthly job generates payout reports on the 7th of each month (fixed schedule)",
         "rationale": "PRD Entry Points, prd.md lines 81-85"
@@ -64172,7 +64289,7 @@
       "owner_fr": "FR-018",
       "title": "System validates inputs (unique email, valid payment details format)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System validates inputs (unique email, valid payment details format)",
         "rationale": "PRD Main Flow, prd.md line 106"
@@ -64184,7 +64301,7 @@
       "owner_fr": "FR-018",
       "title": "Generated unique affiliate ID",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Generated unique affiliate ID",
         "rationale": "PRD Main Flow, prd.md line 109"
@@ -64196,7 +64313,7 @@
       "owner_fr": "FR-018",
       "title": "Discount type: Hairline fees only (deducted from Hairline's commission)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Discount type: Hairline fees only (deducted from Hairline's commission)",
         "rationale": "PRD Main Flow, prd.md line 115"
@@ -64208,7 +64325,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate clicks the \"Set Password\" link; system displays the password creation form...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate clicks the \"Set Password\" link; system displays the password creation form (strong password required: min 12 chars, uppercase, lowercase, number, special char)",
         "rationale": "PRD Main Flow, prd.md line 129"
@@ -64220,7 +64337,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate sets and confirms password; system validates strength, saves the encrypted password...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate sets and confirms password; system validates strength, saves the encrypted password, and redirects to the Affiliate Portal login",
         "rationale": "PRD Main Flow, prd.md line 130"
@@ -64232,7 +64349,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate logs in and lands on the Affiliate Portal (Overview tab), where...",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Affiliate logs in and lands on the Affiliate Portal (Overview tab), where assigned discount code(s), commission structure, and payout schedule are shown; affiliate can review real-time stats and complete non-sensitive fields on the Profile tab",
         "rationale": "PRD Main Flow, prd.md line 131"
@@ -64244,7 +64361,7 @@
       "owner_fr": "FR-018",
       "title": "Activation email content",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Activation email contains: System sends the activation email to the affiliate containing:; Welcome message and platform introduction; Secure one-time \"Set Password\" link (expires in 24 hours); The affiliate's contact email (used as the login username); Instructions for first login and profile completion",
         "rationale": "PRD Main Flow, prd.md lines 124-128"
@@ -64256,7 +64373,7 @@
       "owner_fr": "FR-018",
       "title": "Integration Points: Error handling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Error handling: If validation service unavailable, allow checkout to proceed without discount (prevent checkout failure)",
         "rationale": "PRD Integration Points, prd.md line 1393"
@@ -64268,7 +64385,7 @@
       "owner_fr": "FR-018",
       "title": "Integration Points: Error handling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Error handling: If FR-019 registration fails for a generated code, mark that affiliate row as failed and allow admin to retry without duplicating successful rows",
         "rationale": "PRD Integration Points, prd.md line 1398"
@@ -64280,7 +64397,7 @@
       "owner_fr": "FR-018",
       "title": "Integration Points: Error handling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Error handling: If commission calculation fails, retry 3 times with exponential backoff; alert admin if all retries fail",
         "rationale": "PRD Integration Points, prd.md line 1403"
@@ -64292,7 +64409,7 @@
       "owner_fr": "FR-018",
       "title": "Security Considerations: Authorization",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Authorization: Role-based access control (RBAC): Affiliates view only their own data; Admins view all affiliate data",
         "rationale": "PRD Security Considerations, prd.md line 1421"
@@ -64304,7 +64421,7 @@
       "owner_fr": "FR-018",
       "title": "Security Considerations: Audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Audit trail: Log all access to affiliate payment details with timestamp, user ID, and IP address",
         "rationale": "PRD Security Considerations, prd.md line 1423"
@@ -64316,7 +64433,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliates are vetted by Hairline; no self-service signup",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Assumption 1: Hairline will manually vet and approve affiliate partners before onboarding (no self-service affiliate signup)",
         "rationale": "PRD Assumptions, prd.md line 1370"
@@ -98667,6 +98784,215 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-018-001",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens Add New Affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-018-002",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin enters affiliate details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-018-021",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens an existing affiliate profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 1"
+      }
+    },
+    {
+      "id": "STP-018-022",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin clicks Add New Discount Code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 2"
+      }
+    },
+    {
+      "id": "STP-018-031",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens the affiliate profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 1"
+      }
+    },
+    {
+      "id": "STP-018-032",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin clicks Edit Commission Structure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 2"
+      }
+    },
+    {
+      "id": "STP-018-033",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin modifies the commission parameters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 3"
+      }
+    },
+    {
+      "id": "STP-018-041",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate logs in to the affiliate portal",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 1"
+      }
+    },
+    {
+      "id": "STP-018-051",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens the Affiliate Management Dashboard",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 1"
+      }
+    },
+    {
+      "id": "STP-018-052",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin filters affiliates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 2"
+      }
+    },
+    {
+      "id": "STP-018-053",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin reviews the list and selects affiliates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 3"
+      }
+    },
+    {
+      "id": "STP-018-054",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin clicks Generate Codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 4"
+      }
+    },
+    {
+      "id": "STP-018-055",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin enters the campaign-level code settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 5"
+      }
+    },
+    {
+      "id": "STP-018-061",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate opens the Affiliate Portal login page",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 1"
+      }
+    },
+    {
+      "id": "STP-018-062",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate clicks Did not receive activation email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 2"
+      }
+    },
+    {
+      "id": "STP-018-071",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Patient enters the discount code at checkout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 1"
+      }
+    },
+    {
+      "id": "STP-018-101",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens the affiliate profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 1"
+      }
+    },
+    {
+      "id": "STP-018-102",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin clicks Suspend Account",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2"
+      }
+    },
+    {
+      "id": "STP-018-121",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin opens the affiliate profile and clicks Deactivate / Offboard",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 1"
       }
     },
     {
@@ -137549,6 +137875,60 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-018-a1",
+      "verb": "starts at",
+      "to_id": "STP-018-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-a2",
+      "verb": "starts at",
+      "to_id": "STP-018-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-a3",
+      "verb": "starts at",
+      "to_id": "STP-018-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-a4",
+      "verb": "starts at",
+      "to_id": "STP-018-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-a5",
+      "verb": "starts at",
+      "to_id": "STP-018-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-b1",
+      "verb": "starts at",
+      "to_id": "STP-018-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-b3",
+      "verb": "starts at",
+      "to_id": "STP-018-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-b5",
+      "verb": "starts at",
+      "to_id": "STP-018-121",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-main",
+      "verb": "starts at",
+      "to_id": "STP-018-001",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-019-main",
       "verb": "starts at",
       "to_id": "STP-019-001",
@@ -139395,6 +139775,42 @@
         "rules": 206
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-015-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-015-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-017-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-017-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-019-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-029-085",
+      "attrs": {}
     },
     {
       "from_id": "FR-019",
@@ -186473,9 +186889,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-001",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-001",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-001",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-002",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-002",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-002",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-002",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -186485,9 +186937,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-003",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-003",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-004",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-004",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.applied_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-004",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.completed_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-004",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.max_usage_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-004",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.per_patient_usage_limit",
       "attrs": {}
     },
     {
@@ -186497,9 +186985,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-005",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-005",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-booking-completed",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-006",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-006",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-006",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -186509,9 +187021,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-007",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-007",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-payout-cycle-generated",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-008",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-008",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-008",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-008",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-008",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
       "attrs": {}
     },
     {
@@ -186521,9 +187069,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-009",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-009",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-009",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-payout-confirmed",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-010",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-010",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-010",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-010",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
       "attrs": {}
     },
     {
@@ -186533,9 +187117,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-011",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-012",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-012",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.affiliate_id",
       "attrs": {}
     },
     {
@@ -186545,9 +187141,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-013",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-014",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-014",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -186557,9 +187165,51 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-015",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-016",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-016",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
       "attrs": {}
     },
     {
@@ -186569,9 +187219,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-017",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-017",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-017",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-017",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-018",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-018",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-audit-entry",
       "attrs": {}
     },
     {
@@ -186581,9 +187261,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-019",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-019",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-020",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-020",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-020",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
       "attrs": {}
     },
     {
@@ -186593,9 +187297,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-021",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-021",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-021",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-021",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-022",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-022",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
       "attrs": {}
     },
     {
@@ -186605,9 +187339,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-023",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-booking-completed",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-024",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-024",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-024",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-024",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -186617,9 +187375,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-025",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-025",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-026",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-026",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-026",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-026",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-code-created",
       "attrs": {}
     },
     {
@@ -186629,9 +187417,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-027",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-028",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-028",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-028",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-028",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
       "attrs": {}
     },
     {
@@ -186641,9 +187453,51 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-029",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-029",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-029",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-030",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-030",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-030",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-030",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-030",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
       "attrs": {}
     },
     {
@@ -186653,9 +187507,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-031",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-031",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-032",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-032",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-032",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
       "attrs": {}
     },
     {
@@ -186665,9 +187543,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-033",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-033",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-033",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-034",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-034",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_effective_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-034",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-commission-changed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-034",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
       "attrs": {}
     },
     {
@@ -186677,9 +187591,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-035",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-035",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-036",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-036",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-036",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.last_login_at",
       "attrs": {}
     },
     {
@@ -186689,9 +187627,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-037",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-037",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-038",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-038",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-038",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-038",
+      "verb": "applies to",
+      "to_id": "SCR-018-21",
       "attrs": {}
     },
     {
@@ -186701,9 +187669,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-039",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-039",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-039",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-040",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-040",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-040",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -186713,9 +187711,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-041",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-041",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-042",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-042",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-042",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.marketing_material_links",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-042",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
       "attrs": {}
     },
     {
@@ -186725,9 +187753,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-043",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-044",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-044",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
       "attrs": {}
     },
     {
@@ -186737,9 +187777,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-045",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-046",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-046",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-046",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.payout_schedule",
       "attrs": {}
     },
     {
@@ -186749,9 +187807,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-047",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-047",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-048",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-048",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
       "attrs": {}
     },
     {
@@ -186761,9 +187837,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-049",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-050",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-050",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-050",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-050",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-activation-sent",
       "attrs": {}
     },
     {
@@ -186773,9 +187873,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-051",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-052",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-052",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
       "attrs": {}
     },
     {
@@ -186785,9 +187897,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-053",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.max_usage_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-053",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.per_patient_usage_limit",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-054",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-054",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
       "attrs": {}
     },
     {
@@ -186797,9 +187927,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-055",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-056",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-056",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.performance_tier",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-056",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -186815,9 +187963,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-057",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.campaign_eligibility",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-058",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-058",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-058",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-058",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-058",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
       "attrs": {}
     },
     {
@@ -186827,9 +188005,51 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-059",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-060",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-060",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
       "attrs": {}
     },
     {
@@ -186839,9 +188059,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-061",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-audit-entry",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-062",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-062",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
       "attrs": {}
     },
     {
@@ -186851,9 +188083,69 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-063",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-064",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-064",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-064",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.languages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-064",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.phone_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-064",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
       "attrs": {}
     },
     {
@@ -186863,9 +188155,45 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-065",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-065",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-065",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-066",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-066",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_effective_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-066",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-066",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
       "attrs": {}
     },
     {
@@ -186875,9 +188203,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-067",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-067",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-067",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-068",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-068",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -186887,9 +188239,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-069",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-069",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-070",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-070",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -186899,9 +188269,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-071",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-072",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-072",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
       "attrs": {}
     },
     {
@@ -186911,9 +188293,57 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.affiliate_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.campaign_eligibility",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.country_region",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.languages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.performance_tier",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-073",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-074",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-074",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
       "attrs": {}
     },
     {
@@ -186923,9 +188353,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-075",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-076",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-076",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
       "attrs": {}
     },
     {
@@ -186935,9 +188377,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-077",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.campaign_eligibility",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-077",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-078",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-078",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-078",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -186947,9 +188413,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-079",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-079",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-080",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-080",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_percentage",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-080",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -186959,9 +188449,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-081",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-081",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.payout_schedule",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-081",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-082",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-082",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-082",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -186971,9 +188491,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-083",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-083",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-083",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-084",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-084",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_percentage",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-084",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -186983,9 +188533,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-085",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-086",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-086",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
       "attrs": {}
     },
     {
@@ -186995,9 +188557,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-087",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-087",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-088",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-088",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-088",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
       "attrs": {}
     },
     {
@@ -187007,9 +188593,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-089",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-090",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-090",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-090",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
       "attrs": {}
     },
     {
@@ -187019,9 +188623,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-091",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-092",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-092",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_effective_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-092",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
       "attrs": {}
     },
     {
@@ -187031,9 +188653,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-093",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-094",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-094",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-commission-changed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-094",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
       "attrs": {}
     },
     {
@@ -187043,9 +188683,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-095",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-096",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-096",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-096",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -187055,9 +188713,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-097",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.settlement_outcome",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-097",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-098",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-098",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -187067,9 +188743,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-099",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-099",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-100",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-100",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -187079,9 +188773,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-101",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-102",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-102",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -187091,9 +188797,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-103",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.code_text",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-103",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-104",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-104",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.affiliate_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-104",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -187103,9 +188833,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-105",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-106",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-106",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.selection_snapshot",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-106",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -187115,9 +188863,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-107",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.code_text",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-107",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-108",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-108",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.expiration_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-108",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -187127,9 +188899,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-109",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.max_usage_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-109",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-110",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-110",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-110",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
       "attrs": {}
     },
     {
@@ -187139,9 +188935,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-111",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-112",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-112",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -187151,9 +188959,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-113",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-114",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-114",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch-result.reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-114",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
       "attrs": {}
     },
     {
@@ -187163,9 +188989,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-115",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-115",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-116",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-116",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
       "attrs": {}
     },
     {
@@ -187175,9 +189019,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-117",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-118",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-118",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
       "attrs": {}
     },
     {
@@ -187187,9 +189043,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-119",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-120",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-120",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
       "attrs": {}
     },
     {
@@ -187199,9 +189067,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-121",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-122",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-122",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
       "attrs": {}
     },
     {
@@ -187211,9 +189091,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-123",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.expiration_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-123",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.max_usage_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-123",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-123",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-124",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-124",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
       "attrs": {}
     },
     {
@@ -187223,9 +189133,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-125",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-125",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-126",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-126",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
       "attrs": {}
     },
     {
@@ -187235,9 +189163,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-127",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-128",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-128",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
       "attrs": {}
     },
     {
@@ -187247,9 +189187,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-129",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-130",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-130",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
       "attrs": {}
     },
     {
@@ -187259,9 +189211,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-131",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-131",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-132",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-132",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
       "attrs": {}
     },
     {
@@ -187271,9 +189241,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-133",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-134",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-134",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
       "attrs": {}
     },
     {
@@ -187283,9 +189265,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-135",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-136",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-136",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -187295,9 +189289,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-137",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-138",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-138",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -187307,9 +189313,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-139",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-140",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-140",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
       "attrs": {}
     },
     {
@@ -187319,9 +189337,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-141",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-142",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-142",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
       "attrs": {}
     },
     {
@@ -187331,9 +189361,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-143",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-144",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-144",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
       "attrs": {}
     },
     {
@@ -187343,9 +189385,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-145",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-146",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-146",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
       "attrs": {}
     },
     {
@@ -187355,9 +189409,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-147",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-148",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-148",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
       "attrs": {}
     },
     {
@@ -187367,9 +189433,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-149",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-150",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-150",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_link_expires_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-150",
+      "verb": "applies to",
+      "to_id": "SCR-018-18",
       "attrs": {}
     },
     {
@@ -187379,9 +189463,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-151",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-152",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-152",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
       "attrs": {}
     },
     {
@@ -187391,9 +189487,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-153",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-154",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-154",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-154",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
       "attrs": {}
     },
     {
@@ -187403,9 +189517,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-155",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-156",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-156",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
       "attrs": {}
     },
     {
@@ -187415,9 +189541,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-157",
+      "verb": "applies to",
+      "to_id": "SCR-018-21",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-158",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-158",
+      "verb": "applies to",
+      "to_id": "SCR-018-21",
       "attrs": {}
     },
     {
@@ -187427,9 +189565,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-159",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-159",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-160",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-160",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-160",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -187439,9 +189601,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-161",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-161",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-162",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-162",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-162",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
       "attrs": {}
     },
     {
@@ -187451,9 +189637,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-163",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-163",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-164",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-164",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -187463,9 +189667,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-165",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-166",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-166",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-166",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-166",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
       "attrs": {}
     },
     {
@@ -187475,9 +189703,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-167",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-168",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-168",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -187487,9 +189727,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-169",
+      "verb": "applies to",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-170",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-170",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
       "attrs": {}
     },
     {
@@ -187499,9 +189751,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-171",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-171",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-172",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-172",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-172",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -187511,9 +189787,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-173",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.code_text",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-174",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-174",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.affiliate_id",
       "attrs": {}
     },
     {
@@ -187523,9 +189811,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-175",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-175",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.applied_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-175",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.completed_count",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-176",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-176",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -187535,9 +189847,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-177",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-178",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-178",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
       "attrs": {}
     },
     {
@@ -187547,9 +189871,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-179",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-179",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-180",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-180",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
       "attrs": {}
     },
     {
@@ -187559,9 +189901,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-181",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-182",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-182",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
       "attrs": {}
     },
     {
@@ -187571,9 +189925,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-183",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-184",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-184",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
       "attrs": {}
     },
     {
@@ -187583,9 +189949,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-185",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-185",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-186",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-186",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-186",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
       "attrs": {}
     },
     {
@@ -187595,9 +189985,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-187",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-187",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-code-created",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-188",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-188",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-188",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-payout-confirmed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-188",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
       "attrs": {}
     },
     {
@@ -187607,9 +190027,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-189",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-189",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.internal_notes",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-190",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-190",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-190",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -187619,9 +190063,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-191",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-191",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.marketing_material_links",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-192",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-192",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-192",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
       "attrs": {}
     },
     {
@@ -187631,9 +190099,39 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-193",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-193",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-193",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-194",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-194",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-194",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
       "attrs": {}
     },
     {
@@ -187643,9 +190141,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-195",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.id",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-196",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-196",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.discount_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-196",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -187655,9 +190171,33 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-197",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-197",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-198",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-198",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-198",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
       "attrs": {}
     },
     {
@@ -187667,9 +190207,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-199",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-199",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-200",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-200",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-activation-sent",
       "attrs": {}
     },
     {
@@ -187679,9 +190237,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-201",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-201",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-202",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-202",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch-result",
       "attrs": {}
     },
     {
@@ -187691,9 +190267,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-203",
+      "verb": "applies to",
+      "to_id": "EVT-affiliate-booking-completed",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-204",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-204",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-204",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
       "attrs": {}
     },
     {
@@ -187703,9 +190297,27 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-205",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-206",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-206",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-206",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate",
       "attrs": {}
     },
     {
@@ -281981,6 +284593,542 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-018-001",
+      "verb": "applies",
+      "to_id": "REQ-018-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-001",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-001",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-001",
+      "verb": "next",
+      "to_id": "STP-018-002",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-001",
+      "verb": "on",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "applies",
+      "to_id": "REQ-018-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "applies",
+      "to_id": "REQ-018-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "applies",
+      "to_id": "REQ-018-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "applies",
+      "to_id": "REQ-018-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-002",
+      "verb": "on",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-021",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-021",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-021",
+      "verb": "next",
+      "to_id": "STP-018-022",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-021",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-022",
+      "verb": "applies",
+      "to_id": "REQ-018-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-022",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-022",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-022",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-031",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-031",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-031",
+      "verb": "next",
+      "to_id": "STP-018-032",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-031",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-032",
+      "verb": "applies",
+      "to_id": "REQ-018-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-032",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-032",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-032",
+      "verb": "next",
+      "to_id": "STP-018-033",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-032",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-033",
+      "verb": "applies",
+      "to_id": "REQ-018-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-033",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-033",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-033",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-041",
+      "verb": "applies",
+      "to_id": "REQ-018-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-041",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-041",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-041",
+      "verb": "on",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-051",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-051",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-051",
+      "verb": "next",
+      "to_id": "STP-018-052",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-051",
+      "verb": "on",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-052",
+      "verb": "applies",
+      "to_id": "REQ-018-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-052",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-052",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-052",
+      "verb": "next",
+      "to_id": "STP-018-053",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-052",
+      "verb": "on",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-053",
+      "verb": "applies",
+      "to_id": "REQ-018-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-053",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-053",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-053",
+      "verb": "next",
+      "to_id": "STP-018-054",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-053",
+      "verb": "on",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "applies",
+      "to_id": "REQ-018-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "applies",
+      "to_id": "REQ-018-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "next",
+      "to_id": "STP-018-055",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-054",
+      "verb": "on",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "applies",
+      "to_id": "REQ-018-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "applies",
+      "to_id": "REQ-018-108",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "applies",
+      "to_id": "REQ-018-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "applies",
+      "to_id": "REQ-018-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-061",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-061",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-061",
+      "verb": "next",
+      "to_id": "STP-018-062",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-061",
+      "verb": "on",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-062",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-062",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-062",
+      "verb": "on",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-071",
+      "verb": "applies",
+      "to_id": "REQ-018-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-071",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-071",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-101",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-101",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-101",
+      "verb": "next",
+      "to_id": "STP-018-102",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-101",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-102",
+      "verb": "applies",
+      "to_id": "REQ-018-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-102",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-102",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-102",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-121",
+      "verb": "applies",
+      "to_id": "REQ-018-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-121",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-121",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-121",
+      "verb": "on",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-019-001",
       "verb": "applies",
       "to_id": "REQ-019-001",
@@ -291554,6 +294702,255 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261109-192925-5a2948db",
+      "at": "2026-11-09T19:29:25.809978+00:00",
+      "changed_by": "tester",
+      "reason": "FR-018 completeness fixes (D37 review step 1): an applies to edge from each of the 206 FR-018 Rules to the objects its line names; references edges to the other-FR Rules the Internal Dependencies cite; the flow model for the steps a human performs (Steps, Flows, next links). System-performed steps (no System Actor in the graph) and the steps reachable only through them are in 2026-11-10-fr018-completeness-held.yaml. The 90 new Rules drawn from Validation Rules cells, screen bullets and Security lines, with their edges, were moved to the held file by the controller.",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-018-a1",
+        "FLW-018-a2",
+        "FLW-018-a3",
+        "FLW-018-a4",
+        "FLW-018-a5",
+        "FLW-018-b1",
+        "FLW-018-b3",
+        "FLW-018-b5",
+        "FLW-018-main",
+        "STP-018-001",
+        "STP-018-002",
+        "STP-018-021",
+        "STP-018-022",
+        "STP-018-031",
+        "STP-018-032",
+        "STP-018-033",
+        "STP-018-041",
+        "STP-018-051",
+        "STP-018-052",
+        "STP-018-053",
+        "STP-018-054",
+        "STP-018-055",
+        "STP-018-061",
+        "STP-018-062",
+        "STP-018-071",
+        "STP-018-101",
+        "STP-018-102",
+        "STP-018-121"
+      ],
+      "nodes_updated": [
+        "FR-018",
+        "REQ-018-001",
+        "REQ-018-002",
+        "REQ-018-003",
+        "REQ-018-004",
+        "REQ-018-005",
+        "REQ-018-006",
+        "REQ-018-007",
+        "REQ-018-008",
+        "REQ-018-009",
+        "REQ-018-010",
+        "REQ-018-011",
+        "REQ-018-012",
+        "REQ-018-013",
+        "REQ-018-014",
+        "REQ-018-015",
+        "REQ-018-016",
+        "REQ-018-017",
+        "REQ-018-018",
+        "REQ-018-019",
+        "REQ-018-020",
+        "REQ-018-021",
+        "REQ-018-022",
+        "REQ-018-023",
+        "REQ-018-024",
+        "REQ-018-025",
+        "REQ-018-026",
+        "REQ-018-027",
+        "REQ-018-028",
+        "REQ-018-029",
+        "REQ-018-030",
+        "REQ-018-031",
+        "REQ-018-032",
+        "REQ-018-033",
+        "REQ-018-034",
+        "REQ-018-035",
+        "REQ-018-036",
+        "REQ-018-037",
+        "REQ-018-038",
+        "REQ-018-039",
+        "REQ-018-040",
+        "REQ-018-041",
+        "REQ-018-042",
+        "REQ-018-043",
+        "REQ-018-044",
+        "REQ-018-045",
+        "REQ-018-046",
+        "REQ-018-047",
+        "REQ-018-048",
+        "REQ-018-049",
+        "REQ-018-050",
+        "REQ-018-051",
+        "REQ-018-052",
+        "REQ-018-053",
+        "REQ-018-054",
+        "REQ-018-055",
+        "REQ-018-056",
+        "REQ-018-057",
+        "REQ-018-058",
+        "REQ-018-059",
+        "REQ-018-060",
+        "REQ-018-061",
+        "REQ-018-062",
+        "REQ-018-063",
+        "REQ-018-064",
+        "REQ-018-065",
+        "REQ-018-066",
+        "REQ-018-067",
+        "REQ-018-068",
+        "REQ-018-069",
+        "REQ-018-070",
+        "REQ-018-071",
+        "REQ-018-072",
+        "REQ-018-073",
+        "REQ-018-074",
+        "REQ-018-075",
+        "REQ-018-076",
+        "REQ-018-077",
+        "REQ-018-078",
+        "REQ-018-079",
+        "REQ-018-080",
+        "REQ-018-081",
+        "REQ-018-082",
+        "REQ-018-083",
+        "REQ-018-084",
+        "REQ-018-085",
+        "REQ-018-086",
+        "REQ-018-087",
+        "REQ-018-088",
+        "REQ-018-089",
+        "REQ-018-090",
+        "REQ-018-091",
+        "REQ-018-092",
+        "REQ-018-093",
+        "REQ-018-094",
+        "REQ-018-095",
+        "REQ-018-096",
+        "REQ-018-097",
+        "REQ-018-098",
+        "REQ-018-099",
+        "REQ-018-100",
+        "REQ-018-101",
+        "REQ-018-102",
+        "REQ-018-103",
+        "REQ-018-104",
+        "REQ-018-105",
+        "REQ-018-106",
+        "REQ-018-107",
+        "REQ-018-108",
+        "REQ-018-109",
+        "REQ-018-110",
+        "REQ-018-111",
+        "REQ-018-112",
+        "REQ-018-113",
+        "REQ-018-114",
+        "REQ-018-115",
+        "REQ-018-116",
+        "REQ-018-117",
+        "REQ-018-118",
+        "REQ-018-119",
+        "REQ-018-120",
+        "REQ-018-121",
+        "REQ-018-122",
+        "REQ-018-123",
+        "REQ-018-124",
+        "REQ-018-125",
+        "REQ-018-126",
+        "REQ-018-127",
+        "REQ-018-128",
+        "REQ-018-129",
+        "REQ-018-130",
+        "REQ-018-131",
+        "REQ-018-132",
+        "REQ-018-133",
+        "REQ-018-134",
+        "REQ-018-135",
+        "REQ-018-136",
+        "REQ-018-137",
+        "REQ-018-138",
+        "REQ-018-139",
+        "REQ-018-140",
+        "REQ-018-141",
+        "REQ-018-142",
+        "REQ-018-143",
+        "REQ-018-144",
+        "REQ-018-145",
+        "REQ-018-146",
+        "REQ-018-147",
+        "REQ-018-148",
+        "REQ-018-149",
+        "REQ-018-150",
+        "REQ-018-151",
+        "REQ-018-152",
+        "REQ-018-153",
+        "REQ-018-154",
+        "REQ-018-155",
+        "REQ-018-156",
+        "REQ-018-157",
+        "REQ-018-158",
+        "REQ-018-159",
+        "REQ-018-160",
+        "REQ-018-161",
+        "REQ-018-162",
+        "REQ-018-163",
+        "REQ-018-164",
+        "REQ-018-165",
+        "REQ-018-166",
+        "REQ-018-167",
+        "REQ-018-168",
+        "REQ-018-169",
+        "REQ-018-170",
+        "REQ-018-171",
+        "REQ-018-172",
+        "REQ-018-173",
+        "REQ-018-174",
+        "REQ-018-175",
+        "REQ-018-176",
+        "REQ-018-177",
+        "REQ-018-178",
+        "REQ-018-179",
+        "REQ-018-180",
+        "REQ-018-181",
+        "REQ-018-182",
+        "REQ-018-183",
+        "REQ-018-184",
+        "REQ-018-185",
+        "REQ-018-186",
+        "REQ-018-187",
+        "REQ-018-188",
+        "REQ-018-189",
+        "REQ-018-190",
+        "REQ-018-191",
+        "REQ-018-192",
+        "REQ-018-193",
+        "REQ-018-194",
+        "REQ-018-195",
+        "REQ-018-196",
+        "REQ-018-197",
+        "REQ-018-198",
+        "REQ-018-199",
+        "REQ-018-200",
+        "REQ-018-201",
+        "REQ-018-202",
+        "REQ-018-203",
+        "REQ-018-204",
+        "REQ-018-205",
+        "REQ-018-206"
+      ],
+      "edges_added": 467,
+      "edges_removed": 0,
+      "rows": 616
+    },
     {
       "id": "cs-20261109-192743-17f0b1aa",
       "at": "2026-11-09T19:27:43.962784+00:00",
