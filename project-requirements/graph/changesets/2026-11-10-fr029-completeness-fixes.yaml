@@ -1,0 +1,375 @@
+reason: "FR-029 completeness fixes (checker review step 1): missing Rules for validations and the revive rule, applies to links, decided by links to the Product Owner decisions, and the Steps and Flows a human performs. System-performed Steps are held (no System Actor)."
+by: tester
+operations:
+  - {"op": "add_node", "id": "REQ-029-130", "type": "Rule", "owner_fr": "FR-029", "title": "Revived booking resolves commission, deposit and split settings at the later confirmation", "attrs": {"statement": "When the revived booking is confirmed, commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate stays the one locked in the original acceptance snapshot, because a revive keeps the original acceptance unchanged. If the patient instead starts a new inquiry, that inquiry's own acceptance locks its own rate.", "rationale": "Edge Cases, accepted subquote reaches Payment Window Expired and is revived (PRD line 1120)"}}
+  - {"op": "add_node", "id": "REQ-029-131", "type": "Rule", "owner_fr": "FR-029", "title": "Stripe Account Name validation", "attrs": {"statement": "Max 100 chars, must be unique", "rationale": "Screen 1, Account Name, Validation Rules column (PRD line 395)"}}
+  - {"op": "add_node", "id": "REQ-029-132", "type": "Rule", "owner_fr": "FR-029", "title": "Stripe Publishable Key validation", "attrs": {"statement": "Must start with \"pk_test_\" or \"pk_live_\", max 200 chars", "rationale": "Screen 1, Publishable Key, Validation Rules column (PRD line 396)"}}
+  - {"op": "add_node", "id": "REQ-029-133", "type": "Rule", "owner_fr": "FR-029", "title": "Stripe Secret Key validation", "attrs": {"statement": "Must start with \"sk_test_\" or \"sk_live_\", max 200 chars", "rationale": "Screen 1, Secret Key, Validation Rules column (PRD line 397)"}}
+  - {"op": "add_node", "id": "REQ-029-134", "type": "Rule", "owner_fr": "FR-029", "title": "Stripe Webhook Secret validation", "attrs": {"statement": "Min 32 chars, max 200 chars", "rationale": "Screen 1, Webhook Secret, Validation Rules column (PRD line 398)"}}
+  - {"op": "add_node", "id": "REQ-029-135", "type": "Rule", "owner_fr": "FR-029", "title": "Stripe Default Currency validation", "attrs": {"statement": "Must be one of selected supported currencies", "rationale": "Screen 1, Default Currency, Validation Rules column (PRD line 403)"}}
+  - {"op": "add_node", "id": "REQ-029-136", "type": "Rule", "owner_fr": "FR-029", "title": "Manual Base Rate validation", "attrs": {"statement": "Required if Rate Mode = Manual. Must be > 0, decimal precision: 6 digits.", "rationale": "Screen 2B, Manual Base Rate, Validation Rules column (PRD line 530)"}}
+  - {"op": "add_node", "id": "REQ-029-137", "type": "Rule", "owner_fr": "FR-029", "title": "Flat Rate Currency validation", "attrs": {"statement": "Required for Flat Rate; must be an enabled currency from Screen 6; defaults to the system default currency", "rationale": "Screen 5, Flat Rate Currency, Validation Rules column (PRD line 662)"}}
+  - {"op": "add_node", "id": "REQ-029-138", "type": "Rule", "owner_fr": "FR-029", "title": "Commission Effective Date validation", "attrs": {"statement": "Today or future date", "rationale": "Screen 5, Effective Date, Validation Rules column (PRD line 663)"}}
+  - {"op": "add_node", "id": "REQ-029-139", "type": "Rule", "owner_fr": "FR-029", "title": "Global Fallback account conditions", "attrs": {"statement": "If enabled: Assigned Countries must be empty and Account Status must be Active.", "rationale": "Screen 1, Global Fallback, Validation Rules column (PRD line 400)"}}
+  - {"op": "add_node", "id": "FLW-029-main-stripe-account", "type": "Flow", "title": "Main Flow: configure a new Stripe account", "attrs": {"kind": "main", "description": "Main Flow: configure a new Stripe account", "prd_ref": "Main Flow: Configure New Stripe Account"}}
+  - {"op": "add_node", "id": "STP-029-001", "type": "Step", "title": "Admin clicks Add New Account on the Stripe Accounts page", "owner_fr": "FR-029", "attrs": {"prd_ref": "Main Flow: Configure New Stripe Account step 1"}}
+  - {"op": "add_node", "id": "FLW-029-main-currency-conversion", "type": "Flow", "title": "Main Flow: configure currency conversion rules", "attrs": {"kind": "main", "description": "Main Flow: configure currency conversion rules", "prd_ref": "Main Flow: Configure Currency Conversion Rules"}}
+  - {"op": "add_node", "id": "STP-029-014", "type": "Step", "title": "Admin clicks the Currency Conversion tab on the Payment Configuration page", "owner_fr": "FR-029", "attrs": {"prd_ref": "Main Flow: Configure Currency Conversion Rules step 1"}}
+  - {"op": "add_node", "id": "FLW-029-main-deposit-rate", "type": "Flow", "title": "Main Flow: configure deposit rate rules", "attrs": {"kind": "main", "description": "Main Flow: configure deposit rate rules", "prd_ref": "Main Flow: Configure Deposit Rate Rules"}}
+  - {"op": "add_node", "id": "STP-029-028", "type": "Step", "title": "Admin clicks the Deposit Rates tab on the Payment Configuration page", "owner_fr": "FR-029", "attrs": {"prd_ref": "Main Flow: Configure Deposit Rate Rules step 1"}}
+  - {"op": "add_node", "id": "FLW-029-main-commission-rate", "type": "Flow", "title": "Main Flow: configure commission rates", "attrs": {"kind": "main", "description": "Main Flow: configure commission rates", "prd_ref": "Main Flow: Configure Commission Rates"}}
+  - {"op": "add_node", "id": "STP-029-041", "type": "Step", "title": "Admin clicks the Commission Rates tab on the Payment Configuration page", "owner_fr": "FR-029", "attrs": {"prd_ref": "Main Flow: Configure Commission Rates step 1"}}
+  - {"op": "add_node", "id": "FLW-029-main-split-payment", "type": "Flow", "title": "Main Flow: configure split payment (installment) plans", "attrs": {"kind": "main", "description": "Main Flow: configure split payment (installment) plans", "prd_ref": "Main Flow: Configure Split Payment (Installment) Plans"}}
+  - {"op": "add_node", "id": "STP-029-057", "type": "Step", "title": "Admin clicks the Split Payment tab on the Payment Configuration page", "owner_fr": "FR-029", "attrs": {"prd_ref": "Main Flow: Configure Split Payment (Installment) Plans step 1"}}
+  - {"op": "add_node", "id": "FLW-029-alt-stripe-regional-override", "type": "Flow", "title": "Alternative Flow A1: add a Stripe account with a regional grouping override", "attrs": {"kind": "alternative", "description": "Alternative Flow A1: add a Stripe account with a regional grouping override", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "STP-029-072", "type": "Step", "title": "Admin assigns countries that overlap an existing Stripe account", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_node", "id": "FLW-029-alt-provider-deposit-rate", "type": "Flow", "title": "Alternative Flow A2: configure a provider-specific deposit rate", "attrs": {"kind": "alternative", "description": "Alternative Flow A2: configure a provider-specific deposit rate", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "STP-029-079", "type": "Step", "title": "Admin selects the Provider-Specific scope in the deposit rate configuration", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  - {"op": "add_node", "id": "STP-029-080", "type": "Step", "title": "Admin searches for a provider by name or ID", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  - {"op": "add_node", "id": "STP-029-081", "type": "Step", "title": "Admin selects one or more providers from the search results", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  - {"op": "add_node", "id": "STP-029-082", "type": "Step", "title": "Admin sets the custom deposit rate (20-30%) for the selected providers", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
+  - {"op": "add_node", "id": "FLW-029-alt-pair-manual-to-auto", "type": "Flow", "title": "Alternative Flow A3: switch a pair from manual to auto-fetch", "attrs": {"kind": "alternative", "description": "Alternative Flow A3: switch a pair from manual to auto-fetch", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-029-087", "type": "Step", "title": "Admin opens an existing manual-mode pair for editing", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A3 step 1"}}
+  - {"op": "add_node", "id": "STP-029-088", "type": "Step", "title": "Admin changes the Rate Mode from Manual to Auto-fetch", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  - {"op": "add_node", "id": "FLW-029-alt-pair-auto-to-manual", "type": "Flow", "title": "Alternative Flow A3b: switch a pair from auto-fetch to manual", "attrs": {"kind": "alternative", "description": "Alternative Flow A3b: switch a pair from auto-fetch to manual", "prd_ref": "Alternative Flow A3b"}}
+  - {"op": "add_node", "id": "STP-029-097", "type": "Step", "title": "Admin opens an existing auto-fetch pair for editing", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A3b step 1"}}
+  - {"op": "add_node", "id": "STP-029-098", "type": "Step", "title": "Admin changes the Rate Mode from Auto-fetch to Manual", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A3b step 2"}}
+  - {"op": "add_node", "id": "FLW-029-alt-stripe-credential-failure", "type": "Flow", "title": "Boundary Flow B1: Stripe API credential validation fails", "attrs": {"kind": "alternative", "description": "Boundary Flow B1: Stripe API credential validation fails", "prd_ref": "Boundary Flow B1"}}
+  - {"op": "add_node", "id": "STP-029-110", "type": "Step", "title": "Admin submits the Stripe account configuration with API credentials", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 1"}}
+  - {"op": "add_node", "id": "FLW-029-alt-deposit-rate-out-of-range", "type": "Flow", "title": "Boundary Flow B3: deposit rate outside the allowed range", "attrs": {"kind": "alternative", "description": "Boundary Flow B3: deposit rate outside the allowed range", "prd_ref": "Boundary Flow B3"}}
+  - {"op": "add_node", "id": "STP-029-127", "type": "Step", "title": "Admin enters a deposit rate outside 20-30%", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B3 step 1"}}
+  - {"op": "add_node", "id": "STP-029-128", "type": "Step", "title": "Admin clicks Apply Deposit Rate", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B3 step 2"}}
+  - {"op": "add_node", "id": "FLW-029-alt-cutoff-conflict", "type": "Flow", "title": "Boundary Flow B4: split payment cutoff date conflict", "attrs": {"kind": "alternative", "description": "Boundary Flow B4: split payment cutoff date conflict", "prd_ref": "Boundary Flow B4"}}
+  - {"op": "add_node", "id": "STP-029-135", "type": "Step", "title": "Admin sets an aggressive cutoff date (for example 90 days before the procedure)", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B4 step 1"}}
+  - {"op": "add_node", "id": "STP-029-136", "type": "Step", "title": "Admin enables multiple installment options (for example 2-9)", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B4 step 2"}}
+  - {"op": "add_node", "id": "FLW-029-alt-no-stripe-account-for-country", "type": "Flow", "title": "Boundary Flow B6: no Stripe account available for the patient location", "attrs": {"kind": "alternative", "description": "Boundary Flow B6: no Stripe account available for the patient location", "prd_ref": "Boundary Flow B6"}}
+  - {"op": "add_node", "id": "STP-029-152", "type": "Step", "title": "Patient selects the country during the booking flow", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B6 step 1"}}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-029-131", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-132", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-133", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-134", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-135", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-136", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-137", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-138", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-139", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-001", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-001", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-002", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-002", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-003", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-003", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-004", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-004", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-005", "verb": "applies to", "to": "ENT-stripe-account.supported_currencies"}
+  - {"op": "add_edge", "from": "REQ-029-006", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-006", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-007", "verb": "applies to", "to": "ENT-currency-conversion-settings.global_default_markup_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-007", "verb": "applies to", "to": "ENT-currency-pair.markup_percentage_override"}
+  - {"op": "add_edge", "from": "REQ-029-008", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-009", "verb": "applies to", "to": "ENT-currency-pair.current_effective_rate"}
+  - {"op": "add_edge", "from": "REQ-029-010", "verb": "applies to", "to": "ENT-currency-conversion-settings.rate_protection_threshold"}
+  - {"op": "add_edge", "from": "REQ-029-011", "verb": "applies to", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "REQ-029-012", "verb": "applies to", "to": "ENT-currency-pair.status"}
+  - {"op": "add_edge", "from": "REQ-029-013", "verb": "applies to", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "REQ-029-013", "verb": "applies to", "to": "ENT-deposit-rate-config.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-014", "verb": "applies to", "to": "ENT-deposit-rate-config.provider_id"}
+  - {"op": "add_edge", "from": "REQ-029-015", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-016", "verb": "applies to", "to": "ENT-deposit-rate-config.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-017", "verb": "applies to", "to": "ENT-split-payment-config.feature_enabled"}
+  - {"op": "add_edge", "from": "REQ-029-018", "verb": "applies to", "to": "ENT-split-payment-config.available_installments"}
+  - {"op": "add_edge", "from": "REQ-029-019", "verb": "applies to", "to": "ENT-split-payment-config.cutoff_days"}
+  - {"op": "add_edge", "from": "REQ-029-020", "verb": "applies to", "to": "ENT-split-payment-config.minimum_booking_amount"}
+  - {"op": "add_edge", "from": "REQ-029-021", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-022", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-023", "verb": "applies to", "to": "ENT-split-payment-config.late_payment_grace_period_days"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-currency-conversion-settings"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "applies to", "to": "ENT-currency"}
+  - {"op": "add_edge", "from": "REQ-029-025", "verb": "applies to", "to": "ENT-payment-config-audit-log"}
+  - {"op": "add_edge", "from": "REQ-029-027", "verb": "applies to", "to": "ENT-payment-config-audit-log"}
+  - {"op": "add_edge", "from": "REQ-029-028", "verb": "applies to", "to": "ENT-stripe-account.secret_key_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-028", "verb": "applies to", "to": "ENT-stripe-account.webhook_secret_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-029", "verb": "applies to", "to": "ENT-stripe-account.secret_key_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-029", "verb": "applies to", "to": "ENT-stripe-account.webhook_secret_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-030", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-currency-conversion-settings"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-034", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-035", "verb": "applies to", "to": "EVT-payment-config-changed"}
+  - {"op": "add_edge", "from": "REQ-029-035", "verb": "applies to", "to": "EVT-rate-protection-alert"}
+  - {"op": "add_edge", "from": "REQ-029-037", "verb": "applies to", "to": "ENT-deposit-rate-config.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-038", "verb": "applies to", "to": "ENT-currency-pair.markup_percentage_override"}
+  - {"op": "add_edge", "from": "REQ-029-038", "verb": "applies to", "to": "ENT-currency-conversion-settings.global_default_markup_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-039", "verb": "applies to", "to": "ENT-split-payment-config.cutoff_days"}
+  - {"op": "add_edge", "from": "REQ-029-040", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-041", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-041", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-042", "verb": "applies to", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "REQ-029-043", "verb": "applies to", "to": "SCR-029-06"}
+  - {"op": "add_edge", "from": "REQ-029-043", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-044", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-045", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-046", "verb": "applies to", "to": "ENT-stripe-account.webhook_secret_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-047", "verb": "applies to", "to": "ENT-commission-rate-config.commission_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-047", "verb": "applies to", "to": "ENT-commission-rate-config.flat_rate_amount"}
+  - {"op": "add_edge", "from": "REQ-029-048", "verb": "applies to", "to": "ENT-commission-rate-config.provider_ids"}
+  - {"op": "add_edge", "from": "REQ-029-049", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-049", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-049", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-049", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-050", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-050", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-050", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-051", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-052", "verb": "applies to", "to": "ENT-currency"}
+  - {"op": "add_edge", "from": "REQ-029-052", "verb": "applies to", "to": "ENT-currency.enabled"}
+  - {"op": "add_edge", "from": "REQ-029-053", "verb": "applies to", "to": "ENT-currency.is_default"}
+  - {"op": "add_edge", "from": "REQ-029-054", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-055", "verb": "applies to", "to": "ENT-stripe-account.is_global_fallback"}
+  - {"op": "add_edge", "from": "REQ-029-056", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-056", "verb": "applies to", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "REQ-029-057", "verb": "applies to", "to": "ENT-currency-conversion-settings.global_default_sync_frequency"}
+  - {"op": "add_edge", "from": "REQ-029-057", "verb": "applies to", "to": "ENT-currency-pair.sync_frequency_override"}
+  - {"op": "add_edge", "from": "REQ-029-058", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-059", "verb": "applies to", "to": "SCR-029-06"}
+  - {"op": "add_edge", "from": "REQ-029-059", "verb": "applies to", "to": "ENT-commission-rate-config.provider_ids"}
+  - {"op": "add_edge", "from": "REQ-029-060", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-029-061", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-029-061", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-029-062", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-063", "verb": "applies to", "to": "EVT-payment-config-changed"}
+  - {"op": "add_edge", "from": "REQ-029-063", "verb": "applies to", "to": "EVT-rate-protection-alert"}
+  - {"op": "add_edge", "from": "REQ-029-063", "verb": "applies to", "to": "EVT-stripe-account-failure"}
+  - {"op": "add_edge", "from": "REQ-029-064", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-029-064", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-029-065", "verb": "applies to", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "REQ-029-065", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-029-066", "verb": "applies to", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "REQ-029-066", "verb": "applies to", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "REQ-029-066", "verb": "applies to", "to": "SCR-029-06"}
+  - {"op": "add_edge", "from": "REQ-029-067", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-068", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-068", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-069", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-070", "verb": "applies to", "to": "ENT-stripe-account.is_global_fallback"}
+  - {"op": "add_edge", "from": "REQ-029-071", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-072", "verb": "applies to", "to": "ENT-stripe-account.supported_currencies"}
+  - {"op": "add_edge", "from": "REQ-029-073", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-073", "verb": "applies to", "to": "ENT-stripe-account.last_tested_date"}
+  - {"op": "add_edge", "from": "REQ-029-074", "verb": "applies to", "to": "EVT-payment-unsupported-country"}
+  - {"op": "add_edge", "from": "REQ-029-074", "verb": "applies to", "to": "ENT-stripe-account.is_global_fallback"}
+  - {"op": "add_edge", "from": "REQ-029-075", "verb": "applies to", "to": "EVT-stripe-account-failure"}
+  - {"op": "add_edge", "from": "REQ-029-076", "verb": "applies to", "to": "EVT-stripe-account-failure"}
+  - {"op": "add_edge", "from": "REQ-029-077", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-078", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-078", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-079", "verb": "applies to", "to": "ENT-rate-source.last_tested_timestamp"}
+  - {"op": "add_edge", "from": "REQ-029-080", "verb": "applies to", "to": "ENT-rate-source.api_key_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-081", "verb": "applies to", "to": "ENT-rate-source.status"}
+  - {"op": "add_edge", "from": "REQ-029-082", "verb": "applies to", "to": "EVT-rate-protection-alert"}
+  - {"op": "add_edge", "from": "REQ-029-083", "verb": "applies to", "to": "ENT-currency-pair.target_currency"}
+  - {"op": "add_edge", "from": "REQ-029-084", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-085", "verb": "applies to", "to": "ENT-currency-pair.base_currency"}
+  - {"op": "add_edge", "from": "REQ-029-086", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-086", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-087", "verb": "applies to", "to": "ENT-currency-pair.status"}
+  - {"op": "add_edge", "from": "REQ-029-088", "verb": "applies to", "to": "ENT-currency-pair.status"}
+  - {"op": "add_edge", "from": "REQ-029-089", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-090", "verb": "applies to", "to": "EVT-pair-switched-to-manual"}
+  - {"op": "add_edge", "from": "REQ-029-090", "verb": "applies to", "to": "ENT-currency-pair.rate_mode"}
+  - {"op": "add_edge", "from": "REQ-029-091", "verb": "applies to", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "REQ-029-091", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-092", "verb": "applies to", "to": "ENT-currency-pair.manual_base_rate"}
+  - {"op": "add_edge", "from": "REQ-029-093", "verb": "applies to", "to": "ENT-currency-pair.rate_mode"}
+  - {"op": "add_edge", "from": "REQ-029-094", "verb": "applies to", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "REQ-029-095", "verb": "applies to", "to": "EVT-rate-sync-failed"}
+  - {"op": "add_edge", "from": "REQ-029-096", "verb": "applies to", "to": "EVT-rate-protection-alert"}
+  - {"op": "add_edge", "from": "REQ-029-097", "verb": "applies to", "to": "EVT-rate-protection-alert"}
+  - {"op": "add_edge", "from": "REQ-029-098", "verb": "applies to", "to": "EVT-payment-config-daily-digest"}
+  - {"op": "add_edge", "from": "REQ-029-099", "verb": "applies to", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "REQ-029-099", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-100", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-100", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-100", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-101", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-101", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-101", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-101", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-104", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-104", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-029-105", "verb": "applies to", "to": "ENT-split-payment-config.late_payment_grace_period_days"}
+  - {"op": "add_edge", "from": "REQ-029-106", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-108", "verb": "applies to", "to": "ENT-split-payment-config.cutoff_days"}
+  - {"op": "add_edge", "from": "REQ-029-109", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-110", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-112", "verb": "applies to", "to": "ENT-deposit-rate-config.deposit_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-112", "verb": "applies to", "to": "ENT-split-payment-config.available_installments"}
+  - {"op": "add_edge", "from": "REQ-029-112", "verb": "applies to", "to": "ENT-split-payment-config.cutoff_days"}
+  - {"op": "add_edge", "from": "REQ-029-112", "verb": "applies to", "to": "ENT-split-payment-config.installment_frequency"}
+  - {"op": "add_edge", "from": "REQ-029-112", "verb": "applies to", "to": "ENT-payment-config-audit-log"}
+  - {"op": "add_edge", "from": "REQ-029-113", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-114", "verb": "applies to", "to": "ENT-commission-rate-config.provider_ids"}
+  - {"op": "add_edge", "from": "REQ-029-115", "verb": "applies to", "to": "ENT-commission-rate-config.provider_ids"}
+  - {"op": "add_edge", "from": "REQ-029-116", "verb": "applies to", "to": "ENT-commission-rate-config.effective_date"}
+  - {"op": "add_edge", "from": "REQ-029-117", "verb": "applies to", "to": "ENT-commission-rate-config.provider_ids"}
+  - {"op": "add_edge", "from": "REQ-029-118", "verb": "applies to", "to": "ENT-commission-rate-config.commission_percentage"}
+  - {"op": "add_edge", "from": "REQ-029-119", "verb": "applies to", "to": "ENT-commission-rate-config.flat_rate_amount"}
+  - {"op": "add_edge", "from": "REQ-029-120", "verb": "applies to", "to": "ENT-commission-rate-config.flat_rate_currency"}
+  - {"op": "add_edge", "from": "REQ-029-121", "verb": "applies to", "to": "ENT-commission-rate-config.commission_model"}
+  - {"op": "add_edge", "from": "REQ-029-122", "verb": "applies to", "to": "ENT-currency.code"}
+  - {"op": "add_edge", "from": "REQ-029-123", "verb": "applies to", "to": "ENT-currency.is_default"}
+  - {"op": "add_edge", "from": "REQ-029-123", "verb": "applies to", "to": "ENT-currency.enabled"}
+  - {"op": "add_edge", "from": "REQ-029-124", "verb": "applies to", "to": "SCR-029-07"}
+  - {"op": "add_edge", "from": "REQ-029-124", "verb": "applies to", "to": "ENT-currency.enabled"}
+  - {"op": "add_edge", "from": "REQ-029-125", "verb": "applies to", "to": "ENT-currency.enabled"}
+  - {"op": "add_edge", "from": "REQ-029-126", "verb": "applies to", "to": "SCR-029-07"}
+  - {"op": "add_edge", "from": "REQ-029-126", "verb": "applies to", "to": "ENT-currency"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-stripe-account"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-rate-source"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-currency-conversion-settings"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-127", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-128", "verb": "applies to", "to": "EVT-payment-config-changed"}
+  - {"op": "add_edge", "from": "REQ-029-129", "verb": "applies to", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "applies to", "to": "ENT-currency-pair"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "applies to", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "applies to", "to": "ENT-deposit-rate-config"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "applies to", "to": "ENT-split-payment-config"}
+  - {"op": "add_edge", "from": "REQ-029-131", "verb": "applies to", "to": "ENT-stripe-account.account_name"}
+  - {"op": "add_edge", "from": "REQ-029-132", "verb": "applies to", "to": "ENT-stripe-account.publishable_key"}
+  - {"op": "add_edge", "from": "REQ-029-133", "verb": "applies to", "to": "ENT-stripe-account.secret_key_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-134", "verb": "applies to", "to": "ENT-stripe-account.webhook_secret_encrypted"}
+  - {"op": "add_edge", "from": "REQ-029-135", "verb": "applies to", "to": "ENT-stripe-account.default_currency"}
+  - {"op": "add_edge", "from": "REQ-029-136", "verb": "applies to", "to": "ENT-currency-pair.manual_base_rate"}
+  - {"op": "add_edge", "from": "REQ-029-137", "verb": "applies to", "to": "ENT-commission-rate-config.flat_rate_currency"}
+  - {"op": "add_edge", "from": "REQ-029-138", "verb": "applies to", "to": "ENT-commission-rate-config.effective_date"}
+  - {"op": "add_edge", "from": "REQ-029-139", "verb": "applies to", "to": "ENT-stripe-account.is_global_fallback"}
+  - {"op": "add_edge", "from": "REQ-029-139", "verb": "applies to", "to": "ENT-stripe-account.status"}
+  - {"op": "add_edge", "from": "REQ-029-139", "verb": "applies to", "to": "ENT-stripe-account.assigned_countries"}
+  - {"op": "add_edge", "from": "REQ-029-049", "verb": "decided by", "to": "SRC-PO-001-M5"}
+  - {"op": "add_edge", "from": "REQ-029-101", "verb": "decided by", "to": "SRC-PO-001-M5"}
+  - {"op": "add_edge", "from": "REQ-029-100", "verb": "decided by", "to": "SRC-PO-001-D12"}
+  - {"op": "add_edge", "from": "REQ-029-051", "verb": "decided by", "to": "SRC-PO-001-D13"}
+  - {"op": "add_edge", "from": "REQ-029-050", "verb": "decided by", "to": "SRC-PO-001-Q25"}
+  - {"op": "add_edge", "from": "REQ-029-052", "verb": "decided by", "to": "SRC-PO-001-Q7"}
+  - {"op": "add_edge", "from": "REQ-029-053", "verb": "decided by", "to": "SRC-PO-001-Q14"}
+  - {"op": "add_edge", "from": "REQ-029-053", "verb": "decided by", "to": "SRC-PO-001-Q4"}
+  - {"op": "add_edge", "from": "REQ-029-054", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "decided by", "to": "SRC-PO-001-D1"}
+  - {"op": "add_edge", "from": "REQ-029-130", "verb": "decided by", "to": "SRC-PO-001-D2"}
+  - {"op": "add_edge", "from": "FLW-029-main-stripe-account", "verb": "starts at", "to": "STP-029-001"}
+  - {"op": "add_edge", "from": "STP-029-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-001", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-001", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-001", "verb": "applies", "to": "REQ-029-001"}
+  - {"op": "add_edge", "from": "FLW-029-main-currency-conversion", "verb": "starts at", "to": "STP-029-014"}
+  - {"op": "add_edge", "from": "STP-029-014", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-014", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-014", "verb": "on", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "FLW-029-main-deposit-rate", "verb": "starts at", "to": "STP-029-028"}
+  - {"op": "add_edge", "from": "STP-029-028", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-028", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-028", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "FLW-029-main-commission-rate", "verb": "starts at", "to": "STP-029-041"}
+  - {"op": "add_edge", "from": "STP-029-041", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-041", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-041", "verb": "on", "to": "SCR-029-06"}
+  - {"op": "add_edge", "from": "FLW-029-main-split-payment", "verb": "starts at", "to": "STP-029-057"}
+  - {"op": "add_edge", "from": "STP-029-057", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-057", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-057", "verb": "on", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "FLW-029-alt-stripe-regional-override", "verb": "starts at", "to": "STP-029-072"}
+  - {"op": "add_edge", "from": "STP-029-072", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-072", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-072", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-072", "verb": "applies", "to": "REQ-029-068"}
+  - {"op": "add_edge", "from": "FLW-029-alt-provider-deposit-rate", "verb": "starts at", "to": "STP-029-079"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "applies", "to": "REQ-029-014"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "next", "to": "STP-029-080"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "applies", "to": "REQ-029-014"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "next", "to": "STP-029-081"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "applies", "to": "REQ-029-014"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "next", "to": "STP-029-082"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "applies", "to": "REQ-029-014"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "applies", "to": "REQ-029-037"}
+  - {"op": "add_edge", "from": "FLW-029-alt-pair-manual-to-auto", "verb": "starts at", "to": "STP-029-087"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "on", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "applies", "to": "REQ-029-093"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "next", "to": "STP-029-088"}
+  - {"op": "add_edge", "from": "STP-029-088", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-088", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-088", "verb": "on", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "STP-029-088", "verb": "applies", "to": "REQ-029-093"}
+  - {"op": "add_edge", "from": "FLW-029-alt-pair-auto-to-manual", "verb": "starts at", "to": "STP-029-097"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "on", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "applies", "to": "REQ-029-093"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "next", "to": "STP-029-098"}
+  - {"op": "add_edge", "from": "STP-029-098", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-098", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-098", "verb": "on", "to": "SCR-029-03"}
+  - {"op": "add_edge", "from": "STP-029-098", "verb": "applies", "to": "REQ-029-093"}
+  - {"op": "add_edge", "from": "FLW-029-alt-stripe-credential-failure", "verb": "starts at", "to": "STP-029-110"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "applies", "to": "REQ-029-003"}
+  - {"op": "add_edge", "from": "FLW-029-alt-deposit-rate-out-of-range", "verb": "starts at", "to": "STP-029-127"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "applies", "to": "REQ-029-037"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "next", "to": "STP-029-128"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "applies", "to": "REQ-029-037"}
+  - {"op": "add_edge", "from": "FLW-029-alt-cutoff-conflict", "verb": "starts at", "to": "STP-029-135"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "on", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "applies", "to": "REQ-029-019"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "next", "to": "STP-029-136"}
+  - {"op": "add_edge", "from": "STP-029-136", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-136", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-136", "verb": "on", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "STP-029-136", "verb": "applies", "to": "REQ-029-018"}
+  - {"op": "add_edge", "from": "FLW-029-alt-no-stripe-account-for-country", "verb": "starts at", "to": "STP-029-152"}
+  - {"op": "add_edge", "from": "STP-029-152", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-029-152", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-029-152", "verb": "on", "to": "SCR-029-04"}
+  - {"op": "add_edge", "from": "STP-029-152", "verb": "applies", "to": "REQ-029-004"}

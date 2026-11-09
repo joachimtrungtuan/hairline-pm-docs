@@ -1,0 +1,199 @@
+reason: "FR-007B completeness fixes (D37 review step 1): applies to links for every Rule that names an object, Steps done by a human Actor with their Flow nodes and hand-off attributes, decided by links for Product Owner codes the PRD change log ties to a rule, and references to the FR-007 rules the PRD cites by id. System-performed steps wait in the held file."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "REQ-007B-001", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-002", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-003", "verb": "applies to", "to": "ENT-installment-plan.final_payment_deadline", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-004", "verb": "applies to", "to": "ENT-installment-payment.amount", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-004", "verb": "applies to", "to": "ENT-installment-plan.installment_amount", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-005", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-005", "verb": "applies to", "to": "ENT-booking", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-006", "verb": "applies to", "to": "ENT-installment-payment.due_date", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-007", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-008", "verb": "applies to", "to": "ENT-installment-payment.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-009", "verb": "applies to", "to": "ENT-payment-method", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-010", "verb": "applies to", "to": "ENT-payment-method.token_reference", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-011", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-012", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-013", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-014", "verb": "applies to", "to": "EVT-installment-reminder-due", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-015", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-016", "verb": "applies to", "to": "EVT-installment-charged", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-017", "verb": "applies to", "to": "EVT-installment-failed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-017", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-018", "verb": "applies to", "to": "ENT-installment-payment.retry_count", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-018", "verb": "applies to", "to": "ENT-installment-payment.next_retry_date", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-019", "verb": "applies to", "to": "ENT-installment-plan.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-020", "verb": "applies to", "to": "EVT-installment-plan-defaulted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-020", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-021", "verb": "applies to", "to": "ENT-payment-method", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-021", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-022", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-023", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-024", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "ENT-installment-plan.total_amount", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "ENT-installment-plan.currency", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "ENT-installment-plan.exchange_rate", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-026", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-027", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-028", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-028", "verb": "applies to", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-028", "verb": "applies to", "to": "SCR-007B-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-028", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-029", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-029", "verb": "applies to", "to": "SCR-007B-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-029", "verb": "applies to", "to": "SCR-007B-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-030", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-030", "verb": "applies to", "to": "SCR-007B-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-030", "verb": "applies to", "to": "SCR-007B-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-031", "verb": "applies to", "to": "SCR-007B-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-032", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-033", "verb": "applies to", "to": "SCR-007B-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-034", "verb": "applies to", "to": "SCR-007B-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-035", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-036", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-036", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-037", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-038", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-039", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-040", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-041", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-042", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-043", "verb": "applies to", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-043", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-043", "verb": "applies to", "to": "ENT-payment-method", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-044", "verb": "applies to", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-045", "verb": "applies to", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-046", "verb": "applies to", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-047", "verb": "applies to", "to": "ENT-payment-method", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-047", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-048", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-049", "verb": "applies to", "to": "ENT-installment-plan.status", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-049", "verb": "applies to", "to": "EVT-installment-plan-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-050", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-051", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-051", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-052", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-053", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-053", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-054", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-055", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-056", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-057", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-058", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-059", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-060", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-060", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-060", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-061", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-062", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-062", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-063", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-064", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-065", "verb": "applies to", "to": "ENT-installment-plan.cutoff_days", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-066", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-067", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-068", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-069", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-069", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-070", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-071", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-072", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-072", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-072", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-073", "verb": "applies to", "to": "ENT-payment-method", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-074", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-075", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-075", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-075", "verb": "applies to", "to": "ENT-installment-plan-metrics", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-076", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-077", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-078", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-079", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-079", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-080", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-080", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-080", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-081", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-081", "verb": "applies to", "to": "ENT-installment-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-082", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-082", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-083", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-084", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-085", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-086", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-087", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-088", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-089", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-090", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-090", "verb": "applies to", "to": "ACT-super-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-091", "verb": "applies to", "to": "SCR-007B-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-091", "verb": "applies to", "to": "SCR-007B-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-092", "verb": "applies to", "to": "EVT-installment-reminder-due", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-092", "verb": "applies to", "to": "EVT-installment-charged", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-092", "verb": "applies to", "to": "EVT-installment-failed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-092", "verb": "applies to", "to": "EVT-installment-plan-defaulted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-093", "verb": "applies to", "to": "EVT-installment-plan-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-094", "verb": "applies to", "to": "ENT-installment-plan.installments_paid", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-094", "verb": "applies to", "to": "ENT-installment-plan.installments_remaining", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-094", "verb": "applies to", "to": "ENT-installment-plan.next_payment_date", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-094", "verb": "applies to", "to": "ENT-installment-plan.next_payment_amount", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-094", "verb": "applies to", "to": "ENT-installment-plan.completion_percentage", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-095", "verb": "applies to", "to": "ENT-installment-plan.overdue_days", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-096", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-097", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-004", "verb": "decided by", "to": "SRC-PO-001-Q25", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "decided by", "to": "SRC-PO-001-M15", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-025", "verb": "decided by", "to": "SRC-PO-001-D8", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-026", "verb": "decided by", "to": "SRC-PO-001-D1", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-027", "verb": "decided by", "to": "SRC-PO-001-D6", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-027", "verb": "decided by", "to": "SRC-PO-001-D6-M", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-027", "verb": "decided by", "to": "SRC-PO-001-M18", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-097", "verb": "decided by", "to": "SRC-PO-001-D6", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-097", "verb": "decided by", "to": "SRC-PO-001-D6-M", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-097", "verb": "decided by", "to": "SRC-PO-001-M18", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-048", "verb": "decided by", "to": "SRC-PO-001-Q30", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-070", "verb": "decided by", "to": "SRC-PO-001-D12", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-070", "verb": "decided by", "to": "SRC-PO-001-Q5", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-070", "verb": "decided by", "to": "SRC-PO-001-Q25", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-070", "verb": "decided by", "to": "SRC-PO-001-Q28", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-007-017", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-007-019", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007B-001", "type": "Step", "owner_fr": "FR-007B", "title": "Patient reviews booking summary with Pay in Installments selected", "attrs": {"prd_ref": "Main Flow step 1", "handoff_from": "FR-007: Payment Options step, patient chose Pay in Installments"}}
+  - {"op": "add_edge", "from": "STP-007B-001", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-001", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-001", "verb": "on", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-001", "verb": "applies", "to": "REQ-007B-025", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007B-101", "type": "Step", "owner_fr": "FR-007B", "title": "Patient selects fewer installments than the maximum", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-007B-101", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-101", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-101", "verb": "on", "to": "SCR-007B-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-101", "verb": "applies", "to": "REQ-007B-036", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007B-301", "type": "Step", "owner_fr": "FR-007B", "title": "Patient opens booking details and selects Update Payment Method", "attrs": {"prd_ref": "Alternative Flow A3 step 1"}}
+  - {"op": "add_edge", "from": "STP-007B-301", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-301", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-301", "verb": "on", "to": "SCR-007B-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-301", "verb": "applies", "to": "REQ-007B-021", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007B-302", "type": "Step", "owner_fr": "FR-007B", "title": "Patient provides new payment method details", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  - {"op": "add_edge", "from": "STP-007B-302", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-302", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-302", "verb": "applies", "to": "REQ-007B-047", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-301", "verb": "next", "to": "STP-007B-302", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007B-501", "type": "Step", "owner_fr": "FR-007B", "title": "Patient requests cancellation through Contact Support", "attrs": {"prd_ref": "Alternative Flow B2 step 1", "handoff_to": "FR-016: admin queue (Booking Support Requests)"}}
+  - {"op": "add_edge", "from": "STP-007B-501", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-501", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-501", "verb": "applies", "to": "REQ-007B-053", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-007b-main", "type": "Flow", "owner_fr": null, "title": "Patient selects an installment plan and completes the payments", "attrs": {"kind": "main", "description": "Patient selects an installment plan and completes the payments", "prd_ref": "Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-007b-main", "verb": "starts at", "to": "STP-007B-001", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-007b-fewer-installments", "type": "Flow", "owner_fr": null, "title": "Patient chooses fewer installments than the maximum", "attrs": {"kind": "alternative", "description": "Patient chooses fewer installments than the maximum", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_edge", "from": "FLW-007b-fewer-installments", "verb": "starts at", "to": "STP-007B-101", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-007b-update-payment-method", "type": "Flow", "owner_fr": null, "title": "Patient updates the payment method mid-plan", "attrs": {"kind": "alternative", "description": "Patient updates the payment method mid-plan", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "FLW-007b-update-payment-method", "verb": "starts at", "to": "STP-007B-301", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-007b-patient-cancels", "type": "Flow", "owner_fr": null, "title": "Patient cancels the booking with an active installment plan", "attrs": {"kind": "alternative", "description": "Patient cancels the booking with an active installment plan", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "FLW-007b-patient-cancels", "verb": "starts at", "to": "STP-007B-501", "attrs": {}}
