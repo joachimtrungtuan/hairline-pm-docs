@@ -1,0 +1,411 @@
+reason: "FR-001 completeness fixes (D37 review step 1): applies to edges from every FR-001 Rule to the objects it acts on, five Screen nodes the PRD names but the graph lacked, 17 Rules copied verbatim from PRD bullets, the flow model (Steps, Flows, next links) for steps a human Actor performs, and references edges to Rules homed in other FRs. System-performed Steps (no System Actor) and the Flows and links that depend on them are in the held file."
+by: tester
+operations:
+  - {"op": "add_node", "id": "REQ-001-127", "type": "Rule", "owner_fr": "FR-001", "title": "Password special characters set is fixed in codebase", "attrs": {"statement": "Password minimum 12 characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?\":{}|<> (fixed in codebase, not editable in Admin)", "rationale": "prd.md line 390."}}
+  - {"op": "add_edge", "from": "REQ-001-127", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-127", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "REQ-001-127", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_node", "id": "REQ-001-128", "type": "Rule", "owner_fr": "FR-001", "title": "Password strength validated in real time", "attrs": {"statement": "Real-time password strength validation", "rationale": "prd.md line 393."}}
+  - {"op": "add_edge", "from": "REQ-001-128", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-128", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_node", "id": "REQ-001-129", "type": "Rule", "owner_fr": "FR-001", "title": "Email format validation is RFC 5322 compliant", "attrs": {"statement": "Email format validation (RFC 5322 compliant)", "rationale": "prd.md line 1009."}}
+  - {"op": "add_edge", "from": "REQ-001-129", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-129", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "add_node", "id": "REQ-001-130", "type": "Rule", "owner_fr": "FR-001", "title": "Password strength validation shows visual indicators", "attrs": {"statement": "Password strength validation with visual indicators", "rationale": "prd.md line 1010."}}
+  - {"op": "add_edge", "from": "REQ-001-130", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-130", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_node", "id": "REQ-001-131", "type": "Rule", "owner_fr": "FR-001", "title": "Sensitive profile field changes need re-authentication", "attrs": {"statement": "Profile changes require re-authentication for sensitive fields", "rationale": "prd.md line 962."}}
+  - {"op": "add_edge", "from": "REQ-001-131", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-131", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-131", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_node", "id": "REQ-001-132", "type": "Rule", "owner_fr": "FR-001", "title": "Change reason required for all admin modifications", "attrs": {"statement": "Change reason required for all modifications", "rationale": "prd.md line 981."}}
+  - {"op": "add_edge", "from": "REQ-001-132", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-132", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-132", "verb": "applies to", "to": "ENT-patient-audit-log.reason"}
+  - {"op": "add_node", "id": "REQ-001-133", "type": "Rule", "owner_fr": "FR-001", "title": "Registration draft expires after 7 days of inactivity", "attrs": {"statement": "Draft expires after 7 days of inactivity", "rationale": "prd.md line 140."}}
+  - {"op": "add_edge", "from": "REQ-001-133", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-133", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_node", "id": "REQ-001-134", "type": "Rule", "owner_fr": "FR-001", "title": "Splash loading animation gives visual feedback", "attrs": {"statement": "Loading animation provides visual feedback", "rationale": "prd.md line 322."}}
+  - {"op": "add_edge", "from": "REQ-001-134", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_node", "id": "REQ-001-135", "type": "Rule", "owner_fr": "FR-001", "title": "Branding consistent across all platforms", "attrs": {"statement": "Branding consistent across all platforms", "rationale": "prd.md line 323."}}
+  - {"op": "add_edge", "from": "REQ-001-135", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_node", "id": "REQ-001-136", "type": "Rule", "owner_fr": "FR-001", "title": "Name collection screen is responsive", "attrs": {"statement": "Screen responsive to different device sizes", "rationale": "prd.md line 344."}}
+  - {"op": "add_edge", "from": "REQ-001-136", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-136", "verb": "applies to", "to": "SCR-001-01"}
+  - {"op": "add_node", "id": "REQ-001-137", "type": "Rule", "owner_fr": "FR-001", "title": "Login forgot password link leads to recovery", "attrs": {"statement": "Forgot password link leads to recovery flow", "rationale": "prd.md line 507."}}
+  - {"op": "add_edge", "from": "REQ-001-137", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-137", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_node", "id": "REQ-001-138", "type": "Rule", "owner_fr": "FR-001", "title": "Login footer link leads to registration", "attrs": {"statement": "Footer link leads to registration flow", "rationale": "prd.md line 508."}}
+  - {"op": "add_edge", "from": "REQ-001-138", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-138", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_node", "id": "REQ-001-139", "type": "Rule", "owner_fr": "FR-001", "title": "Discovery Continue disabled until an option is selected", "attrs": {"statement": "Continue button disabled until an option is selected", "rationale": "prd.md line 483."}}
+  - {"op": "add_edge", "from": "REQ-001-139", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-001-139", "verb": "applies to", "to": "SCR-001-06"}
+  - {"op": "add_node", "id": "REQ-001-140", "type": "Rule", "owner_fr": "FR-001", "title": "Discovery Continue proceeds to main app", "attrs": {"statement": "Continue button proceeds to main app", "rationale": "prd.md line 484."}}
+  - {"op": "add_edge", "from": "REQ-001-140", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-001-140", "verb": "applies to", "to": "SCR-001-06"}
+  - {"op": "add_node", "id": "REQ-001-141", "type": "Rule", "owner_fr": "FR-001", "title": "Back from confirmation returns to Privacy and Security menu", "attrs": {"statement": "Returning to Settings must preserve navigation state (back stack returns to Screen 15b)", "rationale": "prd.md line 868."}}
+  - {"op": "add_edge", "from": "REQ-001-141", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "REQ-001-142", "type": "Rule", "owner_fr": "FR-001", "title": "Re-verification threshold is configurable", "attrs": {"statement": "Re-verification is required when last successful auth > 5 minutes (configurable threshold)", "rationale": "prd.md line 892."}}
+  - {"op": "add_edge", "from": "REQ-001-142", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-142", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_node", "id": "REQ-001-143", "type": "Rule", "owner_fr": "FR-001", "title": "System sends authentication logs and security events to Admin", "attrs": {"statement": "System → Admin: Authentication logs, security events, and account status updates", "rationale": "prd.md line 70."}}
+  - {"op": "add_edge", "from": "REQ-001-143", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-143", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-143", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-001", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-001", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "applies to", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-003", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-003", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-004", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-004", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-004", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-005", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-005", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-001-005", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "applies to", "to": "SCR-001-10"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "applies to", "to": "EVT-patient-account-locked"}
+  - {"op": "add_edge", "from": "REQ-001-008", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-008", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-009", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "add_edge", "from": "REQ-001-010", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-011", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-011", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-012", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-013", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_edge", "from": "REQ-001-014", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-015", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-015", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-001-016", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-016", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-017", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-017", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-018", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-019", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-020", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-021", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-001-021", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-022", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-001-023", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-023", "verb": "applies to", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "REQ-001-024", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-024", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-025", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-025", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-026", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-026", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "add_edge", "from": "REQ-001-027", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-027", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_edge", "from": "REQ-001-028", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-028", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "add_edge", "from": "REQ-001-029", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-029", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-030", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-030", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-031", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-031", "verb": "applies to", "to": "ENT-account-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-001-032", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-032", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-001-032", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-033", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-033", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-034", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-034", "verb": "applies to", "to": "EVT-patient-profile-changed-by-admin"}
+  - {"op": "add_edge", "from": "REQ-001-035", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-035", "verb": "applies to", "to": "EVT-patient-profile-changed-by-admin"}
+  - {"op": "add_edge", "from": "REQ-001-036", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-036", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-001-037", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-037", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-038", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-038", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-042", "verb": "applies to", "to": "SCR-001-01"}
+  - {"op": "add_edge", "from": "REQ-001-042", "verb": "applies to", "to": "ENT-patient.first_name"}
+  - {"op": "add_edge", "from": "REQ-001-042", "verb": "applies to", "to": "ENT-patient.last_name"}
+  - {"op": "add_edge", "from": "REQ-001-043", "verb": "applies to", "to": "SCR-001-01"}
+  - {"op": "add_edge", "from": "REQ-001-044", "verb": "applies to", "to": "SCR-001-01"}
+  - {"op": "add_edge", "from": "REQ-001-044", "verb": "applies to", "to": "ENT-legal-acceptance"}
+  - {"op": "add_edge", "from": "REQ-001-045", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "REQ-001-045", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "add_edge", "from": "REQ-001-046", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "REQ-001-046", "verb": "applies to", "to": "SCR-001-10"}
+  - {"op": "add_edge", "from": "REQ-001-047", "verb": "applies to", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "REQ-001-048", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-049", "verb": "applies to", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "REQ-001-049", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-050", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-050", "verb": "applies to", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "REQ-001-050", "verb": "applies to", "to": "SCR-001-09"}
+  - {"op": "add_edge", "from": "REQ-001-051", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-052", "verb": "applies to", "to": "SCR-001-04"}
+  - {"op": "add_edge", "from": "REQ-001-052", "verb": "applies to", "to": "SCR-001-05"}
+  - {"op": "add_edge", "from": "REQ-001-052", "verb": "applies to", "to": "ENT-patient.date_of_birth"}
+  - {"op": "add_edge", "from": "REQ-001-053", "verb": "applies to", "to": "SCR-001-04"}
+  - {"op": "add_edge", "from": "REQ-001-053", "verb": "applies to", "to": "ENT-patient.phone"}
+  - {"op": "add_edge", "from": "REQ-001-053", "verb": "applies to", "to": "ENT-patient.phone_country_code"}
+  - {"op": "add_edge", "from": "REQ-001-054", "verb": "applies to", "to": "ENT-patient.country"}
+  - {"op": "add_edge", "from": "REQ-001-054", "verb": "applies to", "to": "ENT-patient.phone_country_code"}
+  - {"op": "add_edge", "from": "REQ-001-055", "verb": "applies to", "to": "ENT-patient.country"}
+  - {"op": "add_edge", "from": "REQ-001-055", "verb": "applies to", "to": "ENT-patient.preferred_currency"}
+  - {"op": "add_edge", "from": "REQ-001-055", "verb": "applies to", "to": "ENT-patient.preferred_language"}
+  - {"op": "add_edge", "from": "REQ-001-056", "verb": "applies to", "to": "SCR-001-04"}
+  - {"op": "add_edge", "from": "REQ-001-057", "verb": "applies to", "to": "ENT-patient.profile_completion_status"}
+  - {"op": "add_edge", "from": "REQ-001-058", "verb": "applies to", "to": "SCR-001-06"}
+  - {"op": "add_edge", "from": "REQ-001-058", "verb": "applies to", "to": "ENT-patient.discovery_source"}
+  - {"op": "add_edge", "from": "REQ-001-059", "verb": "applies to", "to": "SCR-001-06"}
+  - {"op": "add_edge", "from": "REQ-001-059", "verb": "applies to", "to": "ENT-patient.discovery_source"}
+  - {"op": "add_edge", "from": "REQ-001-060", "verb": "applies to", "to": "ENT-patient.discovery_source"}
+  - {"op": "add_edge", "from": "REQ-001-061", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-062", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-063", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-064", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-065", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-066", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-066", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-066", "verb": "applies to", "to": "EVT-patient-account-locked"}
+  - {"op": "add_edge", "from": "REQ-001-067", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-068", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "add_edge", "from": "REQ-001-069", "verb": "applies to", "to": "ENT-patient.email_verified"}
+  - {"op": "add_edge", "from": "REQ-001-070", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-071", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-071", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-001-072", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-072", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "add_edge", "from": "REQ-001-072", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_edge", "from": "REQ-001-073", "verb": "applies to", "to": "SCR-001-08"}
+  - {"op": "add_edge", "from": "REQ-001-073", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-074", "verb": "applies to", "to": "SCR-001-08"}
+  - {"op": "add_edge", "from": "REQ-001-074", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-075", "verb": "applies to", "to": "SCR-001-09"}
+  - {"op": "add_edge", "from": "REQ-001-075", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-076", "verb": "applies to", "to": "SCR-001-10"}
+  - {"op": "add_edge", "from": "REQ-001-076", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-077", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-078", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-078", "verb": "applies to", "to": "EVT-password-reset-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-079", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-079", "verb": "applies to", "to": "EVT-patient-password-changed"}
+  - {"op": "add_edge", "from": "REQ-001-080", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-080", "verb": "applies to", "to": "ENT-patient.password_hash"}
+  - {"op": "add_edge", "from": "REQ-001-081", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-081", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "add_edge", "from": "REQ-001-081", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-082", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-082", "verb": "applies to", "to": "ENT-patient.profile_image_url"}
+  - {"op": "add_edge", "from": "REQ-001-083", "verb": "applies to", "to": "ENT-patient.profile_image_url"}
+  - {"op": "add_edge", "from": "REQ-001-084", "verb": "applies to", "to": "ENT-patient.name"}
+  - {"op": "add_edge", "from": "REQ-001-084", "verb": "applies to", "to": "ENT-patient.first_name"}
+  - {"op": "add_edge", "from": "REQ-001-084", "verb": "applies to", "to": "ENT-patient.last_name"}
+  - {"op": "add_edge", "from": "REQ-001-085", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-086", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-001-087", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-001-088", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-001-088", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-089", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-089", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-090", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-090", "verb": "applies to", "to": "ENT-account-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-001-090", "verb": "applies to", "to": "EVT-account-deletion-requested"}
+  - {"op": "add_edge", "from": "REQ-001-091", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-092", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-093", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-094", "verb": "applies to", "to": "ENT-account-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-001-095", "verb": "applies to", "to": "EVT-account-deletion-requested"}
+  - {"op": "add_edge", "from": "REQ-001-095", "verb": "applies to", "to": "ENT-account-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-001-096", "verb": "applies to", "to": "ENT-account-deletion-request.reason"}
+  - {"op": "add_edge", "from": "REQ-001-096", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-097", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-097", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-098", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-098", "verb": "applies to", "to": "EVT-reauth-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-098", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-099", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-100", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-101", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-101", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-001-104", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-105", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-105", "verb": "applies to", "to": "ENT-patient-notification-preferences"}
+  - {"op": "add_edge", "from": "REQ-001-106", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-107", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-107", "verb": "applies to", "to": "ENT-patient-notification-preferences"}
+  - {"op": "add_edge", "from": "REQ-001-108", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-109", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-110", "verb": "applies to", "to": "SCR-001-13"}
+  - {"op": "add_edge", "from": "REQ-001-110", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_edge", "from": "REQ-001-112", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-113", "verb": "applies to", "to": "SCR-001-14"}
+  - {"op": "add_edge", "from": "REQ-001-113", "verb": "applies to", "to": "SCR-001-15"}
+  - {"op": "add_edge", "from": "REQ-001-114", "verb": "applies to", "to": "SCR-001-14"}
+  - {"op": "add_edge", "from": "REQ-001-114", "verb": "applies to", "to": "SCR-001-15"}
+  - {"op": "add_edge", "from": "REQ-001-115", "verb": "applies to", "to": "SCR-001-14"}
+  - {"op": "add_edge", "from": "REQ-001-116", "verb": "applies to", "to": "SCR-001-14"}
+  - {"op": "add_edge", "from": "REQ-001-116", "verb": "applies to", "to": "SCR-001-15"}
+  - {"op": "add_edge", "from": "REQ-001-117", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-118", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-119", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-119", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-120", "verb": "applies to", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "REQ-001-122", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_edge", "from": "REQ-001-123", "verb": "applies to", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "REQ-001-124", "verb": "applies to", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "REQ-001-124", "verb": "applies to", "to": "ENT-patient.profile_completion_status"}
+  - {"op": "add_edge", "from": "REQ-001-125", "verb": "applies to", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "REQ-001-125", "verb": "applies to", "to": "ENT-patient.last_login_at"}
+  - {"op": "add_edge", "from": "REQ-001-126", "verb": "applies to", "to": "ENT-patient-audit-log"}
+  - {"op": "add_node", "id": "STP-001-001", "type": "Step", "owner_fr": "FR-001", "title": "Patient opens the app and taps Get Started", "attrs": {"prd_ref": "Main Flow Workflow 1 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "applies", "to": "REQ-001-039"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "applies", "to": "REQ-001-040"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "applies", "to": "REQ-001-041"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "applies", "to": "REQ-001-134"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "applies", "to": "REQ-001-135"}
+  - {"op": "add_node", "id": "STP-001-002", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters first and last name", "attrs": {"prd_ref": "Main Flow Workflow 1 step 2"}}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "on", "to": "SCR-001-01"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "applies", "to": "REQ-001-042"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "applies", "to": "REQ-001-043"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "applies", "to": "REQ-001-044"}
+  - {"op": "add_node", "id": "STP-001-003", "type": "Step", "owner_fr": "FR-001", "title": "Patient creates the account with email and password", "attrs": {"prd_ref": "Main Flow Workflow 1 step 3"}}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "on", "to": "SCR-001-02"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-045"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-046"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-047"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-009"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-127"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-128"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-129"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-130"}
+  - {"op": "add_node", "id": "STP-001-004", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters the 6-digit verification code", "attrs": {"prd_ref": "Main Flow Workflow 1 step 4"}}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "on", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "applies", "to": "REQ-001-002"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "applies", "to": "REQ-001-048"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "applies", "to": "REQ-001-049"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "applies", "to": "REQ-001-050"}
+  - {"op": "add_node", "id": "STP-001-005", "type": "Step", "owner_fr": "FR-001", "title": "Patient completes the profile", "attrs": {"prd_ref": "Main Flow Workflow 1 step 5"}}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "on", "to": "SCR-001-04"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "applies", "to": "REQ-001-052"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "applies", "to": "REQ-001-053"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "applies", "to": "REQ-001-054"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "applies", "to": "REQ-001-055"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "applies", "to": "REQ-001-056"}
+  - {"op": "add_node", "id": "STP-001-006", "type": "Step", "owner_fr": "FR-001", "title": "Patient answers the discovery question", "attrs": {"prd_ref": "Main Flow Workflow 1 step 6"}}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "on", "to": "SCR-001-06"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "applies", "to": "REQ-001-058"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "applies", "to": "REQ-001-059"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "applies", "to": "REQ-001-139"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "applies", "to": "REQ-001-140"}
+  - {"op": "add_node", "id": "STP-001-011", "type": "Step", "owner_fr": "FR-001", "title": "Patient opens the login screen", "attrs": {"prd_ref": "Main Flow Workflow 2 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "on", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "applies", "to": "REQ-001-137"}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "applies", "to": "REQ-001-138"}
+  - {"op": "add_node", "id": "STP-001-012", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters email and password and taps Login", "attrs": {"prd_ref": "Main Flow Workflow 2 step 2"}}
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "on", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "applies", "to": "REQ-001-003"}
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "applies", "to": "REQ-001-072"}
+  - {"op": "add_node", "id": "STP-001-021", "type": "Step", "owner_fr": "FR-001", "title": "Patient requests a password reset code", "attrs": {"prd_ref": "Main Flow Workflow 3 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "on", "to": "SCR-001-08"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "applies", "to": "REQ-001-004"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "applies", "to": "REQ-001-073"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "applies", "to": "REQ-001-074"}
+  - {"op": "add_node", "id": "STP-001-022", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters the 6-digit reset code", "attrs": {"prd_ref": "Main Flow Workflow 3 step 2"}}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "on", "to": "SCR-001-09"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "applies", "to": "REQ-001-050"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "applies", "to": "REQ-001-075"}
+  - {"op": "add_node", "id": "STP-001-023", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters and confirms the new password", "attrs": {"prd_ref": "Main Flow Workflow 3 step 3"}}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "on", "to": "SCR-001-10"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-001-046"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-001-128"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-001-130"}
+  - {"op": "add_node", "id": "STP-001-031", "type": "Step", "owner_fr": "FR-001", "title": "Patient opens the profile section", "attrs": {"prd_ref": "Main Flow Workflow 4 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "on", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "applies", "to": "REQ-001-005"}
+  - {"op": "add_node", "id": "STP-001-032", "type": "Step", "owner_fr": "FR-001", "title": "Patient edits and saves profile fields", "attrs": {"prd_ref": "Main Flow Workflow 4 step 2"}}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "on", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "applies", "to": "REQ-001-005"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "applies", "to": "REQ-001-085"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "applies", "to": "REQ-001-081"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "applies", "to": "REQ-001-131"}
+  - {"op": "add_node", "id": "STP-001-033", "type": "Step", "owner_fr": "FR-001", "title": "Patient uploads a profile photo", "attrs": {"prd_ref": "Main Flow Workflow 4 step 3"}}
+  - {"op": "add_edge", "from": "STP-001-033", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-033", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-033", "verb": "on", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "STP-001-033", "verb": "applies", "to": "REQ-001-082"}
+  - {"op": "add_edge", "from": "STP-001-033", "verb": "applies", "to": "REQ-001-083"}
+  - {"op": "add_node", "id": "STP-001-101", "type": "Step", "owner_fr": "FR-001", "title": "Patient taps Resend code", "attrs": {"prd_ref": "Alternative Flow C2 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-101", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-101", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-101", "verb": "on", "to": "SCR-001-09"}
+  - {"op": "add_edge", "from": "STP-001-101", "verb": "applies", "to": "REQ-001-049"}
+  - {"op": "add_node", "id": "STP-001-121", "type": "Step", "owner_fr": "FR-001", "title": "Admin edits the patient profile through the admin platform", "attrs": {"prd_ref": "Alternative Flow D1 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "on", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "applies", "to": "REQ-001-025"}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "applies", "to": "REQ-001-033"}
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "applies", "to": "REQ-001-132"}
+  - {"op": "add_node", "id": "FLW-001-registration", "type": "Flow", "title": "Patient registration main flow", "attrs": {"kind": "main", "description": "Patient registration main flow (prd.md Workflow 1 Main Flow).", "prd_ref": "Workflow 1 Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-001-registration", "verb": "starts at", "to": "STP-001-001"}
+  - {"op": "add_node", "id": "FLW-001-login", "type": "Flow", "title": "Patient login main flow", "attrs": {"kind": "main", "description": "Patient login main flow (prd.md Workflow 2 Main Flow).", "prd_ref": "Workflow 2 Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-001-login", "verb": "starts at", "to": "STP-001-011"}
+  - {"op": "add_node", "id": "FLW-001-password-reset", "type": "Flow", "title": "Password reset main flow", "attrs": {"kind": "main", "description": "Password reset main flow (prd.md Workflow 3 Main Flow).", "prd_ref": "Workflow 3 Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-001-password-reset", "verb": "starts at", "to": "STP-001-021"}
+  - {"op": "add_node", "id": "FLW-001-profile-management", "type": "Flow", "title": "Profile management main flow", "attrs": {"kind": "main", "description": "Profile management main flow (prd.md Workflow 4 Main Flow).", "prd_ref": "Workflow 4 Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-001-profile-management", "verb": "starts at", "to": "STP-001-031"}
+  - {"op": "add_node", "id": "FLW-001-reset-email-missing", "type": "Flow", "title": "Reset email not received alternative flow", "attrs": {"kind": "alternative", "description": "Reset email not received alternative flow (prd.md Alternative Flow C2).", "prd_ref": "Alternative Flow C2"}}
+  - {"op": "add_edge", "from": "FLW-001-reset-email-missing", "verb": "starts at", "to": "STP-001-101"}
+  - {"op": "add_node", "id": "FLW-001-admin-profile-edit", "type": "Flow", "title": "Admin profile modification alternative flow", "attrs": {"kind": "alternative", "description": "Admin profile modification alternative flow (prd.md Alternative Flow D1).", "prd_ref": "Alternative Flow D1"}}
+  - {"op": "add_edge", "from": "FLW-001-admin-profile-edit", "verb": "starts at", "to": "STP-001-121"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "next", "to": "STP-001-002"}
+  - {"op": "add_edge", "from": "STP-001-002", "verb": "next", "to": "STP-001-003"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-004"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "next", "to": "STP-001-005"}
+  - {"op": "add_edge", "from": "STP-001-005", "verb": "next", "to": "STP-001-006"}
+  - {"op": "add_edge", "from": "STP-001-011", "verb": "next", "to": "STP-001-012"}
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "next", "to": "STP-001-022"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "next", "to": "STP-001-023"}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "next", "to": "STP-001-032"}
+  - {"op": "add_edge", "from": "STP-001-032", "verb": "next", "to": "STP-001-033"}
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "next", "to": "STP-001-101", "attrs": {"label": "Patient does not receive the email"}}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-003-103"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-027-009"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-020-072"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-020-073"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-020-030"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-023-030"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-023-008"}

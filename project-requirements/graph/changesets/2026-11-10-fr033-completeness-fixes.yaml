@@ -1,0 +1,250 @@
+# FR-033 completeness fixes. Checker: tester. Checklist: project-requirements/graph/checklists/completeness-check.md v1.3
+# Adds applies to edges for the FR-033 Rules, references edges to the Rules homed in other FRs that the PRD cites, shows edges for the last updated and view count list columns, verbatim failure-handling Rules, and the leading human Steps of each Main and Alternative Flow.
+reason: "FR-033 completeness fixes (D37 review step 1): applies to edges from FR-033 Rules to the Screens, Entities and Actors the PRD names, references edges to Rules homed in FR-022, FR-032, FR-034 and FR-035, shows edges for list columns, and the flow model (Steps, Flows, next links) for the human-performed steps that start each flow. System-performed steps and the human steps reachable only through them are in the held change-set, as are three verbatim failure-handling Rules from External Dependencies, which wait on whether those lines are Rules."
+by: tester
+operations:
+  # new Rules: statements are verbatim PRD text
+  # applies to: Rules to the Actors, Screens and Entities the PRD names
+  - {"op": "add_edge", "from": "REQ-033-001", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-001", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-002", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-002", "verb": "applies to", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "REQ-033-002", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-003", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-003", "verb": "applies to", "to": "SCR-033-17"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "REQ-033-004", "verb": "applies to", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "REQ-033-005", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-006", "verb": "applies to", "to": "ENT-faq-topic"}
+  - {"op": "add_edge", "from": "REQ-033-006", "verb": "applies to", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "REQ-033-007", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-033-008", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-033-009", "verb": "applies to", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "REQ-033-009", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-009", "verb": "applies to", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "REQ-033-009", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-010", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-010", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-010", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-010", "verb": "applies to", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "REQ-033-010", "verb": "applies to", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "REQ-033-011", "verb": "applies to", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "REQ-033-011", "verb": "applies to", "to": "SCR-033-26"}
+  - {"op": "add_edge", "from": "REQ-033-012", "verb": "applies to", "to": "ENT-content-version"}
+  - {"op": "add_edge", "from": "REQ-033-013", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-014", "verb": "applies to", "to": "ENT-service-status"}
+  - {"op": "add_edge", "from": "REQ-033-015", "verb": "applies to", "to": "ENT-help-centre-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-033-016", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-017", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-018", "verb": "applies to", "to": "ENT-content-analytics"}
+  - {"op": "add_edge", "from": "REQ-033-019", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-033-019", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-033-020", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-021", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-033-021", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-033-022", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-023", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-024", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-024", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-025", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-025", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-033-026", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-026", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-033-027", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-028", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-028", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-029", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-030", "verb": "applies to", "to": "ENT-service-status"}
+  - {"op": "add_edge", "from": "REQ-033-030", "verb": "applies to", "to": "SCR-033-12"}
+  - {"op": "add_edge", "from": "REQ-033-031", "verb": "applies to", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "REQ-033-033", "verb": "applies to", "to": "ENT-service-status"}
+  - {"op": "add_edge", "from": "REQ-033-033", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-034", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-035", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-036", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-036", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-037", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-038", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-039", "verb": "applies to", "to": "ENT-content-analytics"}
+  - {"op": "add_edge", "from": "REQ-033-040", "verb": "applies to", "to": "ENT-help-centre-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-033-040", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-041", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-041", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-042", "verb": "applies to", "to": "ENT-content-version"}
+  - {"op": "add_edge", "from": "REQ-033-043", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-043", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-044", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-044", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-045", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-046", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-046", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-047", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-047", "verb": "applies to", "to": "ENT-help-centre-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-033-047", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-048", "verb": "applies to", "to": "ENT-help-centre-category"}
+  - {"op": "add_edge", "from": "REQ-033-048", "verb": "applies to", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "REQ-033-049", "verb": "applies to", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "REQ-033-050", "verb": "applies to", "to": "ENT-help-centre-stats"}
+  - {"op": "add_edge", "from": "REQ-033-050", "verb": "applies to", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "REQ-033-051", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-051", "verb": "applies to", "to": "SCR-033-17"}
+  - {"op": "add_edge", "from": "REQ-033-052", "verb": "applies to", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "REQ-033-052", "verb": "applies to", "to": "SCR-033-17"}
+  - {"op": "add_edge", "from": "REQ-033-053", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-054", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-054", "verb": "applies to", "to": "ENT-content-version"}
+  - {"op": "add_edge", "from": "REQ-033-055", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-056", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-057", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-057", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-057", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-058", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-059", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-060", "verb": "applies to", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "REQ-033-060", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-060", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-060", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-061", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-061", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-062", "verb": "applies to", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "REQ-033-062", "verb": "applies to", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "REQ-033-062", "verb": "applies to", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "REQ-033-062", "verb": "applies to", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "REQ-033-063", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-064", "verb": "applies to", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "REQ-033-064", "verb": "applies to", "to": "SCR-033-18"}
+  - {"op": "add_edge", "from": "REQ-033-065", "verb": "applies to", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "REQ-033-065", "verb": "applies to", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "REQ-033-066", "verb": "applies to", "to": "ENT-faq-topic"}
+  - {"op": "add_edge", "from": "REQ-033-066", "verb": "applies to", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "REQ-033-067", "verb": "applies to", "to": "ENT-faq-topic"}
+  - {"op": "add_edge", "from": "REQ-033-068", "verb": "applies to", "to": "ENT-faq-topic"}
+  - {"op": "add_edge", "from": "REQ-033-068", "verb": "applies to", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "REQ-033-069", "verb": "applies to", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "REQ-033-069", "verb": "applies to", "to": "SCR-033-20"}
+  - {"op": "add_edge", "from": "REQ-033-070", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-070", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-071", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-072", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-072", "verb": "applies to", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "REQ-033-073", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-073", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-074", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-075", "verb": "applies to", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "REQ-033-076", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-076", "verb": "applies to", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "REQ-033-077", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-078", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-079", "verb": "applies to", "to": "ENT-content-analytics"}
+  - {"op": "add_edge", "from": "REQ-033-079", "verb": "applies to", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "REQ-033-080", "verb": "applies to", "to": "ENT-service-status"}
+  - {"op": "add_edge", "from": "REQ-033-081", "verb": "applies to", "to": "ENT-service-component"}
+  - {"op": "add_edge", "from": "REQ-033-081", "verb": "applies to", "to": "SCR-033-13"}
+  - {"op": "add_edge", "from": "REQ-033-082", "verb": "applies to", "to": "ENT-incident-record"}
+  - {"op": "add_edge", "from": "REQ-033-082", "verb": "applies to", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "REQ-033-083", "verb": "applies to", "to": "ENT-incident-record"}
+  - {"op": "add_edge", "from": "REQ-033-084", "verb": "applies to", "to": "ENT-maintenance-window"}
+  - {"op": "add_edge", "from": "REQ-033-084", "verb": "applies to", "to": "SCR-033-15"}
+  - {"op": "add_edge", "from": "REQ-033-085", "verb": "applies to", "to": "ENT-incident-record"}
+  - {"op": "add_edge", "from": "REQ-033-085", "verb": "applies to", "to": "ENT-maintenance-window"}
+  - {"op": "add_edge", "from": "REQ-033-086", "verb": "applies to", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "REQ-033-086", "verb": "applies to", "to": "SCR-033-26"}
+  - {"op": "add_edge", "from": "REQ-033-087", "verb": "applies to", "to": "ENT-content-analytics"}
+  - {"op": "add_edge", "from": "REQ-033-088", "verb": "applies to", "to": "ENT-help-centre-content"}
+  # references: Rules homed in other FRs that FR-033 cites
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-022-118"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-022-119"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-022-120"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-022-121"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-035-028"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-032-012"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-032-028"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-032-097"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-034-022"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-034-023"}
+  - {"op": "add_edge", "from": "FR-033", "verb": "references", "to": "REQ-034-070"}
+  # shows: list columns the PRD names
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.updated_at", "attrs": {"provenance": "retrieved", "label": "Last Updated", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.view_count", "attrs": {"provenance": "retrieved", "label": "View Count", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.updated_at", "attrs": {"provenance": "retrieved", "label": "Last Updated", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.updated_at", "attrs": {"provenance": "retrieved", "label": "Last Updated", "editable": false}}
+  # flow model: leading human Steps
+  - {"op": "add_node", "id": "STP-033-001", "type": "Step", "title": "Navigate to Settings, Help Centre Management", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 1"}}
+  - {"op": "add_edge", "from": "STP-033-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-001", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-001", "verb": "applies", "to": "REQ-033-031"}
+  - {"op": "add_node", "id": "STP-033-016", "type": "Step", "title": "Navigate to Settings, Help Centre Management", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-016", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-016", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-016", "verb": "applies", "to": "REQ-033-031"}
+  - {"op": "add_node", "id": "STP-033-017", "type": "Step", "title": "Search or filter content by category, title or tags", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-017", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-017", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-017", "verb": "applies", "to": "REQ-033-035"}
+  - {"op": "add_node", "id": "STP-033-018", "type": "Step", "title": "Click Edit on the target content item", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-018", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-018", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-018", "verb": "applies", "to": "REQ-033-054"}
+  - {"op": "add_node", "id": "STP-033-026", "type": "Step", "title": "Navigate to Help Centre Management, FAQ Management", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-026", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-026", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-026", "verb": "on", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "STP-033-026", "verb": "applies", "to": "REQ-033-031"}
+  - {"op": "add_node", "id": "STP-033-037", "type": "Step", "title": "Navigate to Help Centre Management, Video Tutorial Management", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-037", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-037", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-037", "verb": "on", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "STP-033-037", "verb": "applies", "to": "REQ-033-031"}
+  - {"op": "add_node", "id": "STP-033-038", "type": "Step", "title": "Click Create New Video Tutorial", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-038", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-038", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-038", "verb": "on", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "STP-033-038", "verb": "applies", "to": "REQ-033-060"}
+  - {"op": "add_node", "id": "STP-033-051", "type": "Step", "title": "Identify outdated content item in the content list", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-051", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-051", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-051", "verb": "applies", "to": "REQ-033-055"}
+  - {"op": "add_node", "id": "STP-033-052", "type": "Step", "title": "Click Unpublish on the item", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-052", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-052", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-052", "verb": "applies", "to": "REQ-033-055"}
+  - {"op": "add_node", "id": "STP-033-060", "type": "Step", "title": "Complete the content form and click Publish", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "applies", "to": "REQ-033-056"}
+  - {"op": "add_node", "id": "STP-033-067", "type": "Step", "title": "Select a file for upload in a management screen", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "applies", "to": "REQ-033-010"}
+  - {"op": "add_node", "id": "STP-033-074", "type": "Step", "title": "Navigate to Help Centre Management, Service Status Management", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 1"}}
+  - {"op": "add_edge", "from": "STP-033-074", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-074", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-074", "verb": "on", "to": "SCR-033-12"}
+  - {"op": "add_edge", "from": "STP-033-074", "verb": "applies", "to": "REQ-033-031"}
+  - {"op": "add_node", "id": "FLW-033-main", "type": "Flow", "title": "Main Flow: Admin Creates Help Centre Content", "attrs": {"kind": "main", "description": "Main Flow: Admin Creates Help Centre Content", "prd_ref": "Main Flow: Admin Creates Help Centre Content"}}
+  - {"op": "add_node", "id": "FLW-033-edit-content", "type": "Flow", "title": "Alternative Flow A2: Admin Edits Existing Help Centre Content", "attrs": {"kind": "alternative", "description": "Alternative Flow A2: Admin Edits Existing Help Centre Content", "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content)"}}
+  - {"op": "add_node", "id": "FLW-033-organise-faq-topics", "type": "Flow", "title": "Alternative Flow A3: Admin Organizes FAQ Content into Topics", "attrs": {"kind": "alternative", "description": "Alternative Flow A3: Admin Organizes FAQ Content into Topics", "prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics)"}}
+  - {"op": "add_node", "id": "FLW-033-upload-video", "type": "Flow", "title": "Alternative Flow A4: Admin Uploads Video Tutorial", "attrs": {"kind": "alternative", "description": "Alternative Flow A4: Admin Uploads Video Tutorial", "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial)"}}
+  - {"op": "add_node", "id": "FLW-033-unpublish-content", "type": "Flow", "title": "Alternative Flow A5: Admin Unpublishes Outdated Content", "attrs": {"kind": "alternative", "description": "Alternative Flow A5: Admin Unpublishes Outdated Content", "prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content)"}}
+  - {"op": "add_node", "id": "FLW-033-validation-fails", "type": "Flow", "title": "Alternative Flow B1: Content Validation Fails", "attrs": {"kind": "alternative", "description": "Alternative Flow B1: Content Validation Fails", "prd_ref": "Alternative Flow B1 (Content Validation Fails)"}}
+  - {"op": "add_node", "id": "FLW-033-file-too-large", "type": "Flow", "title": "Alternative Flow B2: File Upload Exceeds Size Limit", "attrs": {"kind": "alternative", "description": "Alternative Flow B2: File Upload Exceeds Size Limit", "prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit)"}}
+  - {"op": "add_node", "id": "FLW-033-update-service-status", "type": "Flow", "title": "Alternative Flow A6: Admin Updates Service Status", "attrs": {"kind": "alternative", "description": "Alternative Flow A6: Admin Updates Service Status", "prd_ref": "Alternative Flow A6 (Admin Updates Service Status)"}}
+  - {"op": "add_edge", "from": "FLW-033-main", "verb": "starts at", "to": "STP-033-001"}
+  - {"op": "add_edge", "from": "FLW-033-edit-content", "verb": "starts at", "to": "STP-033-016"}
+  - {"op": "add_edge", "from": "FLW-033-organise-faq-topics", "verb": "starts at", "to": "STP-033-026"}
+  - {"op": "add_edge", "from": "FLW-033-upload-video", "verb": "starts at", "to": "STP-033-037"}
+  - {"op": "add_edge", "from": "FLW-033-unpublish-content", "verb": "starts at", "to": "STP-033-051"}
+  - {"op": "add_edge", "from": "FLW-033-validation-fails", "verb": "starts at", "to": "STP-033-060"}
+  - {"op": "add_edge", "from": "FLW-033-file-too-large", "verb": "starts at", "to": "STP-033-067"}
+  - {"op": "add_edge", "from": "FLW-033-update-service-status", "verb": "starts at", "to": "STP-033-074"}
+  - {"op": "add_edge", "from": "STP-033-016", "verb": "next", "to": "STP-033-017"}
+  - {"op": "add_edge", "from": "STP-033-017", "verb": "next", "to": "STP-033-018"}
+  - {"op": "add_edge", "from": "STP-033-037", "verb": "next", "to": "STP-033-038"}
+  - {"op": "add_edge", "from": "STP-033-051", "verb": "next", "to": "STP-033-052"}

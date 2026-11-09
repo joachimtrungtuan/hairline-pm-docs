@@ -1,0 +1,420 @@
+reason: "FR-001 completeness check 2026-11-10, held for user decision: System-performed Steps (the graph has no System Actor), human Steps reachable only through them, the Flows whose start Step is a system Step, and the next links that touch them. Also held: five Screen nodes (Splash, Landing, Settings Main, Privacy and Security, Password Changed Confirmation) with the links that depend on them, and 13 Rules proposed from PRD table cells whose wording needs review. Apply after the fixes file."
+by: tester
+operations:
+  - {"op": "add_node", "id": "SCR-001-20", "type": "Screen", "owner_fr": "FR-001", "title": "Splash Screen", "attrs": {"platform": "patient", "description": "PRD Screen 1 (prd.md line 307). Purpose: Initial app loading and branding display."}}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "SCR-001-20", "verb": "belongs to", "to": "STG-patient-01-registered"}
+  - {"op": "add_node", "id": "SCR-001-21", "type": "Screen", "owner_fr": "FR-001", "title": "Landing Screen", "attrs": {"platform": "patient", "description": "PRD Screen 2 (prd.md line 325). Purpose: Entry screen with registration and login routes."}}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "SCR-001-21", "verb": "belongs to", "to": "STG-patient-01-registered"}
+  - {"op": "add_node", "id": "SCR-001-22", "type": "Screen", "owner_fr": "FR-001", "title": "Settings Main Screen", "attrs": {"platform": "patient", "description": "PRD Screen 15 (prd.md line 638). Purpose: Top-level settings navigation hub."}}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "SCR-001-22", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "SCR-001-23", "type": "Screen", "owner_fr": "FR-001", "title": "Privacy and Security Menu", "attrs": {"platform": "patient", "description": "PRD Screen 15b (prd.md line 703). Purpose: Provide access to security and privacy items."}}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "SCR-001-23", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "SCR-001-24", "type": "Screen", "owner_fr": "FR-001", "title": "Password Changed Confirmation", "attrs": {"platform": "patient", "description": "PRD Screen 17a (prd.md line 851). Purpose: Confirm password change succeeded and return user back to settings."}}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "SCR-001-24", "verb": "belongs to", "to": "STG-patient-03-active"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-134", "verb": "applies to", "to": "SCR-001-20"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-135", "verb": "applies to", "to": "SCR-001-20"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-141", "verb": "applies to", "to": "SCR-001-24"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-141", "verb": "applies to", "to": "SCR-001-23"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-039", "verb": "applies to", "to": "SCR-001-20"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-040", "verb": "applies to", "to": "SCR-001-21"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-041", "verb": "applies to", "to": "SCR-001-21"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-088", "verb": "applies to", "to": "SCR-001-21"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-102", "verb": "applies to", "to": "SCR-001-22"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-103", "verb": "applies to", "to": "SCR-001-22"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-111", "verb": "applies to", "to": "SCR-001-23"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-112", "verb": "applies to", "to": "SCR-001-23"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-119", "verb": "applies to", "to": "SCR-001-24"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-120", "verb": "applies to", "to": "SCR-001-23"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-121", "verb": "applies to", "to": "SCR-001-24"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "REQ-001-122", "verb": "applies to", "to": "SCR-001-24"}
+  # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "on", "to": "SCR-001-21"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-013", "type": "Step", "owner_fr": "FR-001", "title": "System authenticates, creates the session, redirects to the dashboard and logs the login", "attrs": {"prd_ref": "Main Flow Workflow 2 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-013", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-013", "verb": "applies", "to": "REQ-001-003"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-013", "verb": "applies", "to": "REQ-001-011"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-013", "verb": "applies", "to": "REQ-001-008"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-024", "type": "Step", "owner_fr": "FR-001", "title": "System validates password strength, updates the password, creates a session and redirects", "attrs": {"prd_ref": "Main Flow Workflow 3 step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "applies", "to": "REQ-001-076"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "applies", "to": "REQ-001-079"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "applies", "to": "REQ-001-006"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-041", "type": "Step", "owner_fr": "FR-001", "title": "App saves a local registration draft", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-041", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-041", "verb": "applies", "to": "REQ-001-051"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-042", "type": "Step", "owner_fr": "FR-001", "title": "Patient resumes registration from the last completed step", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-042", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-042", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-042", "verb": "applies", "to": "REQ-001-051"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-043", "type": "Step", "owner_fr": "FR-001", "title": "Draft expires after 7 days of inactivity", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-043", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-043", "verb": "applies", "to": "REQ-001-133"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-051", "type": "Step", "owner_fr": "FR-001", "title": "System allows the Resend code option", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-051", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-051", "verb": "on", "to": "SCR-001-03"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-051", "verb": "applies", "to": "REQ-001-049"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-052", "type": "Step", "owner_fr": "FR-001", "title": "Patient requests a new 6-digit verification code", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-052", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-052", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-052", "verb": "on", "to": "SCR-001-03"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-052", "verb": "applies", "to": "REQ-001-049"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-052", "verb": "applies", "to": "REQ-001-048"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-061", "type": "Step", "owner_fr": "FR-001", "title": "System displays specific error messages", "attrs": {"prd_ref": "Alternative Flow A3 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "on", "to": "SCR-001-02"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "applies", "to": "REQ-001-045"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "applies", "to": "REQ-001-006"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-062", "type": "Step", "owner_fr": "FR-001", "title": "Patient corrects the errors before proceeding", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "at", "to": "STG-patient-01-registered"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "on", "to": "SCR-001-02"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "applies", "to": "REQ-001-045"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "applies", "to": "REQ-001-006"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-071", "type": "Step", "owner_fr": "FR-001", "title": "System displays the Invalid email or password error", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-071", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-071", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-071", "verb": "applies", "to": "REQ-001-065"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-072", "type": "Step", "owner_fr": "FR-001", "title": "Patient retries or uses the Forgot your password link", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-072", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-072", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-072", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-072", "verb": "applies", "to": "REQ-001-137"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-073", "type": "Step", "owner_fr": "FR-001", "title": "System tracks failed login attempts", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-073", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-073", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-073", "verb": "applies", "to": "REQ-001-007"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-073", "verb": "applies", "to": "REQ-001-070"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-081", "type": "Step", "owner_fr": "FR-001", "title": "System displays the account lockout message", "attrs": {"prd_ref": "Alternative Flow B2 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-081", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-081", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-081", "verb": "applies", "to": "REQ-001-007"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-081", "verb": "applies", "to": "REQ-001-066"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-082", "type": "Step", "owner_fr": "FR-001", "title": "Patient waits for the lockout duration or contacts support", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-082", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-082", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-082", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-082", "verb": "applies", "to": "REQ-001-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-083", "type": "Step", "owner_fr": "FR-001", "title": "System logs the security event", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-083", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-083", "verb": "on", "to": "SCR-001-07"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-083", "verb": "applies", "to": "REQ-001-008"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-091", "type": "Step", "owner_fr": "FR-001", "title": "System displays an error for an invalid or expired reset code", "attrs": {"prd_ref": "Alternative Flow C1 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-091", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-091", "verb": "on", "to": "SCR-001-09"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-091", "verb": "applies", "to": "REQ-001-075"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-092", "type": "Step", "owner_fr": "FR-001", "title": "Patient requests a new reset code", "attrs": {"prd_ref": "Alternative Flow C1 step 2"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-092", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-092", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-092", "verb": "on", "to": "SCR-001-09"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-092", "verb": "applies", "to": "REQ-001-075"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-102", "type": "Step", "owner_fr": "FR-001", "title": "System sends a new reset code", "attrs": {"prd_ref": "Alternative Flow C2 step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-102", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-102", "verb": "on", "to": "SCR-001-09"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-102", "verb": "applies", "to": "REQ-001-004"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-103", "type": "Step", "owner_fr": "FR-001", "title": "System logs email delivery attempts", "attrs": {"prd_ref": "Alternative Flow C2 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-103", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-103", "verb": "on", "to": "SCR-001-09"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-103", "verb": "applies", "to": "REQ-001-077"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-111", "type": "Step", "owner_fr": "FR-001", "title": "System displays the privacy-preserving reset message", "attrs": {"prd_ref": "Alternative Flow C3 step 1"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-111", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-111", "verb": "on", "to": "SCR-001-08"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-111", "verb": "applies", "to": "REQ-001-073"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-113", "type": "Step", "owner_fr": "FR-001", "title": "System enforces rate limiting on reset requests", "attrs": {"prd_ref": "Alternative Flow C3 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-113", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-113", "verb": "on", "to": "SCR-001-08"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-113", "verb": "applies", "to": "REQ-001-074"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-122", "type": "Step", "owner_fr": "FR-001", "title": "System logs all admin changes with reason", "attrs": {"prd_ref": "Alternative Flow D1 step 2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-122", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-122", "verb": "applies", "to": "REQ-001-017"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-122", "verb": "applies", "to": "REQ-001-033"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-001-123", "type": "Step", "owner_fr": "FR-001", "title": "Patient receives a notification of the changes", "attrs": {"prd_ref": "Alternative Flow D1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "applies", "to": "REQ-001-034"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_node", "id": "STP-001-124", "type": "Step", "owner_fr": "FR-001", "title": "Patient reviews and accepts or rejects the changes", "attrs": {"prd_ref": "Alternative Flow D1 step 4"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "applies", "to": "REQ-001-035"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-registration-abandoned", "type": "Flow", "title": "Abandoned registration alternative flow", "attrs": {"kind": "alternative", "description": "Abandoned registration alternative flow (prd.md Alternative Flow A1).", "prd_ref": "Alternative Flow A1"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-registration-abandoned", "verb": "starts at", "to": "STP-001-041"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-verification-retry", "type": "Flow", "title": "Verification code retry alternative flow", "attrs": {"kind": "alternative", "description": "Verification code retry alternative flow (prd.md Alternative Flow A2).", "prd_ref": "Alternative Flow A2"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-verification-retry", "verb": "starts at", "to": "STP-001-051"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-invalid-registration-input", "type": "Flow", "title": "Invalid email or weak password alternative flow", "attrs": {"kind": "alternative", "description": "Invalid email or weak password alternative flow (prd.md Alternative Flow A3).", "prd_ref": "Alternative Flow A3"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-invalid-registration-input", "verb": "starts at", "to": "STP-001-061"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-invalid-credentials", "type": "Flow", "title": "Invalid credentials alternative flow", "attrs": {"kind": "alternative", "description": "Invalid credentials alternative flow (prd.md Alternative Flow B1).", "prd_ref": "Alternative Flow B1"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-invalid-credentials", "verb": "starts at", "to": "STP-001-071"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-account-locked", "type": "Flow", "title": "Account locked alternative flow", "attrs": {"kind": "alternative", "description": "Account locked alternative flow (prd.md Alternative Flow B2).", "prd_ref": "Alternative Flow B2"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-account-locked", "verb": "starts at", "to": "STP-001-081"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-reset-code-invalid", "type": "Flow", "title": "Invalid reset code alternative flow", "attrs": {"kind": "alternative", "description": "Invalid reset code alternative flow (prd.md Alternative Flow C1).", "prd_ref": "Alternative Flow C1"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-reset-code-invalid", "verb": "starts at", "to": "STP-001-091"}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_node", "id": "FLW-001-reset-email-unregistered", "type": "Flow", "title": "Unregistered reset email alternative flow", "attrs": {"kind": "alternative", "description": "Unregistered reset email alternative flow (prd.md Alternative Flow C3).", "prd_ref": "Alternative Flow C3"}}
+  # waits on: no System Actor (flow start Step is held)
+  - {"op": "add_edge", "from": "FLW-001-reset-email-unregistered", "verb": "starts at", "to": "STP-001-111"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-144", "type": "Rule", "owner_fr": "FR-001", "title": "Terms and Privacy Policy links keep the name form state", "attrs": {"statement": "The Terms and Conditions and Privacy Policy links on the name screen open the latest published documents (FR-027) and do not disrupt the form state.", "rationale": "Proposed from prd.md line 359-360 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-144", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-144", "verb": "applies to", "to": "SCR-001-01"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-145", "type": "Rule", "owner_fr": "FR-001", "title": "Account creation legal footer is static text", "attrs": {"statement": "The Terms of Service and Privacy Policy reference on the account creation screen is static informational text and is not interactive.", "rationale": "Proposed from prd.md line 385 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-145", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-145", "verb": "applies to", "to": "SCR-001-02"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-146", "type": "Rule", "owner_fr": "FR-001", "title": "Verification code input is numeric and needs all six digits", "attrs": {"statement": "The verification code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.", "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies to", "to": "SCR-001-03"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies to", "to": "ENT-otp-code.code"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-147", "type": "Rule", "owner_fr": "FR-001", "title": "Reset code input is numeric and needs all six digits", "attrs": {"statement": "The reset code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.", "rationale": "Proposed from prd.md line 543-544 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies to", "to": "SCR-001-09"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies to", "to": "ENT-otp-code.code"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-148", "type": "Rule", "owner_fr": "FR-001", "title": "Login button disabled until both fields filled; password can be shown", "attrs": {"statement": "The Login button is disabled until both the email and password fields have input, and the password field has a show/hide toggle.", "rationale": "Proposed from prd.md line 498-500 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-148", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-148", "verb": "applies to", "to": "SCR-001-07"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-149", "type": "Rule", "owner_fr": "FR-001", "title": "Send code disabled until the email is valid", "attrs": {"statement": "The Send code button is disabled until the email field has valid input.", "rationale": "Proposed from prd.md line 523 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-149", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-149", "verb": "applies to", "to": "SCR-001-08"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-150", "type": "Rule", "owner_fr": "FR-001", "title": "Save and Login disabled until both passwords are valid and match", "attrs": {"statement": "The Save and Login button is disabled until both password fields are valid and matching, and the password fields have a visibility toggle.", "rationale": "Proposed from prd.md line 567, 573 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-150", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-150", "verb": "applies to", "to": "SCR-001-10"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-151", "type": "Rule", "owner_fr": "FR-001", "title": "Payment method menu item opens payment method management", "attrs": {"statement": "The Payment method item on the profile overview opens payment method management.", "rationale": "Proposed from prd.md line 589 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-151", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-151", "verb": "applies to", "to": "SCR-001-11"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-152", "type": "Rule", "owner_fr": "FR-001", "title": "Settings navigation rows are static and keep back navigation", "attrs": {"statement": "The Settings navigation rows are always visible in the same order, and tapping one opens its sub-screen and preserves back navigation to the Settings main screen.", "rationale": "Proposed from prd.md line 655-656 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-152", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-152", "verb": "applies to", "to": "SCR-001-22"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-153", "type": "Rule", "owner_fr": "FR-001", "title": "Save buttons stay disabled until required fields are valid", "attrs": {"statement": "The Save and update button on Edit Profile and the Save button on Change Password are disabled until all required fields are valid or present.", "rationale": "Proposed from prd.md line 631, 838 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-153", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-153", "verb": "applies to", "to": "SCR-001-12"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-153", "verb": "applies to", "to": "SCR-001-17"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-154", "type": "Rule", "owner_fr": "FR-001", "title": "Notification toggle shows save status", "attrs": {"statement": "After a notification toggle change the screen briefly shows Saving or Saved feedback.", "rationale": "Proposed from prd.md line 684 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-154", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-154", "verb": "applies to", "to": "SCR-001-13"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-155", "type": "Rule", "owner_fr": "FR-001", "title": "Create account on the profile screen needs all required fields", "attrs": {"statement": "The Create account button on the profile creation screen is disabled until all required fields are complete.", "rationale": "Proposed from prd.md line 434 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-155", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-155", "verb": "applies to", "to": "SCR-001-04"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-156", "type": "Rule", "owner_fr": "FR-001", "title": "Deletion confirmation modal follows re-authentication", "attrs": {"statement": "On the delete account screen, the Request deletion button opens a Submit deletion request confirmation modal with Confirm and Cancel once any needed re-authentication has passed; Confirm submits the request and Cancel returns to the screen.", "rationale": "Proposed from prd.md line 807-809 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies to", "to": "SCR-001-16"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies to", "to": "SCR-001-18"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "next", "to": "STP-001-013"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "next", "to": "STP-001-024"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-041", "verb": "next", "to": "STP-001-042"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-042", "verb": "next", "to": "STP-001-043"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-051", "verb": "next", "to": "STP-001-052"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "next", "to": "STP-001-062"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-071", "verb": "next", "to": "STP-001-072"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-072", "verb": "next", "to": "STP-001-073"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-081", "verb": "next", "to": "STP-001-082"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-082", "verb": "next", "to": "STP-001-083"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-091", "verb": "next", "to": "STP-001-092"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-101", "verb": "next", "to": "STP-001-102"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-102", "verb": "next", "to": "STP-001-103"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-111", "verb": "next", "to": "STP-001-113"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-121", "verb": "next", "to": "STP-001-122"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-122", "verb": "next", "to": "STP-001-123"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "next", "to": "STP-001-124"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "next", "to": "STP-001-051", "attrs": {"label": "Verification code fails or expires"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-061", "attrs": {"label": "Invalid email format or weak password"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-012", "verb": "next", "to": "STP-001-071", "attrs": {"label": "Invalid credentials"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-022", "verb": "next", "to": "STP-001-091", "attrs": {"label": "Reset code expires or is invalid"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-001-021", "verb": "next", "to": "STP-001-111", "attrs": {"label": "Email address is not registered"}}

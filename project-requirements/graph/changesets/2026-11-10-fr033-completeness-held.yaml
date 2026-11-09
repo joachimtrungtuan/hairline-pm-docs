@@ -1,0 +1,452 @@
+# FR-033 completeness fixes, held. Checker: tester. Checklist: project-requirements/graph/checklists/completeness-check.md v1.3
+# Apply after 2026-11-10-fr033-completeness-fixes.yaml. Every op here waits on the user deciding that the graph needs a System Actor.
+reason: "FR-033 completeness fixes held (D37 review step 1): Steps the PRD assigns to the system, the human Steps reachable only through them, and every next edge that touches them. Held until the user decides how the graph models a System Actor."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-002", "type": "Step", "title": "Dashboard shows category navigation for the 10 categories", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 2"}}
+  - {"op": "add_edge", "from": "STP-033-002", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-002", "verb": "on", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "STP-033-002", "verb": "applies", "to": "REQ-033-049"}
+  - {"op": "add_edge", "from": "STP-033-002", "verb": "applies", "to": "REQ-033-050"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-003", "type": "Step", "title": "Select a Help Centre category to manage", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 3"}}
+  - {"op": "add_edge", "from": "STP-033-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-003", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-003", "verb": "on", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "STP-033-003", "verb": "applies", "to": "REQ-033-049"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-004", "type": "Step", "title": "Click the primary action for the category (Create Content, Manage, Configure)", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 4"}}
+  - {"op": "add_edge", "from": "STP-033-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-004", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-004", "verb": "on", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "STP-033-004", "verb": "applies", "to": "REQ-033-004"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-005", "type": "Step", "title": "System shows the category-specific editor", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 5"}}
+  - {"op": "add_edge", "from": "STP-033-005", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-005", "verb": "applies", "to": "REQ-033-004"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-006", "type": "Step", "title": "Enter details in the category-specific editor", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 6"}}
+  - {"op": "add_edge", "from": "STP-033-006", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-006", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-006", "verb": "applies", "to": "REQ-033-004"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-007", "type": "Step", "title": "Upload attachments if needed", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 7"}}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "applies", "to": "REQ-033-017"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-008", "type": "Step", "title": "Assign tags", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 8"}}
+  - {"op": "add_edge", "from": "STP-033-008", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-008", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-008", "verb": "applies", "to": "REQ-033-004"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-009", "type": "Step", "title": "Click Preview", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 9"}}
+  - {"op": "add_edge", "from": "STP-033-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-009", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-009", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-009", "verb": "applies", "to": "REQ-033-011"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-010", "type": "Step", "title": "System renders the matching provider layout", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 10"}}
+  - {"op": "add_edge", "from": "STP-033-010", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-010", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-010", "verb": "applies", "to": "REQ-033-086"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-011", "type": "Step", "title": "Review preview, then Save as Draft or Publish", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 11"}}
+  - {"op": "add_edge", "from": "STP-033-011", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-011", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-011", "verb": "applies", "to": "REQ-033-053"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-012", "type": "Step", "title": "System saves status and timestamps", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 12"}}
+  - {"op": "add_edge", "from": "STP-033-012", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-012", "verb": "applies", "to": "REQ-033-053"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-013", "type": "Step", "title": "System logs creation in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 13"}}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "applies", "to": "REQ-033-015"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-014", "type": "Step", "title": "If published, content is immediately available in the provider category", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 14"}}
+  - {"op": "add_edge", "from": "STP-033-014", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-014", "verb": "applies", "to": "REQ-033-034"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-015", "type": "Step", "title": "System shows success confirmation with link to published content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 15"}}
+  - {"op": "add_edge", "from": "STP-033-015", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-015", "verb": "applies", "to": "REQ-033-053"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-019", "type": "Step", "title": "System loads the editor pre-filled with existing content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-019", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-019", "verb": "applies", "to": "REQ-033-060"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-020", "type": "Step", "title": "System creates a new version in version control", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-020", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-020", "verb": "applies", "to": "REQ-033-054"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-021", "type": "Step", "title": "Change title, body, attachments or category", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-021", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-021", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-021", "verb": "applies", "to": "REQ-033-061"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-022", "type": "Step", "title": "Preview the changes", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-022", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-022", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-022", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-022", "verb": "applies", "to": "REQ-033-086"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-023", "type": "Step", "title": "Save with optional version note", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 8"}}
+  - {"op": "add_edge", "from": "STP-033-023", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-023", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-023", "verb": "applies", "to": "REQ-033-054"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-024", "type": "Step", "title": "System updates the version and logs the change in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 9"}}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "applies", "to": "REQ-033-015"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "applies", "to": "REQ-033-054"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-025", "type": "Step", "title": "If published, system immediately updates provider-facing content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 10"}}
+  - {"op": "add_edge", "from": "STP-033-025", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-025", "verb": "applies", "to": "REQ-033-034"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-027", "type": "Step", "title": "System shows all FAQ items with current organisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-027", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-027", "verb": "on", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "STP-033-027", "verb": "applies", "to": "REQ-033-064"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-028", "type": "Step", "title": "Click Manage Topics", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-028", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-028", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-028", "verb": "on", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "STP-033-028", "verb": "applies", "to": "REQ-033-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-029", "type": "Step", "title": "System shows topic management with drag-and-drop", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-029", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-029", "verb": "on", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "STP-033-029", "verb": "applies", "to": "REQ-033-066"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-030", "type": "Step", "title": "Create a new topic section", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "on", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "applies", "to": "REQ-033-006"}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "applies", "to": "REQ-033-066"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-031", "type": "Step", "title": "Assign FAQ items to topics by dragging", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-031", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-031", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-031", "verb": "on", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "STP-033-031", "verb": "applies", "to": "REQ-033-006"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-032", "type": "Step", "title": "Reorder topics and FAQ items within topics", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "on", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "applies", "to": "REQ-033-006"}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "applies", "to": "REQ-033-064"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-033", "type": "Step", "title": "Preview the FAQ accordion layout", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 8"}}
+  - {"op": "add_edge", "from": "STP-033-033", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-033", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-033", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-033", "verb": "applies", "to": "REQ-033-064"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-034", "type": "Step", "title": "Save the organisation structure", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 9"}}
+  - {"op": "add_edge", "from": "STP-033-034", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-034", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-034", "verb": "on", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "STP-033-034", "verb": "applies", "to": "REQ-033-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-035", "type": "Step", "title": "System updates FAQ navigation for the provider Help Centre", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 10"}}
+  - {"op": "add_edge", "from": "STP-033-035", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-035", "verb": "applies", "to": "REQ-033-034"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-036", "type": "Step", "title": "Provider Help Centre immediately reflects the new organisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 11"}}
+  - {"op": "add_edge", "from": "STP-033-036", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-036", "verb": "applies", "to": "REQ-033-034"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-039", "type": "Step", "title": "System shows video upload form", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-039", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-039", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-039", "verb": "applies", "to": "REQ-033-076"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-040", "type": "Step", "title": "Enter title and description", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "applies", "to": "REQ-033-076"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-041", "type": "Step", "title": "Upload video file (MP4 or MOV, max 500MB)", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "applies", "to": "REQ-033-024"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-042", "type": "Step", "title": "System validates size and format, starts upload to media storage", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-042", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-042", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-042", "verb": "applies", "to": "REQ-033-027"}
+  - {"op": "add_edge", "from": "STP-033-042", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-043", "type": "Step", "title": "System shows upload progress bar", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-043", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-043", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-043", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-044", "type": "Step", "title": "System extracts duration and generates thumbnail at the 10% mark", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 8"}}
+  - {"op": "add_edge", "from": "STP-033-044", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-044", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-044", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-045", "type": "Step", "title": "Upload custom thumbnail or use the auto-generated one", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 9"}}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "applies", "to": "REQ-033-076"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-046", "type": "Step", "title": "Optionally enter transcript", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 10"}}
+  - {"op": "add_edge", "from": "STP-033-046", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-046", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-046", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-046", "verb": "applies", "to": "REQ-033-076"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-047", "type": "Step", "title": "Preview in the video player interface", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 11"}}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "applies", "to": "REQ-033-086"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-048", "type": "Step", "title": "Publish the video tutorial", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 12"}}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "applies", "to": "REQ-033-053"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-049", "type": "Step", "title": "System processes video for streaming optimisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 13"}}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "applies", "to": "REQ-033-077"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-050", "type": "Step", "title": "System makes video available in the provider Video Tutorials subscreen", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 14"}}
+  - {"op": "add_edge", "from": "STP-033-050", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-050", "verb": "applies", "to": "REQ-033-034"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-053", "type": "Step", "title": "System asks to confirm unpublish with a reason", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-053", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-053", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-054", "type": "Step", "title": "Enter the reason", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-054", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-054", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-054", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-055", "type": "Step", "title": "Confirm unpublish", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-055", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-055", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-055", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-056", "type": "Step", "title": "System changes status from Published to Unpublished", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-056", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-056", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-057", "type": "Step", "title": "System immediately removes content from provider view", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-057", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-057", "verb": "applies", "to": "REQ-033-034"}
+  - {"op": "add_edge", "from": "STP-033-057", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-058", "type": "Step", "title": "System logs unpublish with reason in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 8"}}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "applies", "to": "REQ-033-015"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-059", "type": "Step", "title": "Content stays in admin view as Unpublished", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 9"}}
+  - {"op": "add_edge", "from": "STP-033-059", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-059", "verb": "applies", "to": "REQ-033-055"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-061", "type": "Step", "title": "System validates required fields", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-061", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-061", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-062", "type": "Step", "title": "System detects a validation error", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-062", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-062", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-063", "type": "Step", "title": "System shows error message highlighting missing or invalid fields", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-063", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-063", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-064", "type": "Step", "title": "Correct the validation errors", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-064", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-064", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-064", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-065", "type": "Step", "title": "Re-submit content for publishing", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-065", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-065", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-065", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-066", "type": "Step", "title": "System re-validates and publishes if all validations pass", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-066", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-066", "verb": "applies", "to": "REQ-033-056"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-068", "type": "Step", "title": "System checks file size against limits", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-068", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-068", "verb": "applies", "to": "REQ-033-010"}
+  - {"op": "add_edge", "from": "STP-033-068", "verb": "applies", "to": "REQ-033-057"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-069", "type": "Step", "title": "File exceeds the size limit", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-069", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-069", "verb": "applies", "to": "REQ-033-057"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-070", "type": "Step", "title": "System shows error with the limit and alternatives", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-070", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-070", "verb": "applies", "to": "REQ-033-057"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-071", "type": "Step", "title": "Reduce file size or use alternative hosting (YouTube or Vimeo embed link)", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-071", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-071", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-071", "verb": "applies", "to": "REQ-033-057"}
+  - {"op": "add_edge", "from": "STP-033-071", "verb": "applies", "to": "REQ-033-078"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-072", "type": "Step", "title": "Re-upload the compressed file or add an external embed link", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "applies", "to": "REQ-033-057"}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "applies", "to": "REQ-033-078"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-073", "type": "Step", "title": "System validates the new file or link and continues the upload", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-073", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-073", "verb": "applies", "to": "REQ-033-057"}
+  - {"op": "add_edge", "from": "STP-033-073", "verb": "applies", "to": "REQ-033-078"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-075", "type": "Step", "title": "System shows overall status, components, incident history, maintenance schedule", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 2"}}
+  - {"op": "add_edge", "from": "STP-033-075", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-075", "verb": "on", "to": "SCR-033-12"}
+  - {"op": "add_edge", "from": "STP-033-075", "verb": "applies", "to": "REQ-033-080"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-076", "type": "Step", "title": "Update a service component status", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 3"}}
+  - {"op": "add_edge", "from": "STP-033-076", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-076", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-076", "verb": "on", "to": "SCR-033-13"}
+  - {"op": "add_edge", "from": "STP-033-076", "verb": "applies", "to": "REQ-033-081"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-077", "type": "Step", "title": "System recalculates overall status from component statuses", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 4"}}
+  - {"op": "add_edge", "from": "STP-033-077", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-077", "verb": "on", "to": "SCR-033-12"}
+  - {"op": "add_edge", "from": "STP-033-077", "verb": "applies", "to": "REQ-033-080"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-078", "type": "Step", "title": "Create a new incident (title, description, affected services, Investigating)", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 5"}}
+  - {"op": "add_edge", "from": "STP-033-078", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-078", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-078", "verb": "on", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "STP-033-078", "verb": "applies", "to": "REQ-033-082"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-079", "type": "Step", "title": "System creates the incident record and timeline entry", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 6"}}
+  - {"op": "add_edge", "from": "STP-033-079", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-079", "verb": "on", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "STP-033-079", "verb": "applies", "to": "REQ-033-082"}
+  - {"op": "add_edge", "from": "STP-033-079", "verb": "applies", "to": "REQ-033-083"}
+  # waits on: no System Actor (reachable only through a held system step)
+  - {"op": "add_node", "id": "STP-033-080", "type": "Step", "title": "Update incident status as investigation progresses", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 7"}}
+  - {"op": "add_edge", "from": "STP-033-080", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-080", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-080", "verb": "on", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "STP-033-080", "verb": "applies", "to": "REQ-033-082"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-081", "type": "Step", "title": "System updates incident timeline with each status change", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 8"}}
+  - {"op": "add_edge", "from": "STP-033-081", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-081", "verb": "on", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "STP-033-081", "verb": "applies", "to": "REQ-033-083"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-082", "type": "Step", "title": "Status updates propagate to the provider Service Status subscreen within 1 minute", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 9"}}
+  - {"op": "add_edge", "from": "STP-033-082", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-082", "verb": "applies", "to": "REQ-033-033"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-033-083", "type": "Step", "title": "Providers see the updated status on the status page", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 10"}}
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "applies", "to": "REQ-033-033"}
+  # waits on: no System Actor (next edges touching a held system step)
+  - {"op": "add_edge", "from": "STP-033-001", "verb": "next", "to": "STP-033-002"}
+  - {"op": "add_edge", "from": "STP-033-002", "verb": "next", "to": "STP-033-003"}
+  - {"op": "add_edge", "from": "STP-033-003", "verb": "next", "to": "STP-033-004"}
+  - {"op": "add_edge", "from": "STP-033-004", "verb": "next", "to": "STP-033-005"}
+  - {"op": "add_edge", "from": "STP-033-005", "verb": "next", "to": "STP-033-006"}
+  - {"op": "add_edge", "from": "STP-033-006", "verb": "next", "to": "STP-033-007"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "next", "to": "STP-033-008"}
+  - {"op": "add_edge", "from": "STP-033-008", "verb": "next", "to": "STP-033-009"}
+  - {"op": "add_edge", "from": "STP-033-009", "verb": "next", "to": "STP-033-010"}
+  - {"op": "add_edge", "from": "STP-033-010", "verb": "next", "to": "STP-033-011"}
+  - {"op": "add_edge", "from": "STP-033-011", "verb": "next", "to": "STP-033-012"}
+  - {"op": "add_edge", "from": "STP-033-012", "verb": "next", "to": "STP-033-013"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "next", "to": "STP-033-014"}
+  - {"op": "add_edge", "from": "STP-033-014", "verb": "next", "to": "STP-033-015"}
+  - {"op": "add_edge", "from": "STP-033-018", "verb": "next", "to": "STP-033-019"}
+  - {"op": "add_edge", "from": "STP-033-019", "verb": "next", "to": "STP-033-020"}
+  - {"op": "add_edge", "from": "STP-033-020", "verb": "next", "to": "STP-033-021"}
+  - {"op": "add_edge", "from": "STP-033-021", "verb": "next", "to": "STP-033-022"}
+  - {"op": "add_edge", "from": "STP-033-022", "verb": "next", "to": "STP-033-023"}
+  - {"op": "add_edge", "from": "STP-033-023", "verb": "next", "to": "STP-033-024"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "next", "to": "STP-033-025"}
+  - {"op": "add_edge", "from": "STP-033-026", "verb": "next", "to": "STP-033-027"}
+  - {"op": "add_edge", "from": "STP-033-027", "verb": "next", "to": "STP-033-028"}
+  - {"op": "add_edge", "from": "STP-033-028", "verb": "next", "to": "STP-033-029"}
+  - {"op": "add_edge", "from": "STP-033-029", "verb": "next", "to": "STP-033-030"}
+  - {"op": "add_edge", "from": "STP-033-030", "verb": "next", "to": "STP-033-031"}
+  - {"op": "add_edge", "from": "STP-033-031", "verb": "next", "to": "STP-033-032"}
+  - {"op": "add_edge", "from": "STP-033-032", "verb": "next", "to": "STP-033-033"}
+  - {"op": "add_edge", "from": "STP-033-033", "verb": "next", "to": "STP-033-034"}
+  - {"op": "add_edge", "from": "STP-033-034", "verb": "next", "to": "STP-033-035"}
+  - {"op": "add_edge", "from": "STP-033-035", "verb": "next", "to": "STP-033-036"}
+  - {"op": "add_edge", "from": "STP-033-038", "verb": "next", "to": "STP-033-039"}
+  - {"op": "add_edge", "from": "STP-033-039", "verb": "next", "to": "STP-033-040"}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "next", "to": "STP-033-041"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "next", "to": "STP-033-042"}
+  - {"op": "add_edge", "from": "STP-033-042", "verb": "next", "to": "STP-033-043"}
+  - {"op": "add_edge", "from": "STP-033-043", "verb": "next", "to": "STP-033-044"}
+  - {"op": "add_edge", "from": "STP-033-044", "verb": "next", "to": "STP-033-045"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "next", "to": "STP-033-046"}
+  - {"op": "add_edge", "from": "STP-033-046", "verb": "next", "to": "STP-033-047"}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "next", "to": "STP-033-048"}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "next", "to": "STP-033-049"}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "next", "to": "STP-033-050"}
+  - {"op": "add_edge", "from": "STP-033-052", "verb": "next", "to": "STP-033-053"}
+  - {"op": "add_edge", "from": "STP-033-053", "verb": "next", "to": "STP-033-054"}
+  - {"op": "add_edge", "from": "STP-033-054", "verb": "next", "to": "STP-033-055"}
+  - {"op": "add_edge", "from": "STP-033-055", "verb": "next", "to": "STP-033-056"}
+  - {"op": "add_edge", "from": "STP-033-056", "verb": "next", "to": "STP-033-057"}
+  - {"op": "add_edge", "from": "STP-033-057", "verb": "next", "to": "STP-033-058"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "next", "to": "STP-033-059"}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "next", "to": "STP-033-061"}
+  - {"op": "add_edge", "from": "STP-033-061", "verb": "next", "to": "STP-033-062"}
+  - {"op": "add_edge", "from": "STP-033-062", "verb": "next", "to": "STP-033-063"}
+  - {"op": "add_edge", "from": "STP-033-063", "verb": "next", "to": "STP-033-064"}
+  - {"op": "add_edge", "from": "STP-033-064", "verb": "next", "to": "STP-033-065"}
+  - {"op": "add_edge", "from": "STP-033-065", "verb": "next", "to": "STP-033-066"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "next", "to": "STP-033-068"}
+  - {"op": "add_edge", "from": "STP-033-068", "verb": "next", "to": "STP-033-069"}
+  - {"op": "add_edge", "from": "STP-033-069", "verb": "next", "to": "STP-033-070"}
+  - {"op": "add_edge", "from": "STP-033-070", "verb": "next", "to": "STP-033-071"}
+  - {"op": "add_edge", "from": "STP-033-071", "verb": "next", "to": "STP-033-072"}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "next", "to": "STP-033-073"}
+  - {"op": "add_edge", "from": "STP-033-074", "verb": "next", "to": "STP-033-075"}
+  - {"op": "add_edge", "from": "STP-033-075", "verb": "next", "to": "STP-033-076"}
+  - {"op": "add_edge", "from": "STP-033-076", "verb": "next", "to": "STP-033-077"}
+  - {"op": "add_edge", "from": "STP-033-077", "verb": "next", "to": "STP-033-078"}
+  - {"op": "add_edge", "from": "STP-033-078", "verb": "next", "to": "STP-033-079"}
+  - {"op": "add_edge", "from": "STP-033-079", "verb": "next", "to": "STP-033-080"}
+  - {"op": "add_edge", "from": "STP-033-080", "verb": "next", "to": "STP-033-081"}
+  - {"op": "add_edge", "from": "STP-033-081", "verb": "next", "to": "STP-033-082"}
+  - {"op": "add_edge", "from": "STP-033-082", "verb": "next", "to": "STP-033-083"}
+  # waits on: whether the External Dependencies failure-handling lines (PRD 1140, 1145, 1150) are Rules; the migration left them out (controller moved these from the fixes file)
+  - {"op": "add_node", "id": "REQ-033-089", "type": "Rule", "owner_fr": "FR-033", "title": "Media storage failure: queue uploads, cached content, notify admin", "attrs": {"statement": "If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues", "rationale": "Dependencies, External Dependencies, Media Storage Service failure handling (PRD line 1140)."}}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_node", "id": "REQ-033-090", "type": "Rule", "owner_fr": "FR-033", "title": "Editor library fails to load: plain textarea fallback", "attrs": {"statement": "If editor library fails to load, fall back to plain textarea with markdown support", "rationale": "Dependencies, External Dependencies, Rich Text Editor Library failure handling (PRD line 1145)."}}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "REQ-033-091", "type": "Rule", "owner_fr": "FR-033", "title": "Virus scanner unavailable: quarantine uploads", "attrs": {"statement": "If virus scanner unavailable, quarantine uploads and notify admin; do not make files available to providers until scan completes", "rationale": "Dependencies, External Dependencies, Virus Scanning Service failure handling (PRD line 1150)."}}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ACT-platform-admin"}

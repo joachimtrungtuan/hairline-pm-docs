@@ -1,0 +1,344 @@
+reason: "FR-031 completeness fixes (D37 review step 1): flow model for the steps a human performs (Steps, Flows, next links, starts at) and an applies to edge from each FR-031 Rule to the objects its line names, one shows edge for Users Count, and references edges to the FR-022 list and audit-trail filter Rules. System-performed steps (no System Actor), the human Steps reachable only through them and the six B Flows are in the held change-set."
+by: tester
+operations:
+  - {"op": "add_node", "id": "REQ-031-121", "type": "Rule", "owner_fr": "FR-031", "title": "Invalid phone number message", "attrs": {"statement": "Invalid phone format: \"Please enter a valid phone number (e.g., +1234567890).\"", "rationale": "prd.md lines 460 and 515 (Screen 2 and Screen 3 validation messages), verbatim."}}
+  - {"op": "add_node", "id": "REQ-031-122", "type": "Rule", "owner_fr": "FR-031", "title": "Admin Account Setup branding", "attrs": {"statement": "Display provider branding (Hairline Admin Platform logo and name)", "rationale": "prd.md Screen 3 Notes, line 531, verbatim."}}
+  - {"op": "add_node", "id": "REQ-031-123", "type": "Rule", "owner_fr": "FR-031", "title": "Admin Account Setup security notice", "attrs": {"statement": "Security notice: \"Strong password required. All admin actions are logged for security.\"", "rationale": "prd.md Screen 3 Notes, line 535, verbatim. Stage placement follows the sibling FR-031 Rules (provisional, see review queue C49)."}}
+  - {"op": "add_node", "id": "STP-031-001", "type": "Step", "title": "Super Admin opens User Roles & Permissions", "owner_fr": "FR-031", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_node", "id": "STP-031-101", "type": "Step", "title": "Super Admin views pending invitations", "owner_fr": "FR-031", "attrs": {"prd_ref": "A1 step 1"}}
+  - {"op": "add_node", "id": "STP-031-201", "type": "Step", "title": "Super Admin opens Admin Users tab", "owner_fr": "FR-031", "attrs": {"prd_ref": "A2 step 1"}}
+  - {"op": "add_node", "id": "STP-031-202", "type": "Step", "title": "Super Admin selects target user", "owner_fr": "FR-031", "attrs": {"prd_ref": "A2 step 2"}}
+  - {"op": "add_node", "id": "STP-031-203", "type": "Step", "title": "Super Admin clicks Change Role", "owner_fr": "FR-031", "attrs": {"prd_ref": "A2 step 3"}}
+  - {"op": "add_node", "id": "STP-031-301", "type": "Step", "title": "Super Admin opens Admin Roles", "owner_fr": "FR-031", "attrs": {"prd_ref": "A3 step 1"}}
+  - {"op": "add_node", "id": "STP-031-302", "type": "Step", "title": "Super Admin clicks Create New Role", "owner_fr": "FR-031", "attrs": {"prd_ref": "A3 step 2"}}
+  - {"op": "add_node", "id": "STP-031-401", "type": "Step", "title": "Super Admin opens Provider Roles", "owner_fr": "FR-031", "attrs": {"prd_ref": "A4 step 1"}}
+  - {"op": "add_node", "id": "STP-031-501", "type": "Step", "title": "Super Admin opens Create New Role", "owner_fr": "FR-031", "attrs": {"prd_ref": "A5 step 1"}}
+  - {"op": "add_node", "id": "STP-031-502", "type": "Step", "title": "Super Admin enters name and base type", "owner_fr": "FR-031", "attrs": {"prd_ref": "A5 step 2"}}
+  - {"op": "add_node", "id": "STP-031-601", "type": "Step", "title": "Super Admin chooses Clone Role", "owner_fr": "FR-031", "attrs": {"prd_ref": "A6 step 1"}}
+  - {"op": "add_node", "id": "FLW-031-main", "type": "Flow", "title": "Admin team member invitation main flow", "attrs": {"kind": "main", "prd_ref": "Main Flow", "description": "Super Admin invites an admin user, who accepts and activates the account."}}
+  - {"op": "add_node", "id": "FLW-031-a1-resend", "type": "Flow", "title": "A1 Re-send invitation", "attrs": {"kind": "alternative", "prd_ref": "A1: Re-send Invitation"}}
+  - {"op": "add_node", "id": "FLW-031-a2-role-change", "type": "Flow", "title": "A2 Role change for an existing admin", "attrs": {"kind": "alternative", "prd_ref": "A2: Role Change"}}
+  - {"op": "add_node", "id": "FLW-031-a3-custom-admin-role", "type": "Flow", "title": "A3 Create custom admin role", "attrs": {"kind": "alternative", "prd_ref": "A3: Create Custom Admin Role"}}
+  - {"op": "add_node", "id": "FLW-031-a4-provider-role-permissions", "type": "Flow", "title": "A4 Configure provider role permissions", "attrs": {"kind": "alternative", "prd_ref": "A4: Configure Provider Role Permissions"}}
+  - {"op": "add_node", "id": "FLW-031-a5-custom-provider-role", "type": "Flow", "title": "A5 Create custom provider role", "attrs": {"kind": "alternative", "prd_ref": "A5: Create Custom Provider Role"}}
+  - {"op": "add_node", "id": "FLW-031-a6-clone-provider-role", "type": "Flow", "title": "A6 Clone provider role", "attrs": {"kind": "alternative", "prd_ref": "A6: Clone Provider Role"}}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "applies", "to": "REQ-031-027"}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "applies", "to": "REQ-031-028"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "applies", "to": "REQ-031-042"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "applies", "to": "REQ-031-039"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "applies", "to": "REQ-031-054"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "applies", "to": "REQ-031-054"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "applies", "to": "REQ-031-054"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "applies", "to": "REQ-031-082"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "applies", "to": "REQ-031-057"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "applies", "to": "REQ-031-057"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "applies", "to": "REQ-031-058"}
+  - {"op": "add_edge", "from": "STP-031-401", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-401", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-401", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-401", "verb": "applies", "to": "REQ-031-005"}
+  - {"op": "add_edge", "from": "STP-031-501", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-501", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-501", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-501", "verb": "applies", "to": "REQ-031-059"}
+  - {"op": "add_edge", "from": "STP-031-502", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-502", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-502", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-502", "verb": "applies", "to": "REQ-031-059"}
+  - {"op": "add_edge", "from": "STP-031-502", "verb": "applies", "to": "REQ-031-063"}
+  - {"op": "add_edge", "from": "STP-031-601", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-601", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-601", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-601", "verb": "applies", "to": "REQ-031-060"}
+  - {"op": "add_edge", "from": "FLW-031-main", "verb": "starts at", "to": "STP-031-001"}
+  - {"op": "add_edge", "from": "FLW-031-a1-resend", "verb": "starts at", "to": "STP-031-101"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "next", "to": "STP-031-202"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "next", "to": "STP-031-203"}
+  - {"op": "add_edge", "from": "FLW-031-a2-role-change", "verb": "starts at", "to": "STP-031-201"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "next", "to": "STP-031-302"}
+  - {"op": "add_edge", "from": "FLW-031-a3-custom-admin-role", "verb": "starts at", "to": "STP-031-301"}
+  - {"op": "add_edge", "from": "FLW-031-a4-provider-role-permissions", "verb": "starts at", "to": "STP-031-401"}
+  - {"op": "add_edge", "from": "STP-031-501", "verb": "next", "to": "STP-031-502"}
+  - {"op": "add_edge", "from": "FLW-031-a5-custom-provider-role", "verb": "starts at", "to": "STP-031-501"}
+  - {"op": "add_edge", "from": "FLW-031-a6-clone-provider-role", "verb": "starts at", "to": "STP-031-601"}
+  - {"op": "add_edge", "from": "REQ-031-001", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-001", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-001", "verb": "applies to", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "REQ-031-002", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-002", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-002", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-003", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-003", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-004", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-manager"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-clinical-staff"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-billing-staff"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "add_edge", "from": "REQ-031-006", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-007", "verb": "applies to", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "REQ-031-007", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-008", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-009", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-009", "verb": "applies to", "to": "ENT-admin-user-account.status"}
+  - {"op": "add_edge", "from": "REQ-031-010", "verb": "applies to", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "REQ-031-010", "verb": "applies to", "to": "EVT-admin-role-changed"}
+  - {"op": "add_edge", "from": "REQ-031-010", "verb": "applies to", "to": "EVT-admin-password-reset-sent"}
+  - {"op": "add_edge", "from": "REQ-031-010", "verb": "applies to", "to": "EVT-admin-repeated-access-denial"}
+  - {"op": "add_edge", "from": "REQ-031-011", "verb": "applies to", "to": "ENT-admin-user-account.role_effective_from"}
+  - {"op": "add_edge", "from": "REQ-031-012", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-013", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-014", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-015", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-016", "verb": "applies to", "to": "ENT-admin-user-account.mfa_enabled"}
+  - {"op": "add_edge", "from": "REQ-031-017", "verb": "applies to", "to": "ENT-admin-user-account.password_hash"}
+  - {"op": "add_edge", "from": "REQ-031-018", "verb": "applies to", "to": "ENT-admin-user-account.password_hash"}
+  - {"op": "add_edge", "from": "REQ-031-018", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-020", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-020", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-021", "verb": "applies to", "to": "ENT-admin-user-account.status"}
+  - {"op": "add_edge", "from": "REQ-031-022", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-031-022", "verb": "applies to", "to": "ENT-admin-user-account.name"}
+  - {"op": "add_edge", "from": "REQ-031-023", "verb": "applies to", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "REQ-031-023", "verb": "applies to", "to": "EVT-admin-role-changed"}
+  - {"op": "add_edge", "from": "REQ-031-023", "verb": "applies to", "to": "EVT-admin-password-reset-sent"}
+  - {"op": "add_edge", "from": "REQ-031-025", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-026", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-027", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-027", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-028", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-028", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-028", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-029", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-030", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "add_edge", "from": "REQ-031-030", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-032", "verb": "applies to", "to": "EVT-admin-role-permissions-changed"}
+  - {"op": "add_edge", "from": "REQ-031-032", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.first_name"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.last_name"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.phone_number"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies to", "to": "ENT-admin-user-account.personal_message"}
+  - {"op": "add_edge", "from": "REQ-031-034", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-034", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-031-035", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-035", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-031-035", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-036", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-036", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-036", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-037", "verb": "applies to", "to": "ENT-admin-user-account.invitation_expires_at"}
+  - {"op": "add_edge", "from": "REQ-031-037", "verb": "applies to", "to": "ENT-admin-user-account.invitation_token"}
+  - {"op": "add_edge", "from": "REQ-031-038", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-038", "verb": "applies to", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "REQ-031-039", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-040", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-040", "verb": "applies to", "to": "ENT-admin-user-account.invitation_token"}
+  - {"op": "add_edge", "from": "REQ-031-041", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies to", "to": "ENT-admin-user-account.invitation_token"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies to", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "REQ-031-043", "verb": "applies to", "to": "EVT-admin-invitation-delivery-failed"}
+  - {"op": "add_edge", "from": "REQ-031-043", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-043", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies to", "to": "ENT-admin-user-account.first_name"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies to", "to": "ENT-admin-user-account.last_name"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies to", "to": "ENT-admin-user-account.personal_message"}
+  - {"op": "add_edge", "from": "REQ-031-045", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-045", "verb": "applies to", "to": "ENT-admin-user-account.password_hash"}
+  - {"op": "add_edge", "from": "REQ-031-046", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-046", "verb": "applies to", "to": "ENT-admin-user-account.terms_accepted_at"}
+  - {"op": "add_edge", "from": "REQ-031-047", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-047", "verb": "applies to", "to": "ENT-admin-user-account.invitation_token"}
+  - {"op": "add_edge", "from": "REQ-031-048", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-048", "verb": "applies to", "to": "ENT-admin-user-account.phone_number"}
+  - {"op": "add_edge", "from": "REQ-031-048", "verb": "applies to", "to": "ENT-admin-user-account.mfa_enabled"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies to", "to": "EVT-admin-account-created"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies to", "to": "ACT-admin-invitee"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-050", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-051", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-051", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-052", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-052", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-053", "verb": "applies to", "to": "ENT-admin-user-account.status"}
+  - {"op": "add_edge", "from": "REQ-031-053", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-054", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-054", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-055", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-056", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-057", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-057", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-057", "verb": "applies to", "to": "ENT-role-permission-definition.role_name"}
+  - {"op": "add_edge", "from": "REQ-031-057", "verb": "applies to", "to": "ENT-role-permission-definition.description"}
+  - {"op": "add_edge", "from": "REQ-031-058", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-058", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-058", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-059", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-059", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-059", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-059", "verb": "applies to", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "add_edge", "from": "REQ-031-059", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-060", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-060", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-060", "verb": "applies to", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "add_edge", "from": "REQ-031-061", "verb": "applies to", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "REQ-031-061", "verb": "applies to", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "add_edge", "from": "REQ-031-061", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "add_edge", "from": "REQ-031-062", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-062", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "add_edge", "from": "REQ-031-062", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-063", "verb": "applies to", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "add_edge", "from": "REQ-031-063", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "add_edge", "from": "REQ-031-064", "verb": "applies to", "to": "ACT-provider-clinical-staff"}
+  - {"op": "add_edge", "from": "REQ-031-064", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-065", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-066", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-067", "verb": "applies to", "to": "ENT-permission.is_super_admin_only"}
+  - {"op": "add_edge", "from": "REQ-031-067", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-068", "verb": "applies to", "to": "ACT-provider-owner"}
+  - {"op": "add_edge", "from": "REQ-031-068", "verb": "applies to", "to": "ACT-provider-manager"}
+  - {"op": "add_edge", "from": "REQ-031-068", "verb": "applies to", "to": "ACT-provider-clinical-staff"}
+  - {"op": "add_edge", "from": "REQ-031-068", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-069", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-070", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-070", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-071", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-071", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-072", "verb": "applies to", "to": "ENT-permission.module_code"}
+  - {"op": "add_edge", "from": "REQ-031-072", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-073", "verb": "applies to", "to": "ENT-permission.is_sensitive"}
+  - {"op": "add_edge", "from": "REQ-031-073", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-073", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-074", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-074", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-075", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-075", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-076", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-076", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-077", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-077", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-077", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-078", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-079", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-079", "verb": "applies to", "to": "ENT-role-permission-definition.last_synced_at"}
+  - {"op": "add_edge", "from": "REQ-031-080", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-080", "verb": "applies to", "to": "ENT-role-permission-definition.user_count"}
+  - {"op": "add_edge", "from": "REQ-031-081", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-081", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "ENT-admin-user-account.role_effective_from"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-083", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-083", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-084", "verb": "applies to", "to": "EVT-admin-role-changed"}
+  - {"op": "add_edge", "from": "REQ-031-085", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-085", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-085", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-086", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-086", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-086", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-087", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-088", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-089", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-090", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-090", "verb": "applies to", "to": "EVT-admin-repeated-access-denial"}
+  - {"op": "add_edge", "from": "REQ-031-091", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-092", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-093", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-093", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "REQ-031-093", "verb": "applies to", "to": "EVT-admin-password-reset-sent"}
+  - {"op": "add_edge", "from": "REQ-031-093", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-094", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "REQ-031-094", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-095", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-095", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "REQ-031-096", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "REQ-031-097", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-098", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-098", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-099", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-101", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-101", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-102", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-102", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-103", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-103", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-104", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-104", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-105", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-105", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-106", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-106", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-107", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-107", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-108", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-108", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-109", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-109", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-110", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-110", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-111", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-111", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-112", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-112", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-113", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-113", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-114", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-114", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-115", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-115", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-116", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-116", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-117", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-117", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-118", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-118", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-119", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-119", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-120", "verb": "applies to", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "REQ-031-120", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "SCR-031-04", "verb": "shows", "to": "ENT-role-permission-definition.user_count", "attrs": {"provenance": "system calculated", "label": "User Count"}}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-022-115"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-022-117"}
+  - {"op": "add_edge", "from": "REQ-031-121", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-121", "verb": "applies to", "to": "SCR-031-02"}
+  - {"op": "add_edge", "from": "REQ-031-121", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-121", "verb": "applies to", "to": "ENT-admin-user-account.phone_number"}
+  - {"op": "add_edge", "from": "REQ-031-122", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-122", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-123", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-123", "verb": "applies to", "to": "SCR-031-03"}
