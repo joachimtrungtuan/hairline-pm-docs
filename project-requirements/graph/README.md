@@ -9,7 +9,10 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/common.py`: loads and validates `schema.yaml`, and opens the DB with foreign keys enforced.
 - `scripts/init_db.py`: creates an empty `graph.db`.
 - `scripts/test_init_db.py`: tests for the schema loader and the database rules.
+- `scripts/migrate_schema_v5.py`: moves a version 4 `graph.db` to schema version 5 (see "Schema version 5" below).
+- `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
+- `checklists/`: the review and migration checklists every repeated task runs from (`checklists/README.md` lists them, their versions and how a brief must cite them).
 
 ## Database rules
 
@@ -29,28 +32,25 @@ The database enforces these rules itself, so a script with a bug cannot break th
 - When a field is deleted, its `enum_values` rows are deleted with it.
 - The database rejects duplicate edges `(from_id, verb, to_id)`, duplicate field names on the same entity, and duplicate enum values on the same field.
 
+- Dashboard totals that no PRD Key Entity owns live on an Entity marked as an aggregate view (not stored), one Field per total with `calculated_by` set. Approved 2026-11-09; see `checklists/migrate-fr.md`.
+
 ## Setup
 
-Run these from this folder. System pip is blocked by PEP 668, so use the local virtual environment:
-
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
+Run these from this folder with the Apple system interpreter, `/usr/bin/python3`. The scripts need only the standard library plus PyYAML, which that interpreter already ships (6.0.3 on macOS 26). Since 2026-11-09 this is the documented route: the workspace's command hook blocks any command that names a `.venv` path, so the earlier local virtual environment is no longer used. If a machine's system python lacks PyYAML, create a venv elsewhere (outside this tree) and substitute its interpreter in the commands below.
 
 ## Create the database
 
 ```bash
-.venv/bin/python scripts/init_db.py                # creates graph.db here
-.venv/bin/python scripts/init_db.py path/to/x.db   # or at another path
-.venv/bin/python scripts/init_db.py --force        # replaces graph.db after copying it to backups/graph-YYYYMMDD-HHMMSS.db
+/usr/bin/python3 scripts/init_db.py                # creates graph.db here
+/usr/bin/python3 scripts/init_db.py path/to/x.db   # or at another path
+/usr/bin/python3 scripts/init_db.py --force        # replaces graph.db after copying it to backups/graph-YYYYMMDD-HHMMSS.db
 ```
 
 Without `--force`, the script will not overwrite an existing database. `--force` replaces the database with an empty one, so all graph data is lost unless you restore the backup.
 
 ## Write and query
 
-`scripts/write.py` is the only way to change the graph. It applies one change-set file (JSON for `.json`, YAML otherwise) in a single transaction. A change-set has `reason`, `by`, an optional `source_id` (a Source node), and a list of `operations`: `add_node`, `update_node`, `retire_node`, `add_field`, `update_field`, `add_enum_value`, `retire_enum_value`, `add_edge`, `remove_edge` and `add_source`. The keys of each operation are listed at the top of the script. When `add_enum_value` has no `sort_order`, the value goes after the field's current values (highest `sort_order` plus one, or 0 for the first). Every operation is checked against `schema.yaml` first; if any check fails, nothing is written and each problem is printed with its operation index, such as `operations[3] (add_edge): ...`. Each applied change-set adds one `changes` row per attribute changed, all under one generated `changeset_id`, and raises `version` by one on every existing node it touched. Exit codes: 0 applied, 1 change-set invalid, 2 database error.
+`scripts/write.py` is the only way to change the graph. It applies one change-set file (JSON for `.json`, YAML otherwise) in a single transaction. A change-set has `reason`, `by`, an optional `source_id` (a Source node), and a list of `operations`: `add_node`, `update_node`, `retire_node`, `add_field`, `update_field`, `add_enum_value`, `retire_enum_value`, `add_edge`, `remove_edge`, `add_source` and `merge_node`. The keys of each operation are listed at the top of the script. When `add_enum_value` has no `sort_order`, the value goes after the field's current values (highest `sort_order` plus one, or 0 for the first). Every operation is checked against `schema.yaml` first; if any check fails, nothing is written and each problem is printed with its operation index, such as `operations[3] (add_edge): ...`. Each applied change-set adds one `changes` row per attribute changed, all under one generated `changeset_id`, and raises `version` by one on every existing node it touched. Exit codes: 0 applied, 1 change-set invalid, 2 database error.
 
 ```yaml
 # changes/add-quote-expiry.yaml
@@ -63,49 +63,83 @@ operations:
 ```
 
 ```bash
-.venv/bin/python scripts/write.py changes/add-quote-expiry.yaml
+/usr/bin/python3 scripts/write.py changes/add-quote-expiry.yaml
 ```
 
-`scripts/query.py` only reads. It prints a plain table, or JSON with `--json`, and takes `--db PATH`. Subcommands: `impact <node-id> [--depth N]` (everything within N hops through any edge, default 2), `lifecycle <timeline>`, `cites <node-id>`, `fr <FR-id>`, `history <node-id>`, `at <node-id> <ISO-timestamp>` (attributes at that time; a timestamp without an offset is read as UTC) and `changeset <changeset-id>`.
+`merge_node` (keys `survivor`, `loser`) folds a duplicate Rule into the one that stays. A Rule has one text, so repeats become edges, not nodes. Both nodes must be active, of one type, and of a type whose schema allows the `aliases` attribute (today only Rule). Every edge of the loser, in either direction, moves to the survivor; an edge the survivor already has is dropped rather than duplicated, and a `calculated by` edge moves together with its `fields.calculated_by` column. The loser's id, then the loser's own aliases, are appended to the survivor's `aliases` (comma-separated, no repeats), so old PRD citations of the loser still resolve. The loser is then retired. The merge is part of its change-set's single transaction, and each step is a `changes` row.
+
+```yaml
+reason: REQ-004-031 repeats REQ-004-012 under a second screen
+by: joachim
+operations:
+  - {op: merge_node, survivor: REQ-004-012, loser: REQ-004-031}
+```
+
+`scripts/query.py` only reads. It prints a plain table, or JSON with `--json`, and takes `--db PATH`. Subcommands: `impact <node-id> [--depth N]` (everything within N hops through any edge, default 2), `lifecycle <timeline>`, `cites <node-id>`, `fr <FR-id>`, `history <node-id>`, `at <node-id> <ISO-timestamp>` (attributes at that time; a timestamp without an offset is read as UTC), `changeset <changeset-id>` and `duplicates [--text "<statement>"]`.
+
+`duplicates --text "<statement>"` lists the active Rules whose statement equals (`exact`, score 1.0) or is near (`similar`, with its score) the candidate statement. Run it before adding any Rule; no rows means no duplicate. Without `--text` it lists every duplicate pair of active Rules, with both owners and statements. It uses the same matching as lint L12.
 
 ```bash
-.venv/bin/python scripts/query.py impact SCR-004-01 --depth 2
+/usr/bin/python3 scripts/query.py impact SCR-004-01 --depth 2
 ```
 
-Tests: `.venv/bin/python scripts/test_write_query.py`.
+Tests: `/usr/bin/python3 scripts/test_write_query.py`.
 
 ## Lint, export and render
 
 These three scripts only read the database. Each takes `--db PATH` to use a DB other than `graph.db`.
 
-`scripts/lint.py` checks every active node against the guardrails (rules L01 to L11, listed at the top of the script). It prints one row per finding, or `--json`, and exits 1 if there is any finding, 0 if the graph is clean, 2 on an error. Each finding ID is the rule code plus its subject, such as `L03:SCR-004-01`, so counts can be compared between runs. `--fr FR-004` limits the check to nodes that FR owns.
+`scripts/lint.py` checks every active node against the guardrails (rules L01 to L13, listed at the top of the script). It prints one row per finding, or `--json`, and exits 1 if there is any finding, 0 if the graph is clean, 2 on an error. Each finding ID is the rule code plus its subject, such as `L03:SCR-004-01`, so counts can be compared between runs. `--fr FR-004` limits the check to nodes that FR owns.
 
 ```bash
-.venv/bin/python scripts/lint.py --fr FR-004
+/usr/bin/python3 scripts/lint.py --fr FR-004
 ```
+
+L12 flags duplicate Rule statements, one finding per Rule listing its partners. Statements are first normalised: lowercased, punctuation replaced by a space, whitespace collapsed, and the words system, must, shall, the, a and an removed. Equal normalised statements are reported as `same text`. Others are reported as `similar` when difflib's character ratio of the two normalised statements is at least 0.8 (pairs whose word-level ratio is below 0.5 are skipped first, for speed). At 0.8 the 1079 REQ lines of the frozen PRDs give 34 pairs, 4 of them exact. A similar pair can be two different rules worded alike, so a person decides: merge it with `merge_node`, or keep both. L13 flags a Rule with no `applies at` edge at all. L02 also covers that case, and additionally fires when every `applies at` edge ends at a retired Stage.
 
 `scripts/export.py` writes `graph.json` for the viewer: active nodes, fields, enum values, edges and sources, each list sorted so the file diffs cleanly. `--include-retired` adds retired nodes. History is summarised in a top-level `changes` array, one entry per change-set newest first (`id`, `at`, `changed_by`, `reason`, `source_id`, the sorted `nodes_added` and `nodes_updated` ids, `edges_added`, `edges_removed` and `rows`), which the viewer's Changes tab lists; individual change rows stay in `graph.db`.
 
 ```bash
-.venv/bin/python scripts/export.py                 # writes graph.json here
+/usr/bin/python3 scripts/export.py                 # writes graph.json here
 ```
 
 `scripts/render.py` renders the graph-owned sections of one FR PRD as markdown: Scope, Actors, Workflows, Screen Specifications, Business Rules, Data, Events, Settings, Dependencies, Sources and Change Log. Rules owned by another FR appear only as a `[REQ-NNN-NNN] title` citation. The output is derived, so hand edits are lost on the next render.
 
 ```bash
-.venv/bin/python scripts/render.py FR-004 --out /tmp/fr-004.md   # stdout without --out
+/usr/bin/python3 scripts/render.py FR-004 --out /tmp/fr-004.md   # stdout without --out
 ```
 
-Tests: `.venv/bin/python scripts/test_lint_export_render.py`.
+Tests: `/usr/bin/python3 scripts/test_lint_export_render.py`.
+
+## Headless review wrapper
+
+`scripts/headless_review.sh` runs one checklist-driven review of a frozen FR PRD through a headless OpenCode model with restricted permissions (no shell, no network, writes only `report.md` and `status.json` in the output folder). The controller pre-computes the graph query, so the model never executes anything; the PRD, the checklist and the query result are symlinked into `<output-dir>/in`. Exit code 0 means the report was written, 124 a timeout, anything else an OpenCode failure; `status.json` is always written. It runs the scripts with `/usr/bin/python3`.
+
+```bash
+scripts/headless_review.sh <model> <FR-id> <checklist-path> <output-dir> [timeout-seconds]
+scripts/headless_review.sh opencode-go/deepseek-v4.1-flash FR-025 local-docs/project-requirements/graph/checklists/completeness-check.md /tmp/oc-fr025 900
+```
+
+The first paired runs (2026-11-09, `plans/reports/tester-261109-headless-trial.md`) found DeepSeek the only working model, with 87 % agreement against a Sonnet run on FR-025; FR-008 timed out at 900 s and was re-run with Sonnet.
 
 ## Change-set files and replay
 
 Files under `changesets/` are kept so a change-set can be reviewed before and after it is applied. They are a record, not a rebuild script: each one was validated against the schema version in force when it was written, so a later schema change (for example a new required attribute) can make an older file fail on a fresh database. Recovery is from `backups/`, and history is the `changes` table in `graph.db`. Do not edit an applied change-set file to make it replay.
 
-## Run the tests
+## Schema version 5
+
+Version 5 adds the edge verb `references` (pairs `[FR, Rule]`: an FR that repeats a Rule owned by another FR cites it instead of copying it) and the optional Rule attribute `aliases`. `aliases` is already in `schema.yaml` because it needs no DB change. The verb and the version bump are not applied yet: `init_db.py` writes the verb list into a CHECK on `edges.verb`, so the edges table must be rebuilt, and `write.py` refuses a DB whose version differs from `schema.yaml`. To move to version 5, when no one else is writing to `graph.db`, set `version: 5` and add the `references` verb in `schema.yaml`, then run:
 
 ```bash
-.venv/bin/python scripts/test_init_db.py
+/usr/bin/python3 scripts/migrate_schema_v5.py      # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+## Run the tests
+
+From this folder:
+
+```bash
+/usr/bin/python3 -m unittest discover -s scripts -p "test_*.py" -q
 ```
 
 The tests use temporary databases. They never touch `graph.db`.

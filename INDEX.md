@@ -99,6 +99,8 @@ local-docs/
 │   ├── system-technical-spec.md  Architecture, APIs, deploy               ⚠️ ~2070 lines
 │   ├── system-data-schema.md     97 tables, relationships                 ⚠️ ~2027 lines
 │   ├── functional-requirements/  frNNN-slug/prd.md  (38 FRs; many ⚠️ >1000 lines)
+│   ├── graph/                    Requirements graph: graph.db is the requirements author; README.md
+│   │                             documents scripts; changesets/ for every change; checklists/ review checklists
 │   ├── templates/                Canonical FR, Change Request, and Spec Kit templates
 │   ├── transcriptions/           Client requirements, verbatim
 │   ├── sources/                  Later stakeholder evidence, meeting extractions, and source register
