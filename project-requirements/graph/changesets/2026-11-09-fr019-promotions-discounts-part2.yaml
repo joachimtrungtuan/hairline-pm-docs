@@ -1,0 +1,216 @@
+# FR-019 Promotions and Discounts: PRD migrated into the graph (part 2 of 2).
+# Source: archived/prd-baseline-2026-11-08/fr019-promotions-discounts/prd.md, read section by section. Change Requests were not read (D14).
+# Rules keep REQ-019-001..019 verbatim; prose rules get REQ-019-020 and up. Statements are copied from the PRD line numbers named in each rationale.
+# Part 2 holds the 11 screens, belongs to, uses and shows edges. It needs part 1 applied first (rules, entities and fields).
+# Markers: "# shared edge" = edge to a shared Stage or Actor node. No node owned by another FR is created, so no "# stub" or "# may-collide" operation appears.
+reason: "Migrate the frozen FR-019 PRD into the graph (part 2 of 2): promotion rules, entities, fields, enum values, settings, events, screens and their edges"
+by: docs-manager
+operations:
+  # --- Screens (Screen Specifications, Screens 1 to 11)
+  - {"op": "add_node", "id": "SCR-019-01", "type": "Screen", "title": "Promotion Program Hub", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 1. Master catalog of every promotion program with type-aware filters and row actions. Search and filter controls are co-owned with FR-022. Controls (search box, filters, result count, Pause, Resume, Archive, View Detail, View Adoptions, View Applications) are UI controls, not fields; the Filter fields on scope, provider participation, date range, usage and ROI act on the program fields shown here."}}
+  - {"op": "add_node", "id": "SCR-019-02", "type": "Screen", "title": "Promotion Detail (Admin)", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 2. Type-aware create and edit form for a program across its lifecycle; the form hides sections that do not apply to the program type."}}
+  - {"op": "add_node", "id": "SCR-019-03", "type": "Screen", "title": "Provider Adoption Manager", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 3. Per-program view of every targeted provider's adoption status with admin overrides (Re-invite, Force-Revoke, Mark Exempt; Mark Exempt is undefined in the PRD)."}}
+  - {"op": "add_node", "id": "SCR-019-04", "type": "Screen", "title": "Provider Promotion Portfolio", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 4. Per-provider drill-down of adopted admin programs and self-created programs with a KPI header strip. Deliberate scope expansion beyond the client transcription (PRD lines 400-402)."}}
+  - {"op": "add_node", "id": "SCR-019-05", "type": "Screen", "title": "Hairline-Funded and Direct-Issued Codes Manager", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 5. Manager for codes Hairline funds and issues directly. Bulk Generate, Bulk Revoke and Export are UI actions; Bulk Revoke needs a mandatory reason."}}
+  - {"op": "add_node", "id": "SCR-019-06", "type": "Screen", "title": "Promotion Analytics and Applications (Admin)", "owner_fr": "FR-019", "attrs": {"platform": "admin", "description": "Screen 6. Overview tab of KPI cards and Applications tab (redemption log) with Reverse and Refund on Completed rows. Drilling from a KPI card filters the Applications tab."}}
+  - {"op": "add_node", "id": "SCR-019-07", "type": "Screen", "title": "Admin Campaigns (Provider)", "owner_fr": "FR-019", "attrs": {"platform": "provider", "description": "Screen 7. Provider inbox of admin campaigns with Pending, Active and Past tabs; Accept, Decline and Revoke Adoption are UI actions."}}
+  - {"op": "add_node", "id": "SCR-019-08", "type": "Screen", "title": "My Promotions (Provider)", "owner_fr": "FR-019", "attrs": {"platform": "provider", "description": "Screen 8. List of every provider self-created promotion with Edit, Pause, Resume, Archive and View Applications row actions."}}
+  - {"op": "add_node", "id": "SCR-019-09", "type": "Screen", "title": "Promotion Detail (Provider)", "owner_fr": "FR-019", "attrs": {"platform": "provider", "description": "Screen 9. Create and edit form for a provider self-created promotion, reached standalone (REUSABLE) or inline from FR-004 quote creation (AD_HOC_QUOTE_BOUND). The Save as reusable toggle is a control that sets scope."}}
+  - {"op": "add_node", "id": "SCR-019-10", "type": "Screen", "title": "Promotion Analytics and Applications (Provider)", "owner_fr": "FR-019", "attrs": {"platform": "provider", "description": "Screen 10. Provider-scoped mirror of Screen 6 with an Overview tab and an Applications tab; no remove, replace or reverse action is offered."}}
+  - {"op": "add_node", "id": "SCR-019-11", "type": "Screen", "title": "Apply Discount Before Acceptance (Patient)", "owner_fr": "FR-019", "attrs": {"platform": "patient", "description": "Screen 11. Validate and apply one discount code on one named subquote before acceptance (FR-005 Screen 2, Alternative Flow A8). The code input is not offered after acceptance."}}
+  # --- Edges: Screen belongs to Stage; Actor uses Screen
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-01"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-02"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-03"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-04"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-05"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-019-06"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-019-07"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-019-08"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "belongs to", "to": "STG-main-02-quote"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-019-09"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-019-10"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "belongs to", "to": "STG-main-03-acceptance"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-019-11"}  # shared edge
+  # --- Edges: Screen shows Field (screens own no fields; UI controls are not fields)
+  # --- SCR-019-01 Promotion Program Hub
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "retrieved", "label": "Code / Program Name"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Code / Program Name"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.program_type", "attrs": {"provenance": "retrieved", "label": "Program Type"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.owner", "attrs": {"provenance": "retrieved", "label": "Owner"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.funding_model", "attrs": {"provenance": "retrieved", "label": "Funding Model"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.targeting", "attrs": {"provenance": "retrieved", "label": "Participating Providers"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.lifecycle_state", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.usage_count", "attrs": {"provenance": "system calculated", "label": "Usage"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.total_usage_limit", "attrs": {"provenance": "retrieved", "label": "Usage"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.roi_tier", "attrs": {"provenance": "retrieved", "label": "ROI Tier"}}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "shows", "to": "ENT-promotion-program.updated_at", "attrs": {"provenance": "retrieved", "label": "Last Updated"}}
+  # --- SCR-019-02 Promotion Detail (Admin)
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.program_type", "attrs": {"provenance": "user input", "label": "Program Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "user input", "label": "Program Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.description", "attrs": {"provenance": "user input", "label": "Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.discount_type", "attrs": {"provenance": "user input", "label": "Discount Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.value", "attrs": {"provenance": "user input", "label": "Value", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.currency", "attrs": {"provenance": "user input", "label": "Value currency", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.applies_to", "attrs": {"provenance": "user input", "label": "Applies To", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "user input", "label": "Code(s)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.application_mode", "attrs": {"provenance": "user input", "label": "Application Mode", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "user input", "label": "Start Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "user input", "label": "End Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.total_usage_limit", "attrs": {"provenance": "user input", "label": "Total Usage Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.per_user_usage_limit", "attrs": {"provenance": "user input", "label": "Per-User Usage Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.lifecycle_state", "attrs": {"provenance": "user input", "label": "Lifecycle State", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.funding_model", "attrs": {"provenance": "system calculated", "label": "Funding Model", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.hairline_share_percent", "attrs": {"provenance": "user input", "label": "Hairline Share %", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.targeting", "attrs": {"provenance": "user input", "label": "Target Providers", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.approval_routing", "attrs": {"provenance": "user input", "label": "Approval Routing", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.auto_decline_window_days", "attrs": {"provenance": "user input", "label": "Auto-Decline Window", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-program.issuance_channel", "attrs": {"provenance": "user input", "label": "Issuance Channel", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-promotion-code.recipient_binding", "attrs": {"provenance": "user input", "label": "Recipient Binding", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.action", "attrs": {"provenance": "retrieved", "label": "Audit Trail: Action"}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.actor_id", "attrs": {"provenance": "retrieved", "label": "Audit Trail: Actor"}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.timestamp", "attrs": {"provenance": "retrieved", "label": "Audit Trail: Timestamp"}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.reason", "attrs": {"provenance": "retrieved", "label": "Audit Trail: Reason"}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.before", "attrs": {"provenance": "retrieved", "label": "Audit Trail: Old value"}}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "shows", "to": "ENT-audit-entry.after", "attrs": {"provenance": "retrieved", "label": "Audit Trail: New value"}}
+  # --- SCR-019-03 Provider Adoption Manager
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Program Header"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "retrieved", "label": "Program Header"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "retrieved", "label": "Program Header"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-program.value", "attrs": {"provenance": "retrieved", "label": "Program Header"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-program.funding_model", "attrs": {"provenance": "retrieved", "label": "Program Header"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-provider.country", "attrs": {"provenance": "retrieved", "label": "Provider region"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-adoption.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-adoption.decided_at", "attrs": {"provenance": "retrieved", "label": "Decided At"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-adoption.decided_by", "attrs": {"provenance": "retrieved", "label": "Decided By"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-adoption.comment", "attrs": {"provenance": "retrieved", "label": "Comment"}}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-promotion-adoption.redemption_count", "attrs": {"provenance": "system calculated", "label": "Redemptions"}}
+  # --- SCR-019-04 Provider Promotion Portfolio
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Header"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.country", "attrs": {"provenance": "retrieved", "label": "Provider region"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.email", "attrs": {"provenance": "retrieved", "label": "Provider contact"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.phone", "attrs": {"provenance": "retrieved", "label": "Provider contact"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.adoption_rate", "attrs": {"provenance": "system calculated", "label": "Adoption Rate"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.self_created_active_count", "attrs": {"provenance": "system calculated", "label": "Self-Created Active Count"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Total Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_discount_issued", "attrs": {"provenance": "system calculated", "label": "Total Discount Issued"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Program Name"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.program_type", "attrs": {"provenance": "retrieved", "label": "Record Type"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.funding_model", "attrs": {"provenance": "retrieved", "label": "Funding Model"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.lifecycle_state", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-adoption.redemption_count", "attrs": {"provenance": "system calculated", "label": "Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-application.hairline_portion", "attrs": {"provenance": "system calculated", "label": "Revenue Impact"}}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-application.provider_portion", "attrs": {"provenance": "system calculated", "label": "Revenue Impact"}}
+  # --- SCR-019-05 Hairline-Funded and Direct-Issued Codes Manager
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Program Selector"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-program.issuance_channel", "attrs": {"provenance": "retrieved", "label": "Issuance Channel"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "retrieved", "label": "Code"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-code.recipient_binding", "attrs": {"provenance": "retrieved", "label": "Recipient Binding"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-code.issued_at", "attrs": {"provenance": "retrieved", "label": "Issued At"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-code.issued_by", "attrs": {"provenance": "retrieved", "label": "Issued By"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-code.status", "attrs": {"provenance": "retrieved", "label": "Redemption Status"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Redeemed By"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-application.completed_at", "attrs": {"provenance": "retrieved", "label": "Redeemed At"}}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "shows", "to": "ENT-promotion-application.discount_value", "attrs": {"provenance": "retrieved", "label": "Discount Issued"}}
+  # --- SCR-019-06 Promotion Analytics and Applications (Admin)
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.active_programs_count", "attrs": {"provenance": "system calculated", "label": "Active Programs"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Total Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_discount_value_issued", "attrs": {"provenance": "system calculated", "label": "Total Discount Value Issued"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.hairline_portion_total", "attrs": {"provenance": "system calculated", "label": "Total Discount Value Issued"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.provider_portion_total", "attrs": {"provenance": "system calculated", "label": "Total Discount Value Issued"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.redemption_funnel", "attrs": {"provenance": "system calculated", "label": "Redemption Funnel"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.roi_by_program_type", "attrs": {"provenance": "system calculated", "label": "ROI by Program Type"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.top_programs_by_redemptions", "attrs": {"provenance": "system calculated", "label": "Top 10 Programs by Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.top_programs_by_discount_value", "attrs": {"provenance": "system calculated", "label": "Top 10 Programs by Discount Value"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.id", "attrs": {"provenance": "retrieved", "label": "Redemption ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "retrieved", "label": "Code"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Program"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-program.program_type", "attrs": {"provenance": "retrieved", "label": "Program"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.state", "attrs": {"provenance": "retrieved", "label": "State"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.quote_id", "attrs": {"provenance": "retrieved", "label": "Quote / Subquote / Acceptance / Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.quote_version", "attrs": {"provenance": "retrieved", "label": "Quote / Subquote / Acceptance / Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.quote_option_date_price_id", "attrs": {"provenance": "retrieved", "label": "Quote / Subquote / Acceptance / Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.acceptance_event_id", "attrs": {"provenance": "retrieved", "label": "Quote / Subquote / Acceptance / Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.booking_id", "attrs": {"provenance": "retrieved", "label": "Quote / Subquote / Acceptance / Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.source", "attrs": {"provenance": "retrieved", "label": "Source"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.discount_value", "attrs": {"provenance": "retrieved", "label": "Discount Value"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.hairline_portion", "attrs": {"provenance": "system calculated", "label": "Funding Split"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.provider_portion", "attrs": {"provenance": "system calculated", "label": "Funding Split"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.applied_at", "attrs": {"provenance": "retrieved", "label": "Applied At"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.completed_at", "attrs": {"provenance": "retrieved", "label": "Completed At"}}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-application.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  # --- SCR-019-07 Admin Campaigns (Provider)
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Program Name"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.description", "attrs": {"provenance": "retrieved", "label": "Description"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.discount_type", "attrs": {"provenance": "retrieved", "label": "Discount Type / Value"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.value", "attrs": {"provenance": "retrieved", "label": "Discount Type / Value"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-adoption.financial_impact_preview", "attrs": {"provenance": "system calculated", "label": "Financial Impact Preview"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-adoption.status", "attrs": {"provenance": "retrieved", "label": "Tab (Pending, Active, Past)"}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-adoption.comment", "attrs": {"provenance": "user input", "label": "Decision comment", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-07", "verb": "shows", "to": "ENT-promotion-adoption.decided_at", "attrs": {"provenance": "retrieved", "label": "Decision Timestamp"}}
+  # --- SCR-019-08 My Promotions (Provider)
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Promotion Name"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "retrieved", "label": "Code"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.discount_type", "attrs": {"provenance": "retrieved", "label": "Type / Value"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.value", "attrs": {"provenance": "retrieved", "label": "Type / Value"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.applies_to", "attrs": {"provenance": "retrieved", "label": "Applies To"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "retrieved", "label": "Active Window"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.lifecycle_state", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.redemption_count", "attrs": {"provenance": "system calculated", "label": "Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-08", "verb": "shows", "to": "ENT-promotion-program.savings_issued", "attrs": {"provenance": "system calculated", "label": "Savings Issued"}}
+  # --- SCR-019-09 Promotion Detail (Provider)
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "user input", "label": "Promotion Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.description", "attrs": {"provenance": "user input", "label": "Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.discount_type", "attrs": {"provenance": "user input", "label": "Discount Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.value", "attrs": {"provenance": "user input", "label": "Value", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.applies_to", "attrs": {"provenance": "user input", "label": "Applies To", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "user input", "label": "Code (optional)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.application_mode", "attrs": {"provenance": "default", "label": "Application Mode", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.start_at", "attrs": {"provenance": "user input", "label": "Start Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.end_at", "attrs": {"provenance": "user input", "label": "End Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.total_usage_limit", "attrs": {"provenance": "user input", "label": "Total Usage Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.per_user_usage_limit", "attrs": {"provenance": "user input", "label": "Per-User Usage Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.funding_model", "attrs": {"provenance": "default", "label": "Funding Model (fixed Provider Only)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-019-09", "verb": "shows", "to": "ENT-promotion-program.scope", "attrs": {"provenance": "user input", "label": "Save as reusable", "editable": true}}
+  # --- SCR-019-10 Promotion Analytics and Applications (Provider)
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Redemptions"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.savings_issued", "attrs": {"provenance": "system calculated", "label": "Savings Issued"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.conversion_lift", "attrs": {"provenance": "system calculated", "label": "Conversion Lift vs baseline"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.roi_estimate", "attrs": {"provenance": "system calculated", "label": "ROI Estimate"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.adopted_vs_self_created_split", "attrs": {"provenance": "system calculated", "label": "Adopted-Admin vs Self-Created split"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.top_programs_by_redemptions", "attrs": {"provenance": "system calculated", "label": "Top performing programs"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.id", "attrs": {"provenance": "retrieved", "label": "Redemption ID"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-code.code", "attrs": {"provenance": "retrieved", "label": "Code / Program"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-program.name", "attrs": {"provenance": "retrieved", "label": "Code / Program"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.state", "attrs": {"provenance": "retrieved", "label": "State"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.quote_id", "attrs": {"provenance": "retrieved", "label": "Quote / Case ID"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-treatment-record.id", "attrs": {"provenance": "inherited from another FR", "label": "Quote / Case ID"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.discount_value", "attrs": {"provenance": "retrieved", "label": "Discount Value"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.applied_at", "attrs": {"provenance": "retrieved", "label": "Applied At"}}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-application.completed_at", "attrs": {"provenance": "retrieved", "label": "Completed At"}}
+  # --- SCR-019-11 Apply Discount Before Acceptance (Patient)
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "shows", "to": "ENT-acceptance-event.promotion_code", "attrs": {"provenance": "user input", "label": "Code input", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "retrieved", "label": "Price breakdown: offered price"}}
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "shows", "to": "ENT-acceptance-event.discounted_price", "attrs": {"provenance": "system calculated", "label": "Price breakdown: discounted total"}}
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "shows", "to": "ENT-subquote.price_after_promotion", "attrs": {"provenance": "system calculated", "label": "Price breakdown: discount line"}}
+  - {"op": "add_edge", "from": "SCR-019-11", "verb": "shows", "to": "ENT-promotion-program.applies_to", "attrs": {"provenance": "retrieved", "label": "Discount Scope label"}}

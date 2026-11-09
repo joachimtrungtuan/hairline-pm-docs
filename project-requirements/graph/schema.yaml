@@ -62,7 +62,7 @@ node_types:
       required: {}
       optional: {description: text}
   Rule:
-    id_pattern: '^REQ-\d{3}-\d{3}$'
+    id_pattern: '^REQ-\d{3}[A-Z]?-\d{3}$'
     owner_fr: required
     attrs:
       required: {statement: text}
@@ -81,7 +81,7 @@ node_types:
       required: {}
       optional: {description: text, default: text, unit: text}
   Screen:
-    id_pattern: '^SCR-\d{3}-\d{2,}$'
+    id_pattern: '^SCR-\d{3}[A-Z]?-\d{2,}$'
     owner_fr: required
     attrs:
       required: {}

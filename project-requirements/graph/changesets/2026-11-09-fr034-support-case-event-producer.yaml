@@ -1,0 +1,8 @@
+# FR-034 support-case events: single producer stage. User decision 2026-11-09 morning: the owning PRD (FR-034) wins,
+# the three events are emitted from STG-patient-03-active; the STG-provider-03-active edges added as stubs by FR-030 are removed.
+by: "controller (Claude), user decision 2026-11-09 morning"
+reason: "Resolve L04 on three support-case events: remove the FR-030 provider-stage producer edges (user decision 2026-11-09)"
+operations:
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-assigned"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-admin-reply"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-escalated"}

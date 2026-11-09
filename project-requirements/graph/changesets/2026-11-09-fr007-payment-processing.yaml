@@ -1,0 +1,611 @@
+# FR-007 Payment Processing: PRD migrated into the graph.
+# Source: archived/prd-baseline-2026-11-08/fr007-payment-processing/prd.md only. Rule statements are copied from the PRD.
+# Operations marked '# stub' create a node or field owned by another FR; the controller converts a collision into an update.
+# Operations marked '# shared edge' touch a shared Stage or Actor node.
+reason: "Migrate the frozen FR-007 PRD into the graph: payment, payout and commission entities and fields, 86 rules (REQ-007-001 to 022 verbatim, 023 and up from prose), events, settings, screens and their field edges."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "SET-supported-payment-methods", "type": "Setting", "title": "Supported payment methods and currencies", "owner_fr": "FR-029", "attrs": {"description": "Payment methods and currencies enabled or disabled by admin: \"Supported payment methods and currencies (enable/disable) - managed via FR-029\". Stub created during FR-007 migration."}}  # stub
+  - {"op": "add_node", "id": "SET-payout-execution-window", "type": "Setting", "title": "Payout execution timing window", "owner_fr": "FR-017", "attrs": {"description": "\"Payout execution timing windows (e.g., business days)\": configurable with restrictions. Owner FR-017 is provisional; the PRD does not name an owner.", "unit": "business days"}}  # stub
+  - {"op": "add_node", "id": "SET-payment-reminder-timing", "type": "Setting", "title": "Payment reminder timing", "owner_fr": "FR-007", "attrs": {"description": "\"Payment reminder timing templates (e.g., 3 days before due date)\": configurable with restrictions. Owner is provisional; the PRD does not name an owner or the restrictions.", "default": "3 days before due date and on due date"}}
+  - {"op": "add_node", "id": "ENT-payment", "type": "Entity", "title": "Payment", "owner_fr": "FR-007", "attrs": {"description": "A payment or refund transaction recorded against a booking (deposit, installment, full payment, final payment or refund)."}}
+  - {"op": "add_node", "id": "ENT-payout", "type": "Entity", "title": "Payout", "owner_fr": "FR-007", "attrs": {"description": "The provider payout for a completed booking: gross amount, commission deducted and net amount. Execution is described in FR-017."}}
+  - {"op": "add_node", "id": "ENT-commission", "type": "Entity", "title": "Commission", "owner_fr": "FR-007", "attrs": {"description": "The platform commission for one booking, taken as a snapshot at booking confirmation (FR-029) and deducted at payout."}}
+  - {"op": "add_node", "id": "ENT-treatment-record", "type": "Entity", "title": "Treatment record", "owner_fr": "FR-010", "attrs": {"description": "The treatment execution record: completion date and the clinician recorded for the completed procedure. Stub created during FR-007 migration; only the fields FR-007 Screen 4 shows."}}  # stub
+  - {"op": "add_node", "id": "REQ-007-001", "type": "Rule", "title": "Patients pay the accepted subquote's booking: deposit, first installment or full payment, then final amount", "owner_fr": "FR-007", "attrs": {"statement": "System MUST allow patients to pay deposit, eligible first installment per FR-007B, or the existing full-payment alternative to confirm the same accepted subquote's booking, and final amount by due date."}}
+  - {"op": "add_node", "id": "REQ-007-002", "type": "Rule", "title": "Card and bank transfer supported", "owner_fr": "FR-007", "attrs": {"statement": "System MUST support card and bank transfer methods for payments"}}
+  - {"op": "add_node", "id": "REQ-007-003", "type": "Rule", "title": "Multiple currencies supported with accurate totals", "owner_fr": "FR-007", "attrs": {"statement": "System MUST support multiple currencies (at minimum USD, EUR, GBP, TRY) and display accurate totals"}}
+  - {"op": "add_node", "id": "REQ-007-004", "type": "Rule", "title": "Receipts and invoices for successful payments and refunds", "owner_fr": "FR-007", "attrs": {"statement": "System MUST generate and deliver receipts/invoices for successful payments and refunds"}}
+  - {"op": "add_node", "id": "REQ-007-005", "type": "Rule", "title": "Booking confirmed only on a successful initial charge; callbacks idempotent", "owner_fr": "FR-007", "attrs": {"statement": "System MUST confirm the existing accepted-selection booking only on a successful initial charge (deposit, eligible first installment, or full payment), mark it fully paid when its balance is settled, and process duplicate callbacks idempotently.", "rationale": "Scheduling installments alone is not confirmation. Eligible installment selection is owned by FR-007B and confirms booking only after its first successful charge. A retry or duplicate callback cannot create a second booking or change the accepted selection. Duplicate or late processor callbacks must not create another booking, replace the accepted choice, or bypass FR-006's confirmation rules; reconcile financial events under the existing payment/booking owners"}}
+  - {"op": "add_node", "id": "REQ-007-006", "type": "Rule", "title": "Complete payment history per booking", "owner_fr": "FR-007", "attrs": {"statement": "System MUST maintain complete payment history per booking, including refunds and payout references"}}
+  - {"op": "add_node", "id": "REQ-007-007", "type": "Rule", "title": "Platform commission computed per transaction and linked to payout", "owner_fr": "FR-007", "attrs": {"statement": "System MUST compute platform commission per transaction and link to provider payout records"}}
+  - {"op": "add_node", "id": "REQ-007-008", "type": "Rule", "title": "No card numbers stored by the platform", "owner_fr": "FR-007", "attrs": {"statement": "System MUST ensure no card numbers are stored by the platform; only the processor handles them"}}
+  - {"op": "add_node", "id": "REQ-007-009", "type": "Rule", "title": "All financial events logged", "owner_fr": "FR-007", "attrs": {"statement": "System MUST log all financial events with actor, timestamp, booking ID, and outcomes", "rationale": "All payment lifecycle events are logged for a tamper-evident audit trail Full audit trail for financial events and administrative actions affecting payouts and refunds"}}
+  - {"op": "add_node", "id": "REQ-007-010", "type": "Rule", "title": "Additional authentication when required", "owner_fr": "FR-007", "attrs": {"statement": "System MUST support additional authentication for payments when required by issuer/regulation"}}
+  - {"op": "add_node", "id": "REQ-007-011", "type": "Rule", "title": "Processor-driven authorization, capture and refund", "owner_fr": "FR-007", "attrs": {"statement": "System MUST support processor-driven payment flows for authorization, capture, and refund"}}
+  - {"op": "add_node", "id": "REQ-007-012", "type": "Rule", "title": "Payout execution with commission deduction and statement generation", "owner_fr": "FR-007", "attrs": {"statement": "System MUST support payout execution with commission deduction and statement generation"}}
+  - {"op": "add_node", "id": "REQ-007-013", "type": "Rule", "title": "Platform is Merchant of Record", "owner_fr": "FR-007", "attrs": {"statement": "Platform is Merchant of Record; platform issues patient invoices, manages refunds and tax implications, and pays out net to providers"}}
+  - {"op": "add_node", "id": "REQ-007-014", "type": "Rule", "title": "Commission on the accepted price after promotion, deducted at payout", "owner_fr": "FR-007", "attrs": {"statement": "Commission is calculated on the accepted price after promotion (the FR-029 booking total) using the commission type (Percentage or Flat Rate) and value from the snapshot taken at booking confirmation, and is deducted at the time of provider payout after treatment completion (admin‑triggered); not pro‑rata across deposit/final", "rationale": "Commission is deducted at time of payout after treatment completion (admin-triggered), consistent with FR-007 Payment Flow V1 read from the commission snapshot taken at booking confirmation (FR-029), never from live configuration"}}
+  - {"op": "add_node", "id": "REQ-007-015", "type": "Rule", "title": "Refunds need admin approval within two business days", "owner_fr": "FR-007", "attrs": {"statement": "Refunds require Admin approval with an SLA to approve/deny within 2 business days; the decision and reason are logged and notifications sent", "rationale": "Admin approval required for all refunds"}}
+  - {"op": "add_node", "id": "REQ-007-016", "type": "Rule", "title": "Accepted snapshot is the commercial base for every payment view", "owner_fr": "FR-007", "attrs": {"statement": "All payment, receipt/invoice, provider/admin financial-detail, and refund views MUST use one FR-006 Booking's immutable accepted subquote snapshot as the commercial base; exclude sibling alternatives/live library prices and prevent component double-counting. The accepted promotion and discounted price are read from the snapshot and never recomputed; no promotion code can be entered, removed, or replaced at checkout or payment.", "rationale": "Payment amounts derive from the accepted subquote's offered price after the accepted promotion, as frozen in the acceptance snapshot, and are never recomputed. Do not price from a parent range, sum alternative packages/date rows, reload library prices, or add informational price components to an already complete offered total. The accepted promotion and discounted price are frozen at acceptance (FR-019). Checkout and payment offer no code entry, removal, replacement, or price-changing revalidation; do not mutate the AcceptanceEvent or reapply current promotion settings to payments."}}
+  - {"op": "add_node", "id": "REQ-007-017", "type": "Rule", "title": "Initial payment guard before processor submission", "owner_fr": "FR-007", "attrs": {"statement": "Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows `Payment Window Expired`, without hold extension or quote reopening. Payment failure MUST NOT extend or restart the hold; only the FR-006 audited admin revive creates a new hold. Later confirmed-booking payments do not acquire a new acceptance hold.", "rationale": "**Initial Payment Guard**: Before calling the payment processor, validate the FR-006 handoff (FR-006 owns these checks): the booking is `Accepted`; the parent inquiry is not `Cancelled`; the parent quote and accepted subquote are still `Accepted`; the provider is still Active (FR-015); parent/subquote versions match the AcceptanceEvent (`acceptedSubquoteVersion = acceptedParentQuoteVersion`); and that event owns the unexpired exclusive appointment hold. Payment cannot select a different package, option/date-price record, appointment, or quote price. This hold guard applies to the first confirming charge, not to later installments/final payments on an already confirmed booking."}}
+  - {"op": "add_node", "id": "REQ-007-018", "type": "Rule", "title": "Amount and currency read from the accepted snapshot", "owner_fr": "FR-007", "attrs": {"statement": "System MUST read the payment amount and the accepted patient currency/exchange-rate from the FR-005 accepted snapshot for initial and subsequent payments, never recomputed; checkout cannot change these values or reselect package/date/appointment/quote price.", "rationale": "Patient payment currency and applicable exchange rates come from the accepted snapshot and remain read-only throughout checkout and later payments Patient locale/system currency or market exchange rate changes after acceptance; payment currency/rates remain the accepted values, not a new checkout selection"}}
+  - {"op": "add_node", "id": "REQ-007-019", "type": "Rule", "title": "Payment history resolves to the AcceptanceEvent and snapshot", "owner_fr": "FR-007", "attrs": {"statement": "Payment history MUST resolve through its booking to the AcceptanceEvent, accepted parent/subquote IDs, equal aggregate versions, selected option/date-price provenance, and original snapshot; subsequent authorized admin interventions (FR-006 revive, appointment change, cancellation, and provider-fault transfer) remain separately recorded."}}
+  - {"op": "add_node", "id": "REQ-007-020", "type": "Rule", "title": "First successful initial payment confirms booking and consumes the promotion use", "owner_fr": "FR-007", "attrs": {"statement": "On the first successful initial payment, System MUST confirm the booking, create its appointment record from the hold (FR-006), and, for a provider-selected promotion or patient-entered code, consume the promotion use reserved at acceptance (FR-019 REQ-019-014). An automatic promotion's use is consumed at acceptance and follows FR-019 REQ-019-015.", "rationale": "The appointment record is created only on successful initial payment; before that, only the temporary hold keyed by provider, appointment date/time, and time zone exists (FR-006)."}}
+  - {"op": "add_node", "id": "REQ-007-021", "type": "Rule", "title": "Payment Window Expired applies only to the first payment step", "owner_fr": "FR-007", "attrs": {"statement": "`Payment Window Expired` MUST apply only to the first payment step, as stated in FR-006 (REQ-006-016). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation.", "rationale": "A missed later installment or final payment never causes `Payment Window Expired`, booking cancellation, or inquiry cancellation; it is flagged and notified."}}
+  - {"op": "add_node", "id": "REQ-007-022", "type": "Rule", "title": "Provider fault after acceptance blocks payment and credits or refunds paid money", "owner_fr": "FR-007", "attrs": {"statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it and treat money already paid under the B5 placeholder: credit toward the replacement booking, refund of any unused part, and no patient fee. Detailed mechanics are defined in the payment pass.", "rationale": "Provider fault after acceptance follows FR-006 Alternative Flow B5 (Alternative Flow B4 above); paid money follows its placeholder, with detailed mechanics deferred to the payment pass."}}
+  - {"op": "add_node", "id": "REQ-007-023", "type": "Rule", "title": "Provider sees booking payment status, progress, payouts and statements", "owner_fr": "FR-007", "attrs": {"statement": "View booking payment status (unpaid/deposit paid/final paid/refunded); View patient payment progress (deposit status, installment progress, final payment status); View upcoming and completed payouts with commission deducted (payout execution managed in FR-017); Access payout statements for accounting (generated in FR-017)"}}
+  - {"op": "add_node", "id": "REQ-007-024", "type": "Rule", "title": "Admin monitors payment progress, details and reminders across bookings", "owner_fr": "FR-007", "attrs": {"statement": "View patient payment progress across all bookings (deposit status, installment progress, final payment status) as part of patient management oversight; View payment details with full context from inquiry/quote/booking stages for patient journey tracking; Monitor payment status and send payment reminders to patients; Access payment information when managing patient accounts and resolving disputes", "rationale": "Admin can send payment reminders to patients"}}
+  - {"op": "add_node", "id": "REQ-007-025", "type": "Rule", "title": "Admin reconciliation dashboards and payment/commission report export", "owner_fr": "FR-007", "attrs": {"statement": "View reconciliation dashboards and export payment/commission reports; Monitor financial reconciliation data and payment operations"}}
+  - {"op": "add_node", "id": "REQ-007-026", "type": "Rule", "title": "Patient views receipts, invoices and payment history", "owner_fr": "FR-007", "attrs": {"statement": "View receipts/invoices and payment history"}}
+  - {"op": "add_node", "id": "REQ-007-027", "type": "Rule", "title": "Payment notices in scope: confirmations, reminders, refund and payout notices", "owner_fr": "FR-007", "attrs": {"statement": "Payment confirmations (deposit, final) to patient; Payment reminders for upcoming final payment; Refund confirmations to patient and provider; Payout notifications to provider after execution", "rationale": "sends confirmation to patient and provider Triggers on payment lifecycle events"}}
+  - {"op": "add_node", "id": "REQ-007-028", "type": "Rule", "title": "SMS payment notifications not available in MVP", "owner_fr": "FR-007", "attrs": {"statement": "SMS payment notifications are not available in MVP and will only be enabled in a future phase via S-03/FR-020/FR-030"}}
+  - {"op": "add_node", "id": "REQ-007-029", "type": "Rule", "title": "Entry points to payment and refund", "owner_fr": "FR-007", "attrs": {"statement": "Patient initiates payment in booking confirmation flow (deposit required); Patient initiates final payment from booking details prior to procedure date; Admin processes refunds per cancellation policy (refund amounts per FR-006)"}}
+  - {"op": "add_node", "id": "REQ-007-030", "type": "Rule", "title": "Only authenticated patients can pay and view receipts", "owner_fr": "FR-007", "attrs": {"statement": "Only authenticated patients can pay and view receipts"}}
+  - {"op": "add_node", "id": "REQ-007-031", "type": "Rule", "title": "Patient reviews the accepted summary, payable total, deposit and remaining balance before paying", "owner_fr": "FR-007", "attrs": {"statement": "Patient reviews the accepted subquote summary (selected package/services, date range, appointment/timezone, offered price, accepted promotion and discounted price, locked currency), payable booking total, deposit amount, and remaining balance."}}
+  - {"op": "add_node", "id": "REQ-007-032", "type": "Rule", "title": "Supported payment methods and applicable fees shown at checkout", "owner_fr": "FR-007", "attrs": {"statement": "System displays supported payment methods and any applicable fees/requirements"}}
+  - {"op": "add_node", "id": "REQ-007-033", "type": "Rule", "title": "Checkout breakdown of total, deposit, remaining balance and currency", "owner_fr": "FR-007", "attrs": {"statement": "Show clear breakdown: total, deposit, remaining balance, currency", "rationale": "View the locked accepted currency; see clear totals, fees, and remaining balance"}}
+  - {"op": "add_node", "id": "REQ-007-034", "type": "Rule", "title": "Deposit is a configurable percentage of the booking total collected at booking confirmation", "owner_fr": "FR-007", "attrs": {"statement": "Deposit payment is collected at booking confirmation (admin-configurable percentage, default 20-30% range, configured via FR-029); final payment before or on procedure day", "rationale": "Admin-configurable percentage (default 20-30% range, configured via FR-029) of the booking total (accepted price after promotion, from the acceptance snapshot); within allowed range Default deposit set to 20-30% range (admin-configurable via FR-029) unless provider-specific override exists The FR-029 booking total (accepted price after promotion, from the acceptance snapshot) is the single base for the deposit percentage, instalment amounts, and commission."}}
+  - {"op": "add_node", "id": "REQ-007-035", "type": "Rule", "title": "Full payment always available as an alternative to split payments", "owner_fr": "FR-007", "attrs": {"statement": "Full payment option is always available as an alternative to split payments"}}
+  - {"op": "add_node", "id": "REQ-007-036", "type": "Rule", "title": "Final payment due before or on procedure date; overdue payments flagged and notified", "owner_fr": "FR-007", "attrs": {"statement": "Final payment is due before or on procedure date; overdue payments are flagged and notified", "rationale": "If payment overdue, flag booking and notify admin; an overdue final payment never causes `Payment Window Expired` or booking cancellation (FR-006)"}}
+  - {"op": "add_node", "id": "REQ-007-037", "type": "Rule", "title": "Final payment screen shows due date and countdown to procedure date", "owner_fr": "FR-007", "attrs": {"statement": "Display due date and countdown to procedure date"}}
+  - {"op": "add_node", "id": "REQ-007-038", "type": "Rule", "title": "Final payment reminders three days before and on the due date", "owner_fr": "FR-007", "attrs": {"statement": "Send reminder 3 days before due date and on due date"}}
+  - {"op": "add_node", "id": "REQ-007-039", "type": "Rule", "title": "One invoice record per booking, updated for later payments", "owner_fr": "FR-007", "attrs": {"statement": "Receipts and invoice/payment documents are generated for every successful transaction; FR-017 retains one invoice record per booking, updated for later payments rather than duplicating it per option/charge.", "rationale": "generates receipt and invoice from that booking's recorded terms"}}
+  - {"op": "add_node", "id": "REQ-007-040", "type": "Rule", "title": "Provider payout only after treatment completion and admin-triggered execution", "owner_fr": "FR-007", "attrs": {"statement": "Provider payout occurs only after treatment completion and admin-triggered execution", "rationale": "After treatment completion, provider payout becomes eligible (payout execution handled in FR-017: Admin Billing & Financial Management) Admin marks treatment completion; provider cannot self-execute payouts (payout execution in FR-017)"}}
+  - {"op": "add_node", "id": "REQ-007-041", "type": "Rule", "title": "Up to three automatic retries with backoff for transient failures", "owner_fr": "FR-007", "attrs": {"statement": "**Retry Policy (Constitution-aligned)**: For transient processor/network failures, Payment Service MUST perform up to 3 automatic retries using exponential backoff with jitter (and idempotency) before marking a payment attempt failed; hard declines require explicit patient action to retry.", "rationale": "System classifies failure type (hard decline vs transient error). surface progress and final failure to patient if retries exhaust"}}
+  - {"op": "add_node", "id": "REQ-007-042", "type": "Rule", "title": "Hard decline shows a clear error; patient retries or picks another method against the same snapshot", "owner_fr": "FR-007", "attrs": {"statement": "For hard declines, System displays clear error and suggested next steps (retry, use different method). Patient retries or selects another method against the same accepted snapshot while the original FR-006 hold remains valid.", "rationale": "Display clear error messaging and retry options on failure Booking remains unconfirmed until successful initial payment; failure/retry does not change the accepted selection."}}
+  - {"op": "add_node", "id": "REQ-007-043", "type": "Rule", "title": "Failed or abandoned authentication leaves payment incomplete; retry only while the original hold is active", "owner_fr": "FR-007", "attrs": {"statement": "Payment remains incomplete until successful authentication; booking not confirmed. Retrying is allowed only while the original FR-006 hold remains active; an authentication challenge does not restart the payment window.", "rationale": "System informs patient of the authentication requirement and guides action If challenge fails or times out, System presents retry and alternative method options Hold expires during an authentication challenge; retry cannot extend/recreate the hold or bypass FR-006 eligibility; only an FR-006 audited admin revive starts a new hold"}}
+  - {"op": "add_node", "id": "REQ-007-044", "type": "Rule", "title": "Expired selection stays blocked; AcceptanceEvent retained; recovery by new inquiry or admin revive", "owner_fr": "FR-007", "attrs": {"statement": "On hold expiry, FR-006 releases the hold, creates no appointment record, and records `Payment Window Expired`; payment against that accepted selection remains blocked. Retain the AcceptanceEvent and snapshot unchanged. Do not reopen the parent quote or make the accepted subquote selectable again; recovery is by cancelling the inquiry and starting a new inquiry, or by the FR-006 audited admin revive.", "rationale": "`Payment Window Expired` blocks further payment against that selection without reopening its parent/subquote; only the FR-006 audited admin revive creates a new hold."}}
+  - {"op": "add_node", "id": "REQ-007-045", "type": "Rule", "title": "Admin revive starts a new hold and re-takes a promotion use", "owner_fr": "FR-007", "attrs": {"statement": "An admin revive does not extend the expired hold. It starts a new hold of the FR-026 slot-hold duration at the revive time and, where the accepted promotion has a usage limit, takes one use again (re-reserved for a provider-selected promotion or patient-entered code, taken again for an automatic promotion; the revive is rejected if the limit has no room); initial payment then runs the Initial Payment Guard against that new hold."}}
+  - {"op": "add_node", "id": "REQ-007-046", "type": "Rule", "title": "Replacement booking takes its amount and currency from the replacement quote's snapshot", "owner_fr": "FR-007", "attrs": {"statement": "The replacement booking takes its payable amount and currency from the replacement quote's acceptance snapshot and follows the main flow."}}
+  - {"op": "add_node", "id": "REQ-007-047", "type": "Rule", "title": "Provider direct contact details hidden until booking confirmed", "owner_fr": "FR-007", "attrs": {"statement": "Do not reveal provider direct contact details until booking confirmed"}}
+  - {"op": "add_node", "id": "REQ-007-048", "type": "Rule", "title": "Checkout gives processing feedback, keeps entered details and blocks payment until fields are valid", "owner_fr": "FR-007", "attrs": {"statement": "Disable payment button until all required fields are valid; Show progress indicator during processing; avoid blocking UI for more than a few seconds without feedback; Preserve entered details if payment attempt fails to allow quick retry"}}
+  - {"op": "add_node", "id": "REQ-007-049", "type": "Rule", "title": "Checkout shows a hold countdown and disables payment after expiry", "owner_fr": "FR-007", "attrs": {"statement": "display countdown and disable payment after expiry"}}
+  - {"op": "add_node", "id": "REQ-007-050", "type": "Rule", "title": "Payment and payout data is read-only for the provider", "owner_fr": "FR-007", "attrs": {"statement": "Provider can see payment progress but cannot modify payment information; All payment data is read-only for provider; All payout data is read-only for provider (payout execution is admin-controlled in FR-017)"}}
+  - {"op": "add_node", "id": "REQ-007-051", "type": "Rule", "title": "Payment status reflects real-time payment progress", "owner_fr": "FR-007", "attrs": {"statement": "Payment status reflects real-time payment progress (deposit, installments, final payment)", "rationale": "Payment status updates in real-time as patient makes payments"}}
+  - {"op": "add_node", "id": "REQ-007-052", "type": "Rule", "title": "Payment views show data from previous stages in chronological order", "owner_fr": "FR-007", "attrs": {"statement": "All sections display data from previous stages (inquiry → quote → booking → payment) in chronological order"}}
+  - {"op": "add_node", "id": "REQ-007-053", "type": "Rule", "title": "Payment details shown without card information", "owner_fr": "FR-007", "attrs": {"statement": "Payment details shown without card information (PCI compliance)"}}
+  - {"op": "add_node", "id": "REQ-007-054", "type": "Rule", "title": "Payout visible only after treatment marked complete by admin", "owner_fr": "FR-007", "attrs": {"statement": "Payout visible only after treatment marked complete by admin"}}
+  - {"op": "add_node", "id": "REQ-007-055", "type": "Rule", "title": "Payout calculated on the total paid amount, not just the deposit", "owner_fr": "FR-007", "attrs": {"statement": "Payout calculation based on total paid amount (not just deposit)"}}
+  - {"op": "add_node", "id": "REQ-007-056", "type": "Rule", "title": "Net payout is gross minus commission", "owner_fr": "FR-007", "attrs": {"statement": "Gross minus commission"}}
+  - {"op": "add_node", "id": "REQ-007-057", "type": "Rule", "title": "Payout history accessible for accounting", "owner_fr": "FR-007", "attrs": {"statement": "History of payouts accessible for accounting"}}
+  - {"op": "add_node", "id": "REQ-007-058", "type": "Rule", "title": "Payout blocked until completion status is resolved by admin", "owner_fr": "FR-007", "attrs": {"statement": "Payout blocked due to missing completion status; admin resolves before execution"}}
+  - {"op": "add_node", "id": "REQ-007-059", "type": "Rule", "title": "Provider payout currency follows existing configuration and the locked conversion contract", "owner_fr": "FR-007", "attrs": {"statement": "provider payout currency follows existing configuration and the locked conversion contract"}}
+  - {"op": "add_node", "id": "REQ-007-060", "type": "Rule", "title": "Admin dashboard lists payment progress for all bookings and providers with filters", "owner_fr": "FR-007", "attrs": {"statement": "Admin can view payment progress for all bookings across all providers; Filtering options: Payment Status, Provider, Date Range, Overdue Payments"}}
+  - {"op": "add_node", "id": "REQ-007-061", "type": "Rule", "title": "Admin payment data is read-only except refund processing and reminders", "owner_fr": "FR-007", "attrs": {"statement": "All payment data is read-only except for refund processing and reminder actions", "rationale": "All payment data in dashboard is read-only"}}
+  - {"op": "add_node", "id": "REQ-007-062", "type": "Rule", "title": "Links to inquiry, snapshot, parent revision and booking preserve the audit trail", "owner_fr": "FR-007", "attrs": {"statement": "Links to the inquiry, accepted subquote snapshot, parent revision, and booking preserve the audit trail; the current editable quote is not the pricing source."}}
+  - {"op": "add_node", "id": "REQ-007-063", "type": "Rule", "title": "Refunds follow the cancellation policy ladder", "owner_fr": "FR-007", "attrs": {"statement": "Refunds follow FR-006 cancellation policy: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund (unless medical emergency with documentation)", "rationale": "Refund amount calculation is based on FR-006 cancellation policy"}}
+  - {"op": "add_node", "id": "REQ-007-064", "type": "Rule", "title": "Refund exceptions need secondary admin approval and documentation", "owner_fr": "FR-007", "attrs": {"statement": "Exceptions to policy (e.g., medical emergency) require secondary admin approval and documentation upload; Refund requested outside policy window; admin records exception with documentation", "rationale": "Refund exceptions (e.g., medical emergency) require documentation and admin approval; refund amounts per FR-006 cancellation policy"}}
+  - {"op": "add_node", "id": "REQ-007-065", "type": "Rule", "title": "Refund goes to the original payment method unless admin selects another", "owner_fr": "FR-007", "attrs": {"statement": "Refund processed to original payment method by default; admin can select alternative method"}}
+  - {"op": "add_node", "id": "REQ-007-066", "type": "Rule", "title": "Refund cannot exceed the total paid amount", "owner_fr": "FR-007", "attrs": {"statement": "Refund amount cannot exceed total paid amount"}}
+  - {"op": "add_node", "id": "REQ-007-067", "type": "Rule", "title": "Refund actions audited with timestamp, actor, reason and approval chain", "owner_fr": "FR-007", "attrs": {"statement": "All refund actions are auditable with timestamp, actor, reason, and approval chain"}}
+  - {"op": "add_node", "id": "REQ-007-068", "type": "Rule", "title": "Refund reason is mandatory, at least 20 characters", "owner_fr": "FR-007", "attrs": {"statement": "Mandatory audit field; min 20 characters"}}
+  - {"op": "add_node", "id": "REQ-007-069", "type": "Rule", "title": "Refund updates booking status and notifies patient and provider", "owner_fr": "FR-007", "attrs": {"statement": "Refund processing updates booking status and notifies patient and provider", "rationale": "Refund processed according to FR-006 cancellation policy; provider payout eligibility updated"}}
+  - {"op": "add_node", "id": "REQ-007-070", "type": "Rule", "title": "Payment PII protected and encrypted at rest and in transit", "owner_fr": "FR-007", "attrs": {"statement": "All payment-related PII is protected per privacy standards and encrypted at rest and in transit"}}
+  - {"op": "add_node", "id": "REQ-007-071", "type": "Rule", "title": "Payment data access by role: patients own, providers payout-related, admins system-wide", "owner_fr": "FR-007", "attrs": {"statement": "Access to payment data follows RBAC: patients see their own transactions; providers see payout-related booking financials; admins see system-wide financials", "rationale": "RBAC enforced across tenants; providers see only payout-related financials for their bookings"}}
+  - {"op": "add_node", "id": "REQ-007-072", "type": "Rule", "title": "PCI-DSS, GDPR and HIPAA-aligned handling; no cross-tenant database sharing", "owner_fr": "FR-007", "attrs": {"statement": "Compliance: PCI-DSS (via processor), GDPR/HIPAA-aligned handling of personal and medical data; no direct database sharing across tenants"}}
+  - {"op": "add_node", "id": "REQ-007-073", "type": "Rule", "title": "Supported payment methods and currencies enabled or disabled in FR-029", "owner_fr": "FR-007", "attrs": {"statement": "Supported payment methods and currencies (enable/disable) - managed via FR-029"}}
+  - {"op": "add_node", "id": "REQ-007-074", "type": "Rule", "title": "Admin editable: refund approvals and reasons within the cancellation policy", "owner_fr": "FR-007", "attrs": {"statement": "Refund approvals and reasons (within FR-006 cancellation policy)"}}
+  - {"op": "add_node", "id": "REQ-007-075", "type": "Rule", "title": "Security controls, financial audit scope and duplicate-charge protections are fixed in code", "owner_fr": "FR-007", "attrs": {"statement": "Fixed in Codebase (Not Editable): Core security controls and encryption standards; Audit logging scope for financial events; Idempotency and duplicate-charge protections", "rationale": "All financial events require idempotent handling to prevent duplicates"}}
+  - {"op": "add_node", "id": "REQ-007-076", "type": "Rule", "title": "Reminder timing and payout execution windows configurable with restrictions", "owner_fr": "FR-007", "attrs": {"statement": "Configurable with Restrictions: Payment reminder timing templates (e.g., 3 days before due date); Payout execution timing windows (e.g., business days)"}}
+  - {"op": "add_node", "id": "REQ-007-077", "type": "Rule", "title": "One booking's payments resolve one accepted subquote; no fan-out into sibling bookings", "owner_fr": "FR-007", "attrs": {"statement": "One booking's payments resolve one accepted subquote and its AcceptanceEvent; payment attempts and callbacks cannot fan out into sibling-option bookings."}}
+  - {"op": "add_node", "id": "REQ-007-078", "type": "Rule", "title": "Confirmed payments, refunds and payouts are immutable; adjustments by corrective entry", "owner_fr": "FR-007", "attrs": {"statement": "Payment records, refunds, and payouts must be immutable once confirmed, with corrective entries for adjustments"}}
+  - {"op": "add_node", "id": "REQ-007-079", "type": "Rule", "title": "Show the complete offered price when component itemization is missing", "owner_fr": "FR-007", "attrs": {"statement": "Accepted pricing lacks optional component itemization; show the complete offered price without inventing treatment/package components"}}
+  - {"op": "add_node", "id": "REQ-007-080", "type": "Rule", "title": "Payment challenge resumes gracefully when the device loses focus", "owner_fr": "FR-007", "attrs": {"statement": "Payment challenge required but device/app loses focus; flow must resume gracefully"}}
+  - {"op": "add_node", "id": "REQ-007-081", "type": "Rule", "title": "Remaining balance is the payable total less successful payments and authorized adjustments", "owner_fr": "FR-007", "attrs": {"statement": "reconciled payable total less recorded successful payments and authorized adjustments"}}
+  - {"op": "add_node", "id": "REQ-007-082", "type": "Rule", "title": "Total paid is the sum of all payments made", "owner_fr": "FR-007", "attrs": {"statement": "Sum of all payments made"}}
+  - {"op": "add_node", "id": "REQ-007-083", "type": "Rule", "title": "Final payment marks the booking fully paid and issues the final receipt", "owner_fr": "FR-007", "attrs": {"statement": "System processes final payment and updates booking to fully paid; issues final receipt/invoice; sends confirmations"}}
+  - {"op": "add_node", "id": "REQ-007-084", "type": "Rule", "title": "Full payment confirms the same booking and marks it fully paid", "owner_fr": "FR-007", "attrs": {"statement": "Patient selects full payment for the same accepted subquote's booking; the Initial Payment Guard still applies. System processes that booking's payable full amount and marks the same booking Confirmed and fully paid."}}
+  - {"op": "add_node", "id": "REQ-007-085", "type": "Rule", "title": "Duplicate submission from rapid taps produces a single charge", "owner_fr": "FR-007", "attrs": {"statement": "Duplicate submission from rapid taps; idempotency ensures single charge", "rationale": "Given a payment failure, When the patient retries with a different method, Then the system prevents duplicate charges and confirms only a single successful payment."}}
+  - {"op": "add_node", "id": "REQ-007-086", "type": "Rule", "title": "Admin refund denial is recorded with reason and the patient is notified", "owner_fr": "FR-007", "attrs": {"statement": "When admin denies refund per policy, Then the system records the decision with reason and notifies the patient"}}
+  - {"op": "add_node", "id": "EVT-initial-payment-confirmed", "type": "Event", "title": "Initial payment confirmed", "owner_fr": "FR-007", "attrs": {"description": "Payment confirmation (deposit) to the patient, and confirmation to the provider, on the first successful initial charge."}}
+  - {"op": "add_node", "id": "EVT-final-payment-confirmed", "type": "Event", "title": "Final payment confirmed", "owner_fr": "FR-007", "attrs": {"description": "Payment confirmation (final) to the patient."}}
+  - {"op": "add_node", "id": "EVT-payment-reminder", "type": "Event", "title": "Payment reminder", "owner_fr": "FR-007", "attrs": {"description": "Payment reminder for the upcoming final payment, sent by the system or by an admin on request."}}
+  - {"op": "add_node", "id": "EVT-payment-overdue", "type": "Event", "title": "Payment overdue", "owner_fr": "FR-007", "attrs": {"description": "An overdue payment is flagged and the admin is notified."}}
+  - {"op": "add_node", "id": "EVT-refund-processed", "type": "Event", "title": "Refund processed", "owner_fr": "FR-007", "attrs": {"description": "Refund confirmation to the patient and the provider."}}
+  - {"op": "add_node", "id": "EVT-payout-executed", "type": "Event", "title": "Payout executed", "owner_fr": "FR-007", "attrs": {"description": "Payout notification to the provider after execution. Payout execution is described in FR-017; the producer stage is recorded as the treatment stage and raised as an ownership question."}}
+  - {"op": "add_field", "id": "ENT-treatment-record.completed_at", "entity_id": "ENT-treatment-record", "name": "completed_at", "data_type": "datetime", "title": "Treatment completion date", "owner_fr": "FR-010", "required": true, "attrs": {"description": "Date the treatment was marked complete (Screen 4: Treatment Completion Date)."}}  # stub
+  - {"op": "add_field", "id": "ENT-treatment-record.clinician_ids", "entity_id": "ENT-treatment-record", "name": "clinician_ids", "data_type": "id[]", "title": "Clinician recorded for the completed procedure", "owner_fr": "FR-010", "required": true, "attrs": {"description": "Actual FR-010 execution record, with the accepted assignment retained as history."}}  # stub
+  - {"op": "add_field", "id": "ENT-booking.payable_total", "entity_id": "ENT-booking", "name": "payable_total", "data_type": "money", "title": "Payable booking total", "owner_fr": "FR-007", "required": true, "attrs": {"description": "Payable booking total under the recorded commercial terms: the accepted discounted price from the acceptance snapshot, never recomputed."}}
+  - {"op": "add_field", "id": "ENT-booking.deposit_payment_method", "entity_id": "ENT-booking", "name": "deposit_payment_method", "data_type": "enum", "title": "Deposit payment method", "owner_fr": "FR-007"}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.deposit_payment_method", "value": "card", "label": "Card", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.deposit_payment_method", "value": "bank_transfer", "label": "Bank transfer", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-booking.deposit_paid_amount", "entity_id": "ENT-booking", "name": "deposit_paid_amount", "data_type": "money", "title": "Deposit paid", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-booking.final_payment_status", "entity_id": "ENT-booking", "name": "final_payment_status", "data_type": "enum", "title": "Final payment status", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_status", "value": "not_due", "label": "Not Due", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_status", "value": "due", "label": "Due", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_status", "value": "paid", "label": "Paid", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_status", "value": "overdue", "label": "Overdue", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-booking.final_payment_amount", "entity_id": "ENT-booking", "name": "final_payment_amount", "data_type": "money", "title": "Final payment amount", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-booking.final_payment_method", "entity_id": "ENT-booking", "name": "final_payment_method", "data_type": "enum", "title": "Final payment method", "owner_fr": "FR-007"}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_method", "value": "card", "label": "Card", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.final_payment_method", "value": "bank_transfer", "label": "Bank transfer", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-booking.final_payment_paid_at", "entity_id": "ENT-booking", "name": "final_payment_paid_at", "data_type": "datetime", "title": "Final payment paid date", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-booking.final_payment_paid_amount", "entity_id": "ENT-booking", "name": "final_payment_paid_amount", "data_type": "money", "title": "Final payment paid", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-booking.installment_progress", "entity_id": "ENT-booking", "name": "installment_progress", "data_type": "json", "title": "Installment progress", "owner_fr": "FR-007B", "attrs": {"description": "Current installment number, total installments, next due date and completion percentage. Shown only if installments are active; owned by FR-007B."}}  # stub
+  - {"op": "add_field", "id": "ENT-booking.cancellation_requested_at", "entity_id": "ENT-booking", "name": "cancellation_requested_at", "data_type": "datetime", "title": "Cancellation requested at", "owner_fr": "FR-006", "attrs": {"description": "Date of the cancellation request (FR-007 Screen 6: Cancellation Date)."}}  # stub
+  - {"op": "add_field", "id": "ENT-payment.id", "entity_id": "ENT-payment", "name": "id", "data_type": "id", "title": "Payment ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payment.booking_id", "entity_id": "ENT-payment", "name": "booking_id", "data_type": "id", "title": "Booking ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payment.payment_type", "entity_id": "ENT-payment", "name": "payment_type", "data_type": "enum", "title": "Payment type", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_type", "value": "deposit", "label": "Deposit", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_type", "value": "installment", "label": "Installment", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_type", "value": "full", "label": "Full payment", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_type", "value": "final", "label": "Final payment", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_type", "value": "refund", "label": "Refund", "sort_order": 4}
+  - {"op": "add_field", "id": "ENT-payment.amount", "entity_id": "ENT-payment", "name": "amount", "data_type": "money", "title": "Amount", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payment.currency", "entity_id": "ENT-payment", "name": "currency", "data_type": "text", "title": "Currency", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payment.payment_method", "entity_id": "ENT-payment", "name": "payment_method", "data_type": "enum", "title": "Payment method", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_method", "value": "card", "label": "Card", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.payment_method", "value": "bank_transfer", "label": "Bank transfer", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-payment.status", "entity_id": "ENT-payment", "name": "status", "data_type": "text", "title": "Payment status", "owner_fr": "FR-007", "required": true, "attrs": {"description": "Status of the payment with dates, amounts, methods and transaction IDs in the history. The PRD does not list the values."}}
+  - {"op": "add_field", "id": "ENT-payment.created_at", "entity_id": "ENT-payment", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payment.paid_at", "entity_id": "ENT-payment", "name": "paid_at", "data_type": "datetime", "title": "Paid at", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payment.failure_class", "entity_id": "ENT-payment", "name": "failure_class", "data_type": "enum", "title": "Failure class", "owner_fr": "FR-007"}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.failure_class", "value": "hard_decline", "label": "Hard decline", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.failure_class", "value": "transient_error", "label": "Transient error", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-payment.transaction_id", "entity_id": "ENT-payment", "name": "transaction_id", "data_type": "text", "title": "Payment transaction ID", "owner_fr": "FR-007", "attrs": {"description": "Payment processor transaction ID."}}
+  - {"op": "add_field", "id": "ENT-payment.receipt_ref", "entity_id": "ENT-payment", "name": "receipt_ref", "data_type": "text", "title": "Payment receipt link", "owner_fr": "FR-007", "attrs": {"description": "Link to the payment receipt/invoice."}}
+  - {"op": "add_field", "id": "ENT-payment.invoice_ref", "entity_id": "ENT-payment", "name": "invoice_ref", "data_type": "text", "title": "Invoice reference", "owner_fr": "FR-007", "attrs": {"description": "FR-017 retains one invoice record per booking."}}
+  - {"op": "add_field", "id": "ENT-payment.billing_details", "entity_id": "ENT-payment", "name": "billing_details", "data_type": "text", "title": "Billing details", "owner_fr": "FR-007", "attrs": {"description": "Name, address, contact. Required for invoicing; required at final payment if changed since deposit."}}
+  - {"op": "add_field", "id": "ENT-payment.days_before_procedure", "entity_id": "ENT-payment", "name": "days_before_procedure", "data_type": "int", "title": "Days before procedure", "owner_fr": "FR-007", "attrs": {"description": "Days until the procedure date at cancellation. Calculated, read-only."}}
+  - {"op": "add_field", "id": "ENT-payment.applied_cancellation_policy", "entity_id": "ENT-payment", "name": "applied_cancellation_policy", "data_type": "text", "title": "Applicable cancellation policy", "owner_fr": "FR-007", "attrs": {"description": "Applicable refund percentage per FR-006, based on timing."}}
+  - {"op": "add_field", "id": "ENT-payment.refund_percentage", "entity_id": "ENT-payment", "name": "refund_percentage", "data_type": "decimal", "title": "Refund percentage", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payment.refund_amount", "entity_id": "ENT-payment", "name": "refund_amount", "data_type": "money", "title": "Calculated refund amount", "owner_fr": "FR-007", "calculated_by": "REQ-007-063", "attrs": {"description": "Cannot exceed the paid amount."}}
+  - {"op": "add_field", "id": "ENT-payment.refund_breakdown", "entity_id": "ENT-payment", "name": "refund_breakdown", "data_type": "text", "title": "Refund breakdown", "owner_fr": "FR-007", "attrs": {"description": "Explanation of the calculation, for transparency."}}
+  - {"op": "add_field", "id": "ENT-payment.refund_reason", "entity_id": "ENT-payment", "name": "refund_reason", "data_type": "text", "title": "Refund reason", "owner_fr": "FR-007", "attrs": {"description": "Mandatory audit field; min 20 characters."}}
+  - {"op": "add_field", "id": "ENT-payment.refund_destination", "entity_id": "ENT-payment", "name": "refund_destination", "data_type": "text", "title": "Refund destination", "owner_fr": "FR-007", "attrs": {"description": "Defaults to the original payment method; admin can select an alternative."}}
+  - {"op": "add_field", "id": "ENT-payment.refund_method", "entity_id": "ENT-payment", "name": "refund_method", "data_type": "text", "title": "Refund method", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payment.secondary_approval", "entity_id": "ENT-payment", "name": "secondary_approval", "data_type": "bool", "title": "Secondary admin approval", "owner_fr": "FR-007", "attrs": {"description": "Required for exceptions to policy."}}
+  - {"op": "add_field", "id": "ENT-payment.exception_documentation", "entity_id": "ENT-payment", "name": "exception_documentation", "data_type": "file", "title": "Exception documentation", "owner_fr": "FR-007", "attrs": {"description": "Medical emergency documentation or other exception proof; required for an exception to policy."}}
+  - {"op": "add_field", "id": "ENT-payout.id", "entity_id": "ENT-payout", "name": "id", "data_type": "id", "title": "Payout ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payout.booking_id", "entity_id": "ENT-payout", "name": "booking_id", "data_type": "id", "title": "Booking ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payout.provider_id", "entity_id": "ENT-payout", "name": "provider_id", "data_type": "id", "title": "Provider ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-payout.gross_amount", "entity_id": "ENT-payout", "name": "gross_amount", "data_type": "money", "title": "Gross amount", "owner_fr": "FR-007", "required": true, "calculated_by": "REQ-007-055", "attrs": {"description": "Total paid by the patient."}}
+  - {"op": "add_field", "id": "ENT-payout.commission_amount", "entity_id": "ENT-payout", "name": "commission_amount", "data_type": "money", "title": "Commission amount", "owner_fr": "FR-007", "required": true, "calculated_by": "REQ-007-014"}
+  - {"op": "add_field", "id": "ENT-payout.net_amount", "entity_id": "ENT-payout", "name": "net_amount", "data_type": "money", "title": "Net payout", "owner_fr": "FR-007", "required": true, "calculated_by": "REQ-007-056"}
+  - {"op": "add_field", "id": "ENT-payout.status", "entity_id": "ENT-payout", "name": "status", "data_type": "enum", "title": "Payout status", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-payout.status", "value": "pending", "label": "Pending", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payout.status", "value": "eligible", "label": "Eligible", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-payout.status", "value": "processing", "label": "Processing", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-payout.status", "value": "executed", "label": "Executed", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-payout.status", "value": "on_hold", "label": "On Hold", "sort_order": 4}
+  - {"op": "add_field", "id": "ENT-payout.eligibility_at", "entity_id": "ENT-payout", "name": "eligibility_at", "data_type": "datetime", "title": "Payout eligibility date", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payout.executed_at", "entity_id": "ENT-payout", "name": "executed_at", "data_type": "datetime", "title": "Payout execution date", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payout.payout_method", "entity_id": "ENT-payout", "name": "payout_method", "data_type": "text", "title": "Payout method", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payout.transaction_id", "entity_id": "ENT-payout", "name": "transaction_id", "data_type": "text", "title": "Payout transaction ID", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-payout.statement_ref", "entity_id": "ENT-payout", "name": "statement_ref", "data_type": "text", "title": "Payout statement link", "owner_fr": "FR-007", "attrs": {"description": "Link to the detailed payout invoice (FR-017)."}}
+  - {"op": "add_field", "id": "ENT-payout.invoice_ref", "entity_id": "ENT-payout", "name": "invoice_ref", "data_type": "text", "title": "Payout invoice", "owner_fr": "FR-007", "attrs": {"description": "Payout invoice PDF, shown only if the payout is executed."}}
+  - {"op": "add_field", "id": "ENT-payout.payout_currency", "entity_id": "ENT-payout", "name": "payout_currency", "data_type": "text", "title": "Payout currency", "owner_fr": "FR-007", "attrs": {"description": "Provider's payout currency; provider-configured."}}
+  - {"op": "add_field", "id": "ENT-commission.id", "entity_id": "ENT-commission", "name": "id", "data_type": "id", "title": "Commission ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-commission.booking_id", "entity_id": "ENT-commission", "name": "booking_id", "data_type": "id", "title": "Booking ID", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_field", "id": "ENT-commission.commission_type", "entity_id": "ENT-commission", "name": "commission_type", "data_type": "enum", "title": "Commission type", "owner_fr": "FR-007", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-commission.commission_type", "value": "percentage", "label": "Percentage", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-commission.commission_type", "value": "flat_rate", "label": "Flat Rate", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-commission.rate_value", "entity_id": "ENT-commission", "name": "rate_value", "data_type": "decimal", "title": "Commission value", "owner_fr": "FR-007", "required": true, "attrs": {"description": "Read from the commission snapshot taken at booking confirmation (FR-029), never from live configuration."}}
+  - {"op": "add_field", "id": "ENT-commission.computed_amount", "entity_id": "ENT-commission", "name": "computed_amount", "data_type": "money", "title": "Computed commission amount", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-commission.basis", "entity_id": "ENT-commission", "name": "basis", "data_type": "enum", "title": "Commission basis", "owner_fr": "FR-007"}
+  - {"op": "add_enum_value", "field_id": "ENT-commission.basis", "value": "total", "label": "Total", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-commission.basis", "value": "line", "label": "Line", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-commission.snapshot_taken_at", "entity_id": "ENT-commission", "name": "snapshot_taken_at", "data_type": "datetime", "title": "Snapshot taken at", "owner_fr": "FR-007"}
+  - {"op": "add_field", "id": "ENT-commission.payment_id", "entity_id": "ENT-commission", "name": "payment_id", "data_type": "id", "title": "Payment ID", "owner_fr": "FR-007", "attrs": {"description": "Commission is associated with the payment."}}
+  - {"op": "add_field", "id": "ENT-commission.payout_id", "entity_id": "ENT-commission", "name": "payout_id", "data_type": "id", "title": "Payout ID", "owner_fr": "FR-007", "attrs": {"description": "Commission is linked to the payout."}}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "unpaid", "label": "Unpaid", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "deposit_only", "label": "Deposit Only", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "installments_active", "label": "Installments Active", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "full_paid", "label": "Full Paid", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "overdue", "label": "Overdue", "sort_order": 4}
+  - {"op": "add_node", "id": "SCR-007-01", "type": "Screen", "title": "Patient Checkout (Deposit)", "owner_fr": "FR-007", "attrs": {"platform": "patient", "description": "Screen 1. Allow patient to pay deposit to confirm booking."}}
+  - {"op": "add_node", "id": "SCR-007-02", "type": "Screen", "title": "Patient Final Payment", "owner_fr": "FR-007", "attrs": {"platform": "patient", "description": "Screen 2. Allow patient to complete final payment before or on procedure date."}}
+  - {"op": "add_node", "id": "SCR-007-03", "type": "Screen", "title": "Booking Payment Status and Progress (Provider)", "owner_fr": "FR-007", "attrs": {"platform": "provider", "description": "Screen 3. View complete payment information with full context from inquiry, quote, booking, and payment stages."}}
+  - {"op": "add_node", "id": "SCR-007-04", "type": "Screen", "title": "Provider Payout Overview (Provider)", "owner_fr": "FR-007", "attrs": {"platform": "provider", "description": "Screen 4. View payout status and details for completed treatments with full context from booking and payment stages."}}
+  - {"op": "add_node", "id": "SCR-007-05", "type": "Screen", "title": "Patient Payment Progress Dashboard (Admin)", "owner_fr": "FR-007", "attrs": {"platform": "admin", "description": "Screen 5. Allow admin to monitor patient payment progress across all bookings (list/dashboard view)."}}
+  - {"op": "add_node", "id": "SCR-007-06", "type": "Screen", "title": "Payment Detail View (Admin)", "owner_fr": "FR-007", "attrs": {"platform": "admin", "description": "Screen 5B. View complete payment information with full context from all stages for a specific booking."}}
+  - {"op": "add_node", "id": "SCR-007-07", "type": "Screen", "title": "Refund Processing (Admin)", "owner_fr": "FR-007", "attrs": {"platform": "admin", "description": "Screen 6. Process refunds per cancellation policy with full context from booking and payment stages."}}
+  - {"op": "add_edge", "from": "REQ-007-001", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-002", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-003", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-004", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-005", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-005", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-006", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-007", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-008", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-009", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-010", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-011", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-012", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-012", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-013", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-014", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-014", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-015", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-016", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-017", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-017", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-018", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-019", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-020", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-020", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-021", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-021", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-022", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-022", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-023", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-024", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-025", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-026", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-027", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-027", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-028", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-029", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-030", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-031", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-032", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-033", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-034", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-035", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-036", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-037", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-038", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-039", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-040", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-040", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-041", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-042", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-043", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-044", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-044", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-045", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-045", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-046", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-046", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-047", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-048", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-049", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-050", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-051", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-052", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-053", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-054", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-054", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-055", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-055", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-056", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-056", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-057", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-057", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-058", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-058", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-059", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-059", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-060", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-061", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-062", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-063", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-064", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-065", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-066", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-067", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-068", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-069", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-070", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-071", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-072", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-073", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-074", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-075", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-076", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-076", "verb": "applies at", "to": "STG-main-06-treatment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-077", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-077", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-078", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-079", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-080", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-081", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-082", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-083", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-084", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-084", "verb": "applies at", "to": "STG-main-04-booking"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-085", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-086", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-007-002", "verb": "governed by", "to": "SET-supported-payment-methods"}
+  - {"op": "add_edge", "from": "REQ-007-003", "verb": "governed by", "to": "SET-supported-payment-methods"}
+  - {"op": "add_edge", "from": "REQ-007-007", "verb": "governed by", "to": "SET-commission-rate"}
+  - {"op": "add_edge", "from": "REQ-007-014", "verb": "governed by", "to": "SET-commission-rate"}
+  - {"op": "add_edge", "from": "REQ-007-016", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-017", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-007-017", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-018", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-019", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-020", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-021", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-007-021", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-032", "verb": "governed by", "to": "SET-supported-payment-methods"}
+  - {"op": "add_edge", "from": "REQ-007-034", "verb": "governed by", "to": "SET-deposit-percentage"}
+  - {"op": "add_edge", "from": "REQ-007-034", "verb": "decided by", "to": "SRC-DOC-001-R07"}
+  - {"op": "add_edge", "from": "REQ-007-035", "verb": "decided by", "to": "SRC-DOC-001-R07"}
+  - {"op": "add_edge", "from": "REQ-007-038", "verb": "governed by", "to": "SET-payment-reminder-timing"}
+  - {"op": "add_edge", "from": "REQ-007-038", "verb": "decided by", "to": "SRC-DOC-001-R08"}
+  - {"op": "add_edge", "from": "REQ-007-043", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-007-044", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-007-045", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-007-063", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-007-073", "verb": "governed by", "to": "SET-supported-payment-methods"}
+  - {"op": "add_edge", "from": "REQ-007-074", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-007-076", "verb": "governed by", "to": "SET-payment-reminder-timing"}
+  - {"op": "add_edge", "from": "REQ-007-076", "verb": "governed by", "to": "SET-payout-execution-window"}
+  - {"op": "add_edge", "from": "REQ-007-077", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-005-008", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "REQ-006-048", "verb": "applies at", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "acts in", "to": "STG-main-05-payment"}  # shared edge; also in the FR-007B change-set, drop the duplicate when both are applied
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "acts in", "to": "STG-main-05-payment"}  # shared edge; also in the FR-007B change-set, drop the duplicate when both are applied
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-acceptance-event"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-subquote"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-slot-hold"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-quote"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-patient"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-provider"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-inquiry"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-treatment-record"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-booking"}  # shared edge; also in the FR-007B change-set, drop the duplicate when both are applied
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-booking"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-payment"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-commission"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-promotion-program"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-booking"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-payment"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-commission"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-treatment-record"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "writes", "to": "ENT-payout"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-initial-payment-confirmed"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-final-payment-confirmed"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-payment-reminder"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-payment-overdue"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-refund-processed"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "emits", "to": "EVT-payout-executed"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-007-01"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-007-02"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-007-03"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-007-04"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-007-05"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-007-06"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-007-07"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-subquote.promotion_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applications"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-acceptance-event.promotion_code", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applications"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-booking.deposit_amount", "attrs": {"provenance": "system calculated", "label": "Deposit Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-slot-hold.hold_expires_at", "attrs": {"provenance": "inherited from another FR", "label": "Payment Hold Expires At"}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-payment.payment_method", "attrs": {"provenance": "user input", "label": "Payment Method", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-payment.billing_details", "attrs": {"provenance": "user input", "label": "Billing Details", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-booking.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-subquote.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-booking.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-payment.payment_method", "attrs": {"provenance": "user input", "label": "Payment Method", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-payment.billing_details", "attrs": {"provenance": "user input", "label": "Billing Details", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.id", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.status", "attrs": {"provenance": "retrieved", "label": "Booking Status"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Appointment Date"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-inquiry.reference", "attrs": {"provenance": "retrieved", "label": "Inquiry Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.accepted_parent_quote_id", "attrs": {"provenance": "inherited from another FR", "label": "Parent Quote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.accepted_parent_quote_version", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.accepted_subquote_version", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.quote_option_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.option_date_price_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Timezone"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Timezone"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-slot-hold.hold_expires_at", "attrs": {"provenance": "inherited from another FR", "label": "Payment Hold Expires At"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient Anonymized ID"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-patient.country", "attrs": {"provenance": "retrieved", "label": "Patient Location"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-patient.city", "attrs": {"provenance": "retrieved", "label": "Patient Location"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Treatment Type Requested"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-quote.estimated_grafts", "attrs": {"provenance": "inherited from another FR", "label": "Estimated Graft Count"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-quote.clinician_ids", "attrs": {"provenance": "inherited from another FR", "label": "Clinician Assigned"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-quote-option-item.price", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Price / Package / Service Price Components"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.promotion_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applied"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-acceptance-event.promotion_code", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applied"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Payable Booking Total"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.deposit_percentage", "attrs": {"provenance": "retrieved", "label": "Deposit Percentage"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.deposit_amount", "attrs": {"provenance": "system calculated", "label": "Deposit Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.deposit_status", "attrs": {"provenance": "retrieved", "label": "Deposit Status"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.deposit_paid_at", "attrs": {"provenance": "retrieved", "label": "Deposit Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.deposit_payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method (Deposit)"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.installment_progress", "attrs": {"provenance": "retrieved", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.final_payment_status", "attrs": {"provenance": "retrieved", "label": "Final Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.final_payment_due_at", "attrs": {"provenance": "retrieved", "label": "Final Payment Due Date"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.final_payment_amount", "attrs": {"provenance": "system calculated", "label": "Final Payment Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.final_payment_method", "attrs": {"provenance": "retrieved", "label": "Final Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.final_payment_paid_at", "attrs": {"provenance": "retrieved", "label": "Final Payment Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.paid_amount", "attrs": {"provenance": "system calculated", "label": "Total Paid Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payment.transaction_id", "attrs": {"provenance": "retrieved", "label": "Payment Transaction ID"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payment.receipt_ref", "attrs": {"provenance": "retrieved", "label": "Payment Receipt Link"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.refund_history", "attrs": {"provenance": "retrieved", "label": "Refund History"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout Status"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.gross_amount", "attrs": {"provenance": "system calculated", "label": "Gross Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-commission.commission_type", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-commission.rate_value", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.commission_amount", "attrs": {"provenance": "system calculated", "label": "Commission Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.net_amount", "attrs": {"provenance": "system calculated", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.executed_at", "attrs": {"provenance": "retrieved", "label": "Payout Execution Date"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-payout.statement_ref", "attrs": {"provenance": "retrieved", "label": "Payout Statement Link"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.id", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-treatment-record.completed_at", "attrs": {"provenance": "retrieved", "label": "Treatment Completion Date"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-quote.estimated_grafts", "attrs": {"provenance": "inherited from another FR", "label": "Estimated Graft Count"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-quote.clinician_ids", "attrs": {"provenance": "inherited from another FR", "label": "Clinician Assigned"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Treatment Type Requested"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Payable Booking Total"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.paid_amount", "attrs": {"provenance": "system calculated", "label": "Total Paid Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.gross_amount", "attrs": {"provenance": "system calculated", "label": "Gross Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-commission.commission_type", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-commission.rate_value", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.commission_amount", "attrs": {"provenance": "system calculated", "label": "Commission Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.net_amount", "attrs": {"provenance": "system calculated", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.payout_currency", "attrs": {"provenance": "retrieved", "label": "Payout Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-quote.locked_exchange_rate_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Exchange Rate"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout Status"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.eligibility_at", "attrs": {"provenance": "retrieved", "label": "Payout Eligibility Date"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.executed_at", "attrs": {"provenance": "retrieved", "label": "Payout Execution Date"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.payout_method", "attrs": {"provenance": "retrieved", "label": "Payout Method"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.transaction_id", "attrs": {"provenance": "retrieved", "label": "Payout Transaction ID"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.statement_ref", "attrs": {"provenance": "retrieved", "label": "Payout Statement Link"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-payout.invoice_ref", "attrs": {"provenance": "retrieved", "label": "Payout Invoice"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.accepted_parent_quote_id", "attrs": {"provenance": "inherited from another FR", "label": "Parent Quote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Appointment"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Appointment"}}
+  - {"op": "add_edge", "from": "SCR-007-04", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Appointment"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.id", "attrs": {"provenance": "retrieved", "label": "Booking ID"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.deposit_amount", "attrs": {"provenance": "system calculated", "label": "Deposit Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.deposit_status", "attrs": {"provenance": "retrieved", "label": "Deposit Status"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.deposit_paid_at", "attrs": {"provenance": "retrieved", "label": "Deposit Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.installment_progress", "attrs": {"provenance": "retrieved", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.next_payment_due_at", "attrs": {"provenance": "retrieved", "label": "Next Payment Due Date"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.final_payment_status", "attrs": {"provenance": "retrieved", "label": "Final Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.id", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.status", "attrs": {"provenance": "retrieved", "label": "Booking Status"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Appointment Date"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-inquiry.reference", "attrs": {"provenance": "retrieved", "label": "Inquiry Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.accepted_parent_quote_id", "attrs": {"provenance": "inherited from another FR", "label": "Parent Quote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.accepted_parent_quote_version", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.accepted_subquote_version", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.quote_option_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.option_date_price_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Provenance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Timezone"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Date Range / Timezone"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-slot-hold.hold_expires_at", "attrs": {"provenance": "inherited from another FR", "label": "Payment Hold Expires At"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.email", "attrs": {"provenance": "retrieved", "label": "Patient Email"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Patient Phone"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.address", "attrs": {"provenance": "retrieved", "label": "Patient Address"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.country", "attrs": {"provenance": "retrieved", "label": "Patient Location"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.city", "attrs": {"provenance": "retrieved", "label": "Patient Location"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.age", "attrs": {"provenance": "retrieved", "label": "Patient Age"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-patient.gender", "attrs": {"provenance": "retrieved", "label": "Patient Gender"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Treatment Type Requested"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-quote.estimated_grafts", "attrs": {"provenance": "inherited from another FR", "label": "Estimated Graft Count"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Package / Services"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-quote.clinician_ids", "attrs": {"provenance": "inherited from another FR", "label": "Clinician Assigned"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-quote-option-item.price", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Price / Package / Service Price Components"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.promotion_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applied"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-acceptance-event.promotion_code", "attrs": {"provenance": "inherited from another FR", "label": "Discount Applied"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Payable Booking Total"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.deposit_percentage", "attrs": {"provenance": "retrieved", "label": "Deposit Percentage"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.deposit_amount", "attrs": {"provenance": "system calculated", "label": "Deposit Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.deposit_status", "attrs": {"provenance": "retrieved", "label": "Deposit Status"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.deposit_paid_at", "attrs": {"provenance": "retrieved", "label": "Deposit Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.deposit_payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method (Deposit)"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.installment_progress", "attrs": {"provenance": "retrieved", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.final_payment_status", "attrs": {"provenance": "retrieved", "label": "Final Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.final_payment_due_at", "attrs": {"provenance": "retrieved", "label": "Final Payment Due Date"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.final_payment_amount", "attrs": {"provenance": "system calculated", "label": "Final Payment Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.final_payment_method", "attrs": {"provenance": "retrieved", "label": "Final Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.final_payment_paid_at", "attrs": {"provenance": "retrieved", "label": "Final Payment Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.paid_amount", "attrs": {"provenance": "system calculated", "label": "Total Paid Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payment.transaction_id", "attrs": {"provenance": "retrieved", "label": "Payment Transaction ID"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payment.receipt_ref", "attrs": {"provenance": "retrieved", "label": "Payment Receipt Link"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.refund_history", "attrs": {"provenance": "retrieved", "label": "Refund History"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-provider.phone", "attrs": {"provenance": "retrieved", "label": "Provider Contact"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-provider.address", "attrs": {"provenance": "retrieved", "label": "Provider Contact"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-provider.email", "attrs": {"provenance": "retrieved", "label": "Provider Email"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout Status"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payout.gross_amount", "attrs": {"provenance": "system calculated", "label": "Gross Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-commission.commission_type", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-commission.rate_value", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payout.commission_amount", "attrs": {"provenance": "system calculated", "label": "Commission Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payout.net_amount", "attrs": {"provenance": "system calculated", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-payout.id", "attrs": {"provenance": "retrieved", "label": "Payout Link"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.id", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.status", "attrs": {"provenance": "retrieved", "label": "Booking Status"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Appointment Date"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.accepted_subquote_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.included_and_custom_services", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.date_range", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.appointment_at", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.appointment_timezone", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Selection / Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.cancellation_requested_at", "attrs": {"provenance": "retrieved", "label": "Cancellation Date"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.days_before_procedure", "attrs": {"provenance": "system calculated", "label": "Days Before Procedure"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.cancellation_reason", "attrs": {"provenance": "retrieved", "label": "Cancellation Reason"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-patient.email", "attrs": {"provenance": "retrieved", "label": "Patient Email"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Patient Phone"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-subquote.offered_price", "attrs": {"provenance": "inherited from another FR", "label": "Accepted Subquote Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.payable_total", "attrs": {"provenance": "inherited from another FR", "label": "Payable Booking Total"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-quote.currency_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.paid_amount", "attrs": {"provenance": "system calculated", "label": "Total Paid Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.deposit_paid_amount", "attrs": {"provenance": "retrieved", "label": "Deposit Paid"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.final_payment_paid_amount", "attrs": {"provenance": "retrieved", "label": "Final Payment Paid"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.payment_method", "attrs": {"provenance": "retrieved", "label": "Original Payment Methods", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.applied_cancellation_policy", "attrs": {"provenance": "system calculated", "label": "Cancellation Policy"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_percentage", "attrs": {"provenance": "system calculated", "label": "Refund Percentage"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_amount", "attrs": {"provenance": "system calculated", "label": "Calculated Refund Amount"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_breakdown", "attrs": {"provenance": "system calculated", "label": "Refund Breakdown"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_reason", "attrs": {"provenance": "user input", "label": "Refund Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_destination", "attrs": {"provenance": "user input", "label": "Refund Destination", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_method", "attrs": {"provenance": "system calculated", "label": "Refund Method"}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.secondary_approval", "attrs": {"provenance": "user input", "label": "Approval Required", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.exception_documentation", "attrs": {"provenance": "user input", "label": "Exception Documentation", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.refund_history", "attrs": {"provenance": "retrieved", "label": "Previous Refunds"}}

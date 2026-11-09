@@ -1,0 +1,317 @@
+# FR-011 Aftercare & Recovery Management, part 2 of 2: Screen Specifications (Screens 1 to 19), their stage, actor and field edges.
+# Requires part 1 (fields and entities) to be applied first.
+reason: "Migrate the FR-011 PRD into the graph, part 2: screens and their belongs to, uses and shows edges"
+by: docs-manager
+operations:
+  # --- screens, belongs to, uses, shows
+  - {"op": "add_node", "id": "SCR-011-01", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Dashboard", "attrs": {"platform": "patient", "description": "Patient aftercare home: overall progress, current milestone, days remaining, next and upcoming tasks, last scan and questionnaire, medication adherence, with quick actions to upload a scan, complete a questionnaire, view instructions and contact support."}}
+  - {"op": "add_node", "id": "SCR-011-02", "type": "Screen", "owner_fr": "FR-011", "title": "Scan Upload (V1 Photo Set)", "attrs": {"platform": "patient", "description": "Guided capture and upload of the head scan photo set for a due scan, with real-time quality feedback, retake, upload progress and access to previous scans. True 3D scanning is V2."}}
+  - {"op": "add_node", "id": "SCR-011-03", "type": "Screen", "owner_fr": "FR-011", "title": "Questionnaire Completion", "attrs": {"platform": "patient", "description": "Completion of the milestone questionnaire rendered from the assigned FR-025 Questionnaire Set, with draft save, submit and a warning when responses raise the urgent flag."}}
+  - {"op": "add_node", "id": "SCR-011-04", "type": "Screen", "owner_fr": "FR-011", "title": "Medication Schedule", "attrs": {"platform": "patient", "description": "Today's doses and the provider-prescribed medications with a mark-as-taken action, missed-dose indicator, weekly adherence, missed count and adherence history."}}
+  - {"op": "add_node", "id": "SCR-011-05", "type": "Screen", "owner_fr": "FR-011", "title": "Educational Resources", "attrs": {"platform": "patient", "description": "Milestone educational resources by category (videos, guides, FAQs, help) with view or download, viewed tracking and completion percentage."}}
+  - {"op": "add_node", "id": "SCR-011-06", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Service Purchase", "attrs": {"platform": "patient", "description": "Patient picks post-treatment add-on or standalone service, enters external treatment details where needed, browses purchasable templates with pricing in local currency, picks fixed or subscription and proceeds to payment."}}
+  - {"op": "add_node", "id": "SCR-011-07", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Payment & Checkout", "attrs": {"platform": "patient", "description": "Order summary with subtotal, platform fee, tax and total (and monthly breakdown for subscriptions), payment method choice, billing address and terms acceptance; payment is processed by FR-007."}}
+  - {"op": "add_node", "id": "SCR-011-08", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Cases List", "attrs": {"platform": "provider", "description": "Provider list of assigned aftercare cases with patient, treatment, current milestone, progress, medication alerts and last activity, with search and filters."}}
+  - {"op": "add_node", "id": "SCR-011-09", "type": "Screen", "owner_fr": "FR-011", "title": "Patient Aftercare Details", "attrs": {"platform": "provider", "description": "Provider view of one case with plan, progress, scan history, questionnaire responses, medication adherence history and communication log, plus actions to adjust the plan, request a scan, contact the team and escalate."}}
+  - {"op": "add_node", "id": "SCR-011-10", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Setup (Multi-Step)", "attrs": {"platform": "provider", "description": "Five-step provider wizard: select a template, customize milestones, set up medications, add custom instructions, review and confirm before activation."}}
+  - {"op": "add_node", "id": "SCR-011-11", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Plan Edit", "attrs": {"platform": "provider", "description": "Provider (and admin) edit of an active plan: template, milestones, medications and instructions, with a mandatory change reason, approval status for major changes and change history."}}
+  - {"op": "add_node", "id": "SCR-011-12", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Progress Tracking (Provider)", "attrs": {"platform": "provider", "description": "Provider progress view of an assigned patient: timeline, overdue tasks, scan and questionnaire status, adherence, compliance and a recent activity feed."}}
+  - {"op": "add_node", "id": "SCR-011-13", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Cases List (Admin)", "attrs": {"platform": "admin", "description": "Admin list of every aftercare case across providers with provider, type, milestone, progress, medication alerts and status, with search, filters and actions."}}
+  - {"op": "add_node", "id": "SCR-011-14", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Case Details (Admin)", "attrs": {"platform": "admin", "description": "Four-tab admin case view: overview, progress tracking, communication log and admin actions (edit plan, reassign via Screen 19, escalate, add notes, change history)."}}
+  - {"op": "add_node", "id": "SCR-011-15", "type": "Screen", "owner_fr": "FR-011", "title": "Standalone Aftercare Requests", "attrs": {"platform": "admin", "description": "Admin intake of paid standalone requests: patient and treatment details, documentation, concerns, photos, provider choice by specialization and availability, assign or reject with reason."}}
+  - {"op": "add_node", "id": "SCR-011-16", "type": "Screen", "owner_fr": "FR-011", "title": "Milestone Template Management", "attrs": {"platform": "admin", "description": "Admin template list and editor: milestones, scan and questionnaire schedule per milestone, educational resources, resource files, and pricing configuration per currency (purchase availability, pricing model, default payment method, discounts)."}}
+  - {"op": "add_node", "id": "SCR-011-17", "type": "Screen", "owner_fr": "FR-011", "title": "Provider Performance Dashboard (Backlog)", "attrs": {"platform": "admin", "description": "Backlog (post-MVP analytics): provider list and performance metrics, case drill-down and actions (feedback, reassign, suspend). Its data fields are aggregate metrics with no entity; only the provider name is mapped."}}
+  - {"op": "add_node", "id": "SCR-011-18", "type": "Screen", "owner_fr": "FR-011", "title": "Aftercare Progress Tracking (Admin, Backlog)", "attrs": {"platform": "admin", "description": "Backlog (post-MVP analytics): system-wide progress overview, provider performance grid, status distribution and real-time alerts. Its data fields are aggregate metrics with no entity; only the case status and milestone phase are mapped."}}
+  - {"op": "add_node", "id": "SCR-011-19", "type": "Screen", "owner_fr": "FR-011", "title": "Reassign Aftercare Provider (Admin)", "attrs": {"platform": "admin", "description": "Admin reassigns the aftercare provider or Hairline aftercare team of a case (including a treatment-linked case whose booking stays Aftercare) with mandatory reason and confirmation."}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-01"}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Overall Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "system calculated", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-plan.days_remaining", "attrs": {"provenance": "system calculated", "label": "Days Remaining"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-task.due_at", "attrs": {"provenance": "retrieved", "label": "Next Task / Upcoming Tasks (next 7 days)"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-task.task_type", "attrs": {"provenance": "retrieved", "label": "Upcoming Tasks"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-scan-artifact.uploaded_at", "attrs": {"provenance": "retrieved", "label": "Last Scan Upload"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-scan-artifact.upload_status", "attrs": {"provenance": "retrieved", "label": "Last Scan Upload status"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.responded_at", "attrs": {"provenance": "retrieved", "label": "Last Questionnaire"}}
+  - {"op": "add_edge", "from": "SCR-011-01", "verb": "shows", "to": "ENT-aftercare-plan.medication_adherence", "attrs": {"provenance": "system calculated", "label": "Medication Adherence"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-02"}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "retrieved", "label": "Milestone Name"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-task.due_at", "attrs": {"provenance": "retrieved", "label": "Scan Due Date"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-task.days_overdue", "attrs": {"provenance": "system calculated", "label": "Days Overdue"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-milestone.scan_guidance", "attrs": {"provenance": "retrieved", "label": "Scan Guidance"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-scan-artifact.quality_score", "attrs": {"provenance": "system calculated", "label": "Quality Indicator"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-scan-artifact.media", "attrs": {"provenance": "user input", "label": "Capture Scan"}}
+  - {"op": "add_edge", "from": "SCR-011-02", "verb": "shows", "to": "ENT-aftercare-scan-artifact.upload_status", "attrs": {"provenance": "system calculated", "label": "Upload Status"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-03"}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "retrieved", "label": "Milestone Name"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-milestone.questionnaire_set_id", "attrs": {"provenance": "retrieved", "label": "Questionnaire Set"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-task.due_at", "attrs": {"provenance": "retrieved", "label": "Due Date"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-task.status", "attrs": {"provenance": "retrieved", "label": "Completion Status"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.answers", "attrs": {"provenance": "user input", "label": "Questions"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.urgent_flag", "attrs": {"provenance": "system calculated", "label": "Warning Message"}}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.is_draft", "attrs": {"provenance": "user input", "label": "Save Draft"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-04"}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.name", "attrs": {"provenance": "retrieved", "label": "Medication Name"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.dosage", "attrs": {"provenance": "retrieved", "label": "Dosage"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.frequency", "attrs": {"provenance": "retrieved", "label": "Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.special_instructions", "attrs": {"provenance": "retrieved", "label": "Special Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.start_date", "attrs": {"provenance": "retrieved", "label": "Start Date"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-medication.end_date", "attrs": {"provenance": "retrieved", "label": "End Date"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-dose.scheduled_time", "attrs": {"provenance": "retrieved", "label": "Today's Doses / Dose Time"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-dose.taken_at", "attrs": {"provenance": "user input", "label": "Mark as Taken"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-dose.missed", "attrs": {"provenance": "system calculated", "label": "Missed Dose Indicator"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-plan.weekly_medication_adherence", "attrs": {"provenance": "system calculated", "label": "Weekly Adherence"}}
+  - {"op": "add_edge", "from": "SCR-011-04", "verb": "shows", "to": "ENT-aftercare-plan.missed_doses_count", "attrs": {"provenance": "system calculated", "label": "Missed Doses Count"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-05"}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.category", "attrs": {"provenance": "retrieved", "label": "Resource Category"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.title", "attrs": {"provenance": "retrieved", "label": "Resource Title"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.description", "attrs": {"provenance": "retrieved", "label": "Resource Description"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.resource_type", "attrs": {"provenance": "retrieved", "label": "Resource Type"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.url", "attrs": {"provenance": "retrieved", "label": "Resource URL"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.duration_minutes", "attrs": {"provenance": "retrieved", "label": "Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource.file_size_bytes", "attrs": {"provenance": "retrieved", "label": "File Size"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-resource-view.viewed_at", "attrs": {"provenance": "user input", "label": "Mark as Viewed / Mark All as Viewed"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-milestone.resources_viewed_count", "attrs": {"provenance": "system calculated", "label": "Resources Viewed Count"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-milestone.total_resources", "attrs": {"provenance": "system calculated", "label": "Total Resources"}}
+  - {"op": "add_edge", "from": "SCR-011-05", "verb": "shows", "to": "ENT-aftercare-milestone.resource_completion_percentage", "attrs": {"provenance": "system calculated", "label": "Completion Percentage"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-06"}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.service_type", "attrs": {"provenance": "user input", "label": "Service Type"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Information (post-treatment add-on, auto-populated)"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.treatment_date", "attrs": {"provenance": "user input", "label": "Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.treatment_type", "attrs": {"provenance": "user input", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.treating_clinic", "attrs": {"provenance": "user input", "label": "Treating Clinic"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.documentation", "attrs": {"provenance": "user input", "label": "Upload Treatment Documentation"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template.name", "attrs": {"provenance": "retrieved", "label": "Service Name"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template.service_description", "attrs": {"provenance": "retrieved", "label": "Service Description"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template.duration", "attrs": {"provenance": "retrieved", "label": "Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "retrieved", "label": "Milestones Included"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template.features_included", "attrs": {"provenance": "retrieved", "label": "Features Included"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template-price.fixed_price", "attrs": {"provenance": "retrieved", "label": "Price (Fixed)"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-template-price.monthly_price", "attrs": {"provenance": "retrieved", "label": "Price (Monthly)"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.payment_plan_type", "attrs": {"provenance": "user input", "label": "Payment Method (Fixed or Subscription)"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.total", "attrs": {"provenance": "system calculated", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.currency", "attrs": {"provenance": "system calculated", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.template_id", "attrs": {"provenance": "user input", "label": "Selected Service"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.current_concerns", "attrs": {"provenance": "user input", "label": "Current Concerns"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.photos", "attrs": {"provenance": "user input", "label": "Upload Photos"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-011-07"}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-template.name", "attrs": {"provenance": "carried from previous screen", "label": "Service Name"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-template.duration", "attrs": {"provenance": "carried from previous screen", "label": "Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.payment_plan_type", "attrs": {"provenance": "carried from previous screen", "label": "Payment Method Selected"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.subtotal", "attrs": {"provenance": "carried from previous screen", "label": "Subtotal"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.platform_fee", "attrs": {"provenance": "system calculated", "label": "Platform Fee"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.tax", "attrs": {"provenance": "system calculated", "label": "Tax"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.total", "attrs": {"provenance": "system calculated", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.monthly_amount", "attrs": {"provenance": "carried from previous screen", "label": "Monthly Amount"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.number_of_months", "attrs": {"provenance": "carried from previous screen", "label": "Number of Months"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.total_subscription_amount", "attrs": {"provenance": "system calculated", "label": "Total Subscription Amount"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.payment_instrument", "attrs": {"provenance": "user input", "label": "Payment Method Selection"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.billing_address", "attrs": {"provenance": "user input", "label": "Billing Address (street, city, state, postal code, country)"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.terms_accepted", "attrs": {"provenance": "user input", "label": "Terms & Conditions"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.privacy_accepted", "attrs": {"provenance": "user input", "label": "Privacy Policy"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.payment_status", "attrs": {"provenance": "system calculated", "label": "Payment Processing"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-011-08"}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-patient.email", "attrs": {"provenance": "retrieved", "label": "Patient Name (email)"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Phone Number"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-patient.age", "attrs": {"provenance": "retrieved", "label": "Age"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Problem"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment & Package"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Treatment & Package (package)"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.activated_at", "attrs": {"provenance": "retrieved", "label": "Aftercare Start Date"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.medication_alert_level", "attrs": {"provenance": "system calculated", "label": "Med Alerts"}}
+  - {"op": "add_edge", "from": "SCR-011-08", "verb": "shows", "to": "ENT-aftercare-plan.last_activity_at", "attrs": {"provenance": "system calculated", "label": "Last Activity"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-011-09"}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Details"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.activated_at", "attrs": {"provenance": "retrieved", "label": "Aftercare Start Date"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.duration", "attrs": {"provenance": "retrieved", "label": "Aftercare Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.template_id", "attrs": {"provenance": "retrieved", "label": "Assigned Template"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.custom_instructions", "attrs": {"provenance": "retrieved", "label": "Custom Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Overall Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-task.due_at", "attrs": {"provenance": "retrieved", "label": "Upcoming Tasks"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-scan-artifact.uploaded_at", "attrs": {"provenance": "retrieved", "label": "Scan Upload Date"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-scan-artifact.quality_score", "attrs": {"provenance": "retrieved", "label": "Scan Quality Score"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.answers", "attrs": {"provenance": "retrieved", "label": "Questionnaire Responses"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.responded_at", "attrs": {"provenance": "retrieved", "label": "Response Date"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.questionnaire_set_id", "attrs": {"provenance": "retrieved", "label": "Questionnaire Set"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.medication_adherence", "attrs": {"provenance": "system calculated", "label": "Adherence Percentage"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-dose.scheduled_at", "attrs": {"provenance": "retrieved", "label": "Adherence Period"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-communication-entry.sent_at", "attrs": {"provenance": "retrieved", "label": "Message Date"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-communication-entry.entry_type", "attrs": {"provenance": "retrieved", "label": "Message Type"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-011-10"}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-template.name", "attrs": {"provenance": "retrieved", "label": "Template Name"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-template.description", "attrs": {"provenance": "retrieved", "label": "Template Description"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-template.treatment_type", "attrs": {"provenance": "retrieved", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-template.duration", "attrs": {"provenance": "retrieved", "label": "Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-template.milestone_count", "attrs": {"provenance": "retrieved", "label": "Milestone Count"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "user input", "label": "Milestone Name"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.duration_days", "attrs": {"provenance": "user input", "label": "Milestone Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.scan_frequency", "attrs": {"provenance": "user input", "label": "3D Scan Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.questionnaire_set_id", "attrs": {"provenance": "user input", "label": "Questionnaire Set"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.questionnaire_frequency", "attrs": {"provenance": "user input", "label": "Questionnaire Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.activity_restrictions", "attrs": {"provenance": "user input", "label": "Activity Restrictions"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-milestone.instructions", "attrs": {"provenance": "user input", "label": "Milestone Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-resource.title", "attrs": {"provenance": "retrieved", "label": "Educational Resources"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.custom_instructions", "attrs": {"provenance": "user input", "label": "Custom Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.name", "attrs": {"provenance": "user input", "label": "Medication Name"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.dosage", "attrs": {"provenance": "user input", "label": "Dosage"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.frequency", "attrs": {"provenance": "user input", "label": "Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.start_date", "attrs": {"provenance": "user input", "label": "Start Date"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.end_date", "attrs": {"provenance": "user input", "label": "End Date"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-medication.special_instructions", "attrs": {"provenance": "user input", "label": "Special Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.general_instructions", "attrs": {"provenance": "user input", "label": "General Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.emergency_contact", "attrs": {"provenance": "user input", "label": "Emergency Contact"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.special_considerations", "attrs": {"provenance": "user input", "label": "Special Considerations"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient Information"}}
+  - {"op": "add_edge", "from": "SCR-011-10", "verb": "shows", "to": "ENT-aftercare-plan.provider_id", "attrs": {"provenance": "retrieved", "label": "Provider Information"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-011-11"}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-plan.template_id", "attrs": {"provenance": "retrieved", "label": "Selected Template"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "user input", "label": "Milestone Structure"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-medication.name", "attrs": {"provenance": "user input", "label": "Medication Schedule"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-plan.custom_instructions", "attrs": {"provenance": "user input", "label": "Custom Instructions"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-audit-entry.reason", "attrs": {"provenance": "user input", "label": "Change Reason"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-audit-entry.changed_at", "attrs": {"provenance": "system calculated", "label": "Change Timestamp"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-audit-entry.changed_by", "attrs": {"provenance": "system calculated", "label": "Changed By"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-audit-entry.approval_status", "attrs": {"provenance": "system calculated", "label": "Approval Status"}}
+  - {"op": "add_edge", "from": "SCR-011-11", "verb": "shows", "to": "ENT-aftercare-audit-entry.plan_id", "attrs": {"provenance": "retrieved", "label": "Change History"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-011-12"}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Overall Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.days_remaining", "attrs": {"provenance": "system calculated", "label": "Days Remaining"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-task.due_at", "attrs": {"provenance": "retrieved", "label": "Next Upcoming Tasks / Scan Due Date / Questionnaire Due Date"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-milestone.status", "attrs": {"provenance": "retrieved", "label": "Milestone Timeline (completed, current, upcoming)"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-task.status", "attrs": {"provenance": "retrieved", "label": "Overdue Tasks Indicator / 3D Scan Status / Questionnaire Status"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.medication_adherence", "attrs": {"provenance": "system calculated", "label": "Medication Adherence"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.missed_doses_count", "attrs": {"provenance": "system calculated", "label": "Missed Doses"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.activity_compliance", "attrs": {"provenance": "system calculated", "label": "Activity Compliance"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-scan-artifact.uploaded_at", "attrs": {"provenance": "retrieved", "label": "Recent Scan Uploads"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.responded_at", "attrs": {"provenance": "retrieved", "label": "Questionnaire Completions"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-dose.taken_at", "attrs": {"provenance": "retrieved", "label": "Medication Updates"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-communication-entry.sent_at", "attrs": {"provenance": "retrieved", "label": "Communication Interactions"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-13"}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.id", "attrs": {"provenance": "retrieved", "label": "Case ID"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Phone Number"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-patient.age", "attrs": {"provenance": "retrieved", "label": "Age"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Problem"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-quote.treatment_id", "attrs": {"provenance": "inherited from another FR", "label": "Treatment & Package"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-subquote.package_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Treatment & Package (package)"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.aftercare_type", "attrs": {"provenance": "retrieved", "label": "Aftercare Type"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.activated_at", "attrs": {"provenance": "retrieved", "label": "Start Date"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.medication_alert_level", "attrs": {"provenance": "system calculated", "label": "Med Alerts"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Contact Information"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.treatment_date", "attrs": {"provenance": "retrieved", "label": "Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.treatment_type", "attrs": {"provenance": "retrieved", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-provider.phone", "attrs": {"provenance": "retrieved", "label": "Provider Contact"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.template_id", "attrs": {"provenance": "retrieved", "label": "Template Name"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Current Milestone"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.overall_progress", "attrs": {"provenance": "system calculated", "label": "Progress Percentage"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-milestone.status", "attrs": {"provenance": "retrieved", "label": "Milestone Progress"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-scan-artifact.uploaded_at", "attrs": {"provenance": "retrieved", "label": "Scan Upload Date"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-scan-artifact.quality_score", "attrs": {"provenance": "retrieved", "label": "Scan Quality Score"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.answers", "attrs": {"provenance": "retrieved", "label": "Questionnaire Responses"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.responded_at", "attrs": {"provenance": "retrieved", "label": "Response Date"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.questionnaire_set_id", "attrs": {"provenance": "retrieved", "label": "Questionnaire Set"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.medication_adherence", "attrs": {"provenance": "system calculated", "label": "Adherence Percentage"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.activity_compliance", "attrs": {"provenance": "retrieved", "label": "Activity Compliance"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-communication-entry.sender_role", "attrs": {"provenance": "retrieved", "label": "Patient, Provider and Aftercare Team Messages"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-communication-entry.sent_at", "attrs": {"provenance": "retrieved", "label": "Message Date"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-communication-entry.entry_type", "attrs": {"provenance": "retrieved", "label": "Escalation History / System Notifications / Message Type"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.admin_notes", "attrs": {"provenance": "user input", "label": "Add Notes"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-audit-entry.changed_at", "attrs": {"provenance": "retrieved", "label": "Change Date"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-audit-entry.changed_by", "attrs": {"provenance": "retrieved", "label": "Changed By"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-audit-entry.reason", "attrs": {"provenance": "retrieved", "label": "Change Reason"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-15"}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.submitted_at", "attrs": {"provenance": "retrieved", "label": "Submission Date"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.patient_id", "attrs": {"provenance": "retrieved", "label": "Request ID / Full Patient Information"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-patient.email", "attrs": {"provenance": "retrieved", "label": "Patient Email"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Patient Phone"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.treatment_date", "attrs": {"provenance": "retrieved", "label": "Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.treatment_type", "attrs": {"provenance": "retrieved", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.treating_clinic", "attrs": {"provenance": "retrieved", "label": "Treatment Clinic"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.requested_duration", "attrs": {"provenance": "retrieved", "label": "Requested Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.payment_plan_type", "attrs": {"provenance": "retrieved", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.request_status", "attrs": {"provenance": "retrieved", "label": "Request Status"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.documentation", "attrs": {"provenance": "retrieved", "label": "Treatment Documentation"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.current_concerns", "attrs": {"provenance": "retrieved", "label": "Current Concerns"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.photos", "attrs": {"provenance": "retrieved", "label": "Uploaded Photos"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.surgeon_notes", "attrs": {"provenance": "retrieved", "label": "Surgeon Notes"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-provider.specialty", "attrs": {"provenance": "retrieved", "label": "Provider Specialization"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-provider.availability_status", "attrs": {"provenance": "retrieved", "label": "Provider Availability"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.assigned_provider_id", "attrs": {"provenance": "user input", "label": "Assign Provider"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.rejection_reason", "attrs": {"provenance": "user input", "label": "Rejection Reason"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "belongs to", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-16"}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.name", "attrs": {"provenance": "user input", "label": "Template Name"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.description", "attrs": {"provenance": "user input", "label": "Template Description"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.treatment_type", "attrs": {"provenance": "user input", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.duration", "attrs": {"provenance": "system calculated", "label": "Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.milestone_count", "attrs": {"provenance": "system calculated", "label": "Number of Milestones"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.usage_count", "attrs": {"provenance": "system calculated", "label": "Usage Count"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.name", "attrs": {"provenance": "user input", "label": "Milestone Name"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.duration_days", "attrs": {"provenance": "user input", "label": "Milestone Duration"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.scan_frequency", "attrs": {"provenance": "user input", "label": "3D Scan Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.questionnaire_set_id", "attrs": {"provenance": "user input", "label": "Questionnaire Set"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.questionnaire_frequency", "attrs": {"provenance": "user input", "label": "Questionnaire Frequency"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-milestone.activity_restrictions", "attrs": {"provenance": "user input", "label": "Activity Restrictions"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-resource.title", "attrs": {"provenance": "user input", "label": "Resource Title"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-resource.resource_type", "attrs": {"provenance": "user input", "label": "Resource Type"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-resource.url", "attrs": {"provenance": "user input", "label": "Resource URL"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-resource.file", "attrs": {"provenance": "user input", "label": "Resource File"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.available_for_purchase", "attrs": {"provenance": "user input", "label": "Enable for Purchase"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.service_description", "attrs": {"provenance": "user input", "label": "Service Description"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.pricing_model", "attrs": {"provenance": "user input", "label": "Pricing Model"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template-price.currency", "attrs": {"provenance": "user input", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template-price.fixed_price", "attrs": {"provenance": "user input", "label": "Fixed Price"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template-price.monthly_price", "attrs": {"provenance": "user input", "label": "Monthly Subscription Price"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.default_payment_method", "attrs": {"provenance": "user input", "label": "Default Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-011-16", "verb": "shows", "to": "ENT-aftercare-template.discounts_enabled", "attrs": {"provenance": "user input", "label": "Enable Discounts"}}
+  - {"op": "add_edge", "from": "SCR-011-17", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-17"}
+  - {"op": "add_edge", "from": "SCR-011-17", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider List (provider name)"}}
+  - {"op": "add_edge", "from": "SCR-011-18", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-18"}
+  - {"op": "add_edge", "from": "SCR-011-18", "verb": "shows", "to": "ENT-aftercare-plan.status", "attrs": {"provenance": "retrieved", "label": "Case Status Distribution"}}
+  - {"op": "add_edge", "from": "SCR-011-18", "verb": "shows", "to": "ENT-aftercare-plan.current_milestone", "attrs": {"provenance": "retrieved", "label": "Cases by milestone phase"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "belongs to", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-011-19"}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.id", "attrs": {"provenance": "retrieved", "label": "Case Reference"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.booking_id", "attrs": {"provenance": "retrieved", "label": "Case Reference (linked booking)"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.provider_id", "attrs": {"provenance": "user input", "label": "Current Aftercare Provider or Team / New Provider"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-provider.status", "attrs": {"provenance": "retrieved", "label": "Provider Status and Cause"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.cancellation_reason", "attrs": {"provenance": "retrieved", "label": "Provider Status and Cause (recorded cause)"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.assigned_team_member_id", "attrs": {"provenance": "user input", "label": "New Aftercare Team Member"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-audit-entry.reason", "attrs": {"provenance": "user input", "label": "Reassignment Reason"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-plan.support_required_resolution", "attrs": {"provenance": "user input", "label": "Resolve Support Marker"}}
+  - {"op": "add_edge", "from": "SCR-011-19", "verb": "shows", "to": "ENT-aftercare-audit-entry.new_assignee_id", "attrs": {"provenance": "system calculated", "label": "Confirmation Summary"}}

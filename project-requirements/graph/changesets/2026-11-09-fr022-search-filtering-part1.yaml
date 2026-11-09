@@ -1,0 +1,466 @@
+# FR-022 Search & Filtering: frozen PRD migrated into the graph (part 1 of 2: everything except Screen Specifications; apply first).
+# Source: archived/prd-baseline-2026-11-08/fr022-search-filtering/prd.md, read section by section (migrate-fr.md v1.1).
+# REQ-022-001..058 copied verbatim; prose rules and per-screen criteria get REQ-022-059 onward in PRD order.
+# Screens listed in the PRD are owned by their source FRs and are not created here; their search/filter criteria are FR-022 Rules.
+reason: "Migrate the FR-022 PRD into the graph, part 1 of 2: Functional Requirements Summary rules, workflow, business-rule and edge-case rules, settings, entities, fields and their edges"
+by: docs-manager
+operations:
+  # --- Rules: Functional Requirements Summary REQ-022-001..058 (verbatim) ---
+  - {"op": "add_node", "id": "REQ-022-001", "type": "Rule", "owner_fr": "FR-022", "title": "Admin searches patients by name, email, phone and HPID", "attrs": {"statement": "System MUST allow admins to search patients by name, email, phone number, and patient ID (HPID format)", "rationale": "Restated by Module Scope A-01 (line 60) and Main Flow 1 keyword node. Screen criteria: FR-016 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-002", "type": "Rule", "owner_fr": "FR-022", "title": "Admin filters patients by status, location, registration date and provider", "attrs": {"statement": "System MUST allow admins to filter patients by status, location, registration date range, and provider", "rationale": "Restated by Module Scope A-01 (line 60) and Main Flow 1 filter node. Screen criteria: FR-016 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-003", "type": "Rule", "owner_fr": "FR-022", "title": "Admin searches providers by name, clinic, email and licence number", "attrs": {"statement": "System MUST allow admins to search providers by provider name, clinic name, email, and license number", "rationale": "Restated by Module Scope A-02 (line 61) and Main Flow 2 keyword node. Screen criteria: FR-015 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-004", "type": "Rule", "owner_fr": "FR-022", "title": "Admin filters providers by status, featured, commission type and date", "attrs": {"statement": "System MUST allow admins to filter providers by status, featured flag, commission type, and date range", "rationale": "Restated by Module Scope A-02 (line 61) and Main Flow 2 filter node. Screen criteria: FR-015 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-005", "type": "Rule", "owner_fr": "FR-022", "title": "Search results within 300ms at p95", "attrs": {"statement": "System MUST return search results within 300ms for 95% of queries (p95 latency)", "rationale": "Restated by Search Performance Rule 1 (Search queries MUST complete within 300ms for p95 of requests) and Success Criterion SC-009."}}
+  - {"op": "add_node", "id": "REQ-022-006", "type": "Rule", "owner_fr": "FR-022", "title": "Search results paginated (25 admin/provider, 10 patient mobile)", "attrs": {"statement": "System MUST paginate search results (default 25 results per page for admin/provider; 10 per page for patient mobile)", "rationale": "Restated by General Module Rule 3 and Search Performance Rule 3 (pagination); Edge Case 2 shows the first page of 25. Admin-editable page size: SET-search-results-page-size."}}
+  - {"op": "add_node", "id": "REQ-022-007", "type": "Rule", "owner_fr": "FR-022", "title": "Case-insensitive fuzzy matching on all text search fields", "attrs": {"statement": "System MUST support case-insensitive fuzzy matching for all text search fields", "rationale": "Restated by General Module Rule 1 (all search queries MUST be case-insensitive) and Alternative Flow A2 (partial information, fuzzy matching, multiple matches). Accent-insensitive matching and full-text index basis are in the General Module Rule 2 rule."}}
+  - {"op": "add_node", "id": "REQ-022-008", "type": "Rule", "owner_fr": "FR-022", "title": "Filters combine with AND logic", "attrs": {"statement": "System MUST apply filters cumulatively using AND logic (all active criteria must match)", "rationale": "Restated by Alternative Flow A1 (all active criteria must match), Control Behavior Standards Filter Active row and User Story 3 scenario 2. Within-field OR is a separate rule."}}
+  - {"op": "add_node", "id": "REQ-022-009", "type": "Rule", "owner_fr": "FR-022", "title": "Admin export of search results [P2, spec incomplete]", "attrs": {"statement": "System MUST allow admins to export search results to CSV or Excel format where applicable [P2 — spec incomplete; requires screen-level spec defining button placement, output columns, full-set vs. page-only behavior, and which screens support export before scheduling for development]", "rationale": "Enhanced Requirements; the PRD marks it P2 with an incomplete spec (button placement, output columns, full-set vs page-only, supported screens)."}}
+  - {"op": "add_node", "id": "REQ-022-010", "type": "Rule", "owner_fr": "FR-022", "title": "Patient results show status, location and last activity", "attrs": {"statement": "System MUST display patient status, location, and last activity date in search results", "rationale": "Restated by Main Flow 1 results node (name, ID, status, location, recent activity), General Module Rule 5 (admin results display status prominently) and User Story 1 scenario 1."}}
+  - {"op": "add_node", "id": "REQ-022-011", "type": "Rule", "owner_fr": "FR-022", "title": "Provider results show status, location, rating and active patients", "attrs": {"statement": "System MUST display provider status, location, rating, and active patient count in search results", "rationale": "Restated by Main Flow 2 results node (name, location, status, rating, active patients) and General Module Rule 5 (status displayed prominently)."}}
+  - {"op": "add_node", "id": "REQ-022-012", "type": "Rule", "owner_fr": "FR-022", "title": "Search input debounce 300-500ms", "attrs": {"statement": "System MUST implement search input debounce (300–500ms depending on screen) to reduce server load", "rationale": "Restated by General Module Rule 6 and Implementation Notes debouncing. Fixed split 300ms local / 500ms server-query is its own rule."}}
+  - {"op": "add_node", "id": "REQ-022-013", "type": "Rule", "owner_fr": "FR-022", "title": "Patient searches providers by name and specialty [P2]", "attrs": {"statement": "System MUST allow patients to search providers by name and specialty [P2 - Post-MVP]", "rationale": "Restated by Multi-Tenant Breakdown Patient P-02 (line 44) and Main Flow 3 keyword node. Screen criteria: FR-003 / Screen 7a rule."}}
+  - {"op": "add_node", "id": "REQ-022-014", "type": "Rule", "owner_fr": "FR-022", "title": "Patient filters providers by country, rating and specialty [P2]", "attrs": {"statement": "System MUST allow patients to filter providers by country, rating, and specialty [P2 - Post-MVP]", "rationale": "Restated by Multi-Tenant Breakdown Patient P-02 (line 44) and Main Flow 3 destination/filters nodes; User Story 4 scenario 3 (4.5+ stars). Screen criteria: FR-003 / Screen 7a rule."}}
+  - {"op": "add_node", "id": "REQ-022-015", "type": "Rule", "owner_fr": "FR-022", "title": "Location autocomplete, max 10 suggestions [P2]", "attrs": {"statement": "System MUST support autocomplete suggestions for location searches (max 10 suggestions) [P2 - Post-MVP]", "rationale": "Restated by Alternative Flow A3 (patient autocomplete for location: suggestions in real time, selection populates location and filters provider list). Autocomplete limit is fixed in codebase (Admin Editability Rules)."}}
+  - {"op": "add_node", "id": "REQ-022-017", "type": "Rule", "owner_fr": "FR-022", "title": "At most 5 providers per quote request [P2]", "attrs": {"statement": "System MUST limit patient provider selection to maximum 5 providers per quote request [P2 - Post-MVP]", "rationale": "Restated by Main Flow 3 (up to 5 providers, limit reached finalises recipients), User Story 4 scenario 5 and Admin Editability Rules fixed in codebase (5 providers)."}}
+  - {"op": "add_node", "id": "REQ-022-018", "type": "Rule", "owner_fr": "FR-022", "title": "Provider card content [P2]", "attrs": {"statement": "System MUST display provider card with name, location, rating, starting price, before/after photo [P2 - Post-MVP]", "rationale": "Restated by Main Flow 3 cards node (name, location, rating, price indicator) and User Story 4 scenario 1 (starting prices in the patient's local currency)."}}
+  - {"op": "add_node", "id": "REQ-022-019", "type": "Rule", "owner_fr": "FR-022", "title": "Infinite scroll for patient mobile, 10 per page [P2]", "attrs": {"statement": "System MUST support infinite scroll pagination for patient mobile app (10 results per page) [P2 - Post-MVP]", "rationale": "Restated by Technology Assumption 5 (client-side pagination and infinite scroll)."}}
+  - {"op": "add_node", "id": "REQ-022-021", "type": "Rule", "owner_fr": "FR-022", "title": "Search endpoints require valid JWT authentication", "attrs": {"statement": "System MUST require valid JWT authentication for all search endpoints", "rationale": "Restated by Security Considerations Authentication and the FR-031 internal dependency (admin JWT verified on every search API request)."}}
+  - {"op": "add_node", "id": "REQ-022-022", "type": "Rule", "owner_fr": "FR-022", "title": "Patient and provider search is admin-only (RBAC)", "attrs": {"statement": "System MUST enforce role-based access control (admin-only for patient/provider search)", "rationale": "Restated by Security Considerations Authorization and the FR-031 internal dependency (role-based access control enforced per FR-031)."}}
+  - {"op": "add_node", "id": "REQ-022-023", "type": "Rule", "owner_fr": "FR-022", "title": "Admin searches logged with user, time, terms and result count", "attrs": {"statement": "System MUST log all admin searches with user ID, timestamp, search terms, and result count", "rationale": "Restated by the Data & Privacy Audit Rule (admin user ID, timestamp, search terms), Privacy Rule 2 (admin search logs MUST be retained for audit purposes: who searched for whom, when), Security Considerations Audit trail (adds result count) and Edge Case 6 (audit logs capture each admin's search independently). Stored as ENT-search-audit-log."}}
+  - {"op": "add_node", "id": "REQ-022-024", "type": "Rule", "owner_fr": "FR-022", "title": "Search inputs sanitised against SQL injection and XSS", "attrs": {"statement": "System MUST sanitize all search inputs to prevent SQL injection and XSS attacks", "rationale": "Restated by Security Considerations Input validation and Edge Case 3 (special characters removed or escaped; user sees results or 'No matches found.')."}}
+  - {"op": "add_node", "id": "REQ-022-025", "type": "Rule", "owner_fr": "FR-022", "title": "Search rate limit 100 per hour per user", "attrs": {"statement": "System MUST rate-limit search queries to 100 per hour per user", "rationale": "Restated by Security Considerations Rate limiting (to prevent abuse/scraping)."}}
+  - {"op": "add_node", "id": "REQ-022-026", "type": "Rule", "owner_fr": "FR-022", "title": "Patient names anonymised in results until payment confirmed", "attrs": {"statement": "System MUST anonymize patient names in search results if patient has not confirmed payment", "rationale": "Restated by Data & Privacy Rule 1: patient names MUST be excluded from provider-facing search fields and results until booking is confirmed and paid; provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier prior to payment confirmation (FR-003/Screen 9 and FR-004/Screen 2). See also REQ-022-033 and REQ-022-035."}}
+  - {"op": "add_node", "id": "REQ-022-027", "type": "Rule", "owner_fr": "FR-022", "title": "Search audit logs encrypted", "attrs": {"statement": "System MUST encrypt audit logs containing patient/provider search history"}}
+  - {"op": "add_node", "id": "REQ-022-028", "type": "Rule", "owner_fr": "FR-022", "title": "Indexes on all searchable fields", "attrs": {"statement": "System MUST create database indexes on all searchable fields for query optimization", "rationale": "Restated by Search Performance Rule 2 and Implementation Notes Database Indexing."}}
+  - {"op": "add_node", "id": "REQ-022-029", "type": "Rule", "owner_fr": "FR-022", "title": "Autocomplete results cached 5 minutes", "attrs": {"statement": "System MUST cache autocomplete results for 5 minutes to reduce database load", "rationale": "Restated by Search Performance Rule 4 and Implementation Notes Caching (5-minute TTL)."}}
+  - {"op": "add_node", "id": "REQ-022-030", "type": "Rule", "owner_fr": "FR-022", "title": "100 concurrent admin searches without degradation", "attrs": {"statement": "System MUST handle 100 concurrent admin searches without performance degradation", "rationale": "Restated by SC-010 and Technology Assumption 4."}}
+  - {"op": "add_node", "id": "REQ-022-031", "type": "Rule", "owner_fr": "FR-022", "title": "500 concurrent patient searches without degradation [P2]", "attrs": {"statement": "System MUST handle 500 concurrent patient searches without performance degradation [P2 - Post-MVP]", "rationale": "Restated by SC-011."}}
+  - {"op": "add_node", "id": "REQ-022-032", "type": "Rule", "owner_fr": "FR-022", "title": "Indexed database queries under 100ms", "attrs": {"statement": "System MUST complete database queries in under 100ms for indexed searches", "rationale": "Restated by SC-013."}}
+  - {"op": "add_node", "id": "REQ-022-033", "type": "Rule", "owner_fr": "FR-022", "title": "Provider inquiry search by patient ID only", "attrs": {"statement": "System MUST allow providers to search their inquiry list by patient ID only (patient name excluded from provider-facing search until booking payment confirmation)", "rationale": "Restated by Multi-Tenant Breakdown PR-02 (line 51) and Privacy Rule 1. Screen criteria: FR-003 / Screen 9 rule."}}
+  - {"op": "add_node", "id": "REQ-022-034", "type": "Rule", "owner_fr": "FR-022", "title": "Provider inquiry filters", "attrs": {"statement": "System MUST allow providers to filter inquiries by concern, age range, date range, medical alerts, and patient location", "rationale": "Screen criteria: FR-003 / Screen 9 rule."}}
+  - {"op": "add_node", "id": "REQ-022-035", "type": "Rule", "owner_fr": "FR-022", "title": "Provider quote list search fields; no patient name before payment", "attrs": {"statement": "System MUST allow providers to search their quote list across patient ID, inquiry, treatment, date, status, and location fields (patient name excluded until booking payment confirmation)", "rationale": "Restated by Multi-Tenant Breakdown PR-02 (line 51) and Privacy Rule 1. Screen criteria: FR-004 / Screen 2 rule (graph screen SCR-004-02)."}}
+  - {"op": "add_node", "id": "REQ-022-036", "type": "Rule", "owner_fr": "FR-022", "title": "Provider quote list filters", "attrs": {"statement": "System MUST allow providers to filter quotes by status, date range, concern, patient location, and medical alerts", "rationale": "Screen criteria: FR-004 / Screen 2 rule (graph screen SCR-004-02)."}}
+  - {"op": "add_node", "id": "REQ-022-037", "type": "Rule", "owner_fr": "FR-022", "title": "Provider treatment case search", "attrs": {"statement": "System MUST allow providers to search treatment cases by patient ID, name, and booking reference", "rationale": "Restated by Multi-Tenant Breakdown PR-03 (line 52). Screen criteria: FR-010 / Screen 3 rule."}}
+  - {"op": "add_node", "id": "REQ-022-038", "type": "Rule", "owner_fr": "FR-022", "title": "Provider treatment case filters", "attrs": {"statement": "System MUST allow providers to filter treatment cases by procedure date range and clinician", "rationale": "Restated by Multi-Tenant Breakdown PR-03 (line 52). Screen criteria: FR-010 / Screen 3 rule."}}
+  - {"op": "add_node", "id": "REQ-022-039", "type": "Rule", "owner_fr": "FR-022", "title": "Provider aftercare case search and filters", "attrs": {"statement": "System MUST allow providers to search and filter aftercare cases by patient name/ID, milestone, status, and date range", "rationale": "Restated by Multi-Tenant Breakdown PR-04 (line 53). The specialist filter is admin-only (FR-011 / Screen 13). Screen criteria: FR-011 / Screen 8 rule."}}
+  - {"op": "add_node", "id": "REQ-022-040", "type": "Rule", "owner_fr": "FR-022", "title": "Provider analytics filters", "attrs": {"statement": "System MUST allow providers to filter their analytics dashboard by date range and treatment type", "rationale": "Restated by Multi-Tenant Breakdown PR-05 (line 54). Screen criteria: FR-014 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-041", "type": "Rule", "owner_fr": "FR-022", "title": "Provider package list search and status filter", "attrs": {"statement": "System MUST allow providers to search their package list by name and filter it by package status (Active or Inactive)", "rationale": "Screen criteria: FR-024 / Screen 4 rule."}}
+  - {"op": "add_node", "id": "REQ-022-042", "type": "Rule", "owner_fr": "FR-022", "title": "Provider review filter by star rating", "attrs": {"statement": "System MUST allow providers to filter their reviews by star rating", "rationale": "Restated by Multi-Tenant Breakdown PR-06 (line 55). Screen criteria: FR-032 / Screen 1 / Tab 5 rule."}}
+  - {"op": "add_node", "id": "REQ-022-043", "type": "Rule", "owner_fr": "FR-022", "title": "Provider support case search and filters", "attrs": {"statement": "System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range", "rationale": "Restated by Multi-Tenant Breakdown PR-06 (line 55). Screen criteria: FR-032 / Screen 5.7 rule."}}
+  - {"op": "add_node", "id": "REQ-022-044", "type": "Rule", "owner_fr": "FR-022", "title": "Provider team member search", "attrs": {"statement": "System MUST allow providers to search team members by name, email, role, and status", "rationale": "Restated by Multi-Tenant Breakdown PR-01 (line 50). Screen criteria: FR-009 / Screen 10 rule."}}
+  - {"op": "add_node", "id": "REQ-022-049", "type": "Rule", "owner_fr": "FR-022", "title": "Patient messages inbox search [P2]", "attrs": {"statement": "System MUST allow patients to search their messages inbox by provider name and message content [P2 - Post-MVP]", "rationale": "Restated by Multi-Tenant Breakdown P-06 (line 45). Screen criteria: FR-012 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-050", "type": "Rule", "owner_fr": "FR-022", "title": "Patient messages inbox read-status filter [P2]", "attrs": {"statement": "System MUST allow patients to filter their messages inbox by read/unread status [P2 - Post-MVP]", "rationale": "Restated by Multi-Tenant Breakdown P-06 (line 45). Screen criteria: FR-012 / Screen 1 rule."}}
+  - {"op": "add_node", "id": "REQ-022-051", "type": "Rule", "owner_fr": "FR-022", "title": "Patient help centre full-text search with auto-suggest", "attrs": {"statement": "System MUST allow patients to search help center content with full-text search and auto-suggest", "rationale": "Restated by Multi-Tenant Breakdown P-08 (line 46). Screen criteria: FR-035 / Screen 1 and Screen 2 rules."}}
+  - {"op": "add_node", "id": "REQ-022-052", "type": "Rule", "owner_fr": "FR-022", "title": "Patient help centre content-type filter", "attrs": {"statement": "System MUST allow patients to filter help center by content type (FAQs, Articles, Resources, Videos)", "rationale": "Screen criteria: FR-035 / Screen 2 rule."}}
+  - {"op": "add_node", "id": "REQ-022-053", "type": "Rule", "owner_fr": "FR-022", "title": "Patient support ticket status filter", "attrs": {"statement": "System MUST allow patients to filter their support tickets by status", "rationale": "Restated by Multi-Tenant Breakdown P-08 (line 46). Screen criteria: FR-035 / Screen 3 rule."}}
+  - {"op": "add_node", "id": "REQ-022-054", "type": "Rule", "owner_fr": "FR-022", "title": "Result count after every search or filter", "attrs": {"statement": "System MUST display a result count after every search or filter operation", "rationale": "Restated by Control Behavior Standards Filter Active row (result count updates) and User Story 5 scenario 2."}}
+  - {"op": "add_node", "id": "REQ-022-055", "type": "Rule", "owner_fr": "FR-022", "title": "Active filter chips, removable one by one", "attrs": {"statement": "System MUST show active filter chips for every applied filter and allow individual chip removal", "rationale": "Restated by Control Behavior Standards Filter Active row (active filter chips shown below filter bar)."}}
+  - {"op": "add_node", "id": "REQ-022-056", "type": "Rule", "owner_fr": "FR-022", "title": "Reset / Clear All control", "attrs": {"statement": "System MUST provide a \"Reset\" or \"Clear All\" control to clear all active filters at once", "rationale": "Restated by Control Behavior Standards Reset Filter row, Main Flows 1-3 Reset all nodes and User Story 3 scenario 3."}}
+  - {"op": "add_node", "id": "REQ-022-057", "type": "Rule", "owner_fr": "FR-022", "title": "Patient sorts and filters FR-005 subquotes", "attrs": {"statement": "System MUST allow patients to sort FR-005 subquotes by price, inherited graft count, inherited provider rating, appointment date, or parent quote date and to filter them by the patient-submitted date range selected by each subquote.", "rationale": "Restated by User Story 5 scenarios 1-2 and the FR-005 / Screen 1 criteria (graph screen SCR-005-01). Near-duplicate of REQ-005-012 and REQ-005-053 (FR-005)."}}
+  - {"op": "add_node", "id": "REQ-022-058", "type": "Rule", "owner_fr": "FR-022", "title": "Patient-facing price order uses display-currency conversion", "attrs": {"statement": "System MUST order any patient-facing price sort or price filter by each price converted to the patient's display currency at the current rate, for ordering and filtering only; each card MUST keep showing its own quote currency, and the price order MUST be labelled approximate when the listed items use more than one currency.", "rationale": "Restated by General Module Rule 9 (identical wording in rule form), the FR-005 / Screen 1 sort basis and User Story 5 scenario 5. Near-duplicate of REQ-005-027 (FR-005), which is limited to subquote price sorting."}}
+  # --- Rules: prose rules outside Screen Specifications, new ids in PRD order ---
+  - {"op": "add_node", "id": "REQ-022-059", "type": "Rule", "owner_fr": "FR-022", "title": "Entry points to search and filter", "attrs": {"statement": "Patient Platform: [P2] Provider Search is accessed when the patient begins the quote request flow and needs to select destination/providers, is triggered from the \"Choose Destination\" or \"Select Providers\" screens, and is available throughout the quote request journey for comparison; [P2] Messaging search is accessed from the patient communications inbox once FR-012 messaging is scheduled; [P1] Help & Support search is accessed from the Help & Support hub, Help Center, and My Support Tickets screens. Provider Platform: PR-01 (Team) from Provider Dashboard → Team tab → Team Directory (FR-009/Screen 10); PR-02 (Inquiries/Quotes) from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2); PR-03 (Treatment) from Provider Dashboard → Treatments tab → In Progress Cases (FR-010/Screen 3); PR-04 (Aftercare) from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8); PR-05 (Analytics) from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1); PR-06 (Profile/Settings) from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7); PR-07 (Messaging) [P2 - Post-MVP] from the provider secure messaging inbox once FR-012 is scheduled. Admin Platform [P1 - MVP]: each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface.", "rationale": "Entry Points (prd.md lines 86-110). Business Process Assumption 3: patient searches for providers occur during the quote request flow, not as standalone exploration [P2]. Change log 2.7 removed admin global/cross-module search entry points."}}
+  - {"op": "add_node", "id": "REQ-022-060", "type": "Rule", "owner_fr": "FR-022", "title": "Keyword and filters evaluated together in real time", "attrs": {"statement": "Search and filter controls are available simultaneously; the System evaluates the active keyword AND active filters together in real-time (Main Flow 1 admin patient search, Main Flow 2 admin provider search). In patient provider discovery the System evaluates destination, keyword, and filters together in real-time (Main Flow 3 [P2 - Post-MVP]).", "rationale": "Main Flows 1-3 CTRL and QUERY nodes (prd.md lines 127-188)."}}
+  - {"op": "add_node", "id": "REQ-022-061", "type": "Rule", "owner_fr": "FR-022", "title": "Default list and reset per search flow", "attrs": {"statement": "Admin opens Patients module — full patient list shown by default; Reset all clears all inputs and restores the full patient list (Main Flow 1). Admin opens Providers module — Active providers shown by default (FR-015 Screen 1); Reset all restores the default Active-only list (Main Flow 2). Patient Reset all clears all inputs and restores the full country list (Main Flow 3 [P2 - Post-MVP]).", "rationale": "Main Flows 1-3 NAV and RESET nodes (prd.md lines 124-199). FR-015 / Screen 1 Status filter default Active (line 1140)."}}
+  - {"op": "add_node", "id": "REQ-022-062", "type": "Rule", "owner_fr": "FR-022", "title": "No-results feedback with refinement guidance", "attrs": {"statement": "When a search term or filter combination matches no records, the System displays 'No results found' with refinement guidance: check spelling or try different keywords; remove one or more filters; contact support (admin platform only). In patient provider discovery the System displays 'No providers found' with refinement guidance.", "rationale": "Alternative Flow B1 (prd.md lines 275-295); Main Flows 1-3 EMPTY nodes."}}
+  - {"op": "add_node", "id": "REQ-022-063", "type": "Rule", "owner_fr": "FR-022", "title": "Search unavailable: message, retry, engineering alert", "attrs": {"statement": "If the backend database connection fails during a search query, the System displays 'Search temporarily unavailable. Please try again.', logs the error and alerts the engineering team; the user can retry, abandon the search or contact support.", "rationale": "Alternative Flow B2 (prd.md lines 296-315)."}}
+  - {"op": "add_node", "id": "REQ-022-124", "type": "Rule", "owner_fr": "FR-022", "title": "Fuzzy, accent-insensitive matching via full-text indexes", "attrs": {"statement": "Search functionality MUST support fuzzy matching via database full-text indexes (e.g., \"Mark P\" matches \"Mark Patterson\"; \"Mehmet\" matches \"Mehmet Yilmaz\"; accent-insensitive matching, e.g., \"Jose\" matches \"José\").", "rationale": "General Module Rule 2 (line 1797). Restated by Edge Case 4 (accent-insensitive matching, José matches Jose). Refines REQ-022-007. Advanced fuzzy features (synonyms, edit distance, relevance) are a P3 external-search enhancement."}}
+  - {"op": "add_node", "id": "REQ-022-125", "type": "Rule", "owner_fr": "FR-022", "title": "Filter selections persist for the session", "attrs": {"statement": "Filter selections MUST persist during user session (cleared on logout)", "rationale": "General Module Rule 4 (line 1799)."}}
+  - {"op": "add_node", "id": "REQ-022-126", "type": "Rule", "owner_fr": "FR-022", "title": "Autocomplete limited to 10 suggestions", "attrs": {"statement": "Autocomplete suggestions MUST be limited to 10 results to avoid overwhelming user", "rationale": "General Module Rule 7 (line 1802). Admin Editability Rules list the autocomplete result limit (10 suggestions) as fixed in codebase. REQ-022-015 applies the same limit to P2 location autocomplete."}}
+  - {"op": "add_node", "id": "REQ-022-127", "type": "Rule", "owner_fr": "FR-022", "title": "Search history not stored", "attrs": {"statement": "Search history MUST NOT be stored (privacy consideration for admin platform)", "rationale": "General Module Rule 8 (line 1803). See needs-decision item on admin search audit logging (REQ-022-023, REQ-022-027)."}}
+  - {"op": "add_node", "id": "REQ-022-128", "type": "Rule", "owner_fr": "FR-022", "title": "Patient contact information not indexed for public search", "attrs": {"statement": "Patient contact information MUST NOT be indexed for public search (admin only)", "rationale": "Data & Privacy Rule 3 (line 1810)."}}
+  - {"op": "add_node", "id": "REQ-022-129", "type": "Rule", "owner_fr": "FR-022", "title": "Provider financial data not searchable by other providers", "attrs": {"statement": "Provider financial data MUST NOT be searchable by other providers (admin only)", "rationale": "Data & Privacy Rule 4 (line 1811)."}}
+  - {"op": "add_node", "id": "REQ-022-130", "type": "Rule", "owner_fr": "FR-022", "title": "Featured providers curated by admin; affects Recommended sort", "attrs": {"statement": "Featured provider designation is a manually curated list editable by admin; admin can feature/unfeature providers in patient search, affecting \"Recommended\" sort order.", "rationale": "Admin Editability Rules: Editable by Admin (line 1820) and Configurable with Restrictions (line 1833). Business Process Assumption 4: Featured status is manually curated by admin based on performance, quality, and partnerships. FR-015 / Screen 1 Featured filter."}}
+  - {"op": "add_node", "id": "REQ-022-131", "type": "Rule", "owner_fr": "FR-022", "title": "Only active providers appear in search; suspension hides, never deletes", "attrs": {"statement": "Provider visibility status: active providers appear in search, suspended do not. Admin can temporarily disable provider from search results (suspension) but cannot delete provider record.", "rationale": "Admin Editability Rules: Editable by Admin (line 1821) and Configurable with Restrictions (line 1832)."}}
+  - {"op": "add_node", "id": "REQ-022-132", "type": "Rule", "owner_fr": "FR-022", "title": "Debounce timing fixed: 300ms local, 500ms server query", "attrs": {"statement": "Search debounce timing is fixed in codebase (not editable): per REQ-022-012, 300ms for local filters, 500ms for server-query searches.", "rationale": "Admin Editability Rules: Fixed in Codebase (line 1825)."}}
+  - {"op": "add_node", "id": "REQ-022-133", "type": "Rule", "owner_fr": "FR-022", "title": "Search query maximum length by platform", "attrs": {"statement": "Search query max length is fixed in codebase (not editable): 200 chars for admin, 200 chars for provider, 50 chars for patient.", "rationale": "Admin Editability Rules: Fixed in Codebase (line 1828); change log 2.3 item 3 and 2.5 item 5. See needs-decision item on screens that set 100 chars."}}
+  - {"op": "add_node", "id": "REQ-022-134", "type": "Rule", "owner_fr": "FR-022", "title": "No active providers in the selected country [P2]", "attrs": {"statement": "When a patient searches for providers in a country with no active providers, the System displays \"No providers available in [country]. Please try another location or contact support.\" with link to support chat.", "rationale": "Edge Case 1 (prd.md lines 2135-2136)."}}
+  - {"op": "add_node", "id": "REQ-022-135", "type": "Rule", "owner_fr": "FR-022", "title": "Many results: first page, total count and narrowing banner", "attrs": {"statement": "When an admin search matches very many records (e.g., a very common name), the System displays the first page of results (25 per page, per REQ-022-006) with total result count shown (e.g., \"500+ results found\") and an informational banner: \"Many results found. Use filters to narrow down by location, status, or patient ID.\"", "rationale": "Edge Case 2 (prd.md lines 2138-2139); change log 2.4 item 2 (pagination is the single model; no truncation)."}}
+  - {"op": "add_node", "id": "REQ-022-136", "type": "Rule", "owner_fr": "FR-022", "title": "Search timeout after 10 seconds", "attrs": {"statement": "Search times out after 10 seconds; error message displayed: \"Search taking too long. Please try again or contact support.\"; error logged for engineering team to investigate.", "rationale": "Edge Case 5 (prd.md lines 2147-2148); the missing-index cause is technical and not migrated."}}
+  - {"op": "add_node", "id": "REQ-022-137", "type": "Rule", "owner_fr": "FR-022", "title": "Duplicate patient accounts all returned and flagged", "attrs": {"statement": "When a patient has multiple accounts with the same name/email, search returns all matching accounts; the admin reviews each record to identify the correct patient using patient ID, location, or registration date; duplicate account detection is flagged in results.", "rationale": "Edge Case 7 (prd.md lines 2153-2154)."}}
+  - {"op": "add_node", "id": "REQ-022-138", "type": "Rule", "owner_fr": "FR-022", "title": "Patient email and phone shown only to authorised admins", "attrs": {"statement": "Patient PII (email, phone) displayed only to authorized admins with proper permissions", "rationale": "Implementation Notes, Security Considerations: Data masking (line 2039); promoted as a business rule. Permissions per FR-031."}}
+  # --- Settings (Admin Editability Rules; owner not named by the PRD, FR-022 provisionally) ---
+  - {"op": "add_node", "id": "SET-search-results-page-size", "type": "Setting", "owner_fr": "FR-022", "title": "Maximum search results per page", "attrs": {"description": "Admin-editable maximum search results per page; range 10-100.", "default": "25", "unit": "results per page"}}
+  - {"op": "add_node", "id": "SET-provider-search-default-sort", "type": "Setting", "owner_fr": "FR-022", "title": "Default sort order for provider search", "attrs": {"description": "Admin-editable default sort order for patient provider search; options Recommended, Rating, Price, Experience. The PRD gives no default value. [P2 - Post-MVP]"}}
+  # --- Entities and fields (Key Entities; Entity 4 Database Index is technical and not migrated) ---
+  - {"op": "add_node", "id": "ENT-patient-search-record", "type": "Entity", "owner_fr": "FR-022", "title": "Patient search record", "attrs": {"description": "Patient record as searched by admins. Links to inquiries, quotes, bookings, payments (Key Entities, Entity 1)."}}
+  - {"op": "add_node", "id": "ENT-provider-search-record", "type": "Entity", "owner_fr": "FR-022", "title": "Provider search record", "attrs": {"description": "Provider record as searched by admins and, post-MVP, patients. Links to staff, certifications, reviews, treatments, bookings (Key Entities, Entity 2)."}}
+  - {"op": "add_node", "id": "ENT-search-audit-log", "type": "Entity", "owner_fr": "FR-022", "title": "Search audit log", "attrs": {"description": "One entry per admin search for patient or provider records. Links to the admin user who performed the search (Key Entities, Entity 3)."}}
+  - {"op": "add_field", "id": "ENT-patient-search-record.patient_id", "entity_id": "ENT-patient-search-record", "name": "patient_id", "data_type": "id", "title": "Patient ID (HPID)", "owner_fr": "FR-022", "required": false, "attrs": {"description": "Patient ID in HPID format."}}
+  - {"op": "add_field", "id": "ENT-patient-search-record.name", "entity_id": "ENT-patient-search-record", "name": "name", "data_type": "text", "title": "Name", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.email", "entity_id": "ENT-patient-search-record", "name": "email", "data_type": "text", "title": "Email", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.phone", "entity_id": "ENT-patient-search-record", "name": "phone", "data_type": "text", "title": "Phone", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.status", "entity_id": "ENT-patient-search-record", "name": "status", "data_type": "text", "title": "Status", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.location", "entity_id": "ENT-patient-search-record", "name": "location", "data_type": "text", "title": "Location", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.registration_date", "entity_id": "ENT-patient-search-record", "name": "registration_date", "data_type": "date", "title": "Registration date", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.last_activity_date", "entity_id": "ENT-patient-search-record", "name": "last_activity_date", "data_type": "date", "title": "Last activity date", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-patient-search-record.treatment_type", "entity_id": "ENT-patient-search-record", "name": "treatment_type", "data_type": "text", "title": "Treatment type", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.provider_id", "entity_id": "ENT-provider-search-record", "name": "provider_id", "data_type": "id", "title": "Provider ID", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.clinic_name", "entity_id": "ENT-provider-search-record", "name": "clinic_name", "data_type": "text", "title": "Clinic name", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.location", "entity_id": "ENT-provider-search-record", "name": "location", "data_type": "text", "title": "Location", "owner_fr": "FR-022", "required": false, "attrs": {"description": "City and country."}}
+  - {"op": "add_field", "id": "ENT-provider-search-record.status", "entity_id": "ENT-provider-search-record", "name": "status", "data_type": "text", "title": "Status", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.specialties", "entity_id": "ENT-provider-search-record", "name": "specialties", "data_type": "text[]", "title": "Specialties", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.rating", "entity_id": "ENT-provider-search-record", "name": "rating", "data_type": "decimal", "title": "Rating", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.review_count", "entity_id": "ENT-provider-search-record", "name": "review_count", "data_type": "int", "title": "Review count", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.years_experience", "entity_id": "ENT-provider-search-record", "name": "years_experience", "data_type": "int", "title": "Years of experience", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.active_patients", "entity_id": "ENT-provider-search-record", "name": "active_patients", "data_type": "int", "title": "Active patients", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-search-record.total_procedures", "entity_id": "ENT-provider-search-record", "name": "total_procedures", "data_type": "int", "title": "Total procedures", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.log_id", "entity_id": "ENT-search-audit-log", "name": "log_id", "data_type": "id", "title": "Log ID", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.admin_user_id", "entity_id": "ENT-search-audit-log", "name": "admin_user_id", "data_type": "id", "title": "Admin user ID", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.search_type", "entity_id": "ENT-search-audit-log", "name": "search_type", "data_type": "enum", "title": "Search type", "owner_fr": "FR-022", "required": false, "attrs": {"description": "patient or provider."}}
+  - {"op": "add_field", "id": "ENT-search-audit-log.search_term", "entity_id": "ENT-search-audit-log", "name": "search_term", "data_type": "text", "title": "Search term", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.filters_applied", "entity_id": "ENT-search-audit-log", "name": "filters_applied", "data_type": "json", "title": "Filters applied", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.result_count", "entity_id": "ENT-search-audit-log", "name": "result_count", "data_type": "int", "title": "Result count", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_field", "id": "ENT-search-audit-log.timestamp", "entity_id": "ENT-search-audit-log", "name": "timestamp", "data_type": "datetime", "title": "Timestamp", "owner_fr": "FR-022", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-search-audit-log.search_type", "value": "patient", "label": "Patient", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-search-audit-log.search_type", "value": "provider", "label": "Provider", "sort_order": 1}
+  # --- applies at ---
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-002", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-003", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-004", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-009", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-010", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-013", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-014", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-015", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-017", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-018", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-019", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-022", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-022", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-023", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-023", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-026", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-026", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-027", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-027", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-030", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-031", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-033", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-034", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-035", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-036", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-037", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-038", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-039", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-040", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-041", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-042", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-043", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-044", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-049", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-050", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-051", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-052", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-053", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-057", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-058", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-059", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-061", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-061", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-061", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-127", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-128", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-129", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-130", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-130", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-131", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-131", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-134", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-135", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-137", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-022-138", "verb": "applies at", "to": "STG-patient-03-active"}
+  # --- governed by ---
+  - {"op": "add_edge", "from": "REQ-022-006", "verb": "governed by", "to": "SET-search-results-page-size"}
+  - {"op": "add_edge", "from": "REQ-022-130", "verb": "governed by", "to": "SET-provider-search-default-sort"}
+  # --- decided by ---
+  - {"op": "add_edge", "from": "REQ-022-057", "verb": "decided by", "to": "SRC-MTG-002-D06"}
+  - {"op": "add_edge", "from": "REQ-022-057", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-022-057", "verb": "decided by", "to": "SRC-MTG-003-D02"}
+  - {"op": "add_edge", "from": "REQ-022-058", "verb": "decided by", "to": "SRC-MTG-002-D06"}
+  - {"op": "add_edge", "from": "REQ-022-058", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  # --- Stage reads / writes ---
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "writes", "to": "ENT-search-audit-log"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-search-audit-log"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-provider-search-record"}
+  # --- acts in (Multi-Tenant Breakdown; shared stage edges may collide with parallel Batch A migrations) ---
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "acts in", "to": "STG-patient-03-active"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-main-05-payment"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-main-07-aftercare"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-main-09-review-close"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-patient-03-active"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-provider-03-active"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "acts in", "to": "STG-main-06-treatment"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "acts in", "to": "STG-main-07-aftercare"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "acts in", "to": "STG-main-09-review-close"}  # may-collide
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "acts in", "to": "STG-provider-03-active"}  # may-collide

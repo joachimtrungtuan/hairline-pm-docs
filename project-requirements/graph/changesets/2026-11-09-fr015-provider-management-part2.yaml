@@ -1,0 +1,261 @@
+reason: "FR-015 Provider Management (Admin-Initiated) migration, part 2 of 2: settings, entities, fields, events, screens, shows and stage edges (migrate-fr checklist v1.1, from the frozen PRD)."
+by: "docs-manager"
+# Source: archived/prd-baseline-2026-11-08/fr015-provider-management/prd.md. REQ-015-001..029 kept verbatim; prose rules numbered from REQ-015-030.
+# Operations marked '# stub' create a node or field owned by another FR; the controller converts a collision into an update.
+# Operations marked '# shared edge' touch a Stage or Actor shared with other FRs.
+# Apply after part 1 (references its rules).
+operations:
+  - {"op": "add_node", "id": "SET-activation-link-expiry", "type": "Setting", "owner_fr": "FR-015", "title": "Activation link expiry", "attrs": {"description": "How long the one-time password setup link in the provider activation email stays valid (REQ-015-006, REQ-015-011).", "default": "24", "unit": "hours"}}
+  - {"op": "add_node", "id": "SET-activation-resend-limit", "type": "Setting", "owner_fr": "FR-015", "title": "Activation email resend limit", "attrs": {"description": "Maximum activation email resend requests per email address per hour (REQ-015-006, REQ-015-016).", "default": "3", "unit": "requests per hour per email"}}
+  - {"op": "add_node", "id": "SET-featured-provider-cap", "type": "Setting", "owner_fr": "FR-015", "title": "Featured provider cap", "attrs": {"description": "Maximum number of Active providers that may be featured at once (General Module Rule 8).", "default": "10", "unit": "providers"}}
+  - {"op": "add_node", "id": "SET-provider-creation-rate-limit", "type": "Setting", "owner_fr": "FR-015", "title": "Provider creation rate limit", "attrs": {"description": "Maximum provider creations per admin per hour (Implementation Notes, Security Considerations).", "default": "10", "unit": "creations per admin per hour"}}
+  - {"op": "add_node", "id": "SET-admin-change-reason-length", "type": "Setting", "owner_fr": "FR-015", "title": "Admin change reason length", "attrs": {"description": "Allowed length of the Reason for change an admin gives when saving provider data (REQ-015-025).", "default": "10 to 500", "unit": "characters"}}
+  - {"op": "add_node", "id": "SET-status-change-reason-length", "type": "Setting", "owner_fr": "FR-015", "title": "Status change reason length", "attrs": {"description": "Allowed length of the reason for suspension, deactivation, reactivation and cancelling a scheduled change (Screens 4 and 5).", "default": "20 to 500", "unit": "characters"}}
+  - {"op": "add_node", "id": "SET-cascade-completion-target", "type": "Setting", "owner_fr": "FR-015", "title": "Provider status cascade completion target", "attrs": {"description": "Target time for the idempotent background job of the A5 cancellation cascade, counted from the effective time.", "default": "5", "unit": "minutes"}}
+  - {"op": "add_node", "id": "SET-admin-inactivity-timeout", "type": "Setting", "owner_fr": "FR-026", "title": "Admin inactivity timeout", "attrs": {"description": "The standard admin inactivity timeout that also ends a Login as Provider session. The PRD calls it standard and names no owner; stub placed under FR-026 (admin security policies).", "default": "30", "unit": "minutes"}}  # stub owned by FR-026
+  - {"op": "add_edge", "from": "REQ-015-006", "verb": "governed by", "to": "SET-activation-link-expiry"}
+  - {"op": "add_edge", "from": "REQ-015-011", "verb": "governed by", "to": "SET-activation-link-expiry"}
+  - {"op": "add_edge", "from": "REQ-015-006", "verb": "governed by", "to": "SET-activation-resend-limit"}
+  - {"op": "add_edge", "from": "REQ-015-016", "verb": "governed by", "to": "SET-activation-resend-limit"}
+  - {"op": "add_edge", "from": "REQ-015-034", "verb": "governed by", "to": "SET-featured-provider-cap"}
+  - {"op": "add_edge", "from": "REQ-015-067", "verb": "governed by", "to": "SET-provider-creation-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-015-025", "verb": "governed by", "to": "SET-admin-change-reason-length"}
+  - {"op": "add_edge", "from": "REQ-015-081", "verb": "governed by", "to": "SET-status-change-reason-length"}
+  - {"op": "add_edge", "from": "REQ-015-020", "verb": "governed by", "to": "SET-cascade-completion-target"}
+  - {"op": "add_edge", "from": "REQ-015-026", "verb": "governed by", "to": "SET-admin-inactivity-timeout"}
+  - {"op": "add_edge", "from": "REQ-015-010", "verb": "governed by", "to": "SET-default-seat-limit"}
+  - {"op": "update_node", "id": "ENT-provider", "attrs": {"description": "A hair transplant provider organization account created by an admin: identity and login email, professional details, status (Active, Suspended, Deactivated), featured flag, seat limit and payout frequency. Commission settings live in ENT-commission-rate-config (FR-029); clinic data in ENT-clinic-information."}}
+  - {"op": "add_node", "id": "ENT-pending-provider-status-change", "type": "Entity", "owner_fr": "FR-015", "title": "Pending provider status change", "attrs": {"description": "A scheduled suspension or deactivation waiting for its Effective Date; at most one pending per provider."}}
+  - {"op": "add_node", "id": "ENT-provider-status-event", "type": "Entity", "owner_fr": "FR-015", "title": "Provider status event", "attrs": {"description": "Record of one provider status change (cause, reason, effective time, acting admin) that drives the cancellation cascade."}}
+  - {"op": "add_node", "id": "ENT-provider-activity-log-entry", "type": "Entity", "owner_fr": "FR-015", "title": "Provider activity log entry", "attrs": {"description": "One entry of the provider Activity Log shown in Screen 3 Tab 8 (profile edits, status changes, document actions, logins, commission changes). Not listed under Key Entities; modelled from Tab 8 and the Audit Rule."}}
+  - {"op": "add_field", "id": "ENT-provider.first_name", "entity_id": "ENT-provider", "name": "first_name", "data_type": "text", "title": "First name", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.last_name", "entity_id": "ENT-provider", "name": "last_name", "data_type": "text", "title": "Last name", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.bio", "entity_id": "ENT-provider", "name": "bio", "data_type": "text", "title": "Bio / description", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.awards", "entity_id": "ENT-provider", "name": "awards", "data_type": "json", "title": "Awards and recognition", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.medical_license_number", "entity_id": "ENT-provider", "name": "medical_license_number", "data_type": "text", "title": "Medical license number", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.years_experience", "entity_id": "ENT-provider", "name": "years_experience", "data_type": "int", "title": "Years of experience", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.featured", "entity_id": "ENT-provider", "name": "featured", "data_type": "bool", "title": "Featured provider", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.password_hash", "entity_id": "ENT-provider", "name": "password_hash", "data_type": "text", "title": "Password hash", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.password_set", "entity_id": "ENT-provider", "name": "password_set", "data_type": "bool", "title": "Password set", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.activation_token", "entity_id": "ENT-provider", "name": "activation_token", "data_type": "text", "title": "Activation token", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.activation_token_expiry", "entity_id": "ENT-provider", "name": "activation_token_expiry", "data_type": "datetime", "title": "Activation token expiry", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.activation_email_sent_count", "entity_id": "ENT-provider", "name": "activation_email_sent_count", "data_type": "int", "title": "Activation email sent count", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.last_activation_email_sent_at", "entity_id": "ENT-provider", "name": "last_activation_email_sent_at", "data_type": "datetime", "title": "Last activation email sent at", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider.created_at", "entity_id": "ENT-provider", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.updated_at", "entity_id": "ENT-provider", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider.last_activity_date", "entity_id": "ENT-provider", "name": "last_activity_date", "data_type": "datetime", "title": "Last activity date", "owner_fr": "FR-015", "required": false, "calculated_by": "REQ-015-093"}
+  - {"op": "add_field", "id": "ENT-provider.completed_procedures_count", "entity_id": "ENT-provider", "name": "completed_procedures_count", "data_type": "int", "title": "Completed procedures", "owner_fr": "FR-015", "required": false, "calculated_by": "REQ-015-023"}
+  - {"op": "add_field", "id": "ENT-provider-document.file_format", "entity_id": "ENT-provider-document", "name": "file_format", "data_type": "text", "title": "File format", "owner_fr": "FR-032", "required": true}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-provider-document.uploader_id", "entity_id": "ENT-provider-document", "name": "uploader_id", "data_type": "id", "title": "Uploader id", "owner_fr": "FR-032", "required": true}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-provider-document.deleted", "entity_id": "ENT-provider-document", "name": "deleted", "data_type": "bool", "title": "Deleted", "owner_fr": "FR-032", "required": true}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-provider-document.deleted_at", "entity_id": "ENT-provider-document", "name": "deleted_at", "data_type": "datetime", "title": "Deleted at", "owner_fr": "FR-032", "required": false}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-provider-profile.address_fields", "entity_id": "ENT-provider-profile", "name": "address_fields", "data_type": "json", "title": "Clinic address fields", "owner_fr": "FR-032", "required": false}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-provider-profile.operating_hours", "entity_id": "ENT-provider-profile", "name": "operating_hours", "data_type": "text", "title": "Operating hours", "owner_fr": "FR-032", "required": false}  # stub owned by FR-032
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.pending_change_id", "entity_id": "ENT-pending-provider-status-change", "name": "pending_change_id", "data_type": "id", "title": "Pending change id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.provider_id", "entity_id": "ENT-pending-provider-status-change", "name": "provider_id", "data_type": "id", "title": "Provider id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.change_type", "entity_id": "ENT-pending-provider-status-change", "name": "change_type", "data_type": "enum", "title": "Change type", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-pending-provider-status-change.change_type", "value": "suspend", "label": "Suspend", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-pending-provider-status-change.change_type", "value": "deactivate", "label": "Deactivate", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.effective_date", "entity_id": "ENT-pending-provider-status-change", "name": "effective_date", "data_type": "date", "title": "Effective date", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.reason", "entity_id": "ENT-pending-provider-status-change", "name": "reason", "data_type": "text", "title": "Reason", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.notify_provider", "entity_id": "ENT-pending-provider-status-change", "name": "notify_provider", "data_type": "bool", "title": "Notify provider", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.scheduled_by", "entity_id": "ENT-pending-provider-status-change", "name": "scheduled_by", "data_type": "id", "title": "Scheduled by", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.scheduled_at", "entity_id": "ENT-pending-provider-status-change", "name": "scheduled_at", "data_type": "datetime", "title": "Scheduled at", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.state", "entity_id": "ENT-pending-provider-status-change", "name": "state", "data_type": "enum", "title": "State", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-pending-provider-status-change.state", "value": "pending", "label": "Pending", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-pending-provider-status-change.state", "value": "applied", "label": "Applied", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-pending-provider-status-change.state", "value": "cancelled", "label": "Cancelled", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.cancelled_by", "entity_id": "ENT-pending-provider-status-change", "name": "cancelled_by", "data_type": "id", "title": "Cancelled by", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.cancellation_reason", "entity_id": "ENT-pending-provider-status-change", "name": "cancellation_reason", "data_type": "text", "title": "Cancellation reason", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-pending-provider-status-change.resolved_at", "entity_id": "ENT-pending-provider-status-change", "name": "resolved_at", "data_type": "datetime", "title": "Resolved at", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-status-event.status_event_id", "entity_id": "ENT-provider-status-event", "name": "status_event_id", "data_type": "id", "title": "Status event id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.provider_id", "entity_id": "ENT-provider-status-event", "name": "provider_id", "data_type": "id", "title": "Provider id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.from_status", "entity_id": "ENT-provider-status-event", "name": "from_status", "data_type": "text", "title": "From status", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.to_status", "entity_id": "ENT-provider-status-event", "name": "to_status", "data_type": "text", "title": "To status", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.cause", "entity_id": "ENT-provider-status-event", "name": "cause", "data_type": "enum", "title": "Cause", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-status-event.cause", "value": "ProviderSuspended", "label": "ProviderSuspended", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-status-event.cause", "value": "ProviderDeactivated", "label": "ProviderDeactivated", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-status-event.cause", "value": "ProviderReactivated", "label": "ProviderReactivated", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-provider-status-event.reason", "entity_id": "ENT-provider-status-event", "name": "reason", "data_type": "text", "title": "Reason", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.effective_at", "entity_id": "ENT-provider-status-event", "name": "effective_at", "data_type": "datetime", "title": "Effective at", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.admin_id", "entity_id": "ENT-provider-status-event", "name": "admin_id", "data_type": "id", "title": "Admin id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.notify_provider", "entity_id": "ENT-provider-status-event", "name": "notify_provider", "data_type": "bool", "title": "Notify provider", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-status-event.pending_change_id", "entity_id": "ENT-provider-status-event", "name": "pending_change_id", "data_type": "id", "title": "Pending change id", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-status-event.closure_request_id", "entity_id": "ENT-provider-status-event", "name": "closure_request_id", "data_type": "id", "title": "Closure request id", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-status-event.created_at", "entity_id": "ENT-provider-status-event", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.entry_id", "entity_id": "ENT-provider-activity-log-entry", "name": "entry_id", "data_type": "id", "title": "Entry id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.provider_id", "entity_id": "ENT-provider-activity-log-entry", "name": "provider_id", "data_type": "id", "title": "Provider id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.occurred_at", "entity_id": "ENT-provider-activity-log-entry", "name": "occurred_at", "data_type": "datetime", "title": "Timestamp", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.user_id", "entity_id": "ENT-provider-activity-log-entry", "name": "user_id", "data_type": "id", "title": "User id", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.user_type", "entity_id": "ENT-provider-activity-log-entry", "name": "user_type", "data_type": "enum", "title": "User type", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-activity-log-entry.user_type", "value": "admin", "label": "Admin", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-activity-log-entry.user_type", "value": "provider", "label": "Provider", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.action_type", "entity_id": "ENT-provider-activity-log-entry", "name": "action_type", "data_type": "text", "title": "Action type", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.changed_fields", "entity_id": "ENT-provider-activity-log-entry", "name": "changed_fields", "data_type": "json", "title": "Changed fields (old and new values)", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.reason", "entity_id": "ENT-provider-activity-log-entry", "name": "reason", "data_type": "text", "title": "Reason", "owner_fr": "FR-015", "required": false}
+  - {"op": "add_field", "id": "ENT-provider-activity-log-entry.ip_address", "entity_id": "ENT-provider-activity-log-entry", "name": "ip_address", "data_type": "text", "title": "IP address", "owner_fr": "FR-015", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-provider.status", "value": "active", "label": "Active", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-provider.status", "value": "suspended", "label": "Suspended", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-provider.status", "value": "deactivated", "label": "Deactivated", "sort_order": 2}
+  - {"op": "add_node", "id": "EVT-provider-activation", "type": "Event", "owner_fr": "FR-020", "title": "Provider activation email", "attrs": {"description": "provider.activation: mandatory account activation email with a one-time password setup link (creation, resend, Owner email change). Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "emits", "to": "EVT-provider-activation"}
+  - {"op": "add_node", "id": "EVT-provider-suspended", "type": "Event", "owner_fr": "FR-020", "title": "Provider suspended", "attrs": {"description": "provider.suspended: notice to the provider Owner when Notify Provider is checked. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "emits", "to": "EVT-provider-suspended"}
+  - {"op": "add_node", "id": "EVT-provider-reactivated", "type": "Event", "owner_fr": "FR-020", "title": "Provider reactivated", "attrs": {"description": "provider.reactivated: notice to the provider Owner when Notify Provider is checked. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "emits", "to": "EVT-provider-reactivated"}
+  - {"op": "add_node", "id": "EVT-provider-scheduled-change-cancelled", "type": "Event", "owner_fr": "FR-020", "title": "Provider scheduled change cancelled", "attrs": {"description": "provider.scheduled_change_cancelled: notice to the Owner if they were told of the scheduled change. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-provider-scheduled-change-cancelled"}
+  - {"op": "add_node", "id": "EVT-provider-login-email-changed", "type": "Event", "owner_fr": "FR-020", "title": "Provider login email changed", "attrs": {"description": "provider.login_email_changed: mandatory security notice to the old and new login addresses. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-provider-login-email-changed"}
+  - {"op": "add_node", "id": "EVT-provider-status-cancellation-patient", "type": "Event", "owner_fr": "FR-020", "title": "Provider status cancellation notice to patient", "attrs": {"description": "provider.status_cancellation_patient: patient notice before acceptance that the offer is no longer available, with Contact Admin/Support. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "emits", "to": "EVT-provider-status-cancellation-patient"}
+  - {"op": "add_node", "id": "EVT-provider-status-cancellation-admin-support", "type": "Event", "owner_fr": "FR-020", "title": "Provider status cancellation alert to admin support", "attrs": {"description": "provider.status_cancellation_admin_support: admin alert, one per affected inquiry or case, to admins with Respond to Support. Stub owned by FR-020."}}  # stub owned by FR-020
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "emits", "to": "EVT-provider-status-cancellation-admin-support"}
+  - {"op": "add_node", "id": "SCR-015-01", "type": "Screen", "owner_fr": "FR-015", "title": "Provider Management Dashboard", "attrs": {"platform": "admin", "description": "Admin list of all providers with status count tiles, search and filters, a 50-row table and per-row quick actions (Screen 1)."}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-015-01"}
+  - {"op": "add_node", "id": "SCR-015-02", "type": "Screen", "owner_fr": "FR-015", "title": "Provider Creation Wizard", "attrs": {"platform": "admin", "description": "Six-step wizard (basic information, professional details, clinic, documents, commission and settings, review) that creates an Active provider (Screen 2)."}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "belongs to", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-015-02"}
+  - {"op": "add_node", "id": "SCR-015-03", "type": "Screen", "owner_fr": "FR-015", "title": "Provider Profile Details", "attrs": {"platform": "admin", "description": "Tabbed provider view: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission and Financials, Activity Log; header quick actions including Login as Provider (Screen 3)."}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "belongs to", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "belongs to", "to": "STG-provider-05-offboarded"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-015-03"}
+  - {"op": "add_node", "id": "SCR-015-04", "type": "Screen", "owner_fr": "FR-015", "title": "Provider Suspension and Deactivation Modal", "attrs": {"platform": "admin", "description": "Captures reason, notify choice, effective date and re-authentication, and previews affected quotes and cases (Screen 4)."}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "belongs to", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "belongs to", "to": "STG-provider-05-offboarded"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-015-04"}
+  - {"op": "add_node", "id": "SCR-015-05", "type": "Screen", "owner_fr": "FR-015", "title": "Provider Reactivation Modal", "attrs": {"platform": "admin", "description": "Captures reason and re-authentication to return a Suspended provider to Active (Screen 5)."}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "belongs to", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-015-05"}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Name"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider-profile.clinic_name", "attrs": {"provenance": "retrieved", "label": "Clinic"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider.status", "attrs": {"provenance": "retrieved", "label": "Status badge"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider.featured", "attrs": {"provenance": "retrieved", "label": "Featured star"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider.created_at", "attrs": {"provenance": "retrieved", "label": "Created Date"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-provider.last_activity_date", "attrs": {"provenance": "system calculated", "label": "Last Activity Date (date filter)"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-commission-rate-config.commission_model", "attrs": {"provenance": "retrieved", "label": "Commission Rate column (model)"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-commission-rate-config.commission_percentage", "attrs": {"provenance": "retrieved", "label": "Commission Rate column (percentage)"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_amount", "attrs": {"provenance": "retrieved", "label": "Commission Rate column (flat rate)"}}
+  - {"op": "add_edge", "from": "SCR-015-01", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_currency", "attrs": {"provenance": "retrieved", "label": "Commission Rate column (flat rate currency)"}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.supported_languages", "attrs": {"provenance": "user input", "label": "Languages Spoken", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.first_name", "attrs": {"provenance": "user input", "label": "First Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.last_name", "attrs": {"provenance": "user input", "label": "Last Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.email", "attrs": {"provenance": "user input", "label": "Email Address", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.phone", "attrs": {"provenance": "user input", "label": "Phone Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.bio", "attrs": {"provenance": "user input", "label": "Bio / Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.specialty", "attrs": {"provenance": "user input", "label": "Specialty", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.medical_license_number", "attrs": {"provenance": "user input", "label": "Medical License Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.years_experience", "attrs": {"provenance": "user input", "label": "Years of Experience", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.awards", "attrs": {"provenance": "user input", "label": "Awards & Recognition", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.payout_frequency", "attrs": {"provenance": "user input", "label": "Payout Frequency", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.seat_limit", "attrs": {"provenance": "default", "label": "Seat Limit (default 100)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider.featured", "attrs": {"provenance": "default", "label": "Featured Provider toggle (default Off)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.logo_url", "attrs": {"provenance": "user input", "label": "Profile Picture / Logo", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.cover_image_url", "attrs": {"provenance": "user input", "label": "Cover Image", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.clinic_name", "attrs": {"provenance": "user input", "label": "Clinic Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.address_fields", "attrs": {"provenance": "user input", "label": "Clinic Address", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.contact_email", "attrs": {"provenance": "user input", "label": "Contact Email", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.city", "attrs": {"provenance": "user input", "label": "Location - City", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.country", "attrs": {"provenance": "user input", "label": "Location - Country", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.public_phone", "attrs": {"provenance": "user input", "label": "Contact Phone (Public)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.website_url", "attrs": {"provenance": "user input", "label": "Website URL", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-profile.operating_hours", "attrs": {"provenance": "user input", "label": "Operating Hours", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-document.file_url", "attrs": {"provenance": "user input", "label": "Medical License, Board Certification and Insurance Certificate uploads", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-provider-document.document_type", "attrs": {"provenance": "default", "label": "Document type fixed by the upload slot", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-commission-rate-config.commission_model", "attrs": {"provenance": "default", "label": "Commission Model (default Percentage)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-commission-rate-config.commission_percentage", "attrs": {"provenance": "user input", "label": "Commission Value (percentage)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_amount", "attrs": {"provenance": "user input", "label": "Commission Value (flat rate)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_currency", "attrs": {"provenance": "default", "label": "Flat Rate Currency (default: system default currency)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-02", "verb": "shows", "to": "ENT-commission-rate-config.effective_date", "attrs": {"provenance": "user input", "label": "Commission Start Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.supported_languages", "attrs": {"provenance": "retrieved", "label": "Tab 2 Supported Languages", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.first_name", "attrs": {"provenance": "retrieved", "label": "First Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.last_name", "attrs": {"provenance": "retrieved", "label": "Last Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.email", "attrs": {"provenance": "retrieved", "label": "Email Address", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.phone", "attrs": {"provenance": "retrieved", "label": "Phone Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.bio", "attrs": {"provenance": "retrieved", "label": "Bio / Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.specialty", "attrs": {"provenance": "retrieved", "label": "Specialty", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.medical_license_number", "attrs": {"provenance": "retrieved", "label": "Medical License Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.years_experience", "attrs": {"provenance": "retrieved", "label": "Years of Experience", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.seat_limit", "attrs": {"provenance": "retrieved", "label": "Seat Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.featured", "attrs": {"provenance": "retrieved", "label": "Featured Provider", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.status", "attrs": {"provenance": "retrieved", "label": "Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.awards", "attrs": {"provenance": "retrieved", "label": "Tab 4 Awards List", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.payout_frequency", "attrs": {"provenance": "retrieved", "label": "Tab 7 Payout Frequency", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.completed_procedures_count", "attrs": {"provenance": "system calculated", "label": "Completed Procedures", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.logo_url", "attrs": {"provenance": "retrieved", "label": "Profile Picture / Logo", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.cover_image_url", "attrs": {"provenance": "retrieved", "label": "Cover Image", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.clinic_name", "attrs": {"provenance": "retrieved", "label": "Clinic Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.address_fields", "attrs": {"provenance": "retrieved", "label": "Clinic Address", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.city", "attrs": {"provenance": "retrieved", "label": "Location - City", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.country", "attrs": {"provenance": "retrieved", "label": "Location - Country", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.public_phone", "attrs": {"provenance": "retrieved", "label": "Contact Phone (Public)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.contact_email", "attrs": {"provenance": "retrieved", "label": "Contact Email", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.website_url", "attrs": {"provenance": "retrieved", "label": "Website URL", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-profile.operating_hours", "attrs": {"provenance": "retrieved", "label": "Operating Hours", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-review-summary.average_rating", "attrs": {"provenance": "inherited from another FR", "label": "Average Rating (Tab 1) and Overall Rating Summary (Tab 5)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-review-summary.review_count", "attrs": {"provenance": "inherited from another FR", "label": "Total review count (Tab 5)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.document_name", "attrs": {"provenance": "retrieved", "label": "Document Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.document_type", "attrs": {"provenance": "user input", "label": "Document Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.uploaded_at", "attrs": {"provenance": "retrieved", "label": "Upload Date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.uploaded_by", "attrs": {"provenance": "retrieved", "label": "Uploaded By", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.file_size", "attrs": {"provenance": "retrieved", "label": "File Size", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-document.file_url", "attrs": {"provenance": "user input", "label": "Upload Document file", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-commission-rate-config.commission_model", "attrs": {"provenance": "retrieved", "label": "Commission Model", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-commission-rate-config.commission_percentage", "attrs": {"provenance": "retrieved", "label": "Commission Value (percentage)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_amount", "attrs": {"provenance": "retrieved", "label": "Commission Value (flat rate)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-commission-rate-config.flat_rate_currency", "attrs": {"provenance": "retrieved", "label": "Flat Rate Currency", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-commission-rate-config.effective_date", "attrs": {"provenance": "retrieved", "label": "Commission Start Date / Effective Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Timestamp", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.user_id", "attrs": {"provenance": "retrieved", "label": "User", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Action type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.changed_fields", "attrs": {"provenance": "retrieved", "label": "Changed fields; Commission History old and new values", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.ip_address", "attrs": {"provenance": "retrieved", "label": "IP address", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider-activity-log-entry.reason", "attrs": {"provenance": "retrieved", "label": "Reason for change", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "carried from previous screen", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "shows", "to": "ENT-pending-provider-status-change.change_type", "attrs": {"provenance": "user input", "label": "Action Type (Suspend or Deactivate)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "shows", "to": "ENT-pending-provider-status-change.reason", "attrs": {"provenance": "user input", "label": "Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "shows", "to": "ENT-pending-provider-status-change.notify_provider", "attrs": {"provenance": "default", "label": "Notify Provider (default checked)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-04", "verb": "shows", "to": "ENT-pending-provider-status-change.effective_date", "attrs": {"provenance": "user input", "label": "Effective Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "carried from previous screen", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-provider-status-event.reason", "attrs": {"provenance": "user input", "label": "Reason for reactivation (the current suspension reason is retrieved from the latest suspension status event)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-provider-status-event.effective_at", "attrs": {"provenance": "retrieved", "label": "Current Suspension date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-provider-status-event.notify_provider", "attrs": {"provenance": "default", "label": "Notify Provider (default checked)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-pending-provider-status-change.change_type", "attrs": {"provenance": "retrieved", "label": "Pending Scheduled Change warning (type)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-015-05", "verb": "shows", "to": "ENT-pending-provider-status-change.effective_date", "attrs": {"provenance": "retrieved", "label": "Pending Scheduled Change warning (date)", "editable": false}}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "writes", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "writes", "to": "ENT-provider-profile"}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "writes", "to": "ENT-provider-document"}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "writes", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "writes", "to": "ENT-provider-activity-log-entry"}
+  - {"op": "add_edge", "from": "STG-provider-02-onboarding", "verb": "writes", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "STG-provider-02-onboarding", "verb": "writes", "to": "ENT-provider-activity-log-entry"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-commission-rate-config"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-pending-provider-status-change"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-provider-activity-log-entry"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-provider-status-event"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-pending-provider-status-change"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-provider-activity-log-entry"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-inquiry"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-provider-inquiry"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "writes", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-provider-status-event"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-pending-provider-status-change"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-provider-activity-log-entry"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-inquiry"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-provider-inquiry"}
+  - {"op": "add_edge", "from": "STG-provider-05-offboarded", "verb": "writes", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "STG-provider-04-suspended", "verb": "reads", "to": "ENT-team-member"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-provider-01-invited"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-provider-05-offboarded"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider-owner", "verb": "acts in", "to": "STG-provider-02-onboarding"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-provider-owner", "verb": "acts in", "to": "STG-provider-04-suspended"}  # shared edge

@@ -1,0 +1,290 @@
+# FR-033 Help Centre Content Management: PRD migrated into the graph.
+# Source: archived/prd-baseline-2026-11-08/fr033-help-centre-management/prd.md, read section by section. No CRs read.
+# Rules keep REQ-033-001..030 verbatim; prose rules without an ID get REQ-033-031 onward. No source item covers the Help Centre, so no decided by edges.
+# Part 2 of 2: screens, belongs to, uses and shows edges. Apply after part 1.
+
+reason: "Migrate the FR-033 PRD into the graph (part 2 of 2): screens and their edges"
+by: docs-manager
+operations:
+  # --- Screens (SCR-033-01..16 provider content management, 17..26 patient content management; all admin-only on the Admin Platform)
+  - {"op": "add_node", "id": "SCR-033-01", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Help Centre Management Dashboard", "attrs": {"platform": "admin", "description": "Admin Platform dashboard for provider Help Centre content: category navigation over the 10 provider categories, quick stats and recent activity (PRD Screen 1). UI controls, not fields: category navigation links."}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-01"}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-stats.total_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: total content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-stats.published_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: published content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-stats.draft_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: draft content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-stats.total_views", "attrs": {"provenance": "system calculated", "label": "Quick Stats: total views", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-audit-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Recent Activity: action", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-audit-entry.target_id", "attrs": {"provenance": "retrieved", "label": "Recent Activity: item", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-audit-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Recent Activity: date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-01", "verb": "shows", "to": "ENT-help-centre-category.label", "attrs": {"provenance": "retrieved", "label": "Category Navigation", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-02", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Help Centre Category Configuration", "attrs": {"platform": "admin", "description": "Admin configures the 10 provider categories: order, visibility, label, description, routing type, external URL and intro copy (PRD Screen 1.1). UI controls, not fields: none."}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-02"}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.category_key", "attrs": {"provenance": "retrieved", "label": "Category List", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.display_order", "attrs": {"provenance": "user input", "label": "Display Order", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.visible", "attrs": {"provenance": "user input", "label": "Visibility Toggle", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.label", "attrs": {"provenance": "user input", "label": "Category Label", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.description", "attrs": {"provenance": "user input", "label": "Category Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.routing_type", "attrs": {"provenance": "user input", "label": "Routing Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.external_url", "attrs": {"provenance": "user input", "label": "External URL", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-02", "verb": "shows", "to": "ENT-help-centre-category.intro_copy", "attrs": {"provenance": "user input", "label": "Contact Support / Feedback & Suggestions Intro Copy", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-03", "type": "Screen", "owner_fr": "FR-033", "title": "Provider FAQ Management", "attrs": {"platform": "admin", "description": "List of provider FAQs organised by topic with edit, delete, preview and manage-topics actions (PRD Screen 2). UI controls, not fields: Add New FAQ, Edit, Delete, Preview, Manage Topics buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "FAQ Question", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "FAQ Answer", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "retrieved", "label": "FAQ Topic", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.display_order", "attrs": {"provenance": "retrieved", "label": "Display Order", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-03", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-04", "type": "Screen", "owner_fr": "FR-033", "title": "Provider FAQ Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a provider FAQ (PRD Screen 2.1). UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "FAQ Question", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "user input", "label": "FAQ Answer", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "user input", "label": "FAQ Topic", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "shows", "to": "ENT-help-centre-content.display_order", "attrs": {"provenance": "user input", "label": "Display Order", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-04", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-05", "type": "Screen", "owner_fr": "FR-033", "title": "Provider FAQ Topic Management", "attrs": {"platform": "admin", "description": "Create, edit, reorder and delete provider FAQ topics (PRD Screen 2.2). Patient FAQ topics have no screen of their own; see the report. UI controls, not fields: Add New Topic, Edit, Delete, Save Order, Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-05", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-05"}
+  - {"op": "add_edge", "from": "SCR-033-05", "verb": "shows", "to": "ENT-faq-topic.name", "attrs": {"provenance": "user input", "label": "Topic Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-05", "verb": "shows", "to": "ENT-faq-topic.description", "attrs": {"provenance": "user input", "label": "Topic Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-05", "verb": "shows", "to": "ENT-faq-topic.display_order", "attrs": {"provenance": "user input", "label": "Display Order", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-05", "verb": "shows", "to": "ENT-faq-topic.faq_count", "attrs": {"provenance": "system calculated", "label": "Number of FAQs", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-06", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Article Management", "attrs": {"platform": "admin", "description": "List of provider articles organised by type (PRD Screen 3). UI controls, not fields: Add New Article, Edit, Delete, Preview buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Article Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "Article Content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "retrieved", "label": "Article Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "retrieved", "label": "Category/Tags", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.table_of_contents", "attrs": {"provenance": "system calculated", "label": "Table of Contents", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "retrieved", "label": "Related Articles", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-06", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-07", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Article Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a provider article (PRD Screen 3.1). UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Article Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "user input", "label": "Article Content", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "user input", "label": "Article Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "user input", "label": "Category/Tags", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "user input", "label": "Related Articles", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-07", "verb": "shows", "to": "ENT-help-centre-content.table_of_contents", "attrs": {"provenance": "system calculated", "label": "Table of Contents", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-08", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Resource Library Management", "attrs": {"platform": "admin", "description": "List of provider resources organised by category (PRD Screen 4). UI controls, not fields: Add New Resource, Edit, Delete, Preview, Download buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Resource Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "retrieved", "label": "Resource Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Resource File", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "retrieved", "label": "Resource Category", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.file_type", "attrs": {"provenance": "system calculated", "label": "File Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.file_size", "attrs": {"provenance": "system calculated", "label": "File Size", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Thumbnail/Icon", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.download_count", "attrs": {"provenance": "system calculated", "label": "Download Count", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-09", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Resource Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a provider resource (PRD Screen 4.1). UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Resource Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "user input", "label": "Resource Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "user input", "label": "Resource File", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "user input", "label": "Resource Category", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "user input", "label": "Thumbnail/Icon", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.file_type", "attrs": {"provenance": "system calculated", "label": "File Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.file_size", "attrs": {"provenance": "system calculated", "label": "File Size", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-10", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Video Tutorial Management", "attrs": {"platform": "admin", "description": "List of provider video tutorials organised by category (PRD Screen 5). UI controls, not fields: Add New Video, Edit, Delete, Preview buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Video Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "retrieved", "label": "Video Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.video_source_type", "attrs": {"provenance": "retrieved", "label": "Video Source Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Video File", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.video_embed_url", "attrs": {"provenance": "retrieved", "label": "Video Embed URL", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Video Thumbnail", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.duration", "attrs": {"provenance": "system calculated", "label": "Video Duration", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.processing_status", "attrs": {"provenance": "system calculated", "label": "Processing Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.transcript", "attrs": {"provenance": "retrieved", "label": "Video Transcript", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "retrieved", "label": "Category/Tags", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "retrieved", "label": "Related Videos", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.view_count", "attrs": {"provenance": "system calculated", "label": "View Count", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-10", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-11", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Video Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a provider video from an uploaded file or a third-party embed (PRD Screen 5.1). UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Video Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "user input", "label": "Video Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.video_source_type", "attrs": {"provenance": "user input", "label": "Video Source Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "user input", "label": "Video File", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.video_embed_url", "attrs": {"provenance": "user input", "label": "Video Embed URL", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "user input", "label": "Video Thumbnail", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.duration", "attrs": {"provenance": "system calculated", "label": "Video Duration", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.processing_status", "attrs": {"provenance": "system calculated", "label": "Processing Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.transcript", "attrs": {"provenance": "user input", "label": "Video Transcript", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "user input", "label": "Category/Tags", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "user input", "label": "Related Videos", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-11", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-12", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Service Status Management", "attrs": {"platform": "admin", "description": "Overview of overall status, service components, incident history and maintenance schedule (PRD Screen 6). Provider-only. UI controls, not fields: add, edit, delete actions on components, incidents and maintenance."}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-12"}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.overall_status", "attrs": {"provenance": "system calculated", "label": "Overall Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.components", "attrs": {"provenance": "retrieved", "label": "Service Components List", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.incidents", "attrs": {"provenance": "retrieved", "label": "Incident History", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.maintenance", "attrs": {"provenance": "retrieved", "label": "Maintenance Schedule", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-component.name", "attrs": {"provenance": "retrieved", "label": "Component Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-component.status", "attrs": {"provenance": "retrieved", "label": "Component Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-incident-record.title", "attrs": {"provenance": "retrieved", "label": "Incident Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-incident-record.description", "attrs": {"provenance": "retrieved", "label": "Incident Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-incident-record.status", "attrs": {"provenance": "retrieved", "label": "Incident Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-incident-record.affected_services", "attrs": {"provenance": "retrieved", "label": "Affected Services (incident)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-maintenance-window.title", "attrs": {"provenance": "retrieved", "label": "Maintenance Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-maintenance-window.description", "attrs": {"provenance": "retrieved", "label": "Maintenance Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-maintenance-window.scheduled_start", "attrs": {"provenance": "retrieved", "label": "Scheduled Start Time", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-maintenance-window.scheduled_end", "attrs": {"provenance": "retrieved", "label": "Scheduled End Time", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-13", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Service Component Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a service component (PRD Screen 6.1). UI controls, not fields: Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-13", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-13"}
+  - {"op": "add_edge", "from": "SCR-033-13", "verb": "shows", "to": "ENT-service-component.name", "attrs": {"provenance": "user input", "label": "Component Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-13", "verb": "shows", "to": "ENT-service-component.status", "attrs": {"provenance": "user input", "label": "Component Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-14", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Incident Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit an incident (PRD Screen 6.2). UI controls, not fields: Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-14"}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.title", "attrs": {"provenance": "user input", "label": "Incident Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.description", "attrs": {"provenance": "user input", "label": "Incident Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.status", "attrs": {"provenance": "user input", "label": "Incident Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.affected_services", "attrs": {"provenance": "user input", "label": "Affected Services", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.start_time", "attrs": {"provenance": "user input", "label": "Start Time", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-14", "verb": "shows", "to": "ENT-incident-record.end_time", "attrs": {"provenance": "user input", "label": "End Time", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-15", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Maintenance Add/Edit Form", "attrs": {"platform": "admin", "description": "Schedule or edit a maintenance window (PRD Screen 6.3). UI controls, not fields: Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-15"}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.title", "attrs": {"provenance": "user input", "label": "Maintenance Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.description", "attrs": {"provenance": "user input", "label": "Maintenance Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.scheduled_start", "attrs": {"provenance": "user input", "label": "Scheduled Start Time", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.scheduled_end", "attrs": {"provenance": "user input", "label": "Scheduled End Time", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.affected_services", "attrs": {"provenance": "user input", "label": "Affected Services", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-15", "verb": "shows", "to": "ENT-maintenance-window.status", "attrs": {"provenance": "user input", "label": "Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-16", "type": "Screen", "owner_fr": "FR-033", "title": "Provider Content Preview", "attrs": {"platform": "admin", "description": "Renders FAQs, articles, resources, videos or service status as providers see them (PRD Screen 7). Shows the content being previewed, read-only. UI controls, not fields: Preview Mode dropdown."}}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Content Preview: title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "Content Preview: body", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Content Preview: attachments", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Content Preview: thumbnail", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-16", "verb": "shows", "to": "ENT-service-status.overall_status", "attrs": {"provenance": "retrieved", "label": "Content Preview: service status", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-17", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Help Centre Management Dashboard", "attrs": {"platform": "admin", "description": "Admin Platform dashboard for patient Help Centre content; mirrors Screen 1 (PRD Screen 8). Admin-only screen. UI controls, not fields: category navigation links."}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-17"}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-stats.total_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: total content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-stats.published_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: published content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-stats.draft_content_count", "attrs": {"provenance": "system calculated", "label": "Quick Stats: draft content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-stats.total_views", "attrs": {"provenance": "system calculated", "label": "Quick Stats: total views", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-audit-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Recent Activity: action", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-audit-entry.target_id", "attrs": {"provenance": "retrieved", "label": "Recent Activity: item", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-audit-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Recent Activity: date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-17", "verb": "shows", "to": "ENT-help-centre-category.label", "attrs": {"provenance": "retrieved", "label": "Category Navigation", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-18", "type": "Screen", "owner_fr": "FR-033", "title": "Patient FAQ Management", "attrs": {"platform": "admin", "description": "Admin list of patient FAQs; mirrors Screen 2 (PRD Screen 9). Admin-only screen. UI controls, not fields: Add New FAQ, Edit, Delete, Preview buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-18"}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "FAQ Question", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "FAQ Answer", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "retrieved", "label": "FAQ Topic", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.display_order", "attrs": {"provenance": "retrieved", "label": "Display Order", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-18", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-19", "type": "Screen", "owner_fr": "FR-033", "title": "Patient FAQ Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a patient FAQ; mirrors Screen 2.1 (PRD Screen 9.1). Admin-only screen. UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "FAQ Question", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "user input", "label": "FAQ Answer", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "user input", "label": "FAQ Topic", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "shows", "to": "ENT-help-centre-content.display_order", "attrs": {"provenance": "user input", "label": "Display Order", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-19", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-20", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Article Management", "attrs": {"platform": "admin", "description": "Admin list of patient articles; mirrors Screen 3 (PRD Screen 10). Admin-only screen. UI controls, not fields: Add New Article, Edit, Delete, Preview buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-20"}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Article Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "Article Content", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "retrieved", "label": "Article Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "retrieved", "label": "Category/Tags", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.table_of_contents", "attrs": {"provenance": "system calculated", "label": "Table of Contents", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "retrieved", "label": "Related Articles", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-20", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-21", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Article Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a patient article; mirrors Screen 3.1 (PRD Screen 10.1). Admin-only screen. UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Article Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "user input", "label": "Article Content", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "user input", "label": "Article Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "user input", "label": "Category/Tags", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "user input", "label": "Related Articles", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-21", "verb": "shows", "to": "ENT-help-centre-content.table_of_contents", "attrs": {"provenance": "system calculated", "label": "Table of Contents", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-22", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Resource Library Management", "attrs": {"platform": "admin", "description": "Admin list of patient resources; mirrors Screen 4 (PRD Screen 11). Admin-only screen. UI controls, not fields: Add New Resource, Edit, Delete, Preview, Download buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-22"}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Resource Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "retrieved", "label": "Resource Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Resource File", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "retrieved", "label": "Resource Category", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.file_type", "attrs": {"provenance": "system calculated", "label": "File Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.file_size", "attrs": {"provenance": "system calculated", "label": "File Size", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Thumbnail/Icon", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.download_count", "attrs": {"provenance": "system calculated", "label": "Download Count", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-23", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Resource Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a patient resource; mirrors Screen 4.1 (PRD Screen 11.1). Admin-only screen. UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Resource Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "user input", "label": "Resource Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "user input", "label": "Resource File", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.topic", "attrs": {"provenance": "user input", "label": "Resource Category", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "user input", "label": "Thumbnail/Icon", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.file_type", "attrs": {"provenance": "system calculated", "label": "File Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.file_size", "attrs": {"provenance": "system calculated", "label": "File Size", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-24", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Video Tutorial Management", "attrs": {"platform": "admin", "description": "Admin list of patient video tutorials; mirrors Screen 5 (PRD Screen 12). Admin-only screen. UI controls, not fields: Add New Video, Edit, Delete, Preview buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-24"}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Video Title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "retrieved", "label": "Video Description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.video_source_type", "attrs": {"provenance": "retrieved", "label": "Video Source Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Video File", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.video_embed_url", "attrs": {"provenance": "retrieved", "label": "Video Embed URL", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Video Thumbnail", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.duration", "attrs": {"provenance": "system calculated", "label": "Video Duration", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.processing_status", "attrs": {"provenance": "system calculated", "label": "Processing Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.transcript", "attrs": {"provenance": "retrieved", "label": "Video Transcript", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "retrieved", "label": "Category/Tags", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "retrieved", "label": "Related Videos", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "retrieved", "label": "Publish Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.view_count", "attrs": {"provenance": "system calculated", "label": "View Count", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-24", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_node", "id": "SCR-033-25", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Video Add/Edit Form", "attrs": {"platform": "admin", "description": "Create or edit a patient video; mirrors Screen 5.1 (PRD Screen 12.1). Admin-only screen. UI controls, not fields: Preview, Save and Cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "user input", "label": "Video Title", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.summary", "attrs": {"provenance": "user input", "label": "Video Description", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.video_source_type", "attrs": {"provenance": "user input", "label": "Video Source Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "user input", "label": "Video File", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.video_embed_url", "attrs": {"provenance": "user input", "label": "Video Embed URL", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "user input", "label": "Video Thumbnail", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.duration", "attrs": {"provenance": "system calculated", "label": "Video Duration", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.processing_status", "attrs": {"provenance": "system calculated", "label": "Processing Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.transcript", "attrs": {"provenance": "user input", "label": "Video Transcript", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.tags", "attrs": {"provenance": "user input", "label": "Category/Tags", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.related_content_ids", "attrs": {"provenance": "user input", "label": "Related Videos", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-25", "verb": "shows", "to": "ENT-help-centre-content.publish_status", "attrs": {"provenance": "user input", "label": "Publish Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-033-26", "type": "Screen", "owner_fr": "FR-033", "title": "Patient Content Preview", "attrs": {"platform": "admin", "description": "Renders patient FAQs, articles, resources or videos as patients see them; mirrors Screen 7 (PRD Screen 13). Admin-only screen. UI controls, not fields: Preview Mode dropdown."}}
+  - {"op": "add_edge", "from": "SCR-033-26", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-033-26"}
+  - {"op": "add_edge", "from": "SCR-033-26", "verb": "shows", "to": "ENT-help-centre-content.title", "attrs": {"provenance": "retrieved", "label": "Content Preview: title", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-26", "verb": "shows", "to": "ENT-help-centre-content.body", "attrs": {"provenance": "retrieved", "label": "Content Preview: body", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-26", "verb": "shows", "to": "ENT-help-centre-content.attachments", "attrs": {"provenance": "retrieved", "label": "Content Preview: attachments", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-26", "verb": "shows", "to": "ENT-help-centre-content.thumbnail_url", "attrs": {"provenance": "retrieved", "label": "Content Preview: thumbnail", "editable": false}}

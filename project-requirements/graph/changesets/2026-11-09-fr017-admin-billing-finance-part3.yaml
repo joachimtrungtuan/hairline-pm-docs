@@ -1,0 +1,318 @@
+# FR-017 Admin Billing & Financial Management: PRD migrated into the graph (part 3 of 3: screens and their edges).
+# Source: archived/prd-baseline-2026-11-08/fr017-admin-billing-finance/prd.md, read section by section (no CR read, D14/D32).
+# REQ-017-001..030 keep their PRD numbers; prose rules without an id get REQ-017-031 onward.
+# Apply the parts in order (1, 2, 3), AFTER the FR-006 and FR-007B change-sets: this file adds fields and an enum value to
+# FR-007B's ENT-installment-payment, and skips edges FR-007B already creates (STG-main-05-payment writes ENT-installment-payment).
+# FR-007B needs its schema id-pattern patch first (see that file's header). FR-029 settings in the graph are reused.
+# Stub nodes owned by another FR carry a trailing '# stub' comment; edges onto shared Stage or Actor nodes carry '# shared edge'.
+reason: "Migrate the FR-017 PRD into the graph (part 3 of 3: screens and their edges)"
+by: docs-manager
+operations:
+# --- Screens: SCR-017-01..12 map to PRD Screens 1, 2, 3, 4, 4a, 4b, 5, 6, 7, 8, 9, 10; UI controls are listed in each description
+  - {"op": "add_node", "id": "SCR-017-01", "type": "Screen", "owner_fr": "FR-017", "title": "Financial Reporting: Revenue Dashboard", "attrs": {"platform": "admin", "description": "PRD prd.md lines 311-357. UI controls (no field): Export Full Report button; Compare to previous period toggle; Anomaly warning icons."}}
+  - {"op": "add_node", "id": "SCR-017-02", "type": "Screen", "owner_fr": "FR-017", "title": "Provider Billing: Upcoming Payments List", "attrs": {"platform": "admin", "description": "PRD prd.md lines 364-425. UI controls (no field): Select checkbox; Actions (View Details, Approve Payout, Unapprove, Void Statement, Add Note, Retry Payout); Batch Approval Toolbar (Selected Statements, Selected Net Total, Approve All Selected Payouts, Clear Selection); Unapprove and Void reason inputs; Filters, sort and CSV export."}}
+  - {"op": "add_node", "id": "SCR-017-03", "type": "Screen", "owner_fr": "FR-017", "title": "Provider Payout Detail Modal", "attrs": {"platform": "admin", "description": "PRD prd.md lines 427-542. UI controls (no field): Batch Approval Confirmation Modal (summary, counts, warning, re-authentication, confirm, cancel, result summary); Approve Payout Confirmation Modal; Retry Payout Confirmation Modal; Export payout report."}}
+  - {"op": "add_node", "id": "SCR-017-04", "type": "Screen", "owner_fr": "FR-017", "title": "Patient Billing: Invoice Management", "attrs": {"platform": "admin", "description": "PRD prd.md lines 544-614. UI controls (no field): Actions (View Details, Send Reminder, Process Refund, Download Invoice, Override Status); Send Reminder Confirmation Modal (summary, invoice reference, channel, confirm, cancel); Override Status reason input; Filters, search and bulk actions."}}
+  - {"op": "add_node", "id": "SCR-017-05", "type": "Screen", "owner_fr": "FR-017", "title": "Patient Invoice Detail", "attrs": {"platform": "admin", "description": "PRD prd.md lines 616-711. UI controls (no field): Actions (same as Screen 4); At Risk warning banner."}}
+  - {"op": "add_node", "id": "SCR-017-06", "type": "Screen", "owner_fr": "FR-017", "title": "Refund Confirmation Modal", "attrs": {"platform": "admin", "description": "PRD prd.md lines 713-748. UI controls (no field): Re-authentication input; Confirm Refund button; Cancel button."}}
+  - {"op": "add_node", "id": "SCR-017-07", "type": "Screen", "owner_fr": "FR-017", "title": "Discount Usage Overview", "attrs": {"platform": "admin", "description": "PRD prd.md lines 750-785. UI controls (no field): FR-019 detail link; Filters, search and export."}}
+  - {"op": "add_node", "id": "SCR-017-08", "type": "Screen", "owner_fr": "FR-017", "title": "Affiliate Billing: Commission Payouts", "attrs": {"platform": "admin", "description": "PRD prd.md lines 787-901. UI controls (no field): Select checkbox; Actions (View Details, Process Payout, Retry Payout, Add Note, Download Report); Bulk Payout Toolbar (Selected Payouts, Selected Total, Process All Selected Payouts, Clear Selection); Bulk Affiliate Payout Confirmation Modal; Process Payout Confirmation Modal; Retry Payout Confirmation Modal; Pending and Paid tabs, filters."}}
+  - {"op": "add_node", "id": "SCR-017-09", "type": "Screen", "owner_fr": "FR-017", "title": "Transaction Search and Audit Log", "attrs": {"platform": "admin", "description": "PRD prd.md lines 909-1006. UI controls (no field): Search controls (Search By, Search Input, Record Type, Date Range, Status); Search Results Record Type badge (names which record the row is); Save Resolution button; Audit log filter controls (Date Range, Admin User, Action Type, Affected Entity, Entity ID); Audit log export."}}
+  - {"op": "add_node", "id": "SCR-017-10", "type": "Screen", "owner_fr": "FR-017", "title": "Currency Alert Detail Modal", "attrs": {"platform": "admin", "description": "PRD prd.md lines 1008-1057. UI controls (no field): Alert Title (static text); Confirm Decision button; Close button."}}
+  - {"op": "add_node", "id": "SCR-017-11", "type": "Screen", "owner_fr": "FR-017", "title": "Provider Earnings Tracker", "attrs": {"platform": "provider", "description": "PRD prd.md lines 1065-1113. UI controls (no field): Filters, sort and CSV export."}}
+  - {"op": "add_node", "id": "SCR-017-12", "type": "Screen", "owner_fr": "FR-017", "title": "Provider Payout History", "attrs": {"platform": "provider", "description": "PRD prd.md lines 1115-1166. UI controls (no field): Copy Reference button; Invoice download button; Filters, sort and CSV export."}}
+# SCR-017-01 Financial Reporting: Revenue Dashboard
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-01"}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.date_range", "attrs": {"provenance": "user input", "label": "Date Range Selector", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.report_currency", "attrs": {"provenance": "default", "label": "Currency Selector", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.total_revenue", "attrs": {"provenance": "system calculated", "label": "Total Revenue"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.platform_commission", "attrs": {"provenance": "system calculated", "label": "Platform Commission"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.provider_payouts", "attrs": {"provenance": "system calculated", "label": "Provider Payouts"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.affiliate_payouts", "attrs": {"provenance": "system calculated", "label": "Affiliate Payouts"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.at_risk_invoice_count", "attrs": {"provenance": "system calculated", "label": "At Risk Invoice Count"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.failed_payout_count", "attrs": {"provenance": "system calculated", "label": "Failed Payout Count"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.active_currency_alerts", "attrs": {"provenance": "system calculated", "label": "Active Currency Alerts"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.refund_trend", "attrs": {"provenance": "system calculated", "label": "Refund Trend"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.outstanding_patient_invoices", "attrs": {"provenance": "system calculated", "label": "Outstanding Patient Invoices"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.overdue_aging_breakdown", "attrs": {"provenance": "system calculated", "label": "Overdue Aging Breakdown"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.pending_provider_payouts", "attrs": {"provenance": "system calculated", "label": "Pending Provider Payouts"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.affiliate_payout_status_summary", "attrs": {"provenance": "system calculated", "label": "Affiliate Payout Status Summary"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.revenue_by_country", "attrs": {"provenance": "system calculated", "label": "Revenue by Country"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.revenue_by_treatment_type", "attrs": {"provenance": "system calculated", "label": "Revenue by Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.revenue_trend", "attrs": {"provenance": "system calculated", "label": "Revenue Trend"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.top_providers", "attrs": {"provenance": "system calculated", "label": "Top Providers by Revenue"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.discount_usage", "attrs": {"provenance": "system calculated", "label": "Discount Usage"}}
+  - {"op": "add_edge", "from": "SCR-017-01", "verb": "shows", "to": "ENT-financial-report.conversion_rate", "attrs": {"provenance": "system calculated", "label": "Conversion Rate"}}
+# SCR-017-02 Provider Billing: Upcoming Payments List
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider.id", "attrs": {"provenance": "retrieved", "label": "Provider ID"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.payout_reference", "attrs": {"provenance": "retrieved", "label": "Payout Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider.payout_frequency", "attrs": {"provenance": "inherited from another FR", "label": "Payment Schedule"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.payout_date", "attrs": {"provenance": "system calculated", "label": "Next Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.total_revenue", "attrs": {"provenance": "system calculated", "label": "Outstanding Earnings"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.commission_value", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.net_payout", "attrs": {"provenance": "system calculated", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.bank_account_id", "attrs": {"provenance": "retrieved", "label": "Bank Account"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.payout_readiness_status", "attrs": {"provenance": "system calculated", "label": "Payout Readiness"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.payout_status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider-payout.blocked_reason", "attrs": {"provenance": "system calculated", "label": "Blocked Reason"}}
+# SCR-017-03 Provider Payout Detail Modal
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Provider Name"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider.id", "attrs": {"provenance": "retrieved", "label": "Provider ID"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.payout_reference", "attrs": {"provenance": "retrieved", "label": "Payout Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.payout_status", "attrs": {"provenance": "retrieved", "label": "Statement Status"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.payout_period", "attrs": {"provenance": "system calculated", "label": "Payout Period"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.payout_readiness_status", "attrs": {"provenance": "system calculated", "label": "Payout Readiness"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.blocked_reason", "attrs": {"provenance": "system calculated", "label": "Blocked Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.bank_account_id", "attrs": {"provenance": "retrieved", "label": "Bank Account"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.total_revenue", "attrs": {"provenance": "system calculated", "label": "Total Revenue"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.commission_model", "attrs": {"provenance": "retrieved", "label": "Commission Configuration"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.commission_value", "attrs": {"provenance": "retrieved", "label": "Commission Configuration"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.commission_amount", "attrs": {"provenance": "system calculated", "label": "Commission Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.net_payout", "attrs": {"provenance": "system calculated", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.approved_by_admin_id", "attrs": {"provenance": "retrieved", "label": "Approved By"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.approved_at", "attrs": {"provenance": "retrieved", "label": "Approved At"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.processed_at", "attrs": {"provenance": "retrieved", "label": "Processed At"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Stripe Transfer ID"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.failure_reason", "attrs": {"provenance": "retrieved", "label": "Failure Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-payout.internal_notes", "attrs": {"provenance": "user input", "label": "Internal Notes", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Treatment List: Booking Reference; Payout Adjustments: Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Treatment List: Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Treatment List: Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-treatment.name", "attrs": {"provenance": "inherited from another FR", "label": "Treatment List: Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-earning.gross_amount", "attrs": {"provenance": "retrieved", "label": "Treatment List: Treatment Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-earning.commission_deducted", "attrs": {"provenance": "system calculated", "label": "Treatment List: Commission Deducted"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-earning.net_earning", "attrs": {"provenance": "system calculated", "label": "Treatment List: Net Contribution"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-earning.currency", "attrs": {"provenance": "retrieved", "label": "Treatment List: Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-provider-earning.exchange_rate", "attrs": {"provenance": "inherited from another FR", "label": "Treatment List: Exchange Rate"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-booking.status", "attrs": {"provenance": "retrieved", "label": "Treatment List: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.adjustment_type", "attrs": {"provenance": "retrieved", "label": "Payout Adjustments: Adjustment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.effective_date", "attrs": {"provenance": "retrieved", "label": "Payout Adjustments: Effective Date"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.description", "attrs": {"provenance": "retrieved", "label": "Payout Adjustments: Description"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.adjustment_amount", "attrs": {"provenance": "retrieved", "label": "Payout Adjustments: Adjustment Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.remaining_balance", "attrs": {"provenance": "system calculated", "label": "Payout Adjustments: Remaining Balance"}}
+  - {"op": "add_edge", "from": "SCR-017-03", "verb": "shows", "to": "ENT-payout-adjustment.status", "attrs": {"provenance": "retrieved", "label": "Payout Adjustments: Status"}}
+# SCR-017-04 Patient Billing: Invoice Management
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-04"}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.invoice_id", "attrs": {"provenance": "retrieved", "label": "Invoice Number"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.invoice_date", "attrs": {"provenance": "retrieved", "label": "Invoice Date"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.due_date", "attrs": {"provenance": "system calculated", "label": "Due Date"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.total_amount", "attrs": {"provenance": "inherited from another FR", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.amount_paid", "attrs": {"provenance": "system calculated", "label": "Amount Paid"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.outstanding_balance", "attrs": {"provenance": "system calculated", "label": "Outstanding Balance"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.currency", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.reconciliation_flag", "attrs": {"provenance": "retrieved", "label": "Reconciliation Flag"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-patient-invoice.installment_progress", "attrs": {"provenance": "system calculated", "label": "Installment Plan"}}
+  - {"op": "add_edge", "from": "SCR-017-04", "verb": "shows", "to": "ENT-invoice-reminder.reminder_type", "attrs": {"provenance": "system calculated", "label": "Send Reminder modal: Reminder Type"}}
+# SCR-017-05 Patient Invoice Detail
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-05"}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.invoice_id", "attrs": {"provenance": "retrieved", "label": "Invoice Number"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.patient_id", "attrs": {"provenance": "retrieved", "label": "Patient ID"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.invoice_date", "attrs": {"provenance": "retrieved", "label": "Invoice Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.currency", "attrs": {"provenance": "inherited from another FR", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.total_amount", "attrs": {"provenance": "inherited from another FR", "label": "Total Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.adjusted_total_after_refund", "attrs": {"provenance": "system calculated", "label": "Adjusted Total After Refund"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.outstanding_balance", "attrs": {"provenance": "system calculated", "label": "Outstanding Balance"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.payment_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.discount_code_applied", "attrs": {"provenance": "inherited from another FR", "label": "Discount Code Applied"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-booking.payment_history", "attrs": {"provenance": "retrieved", "label": "Payment History Table (Payment #, Payment Type, Scheduled Date, Paid Date, Amount, Method, Stripe Payment Intent ID, Status)"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.installment_number", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Installment #"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.due_date", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Scheduled Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.amount", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.status", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.retry_count", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Retry Count"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.next_retry_date", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Next Retry Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-installment-payment.payment_date", "attrs": {"provenance": "retrieved", "label": "Installment Schedule: Paid Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.refund_date", "attrs": {"provenance": "retrieved", "label": "Refund History: Refund Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.refund_amount", "attrs": {"provenance": "retrieved", "label": "Refund History: Refund Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.refund_type", "attrs": {"provenance": "retrieved", "label": "Refund History: Refund Type"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.reason", "attrs": {"provenance": "retrieved", "label": "Refund History: Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.processed_by_admin_id", "attrs": {"provenance": "retrieved", "label": "Refund History: Processed By"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.stripe_refund_id", "attrs": {"provenance": "retrieved", "label": "Refund History: Stripe Refund ID"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-refund.status", "attrs": {"provenance": "retrieved", "label": "Refund History: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-invoice-reminder.reminder_type", "attrs": {"provenance": "retrieved", "label": "Reminder History: Reminder Type"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-invoice-reminder.channel", "attrs": {"provenance": "retrieved", "label": "Reminder History: Channel"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-invoice-reminder.sent_at", "attrs": {"provenance": "retrieved", "label": "Reminder History: Sent At"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-invoice-reminder.delivery_status", "attrs": {"provenance": "retrieved", "label": "Reminder History: Delivery Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.status_override_at", "attrs": {"provenance": "retrieved", "label": "Status Override History: Override Date"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-transaction-audit-log.before_value", "attrs": {"provenance": "retrieved", "label": "Status Override History: Previous Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-transaction-audit-log.after_value", "attrs": {"provenance": "retrieved", "label": "Status Override History: New Status"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.status_override_reason", "attrs": {"provenance": "retrieved", "label": "Status Override History: Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-05", "verb": "shows", "to": "ENT-patient-invoice.status_override_by_admin_id", "attrs": {"provenance": "retrieved", "label": "Status Override History: Admin"}}
+# SCR-017-06 Refund Confirmation Modal
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-06"}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-patient-invoice.invoice_id", "attrs": {"provenance": "carried from previous screen", "label": "Invoice Number"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "carried from previous screen", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "carried from previous screen", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.days_until_treatment", "attrs": {"provenance": "system calculated", "label": "Days Until/Since Treatment"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.cancellation_policy_applied", "attrs": {"provenance": "system calculated", "label": "Cancellation Policy Applied"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.original_invoice_amount", "attrs": {"provenance": "retrieved", "label": "Original Invoice Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.calculated_refund_amount", "attrs": {"provenance": "system calculated", "label": "Calculated Refund Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.adjusted_refund_amount", "attrs": {"provenance": "user input", "label": "Adjusted Refund Amount", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.refund_amount", "attrs": {"provenance": "system calculated", "label": "Final Refund Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.non_refundable_amount", "attrs": {"provenance": "system calculated", "label": "Non-Refundable Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.reason", "attrs": {"provenance": "user input", "label": "Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-06", "verb": "shows", "to": "ENT-refund.adjustment_justification", "attrs": {"provenance": "user input", "label": "Adjustment Justification", "editable": true}}
+# SCR-017-07 Discount Usage Overview
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-07"}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.discount_code", "attrs": {"provenance": "inherited from another FR", "label": "Discount Code"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.discount_name", "attrs": {"provenance": "inherited from another FR", "label": "Discount Name"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.discount_type", "attrs": {"provenance": "inherited from another FR", "label": "Type"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-usage-summary.times_used", "attrs": {"provenance": "system calculated", "label": "Times Used"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-usage-summary.total_discount_amount", "attrs": {"provenance": "system calculated", "label": "Total Discount Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-usage-summary.hairline_cost", "attrs": {"provenance": "system calculated", "label": "Hairline Cost"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-usage-summary.provider_cost", "attrs": {"provenance": "system calculated", "label": "Provider Cost"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-usage-summary.revenue_generated", "attrs": {"provenance": "system calculated", "label": "Revenue Generated"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.valid_from", "attrs": {"provenance": "inherited from another FR", "label": "Active Window: Valid From"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.valid_until", "attrs": {"provenance": "inherited from another FR", "label": "Active Window: Valid Until"}}
+  - {"op": "add_edge", "from": "SCR-017-07", "verb": "shows", "to": "ENT-discount-code.status", "attrs": {"provenance": "inherited from another FR", "label": "Status"}}
+# SCR-017-08 Affiliate Billing: Commission Payouts
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-08"}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "inherited from another FR", "label": "Affiliate Name"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.affiliate_id", "attrs": {"provenance": "retrieved", "label": "Affiliate ID"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payout_reference", "attrs": {"provenance": "retrieved", "label": "Payout Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-discount-code.discount_code", "attrs": {"provenance": "inherited from another FR", "label": "Discount Code(s); Referral Booking: Referral Code"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payout_period", "attrs": {"provenance": "retrieved", "label": "Payout Period"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.total_referrals", "attrs": {"provenance": "system calculated", "label": "Total Referrals"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.total_referral_revenue", "attrs": {"provenance": "system calculated", "label": "Total Referral Revenue"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.commission_rate", "attrs": {"provenance": "inherited from another FR", "label": "Commission Rate; Referral Booking: Commission Rate"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.commission_earned", "attrs": {"provenance": "system calculated", "label": "Commission Earned"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payout_status", "attrs": {"provenance": "retrieved", "label": "Payment Status"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payout_readiness_status", "attrs": {"provenance": "system calculated", "label": "Payout Readiness"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payout_date", "attrs": {"provenance": "retrieved", "label": "Payment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.processed_at", "attrs": {"provenance": "retrieved", "label": "Processed At"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate.payout_method", "attrs": {"provenance": "inherited from another FR", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.payment_destination", "attrs": {"provenance": "retrieved", "label": "Payment Destination"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Stripe Transfer ID"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.failure_reason", "attrs": {"provenance": "retrieved", "label": "Failure Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.processed_by_admin_id", "attrs": {"provenance": "retrieved", "label": "Processed By"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Referral Booking: Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Referral Booking: Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Referral Booking: Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-treatment.name", "attrs": {"provenance": "inherited from another FR", "label": "Referral Booking: Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.booking_amount", "attrs": {"provenance": "retrieved", "label": "Referral Booking: Booking Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-affiliate-commission.commission_amount", "attrs": {"provenance": "system calculated", "label": "Referral Booking: Commission Earned"}}
+  - {"op": "add_edge", "from": "SCR-017-08", "verb": "shows", "to": "ENT-patient-invoice.currency", "attrs": {"provenance": "retrieved", "label": "Referral Booking: Currency"}}
+# SCR-017-09 Transaction Search and Audit Log
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient-invoice.invoice_id", "attrs": {"provenance": "retrieved", "label": "Search Results: Reference / ID"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-provider-payout.payout_reference", "attrs": {"provenance": "retrieved", "label": "Search Results: Reference / ID"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-installment-payment.installment_id", "attrs": {"provenance": "retrieved", "label": "Search Results: Reference / ID"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Search Results: Booking Reference; Dispute Resolution: Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Search Results: Patient / Provider / Affiliate"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Search Results: Patient / Provider / Affiliate; Dispute Resolution: Provider"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Search Results: Patient / Provider / Affiliate"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient-invoice.invoice_date", "attrs": {"provenance": "retrieved", "label": "Search Results: Date"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-provider-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Search Results: Date"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-installment-payment.due_date", "attrs": {"provenance": "retrieved", "label": "Search Results: Date"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-refund.refund_date", "attrs": {"provenance": "retrieved", "label": "Search Results: Date"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-affiliate-commission.payout_date", "attrs": {"provenance": "retrieved", "label": "Search Results: Date"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient-invoice.total_amount", "attrs": {"provenance": "retrieved", "label": "Search Results: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-provider-payout.net_payout", "attrs": {"provenance": "retrieved", "label": "Search Results: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-installment-payment.amount", "attrs": {"provenance": "retrieved", "label": "Search Results: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-refund.refund_amount", "attrs": {"provenance": "retrieved", "label": "Search Results: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-affiliate-commission.commission_amount", "attrs": {"provenance": "retrieved", "label": "Search Results: Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient-invoice.currency", "attrs": {"provenance": "retrieved", "label": "Search Results: Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-patient-invoice.payment_status", "attrs": {"provenance": "retrieved", "label": "Search Results: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-provider-payout.payout_status", "attrs": {"provenance": "retrieved", "label": "Search Results: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-installment-payment.status", "attrs": {"provenance": "retrieved", "label": "Search Results: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-refund.status", "attrs": {"provenance": "retrieved", "label": "Search Results: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-affiliate-commission.payout_status", "attrs": {"provenance": "retrieved", "label": "Search Results: Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.treatment_status_at_cutoff", "attrs": {"provenance": "system calculated", "label": "Dispute Resolution: Treatment Status at Prior Payout Cutoff"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.expected_net_payout", "attrs": {"provenance": "system calculated", "label": "Dispute Resolution: Expected Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.last_evaluated_payout_cycle", "attrs": {"provenance": "system calculated", "label": "Dispute Resolution: Last Evaluated Payout Cycle"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.prior_inclusion_status", "attrs": {"provenance": "system calculated", "label": "Dispute Resolution: Prior Inclusion Status"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.resolution_action", "attrs": {"provenance": "user input", "label": "Dispute Resolution: Resolution Action", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.target_payout_id", "attrs": {"provenance": "user input", "label": "Dispute Resolution: Target Payout Cycle", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.internal_note", "attrs": {"provenance": "user input", "label": "Dispute Resolution: Internal Note", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-payout-dispute-resolution.notify_provider", "attrs": {"provenance": "user input", "label": "Dispute Resolution: Notify Provider", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.timestamp", "attrs": {"provenance": "retrieved", "label": "Audit Log: Timestamp"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.admin_user_id", "attrs": {"provenance": "retrieved", "label": "Audit Log: Admin"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.action_type", "attrs": {"provenance": "retrieved", "label": "Audit Log: Action Type"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.affected_entity_type", "attrs": {"provenance": "retrieved", "label": "Audit Log: Affected Entity"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.affected_entity_id", "attrs": {"provenance": "retrieved", "label": "Audit Log: Affected Entity"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.before_value", "attrs": {"provenance": "retrieved", "label": "Audit Log: Before Value"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.after_value", "attrs": {"provenance": "retrieved", "label": "Audit Log: After Value"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.ip_address", "attrs": {"provenance": "retrieved", "label": "Audit Log: IP Address"}}
+  - {"op": "add_edge", "from": "SCR-017-09", "verb": "shows", "to": "ENT-transaction-audit-log.notes", "attrs": {"provenance": "retrieved", "label": "Audit Log: Notes"}}
+# SCR-017-10 Currency Alert Detail Modal
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert.currency_pair", "attrs": {"provenance": "inherited from another FR", "label": "Currency Pair"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert.fluctuation_percent", "attrs": {"provenance": "inherited from another FR", "label": "Fluctuation"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert.alert_threshold", "attrs": {"provenance": "inherited from another FR", "label": "Alert Threshold"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert.generated_at", "attrs": {"provenance": "inherited from another FR", "label": "Alert Generated"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Affected Bookings: Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "retrieved", "label": "Affected Bookings: Provider"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Affected Bookings: Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-patient-invoice.total_amount", "attrs": {"provenance": "retrieved", "label": "Affected Bookings: Booking Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-rate-lock.source_currency", "attrs": {"provenance": "inherited from another FR", "label": "Affected Bookings: Patient Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-rate-lock.target_currency", "attrs": {"provenance": "inherited from another FR", "label": "Affected Bookings: Provider Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-rate-lock.locked_rate", "attrs": {"provenance": "inherited from another FR", "label": "Affected Bookings: Locked Rate"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert.current_rate", "attrs": {"provenance": "inherited from another FR", "label": "Affected Bookings: Current Rate"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-rate-lock.rate_difference_percent", "attrs": {"provenance": "system calculated", "label": "Affected Bookings: Rate Difference"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-rate-lock.estimated_exposure", "attrs": {"provenance": "system calculated", "label": "Affected Bookings: Estimated Exposure"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-provider-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Affected Bookings: Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert-decision.decision", "attrs": {"provenance": "user input", "label": "Decision", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-017-10", "verb": "shows", "to": "ENT-currency-alert-decision.notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+# SCR-017-11 Provider Earnings Tracker
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-017-11"}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-treatment.name", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.gross_amount", "attrs": {"provenance": "retrieved", "label": "Gross Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.commission_snapshot", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.commission_deducted", "attrs": {"provenance": "system calculated", "label": "Commission Deducted"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.net_earning", "attrs": {"provenance": "system calculated", "label": "Net Earning"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.adjustment_marker", "attrs": {"provenance": "system calculated", "label": "Adjustment Marker"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.currency", "attrs": {"provenance": "retrieved", "label": "Currency"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-booking.status", "attrs": {"provenance": "retrieved", "label": "Treatment Status"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earning.payout_status", "attrs": {"provenance": "system calculated", "label": "Payout Status"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earnings-summary.total_pending_earnings", "attrs": {"provenance": "system calculated", "label": "Total Pending Earnings"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earnings-summary.next_payout_date", "attrs": {"provenance": "system calculated", "label": "Next Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-017-11", "verb": "shows", "to": "ENT-provider-earnings-summary.treatments_this_period", "attrs": {"provenance": "system calculated", "label": "Treatments This Period"}}
+# SCR-017-12 Provider Payout History
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "belongs to", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-017-12"}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_reference", "attrs": {"provenance": "retrieved", "label": "Payout Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.transfer_confirmed_at", "attrs": {"provenance": "retrieved", "label": "Transfer Confirmation Date"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_period", "attrs": {"provenance": "retrieved", "label": "Payout Period"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.treatment_count", "attrs": {"provenance": "system calculated", "label": "Treatment Count"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.total_revenue", "attrs": {"provenance": "retrieved", "label": "Gross Total"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.commission_amount", "attrs": {"provenance": "retrieved", "label": "Commission Deducted"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.net_payout", "attrs": {"provenance": "retrieved", "label": "Net Payout"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_frequency", "attrs": {"provenance": "retrieved", "label": "Payout Frequency"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.failure_reason", "attrs": {"provenance": "retrieved", "label": "Failure Reason"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.retry_history", "attrs": {"provenance": "retrieved", "label": "Retry Resolution History"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-booking.booking_reference", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Booking Reference"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Patient Name"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-booking.appointment_at", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Treatment Date"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-treatment.name", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Breakdown: Treatment Type"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-earning.gross_amount", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Treatment Amount"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-earning.commission_snapshot", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Commission"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-earning.commission_deducted", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Commission Deducted"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-earning.net_earning", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Net Contribution"}}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-earning.currency", "attrs": {"provenance": "retrieved", "label": "Treatment Breakdown: Currency"}}

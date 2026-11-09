@@ -1,0 +1,480 @@
+# FR-018 Affiliate Management: PRD migrated into the graph (part 2 of 2).
+# Source: archived/prd-baseline-2026-11-08/fr018-affiliate-management/prd.md, read section by section (no CR read, D14/D32).
+# REQ-018-001..042 keep their PRD numbers (statement verbatim from the Functional Requirements Summary); prose rules take REQ-018-043 onward in PRD order.
+# Every prose Rule statement is the PRD line copied (bullet markers and bold stripped; grouped lines joined with '; '). Restatements were not added twice (see report).
+# Apply part 1, then part 2. No Rule has a 'decided by' edge: no register source covers affiliates (lint L10 expected).
+# '# shared edge' marks an edge onto an existing Stage or Actor; '# may-collide' marks an operation FR-017 part 1 also creates (ENT-affiliate, ENT-affiliate.name):
+# if FR-017 is applied first, drop those two lines here and convert them to update_node / update_field; if this file goes first, FR-017 must do the same.
+reason: "Migrate the FR-018 PRD into the graph (part 2 of 2: entities, fields, enum values, screens and their edges)"
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "ENT-affiliate", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate account", "attrs": {"description": "PRD Key Entities, Entity 1. Affiliate partner account: contact, payout details, commission structure, status and read-only performance metrics."}}  # may-collide
+  - {"op": "add_field", "id": "ENT-affiliate.id", "entity_id": "ENT-affiliate", "name": "id", "data_type": "id", "title": "Affiliate ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate.name", "entity_id": "ENT-affiliate", "name": "name", "data_type": "text", "title": "Affiliate name", "owner_fr": "FR-018", "required": true}  # may-collide
+  - {"op": "add_field", "id": "ENT-affiliate.contact_email", "entity_id": "ENT-affiliate", "name": "contact_email", "data_type": "text", "title": "Contact email", "owner_fr": "FR-018", "required": true, "attrs": {"description": "Login username and notification address; unique; immutable after creation."}}
+  - {"op": "add_field", "id": "ENT-affiliate.phone_number", "entity_id": "ENT-affiliate", "name": "phone_number", "data_type": "text", "title": "Phone number", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.languages", "entity_id": "ENT-affiliate", "name": "languages", "data_type": "json", "title": "Language(s)", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.country_region", "entity_id": "ENT-affiliate", "name": "country_region", "data_type": "text", "title": "Country/Region", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.affiliate_type", "entity_id": "ENT-affiliate", "name": "affiliate_type", "data_type": "enum", "title": "Affiliate type", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.affiliate_type", "value": "influencer", "label": "Influencer", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.affiliate_type", "value": "clinic_partner", "label": "Clinic partner", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.affiliate_type", "value": "organization", "label": "Organization", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.affiliate_type", "value": "other", "label": "Other", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-affiliate.tax_vat_business_reg_id", "entity_id": "ENT-affiliate", "name": "tax_vat_business_reg_id", "data_type": "text", "title": "Tax / VAT / Business Reg ID", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.bank_account_holder_name", "entity_id": "ENT-affiliate", "name": "bank_account_holder_name", "data_type": "text", "title": "Account holder name", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate.bank_name", "entity_id": "ENT-affiliate", "name": "bank_name", "data_type": "text", "title": "Bank name", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate.bank_account_number", "entity_id": "ENT-affiliate", "name": "bank_account_number", "data_type": "text", "title": "Account number", "owner_fr": "FR-018", "required": true, "attrs": {"description": "Encrypted at rest; masked to the last 4 digits in the UI."}}
+  - {"op": "add_field", "id": "ENT-affiliate.bank_routing_swift_code", "entity_id": "ENT-affiliate", "name": "bank_routing_swift_code", "data_type": "text", "title": "Routing / SWIFT code", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate.bank_iban", "entity_id": "ENT-affiliate", "name": "bank_iban", "data_type": "text", "title": "IBAN", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.commission_type", "entity_id": "ENT-affiliate", "name": "commission_type", "data_type": "enum", "title": "Commission type", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.commission_type", "value": "percentage", "label": "Percentage", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.commission_type", "value": "fixed", "label": "Fixed", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-affiliate.commission_percentage", "entity_id": "ENT-affiliate", "name": "commission_percentage", "data_type": "decimal", "title": "Commission percentage", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.commission_fixed_amount", "entity_id": "ENT-affiliate", "name": "commission_fixed_amount", "data_type": "money", "title": "Commission fixed amount", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.commission_effective_date", "entity_id": "ENT-affiliate", "name": "commission_effective_date", "data_type": "date", "title": "Commission effective date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.payout_schedule", "entity_id": "ENT-affiliate", "name": "payout_schedule", "data_type": "text", "title": "Payout schedule", "owner_fr": "FR-018", "required": false, "attrs": {"description": "Fixed: monthly on the 7th."}}
+  - {"op": "add_field", "id": "ENT-affiliate.status", "entity_id": "ENT-affiliate", "name": "status", "data_type": "enum", "title": "Status", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.status", "value": "pending", "label": "Pending", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.status", "value": "active", "label": "Active", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.status", "value": "suspended", "label": "Suspended", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.status", "value": "inactive", "label": "Inactive", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-affiliate.status_reason", "entity_id": "ENT-affiliate", "name": "status_reason", "data_type": "text", "title": "Suspension or offboarding reason", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.activation_status", "entity_id": "ENT-affiliate", "name": "activation_status", "data_type": "enum", "title": "Activation status", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.activation_status", "value": "invited", "label": "Invited", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.activation_status", "value": "active", "label": "Active", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-affiliate.activation_link_expires_at", "entity_id": "ENT-affiliate", "name": "activation_link_expires_at", "data_type": "datetime", "title": "Activation link expiry", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.performance_tier", "entity_id": "ENT-affiliate", "name": "performance_tier", "data_type": "enum", "title": "Performance tier", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-056"}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.performance_tier", "value": "bronze", "label": "Bronze", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.performance_tier", "value": "silver", "label": "Silver", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.performance_tier", "value": "gold", "label": "Gold", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.performance_tier", "value": "platinum", "label": "Platinum", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-affiliate.campaign_eligibility", "entity_id": "ENT-affiliate", "name": "campaign_eligibility", "data_type": "enum", "title": "Campaign eligibility", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-057"}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.campaign_eligibility", "value": "eligible", "label": "Eligible", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.campaign_eligibility", "value": "ineligible", "label": "Ineligible", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-affiliate.campaign_eligibility_reason", "entity_id": "ENT-affiliate", "name": "campaign_eligibility_reason", "data_type": "text", "title": "Campaign ineligibility reason", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-057"}
+  - {"op": "add_field", "id": "ENT-affiliate.last_login_at", "entity_id": "ENT-affiliate", "name": "last_login_at", "data_type": "datetime", "title": "Last login", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.created_at", "entity_id": "ENT-affiliate", "name": "created_at", "data_type": "datetime", "title": "Created date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.internal_notes", "entity_id": "ENT-affiliate", "name": "internal_notes", "data_type": "text", "title": "Internal notes", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate.referral_link", "entity_id": "ENT-affiliate", "name": "referral_link", "data_type": "text", "title": "Referral link", "owner_fr": "FR-018", "required": false, "attrs": {"description": "Unique auto-apply code URL."}}
+  - {"op": "add_field", "id": "ENT-affiliate.final_balance_gross", "entity_id": "ENT-affiliate", "name": "final_balance_gross", "data_type": "money", "title": "Final balance gross", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-097"}
+  - {"op": "add_field", "id": "ENT-affiliate.final_reversals", "entity_id": "ENT-affiliate", "name": "final_reversals", "data_type": "money", "title": "Final reversals and refunds", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-097"}
+  - {"op": "add_field", "id": "ENT-affiliate.final_balance_net", "entity_id": "ENT-affiliate", "name": "final_balance_net", "data_type": "money", "title": "Final balance net", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-097"}
+  - {"op": "add_field", "id": "ENT-affiliate.settlement_outcome", "entity_id": "ENT-affiliate", "name": "settlement_outcome", "data_type": "enum", "title": "Settlement outcome", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-097"}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.settlement_outcome", "value": "pay_final_balance", "label": "Pay final balance", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.settlement_outcome", "value": "forfeit", "label": "Forfeit", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.settlement_outcome", "value": "write_off", "label": "Write off", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-affiliate.total_referrals", "entity_id": "ENT-affiliate", "name": "total_referrals", "data_type": "int", "title": "Total referrals", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.referrals_this_month", "entity_id": "ENT-affiliate", "name": "referrals_this_month", "data_type": "int", "title": "Referrals this month", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.total_revenue", "entity_id": "ENT-affiliate", "name": "total_revenue", "data_type": "money", "title": "Total revenue", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.total_commissions_earned", "entity_id": "ENT-affiliate", "name": "total_commissions_earned", "data_type": "money", "title": "Total commissions earned", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.total_commissions_paid", "entity_id": "ENT-affiliate", "name": "total_commissions_paid", "data_type": "money", "title": "Total commissions paid", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.pending_payout", "entity_id": "ENT-affiliate", "name": "pending_payout", "data_type": "money", "title": "Pending payout", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-006"}
+  - {"op": "add_field", "id": "ENT-affiliate.active_codes_count", "entity_id": "ENT-affiliate", "name": "active_codes_count", "data_type": "int", "title": "Active codes count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-012"}
+  - {"op": "add_field", "id": "ENT-affiliate.next_payout_date", "entity_id": "ENT-affiliate", "name": "next_payout_date", "data_type": "date", "title": "Next payout date", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-007"}
+  - {"op": "add_field", "id": "ENT-affiliate.pending_bookings_count", "entity_id": "ENT-affiliate", "name": "pending_bookings_count", "data_type": "int", "title": "Included completed bookings count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-035"}
+  - {"op": "add_node", "id": "ENT-affiliate-discount-code", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate discount code", "attrs": {"description": "PRD Key Entities, Entity 2. Affiliate-bound discount code; belongs to exactly one affiliate."}}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.id", "entity_id": "ENT-affiliate-discount-code", "name": "id", "data_type": "id", "title": "Code ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.code_text", "entity_id": "ENT-affiliate-discount-code", "name": "code_text", "data_type": "text", "title": "Code text", "owner_fr": "FR-018", "required": true, "attrs": {"description": "Unique across affiliates, case-insensitive, uppercase."}}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.affiliate_id", "entity_id": "ENT-affiliate-discount-code", "name": "affiliate_id", "data_type": "id", "title": "Linked affiliate ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.campaign_name", "entity_id": "ENT-affiliate-discount-code", "name": "campaign_name", "data_type": "text", "title": "Campaign name", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.batch_id", "entity_id": "ENT-affiliate-discount-code", "name": "batch_id", "data_type": "id", "title": "Generation batch ID", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.generation_mode", "entity_id": "ENT-affiliate-discount-code", "name": "generation_mode", "data_type": "enum", "title": "Generation mode", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.generation_mode", "value": "single_affiliate", "label": "Single affiliate", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.generation_mode", "value": "selected_affiliates", "label": "Selected affiliates", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.generation_mode", "value": "filtered_segment", "label": "Filtered segment", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.discount_type", "entity_id": "ENT-affiliate-discount-code", "name": "discount_type", "data_type": "enum", "title": "Discount type", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.discount_type", "value": "hairline_fees_only", "label": "Hairline fees only", "sort_order": 0}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.discount_amount_type", "entity_id": "ENT-affiliate-discount-code", "name": "discount_amount_type", "data_type": "enum", "title": "Discount amount type", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.discount_amount_type", "value": "percentage", "label": "Percentage", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.discount_amount_type", "value": "fixed", "label": "Fixed", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.discount_percentage", "entity_id": "ENT-affiliate-discount-code", "name": "discount_percentage", "data_type": "decimal", "title": "Discount percentage", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.discount_fixed_amount", "entity_id": "ENT-affiliate-discount-code", "name": "discount_fixed_amount", "data_type": "money", "title": "Discount fixed amount", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.application_method", "entity_id": "ENT-affiliate-discount-code", "name": "application_method", "data_type": "enum", "title": "Application method", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.application_method", "value": "auto_apply", "label": "Auto apply", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.application_method", "value": "code_based", "label": "Code based", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.expiration_date", "entity_id": "ENT-affiliate-discount-code", "name": "expiration_date", "data_type": "date", "title": "Expiration date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.max_usage_count", "entity_id": "ENT-affiliate-discount-code", "name": "max_usage_count", "data_type": "int", "title": "Maximum usage count", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.per_patient_usage_limit", "entity_id": "ENT-affiliate-discount-code", "name": "per_patient_usage_limit", "data_type": "int", "title": "Per-patient usage limit", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.current_usage_count", "entity_id": "ENT-affiliate-discount-code", "name": "current_usage_count", "data_type": "int", "title": "Current usage count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-004"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.applied_count", "entity_id": "ENT-affiliate-discount-code", "name": "applied_count", "data_type": "int", "title": "Applied count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-004"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.completed_count", "entity_id": "ENT-affiliate-discount-code", "name": "completed_count", "data_type": "int", "title": "Completed count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-004"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.conversion_rate", "entity_id": "ENT-affiliate-discount-code", "name": "conversion_rate", "data_type": "decimal", "title": "Conversion rate", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-004"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.last_used_at", "entity_id": "ENT-affiliate-discount-code", "name": "last_used_at", "data_type": "datetime", "title": "Last used date", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-004"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.revenue_generated", "entity_id": "ENT-affiliate-discount-code", "name": "revenue_generated", "data_type": "money", "title": "Revenue generated", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-005"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.commission_earned", "entity_id": "ENT-affiliate-discount-code", "name": "commission_earned", "data_type": "money", "title": "Commission earned", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-005"}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.status", "entity_id": "ENT-affiliate-discount-code", "name": "status", "data_type": "enum", "title": "Status", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.status", "value": "active", "label": "Active", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.status", "value": "inactive", "label": "Inactive", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.status", "value": "expired", "label": "Expired", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-discount-code.status", "value": "revoked", "label": "Revoked", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.marketing_material_links", "entity_id": "ENT-affiliate-discount-code", "name": "marketing_material_links", "data_type": "json", "title": "Marketing material links", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-discount-code.created_at", "entity_id": "ENT-affiliate-discount-code", "name": "created_at", "data_type": "datetime", "title": "Created date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_node", "id": "ENT-affiliate-code-batch", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate code generation batch", "attrs": {"description": "PRD Key Entities, Entity 2a. One bulk code generation run and its snapshot of selected affiliates."}}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.id", "entity_id": "ENT-affiliate-code-batch", "name": "id", "data_type": "id", "title": "Batch ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.campaign_name", "entity_id": "ENT-affiliate-code-batch", "name": "campaign_name", "data_type": "text", "title": "Campaign name", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.admin_user_id", "entity_id": "ENT-affiliate-code-batch", "name": "admin_user_id", "data_type": "id", "title": "Admin user ID", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.generation_mode", "entity_id": "ENT-affiliate-code-batch", "name": "generation_mode", "data_type": "enum", "title": "Generation mode", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.generation_mode", "value": "single_affiliate", "label": "Single affiliate", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.generation_mode", "value": "selected_affiliates", "label": "Selected affiliates", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.generation_mode", "value": "filtered_segment", "label": "Filtered segment", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.selection_snapshot", "entity_id": "ENT-affiliate-code-batch", "name": "selection_snapshot", "data_type": "json", "title": "Filter snapshot or selected affiliate IDs", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.code_pattern", "entity_id": "ENT-affiliate-code-batch", "name": "code_pattern", "data_type": "text", "title": "Code pattern", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.requested_count", "entity_id": "ENT-affiliate-code-batch", "name": "requested_count", "data_type": "int", "title": "Requested count", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.created_count", "entity_id": "ENT-affiliate-code-batch", "name": "created_count", "data_type": "int", "title": "Created count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-032"}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.skipped_count", "entity_id": "ENT-affiliate-code-batch", "name": "skipped_count", "data_type": "int", "title": "Skipped count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-032"}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.failed_count", "entity_id": "ENT-affiliate-code-batch", "name": "failed_count", "data_type": "int", "title": "Failed count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-032"}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.created_at", "entity_id": "ENT-affiliate-code-batch", "name": "created_at", "data_type": "datetime", "title": "Created date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch.status", "entity_id": "ENT-affiliate-code-batch", "name": "status", "data_type": "enum", "title": "Status", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.status", "value": "completed", "label": "Completed", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.status", "value": "partial", "label": "Partial", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch.status", "value": "failed", "label": "Failed", "sort_order": 2}
+  - {"op": "add_node", "id": "ENT-affiliate-code-batch-result", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate code generation result row", "attrs": {"description": "PRD Screen 4.1 Result Rows and Alternative Flow B4: per-affiliate outcome of a bulk generation, with the reason when skipped or failed."}}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.id", "entity_id": "ENT-affiliate-code-batch-result", "name": "id", "data_type": "id", "title": "Result row ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.batch_id", "entity_id": "ENT-affiliate-code-batch-result", "name": "batch_id", "data_type": "id", "title": "Batch ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.affiliate_id", "entity_id": "ENT-affiliate-code-batch-result", "name": "affiliate_id", "data_type": "id", "title": "Affiliate ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.code_id", "entity_id": "ENT-affiliate-code-batch-result", "name": "code_id", "data_type": "id", "title": "Code ID", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.outcome", "entity_id": "ENT-affiliate-code-batch-result", "name": "outcome", "data_type": "enum", "title": "Outcome", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch-result.outcome", "value": "created", "label": "Created", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch-result.outcome", "value": "skipped", "label": "Skipped", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-code-batch-result.outcome", "value": "failed", "label": "Failed", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-affiliate-code-batch-result.reason", "entity_id": "ENT-affiliate-code-batch-result", "name": "reason", "data_type": "text", "title": "Reason", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_node", "id": "ENT-affiliate-payout", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate payout", "attrs": {"description": "PRD Key Entities, Entity 4. Monthly affiliate payout record generated by FR-018; executed and status-updated by FR-017."}}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.id", "entity_id": "ENT-affiliate-payout", "name": "id", "data_type": "id", "title": "Payout ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.affiliate_id", "entity_id": "ENT-affiliate-payout", "name": "affiliate_id", "data_type": "id", "title": "Affiliate ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.payout_month", "entity_id": "ENT-affiliate-payout", "name": "payout_month", "data_type": "date", "title": "Payout month", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.total_bookings_count", "entity_id": "ENT-affiliate-payout", "name": "total_bookings_count", "data_type": "int", "title": "Total bookings count", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-007"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.total_commission_amount", "entity_id": "ENT-affiliate-payout", "name": "total_commission_amount", "data_type": "money", "title": "Total commission amount", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-007"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.reversals_refunds", "entity_id": "ENT-affiliate-payout", "name": "reversals_refunds", "data_type": "money", "title": "Reversals and refunds", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-067"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.net_amount", "entity_id": "ENT-affiliate-payout", "name": "net_amount", "data_type": "money", "title": "Net amount", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-035"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.stripe_transfer_id", "entity_id": "ENT-affiliate-payout", "name": "stripe_transfer_id", "data_type": "text", "title": "Stripe transfer ID", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.payout_date", "entity_id": "ENT-affiliate-payout", "name": "payout_date", "data_type": "date", "title": "Payout date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.status", "entity_id": "ENT-affiliate-payout", "name": "status", "data_type": "enum", "title": "Status", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-payout.status", "value": "pending", "label": "Pending", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-payout.status", "value": "processing", "label": "Processing", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-payout.status", "value": "paid", "label": "Paid", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-payout.status", "value": "failed", "label": "Failed", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.failure_reason", "entity_id": "ENT-affiliate-payout", "name": "failure_reason", "data_type": "text", "title": "Failure reason", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.admin_notes", "entity_id": "ENT-affiliate-payout", "name": "admin_notes", "data_type": "text", "title": "Admin notes", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.created_at", "entity_id": "ENT-affiliate-payout", "name": "created_at", "data_type": "datetime", "title": "Created date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.payout_readiness", "entity_id": "ENT-affiliate-payout", "name": "payout_readiness", "data_type": "text", "title": "Payout readiness", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-035"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.threshold_excluded", "entity_id": "ENT-affiliate-payout", "name": "threshold_excluded", "data_type": "bool", "title": "Excluded below minimum threshold", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-068"}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.payment_method", "entity_id": "ENT-affiliate-payout", "name": "payment_method", "data_type": "text", "title": "Payment method", "owner_fr": "FR-018", "required": false, "attrs": {"description": "Stripe transfer only."}}
+  - {"op": "add_field", "id": "ENT-affiliate-payout.status_timeline", "entity_id": "ENT-affiliate-payout", "name": "status_timeline", "data_type": "json", "title": "Status timeline", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_node", "id": "ENT-affiliate-audit-entry", "type": "Entity", "owner_fr": "FR-018", "title": "Affiliate transaction log entry", "attrs": {"description": "PRD Key Entities, Entity 5. Append-only audit entry for affiliate lifecycle and money events."}}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.id", "entity_id": "ENT-affiliate-audit-entry", "name": "id", "data_type": "id", "title": "Log ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.affiliate_id", "entity_id": "ENT-affiliate-audit-entry", "name": "affiliate_id", "data_type": "id", "title": "Affiliate ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.action_type", "entity_id": "ENT-affiliate-audit-entry", "name": "action_type", "data_type": "enum", "title": "Action type", "owner_fr": "FR-018", "required": false, "attrs": {"description": "PRD list ends with 'etc.'; values beyond these are not enumerated."}}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "code_created", "label": "Code created", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "code_applied", "label": "Code applied", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "commission_calculated", "label": "Commission calculated", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "payout_processed", "label": "Payout processed", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "status_changed", "label": "Status changed", "sort_order": 4}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-audit-entry.action_type", "value": "activation_sent", "label": "Activation sent", "sort_order": 5}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.timestamp", "entity_id": "ENT-affiliate-audit-entry", "name": "timestamp", "data_type": "datetime", "title": "Timestamp", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.user_id", "entity_id": "ENT-affiliate-audit-entry", "name": "user_id", "data_type": "id", "title": "User ID (admin or system)", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.ip_address", "entity_id": "ENT-affiliate-audit-entry", "name": "ip_address", "data_type": "text", "title": "IP address", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-audit-entry.metadata", "entity_id": "ENT-affiliate-audit-entry", "name": "metadata", "data_type": "json", "title": "Action details", "owner_fr": "FR-018", "required": false}
+  - {"op": "update_node", "id": "ENT-affiliate-attribution", "attrs": {"description": "PRD Key Entities, Entity 3. Booking with affiliate attribution: the captured affiliate code or link, the final applied discount, and the commission owed once the booking completes."}}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.booking_id", "entity_id": "ENT-affiliate-attribution", "name": "booking_id", "data_type": "id", "title": "Booking ID", "owner_fr": "FR-018", "required": true}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.patient_id", "entity_id": "ENT-affiliate-attribution", "name": "patient_id", "data_type": "id", "title": "Patient ID (anonymized in affiliate views)", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.final_discount_applied", "entity_id": "ENT-affiliate-attribution", "name": "final_discount_applied", "data_type": "id", "title": "Final discount applied", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.booking_total", "entity_id": "ENT-affiliate-attribution", "name": "booking_total", "data_type": "money", "title": "Booking total", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.discount_applied", "entity_id": "ENT-affiliate-attribution", "name": "discount_applied", "data_type": "money", "title": "Discount applied", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.hairline_commission", "entity_id": "ENT-affiliate-attribution", "name": "hairline_commission", "data_type": "money", "title": "Hairline commission", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.affiliate_commission_owed", "entity_id": "ENT-affiliate-attribution", "name": "affiliate_commission_owed", "data_type": "money", "title": "Affiliate commission owed", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-054"}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.reversal_amount", "entity_id": "ENT-affiliate-attribution", "name": "reversal_amount", "data_type": "money", "title": "Reversal amount", "owner_fr": "FR-018", "required": false, "calculated_by": "REQ-018-067"}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.booking_status", "entity_id": "ENT-affiliate-attribution", "name": "booking_status", "data_type": "enum", "title": "Booking status", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-attribution.booking_status", "value": "pending", "label": "Pending", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-attribution.booking_status", "value": "completed", "label": "Completed", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate-attribution.booking_status", "value": "refunded", "label": "Refunded", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-affiliate-attribution.completion_date", "entity_id": "ENT-affiliate-attribution", "name": "completion_date", "data_type": "date", "title": "Completion date", "owner_fr": "FR-018", "required": false}
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-discount-code"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-discount-code"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-code-batch"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-code-batch"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-code-batch-result"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-code-batch-result"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-payout"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-payout"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-audit-entry"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-audit-entry"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-affiliate-attribution"}  # shared edge
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "writes", "to": "ENT-affiliate-attribution"}  # shared edge
+  - {"op": "add_node", "id": "SCR-018-01", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Management Dashboard", "attrs": {"platform": "admin", "description": "PRD prd.md lines 321-367. UI controls and composites with no entity field: Actions buttons (View Details, Edit, Suspend, Generate Report); row selection and Generate Codes bulk action; filter and search controls; status badges."}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-01"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Affiliate Name"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "retrieved", "label": "Contact Email"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.total_referrals", "attrs": {"provenance": "system calculated", "label": "Total Referrals"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.total_revenue", "attrs": {"provenance": "system calculated", "label": "Total Revenue"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.total_commissions_paid", "attrs": {"provenance": "system calculated", "label": "Total Commissions Paid"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.pending_payout", "attrs": {"provenance": "system calculated", "label": "Pending Payout"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "retrieved", "label": "Status", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.country_region", "attrs": {"provenance": "retrieved", "label": "Country/Region"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.affiliate_type", "attrs": {"provenance": "retrieved", "label": "Affiliate Type"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.performance_tier", "attrs": {"provenance": "system calculated", "label": "Performance Tier"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.campaign_eligibility", "attrs": {"provenance": "system calculated", "label": "Campaign Eligibility"}}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.active_codes_count", "attrs": {"provenance": "system calculated", "label": "Active Codes Count"}}
+  - {"op": "add_node", "id": "SCR-018-02", "type": "Screen", "owner_fr": "FR-018", "title": "Add/Edit Affiliate Form", "attrs": {"platform": "admin", "description": "PRD prd.md lines 370-416. UI controls and composites with no entity field: Save and cancel buttons; commission type radio."}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-02"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "user input", "label": "Affiliate Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "user input", "label": "Contact Email", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.phone_number", "attrs": {"provenance": "user input", "label": "Phone Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.languages", "attrs": {"provenance": "user input", "label": "Language(s)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.country_region", "attrs": {"provenance": "user input", "label": "Country/Region", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.affiliate_type", "attrs": {"provenance": "user input", "label": "Affiliate Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.tax_vat_business_reg_id", "attrs": {"provenance": "user input", "label": "Tax / VAT / Business Reg ID", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.bank_account_holder_name", "attrs": {"provenance": "user input", "label": "Account Holder Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.bank_name", "attrs": {"provenance": "user input", "label": "Bank Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "user input", "label": "Account Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.bank_routing_swift_code", "attrs": {"provenance": "user input", "label": "Routing / SWIFT Code", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.bank_iban", "attrs": {"provenance": "user input", "label": "IBAN", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.commission_type", "attrs": {"provenance": "user input", "label": "Commission Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.commission_percentage", "attrs": {"provenance": "user input", "label": "Commission Percentage", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.commission_fixed_amount", "attrs": {"provenance": "user input", "label": "Commission Fixed Amount", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.payout_schedule", "attrs": {"provenance": "default", "label": "Payout Schedule", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.performance_tier", "attrs": {"provenance": "system calculated", "label": "Performance Tier", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.activation_status", "attrs": {"provenance": "system calculated", "label": "Activation Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.last_login_at", "attrs": {"provenance": "retrieved", "label": "Last Login", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-02", "verb": "shows", "to": "ENT-affiliate.internal_notes", "attrs": {"provenance": "user input", "label": "Notes (Internal)", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-03", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Detail", "attrs": {"platform": "admin", "description": "PRD prd.md lines 419-463. UI controls and composites with no entity field: Assigned Promo Codes list, Payout History list and Activity / Audit list (rows of other screens' fields); action buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-03"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: name"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: status badge"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.id", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: affiliate ID"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.affiliate_type", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: type"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.country_region", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: country"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.activation_status", "attrs": {"provenance": "retrieved", "label": "Affiliate Header: activation status"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.total_referrals", "attrs": {"provenance": "system calculated", "label": "Summary Metrics: total referrals"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.total_revenue", "attrs": {"provenance": "system calculated", "label": "Summary Metrics: total revenue"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.total_commissions_paid", "attrs": {"provenance": "system calculated", "label": "Summary Metrics: commissions paid"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.pending_payout", "attrs": {"provenance": "system calculated", "label": "Summary Metrics: pending payout"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.next_payout_date", "attrs": {"provenance": "system calculated", "label": "Summary Metrics: next payout date"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: contact email"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.phone_number", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: phone number"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.languages", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: languages"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.tax_vat_business_reg_id", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: tax / VAT / business reg ID"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.bank_account_holder_name", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: account holder name"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.bank_name", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: bank name"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: account number (masked)"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.bank_routing_swift_code", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: routing / SWIFT code"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.bank_iban", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: IBAN"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.commission_type", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: commission type"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.commission_percentage", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: commission percentage"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.commission_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: commission fixed amount"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.payout_schedule", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: payout schedule"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.performance_tier", "attrs": {"provenance": "system calculated", "label": "Account Details Panel: performance tier"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.last_login_at", "attrs": {"provenance": "retrieved", "label": "Account Details Panel: last login"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.pending_bookings_count", "attrs": {"provenance": "system calculated", "label": "Upcoming Payout Panel: included completed bookings count"}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate.internal_notes", "attrs": {"provenance": "user input", "label": "Internal Notes", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-04", "type": "Screen", "owner_fr": "FR-018", "title": "Suspend / Reinstate Affiliate (Modal)", "attrs": {"platform": "admin", "description": "PRD prd.md lines 464-490. UI controls and composites with no entity field: Confirm checkbox; Submit and cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-04", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-04"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-04", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "retrieved", "label": "Action (Suspend or Reinstate by current status)"}}
+  - {"op": "add_edge", "from": "SCR-018-04", "verb": "shows", "to": "ENT-affiliate.status_reason", "attrs": {"provenance": "user input", "label": "Reason", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-05", "type": "Screen", "owner_fr": "FR-018", "title": "Edit Commission Structure (Modal)", "attrs": {"platform": "admin", "description": "PRD prd.md lines 491-519. UI controls and composites with no entity field: Confirm checkbox; Submit and cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-05", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-05"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-05", "verb": "shows", "to": "ENT-affiliate.commission_type", "attrs": {"provenance": "user input", "label": "Commission Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-05", "verb": "shows", "to": "ENT-affiliate.commission_percentage", "attrs": {"provenance": "user input", "label": "Commission Percentage", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-05", "verb": "shows", "to": "ENT-affiliate.commission_fixed_amount", "attrs": {"provenance": "user input", "label": "Commission Fixed Amount", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-05", "verb": "shows", "to": "ENT-affiliate.commission_effective_date", "attrs": {"provenance": "user input", "label": "Effective Date", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-06", "type": "Screen", "owner_fr": "FR-018", "title": "Deactivate / Offboard Affiliate (Modal)", "attrs": {"platform": "admin", "description": "PRD prd.md lines 520-551. UI controls and composites with no entity field: Confirm checkbox; Submit and cancel buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-06"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "shows", "to": "ENT-affiliate.status_reason", "attrs": {"provenance": "user input", "label": "Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "shows", "to": "ENT-affiliate.final_balance_gross", "attrs": {"provenance": "system calculated", "label": "Final Balance Summary: gross pending", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "shows", "to": "ENT-affiliate.final_reversals", "attrs": {"provenance": "system calculated", "label": "Final Balance Summary: reversals/refunds", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "shows", "to": "ENT-affiliate.final_balance_net", "attrs": {"provenance": "system calculated", "label": "Final Balance Summary: net final balance", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-06", "verb": "shows", "to": "ENT-affiliate.settlement_outcome", "attrs": {"provenance": "system calculated", "label": "Settlement Outcome", "editable": false}}
+  - {"op": "add_node", "id": "SCR-018-07", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Code Generation", "attrs": {"platform": "admin", "description": "PRD prd.md lines 552-605. UI controls and composites with no entity field: Submit and cancel buttons; Generation Mode radio switch."}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-07"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.affiliate_id", "attrs": {"provenance": "user input", "label": "Linked Affiliate", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.generation_mode", "attrs": {"provenance": "user input", "label": "Generation Mode", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-code-batch.selection_snapshot", "attrs": {"provenance": "user input", "label": "Affiliate Selection / Filter Criteria", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.campaign_name", "attrs": {"provenance": "user input", "label": "Campaign Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-code-batch.code_pattern", "attrs": {"provenance": "user input", "label": "Code Pattern", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "user input", "label": "Discount Code", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_type", "attrs": {"provenance": "user input", "label": "Discount Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_amount_type", "attrs": {"provenance": "user input", "label": "Discount Amount Type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_percentage", "attrs": {"provenance": "user input", "label": "Discount Percentage", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_fixed_amount", "attrs": {"provenance": "user input", "label": "Discount Fixed Amount", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.application_method", "attrs": {"provenance": "user input", "label": "Application Method", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.expiration_date", "attrs": {"provenance": "user input", "label": "Expiration Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.max_usage_count", "attrs": {"provenance": "user input", "label": "Maximum Usage Count", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.per_patient_usage_limit", "attrs": {"provenance": "user input", "label": "Per-Patient Usage Limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-07", "verb": "shows", "to": "ENT-affiliate-discount-code.status", "attrs": {"provenance": "user input", "label": "Status", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-08", "type": "Screen", "owner_fr": "FR-018", "title": "Code Generation Results", "attrs": {"platform": "admin", "description": "PRD prd.md lines 606-642. UI controls and composites with no entity field: Retry Failed Only and Export CSV buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-08"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.id", "attrs": {"provenance": "retrieved", "label": "Batch ID"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.campaign_name", "attrs": {"provenance": "retrieved", "label": "Campaign Name"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.requested_count", "attrs": {"provenance": "retrieved", "label": "Requested Count"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.created_count", "attrs": {"provenance": "system calculated", "label": "Created Count"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.skipped_count", "attrs": {"provenance": "system calculated", "label": "Skipped Count"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch.failed_count", "attrs": {"provenance": "system calculated", "label": "Failed Count"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch-result.outcome", "attrs": {"provenance": "retrieved", "label": "Result Rows: outcome"}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch-result.reason", "attrs": {"provenance": "retrieved", "label": "Result Rows: reason"}}
+  - {"op": "add_node", "id": "SCR-018-09", "type": "Screen", "owner_fr": "FR-018", "title": "Promo Code Management", "attrs": {"platform": "admin", "description": "PRD prd.md lines 643-686. UI controls and composites with no entity field: Actions buttons (View Detail, activate/deactivate); filters, search, row selection."}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-09"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "retrieved", "label": "Discount Code"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.campaign_name", "attrs": {"provenance": "retrieved", "label": "Campaign Name"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.affiliate_id", "attrs": {"provenance": "retrieved", "label": "Linked Affiliate"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_percentage", "attrs": {"provenance": "retrieved", "label": "Discount: percentage"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Discount: fixed amount"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.application_method", "attrs": {"provenance": "retrieved", "label": "Application Method"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.applied_count", "attrs": {"provenance": "retrieved", "label": "Applied / Completed: applied"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.completed_count", "attrs": {"provenance": "retrieved", "label": "Applied / Completed: completed"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.conversion_rate", "attrs": {"provenance": "retrieved", "label": "Conversion Rate"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.revenue_generated", "attrs": {"provenance": "retrieved", "label": "Revenue"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.commission_earned", "attrs": {"provenance": "retrieved", "label": "Commission"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-018-09", "verb": "shows", "to": "ENT-affiliate-discount-code.created_at", "attrs": {"provenance": "retrieved", "label": "Created Date"}}
+  - {"op": "add_node", "id": "SCR-018-10", "type": "Screen", "owner_fr": "FR-018", "title": "Promo Code Detail (Shared)", "attrs": {"platform": "admin", "description": "PRD prd.md lines 687-725. UI controls and composites with no entity field: Usage Over Time chart; Status Controls buttons; Audit / History list."}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-10"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "retrieved", "label": "Code Header: code text"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.campaign_name", "attrs": {"provenance": "retrieved", "label": "Code Header: campaign"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.status", "attrs": {"provenance": "retrieved", "label": "Code Header: status"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.affiliate_id", "attrs": {"provenance": "retrieved", "label": "Linked Affiliate"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_type", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: discount type"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_amount_type", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: discount amount type"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_percentage", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: discount percentage"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: discount fixed amount"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.application_method", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: application method"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.expiration_date", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: expiration date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.max_usage_count", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: maximum usage count", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.per_patient_usage_limit", "attrs": {"provenance": "retrieved", "label": "Code Settings Panel: per-patient usage limit", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.current_usage_count", "attrs": {"provenance": "system calculated", "label": "Code Settings Panel: current usage count"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.applied_count", "attrs": {"provenance": "system calculated", "label": "Performance Panel: applied"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.completed_count", "attrs": {"provenance": "system calculated", "label": "Performance Panel: completed"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.conversion_rate", "attrs": {"provenance": "system calculated", "label": "Performance Panel: conversion rate"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.revenue_generated", "attrs": {"provenance": "system calculated", "label": "Performance Panel: revenue"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.commission_earned", "attrs": {"provenance": "system calculated", "label": "Performance Panel: commission earned"}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.batch_id", "attrs": {"provenance": "retrieved", "label": "Generation Source: Batch ID"}}
+  - {"op": "add_node", "id": "SCR-018-11", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Payout Status and History", "attrs": {"platform": "admin", "description": "PRD prd.md lines 726-775. UI controls and composites with no entity field: Overall Totals composite (aggregates across affiliates: total owed, total paid, affiliate count, failed count); Actions buttons; sub-view tabs."}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-11"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.payout_month", "attrs": {"provenance": "retrieved", "label": "Payout Month"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Affiliate Name"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.total_bookings_count", "attrs": {"provenance": "system calculated", "label": "Total Completed Bookings"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.total_commission_amount", "attrs": {"provenance": "system calculated", "label": "Total Commissions Owed"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "retrieved", "label": "Payment Details (masked)"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout Status"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Transaction ID"}}
+  - {"op": "add_edge", "from": "SCR-018-11", "verb": "shows", "to": "ENT-affiliate-payout.admin_notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-12", "type": "Screen", "owner_fr": "FR-018", "title": "Payout / Transaction Detail (Shared)", "attrs": {"platform": "admin", "description": "PRD prd.md lines 776-821. UI controls and composites with no entity field: Included Bookings list; Actions buttons (Download Receipt)."}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-018-12"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Payout Header: affiliate name"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.payout_month", "attrs": {"provenance": "retrieved", "label": "Payout Header: payout month / Period"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout Header: status badge"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.id", "attrs": {"provenance": "retrieved", "label": "Payout Header: payout ID"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.total_bookings_count", "attrs": {"provenance": "system calculated", "label": "Commission Calculation: total bookings count"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.total_commission_amount", "attrs": {"provenance": "system calculated", "label": "Commission Calculation: gross commission"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.reversals_refunds", "attrs": {"provenance": "system calculated", "label": "Commission Calculation: reversals/refunds"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.net_amount", "attrs": {"provenance": "system calculated", "label": "Commission Calculation: net amount"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "retrieved", "label": "Payment Details (masked)"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Transaction ID"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.status_timeline", "attrs": {"provenance": "retrieved", "label": "Status Timeline"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.failure_reason", "attrs": {"provenance": "retrieved", "label": "Failure Reason"}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-payout.admin_notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-13", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Portal", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 822-852. UI controls and composites with no entity field: Portal tab navigation (Overview, Promo Codes, Payouts, Profile); one-click copy action."}}
+  - {"op": "add_edge", "from": "SCR-018-13", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-13"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-13", "verb": "shows", "to": "ENT-affiliate.referral_link", "attrs": {"provenance": "retrieved", "label": "Referral Link"}}
+  - {"op": "add_node", "id": "SCR-018-14", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Portal: Overview Tab", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 853-887. UI controls and composites with no entity field: Conversion funnel chart; All-Time / Current Month toggle; Download Report button."}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-14"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.total_referrals", "attrs": {"provenance": "system calculated", "label": "Total Referrals (All-Time)"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.referrals_this_month", "attrs": {"provenance": "system calculated", "label": "Referrals This Month"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.total_revenue", "attrs": {"provenance": "system calculated", "label": "Total Revenue Generated"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.total_commissions_earned", "attrs": {"provenance": "system calculated", "label": "Total Commissions Earned"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.total_commissions_paid", "attrs": {"provenance": "system calculated", "label": "Commissions Paid"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.pending_payout", "attrs": {"provenance": "system calculated", "label": "Pending Payout"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.next_payout_date", "attrs": {"provenance": "system calculated", "label": "Next Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-018-14", "verb": "shows", "to": "ENT-affiliate.referral_link", "attrs": {"provenance": "retrieved", "label": "Referral Link"}}
+  - {"op": "add_node", "id": "SCR-018-15", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Portal: Promo Codes Tab", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 888-942. UI controls and composites with no entity field: Usage Over Time chart; Copy / Share action; sort and filter controls."}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-15"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "retrieved", "label": "Discount Code"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.campaign_name", "attrs": {"provenance": "retrieved", "label": "Campaign Name"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.expiration_date", "attrs": {"provenance": "retrieved", "label": "Active Window (expiration only; no start date field)"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_percentage", "attrs": {"provenance": "retrieved", "label": "Discount: percentage"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.discount_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Discount: fixed amount"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.application_method", "attrs": {"provenance": "retrieved", "label": "Application Method"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.applied_count", "attrs": {"provenance": "retrieved", "label": "Applied Count"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.completed_count", "attrs": {"provenance": "retrieved", "label": "Completed Count"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.conversion_rate", "attrs": {"provenance": "retrieved", "label": "Conversion Rate"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.revenue_generated", "attrs": {"provenance": "retrieved", "label": "Revenue Generated"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.commission_earned", "attrs": {"provenance": "retrieved", "label": "Commission Earned"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.created_at", "attrs": {"provenance": "retrieved", "label": "Created Date"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.last_used_at", "attrs": {"provenance": "retrieved", "label": "Last Used Date"}}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.marketing_material_links", "attrs": {"provenance": "retrieved", "label": "Marketing Materials"}}
+  - {"op": "add_node", "id": "SCR-018-16", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Portal: Payouts Tab", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 943-1000. UI controls and composites with no entity field: Download Receipt button; Minimum Threshold Note display text."}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-16"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate.next_payout_date", "attrs": {"provenance": "system calculated", "label": "Upcoming Payout: next payout date"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate.pending_payout", "attrs": {"provenance": "system calculated", "label": "Upcoming Payout: pending amount"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate.pending_bookings_count", "attrs": {"provenance": "system calculated", "label": "Upcoming Payout: included bookings count"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.payout_month", "attrs": {"provenance": "retrieved", "label": "Payout Period"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.net_amount", "attrs": {"provenance": "retrieved", "label": "Net Amount"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.status", "attrs": {"provenance": "retrieved", "label": "Status"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.total_bookings_count", "attrs": {"provenance": "retrieved", "label": "Completed Bookings"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Payout Date"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Transaction Reference"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.total_commission_amount", "attrs": {"provenance": "retrieved", "label": "Payout Detail: gross commission"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.reversals_refunds", "attrs": {"provenance": "retrieved", "label": "Payout Detail: reversals/refunds"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate-payout.payment_method", "attrs": {"provenance": "retrieved", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "SCR-018-16", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "retrieved", "label": "Bank Account (masked)"}}
+  - {"op": "add_node", "id": "SCR-018-17", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Portal: Profile Tab", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 1001-1054. UI controls and composites with no entity field: Change Password action; MFA (optional, future) toggle."}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-17"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.name", "attrs": {"provenance": "retrieved", "label": "Affiliate Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "retrieved", "label": "Contact Email", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.phone_number", "attrs": {"provenance": "user input", "label": "Phone Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.languages", "attrs": {"provenance": "user input", "label": "Language(s)", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.country_region", "attrs": {"provenance": "retrieved", "label": "Country/Region", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.affiliate_type", "attrs": {"provenance": "retrieved", "label": "Affiliate Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.tax_vat_business_reg_id", "attrs": {"provenance": "retrieved", "label": "Tax / VAT / Business Reg ID", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.created_at", "attrs": {"provenance": "retrieved", "label": "Member Since", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.activation_status", "attrs": {"provenance": "retrieved", "label": "Activation Status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.bank_account_number", "attrs": {"provenance": "retrieved", "label": "Bank Account (masked)", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.bank_name", "attrs": {"provenance": "retrieved", "label": "Bank Name", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.commission_type", "attrs": {"provenance": "retrieved", "label": "Commission Structure: type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.commission_percentage", "attrs": {"provenance": "retrieved", "label": "Commission Structure: percentage", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.commission_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Commission Structure: fixed amount", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.payout_schedule", "attrs": {"provenance": "retrieved", "label": "Payout Schedule", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-17", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "retrieved", "label": "Account Status", "editable": false}}
+  - {"op": "add_node", "id": "SCR-018-18", "type": "Screen", "owner_fr": "FR-018", "title": "Affiliate Onboarding and Activation", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 1055-1071. UI controls and composites with no entity field: Container for Screens 10.1 to 10.3; activation email sequence."}}
+  - {"op": "add_edge", "from": "SCR-018-18", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-18"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-18", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "system calculated", "label": "Activation: Status flips Pending to Active"}}
+  - {"op": "add_edge", "from": "SCR-018-18", "verb": "shows", "to": "ENT-affiliate.activation_status", "attrs": {"provenance": "system calculated", "label": "Activation: Activation Status flips Invited to Active"}}
+  - {"op": "add_node", "id": "SCR-018-19", "type": "Screen", "owner_fr": "FR-018", "title": "Set Password (Activation Landing)", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 1072-1101. UI controls and composites with no entity field: New Password and Confirm Password inputs; Password Strength Meter; Set Password button."}}
+  - {"op": "add_edge", "from": "SCR-018-19", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-19"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-19", "verb": "shows", "to": "ENT-affiliate.activation_link_expires_at", "attrs": {"provenance": "system calculated", "label": "Activation Link Status"}}
+  - {"op": "add_edge", "from": "SCR-018-19", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "retrieved", "label": "Account Email", "editable": false}}
+  - {"op": "add_node", "id": "SCR-018-20", "type": "Screen", "owner_fr": "FR-018", "title": "Resend Activation Email", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 1102-1128. UI controls and composites with no entity field: Resend Activation button; Confirmation Message display."}}
+  - {"op": "add_edge", "from": "SCR-018-20", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-20"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-20", "verb": "shows", "to": "ENT-affiliate.contact_email", "attrs": {"provenance": "user input", "label": "Email", "editable": true}}
+  - {"op": "add_node", "id": "SCR-018-21", "type": "Screen", "owner_fr": "FR-018", "title": "Welcome / Get Started (First Login)", "attrs": {"platform": "affiliate", "description": "PRD prd.md lines 1129-1157. UI controls and composites with no entity field: Welcome Header; Complete Profile and Get Started buttons."}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "belongs to", "to": "STG-main-05-payment"}  # shared edge
+  - {"op": "add_edge", "from": "ACT-affiliate", "verb": "uses", "to": "SCR-018-21"}  # shared edge
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "retrieved", "label": "Assigned Codes Summary"}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate.commission_type", "attrs": {"provenance": "retrieved", "label": "Commission Summary: type"}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate.commission_percentage", "attrs": {"provenance": "retrieved", "label": "Commission Summary: percentage"}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate.commission_fixed_amount", "attrs": {"provenance": "retrieved", "label": "Commission Summary: fixed amount"}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate.payout_schedule", "attrs": {"provenance": "retrieved", "label": "Payout Schedule"}}
+  - {"op": "add_edge", "from": "SCR-018-21", "verb": "shows", "to": "ENT-affiliate.referral_link", "attrs": {"provenance": "retrieved", "label": "Referral Link"}}

@@ -1,0 +1,461 @@
+# FR-026 App Settings & Security Policies: PRD migrated into the graph.
+# Source: archived/prd-baseline-2026-11-08/fr026-app-settings-security/prd.md. Rules keep REQ-026-001..031 verbatim; the PRD ids
+# 012a..012h are renumbered REQ-026-032..039; prose rules get REQ-026-040 upward.
+# Part 1: everything except Screen Specifications (settings, rules, entities, fields, enum values, edges).
+reason: "Migrate the FR-026 PRD into the graph, part 1: settings, rules, entities, fields and their edges"
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "SET-max-login-attempts", "type": "Setting", "owner_fr": "FR-026", "title": "Max login attempts before lockout", "attrs": {"description": "Failed login attempts allowed before the account is locked. Permitted 1 through 10.", "default": "5", "unit": "attempts"}}
+  - {"op": "add_node", "id": "SET-lockout-duration", "type": "Setting", "owner_fr": "FR-026", "title": "Account lockout duration", "attrs": {"description": "Minutes an account stays locked after exceeding the allowed failed attempts. Permitted 5 through 60.", "default": "15", "unit": "minutes"}}
+  - {"op": "add_node", "id": "SET-otp-expiry-time", "type": "Setting", "owner_fr": "FR-026", "title": "OTP expiry time", "attrs": {"description": "Minutes an OTP stays valid; one value for email verification and password reset. Permitted 5 through 30.", "default": "15", "unit": "minutes"}}
+  - {"op": "add_node", "id": "SET-otp-resend-cooldown", "type": "Setting", "owner_fr": "FR-026", "title": "OTP resend cooldown", "attrs": {"description": "Seconds a user must wait between OTP resend requests. Permitted 30 through 300.", "default": "60", "unit": "seconds"}}
+  - {"op": "add_node", "id": "SET-otp-max-resend-attempts", "type": "Setting", "owner_fr": "FR-026", "title": "OTP maximum resend attempts", "attrs": {"description": "Maximum OTP resend requests per rolling 60 minutes. Permitted 3 through 10.", "default": "5", "unit": "per hour"}}
+  - {"op": "add_node", "id": "SET-otp-code-length", "type": "Setting", "owner_fr": "FR-026", "title": "OTP code length", "attrs": {"description": "Number of digits in an OTP code. Fixed in codebase, not admin-editable.", "default": "6", "unit": "digits"}}
+  - {"op": "add_node", "id": "SET-discovery-question-options", "type": "Setting", "owner_fr": "FR-026", "title": "Discovery question answer options", "attrs": {"description": "Ordered list of answer options for the \"How did you find out about us?\" question, each active or inactive."}}
+  - {"op": "update_node", "id": "SET-account-deletion-reasons", "title": "Account deletion reason options", "attrs": {"description": "Ordered list of reasons offered when a patient requests account deletion; each has a requires-explanation flag and an active flag."}}  # was add_node; stub created by FR-001
+  - {"op": "add_node", "id": "SET-provider-specialties", "type": "Setting", "owner_fr": "FR-026", "title": "Provider specialties", "attrs": {"description": "Ordered list of specialty values providers can hold; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other."}}
+  - {"op": "add_node", "id": "SET-treatment-area-options", "type": "Setting", "owner_fr": "FR-026", "title": "Inquiry treatment-area options", "attrs": {"description": "Ordered list of treatment-area options (label, image or icon asset, active flag) offered on inquiry creation."}}
+  - {"op": "add_node", "id": "SET-otp-email-templates", "type": "Setting", "owner_fr": "FR-026", "title": "OTP email templates", "attrs": {"description": "Verification Email and Password Reset Email templates: subject line, HTML body, plain text body, required variables."}}
+  - {"op": "add_node", "id": "SET-ttfq-sla-target", "type": "Setting", "owner_fr": "FR-026", "title": "Time-to-first-quote SLA target", "attrs": {"description": "Platform-wide target for time to first quote, in positive whole minutes.", "default": "120", "unit": "minutes"}}
+  - {"op": "add_node", "id": "SET-at-risk-threshold", "type": "Setting", "owner_fr": "FR-026", "title": "At Risk threshold", "attrs": {"description": "Whole days of provider inactivity after which a provider is At Risk.", "default": "7", "unit": "days"}}
+  - {"op": "add_node", "id": "SET-dormant-threshold", "type": "Setting", "owner_fr": "FR-026", "title": "Dormant threshold", "attrs": {"description": "Whole days of inactivity after which a provider is Dormant; must be greater than the At Risk threshold.", "default": "30", "unit": "days"}}
+  - {"op": "add_node", "id": "SET-price-outlier-threshold", "type": "Setting", "owner_fr": "FR-026", "title": "Price outlier threshold", "attrs": {"description": "Whole percent difference from the benchmark that marks a price as an outlier. Permitted 1 through 100.", "default": "30", "unit": "percent"}}
+  - {"op": "add_node", "id": "SET-benchmark-refresh-frequency", "type": "Setting", "owner_fr": "FR-026", "title": "Benchmark refresh frequency", "attrs": {"description": "How often benchmarks are refreshed: Daily, Weekly or Monthly.", "default": "Weekly"}}
+  - {"op": "add_node", "id": "SET-target-monthly-commission", "type": "Setting", "owner_fr": "FR-026", "title": "Target monthly commission", "attrs": {"description": "Optional platform target for monthly commission shown as a reference line in FR-014; blank hides the line."}}
+  - {"op": "update_node", "id": "SET-country-list", "attrs": {"description": "Centrally managed list of countries (name, ISO code, flag asset URL, display order, active flag) used by patient and provider forms."}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-country-calling-codes", "attrs": {"description": "Calling code per country in the format +[1-4 digits]; codes may be shared by several countries."}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-hold-expiring-soon-lead-time", "attrs": {"description": "Hours before a slot hold ends at which the hold-expiring-soon reminder is sent. Whole hours from 1 up to half of the slot-hold duration.", "default": "12", "unit": "hours"}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-inquiry-cancellation-reasons", "attrs": {"description": "Ordered list of reasons offered when a patient cancels an inquiry; each has a requires-explanation flag and an active flag. Consumer FR-003 Screen 8a."}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-inquiry-lead-time", "attrs": {"description": "Versioned minimum inquiry lead time: whole days from 0 through 730, applied to the calendar and to submission validation. Consumer FR-003 Screen 5.", "default": "3", "unit": "days"}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-password-policy", "attrs": {"description": "Fixed in codebase, view-only: minimum 12 characters with at least one uppercase, lowercase, digit and special character."}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-quote-currency", "attrs": {"description": "Currency of a quote. Read from the FR-029 Default Currency; FR-026 holds no separate currency value. Each Default Currency change creates a new Quote Configuration version."}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-quote-expiring-soon-lead-time", "attrs": {"description": "Hours before a quote expires at which the quote-expiring-soon reminder is sent. Whole hours from 1 up to half of the quote expiry window.", "default": "12", "unit": "hours"}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-quote-expiry-window", "attrs": {"description": "Hours a sent quote stays valid. Whole hours from 24 to 336.", "default": "48", "unit": "hours"}}  # stub updated, owner FR-026
+  - {"op": "update_node", "id": "SET-slot-hold-duration", "attrs": {"description": "Hours a slot hold lasts once placed. Whole hours from 24 to 168.", "default": "48", "unit": "hours"}}  # stub updated, owner FR-026
+  - {"op": "add_node", "id": "REQ-026-001", "type": "Rule", "owner_fr": "FR-026", "title": "Settings UI limited to Settings Manager and Settings Viewer", "attrs": {"statement": "System MUST provide Settings Management UI accessible only to admins with \"Settings Manager\" or \"Settings Viewer\" role", "rationale": "Screen 1 states a different permission name (\"Settings Management\"); see the open question on permission naming."}}
+  - {"op": "add_node", "id": "REQ-026-002", "type": "Rule", "owner_fr": "FR-026", "title": "Change reason required for every setting change", "attrs": {"statement": "System MUST require change reason (10-500 characters) for all setting modifications", "rationale": "Restated by General Module Rule 1 and Main Flow step 9 (modal titled \"Change Reason\", 10-500 chars, shown after Save) and by the Screen Specification notes and the A1 to A9 workflows."}}
+  - {"op": "add_node", "id": "REQ-026-003", "type": "Rule", "owner_fr": "FR-026", "title": "Setting changes versioned with auto-incremented numbers", "attrs": {"statement": "System MUST version all setting changes with auto-incremented version numbers (v1.0, v1.1, v1.2, etc.)", "rationale": "Restated by General Module Rule 2 and Main Flow step 11."}}
+  - {"op": "add_node", "id": "REQ-026-004", "type": "Rule", "owner_fr": "FR-026", "title": "Immutable audit log entry for every change", "attrs": {"statement": "System MUST create immutable audit log for every change capturing: timestamp, admin ID, admin email, setting group, old values, new values, change reason", "rationale": "Restated by Audit Rule 1, Audit Rule 2 (no deletion, no editing) and Main Flow step 10; Screen 7 states that version history is immutable."}}
+  - {"op": "add_node", "id": "REQ-026-005", "type": "Rule", "owner_fr": "FR-026", "title": "Changes propagate within 1 minute by polling", "attrs": {"statement": "System MUST propagate setting changes to dependent services within 1 minute via polling mechanism", "rationale": "Restated by General Module Rule 3 (60-second polling interval), the Entry Points and Main Flow step 15."}}
+  - {"op": "add_node", "id": "REQ-026-006", "type": "Rule", "owner_fr": "FR-026", "title": "Settings cache invalidated immediately on save", "attrs": {"statement": "System MUST invalidate settings cache immediately upon save to trigger propagation", "rationale": "Restated by General Module Rule 4 and Main Flow step 13."}}
+  - {"op": "add_node", "id": "REQ-026-007", "type": "Rule", "owner_fr": "FR-026", "title": "No rollback; forward-only changes", "attrs": {"statement": "System MUST NOT support rollback. Admins make forward-only changes; version history is read-only.", "rationale": "Restated by the Executive Summary and the Admin Platform scope."}}
+  - {"op": "add_node", "id": "REQ-026-008", "type": "Rule", "owner_fr": "FR-026", "title": "Version history newest first with diff highlighting", "attrs": {"statement": "System MUST display version history in reverse chronological order with diff highlighting (old → new)", "rationale": "Restated by the Screen 7 business rules."}}
+  - {"op": "add_node", "id": "REQ-026-009", "type": "Rule", "owner_fr": "FR-026", "title": "Authentication throttling settings and ranges", "attrs": {"statement": "System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)", "rationale": "Restated by Main Flow step 8, Alternative Flow B1 and the Admin Editability Rules; Screen 2 field validation ranges."}}
+  - {"op": "add_node", "id": "REQ-026-010", "type": "Rule", "owner_fr": "FR-026", "title": "OTP configuration settings and ranges", "attrs": {"statement": "System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)", "rationale": "Restated by the Admin Editability Rules and the Screen 3 field validation ranges."}}
+  - {"op": "add_node", "id": "REQ-026-011", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed country list", "attrs": {"statement": "System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage, nullable), display order, active status", "rationale": "Flag assets are stored in centralized media storage/CDN (S-05) and referenced by URL. Screen 4 marks the Country Flag field Required = Yes while this rule and Entity 4 say nullable; see the open question on country flag."}}
+  - {"op": "add_node", "id": "REQ-026-012", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed discovery question options", "attrs": {"statement": "System MUST store centrally managed discovery question options: answer option, display order, active status"}}
+  - {"op": "add_node", "id": "REQ-026-013", "type": "Rule", "owner_fr": "FR-026", "title": "OTP email templates stored with version number", "attrs": {"statement": "System MUST store OTP email templates: template name, subject line, HTML body, plain text body, version number"}}
+  - {"op": "add_node", "id": "REQ-026-014", "type": "Rule", "owner_fr": "FR-026", "title": "Sensitive values masked in UI and audit logs", "attrs": {"statement": "System MUST mask sensitive values (API keys, secrets) in UI and audit logs (display as \"••••••••\" or \"[REDACTED]\")", "rationale": "Restated by Privacy Rule 1 (UI) and Privacy Rule 2 (audit logs), and the Admin Platform scope."}}
+  - {"op": "add_node", "id": "REQ-026-015", "type": "Rule", "owner_fr": "FR-026", "title": "\"View Sensitive Settings\" limited to authorized admins", "attrs": {"statement": "System MUST restrict \"View Sensitive Settings\" permission to authorized admins only", "rationale": "Restated by Privacy Rule 3 and the Admin Platform scope."}}
+  - {"op": "add_node", "id": "REQ-026-016", "type": "Rule", "owner_fr": "FR-026", "title": "Sensitive values encrypted at rest with AES-256", "attrs": {"statement": "System MUST encrypt sensitive values at rest using AES-256"}}
+  - {"op": "add_node", "id": "REQ-026-017", "type": "Rule", "owner_fr": "FR-026", "title": "Admin MFA is a future requirement tied to FR-031", "attrs": {"statement": "Multi-factor authentication for admin access to Settings Management UI is a future (non-MVP) requirement and MUST be enforced once the shared MFA stack (FR-031) is delivered.", "rationale": "Future (non-MVP) requirement; the PRD defers it to the shared MFA stack of FR-031."}}
+  - {"op": "add_node", "id": "REQ-026-018", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API rate limited to 100 requests per minute per admin", "attrs": {"statement": "System MUST rate limit Settings API to 100 requests/minute per admin to prevent abuse"}}
+  - {"op": "add_node", "id": "REQ-026-019", "type": "Rule", "owner_fr": "FR-026", "title": "Audit logs retained for at least 10 years", "attrs": {"statement": "System MUST retain audit logs for minimum 10 years per compliance requirements", "rationale": "Restated by Audit Rule 3 and the Security Considerations compliance bullet."}}
+  - {"op": "add_node", "id": "REQ-026-020", "type": "Rule", "owner_fr": "FR-026", "title": "Admin inputs validated against XSS, SQL and command injection", "attrs": {"statement": "System MUST validate all admin inputs to prevent XSS, SQL injection, command injection attacks"}}
+  - {"op": "add_node", "id": "REQ-026-021", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API exposed for dependent services to poll", "attrs": {"statement": "System MUST expose Settings API (RESTful) for dependent services to poll configurations"}}
+  - {"op": "add_node", "id": "REQ-026-022", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API response carries version, values and last-modified", "attrs": {"statement": "Settings API MUST return JSON response with version number, setting values, and last modified timestamp"}}
+  - {"op": "add_node", "id": "REQ-026-023", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API supports OAuth 2.0 with read:settings and write:settings", "attrs": {"statement": "Settings API MUST support OAuth 2.0 authentication with \"read:settings\" or \"write:settings\" scopes"}}
+  - {"op": "add_node", "id": "REQ-026-024", "type": "Rule", "owner_fr": "FR-026", "title": "No rollback API exposed", "attrs": {"statement": "System MUST NOT expose a rollback API."}}
+  - {"op": "add_node", "id": "REQ-026-025", "type": "Rule", "owner_fr": "FR-026", "title": "Patient configuration response returns treatment areas and lead days together", "attrs": {"statement": "The patient configuration response MUST return active ordered treatment-area options and `minimum_inquiry_lead_days` together so the client calendar and backend validator use one configuration source.", "rationale": "Screen 5c adds that the API must not return inactive options for new inquiries."}}
+  - {"op": "add_node", "id": "REQ-026-026", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API returns the whole Quote Configuration at once", "attrs": {"statement": "The authenticated Settings API MUST return the quote currency, the quote expiry window, both lead times, the slot-hold duration, the configuration version, and the last-modified timestamp together, so FR-004 sends each parent Quote from one consistent configuration version and can record that version on the quote.", "rationale": "Quote currency and expiry window are copied onto the quote at first send by FR-004."}}
+  - {"op": "add_node", "id": "REQ-026-027", "type": "Rule", "owner_fr": "FR-026", "title": "Quote Configuration changes affect only quotes first sent after activation", "attrs": {"statement": "Quote Configuration changes MUST affect only quotes first sent after activation; the currency and expiry already copied onto a sent quote MUST remain unchanged, drafts MUST carry neither value, and no per-quote extension is allowed.", "rationale": "Restated by workflow A7 step 6 and the Screen 5d business rules."}}
+  - {"op": "add_node", "id": "REQ-026-028", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API returns the whole Analytics Configuration at once", "attrs": {"statement": "The authenticated Settings API MUST return all Analytics Configuration values with the configuration version and last-modified timestamp so FR-014 calculations use one consistent version and can record it with their aggregates."}}
+  - {"op": "add_node", "id": "REQ-026-029", "type": "Rule", "owner_fr": "FR-026", "title": "Analytics Configuration changes apply to every displayed period; exports untouched", "attrs": {"statement": "Analytics Configuration changes MUST apply from FR-014's next calculation or benchmark refresh to every period then displayed (past periods are not frozen), and MUST NOT rewrite exports or scheduled-export files that were already generated.", "rationale": "Restated by the Screen 5e recalculation rule."}}
+  - {"op": "add_node", "id": "REQ-026-030", "type": "Rule", "owner_fr": "FR-026", "title": "Each slot hold uses the duration in effect when placed", "attrs": {"statement": "Each slot hold MUST use the slot-hold duration in effect when the hold is placed (at subquote acceptance or an FR-006 admin revive); later changes MUST NOT alter an existing hold, and payment failure MUST NOT extend or restart a hold.", "rationale": "Restated by workflow A7 step 7, the Screen 5d business rules and the edge case on changing the slot-hold duration while holds are active."}}
+  - {"op": "add_node", "id": "REQ-026-031", "type": "Rule", "owner_fr": "FR-026", "title": "Lead-time changes apply only to reminders not yet sent", "attrs": {"statement": "Changes to the quote-expiring-soon or hold-expiring-soon lead time MUST apply only to reminders not yet sent."}}
+  - {"op": "add_node", "id": "REQ-026-032", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed inquiry cancellation reasons", "attrs": {"statement": "System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 8a.", "rationale": "PRD id REQ-026-012a, renumbered. Consumer FR-003 Screen 8a."}}
+  - {"op": "add_node", "id": "REQ-026-033", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed account deletion reasons", "attrs": {"statement": "System MUST store centrally managed account deletion reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-001 Screen 16.", "rationale": "PRD id REQ-026-012b, renumbered. Consumer FR-001 Screen 16."}}
+  - {"op": "add_node", "id": "REQ-026-034", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed inquiry treatment-area options", "attrs": {"statement": "System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.", "rationale": "PRD id REQ-026-012c, renumbered. Consumer FR-003 Screen 1."}}
+  - {"op": "add_node", "id": "REQ-026-035", "type": "Rule", "owner_fr": "FR-026", "title": "Versioned minimum inquiry lead time, 0 to 730 days", "attrs": {"statement": "System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.", "rationale": "PRD id REQ-026-012d, renumbered. Consumer FR-003 Screen 5."}}
+  - {"op": "add_node", "id": "REQ-026-036", "type": "Rule", "owner_fr": "FR-026", "title": "Final active treatment-area option cannot be deactivated", "attrs": {"statement": "System MUST prevent deactivation of the final active inquiry treatment-area option.", "rationale": "PRD id REQ-026-012e, renumbered."}}
+  - {"op": "add_node", "id": "REQ-026-037", "type": "Rule", "owner_fr": "FR-026", "title": "One versioned Quote Configuration; currency is the FR-029 Default Currency", "attrs": {"statement": "System MUST store one versioned Quote Configuration containing the quote expiry window (whole hours from 24 to 336, default 48), the quote-expiring-soon lead time (whole hours from 1 up to half of the expiry window, default 12), the slot-hold duration (whole hours from 24 to 168, default 48), and the hold-expiring-soon lead time (whole hours from 1 up to half of the slot-hold duration, default 12). The quote currency MUST be the FR-029 Default Currency, not a separate setting, and each change to the FR-029 Default Currency MUST create a new Quote Configuration version so the version recorded on a quote identifies both the hours and the currency used. Consumers: FR-004 (currency, expiry window, quote-expiring-soon lead time), FR-005 and FR-006 (slot-hold duration), and FR-006 (hold-expiring-soon lead time).", "rationale": "PRD id REQ-026-012f, renumbered. FR-026 keeps no second currency setting."}}
+  - {"op": "add_node", "id": "REQ-026-038", "type": "Rule", "owner_fr": "FR-026", "title": "One versioned Analytics Configuration", "attrs": {"statement": "System MUST store one versioned Analytics Configuration containing TTFQ SLA target (positive whole minutes, default 120), At Risk threshold (whole days, default 7), Dormant threshold (whole days, greater than At Risk, default 30), price outlier threshold (whole percent 1-100, default 30), benchmark refresh frequency (Daily, Weekly, or Monthly; default Weekly), and optional target monthly commission (blank by default). Consumer: FR-014.", "rationale": "PRD id REQ-026-012g, renumbered. Consumer FR-014."}}
+  - {"op": "add_node", "id": "REQ-026-039", "type": "Rule", "owner_fr": "FR-026", "title": "Centrally managed Provider Specialties list", "attrs": {"statement": "System MUST store a centrally managed Provider Specialties list: stable specialty ID, specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other. Admins can add, rename, reorder, and deactivate values (no hard delete); at least one value MUST remain active; changes MUST be versioned and audit-logged. Deactivated values MUST be hidden from new selection while providers that hold them keep and still display them; renames MUST apply to display everywhere. Consumer: FR-015 Screen 2 Step 2 and Screen 3 Tab 1.", "rationale": "PRD id REQ-026-012h, renumbered. Consumer FR-015."}}
+  - {"op": "add_node", "id": "REQ-026-040", "type": "Rule", "owner_fr": "FR-026", "title": "Settings consumers by platform", "attrs": {"statement": "Patient Platform (P-01) consumes authentication policies, OTP configurations, country/calling code lists, discovery question options, inquiry cancellation reason options, and account deletion reason options. Provider Platform (PR-06 and PR-02) consumes centrally managed profile lists and the versioned Quote Configuration. Quote Acceptance and Booking (FR-005 and FR-006) consume the versioned slot-hold duration and the hold-expiring-soon reminder lead time. Admin Platform (A-02) FR-015 consumes the Provider Specialties list. Analytics (PR-05 and A-08) FR-014 consumes the versioned Analytics Configuration. Shared Services (S-03) Notification Service consumes OTP email templates. Admin Platform (A-09) is the primary interface for viewing, editing, and versioning all settings.", "rationale": "Module Scope, Multi-Tenant Architecture."}}
+  - {"op": "add_node", "id": "REQ-026-041", "type": "Rule", "owner_fr": "FR-026", "title": "Patient platform applies throttling, OTP and centrally managed lists", "attrs": {"statement": "Patient registration and login flows apply authentication throttling policies. OTP verification for email confirmation applies OTP expiry and resend cooldown. Profile forms use centrally managed country and calling code lists. Discovery questions (\"How did you find us?\") display options from the centralized list.", "rationale": "Module Scope, Multi-Tenant Breakdown, Patient Platform (P-01)."}}
+  - {"op": "add_node", "id": "REQ-026-042", "type": "Rule", "owner_fr": "FR-026", "title": "Provider platform applies throttling and OTP parameters", "attrs": {"statement": "Authentication throttling (PR-01) applies to provider login attempts. OTP parameters (PR-01) apply to provider email verification flows. Provider staff management (PR-06) indirectly uses centrally managed lists.", "rationale": "Module Scope, Multi-Tenant Breakdown, Provider Platform."}}
+  - {"op": "add_node", "id": "REQ-026-043", "type": "Rule", "owner_fr": "FR-026", "title": "Boundaries of FR-026", "attrs": {"statement": "Out of scope for FR-026: actual email sending (handled by S-03: Notification Service); SMS notifications (future enhancement, V2); push notification templates (handled separately in notification preferences module); legal content management (see FR-027: Terms & Conditions, Privacy Policy, Consent forms); regional configuration and pricing (see FR-028: Location presentation, starting prices by currency); payment system configuration (see FR-029: Stripe account management, conversion rates, split payment rules); notification rules and event-based triggers (see FR-030: Event-to-notification mapping, channel configuration); admin access control and role-based permissions (see FR-031: Role management, permission matrix).", "rationale": "Communication Structure, Out of Scope. Boundary recorded as the PRD states it (D10)."}}
+  - {"op": "add_node", "id": "REQ-026-044", "type": "Rule", "owner_fr": "FR-026", "title": "Entry points to settings", "attrs": {"statement": "Admin reaches settings through Settings, Authentication & Security (throttling policies), Settings, App Data (country lists, discovery questions, inquiry cancellation reasons, account deletion reasons, provider specialties, inquiry configuration, quote configuration), Settings, Notifications (OTP email templates) and Settings, Analytics (analytics configuration consumed by FR-014).", "rationale": "Entry Points, Admin-Initiated."}}
+  - {"op": "add_node", "id": "REQ-026-045", "type": "Rule", "owner_fr": "FR-026", "title": "Out-of-range values rejected before save with a range message", "attrs": {"statement": "The system validates admin input before save and rejects an out-of-range value with an error message stating the valid range (for example, \"Max Login Attempts must be between 1 and 10\" for 0); the admin corrects the value and the system re-validates.", "rationale": "Alternative Flow B1."}}
+  - {"op": "add_node", "id": "REQ-026-046", "type": "Rule", "owner_fr": "FR-026", "title": "Consumers keep cached settings when the Settings API fails", "attrs": {"statement": "If a consuming platform cannot retrieve updated settings (for example a network timeout on the Settings API), it logs the error, continues using its cached settings, and retries on the next scheduled 60-second poll; on a successful retry it applies the updated settings. The system logs the propagation delay but does not alert (self-healing).", "rationale": "Alternative Flow B2, the Settings API unreachable edge case and Integration 1. The edge case and Integration 1 say cached settings are used for up to 1 minute, then the error is logged and the poll retried; see the open question on cache duration."}}
+  - {"op": "add_node", "id": "REQ-026-047", "type": "Rule", "owner_fr": "FR-026", "title": "Notification Service falls back to a default template", "attrs": {"statement": "If the Settings API is unreachable when the Notification Service retrieves an OTP email template, the Notification Service uses a fallback template (hardcoded default) and logs the error for admin review.", "rationale": "Implementation Notes, Integration 2 (a business rule inside the technical section)."}}
+  - {"op": "add_node", "id": "REQ-026-048", "type": "Rule", "owner_fr": "FR-026", "title": "Settings API stays available during deployments", "attrs": {"statement": "The Settings API remains available during deployments; the Patient app retrieves settings after restart; no data is lost.", "rationale": "Edge case on settings propagation during a Patient app deployment."}}
+  - {"op": "add_node", "id": "REQ-026-049", "type": "Rule", "owner_fr": "FR-026", "title": "Concurrent edits to one setting group are detected before save", "attrs": {"statement": "The system detects a concurrent edit by two admins to the same setting group before save and displays a modal popup: \"This setting was updated by [admin email] 30 seconds ago. Your changes may conflict. Review the latest version before saving.\" The modal shows a diff of the latest changes and the options \"Reload Latest Version\" or \"Save Anyway (Overwrite)\".", "rationale": "Edge case on concurrent edits."}}
+  - {"op": "add_node", "id": "REQ-026-050", "type": "Rule", "owner_fr": "FR-026", "title": "Timestamps stored in UTC, shown in the admin local timezone", "attrs": {"statement": "All timestamps MUST be stored in UTC and displayed in admin's local timezone.", "rationale": "General Module Rule 5."}}
+  - {"op": "add_node", "id": "REQ-026-051", "type": "Rule", "owner_fr": "FR-026", "title": "Admin activity logs exempt from GDPR deletion requests", "attrs": {"statement": "Admin activity logs are exempt from GDPR deletion requests (business records, legal requirement).", "rationale": "Data & Privacy Rules, GDPR line."}}
+  - {"op": "add_node", "id": "REQ-026-052", "type": "Rule", "owner_fr": "FR-026", "title": "Sensitive values masked in version history; unmask by permission", "attrs": {"statement": "Sensitive values are masked in version history (displayed as \"[REDACTED]\"); admins with \"View Sensitive Settings\" permission can click \"Show\" to unmask them.", "rationale": "Edge case on sensitive value visibility in version history, and the Screen 7 business rule."}}
+  - {"op": "add_node", "id": "REQ-026-053", "type": "Rule", "owner_fr": "FR-026", "title": "Audit trail also records IP address and user agent", "attrs": {"statement": "All admin actions are logged with IP address, user agent, timestamp, and change details.", "rationale": "Security Considerations, Audit trail. REQ-026-004 lists a narrower set of audit fields; the lists are complementary."}}
+  - {"op": "add_node", "id": "REQ-026-054", "type": "Rule", "owner_fr": "FR-026", "title": "Settings roles and what each may do", "attrs": {"statement": "Role-based access control is enforced: the \"Settings Manager\" role can view and edit all settings; the \"Settings Viewer\" role can view settings and version history (read-only); the \"Security Admin\" role can view sensitive values (API keys, secrets) unmasked.", "rationale": "Security Considerations and Dependencies. FR-031 owns role management and the permission matrix; this rule records only what FR-026 states. See the open question on roles versus the \"Settings Management\" permission."}}
+  - {"op": "add_node", "id": "REQ-026-055", "type": "Rule", "owner_fr": "FR-026", "title": "Password policy fixed in codebase", "attrs": {"statement": "Password policy is fixed in codebase and not admin-editable: minimum 12 characters, at least 1 uppercase, 1 lowercase, 1 digit, 1 special character from !@#$%^&(),.?\":{}|<>.", "rationale": "Admin Editability Rules, Fixed in Codebase; shown view-only on Screen 1."}}
+  - {"op": "add_node", "id": "REQ-026-056", "type": "Rule", "owner_fr": "FR-026", "title": "IP and device rate limiting fixed, independent of per-user throttling", "attrs": {"statement": "IP/device-level rate limiting is fixed at the application layer and not admin-configurable: max 20 failed login attempts per IP address per hour with a 1-hour IP lockout. It is enforced independently of the per-user authentication throttling configured in Screen 2; both constraints apply simultaneously (whichever triggers first locks the user out).", "rationale": "Admin Editability Rules, Fixed in Codebase, and Security Considerations."}}
+  - {"op": "add_node", "id": "REQ-026-057", "type": "Rule", "owner_fr": "FR-026", "title": "Discovery question text fixed", "attrs": {"statement": "The discovery question text is FIXED as \"How did you find out about us?\" and is not editable.", "rationale": "Admin Editability Rules, Fixed in Codebase, and Screen 5."}}
+  - {"op": "add_node", "id": "REQ-026-058", "type": "Rule", "owner_fr": "FR-026", "title": "OTP email template names fixed", "attrs": {"statement": "OTP email template names are fixed: admins cannot rename the templates.", "rationale": "Admin Editability Rules, Fixed in Codebase, and Screen 6."}}
+  - {"op": "add_node", "id": "REQ-026-059", "type": "Rule", "owner_fr": "FR-026", "title": "Setting groups are predefined", "attrs": {"statement": "The setting group structure is predefined: admins cannot create new setting groups.", "rationale": "Admin Editability Rules, Fixed in Codebase."}}
+  - {"op": "add_node", "id": "REQ-026-060", "type": "Rule", "owner_fr": "FR-026", "title": "OTP code length fixed at 6 digits", "attrs": {"statement": "OTP code length is FIXED at 6 digits in codebase and is not editable.", "rationale": "Admin Editability Rules, Fixed in Codebase, and Screen 3 business rules."}}
+  - {"op": "add_node", "id": "REQ-026-061", "type": "Rule", "owner_fr": "FR-026", "title": "FR-024 and FR-011 build on the FR-026 settings infrastructure", "attrs": {"statement": "FR-026 provides the settings infrastructure (audit trail, versioning, UI shell); FR-024 implements treatment-specific CRUD operations and FR-011 implements aftercare milestone template management within that infrastructure, sharing the Settings Management UI and audit trail.", "rationale": "Dependencies, Downstream Consumers. Listed for traceability."}}
+  - {"op": "add_node", "id": "REQ-026-062", "type": "Rule", "owner_fr": "FR-026", "title": "A reason deactivated mid-flow is still accepted for that submission", "attrs": {"statement": "If an admin deactivates a cancellation reason while a patient is mid-cancellation, the patient app uses its cached reason list (up to 1 minute stale); a submission with a now-deactivated reason is still accepted because the reason was valid at flow start, and the next cancellation flow loads the updated list.", "rationale": "Edge case on deactivating a cancellation reason mid-flow."}}
+  - {"op": "add_node", "id": "REQ-026-063", "type": "Rule", "owner_fr": "FR-026", "title": "Quote send blocked when the Settings API is unavailable", "attrs": {"statement": "If the Settings API is unavailable as a provider first sends a quote, FR-004 blocks the send and keeps the quote as a draft; the quote is never sent with a guessed or stale currency or expiry. The provider can retry.", "rationale": "Edge case on the Settings API being unavailable at first send."}}
+  - {"op": "add_node", "id": "REQ-026-064", "type": "Rule", "owner_fr": "FR-026", "title": "Seeded discovery question options", "attrs": {"statement": "Discovery Questions are seeded with \"Search Engine\" (Order 1), \"Social Media\" (Order 2) and \"Friend Referral\" (Order 3).", "rationale": "Implementation Notes, Initial Configuration / Seeding."}}
+  - {"op": "add_node", "id": "REQ-026-065", "type": "Rule", "owner_fr": "FR-026", "title": "Seeded inquiry cancellation reasons", "attrs": {"statement": "Inquiry Cancellation Reasons are seeded with: \"Changed my mind\" (Order 1), \"Found a better option elsewhere\" (2), \"Medical concerns\" (3), \"Financial reasons\" (4), \"Travel restrictions\" (5), \"Timeline doesn't work\" (6), each with Requires Explanation = No; and \"Other\" (7) with Requires Explanation = Yes, FIXED, which cannot be deactivated.", "rationale": "Implementation Notes, Initial Configuration / Seeding."}}
+  - {"op": "add_node", "id": "REQ-026-066", "type": "Rule", "owner_fr": "FR-026", "title": "Seeded account deletion reasons", "attrs": {"statement": "Account Deletion Reasons are seeded with: \"I no longer use this app\" (Order 1), \"I found a better alternative\" (2), \"The app doesn't meet my needs\" (3), \"Too many notifications or emails\" (4), \"Concerns about privacy or data security\" (5), \"I had technical issues or bugs\" (6), \"The app is difficult to use\" (7), \"I'm taking a break and may return later\" (8), each with Requires Explanation = No; and \"Others\" (9) with Requires Explanation = Yes, FIXED, which cannot be deactivated.", "rationale": "Implementation Notes, Initial Configuration / Seeding."}}
+  - {"op": "add_node", "id": "REQ-026-067", "type": "Rule", "owner_fr": "FR-026", "title": "Seeded minimum country set", "attrs": {"statement": "The country list is seeded with at least: Turkey (TR, +90), UK (GB, +44), USA (US, +1) and Germany (DE, +49).", "rationale": "Implementation Notes, Initial Configuration / Seeding (minimum initial set)."}}
+  - {"op": "add_node", "id": "REQ-026-068", "type": "Rule", "owner_fr": "FR-026", "title": "Seeded OTP email templates", "attrs": {"statement": "The default \"Verification Email\" and \"Password Reset Email\" templates MUST be seeded with standard branding and variables.", "rationale": "Implementation Notes, Initial Configuration / Seeding."}}
+  - {"op": "add_node", "id": "REQ-026-069", "type": "Rule", "owner_fr": "FR-026", "title": "Template HTML sanitized; previews run under a restrictive policy", "attrs": {"statement": "Email template HTML MUST be sanitized server-side: script, iframe, form and similar tags, event-handler attributes, and javascript:, data: and other non-whitelisted URL protocols (only http, https and mailto are allowed) are stripped or rejected, and dangerous CSS is removed; variable substitution still renders. The template preview MUST render with a restrictive content security policy that blocks scripts.", "rationale": "Implementation Notes, Security Considerations, HTML Sanitization for Email Templates (a business rule inside the technical section). Condensed: tag and attribute allow-lists, library names and XSS test cases stay in the technical spec."}}
+  - {"op": "add_node", "id": "ENT-setting-group", "type": "Entity", "owner_fr": "FR-026", "title": "Setting group", "attrs": {"description": "A predefined collection of related settings (for example Authentication Throttling, OTP Configuration) that admins view, edit and version together."}}
+  - {"op": "add_node", "id": "ENT-setting-version", "type": "Entity", "owner_fr": "FR-026", "title": "Setting version", "attrs": {"description": "One saved version of a setting group configuration, with the change reason."}}
+  - {"op": "add_node", "id": "ENT-settings-audit-entry", "type": "Entity", "owner_fr": "FR-026", "title": "Settings audit log entry", "attrs": {"description": "Immutable record of one setting change, kept at least 10 years."}}
+  - {"op": "add_node", "id": "ENT-country", "type": "Entity", "owner_fr": "FR-026", "title": "Country", "attrs": {"description": "Centrally managed country used by patient and provider profiles."}}
+  - {"op": "add_node", "id": "ENT-discovery-question-option", "type": "Entity", "owner_fr": "FR-026", "title": "Discovery question option", "attrs": {"description": "Answer choice for the \"How did you find out about us?\" question."}}
+  - {"op": "add_node", "id": "ENT-inquiry-cancellation-reason", "type": "Entity", "owner_fr": "FR-026", "title": "Inquiry cancellation reason", "attrs": {"description": "Centrally managed reason a patient can pick when cancelling an inquiry (FR-003)."}}
+  - {"op": "add_node", "id": "ENT-account-deletion-reason", "type": "Entity", "owner_fr": "FR-026", "title": "Account deletion reason", "attrs": {"description": "Centrally managed reason a patient can pick when requesting account deletion (FR-001 Screen 16)."}}
+  - {"op": "add_node", "id": "ENT-provider-specialty", "type": "Entity", "owner_fr": "FR-026", "title": "Provider specialty", "attrs": {"description": "Centrally managed specialty value referenced by provider records by stable ID (FR-015); never hard-deleted."}}
+  - {"op": "add_node", "id": "ENT-email-template", "type": "Entity", "owner_fr": "FR-026", "title": "OTP email template", "attrs": {"description": "OTP email template configuration consumed by the Notification Service (S-03)."}}
+  - {"op": "add_node", "id": "ENT-inquiry-scheduling-policy", "type": "Entity", "owner_fr": "FR-026", "title": "Inquiry scheduling policy", "attrs": {"description": "Versioned configuration for inquiry date eligibility."}}
+  - {"op": "add_node", "id": "ENT-quote-configuration", "type": "Entity", "owner_fr": "FR-026", "title": "Quote configuration", "attrs": {"description": "Versioned configuration for quote expiry, slot holds and their reminder lead times."}}
+  - {"op": "add_node", "id": "ENT-analytics-configuration", "type": "Entity", "owner_fr": "FR-026", "title": "Analytics configuration", "attrs": {"description": "Versioned configuration used by FR-014 analytics."}}
+  - {"op": "add_field", "id": "ENT-setting-group.group_id", "entity_id": "ENT-setting-group", "name": "group_id", "data_type": "id", "title": "Setting group ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-group.group_name", "entity_id": "ENT-setting-group", "name": "group_name", "data_type": "text", "title": "Setting group name", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-group.group_category", "entity_id": "ENT-setting-group", "name": "group_category", "data_type": "enum", "title": "Setting group category", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-group.group_category", "value": "security", "label": "Security", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-group.group_category", "value": "data", "label": "Data", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-group.group_category", "value": "notifications", "label": "Notifications", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-group.group_category", "value": "analytics", "label": "Analytics", "sort_order": 3}
+  - {"op": "add_field", "id": "ENT-setting-group.current_version", "entity_id": "ENT-setting-group", "name": "current_version", "data_type": "text", "title": "Current version", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-setting-group.last_modified", "entity_id": "ENT-setting-group", "name": "last_modified", "data_type": "datetime", "title": "Last modified", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-group.last_modified_by", "entity_id": "ENT-setting-group", "name": "last_modified_by", "data_type": "text", "title": "Last modified by", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.version_id", "entity_id": "ENT-setting-version", "name": "version_id", "data_type": "id", "title": "Version ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.version_number", "entity_id": "ENT-setting-version", "name": "version_number", "data_type": "int", "title": "Version number", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-setting-version.setting_group_id", "entity_id": "ENT-setting-version", "name": "setting_group_id", "data_type": "id", "title": "Setting group ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.version_data", "entity_id": "ENT-setting-version", "name": "version_data", "data_type": "json", "title": "Version data", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.created_at", "entity_id": "ENT-setting-version", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.created_by", "entity_id": "ENT-setting-version", "name": "created_by", "data_type": "text", "title": "Created by", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.change_reason", "entity_id": "ENT-setting-version", "name": "change_reason", "data_type": "text", "title": "Change reason", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-setting-version.change_type", "entity_id": "ENT-setting-version", "name": "change_type", "data_type": "enum", "title": "Change type", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-version.change_type", "value": "update", "label": "Update", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-setting-version.change_type", "value": "initial", "label": "Initial", "sort_order": 1}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.log_id", "entity_id": "ENT-settings-audit-entry", "name": "log_id", "data_type": "id", "title": "Log ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.setting_group_id", "entity_id": "ENT-settings-audit-entry", "name": "setting_group_id", "data_type": "id", "title": "Setting group ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.timestamp", "entity_id": "ENT-settings-audit-entry", "name": "timestamp", "data_type": "datetime", "title": "Timestamp", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.admin_id", "entity_id": "ENT-settings-audit-entry", "name": "admin_id", "data_type": "id", "title": "Admin ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.admin_email", "entity_id": "ENT-settings-audit-entry", "name": "admin_email", "data_type": "text", "title": "Admin email", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.admin_ip", "entity_id": "ENT-settings-audit-entry", "name": "admin_ip", "data_type": "text", "title": "Admin IP address", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.old_values", "entity_id": "ENT-settings-audit-entry", "name": "old_values", "data_type": "json", "title": "Old values", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.new_values", "entity_id": "ENT-settings-audit-entry", "name": "new_values", "data_type": "json", "title": "New values", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-settings-audit-entry.change_reason", "entity_id": "ENT-settings-audit-entry", "name": "change_reason", "data_type": "text", "title": "Change reason", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.country_id", "entity_id": "ENT-country", "name": "country_id", "data_type": "id", "title": "Country ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.country_name", "entity_id": "ENT-country", "name": "country_name", "data_type": "text", "title": "Country name", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.iso_code", "entity_id": "ENT-country", "name": "iso_code", "data_type": "text", "title": "ISO code", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.calling_code", "entity_id": "ENT-country", "name": "calling_code", "data_type": "text", "title": "Calling code", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.flag_url", "entity_id": "ENT-country", "name": "flag_url", "data_type": "text", "title": "Country flag URL", "owner_fr": "FR-026", "required": false}
+  - {"op": "add_field", "id": "ENT-country.display_order", "entity_id": "ENT-country", "name": "display_order", "data_type": "int", "title": "Display order", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.active", "entity_id": "ENT-country", "name": "active", "data_type": "bool", "title": "Active", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.created_at", "entity_id": "ENT-country", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-country.updated_at", "entity_id": "ENT-country", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.option_id", "entity_id": "ENT-discovery-question-option", "name": "option_id", "data_type": "id", "title": "Option ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.option_text", "entity_id": "ENT-discovery-question-option", "name": "option_text", "data_type": "text", "title": "Option text", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.display_order", "entity_id": "ENT-discovery-question-option", "name": "display_order", "data_type": "int", "title": "Display order", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.active", "entity_id": "ENT-discovery-question-option", "name": "active", "data_type": "bool", "title": "Active", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.usage_count", "entity_id": "ENT-discovery-question-option", "name": "usage_count", "data_type": "int", "title": "Usage count", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.created_at", "entity_id": "ENT-discovery-question-option", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-discovery-question-option.updated_at", "entity_id": "ENT-discovery-question-option", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.reason_id", "entity_id": "ENT-inquiry-cancellation-reason", "name": "reason_id", "data_type": "id", "title": "Reason ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.reason_label", "entity_id": "ENT-inquiry-cancellation-reason", "name": "reason_label", "data_type": "text", "title": "Reason label", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.requires_explanation", "entity_id": "ENT-inquiry-cancellation-reason", "name": "requires_explanation", "data_type": "bool", "title": "Requires explanation", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.display_order", "entity_id": "ENT-inquiry-cancellation-reason", "name": "display_order", "data_type": "int", "title": "Display order", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.active", "entity_id": "ENT-inquiry-cancellation-reason", "name": "active", "data_type": "bool", "title": "Active", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.usage_count", "entity_id": "ENT-inquiry-cancellation-reason", "name": "usage_count", "data_type": "int", "title": "Usage count", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.created_at", "entity_id": "ENT-inquiry-cancellation-reason", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-cancellation-reason.updated_at", "entity_id": "ENT-inquiry-cancellation-reason", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.reason_id", "entity_id": "ENT-account-deletion-reason", "name": "reason_id", "data_type": "id", "title": "Reason ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.reason_label", "entity_id": "ENT-account-deletion-reason", "name": "reason_label", "data_type": "text", "title": "Reason label", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.requires_explanation", "entity_id": "ENT-account-deletion-reason", "name": "requires_explanation", "data_type": "bool", "title": "Requires explanation", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.display_order", "entity_id": "ENT-account-deletion-reason", "name": "display_order", "data_type": "int", "title": "Display order", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.active", "entity_id": "ENT-account-deletion-reason", "name": "active", "data_type": "bool", "title": "Active", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.usage_count", "entity_id": "ENT-account-deletion-reason", "name": "usage_count", "data_type": "int", "title": "Usage count", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.created_at", "entity_id": "ENT-account-deletion-reason", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-account-deletion-reason.updated_at", "entity_id": "ENT-account-deletion-reason", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.specialty_id", "entity_id": "ENT-provider-specialty", "name": "specialty_id", "data_type": "id", "title": "Specialty ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.specialty_name", "entity_id": "ENT-provider-specialty", "name": "specialty_name", "data_type": "text", "title": "Specialty name", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.display_order", "entity_id": "ENT-provider-specialty", "name": "display_order", "data_type": "int", "title": "Display order", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.active", "entity_id": "ENT-provider-specialty", "name": "active", "data_type": "bool", "title": "Active", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.created_at", "entity_id": "ENT-provider-specialty", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-provider-specialty.updated_at", "entity_id": "ENT-provider-specialty", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.template_id", "entity_id": "ENT-email-template", "name": "template_id", "data_type": "id", "title": "Template ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.template_name", "entity_id": "ENT-email-template", "name": "template_name", "data_type": "text", "title": "Template name", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.subject_line", "entity_id": "ENT-email-template", "name": "subject_line", "data_type": "text", "title": "Subject line", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.html_body", "entity_id": "ENT-email-template", "name": "html_body", "data_type": "text", "title": "HTML body", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.plain_text_body", "entity_id": "ENT-email-template", "name": "plain_text_body", "data_type": "text", "title": "Plain text body", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.version_number", "entity_id": "ENT-email-template", "name": "version_number", "data_type": "int", "title": "Version number", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-email-template.required_variables", "entity_id": "ENT-email-template", "name": "required_variables", "data_type": "json", "title": "Required variables", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.created_at", "entity_id": "ENT-email-template", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-email-template.updated_at", "entity_id": "ENT-email-template", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.policy_id", "entity_id": "ENT-inquiry-scheduling-policy", "name": "policy_id", "data_type": "id", "title": "Policy ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.minimum_inquiry_lead_days", "entity_id": "ENT-inquiry-scheduling-policy", "name": "minimum_inquiry_lead_days", "data_type": "int", "title": "Minimum inquiry lead days", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.version_number", "entity_id": "ENT-inquiry-scheduling-policy", "name": "version_number", "data_type": "int", "title": "Version number", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.change_reason", "entity_id": "ENT-inquiry-scheduling-policy", "name": "change_reason", "data_type": "text", "title": "Change reason", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.created_at", "entity_id": "ENT-inquiry-scheduling-policy", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-inquiry-scheduling-policy.updated_at", "entity_id": "ENT-inquiry-scheduling-policy", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.configuration_id", "entity_id": "ENT-quote-configuration", "name": "configuration_id", "data_type": "id", "title": "Configuration ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.currency_code", "entity_id": "ENT-quote-configuration", "name": "currency_code", "data_type": "text", "title": "Currency code", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.quote_expiry_hours", "entity_id": "ENT-quote-configuration", "name": "quote_expiry_hours", "data_type": "int", "title": "Quote expiry hours", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.quote_expiring_soon_lead_hours", "entity_id": "ENT-quote-configuration", "name": "quote_expiring_soon_lead_hours", "data_type": "int", "title": "Quote expiring-soon lead hours", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.slot_hold_hours", "entity_id": "ENT-quote-configuration", "name": "slot_hold_hours", "data_type": "int", "title": "Slot hold hours", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.hold_expiring_soon_lead_hours", "entity_id": "ENT-quote-configuration", "name": "hold_expiring_soon_lead_hours", "data_type": "int", "title": "Hold expiring-soon lead hours", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.version_number", "entity_id": "ENT-quote-configuration", "name": "version_number", "data_type": "int", "title": "Version number", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-quote-configuration.change_reason", "entity_id": "ENT-quote-configuration", "name": "change_reason", "data_type": "text", "title": "Change reason", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.created_at", "entity_id": "ENT-quote-configuration", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-quote-configuration.updated_at", "entity_id": "ENT-quote-configuration", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.configuration_id", "entity_id": "ENT-analytics-configuration", "name": "configuration_id", "data_type": "id", "title": "Configuration ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.ttfq_sla_minutes", "entity_id": "ENT-analytics-configuration", "name": "ttfq_sla_minutes", "data_type": "int", "title": "TTFQ SLA minutes", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.at_risk_days", "entity_id": "ENT-analytics-configuration", "name": "at_risk_days", "data_type": "int", "title": "At Risk days", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.dormant_days", "entity_id": "ENT-analytics-configuration", "name": "dormant_days", "data_type": "int", "title": "Dormant days", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.price_outlier_percent", "entity_id": "ENT-analytics-configuration", "name": "price_outlier_percent", "data_type": "int", "title": "Price outlier percent", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.benchmark_refresh_frequency", "entity_id": "ENT-analytics-configuration", "name": "benchmark_refresh_frequency", "data_type": "enum", "title": "Benchmark refresh frequency", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_enum_value", "field_id": "ENT-analytics-configuration.benchmark_refresh_frequency", "value": "daily", "label": "Daily", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-analytics-configuration.benchmark_refresh_frequency", "value": "weekly", "label": "Weekly", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-analytics-configuration.benchmark_refresh_frequency", "value": "monthly", "label": "Monthly", "sort_order": 2}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.target_monthly_commission", "entity_id": "ENT-analytics-configuration", "name": "target_monthly_commission", "data_type": "money", "title": "Target monthly commission", "owner_fr": "FR-026", "required": false}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.version_number", "entity_id": "ENT-analytics-configuration", "name": "version_number", "data_type": "int", "title": "Version number", "owner_fr": "FR-026", "required": true, "calculated_by": "REQ-026-003"}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.change_reason", "entity_id": "ENT-analytics-configuration", "name": "change_reason", "data_type": "text", "title": "Change reason", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.created_at", "entity_id": "ENT-analytics-configuration", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-analytics-configuration.updated_at", "entity_id": "ENT-analytics-configuration", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "update_node", "id": "ENT-treatment-area", "attrs": {"description": "Centrally managed treatment-area option for inquiry creation (FR-003 Screen 1); referenced by the inquiry treatment-area snapshot and cannot be deleted while referenced. PRD field image_or_icon_url is held as image_url and active as is_active."}}  # stub updated, owner FR-026
+  - {"op": "update_field", "id": "ENT-treatment-area.label", "required": true}
+  - {"op": "update_field", "id": "ENT-treatment-area.image_url", "required": true}
+  - {"op": "update_field", "id": "ENT-treatment-area.display_order", "required": true}
+  - {"op": "update_field", "id": "ENT-treatment-area.is_active", "required": true}
+  - {"op": "add_field", "id": "ENT-treatment-area.option_id", "entity_id": "ENT-treatment-area", "name": "option_id", "data_type": "id", "title": "Option ID", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-treatment-area.created_at", "entity_id": "ENT-treatment-area", "name": "created_at", "data_type": "datetime", "title": "Created at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_field", "id": "ENT-treatment-area.updated_at", "entity_id": "ENT-treatment-area", "name": "updated_at", "data_type": "datetime", "title": "Updated at", "owner_fr": "FR-026", "required": true}
+  - {"op": "add_edge", "from": "REQ-026-001", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-001", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-002", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-002", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-003", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-003", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-004", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-004", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-005", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-005", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-006", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-006", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-007", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-007", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-008", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-008", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-009", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-009", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-009", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-009", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "governed by", "to": "SET-otp-resend-cooldown"}
+  - {"op": "add_edge", "from": "REQ-026-010", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-011", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-011", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-011", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_edge", "from": "REQ-026-011", "verb": "governed by", "to": "SET-country-calling-codes"}
+  - {"op": "add_edge", "from": "REQ-026-012", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-012", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_edge", "from": "REQ-026-013", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-013", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-013", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-013", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_edge", "from": "REQ-026-014", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-014", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-015", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-015", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-016", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-016", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-017", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-017", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-018", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-018", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-019", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-019", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-020", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-020", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-021", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-021", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-022", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-022", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-023", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-023", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-024", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-024", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-025", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-025", "verb": "governed by", "to": "SET-treatment-area-options"}
+  - {"op": "add_edge", "from": "REQ-026-025", "verb": "governed by", "to": "SET-inquiry-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-quote-expiry-window"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-quote-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-hold-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-026-027", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-026-027", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "add_edge", "from": "REQ-026-027", "verb": "governed by", "to": "SET-quote-expiry-window"}
+  - {"op": "add_edge", "from": "REQ-026-027", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-ttfq-sla-target"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-at-risk-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-dormant-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-price-outlier-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-benchmark-refresh-frequency"}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "governed by", "to": "SET-target-monthly-commission"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-ttfq-sla-target"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-at-risk-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-dormant-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-price-outlier-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-benchmark-refresh-frequency"}
+  - {"op": "add_edge", "from": "REQ-026-029", "verb": "governed by", "to": "SET-target-monthly-commission"}
+  - {"op": "add_edge", "from": "REQ-026-030", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-026-030", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-026-030", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-026-030", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-026-031", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-026-031", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-026-031", "verb": "governed by", "to": "SET-quote-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-031", "verb": "governed by", "to": "SET-hold-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-032", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-032", "verb": "governed by", "to": "SET-inquiry-cancellation-reasons"}
+  - {"op": "add_edge", "from": "REQ-026-033", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-033", "verb": "governed by", "to": "SET-account-deletion-reasons"}
+  - {"op": "add_edge", "from": "REQ-026-034", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-034", "verb": "governed by", "to": "SET-treatment-area-options"}
+  - {"op": "add_edge", "from": "REQ-026-035", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-035", "verb": "governed by", "to": "SET-inquiry-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-036", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-036", "verb": "governed by", "to": "SET-treatment-area-options"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-quote-expiry-window"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-quote-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-slot-hold-duration"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-hold-expiring-soon-lead-time"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-ttfq-sla-target"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-at-risk-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-dormant-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-price-outlier-threshold"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-benchmark-refresh-frequency"}
+  - {"op": "add_edge", "from": "REQ-026-038", "verb": "governed by", "to": "SET-target-monthly-commission"}
+  - {"op": "add_edge", "from": "REQ-026-039", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-026-039", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-039", "verb": "governed by", "to": "SET-provider-specialties"}
+  - {"op": "add_edge", "from": "REQ-026-040", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-040", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-otp-resend-cooldown"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-country-calling-codes"}
+  - {"op": "add_edge", "from": "REQ-026-041", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "governed by", "to": "SET-otp-resend-cooldown"}
+  - {"op": "add_edge", "from": "REQ-026-042", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-043", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-043", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-044", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-044", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-045", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-045", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-045", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-045", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-026-046", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-046", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-047", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-047", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-047", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-047", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_edge", "from": "REQ-026-048", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-048", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-049", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-049", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-050", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-050", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-051", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-051", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-052", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-052", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-053", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-053", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-054", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-054", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-055", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-055", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-055", "verb": "governed by", "to": "SET-password-policy"}
+  - {"op": "add_edge", "from": "REQ-026-056", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-056", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-056", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-056", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-026-057", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-057", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_edge", "from": "REQ-026-058", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-058", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-058", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-058", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_edge", "from": "REQ-026-059", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-059", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-060", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-060", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-060", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-060", "verb": "governed by", "to": "SET-otp-code-length"}
+  - {"op": "add_edge", "from": "REQ-026-061", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-061", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-062", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-062", "verb": "governed by", "to": "SET-inquiry-cancellation-reasons"}
+  - {"op": "add_edge", "from": "REQ-026-063", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-026-063", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "add_edge", "from": "REQ-026-063", "verb": "governed by", "to": "SET-quote-expiry-window"}
+  - {"op": "add_edge", "from": "REQ-026-064", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-064", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_edge", "from": "REQ-026-065", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-065", "verb": "governed by", "to": "SET-inquiry-cancellation-reasons"}
+  - {"op": "add_edge", "from": "REQ-026-066", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-066", "verb": "governed by", "to": "SET-account-deletion-reasons"}
+  - {"op": "add_edge", "from": "REQ-026-067", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-067", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-067", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_edge", "from": "REQ-026-067", "verb": "governed by", "to": "SET-country-calling-codes"}
+  - {"op": "add_edge", "from": "REQ-026-068", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-068", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-068", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-068", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_edge", "from": "REQ-026-069", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-069", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-069", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-069", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_edge", "from": "STG-patient-02-profile-complete", "verb": "reads", "to": "ENT-country"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-country"}
+  - {"op": "add_edge", "from": "STG-patient-01-registered", "verb": "reads", "to": "ENT-discovery-question-option"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-inquiry-cancellation-reason"}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-account-deletion-reason"}
+  - {"op": "add_edge", "from": "STG-provider-01-invited", "verb": "reads", "to": "ENT-provider-specialty"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-provider-specialty"}
+  - {"op": "add_edge", "from": "STG-patient-01-registered", "verb": "reads", "to": "ENT-email-template"}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-email-template"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-email-template"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-inquiry-scheduling-policy"}
+  - {"op": "add_edge", "from": "STG-main-02-quote", "verb": "reads", "to": "ENT-quote-configuration"}
+  - {"op": "add_edge", "from": "STG-main-03-acceptance", "verb": "reads", "to": "ENT-quote-configuration"}
+  - {"op": "add_edge", "from": "STG-main-04-booking", "verb": "reads", "to": "ENT-quote-configuration"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-analytics-configuration"}
+  - {"op": "add_edge", "from": "ENT-quote-configuration", "verb": "decided by", "to": "SRC-MTG-002-O01"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-patient-01-registered"}  # shared edge, may-collide
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-patient-02-profile-complete"}  # shared edge, may-collide

@@ -1,0 +1,286 @@
+# FR-037 Monitor Your Hair Loss: PRD migrated into the graph, part 2 of 2 (Screen Specifications).
+# Source: archived/prd-baseline-2026-11-08/fr037-monitor-hair-loss/prd.md only (no Change Requests read).
+# Part 1 must be applied before part 2.
+reason: "Migrate the FR-037 PRD into the graph, part 2: screens, their stage and actor edges, and shows edges"
+by: "docs-manager"
+operations:
+  # --- Screens (Screen Specifications section)
+  - {"op": "add_node", "id": "SCR-037-01", "type": "Screen", "owner_fr": "FR-037", "title": "Hair-Loss Monitoring Intake and Mode Selection", "attrs": {"platform": "patient", "description": "Screen 1 (Patient Platform). Creates a monitoring case and captures reusable concern information."}}
+  - {"op": "add_node", "id": "SCR-037-02", "type": "Screen", "owner_fr": "FR-037", "title": "Monitoring Dashboard and Calendar", "attrs": {"platform": "patient", "description": "Screen 2 (Patient Platform). Provides the active case timeline, progress summary and actions."}}
+  - {"op": "add_node", "id": "SCR-037-03", "type": "Screen", "owner_fr": "FR-037", "title": "Daily Monitoring Log", "attrs": {"platform": "patient", "description": "Screen 3 (Patient Platform). Records a dated observation using the same structure on every date."}}
+  - {"op": "add_node", "id": "SCR-037-04", "type": "Screen", "owner_fr": "FR-037", "title": "Head Scan Capture and History", "attrs": {"platform": "patient", "description": "Screen 4 (Patient Platform). Captures or reviews standardized scan photo sets across the case."}}
+  - {"op": "add_node", "id": "SCR-037-05", "type": "Screen", "owner_fr": "FR-037", "title": "Complete or Convert Monitoring Case", "attrs": {"platform": "patient", "description": "Screen 5 (Patient Platform). Lets the patient deliberately end the active case."}}
+  - {"op": "add_node", "id": "SCR-037-06", "type": "Screen", "owner_fr": "FR-037", "title": "Monitoring Summary and PDF Export", "attrs": {"platform": "patient", "description": "Screen 6 (Patient Platform). Displays the completed case and its downloadable report."}}
+  - {"op": "add_node", "id": "SCR-037-07", "type": "Screen", "owner_fr": "FR-037", "title": "Convert to Treatment Inquiry: Conversion Summary (Step A)", "attrs": {"platform": "patient", "description": "Screen 7 Step A (Patient Platform). Read-only consolidated preview of the monitoring record and the data that will populate the inquiry; nothing is edited and no inquiry exists yet."}}
+  - {"op": "add_node", "id": "SCR-037-08", "type": "Screen", "owner_fr": "FR-037", "title": "Convert to Treatment Inquiry: Review and Edit Carried-Over Data (Step B)", "attrs": {"platform": "patient", "description": "Screen 7 Step B (Patient Platform). Reviews and edits pre-filled FR-003 data before entering the remaining FR-003 inquiry screens."}}
+  - {"op": "add_node", "id": "SCR-037-09", "type": "Screen", "owner_fr": "FR-037", "title": "Provider Monitoring Advice Queue", "attrs": {"platform": "provider", "description": "Screen 8 (Provider Platform). Shows and helps the provider find cases currently assigned to them."}}
+  - {"op": "add_node", "id": "SCR-037-10", "type": "Screen", "owner_fr": "FR-037", "title": "Provider Monitoring Case Overview", "attrs": {"platform": "provider", "description": "Screen 9 (Provider Platform). Overall view of one monitoring case for the assigned provider; routes each calendar record into its dedicated detail screen."}}
+  - {"op": "add_node", "id": "SCR-037-11", "type": "Screen", "owner_fr": "FR-037", "title": "Provider Daily Log Detail", "attrs": {"platform": "provider", "description": "Screen 10A (Provider Platform). Shows the complete patient-authored record for one selected calendar day without mixing provider advice into it."}}
+  - {"op": "add_node", "id": "SCR-037-12", "type": "Screen", "owner_fr": "FR-037", "title": "Provider Advice Detail", "attrs": {"platform": "provider", "description": "Screen 10B (Provider Platform). Dedicated surface for viewing, submitting or editing one provider-advice record or the current available advice window."}}
+  - {"op": "add_node", "id": "SCR-037-13", "type": "Screen", "owner_fr": "FR-037", "title": "Provider Withdrawal Confirmation", "attrs": {"platform": "provider", "description": "Screen 11 (Provider Platform). Ends a provider assignment safely."}}
+  - {"op": "add_node", "id": "SCR-037-14", "type": "Screen", "owner_fr": "FR-037", "title": "Admin Monitoring Cases and Assignment Queue", "attrs": {"platform": "admin", "description": "Screen 12 (Admin Platform). System-wide operational picture of monitoring cases; oversight, pre-assignment sharing, first assignment and reassignment."}}
+  - {"op": "add_node", "id": "SCR-037-15", "type": "Screen", "owner_fr": "FR-037", "title": "Admin Monitoring Case Overview and Configuration", "attrs": {"platform": "admin", "description": "Screen 13 (Admin Platform). Overall view and operational controls for one case; routes individual patient logs and provider advice into dedicated detail screens."}}
+  - {"op": "add_node", "id": "SCR-037-16", "type": "Screen", "owner_fr": "FR-037", "title": "Admin Daily Log Detail", "attrs": {"platform": "admin", "description": "Screen 14A (Admin Platform). Complete patient-authored record for one selected calendar day and the audited correction controls for that record."}}
+  - {"op": "add_node", "id": "SCR-037-17", "type": "Screen", "owner_fr": "FR-037", "title": "Admin Provider Advice Detail", "attrs": {"platform": "admin", "description": "Screen 14B (Admin Platform). Complete provider-advice record, its advice-window context and audited correction history, without attaching it to a patient log."}}
+  # --- Screen edges: belongs to, uses
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "belongs to", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-04", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-05", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "belongs to", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "belongs to", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-13", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "belongs to", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-01"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-02"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-03"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-04"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-05"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-06"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-07"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-037-08"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-037-09"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-037-10"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-037-11"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-037-12"}
+  - {"op": "add_edge", "from": "ACT-provider", "verb": "uses", "to": "SCR-037-13"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-037-14"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-037-15"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-037-16"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-037-17"}
+  # --- Screen shows Field (Screens own no fields; one edge per screen and field, first label kept)
+  # Screen 01: Hair-Loss Monitoring Intake and Mode Selection
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.mode", "attrs": {"provenance": "user input", "label": "Monitoring Mode", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.nature_of_concern", "attrs": {"provenance": "user input", "label": "Nature of Concern", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.duration", "attrs": {"provenance": "user input", "label": "Duration", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.previous_treatments", "attrs": {"provenance": "user input", "label": "Previous Treatments", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.starting_severity", "attrs": {"provenance": "user input", "label": "Current Severity", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.lifestyle_factors", "attrs": {"provenance": "user input", "label": "Lifestyle Factors", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.additional_notes", "attrs": {"provenance": "user input", "label": "Additional Notes", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.initial_photos", "attrs": {"provenance": "user input", "label": "Initial Photos", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.initial_scan_id", "attrs": {"provenance": "user input", "label": "Initial Head Scan", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.medical_questionnaire_snapshot", "attrs": {"provenance": "user input", "label": "Medical Questionnaire", "editable": true}}
+  # Screen 02: Monitoring Dashboard and Calendar
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "system calculated", "label": "Case Status"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-scan.captured_at", "attrs": {"provenance": "retrieved", "label": "Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Logged Days"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Severity Trend"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-case.advice_state", "attrs": {"provenance": "retrieved", "label": "Provider Advice Status"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice-window.availability", "attrs": {"provenance": "system calculated", "label": "Advice Availability"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice.paragraph", "attrs": {"provenance": "retrieved", "label": "Provider Advice Detail"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice.author_id", "attrs": {"provenance": "retrieved", "label": "Provider Advice Detail"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice.is_edited", "attrs": {"provenance": "retrieved", "label": "Provider Advice Detail"}}
+  - {"op": "add_edge", "from": "SCR-037-02", "verb": "shows", "to": "ENT-monitoring-advice.last_edited_at", "attrs": {"provenance": "retrieved", "label": "Provider Advice Detail"}}
+  # Screen 03: Daily Monitoring Log
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "user input", "label": "Log Date", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "shows", "to": "ENT-monitoring-entry.severity", "attrs": {"provenance": "user input", "label": "Severity", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "shows", "to": "ENT-monitoring-entry.photos", "attrs": {"provenance": "user input", "label": "Photos", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-03", "verb": "shows", "to": "ENT-monitoring-entry.scan_id", "attrs": {"provenance": "user input", "label": "Head Scan", "editable": true}}
+  # Screen 04: Head Scan Capture and History
+  - {"op": "add_edge", "from": "SCR-037-04", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "user input", "label": "Photo Set", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-04", "verb": "shows", "to": "ENT-monitoring-scan.captured_at", "attrs": {"provenance": "system calculated", "label": "Captured At"}}
+  - {"op": "add_edge", "from": "SCR-037-04", "verb": "shows", "to": "ENT-monitoring-scan.id", "attrs": {"provenance": "retrieved", "label": "Scan History"}}
+  # Screen 05: Complete or Convert Monitoring Case
+  - {"op": "add_edge", "from": "SCR-037-05", "verb": "shows", "to": "ENT-monitoring-case.monitoring_period", "attrs": {"provenance": "system calculated", "label": "Case Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-05", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Case Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-05", "verb": "shows", "to": "ENT-monitoring-case.scan_count", "attrs": {"provenance": "system calculated", "label": "Case Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-05", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Case Summary"}}
+  # Screen 06: Monitoring Summary and PDF Export
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-case.monitoring_period", "attrs": {"provenance": "system calculated", "label": "Monitoring Period"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Logged Days"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-case.severity_summary", "attrs": {"provenance": "system calculated", "label": "Severity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Log Timeline"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "retrieved", "label": "Log Timeline"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "retrieved", "label": "Head Scan Photos"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-advice.paragraph", "attrs": {"provenance": "retrieved", "label": "Provider Advice"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-advice.author_id", "attrs": {"provenance": "retrieved", "label": "Provider Advice"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Provider Advice"}}
+  - {"op": "add_edge", "from": "SCR-037-06", "verb": "shows", "to": "ENT-monitoring-export.generation_state", "attrs": {"provenance": "system calculated", "label": "PDF Status"}}
+  # Screen 07: Convert to Treatment Inquiry: Conversion Summary (Step A)
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.monitoring_period", "attrs": {"provenance": "system calculated", "label": "Monitoring Recap"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Monitoring Recap"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.scan_count", "attrs": {"provenance": "system calculated", "label": "Monitoring Recap"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.severity_summary", "attrs": {"provenance": "system calculated", "label": "Monitoring Recap"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.advice_count", "attrs": {"provenance": "system calculated", "label": "Monitoring Recap"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-conversion.carried_over_preview", "attrs": {"provenance": "system calculated", "label": "Carried-Over Data Preview"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-conversion.items_still_needed", "attrs": {"provenance": "system calculated", "label": "Items Still Needed"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-export.pdf_media", "attrs": {"provenance": "system calculated", "label": "Monitoring Summary PDF"}}
+  - {"op": "add_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-conversion.provider_routing", "attrs": {"provenance": "retrieved", "label": "Provider Routing Notice"}}
+  # Screen 08: Convert to Treatment Inquiry: Review and Edit Carried-Over Data (Step B)
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.problem_concern", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.problem_duration", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.previous_treatments", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.symptom_severity", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.lifestyle_factors", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-inquiry.additional_notes", "attrs": {"provenance": "carried from previous screen", "label": "Concern Information", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-monitoring-conversion.selected_scan_id", "attrs": {"provenance": "user input", "label": "Selected Head Scan", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-medical-questionnaire-response.answer", "attrs": {"provenance": "carried from previous screen", "label": "Medical Answers", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-medical-questionnaire-response.details", "attrs": {"provenance": "carried from previous screen", "label": "Medical Answers", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-08", "verb": "shows", "to": "ENT-monitoring-export.pdf_media", "attrs": {"provenance": "carried from previous screen", "label": "Monitoring Summary PDF"}}
+  # Screen 09: Provider Monitoring Advice Queue
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Assigned Cases"}}
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Assigned Cases"}}
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "shows", "to": "ENT-monitoring-case.last_patient_log_at", "attrs": {"provenance": "system calculated", "label": "Last Patient Log"}}
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "shows", "to": "ENT-monitoring-advice-window.availability", "attrs": {"provenance": "system calculated", "label": "Advice Availability"}}
+  - {"op": "add_edge", "from": "SCR-037-09", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assignment_type", "attrs": {"provenance": "retrieved", "label": "Assignment Type"}}
+  # Screen 10: Provider Monitoring Case Overview
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.mode", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.started_on", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assignment_type", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assigned_at", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-scan.id", "attrs": {"provenance": "retrieved", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-scan.captured_at", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-case.medical_questionnaire_snapshot", "attrs": {"provenance": "retrieved", "label": "Medical Questionnaire"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice-window.start_date", "attrs": {"provenance": "system calculated", "label": "Advice Window Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice-window.state", "attrs": {"provenance": "retrieved", "label": "Advice Window Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice.is_edited", "attrs": {"provenance": "retrieved", "label": "Advice History"}}
+  - {"op": "add_edge", "from": "SCR-037-10", "verb": "shows", "to": "ENT-monitoring-advice.last_edited_at", "attrs": {"provenance": "retrieved", "label": "Advice History"}}
+  # Screen 11: Provider Daily Log Detail
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.severity", "attrs": {"provenance": "retrieved", "label": "Severity"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "retrieved", "label": "Notes"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.photos", "attrs": {"provenance": "retrieved", "label": "Photos"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.scan_id", "attrs": {"provenance": "retrieved", "label": "Head Scan"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.created_by", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.submitted_at", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.updated_at", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-monitoring-entry.version", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  # Screen 12: Provider Advice Detail
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice-window.start_date", "attrs": {"provenance": "system calculated", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice-window.state", "attrs": {"provenance": "retrieved", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice-window.id", "attrs": {"provenance": "retrieved", "label": "Advice Window Stack"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.paragraph", "attrs": {"provenance": "user input", "label": "Advice Paragraph", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.author_id", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.is_edited", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.last_edited_at", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-monitoring-advice.versions", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  # Screen 13: Provider Withdrawal Confirmation
+  - {"op": "add_edge", "from": "SCR-037-13", "verb": "shows", "to": "ENT-monitoring-provider-assignment.withdrawal_reason", "attrs": {"provenance": "user input", "label": "Withdrawal Reason", "editable": true}}
+  # Screen 14: Admin Monitoring Cases and Assignment Queue
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.mode", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.started_on", "attrs": {"provenance": "retrieved", "label": "Case Identity"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.last_patient_log_at", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.latest_severity", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.scan_count", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case.last_advice_at", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-advice-window.availability", "attrs": {"provenance": "system calculated", "label": "Activity Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-provider-assignment.provider_id", "attrs": {"provenance": "retrieved", "label": "Assignment Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-provider-assignment.status", "attrs": {"provenance": "retrieved", "label": "Assignment Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assignment_type", "attrs": {"provenance": "retrieved", "label": "Assignment Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assigned_at", "attrs": {"provenance": "retrieved", "label": "Assignment Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-provider-assignment.withdrawal_reason", "attrs": {"provenance": "retrieved", "label": "Assignment Summary"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.dataset_version", "attrs": {"provenance": "retrieved", "label": "Preview Contents"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.expires_at", "attrs": {"provenance": "user input", "label": "Preview Expiry", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.candidate_provider_id", "attrs": {"provenance": "retrieved", "label": "Preview Status"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.created_by", "attrs": {"provenance": "retrieved", "label": "Preview Status"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.created_at", "attrs": {"provenance": "retrieved", "label": "Preview Status"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.state", "attrs": {"provenance": "retrieved", "label": "Preview Status"}}
+  - {"op": "add_edge", "from": "SCR-037-14", "verb": "shows", "to": "ENT-monitoring-case-preview.last_viewed_at", "attrs": {"provenance": "retrieved", "label": "Preview Status"}}
+  # Screen 15: Admin Monitoring Case Overview and Configuration
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-patient.email", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-patient.phone", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.mode", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.started_on", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.completed_on", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.converted_inquiry_id", "attrs": {"provenance": "retrieved", "label": "Case Header"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.nature_of_concern", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.duration", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.previous_treatments", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.starting_severity", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.lifestyle_factors", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.additional_notes", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.initial_photos", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.initial_scan_id", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.medical_questionnaire_snapshot", "attrs": {"provenance": "retrieved", "label": "Intake and Medical Data"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case.scan_count", "attrs": {"provenance": "system calculated", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-scan.id", "attrs": {"provenance": "retrieved", "label": "Monitoring Dashboard"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-scan.captured_at", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Monitoring Calendar"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.provider_id", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assignment_type", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.status", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.assigned_at", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.ended_at", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-provider-assignment.withdrawal_reason", "attrs": {"provenance": "retrieved", "label": "Assignment History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case-preview.state", "attrs": {"provenance": "retrieved", "label": "Assignment Controls"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-case-preview.expires_at", "attrs": {"provenance": "retrieved", "label": "Assignment Controls"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-advice-window.start_date", "attrs": {"provenance": "system calculated", "label": "Advice Window History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-advice-window.state", "attrs": {"provenance": "retrieved", "label": "Advice Window History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-advice-window.advice_id", "attrs": {"provenance": "retrieved", "label": "Advice Window History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-advice-window.superseded_window_id", "attrs": {"provenance": "retrieved", "label": "Advice Window History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-export.report_version", "attrs": {"provenance": "retrieved", "label": "Export and Conversion"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-export.generation_state", "attrs": {"provenance": "retrieved", "label": "Export and Conversion"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-export.pdf_media", "attrs": {"provenance": "retrieved", "label": "Export and Conversion"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-conversion.inquiry_id", "attrs": {"provenance": "retrieved", "label": "Export and Conversion"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-conversion.field_mapping_version", "attrs": {"provenance": "retrieved", "label": "Export and Conversion"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-audit-entry.reason", "attrs": {"provenance": "user input", "label": "Edit Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-audit-entry.before_value", "attrs": {"provenance": "retrieved", "label": "Audit History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-audit-entry.after_value", "attrs": {"provenance": "retrieved", "label": "Audit History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-audit-entry.actor_id", "attrs": {"provenance": "retrieved", "label": "Audit History"}}
+  - {"op": "add_edge", "from": "SCR-037-15", "verb": "shows", "to": "ENT-monitoring-audit-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Audit History"}}
+  # Screen 16: Admin Daily Log Detail
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.severity", "attrs": {"provenance": "retrieved", "label": "Severity", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "retrieved", "label": "Notes", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.photos", "attrs": {"provenance": "retrieved", "label": "Photos", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.scan_id", "attrs": {"provenance": "retrieved", "label": "Head Scan", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.created_by", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.submitted_at", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.updated_at", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-entry.version", "attrs": {"provenance": "retrieved", "label": "Record Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-audit-entry.reason", "attrs": {"provenance": "user input", "label": "Edit Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-audit-entry.before_value", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-audit-entry.after_value", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-audit-entry.actor_id", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-monitoring-audit-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  # Screen 17: Admin Provider Advice Detail
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-case.id", "attrs": {"provenance": "retrieved", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice-window.start_date", "attrs": {"provenance": "system calculated", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice-window.state", "attrs": {"provenance": "retrieved", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.paragraph", "attrs": {"provenance": "retrieved", "label": "Advice Paragraph", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice-window.superseded_window_id", "attrs": {"provenance": "retrieved", "label": "Advice Window Detail"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice-window.advice_id", "attrs": {"provenance": "retrieved", "label": "Advice Window Detail"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.author_id", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.submitted_at", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.is_edited", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.last_edited_at", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-advice.versions", "attrs": {"provenance": "retrieved", "label": "Advice Metadata"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-audit-entry.reason", "attrs": {"provenance": "user input", "label": "Edit Reason", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-audit-entry.before_value", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-audit-entry.after_value", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-audit-entry.actor_id", "attrs": {"provenance": "retrieved", "label": "Version History"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-monitoring-audit-entry.occurred_at", "attrs": {"provenance": "retrieved", "label": "Version History"}}
