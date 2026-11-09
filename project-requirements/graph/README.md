@@ -10,6 +10,8 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/init_db.py`: creates an empty `graph.db`.
 - `scripts/test_init_db.py`: tests for the schema loader and the database rules.
 - `scripts/migrate_schema_v5.py`: moves a version 4 `graph.db` to schema version 5 (see "Schema version 5" below).
+- `scripts/migrate_schema_v6.py`: moves a version 5 `graph.db` to schema version 6 (see "Schema version 6" below).
+- `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
 - `checklists/`: the review and migration checklists every repeated task runs from (`checklists/README.md` lists them, their versions and how a brief must cite them).
@@ -89,7 +91,7 @@ Tests: `/usr/bin/python3 scripts/test_write_query.py`.
 
 These three scripts only read the database. Each takes `--db PATH` to use a DB other than `graph.db`.
 
-`scripts/lint.py` checks every active node against the guardrails (rules L01 to L13, listed at the top of the script). It prints one row per finding, or `--json`, and exits 1 if there is any finding, 0 if the graph is clean, 2 on an error. Each finding ID is the rule code plus its subject, such as `L03:SCR-004-01`, so counts can be compared between runs. `--fr FR-004` limits the check to nodes that FR owns.
+`scripts/lint.py` checks every active node against the guardrails (rules L01 to L19, listed at the top of the script). It prints one row per finding, or `--json`, and exits 1 if there is any finding, 0 if the graph is clean, 2 on an error. Each finding ID is the rule code plus its subject, such as `L03:SCR-004-01`, so counts can be compared between runs. `--fr FR-004` limits the check to nodes that FR owns.
 
 ```bash
 /usr/bin/python3 scripts/lint.py --fr FR-004
@@ -128,11 +130,30 @@ Files under `changesets/` are kept so a change-set can be reviewed before and af
 
 ## Schema version 5
 
-Version 5 adds the edge verb `references` (pairs `[FR, Rule]`: an FR that repeats a Rule owned by another FR cites it instead of copying it) and the optional Rule attribute `aliases`. `aliases` is already in `schema.yaml` because it needs no DB change. The verb and the version bump are not applied yet: `init_db.py` writes the verb list into a CHECK on `edges.verb`, so the edges table must be rebuilt, and `write.py` refuses a DB whose version differs from `schema.yaml`. To move to version 5, when no one else is writing to `graph.db`, set `version: 5` and add the `references` verb in `schema.yaml`, then run:
+Version 5 added the edge verb `references` (pairs `[FR, Rule]`: an FR that repeats a Rule owned by another FR cites it instead of copying it) and the optional Rule attribute `aliases`. `init_db.py` writes the verb list into a CHECK on `edges.verb`, so the edges table had to be rebuilt; the script below did that. It is kept for older copies of the DB:
 
 ```bash
 /usr/bin/python3 scripts/migrate_schema_v5.py      # backs up graph.db to backups/ first; --db PATH for another file
 ```
+
+## Schema version 6
+
+Version 6 (D42, applied 2026-11-10) adds the flow model:
+
+- Node type `Step` (`STP-NNN-NNN`, owned by the FR whose PRD describes it): one action in a flow. Optional attrs `description`, `prd_ref`, and `handoff_to` / `handoff_from`, which name a step in another FR until a cross-FR `next` link replaces them.
+- Node type `Flow` (`FLW-...`, no owner): a named start point, attr `kind` (`main`, `alternative` or `journey`). Its path is the `next` links from the Step it `starts at`, so a journey can cross FRs.
+- Verbs `done by` (Step to Actor), `at` (Step to Stage), `on` (Step to Screen), `applies` (Step to Rule), `next` (Step to Step; optional attrs `condition` = the Rule id that picks the branch, `label`, `back`) and `starts at` (Flow to Step).
+- An Event may now be emitted at several Stages; L04 fires only when it has none.
+
+New lint rules: L14 a Step no Flow reaches (Steps with `handoff_from` are skipped); L15 a `next` link back to an earlier Stage of the same timeline without `back: true`; L16 a Step's Actor with no `acts in` edge to its Stage; L17 a Step without a `done by` Actor or without exactly one `at` Stage; L18 an open hand-off; L19 a `next` condition that is not an active Rule.
+
+Node types and verbs are CHECK constraints in the DDL, so the migration builds a fresh DB from the version 6 DDL, copies every table row by row with its rowid, checks the copy (row equality, foreign keys, integrity), and swaps it in after a backup:
+
+```bash
+/usr/bin/python3 scripts/migrate_schema_v6.py      # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+Product Owner decisions from the MTG-002 decision log are Source nodes `SRC-PO-001-<code>` (kind `decision item`, parent `SRC-PO-001`, kind `decision log`), so Rules can cite them with `decided by`.
 
 ## Run the tests
 

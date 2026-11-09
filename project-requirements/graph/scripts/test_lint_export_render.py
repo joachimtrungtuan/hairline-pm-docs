@@ -98,6 +98,74 @@ class GraphTestCase(unittest.TestCase):
         return {f.id for f in lint.lint(self.conn, SCHEMA, fr)}
 
 
+class TestFlowLint(GraphTestCase):
+    """Flow model (schema v6): Steps linked by 'next', Flows as named start points."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.add_edge("ACT-provider", "acts in", "STG-main-01-inquiry")
+        for step, stage in (("STP-004-001", "STG-main-01-inquiry"), ("STP-004-002", "STG-main-02-quote")):
+            self.add_node(step, "Step", "FR-004", f"Step {step}")
+            self.add_edge(step, "done by", "ACT-provider")
+            self.add_edge(step, "at", stage)
+        self.add_edge("STP-004-002", "on", "SCR-004-01")
+        self.add_edge("STP-004-002", "applies", "REQ-004-001")
+        self.add_edge("STP-004-001", "next", "STP-004-002", '{"condition": "REQ-004-001", "label": "total set"}')
+        self.add_node("FLW-004-main", "Flow", None, "Quote main flow", '{"kind": "main"}')
+        self.add_edge("FLW-004-main", "starts at", "STP-004-001")
+
+    def test_connected_flow_is_clean(self) -> None:
+        self.assertEqual(lint.lint(self.conn, SCHEMA), [])
+
+    def test_l14_step_not_reachable(self) -> None:
+        self.drop_edge("STP-004-001", "next", "STP-004-002")
+        self.assertEqual(self.finding_ids(), {"L14:STP-004-002"})
+
+    def test_l14_skips_step_awaiting_handoff_and_l18_reports_it(self) -> None:
+        self.drop_edge("STP-004-001", "next", "STP-004-002")
+        self.sql("""UPDATE nodes SET attrs = '{"handoff_from": "FR-003 inquiry submitted"}' WHERE id = 'STP-004-002'""")
+        self.assertEqual(self.finding_ids("FR-004"), {"L18:STP-004-002#handoff_from"})
+
+    def test_l15_backward_next_needs_back_flag(self) -> None:
+        self.add_edge("STP-004-002", "next", "STP-004-001")
+        self.assertEqual(self.finding_ids(), {"L15:STP-004-002>next>STP-004-001"})
+        self.sql("""UPDATE edges SET attrs = '{"back": true}' WHERE from_id = 'STP-004-002' AND verb = 'next'""")
+        self.assertEqual(self.finding_ids(), set())
+
+    def test_l16_actor_not_acting_at_stage(self) -> None:
+        self.drop_edge("ACT-provider", "acts in", "STG-main-01-inquiry")
+        self.assertEqual(self.finding_ids(), {"L16:STP-004-001>ACT-provider"})
+
+    def test_l17_missing_actor_and_stage(self) -> None:
+        self.drop_edge("STP-004-001", "done by", "ACT-provider")
+        self.drop_edge("STP-004-001", "at", "STG-main-01-inquiry")
+        self.assertEqual(self.finding_ids(), {"L17:STP-004-001#done-by", "L17:STP-004-001#at"})
+
+    def test_l17_two_stages(self) -> None:
+        self.add_edge("STP-004-001", "at", "STG-main-02-quote")
+        self.assertIn("L17:STP-004-001#at", self.finding_ids())
+
+    def test_l19_condition_not_a_rule(self) -> None:
+        self.sql("""UPDATE edges SET attrs = '{"condition": "SCR-004-01"}' WHERE from_id = 'STP-004-001' AND verb = 'next'""")
+        self.assertEqual(self.finding_ids(), {"L19:STP-004-001>next>STP-004-002"})
+
+    def test_write_accepts_flow_changeset(self) -> None:
+        path = self.dir / "flow.yaml"
+        path.write_text(
+            "reason: test\nby: test\noperations:\n"
+            "  - {op: add_node, id: STP-004-003, type: Step, title: Send quote, owner_fr: FR-004, attrs: {prd_ref: Main Flow step 3}}\n"
+            "  - {op: add_edge, from: STP-004-003, verb: done by, to: ACT-provider}\n"
+            "  - {op: add_edge, from: STP-004-003, verb: at, to: STG-main-02-quote}\n"
+            "  - {op: add_edge, from: STP-004-002, verb: next, to: STP-004-003, attrs: {back: false}}\n",
+            encoding="utf-8",
+        )
+        self.conn.close()
+        code, _, err = run_main(write, ["--db", str(self.db_path), str(path)])
+        self.conn = connect(self.db_path)
+        self.assertEqual(code, 0, err)
+        self.assertEqual(self.finding_ids(), set())
+
+
 class TestLint(GraphTestCase):
     def test_clean_fixture_has_no_findings(self) -> None:
         self.assertEqual(lint.lint(self.conn, SCHEMA), [])
@@ -122,9 +190,10 @@ class TestLint(GraphTestCase):
         self.sql("""UPDATE nodes SET attrs = '{"timeline": "main"}' WHERE id = 'STG-main-02-quote'""")
         self.assertIn("L01:STG-main-02-quote#sequence", self.finding_ids())
 
-    def test_l02_rule_applies_nowhere(self) -> None:
+    def test_rule_with_no_edge_is_l13_not_l02(self) -> None:
         self.drop_edge("REQ-004-001", "applies at", "STG-main-02-quote")
-        self.assertIn("L02:REQ-004-001", self.finding_ids())
+        self.assertIn("L13:REQ-004-001", self.finding_ids())
+        self.assertNotIn("L02:REQ-004-001", self.finding_ids())
 
     def test_l02_retired_stage_does_not_count(self) -> None:
         self.sql("UPDATE nodes SET status = 'retired' WHERE id = 'STG-main-02-quote'")
@@ -142,9 +211,9 @@ class TestLint(GraphTestCase):
         self.drop_edge("STG-main-02-quote", "emits", "EVT-quote-sent")
         self.assertIn("L04:EVT-quote-sent", self.finding_ids())
 
-    def test_l04_event_with_two_producers(self) -> None:
+    def test_l04_allows_several_producers(self) -> None:
         self.add_edge("STG-main-01-inquiry", "emits", "EVT-quote-sent")
-        self.assertIn("L04:EVT-quote-sent", self.finding_ids())
+        self.assertNotIn("L04:EVT-quote-sent", self.finding_ids())
 
     def test_l05_calculated_by_out_of_sync(self) -> None:
         self.sql("UPDATE fields SET calculated_by = NULL WHERE id = 'ENT-quote.total'")
@@ -241,7 +310,7 @@ class TestLint(GraphTestCase):
         self.add_node("REQ-005-001", "Rule", "FR-005", "Acceptance window", '{"statement": "x"}')
         self.add_edge("REQ-005-001", "decided by", "SRC-MTG-002-D03")
         self.assertEqual(self.finding_ids("FR-004"), set())
-        self.assertEqual(self.finding_ids("FR-005"), {"L02:REQ-005-001", "L13:REQ-005-001"})
+        self.assertEqual(self.finding_ids("FR-005"), {"L13:REQ-005-001"})
 
     def test_cli_reports_findings_and_exit_code(self) -> None:
         self.drop_edge("REQ-004-001", "decided by", "SRC-MTG-002-D03")

@@ -2,7 +2,7 @@
 # Changing node types, verbs or enum values is a schema migration: back up graph.db first.
 
 # Schema version, stored in graph.db as PRAGMA user_version.
-version: 4
+version: 6
 
 # Closed value lists. Attribute specs below may name one of these as their type.
 enums:
@@ -23,6 +23,10 @@ enums:
   timeline: [main, aftercare, monitoring, provider-account, patient-account]
   # Which side of the platform an Actor works on: Hairline staff, a clinic, or the patient.
   actor_group: [admin, provider, patient]
+  # A Rule with no specific stage or object it constrains; L02 and L13 accept it.
+  rule_scope: [global]
+  # What a Flow start point names: an FR's main flow, a named alternative flow, or a journey across FRs.
+  flow_kind: [main, alternative, journey]
 
 # Scalar attribute types available besides enum names.
 attr_types: [text, int, bool, date]
@@ -31,7 +35,8 @@ attr_types: [text, int, bool, date]
 # (name: type). detail_table names the table holding the type's structured columns.
 node_types:
   FR:
-    id_pattern: '^FR-\d{3}[A-Z]?$'
+    # FR-SYS stands for the system PRD: the home document of rules shared across FRs.
+    id_pattern: '^FR-(\d{3}[A-Z]?|SYS)$'
     owner_fr: forbidden
     attrs:
       required: {}
@@ -62,12 +67,14 @@ node_types:
       required: {}
       optional: {description: text}
   Rule:
-    id_pattern: '^REQ-\d{3}[A-Z]?-\d{3}$'
+    # owner_fr is the rule's home document (an FR, or FR-SYS for REQ-SYS-NNN); re-homing gives a new id and keeps the old one in aliases.
+    id_pattern: '^REQ-(\d{3}[A-Z]?|SYS)-\d{3}$'
     owner_fr: required
     attrs:
       required: {statement: text}
       # aliases: comma-separated ids of Rules merged into this one by write.py merge_node, so old citations resolve.
-      optional: {rationale: text, aliases: text}
+      # distinct_from: comma-separated ids of Rules reviewed against this one and kept as different rules; L12 skips those pairs.
+      optional: {rationale: text, aliases: text, scope: rule_scope, distinct_from: text}
   Event:
     id_pattern: '^EVT-[a-z0-9]+(-[a-z0-9]+)*$'
     owner_fr: required
@@ -86,6 +93,23 @@ node_types:
     attrs:
       required: {}
       optional: {platform: text, description: text}
+  Step:
+    # One action in a flow, owned by the FR whose PRD describes it. Each Step needs a 'done by' Actor and an
+    # 'at' Stage (lint L17). handoff_to / handoff_from name a step in another FR that this one continues to or
+    # from, until a cross-FR 'next' link is stitched in its place (lint L18).
+    id_pattern: '^STP-(\d{3}[A-Z]?|SYS)-\d{3}$'
+    owner_fr: required
+    attrs:
+      required: {}
+      optional: {description: text, prd_ref: text, handoff_to: text, handoff_from: text}
+  Flow:
+    # A named start point only; its path is the 'next' links from the Step it 'starts at'. No owner, so a
+    # journey can run across FRs.
+    id_pattern: '^FLW-[a-z0-9]+(-[a-z0-9]+)*$'
+    owner_fr: forbidden
+    attrs:
+      required: {}
+      optional: {kind: flow_kind, description: text, prd_ref: text}
   Source:
     id_pattern: '^SRC-[A-Za-z0-9]+(-[A-Za-z0-9]+)*$'
     owner_fr: forbidden
@@ -108,6 +132,7 @@ edge_verbs:
     pairs: [[Rule, Stage]]
   governed by:
     pairs: [[Rule, Setting]]
+  # An Event may be emitted at several Stages (D42); lint L04 asks only for at least one.
   emits:
     pairs: [[Stage, Event]]
   decided by:
@@ -129,3 +154,27 @@ edge_verbs:
   # Mirrors fields.calculated_by so impact queries can traverse it like any other edge.
   calculated by:
     pairs: [[Field, Rule]]
+  # The objects a Rule constrains, any number per Rule, at whatever level it acts. 'applies at' Stage stays separate.
+  applies to:
+    pairs: [[Rule, Actor], [Rule, Screen], [Rule, Entity], [Rule, Field], [Rule, Event]]
+  # An FR that uses a Rule homed in another FR or in the system PRD cites it instead of copying it.
+  references:
+    pairs: [[FR, Rule]]
+  # Flow model (schema v6, D42). A Step is done by an Actor at a Stage, optionally on a Screen and applying Rules.
+  done by:
+    pairs: [[Step, Actor]]
+  at:
+    pairs: [[Step, Stage]]
+  'on':
+    pairs: [[Step, Screen]]
+  applies:
+    pairs: [[Step, Rule]]
+  # Order of Steps. Several 'next' links from one Step are branches; condition names the Rule id that picks
+  # the branch. back marks a deliberate return to an earlier Stage, which lint L15 otherwise flags.
+  next:
+    pairs: [[Step, Step]]
+    attrs:
+      required: {}
+      optional: {condition: text, label: text, back: bool}
+  starts at:
+    pairs: [[Flow, Step]]

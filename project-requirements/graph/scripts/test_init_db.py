@@ -275,9 +275,9 @@ class TestSchema(unittest.TestCase):
     def test_loads_all_types_and_verbs(self) -> None:
         self.assertEqual(
             set(self.schema.node_types),
-            {"FR", "Stage", "Actor", "Entity", "Field", "Rule", "Event", "Setting", "Screen", "Source"},
+            {"FR", "Stage", "Actor", "Entity", "Field", "Rule", "Event", "Setting", "Screen", "Source", "Step", "Flow"},
         )
-        self.assertEqual(len(self.schema.edge_verbs), 14)
+        self.assertEqual(len(self.schema.edge_verbs), 22)
         self.assertIn("carried from previous screen", self.schema.enum("provenance"))
         self.assertIn("partially incorporated", self.schema.enum("source_lifecycle"))
 
@@ -299,6 +299,8 @@ class TestSchema(unittest.TestCase):
             "Setting": "SET-quote-expiry-window",
             "Screen": "SCR-004-01",
             "Source": "SRC-MTG-002-D03",
+            "Step": "STP-005-012",
+            "Flow": "FLW-quote-to-booking",
         }
         for node_type, node_id in examples.items():
             self.assertRegex(node_id, self.schema.id_pattern(node_type), node_type)

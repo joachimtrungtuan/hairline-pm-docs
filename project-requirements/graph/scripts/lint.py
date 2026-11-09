@@ -17,7 +17,13 @@ normalised statements are equal, and near-duplicates when difflib's SequenceMatc
 the two normalised statements is at least SIMILARITY_THRESHOLD (pairs whose word-level ratio is below
 WORD_PREFILTER are skipped without the character ratio, for speed). Near-duplicates are a review list:
 they can be different rules worded alike, and only a person decides. query.py duplicates uses the same
-matching. L13 overlaps L02: L02 also fires when every 'applies at' edge ends at a retired Stage.
+matching. A pair is skipped when either Rule lists the other in its distinct_from attribute (reviewed and
+kept as different rules); query.py duplicates still shows such pairs. L02 and L13 do not overlap: L13 fires
+on a Rule with no 'applies at' or 'applies to' edge, L02 on a Rule whose edges all end at retired nodes.
+
+L14 to L19 check the flow model (schema v6): Steps owned by FRs, linked by 'next', with Flows as named start
+points. A Step with handoff_from set is reported by L18, not L14, until its incoming cross-FR link is stitched.
+L15 compares Stage sequence only when both Stages are on one timeline.
 """
 
 from __future__ import annotations
@@ -36,9 +42,9 @@ from common import DEFAULT_DB_PATH, Edge, Graph, Node, Schema, SchemaError, load
 
 RULES: dict[str, str] = {
     "L01": "node lacks an owning FR or an attribute that its type requires in schema.yaml",
-    "L02": "Rule applies at no Stage",
+    "L02": "Rule that is not global has 'applies at' or 'applies to' edges, but none ends at an active node",
     "L03": "Screen shows a non-Field, or shows nothing",
-    "L04": "Event does not have exactly one producer Stage",
+    "L04": "Event has no producer Stage (several are allowed)",
     "L05": "Field calculated_by column and 'calculated by' edge disagree",
     "L06": "edge verb not allowed for its node-type pair",
     "L07": "'shows' edge has a missing or invalid provenance",
@@ -49,7 +55,13 @@ RULES: dict[str, str] = {
     "L10": "Rule or Entity has no 'decided by' Source",
     "L11": "Field node has no row in the fields table",
     "L12": "Rule statement equals, or is near, another active Rule's statement after normalisation",
-    "L13": "Rule has no 'applies at' edge at all",
+    "L13": "Rule that is not global has no 'applies at' or 'applies to' edge at all",
+    "L14": "Step cannot be reached from any Flow through 'starts at' and 'next' links",
+    "L15": "'next' link goes to a Step at an earlier Stage of the same timeline without back: true",
+    "L16": "Step's Actor has no 'acts in' edge to the Step's Stage",
+    "L17": "Step lacks a 'done by' Actor, or does not have exactly one 'at' Stage",
+    "L18": "Step has an open cross-FR hand-off (handoff_to or handoff_from) not yet stitched as a 'next' link",
+    "L19": "'next' link condition is not an active Rule id",
 }
 
 # Words dropped by normalise_statement: requirement boilerplate that carries no meaning of its own.
@@ -99,13 +111,19 @@ def check_l01(g: Graph, schema: Schema) -> list[Finding]:
     return out
 
 
+def _is_global(n) -> bool:
+    return n.attrs.get("scope") == "global"
+
+
 def check_l02(g: Graph) -> list[Finding]:
-    applies = g.out("applies at")
-    out = []
-    for n in g.of_type("Rule"):
-        if not any(g.active[e.to_id].type == "Stage" for e in applies.get(n.id, [])):
-            out.append(Finding("L02", n.id, n.id, f"Rule {n.id} applies at no active Stage"))
-    return out
+    placing = ("applies at", "applies to")
+    edged = {e.from_id for e in g.edges if e.verb in placing}
+    live = {e.from_id for e in g.live_edges if e.verb in placing}
+    return [
+        Finding("L02", n.id, n.id, f"Rule {n.id} has 'applies at' or 'applies to' edges, but all end at retired nodes")
+        for n in g.of_type("Rule")
+        if n.id in edged and n.id not in live and not _is_global(n)
+    ]
 
 
 def check_l03(g: Graph) -> list[Finding]:
@@ -126,10 +144,9 @@ def check_l04(g: Graph) -> list[Finding]:
     emits = g.into("emits")
     out = []
     for n in g.of_type("Event"):
-        producers = sorted(e.from_id for e in emits.get(n.id, []) if g.active[e.from_id].type == "Stage")
-        if len(producers) != 1:
-            detail = "no producer Stage" if not producers else f"{len(producers)} producer Stages: {', '.join(producers)}"
-            out.append(Finding("L04", n.id, n.id, f"Event {n.id} has {detail}"))
+        producers = [e.from_id for e in emits.get(n.id, []) if g.active[e.from_id].type == "Stage"]
+        if not producers:
+            out.append(Finding("L04", n.id, n.id, f"Event {n.id} has no producer Stage"))
     return out
 
 
@@ -348,10 +365,23 @@ def duplicate_pairs(statements: dict[str, str], threshold: float = SIMILARITY_TH
     return sorted((m for m in found if m), key=lambda m: (-m.score, m.rule_id, m.other))
 
 
+def _distinct_pairs(g: Graph) -> set[frozenset[str]]:
+    """Pairs of Rule ids reviewed and kept as different rules, from either side's distinct_from attribute."""
+    pairs = set()
+    for n in g.of_type("Rule"):
+        value = n.attrs.get("distinct_from")
+        if isinstance(value, str):
+            pairs.update(frozenset((n.id, other.strip())) for other in value.split(",") if other.strip())
+    return pairs
+
+
 def check_l12(g: Graph) -> list[Finding]:
     """One finding per Rule that has duplicates, listing each with its score, so --fr shows both sides."""
     partners: dict[str, list[tuple[str, Match]]] = defaultdict(list)
+    distinct = _distinct_pairs(g)
     for m in duplicate_pairs(rule_statements(g)):
+        if frozenset((m.rule_id, m.other)) in distinct:
+            continue
         partners[m.rule_id].append((m.other, m))
         partners[m.other].append((m.rule_id, m))
     out = []
@@ -365,13 +395,100 @@ def check_l12(g: Graph) -> list[Finding]:
 
 
 def check_l13(g: Graph) -> list[Finding]:
-    """Unlike L02, which also counts edges to retired Stages as missing, L13 fires only with no edge at all."""
-    applying = {e.from_id for e in g.edges if e.verb == "applies at"}
+    """A Rule with no 'applies at' or 'applies to' edge at all; edges that all end at retired nodes are L02."""
+    applying = {e.from_id for e in g.edges if e.verb in ("applies at", "applies to")}
     return [
-        Finding("L13", n.id, n.id, f"Rule {n.id} has no 'applies at' edge")
+        Finding("L13", n.id, n.id, f"Rule {n.id} has no 'applies at' or 'applies to' edge and is not global")
         for n in g.of_type("Rule")
-        if n.id not in applying
+        if n.id not in applying and not _is_global(n)
     ]
+
+
+def _step_stage(g: Graph) -> dict[str, str]:
+    """Each Step's Stage, when it has exactly one live 'at' edge."""
+    return {step: edges[0].to_id for step, edges in g.out("at").items() if len(edges) == 1}
+
+
+def check_l14(g: Graph) -> list[Finding]:
+    nxt = g.out("next")
+    reached: set[str] = set()
+    todo = [e.to_id for edges in g.out("starts at").values() for e in edges]
+    while todo:
+        step = todo.pop()
+        if step not in reached:
+            reached.add(step)
+            todo += [e.to_id for e in nxt.get(step, [])]
+    return [
+        Finding("L14", n.id, n.id, f"Step {n.id} cannot be reached from any Flow")
+        for n in g.of_type("Step")
+        if n.id not in reached and not n.attrs.get("handoff_from")
+    ]
+
+
+def check_l15(g: Graph) -> list[Finding]:
+    stage_of = _step_stage(g)
+    out = []
+    for e in g.live_edges:
+        if e.verb != "next" or e.attrs.get("back") is True:
+            continue
+        a, b = stage_of.get(e.from_id), stage_of.get(e.to_id)
+        if a is None or b is None:
+            continue
+        sa, sb = g.active[a], g.active[b]
+        if sa.attrs.get("timeline") != sb.attrs.get("timeline"):
+            continue
+        qa, qb = sa.attrs.get("sequence"), sb.attrs.get("sequence")
+        if type(qa) is int and type(qb) is int and qb < qa:
+            out.append(Finding("L15", edge_key(e), e.from_id,
+                               f"Step {e.from_id} at {a} goes next to {e.to_id} at earlier Stage {b}; set back: true if intended"))
+    return out
+
+
+def check_l16(g: Graph) -> list[Finding]:
+    stage_of = _step_stage(g)
+    acts = {(e.from_id, e.to_id) for e in g.live_edges if e.verb == "acts in"}
+    out = []
+    for step, edges in g.out("done by").items():
+        stage = stage_of.get(step)
+        if stage is None:
+            continue
+        for e in edges:
+            if (e.to_id, stage) not in acts:
+                out.append(Finding("L16", f"{step}>{e.to_id}", step, f"Step {step}: {e.to_id} has no 'acts in' edge to {stage}"))
+    return out
+
+
+def check_l17(g: Graph) -> list[Finding]:
+    done_by, at = g.out("done by"), g.out("at")
+    out = []
+    for n in g.of_type("Step"):
+        if not done_by.get(n.id):
+            out.append(Finding("L17", f"{n.id}#done-by", n.id, f"Step {n.id} has no 'done by' Actor"))
+        stages = len(at.get(n.id, []))
+        if stages != 1:
+            out.append(Finding("L17", f"{n.id}#at", n.id, f"Step {n.id} has {stages} 'at' Stages, not one"))
+    return out
+
+
+def check_l18(g: Graph) -> list[Finding]:
+    out = []
+    for n in g.of_type("Step"):
+        for key in ("handoff_to", "handoff_from"):
+            if n.attrs.get(key):
+                out.append(Finding("L18", f"{n.id}#{key}", n.id, f"Step {n.id} {key} {n.attrs[key]!r} is not stitched yet"))
+    return out
+
+
+def check_l19(g: Graph) -> list[Finding]:
+    out = []
+    for e in g.live_edges:
+        if e.verb != "next" or "condition" not in e.attrs:
+            continue
+        target = g.active.get(e.attrs["condition"])
+        if target is None or target.type != "Rule":
+            out.append(Finding("L19", edge_key(e), e.from_id,
+                               f"'next' {e.from_id} to {e.to_id} has condition {e.attrs['condition']!r}, not an active Rule"))
+    return out
 
 
 def lint(conn: sqlite3.Connection, schema: Schema, fr: str | None = None) -> list[Finding]:
@@ -380,7 +497,8 @@ def lint(conn: sqlite3.Connection, schema: Schema, fr: str | None = None) -> lis
     findings = (
         check_l01(g, schema) + check_l02(g) + check_l03(g) + check_l04(g) + check_l05(g)
         + check_l06(g, schema) + check_l07(g, schema) + check_l08(g) + check_l09(g) + check_l10(g)
-        + check_l11(g) + check_l12(g) + check_l13(g)
+        + check_l11(g) + check_l12(g) + check_l13(g) + check_l14(g) + check_l15(g) + check_l16(g)
+        + check_l17(g) + check_l18(g) + check_l19(g)
     )
     if fr is not None:
         findings = [f for f in findings if f.node_id in g.nodes and g.nodes[f.node_id].owner_fr == fr]

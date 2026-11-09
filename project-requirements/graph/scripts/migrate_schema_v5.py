@@ -2,9 +2,10 @@
 
 Usage: migrate_schema_v5.py [--db DB_PATH]
 
-Version 5 adds the edge verb `references` (an FR references a Rule owned by another FR) and the
-optional Rule attribute `aliases`. The attribute needs no DB change, because attrs are JSON. The verb
-does: init_db.py writes the verb list into a CHECK on edges.verb, and SQLite cannot alter a CHECK, so
+Version 5 adds the edge verbs `references` (an FR cites a Rule homed in another FR or in the system
+PRD) and `applies to` (a Rule constrains an Actor, Screen, Entity, Field or Event), the optional Rule
+attributes `aliases` and `scope`, and the FR-SYS / REQ-SYS-NNN id forms. Attributes and id patterns
+need no DB change, because attrs are JSON and patterns are checked by write.py. The verbs do: init_db.py writes the verb list into a CHECK on edges.verb, and SQLite cannot alter a CHECK, so
 the edges table is rebuilt with the new list and every row copied in rowid order. The DB's
 PRAGMA user_version then becomes 5, which write.py and query.py require to match schema.yaml.
 
@@ -12,7 +13,8 @@ Run it only after schema.yaml says version 5 and lists the new verb:
 
     version: 5
     ...
-      # An FR that repeats a Rule owned by another FR cites it instead of copying it.
+      applies to:
+        pairs: [[Rule, Actor], [Rule, Screen], [Rule, Entity], [Rule, Field], [Rule, Event]]
       references:
         pairs: [[FR, Rule]]
 
@@ -34,7 +36,7 @@ from common import DEFAULT_DB_PATH, Schema, SchemaError, connect, load_schema
 from init_db import backup_path_for, build_ddl
 
 FROM_VERSION, TO_VERSION = 4, 5
-NEW_VERB = "references"
+NEW_VERBS = ("references", "applies to")
 
 
 class MigrationError(ValueError):
@@ -53,8 +55,9 @@ def _edges_ddl(schema: Schema) -> list[str]:
 
 def migrate(db_path: Path, schema: Schema) -> Path:
     """Rebuild the edges table for the new verb list and set user_version. Returns the backup path."""
-    if schema.version != TO_VERSION or NEW_VERB not in schema.edge_verbs:
-        raise MigrationError(f"schema.yaml must be version {TO_VERSION} with the verb {NEW_VERB!r}; update it first")
+    missing = [verb for verb in NEW_VERBS if verb not in schema.edge_verbs]
+    if schema.version != TO_VERSION or missing:
+        raise MigrationError(f"schema.yaml must be version {TO_VERSION} with the verbs {list(NEW_VERBS)}; update it first")
     if not db_path.is_file():
         raise MigrationError(f"database {db_path} does not exist")
     conn = connect(db_path)
