@@ -1,0 +1,88 @@
+reason: "FR-023 completeness fixes (D37 review step 1): applies to edges from 34 FR-023 Rules to the objects each line names (Actors, Entities, Fields, Events), the human-performed opening Step of the Main Flow and of Alternative Flow A2 with their Flows. System-performed Steps, Steps reachable only through them, their next links and every placement the PRD does not state are in 2026-11-10-fr023-completeness-held.yaml (no System Actor in the graph)."
+by: tester
+operations:
+  - {"op": "add_node", "id": "STP-023-001", "type": "Step", "title": "Patient submits the deletion request and completes verification", "owner_fr": "FR-023", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "applies", "to": "REQ-023-030"}
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "applies", "to": "REQ-023-034"}
+  - {"op": "add_node", "id": "FLW-023-main", "type": "Flow", "title": "Main Flow: Deletion Request (Right to Erasure)", "attrs": {"kind": "main", "description": "Main Flow: Deletion Request (Right to Erasure)", "prd_ref": "Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-023-main", "verb": "starts at", "to": "STP-023-001"}
+  - {"op": "add_node", "id": "STP-023-021", "type": "Step", "title": "Admin confirms exclusion of protected medical and financial records", "owner_fr": "FR-023", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  - {"op": "add_edge", "from": "STP-023-021", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-023-021", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-021", "verb": "applies", "to": "REQ-023-036"}
+  - {"op": "add_node", "id": "FLW-023-a2-exclusion", "type": "Flow", "title": "A2: Exclusion of Legally Retained Data", "attrs": {"kind": "alternative", "description": "A2: Exclusion of Legally Retained Data", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_edge", "from": "FLW-023-a2-exclusion", "verb": "starts at", "to": "STP-023-021"}
+  - {"op": "add_edge", "from": "REQ-023-003", "verb": "applies to", "to": "ENT-inquiry"}
+  - {"op": "add_edge", "from": "REQ-023-003", "verb": "applies to", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "REQ-023-003", "verb": "applies to", "to": "ENT-acceptance-event"}
+  - {"op": "add_edge", "from": "REQ-023-003", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-004", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-004", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-006", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-007", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-007", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-007", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-008", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-008", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-008", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-009", "verb": "applies to", "to": "ENT-retention-policy.data_category"}
+  - {"op": "add_edge", "from": "REQ-023-010", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-011", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-016", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-016", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-017", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-017", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-018", "verb": "applies to", "to": "EVT-dsr-verification-required"}
+  - {"op": "add_edge", "from": "REQ-023-018", "verb": "applies to", "to": "EVT-dsr-in-progress"}
+  - {"op": "add_edge", "from": "REQ-023-018", "verb": "applies to", "to": "EVT-dsr-fulfilled"}
+  - {"op": "add_edge", "from": "REQ-023-018", "verb": "applies to", "to": "EVT-dsr-deadline-approaching"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-020", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-020", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-021", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-023-021", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-022", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-023-023", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-023-023", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-024", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-024", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-025", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-026", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "EVT-dsr-verification-required"}
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "EVT-dsr-in-progress"}
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "EVT-dsr-fulfilled"}
+  - {"op": "add_edge", "from": "REQ-023-029", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-029", "verb": "applies to", "to": "EVT-dsr-deadline-approaching"}
+  - {"op": "add_edge", "from": "REQ-023-030", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-030", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-031", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-031", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-032", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-032", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-033", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-033", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-033", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-034", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-034", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-034", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-035", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-036", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-036", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-037", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-037", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-038", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-038", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-023-038", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-023-039", "verb": "applies to", "to": "ENT-retention-policy"}
+  - {"op": "add_edge", "from": "REQ-023-039", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-023-039", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "applies to", "to": "ENT-inquiry"}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "applies to", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "applies to", "to": "ENT-audit-log-entry"}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "applies to", "to": "ACT-patient"}

@@ -1,0 +1,332 @@
+reason: "FR-030 completeness fixes (checker review step 1): three Rules copied verbatim from the PRD (audit old and new configuration, audit reason, template revert), applies to links from the catalog, workflow, screen and entity Rules to the Events, Screens, Entities and Actors they name, and the Flows with the Steps an Admin performs. System-performed Steps are held (no System Actor)."
+by: tester
+operations:
+  - {"op": "add_node", "id": "REQ-030-210", "type": "Rule", "owner_fr": "FR-030", "title": "Audit trail: rule changes record old and new configuration", "attrs": {"statement": "All notification rule changes logged in audit trail with admin user ID, timestamp, old configuration, and new configuration", "rationale": "prd.md line 497 (General Module Rules, Rule 1), copied verbatim. Rule 1 asks for old and new configuration; REQ-030-020 asks for change summary and IP address."}}
+  - {"op": "add_edge", "from": "REQ-030-210", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-210", "verb": "applies to", "to": "ENT-notification-rule", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-211", "type": "Rule", "owner_fr": "FR-030", "title": "Audit rule: reason recorded with rule modifications", "attrs": {"statement": "All notification rule modifications logged with admin user ID, timestamp, change summary, and reason (if provided)", "rationale": "prd.md line 513 (Data & Privacy Rules, Audit Rule), copied verbatim. REQ-030-020 does not carry the reason."}}
+  - {"op": "add_edge", "from": "REQ-030-211", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-211", "verb": "applies to", "to": "ENT-notification-rule", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-212", "type": "Rule", "owner_fr": "FR-030", "title": "Template revert creates a new version", "attrs": {"statement": "“revert” creates a **new** version copied from a selected prior version and requires admin confirmation", "rationale": "prd.md line 571 (Configurable with Restrictions, Template versioning), copied verbatim from the clause after the last semicolon. Previously present only in the rationale of REQ-030-183."}}
+  - {"op": "add_edge", "from": "REQ-030-212", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-212", "verb": "applies to", "to": "ENT-notification-template", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-212", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-001", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-006", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-007", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-009", "verb": "applies to", "to": "ENT-notification-delivery-log", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-010", "verb": "applies to", "to": "ENT-notification-engagement-metrics", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-011", "verb": "applies to", "to": "ENT-notification-rule", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-012", "verb": "applies to", "to": "ENT-notification-template", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-013", "verb": "applies to", "to": "ENT-notification-delivery-log", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-014", "verb": "applies to", "to": "ENT-notification-engagement-metrics", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-015", "verb": "applies to", "to": "ENT-notification-template", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-016", "verb": "applies to", "to": "ENT-notification-delivery-log", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-020", "verb": "applies to", "to": "ENT-notification-rule", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-026", "verb": "applies to", "to": "EVT-aftercare-provider-reassigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-026", "verb": "applies to", "to": "EVT-provider-status-cancellation-admin-support", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-026", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-027", "verb": "applies to", "to": "EVT-verification-otp-sent", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-028", "verb": "applies to", "to": "EVT-password-reset-otp-sent", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-029", "verb": "applies to", "to": "EVT-account-created", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-030", "verb": "applies to", "to": "EVT-inquiry-submitted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-031", "verb": "applies to", "to": "EVT-inquiry-cancelled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-032", "verb": "applies to", "to": "EVT-inquiry-ttfq-sla-breached", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-033", "verb": "applies to", "to": "EVT-quote-submitted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-034", "verb": "applies to", "to": "EVT-quote-updated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-035", "verb": "applies to", "to": "EVT-quote-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-036", "verb": "applies to", "to": "EVT-quote-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-037", "verb": "applies to", "to": "EVT-quote-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-038", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-039", "verb": "applies to", "to": "EVT-quote-cancelled-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-040", "verb": "applies to", "to": "EVT-booking-scheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-041", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-042", "verb": "applies to", "to": "EVT-booking-payment-window-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-043", "verb": "applies to", "to": "EVT-booking-revived", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-044", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-045", "verb": "applies to", "to": "EVT-booking-confirmed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-046", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-047", "verb": "applies to", "to": "EVT-booking-cancelled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-048", "verb": "applies to", "to": "EVT-booking-appointment-reminder", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-049", "verb": "applies to", "to": "EVT-treatment-started", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-050", "verb": "applies to", "to": "EVT-treatment-plan-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-051", "verb": "applies to", "to": "EVT-treatment-cancelled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-052", "verb": "applies to", "to": "EVT-treatment-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-053", "verb": "applies to", "to": "EVT-treatment-documentation-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-054", "verb": "applies to", "to": "EVT-treatment-task-in-progress-reminder", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-055", "verb": "applies to", "to": "EVT-initial-payment-confirmed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-055", "verb": "applies to", "to": "EVT-final-payment-confirmed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-055", "verb": "applies to", "to": "EVT-billing-payment-received", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-056", "verb": "applies to", "to": "EVT-billing-payment-failed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-057", "verb": "applies to", "to": "EVT-payment-reminder", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-057", "verb": "applies to", "to": "EVT-billing-payment-due-reminder", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-058", "verb": "applies to", "to": "EVT-payout-executed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-058", "verb": "applies to", "to": "EVT-billing-provider-payout-processed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-059", "verb": "applies to", "to": "EVT-billing-affiliate-payout-processed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-060", "verb": "applies to", "to": "EVT-billing-payout-failed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-061", "verb": "applies to", "to": "EVT-message-sent", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-062", "verb": "applies to", "to": "EVT-support-case-created", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-063", "verb": "applies to", "to": "EVT-support-case-assigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-064", "verb": "applies to", "to": "EVT-support-case-status-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-065", "verb": "applies to", "to": "EVT-support-case-admin-reply", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-066", "verb": "applies to", "to": "EVT-support-case-user-reply", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-067", "verb": "applies to", "to": "EVT-support-case-resolved", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-068", "verb": "applies to", "to": "EVT-support-case-reopened", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-069", "verb": "applies to", "to": "EVT-support-case-closed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-070", "verb": "applies to", "to": "EVT-support-case-escalated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-071", "verb": "applies to", "to": "EVT-aftercare-activated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-072", "verb": "applies to", "to": "EVT-aftercare-milestone-due", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-073", "verb": "applies to", "to": "EVT-aftercare-scan-due", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-073", "verb": "applies to", "to": "EVT-aftercare-scan-missed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-074", "verb": "applies to", "to": "EVT-aftercare-questionnaire-due", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-074", "verb": "applies to", "to": "EVT-aftercare-questionnaire-missed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-075", "verb": "applies to", "to": "EVT-aftercare-escalation-triggered", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-076", "verb": "applies to", "to": "EVT-aftercare-standalone-payment-confirmed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-077", "verb": "applies to", "to": "EVT-aftercare-provider-reassigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-078", "verb": "applies to", "to": "EVT-monitoring-assignment-pending", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-079", "verb": "applies to", "to": "EVT-monitoring-provider-assigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-080", "verb": "applies to", "to": "EVT-monitoring-provider-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-081", "verb": "applies to", "to": "EVT-monitoring-provider-reassigned", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-082", "verb": "applies to", "to": "EVT-monitoring-advice-posted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-083", "verb": "applies to", "to": "EVT-monitoring-completed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-084", "verb": "applies to", "to": "EVT-monitoring-export-ready", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-085", "verb": "applies to", "to": "EVT-monitoring-converted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-086", "verb": "applies to", "to": "EVT-review-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-087", "verb": "applies to", "to": "EVT-review-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-088", "verb": "applies to", "to": "EVT-provider-response-published", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-089", "verb": "applies to", "to": "EVT-review-removed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-090", "verb": "applies to", "to": "EVT-takedown-decided", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-091", "verb": "applies to", "to": "EVT-promotion-discount-approval-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-092", "verb": "applies to", "to": "EVT-provider-onboarding-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-093", "verb": "applies to", "to": "EVT-provider-document-expiration-warning", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-094", "verb": "applies to", "to": "EVT-provider-status-cancellation-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-095", "verb": "applies to", "to": "EVT-provider-status-cancellation-admin-support", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-096", "verb": "applies to", "to": "EVT-provider-suspended", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-096", "verb": "applies to", "to": "EVT-provider-deactivated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-097", "verb": "applies to", "to": "EVT-provider-activation", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-098", "verb": "applies to", "to": "EVT-provider-login-email-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-099", "verb": "applies to", "to": "EVT-provider-reactivated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-100", "verb": "applies to", "to": "EVT-provider-scheduled-change-cancelled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-101", "verb": "applies to", "to": "EVT-provider-closure-requested", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-102", "verb": "applies to", "to": "EVT-provider-closure-rejected", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-105", "verb": "applies to", "to": "EVT-analytics-export-ready", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-106", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-107", "verb": "applies to", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-109", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-110", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-111", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-112", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-113", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-114", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-118", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-119", "verb": "applies to", "to": "ENT-notification-rule", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-119", "verb": "applies to", "to": "ENT-notification-template", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-120", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-121", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-123", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-124", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-125", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-126", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-127", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-submitted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-updated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-scheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-payment-window-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-revived", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-128", "verb": "applies to", "to": "EVT-treatment-plan-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-129", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-130", "verb": "applies to", "to": "EVT-quote-submitted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-130", "verb": "applies to", "to": "EVT-quote-updated", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-130", "verb": "applies to", "to": "EVT-quote-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-130", "verb": "applies to", "to": "EVT-quote-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-130", "verb": "applies to", "to": "EVT-quote-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-131", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-131", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-132", "verb": "applies to", "to": "EVT-treatment-plan-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-quote-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-payment-window-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-revived", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-scheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-treatment-plan-changed", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-quote-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-134", "verb": "applies to", "to": "EVT-quote-cancelled-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-135", "verb": "applies to", "to": "EVT-booking-scheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-135", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-136", "verb": "applies to", "to": "EVT-booking-hold-expiring-soon", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-136", "verb": "applies to", "to": "EVT-booking-payment-window-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-136", "verb": "applies to", "to": "EVT-booking-provider-fault-replacement", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-136", "verb": "applies to", "to": "EVT-quote-withdrawn", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-137", "verb": "applies to", "to": "EVT-verification-otp-sent", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-137", "verb": "applies to", "to": "EVT-password-reset-otp-sent", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-138", "verb": "applies to", "to": "EVT-quote-cancelled-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-138", "verb": "applies to", "to": "EVT-quote-accepted", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-138", "verb": "applies to", "to": "EVT-booking-payment-window-expired", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-138", "verb": "applies to", "to": "EVT-booking-revived", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-138", "verb": "applies to", "to": "EVT-booking-rescheduled", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-140", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-141", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-142", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-143", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-144", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-145", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-146", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-147", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-148", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-149", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-150", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-151", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-152", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-153", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-154", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-155", "verb": "applies to", "to": "ENT-notification-delivery-log", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-158", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-159", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-160", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-161", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-163", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-164", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-165", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-166", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-167", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-168", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-169", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-170", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-171", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-172", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-173", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-174", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-175", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-176", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-177", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-178", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-179", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-180", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-181", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-182", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-183", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-184", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-185", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-185", "verb": "applies to", "to": "ENT-notification-template", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-186", "verb": "applies to", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-001", "type": "Step", "title": "Admin navigates to Admin Platform, Settings, Alerts and Notifications", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 1"}}
+  - {"op": "add_edge", "from": "STP-030-001", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-001", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-001", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-001", "verb": "applies", "to": "REQ-030-118", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-main-review-configure", "type": "Flow", "title": "Main Flow: admin reviews the event catalog and toggles or configures notification rules", "attrs": {"kind": "main", "description": "Main Flow: admin reviews the event catalog and toggles or configures notification rules", "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules"}}
+  - {"op": "add_edge", "from": "FLW-030-main-review-configure", "verb": "starts at", "to": "STP-030-001", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-025", "type": "Step", "title": "Admin navigates to Settings, Alerts and Notifications and filters by event type", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 1"}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "applies", "to": "REQ-030-118", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "applies", "to": "REQ-030-167", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-edit-rule", "type": "Flow", "title": "A1: admin edits an existing notification rule", "attrs": {"kind": "alternative", "description": "A1: admin edits an existing notification rule", "prd_ref": "A1: Admin Edits Existing Notification Rule"}}
+  - {"op": "add_edge", "from": "FLW-030-edit-rule", "verb": "starts at", "to": "STP-030-025", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-026", "type": "Step", "title": "Admin clicks Edit on the existing rule", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 2"}}
+  - {"op": "add_edge", "from": "STP-030-026", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-026", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-026", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-026", "verb": "applies", "to": "REQ-030-150", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-025", "verb": "next", "to": "STP-030-026", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-027", "type": "Step", "title": "Admin changes delivery timing from 3 days to 5 days before due date", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 3"}}
+  - {"op": "add_edge", "from": "STP-030-027", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-027", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-027", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-027", "verb": "applies", "to": "REQ-030-145", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-026", "verb": "next", "to": "STP-030-027", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-028", "type": "Step", "title": "Admin enables the SMS channel and selects an SMS template", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 4"}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "applies", "to": "REQ-030-143", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "applies", "to": "REQ-030-144", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "applies", "to": "REQ-030-170", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-027", "verb": "next", "to": "STP-030-028", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-029", "type": "Step", "title": "Admin previews the changes", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 5"}}
+  - {"op": "add_edge", "from": "STP-030-029", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-029", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-029", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-029", "verb": "applies", "to": "REQ-030-147", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-028", "verb": "next", "to": "STP-030-029", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-030", "type": "Step", "title": "Admin saves the changes (applies immediately to future events)", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 6"}}
+  - {"op": "add_edge", "from": "STP-030-030", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-030", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-030", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-030", "verb": "applies", "to": "REQ-030-150", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-029", "verb": "next", "to": "STP-030-030", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-032", "type": "Step", "title": "Admin navigates to Settings, Alerts and Notifications", "owner_fr": "FR-030", "attrs": {"prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 1"}}
+  - {"op": "add_edge", "from": "STP-030-032", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-032", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-032", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-032", "verb": "applies", "to": "REQ-030-118", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-pause-rule", "type": "Flow", "title": "A2: admin deactivates a notification rule temporarily", "attrs": {"kind": "alternative", "description": "A2: admin deactivates a notification rule temporarily", "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily"}}
+  - {"op": "add_edge", "from": "FLW-030-pause-rule", "verb": "starts at", "to": "STP-030-032", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-033", "type": "Step", "title": "Admin toggles the rule status from Active to Paused", "owner_fr": "FR-030", "attrs": {"prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 2"}}
+  - {"op": "add_edge", "from": "STP-030-033", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-033", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-033", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-033", "verb": "applies", "to": "REQ-030-151", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-032", "verb": "next", "to": "STP-030-033", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-038", "type": "Step", "title": "Admin navigates to Settings, Alerts and Notifications and opens the Templates section", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 1"}}
+  - {"op": "add_edge", "from": "STP-030-038", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-038", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-038", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-038", "verb": "applies", "to": "REQ-030-152", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-multilanguage-template", "type": "Flow", "title": "A3: admin creates a multi-language notification template", "attrs": {"kind": "alternative", "description": "A3: admin creates a multi-language notification template", "prd_ref": "A3: Admin Creates Multi-Language Notification Template"}}
+  - {"op": "add_edge", "from": "FLW-030-multilanguage-template", "verb": "starts at", "to": "STP-030-038", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-039", "type": "Step", "title": "Admin selects the event type (for example Quote Submitted / Ready)", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 2"}}
+  - {"op": "add_edge", "from": "STP-030-039", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-039", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-039", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-039", "verb": "applies", "to": "REQ-030-152", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-038", "verb": "next", "to": "STP-030-039", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-040", "type": "Step", "title": "Admin selects the default language English from the supported locales list", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 3"}}
+  - {"op": "add_edge", "from": "STP-030-040", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-040", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-040", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-040", "verb": "applies", "to": "REQ-030-152", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-039", "verb": "next", "to": "STP-030-040", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-041", "type": "Step", "title": "Admin edits the email template with subject, body and variables", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 4"}}
+  - {"op": "add_edge", "from": "STP-030-041", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-041", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-041", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-041", "verb": "applies", "to": "REQ-030-006", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-040", "verb": "next", "to": "STP-030-041", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-042", "type": "Step", "title": "Admin clicks Add Translation", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 5"}}
+  - {"op": "add_edge", "from": "STP-030-042", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-042", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-042", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-042", "verb": "applies", "to": "REQ-030-153", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-041", "verb": "next", "to": "STP-030-042", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-058", "type": "Step", "title": "Admin creates a notification template with variable patient.procedure_date", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 1"}}
+  - {"op": "add_edge", "from": "STP-030-058", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-058", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-058", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-058", "verb": "applies", "to": "REQ-030-158", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-variable-missing", "type": "Flow", "title": "B2: template variable missing or invalid", "attrs": {"kind": "alternative", "description": "B2: template variable missing or invalid", "prd_ref": "B2: Template Variable Missing or Invalid"}}
+  - {"op": "add_edge", "from": "FLW-030-variable-missing", "verb": "starts at", "to": "STP-030-058", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-059", "type": "Step", "title": "Admin saves the template", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 2"}}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "on", "to": "SCR-030-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "applies", "to": "REQ-030-158", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-058", "verb": "next", "to": "STP-030-059", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-065", "type": "Step", "title": "Admin navigates to Settings, Alerts and Notifications", "owner_fr": "FR-030", "attrs": {"prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 1"}}
+  - {"op": "add_edge", "from": "STP-030-065", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-065", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-065", "verb": "on", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-065", "verb": "applies", "to": "REQ-030-159", "attrs": {}}
+  - {"op": "add_node", "id": "FLW-030-duplicate-rules", "type": "Flow", "title": "B3: duplicate rules for the same event are not possible", "attrs": {"kind": "alternative", "description": "B3: duplicate rules for the same event are not possible", "prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI)"}}
+  - {"op": "add_edge", "from": "FLW-030-duplicate-rules", "verb": "starts at", "to": "STP-030-065", "attrs": {}}

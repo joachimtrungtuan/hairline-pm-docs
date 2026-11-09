@@ -1,0 +1,69 @@
+reason: "FR-023 completeness fixes held for a user decision: System-performed Steps (no System Actor in the graph) and the Steps and flows reachable only through them, their next links, and placements the PRD does not state (Screen mapping, submission event, REQ-023-005 placement, REQ-001-094 reference). Apply after 2026-11-10-fr023-completeness-fixes.yaml."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-023-002", "type": "Step", "title": "System classifies the data by category and applicable retention and jurisdiction", "owner_fr": "FR-023", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_edge", "from": "STP-023-002", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-002", "verb": "applies", "to": "REQ-023-031"}
+  - {"op": "add_edge", "from": "STP-023-002", "verb": "applies", "to": "REQ-023-009"}
+  - {"op": "add_edge", "from": "STP-023-002", "verb": "applies", "to": "REQ-023-010"}
+  # waits on: no System Actor (reachable only through held Step STP-023-002)
+  - {"op": "add_node", "id": "STP-023-003", "type": "Step", "title": "Admin reviews the classification and approves the action", "owner_fr": "FR-023", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_edge", "from": "STP-023-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-023-003", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-003", "verb": "applies", "to": "REQ-023-032"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-023-004", "type": "Step", "title": "System deletes or anonymizes the non-protected data and restricts access to protected records", "owner_fr": "FR-023", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-023-004", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-004", "verb": "applies", "to": "REQ-023-004"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-023-005", "type": "Step", "title": "System records the actions in the audit log and notifies the patient of the outcome and legal basis", "owner_fr": "FR-023", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_edge", "from": "STP-023-005", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-005", "verb": "applies", "to": "REQ-023-033"}
+  - {"op": "add_edge", "from": "STP-023-005", "verb": "applies", "to": "REQ-023-028"}
+  # waits on: no System Actor (next links of the main flow touch held Steps)
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "next", "to": "STP-023-002", "attrs": {"label": "verified request"}}
+  - {"op": "add_edge", "from": "STP-023-002", "verb": "next", "to": "STP-023-003", "attrs": {"label": "classification ready for review"}}
+  - {"op": "add_edge", "from": "STP-023-003", "verb": "next", "to": "STP-023-004", "attrs": {"label": "action approved"}}
+  - {"op": "add_edge", "from": "STP-023-004", "verb": "next", "to": "STP-023-005", "attrs": {"label": "deletion and restriction complete"}}
+  # waits on: no System Actor (A1 starts with a System Step, so the whole flow is held)
+  - {"op": "add_node", "id": "STP-023-011", "type": "Step", "title": "System flags the request as Verification Required and notifies the patient", "owner_fr": "FR-023", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-023-011", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-023-011", "verb": "applies", "to": "REQ-023-034"}
+  - {"op": "add_node", "id": "STP-023-012", "type": "Step", "title": "Patient provides additional verification", "owner_fr": "FR-023", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-023-012", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-023-012", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-023-012", "verb": "applies", "to": "REQ-023-034"}
+  - {"op": "add_node", "id": "STP-023-013", "type": "Step", "title": "Admin validates the verification and resumes processing", "owner_fr": "FR-023", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "applies", "to": "REQ-023-034"}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "applies", "to": "REQ-023-035"}
+  - {"op": "add_node", "id": "FLW-023-a1-verification", "type": "Flow", "title": "A1: Verification Required", "attrs": {"kind": "alternative", "description": "A1: Verification Required", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_edge", "from": "FLW-023-a1-verification", "verb": "starts at", "to": "STP-023-011"}
+  - {"op": "add_edge", "from": "STP-023-001", "verb": "next", "to": "STP-023-011", "attrs": {"condition": "REQ-023-034", "label": "identity proof insufficient"}}
+  - {"op": "add_edge", "from": "STP-023-011", "verb": "next", "to": "STP-023-012", "attrs": {"label": "patient notified"}}
+  - {"op": "add_edge", "from": "STP-023-012", "verb": "next", "to": "STP-023-013", "attrs": {"label": "additional proof supplied"}}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "next", "to": "STP-023-002", "attrs": {"label": "verification complete, processing resumes"}}
+  # waits on: no System Actor (A2 step 2 is performed by the System)
+  - {"op": "add_node", "id": "STP-023-022", "type": "Step", "title": "System includes the legal basis and scope of the retained categories in the patient outcome notification", "owner_fr": "FR-023", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  - {"op": "add_edge", "from": "STP-023-022", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-023-022", "verb": "applies", "to": "REQ-023-033"}
+  - {"op": "add_edge", "from": "STP-023-022", "verb": "applies", "to": "REQ-023-036"}
+  # waits on: no System Actor (A2 branch and rejoin links touch held Steps)
+  - {"op": "add_edge", "from": "STP-023-003", "verb": "next", "to": "STP-023-021", "attrs": {"condition": "REQ-023-036", "label": "protected categories included"}}
+  - {"op": "add_edge", "from": "STP-023-021", "verb": "next", "to": "STP-023-022", "attrs": {"label": "exclusion confirmed"}}
+  - {"op": "add_edge", "from": "STP-023-022", "verb": "next", "to": "STP-023-004", "attrs": {"label": "retained categories excluded"}}
+  # waits on: no System Actor and emission stage of A1 step 1 (the PRD fires dsr.verification_required there; the Stage is not stated, see decision on step stages)
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "emits", "to": "EVT-dsr-verification-required"}
+  # waits on: decision on Screen mapping (Privacy screen, DSR Queue; PRD lines 51-53, 62)
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_edge", "from": "REQ-023-030", "verb": "applies to", "to": "SCR-001-16"}
+  # waits on: decision on submission and new-DSR events (FR-023 Event or cite FR-001 EVT-account-deletion-requested)
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "EVT-account-deletion-requested"}
+  # waits on: decision on platform-wide placement of REQ-023-005 (global scope, or the FR-014 analytics entities)
+  - {"op": "add_edge", "from": "REQ-023-005", "verb": "applies to", "to": "ENT-analytics-generated-report"}
+  - {"op": "add_edge", "from": "REQ-023-005", "verb": "applies to", "to": "ENT-platform-analytics-aggregate"}
+  # waits on: decision on ownership of the 30-day SLA rule REQ-001-094 (review queue B49)
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-001-094"}
