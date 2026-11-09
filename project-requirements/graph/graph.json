@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T01:04:32Z",
-  "schema_version": 4,
+  "generated_at": "2026-11-09T17:28:37Z",
+  "schema_version": 6,
   "nodes": [
     {
       "id": "ACT-admin-invitee",
@@ -24148,10 +24148,10 @@
       }
     },
     {
-      "id": "ENT-quote.author_type",
+      "id": "ENT-quote.authored_by_type",
       "type": "Field",
       "owner_fr": "FR-004",
-      "title": "Author type",
+      "title": "Authored by type",
       "status": "active",
       "version": 1,
       "attrs": {
@@ -91092,6 +91092,917 @@
       "attrs": {}
     },
     {
+      "id": "SRC-PO-001",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "MTG-002 quote model Product Owner decision log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "summary": "PO decision log for the MTG-002 quote model: decisions D1-D24, process decisions R7-1 to R7-4, Major-review decisions M1-M18, plan decisions P1-P3, and post-execution answers Q1-Q50 (2026-10-16 to 2026-10-18)."
+      }
+    },
+    {
+      "id": "SRC-PO-001-D1",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "How does a patient recover after Payment Window Expired?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D10",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "When are promotion terms fixed on a sent quote?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D11",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "When is a promotion usage limit consumed?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D12",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Commission base",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D13",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "FR-004 quote-screen commission field",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D14",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Owner of the slot-hold duration",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D15",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "When are quote expiry and currency captured?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D16",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Seeded default quote currency",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D17",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "What is a package (FR-024)?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D18",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Currency per package",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D19",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Cached FX rate older than 24 hours at acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D2",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "May an admin revive a Payment Window Expired booking?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D20",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider acceptance notices when one provider has several parent quotes",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D21",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Which parts of quote.accepted are locked on?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D22",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Is the quote.withdrawn notification mandatory?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D23",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Is confirmed a quote status?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D24",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Booking and acceptance storage in the schema",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D3",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider withdraws a quote after acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D4",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "May an AcceptanceEvent be soft-deleted or restored?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D5",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Unsent draft quotes when another quote is accepted",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D6",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider fails after acceptance (withdraws before treatment or drops out during treatment, incl. FR-010 reassignment)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D6-M",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Money already paid when the provider fails",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D7",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Who clears travel-date-review-required (FR-008)?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D8",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Patient-entered promotion codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-D9",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "May the promotion or price change after acceptance?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M1",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Must every package be priced for every date range?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M10",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Package edits vs quote inline edits (FR-024-8)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M11",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Quote expiry setting owner (FR-026-4)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M12",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Quote version/audit storage (S5-5)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M13",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Hold-expiry notices (S4-2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M14",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Automatic promotions (FR-019-7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M15",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Instalment plan quote data (FR-007b-2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M16",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Acceptance-outcome tests (FR-020-4)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M17",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Notice on D2 admin revive",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M18",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider suspended or deactivated after acceptance (gap found in Wave 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M2",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Downstream reads after acceptance (FR-010-1, FR-010-6, S5-2, S4-5)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M3",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Slot hold timing (S1-2, S5-4)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M4",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Who creates the appointment slot (S1-6)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M5",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "FR-029 Rule 1 lock points (FR-029-1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M6",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Admin filters (FR-022-2, FR-022-3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M7",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider busy-calendar counts (FR-014-2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M8",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Package usage count (FR-024-6)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-M9",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Price in \"new quote received\" notification (FR-030-3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-P1",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Are FR-007, FR-008, FR-014, FR-015, FR-017 already implemented?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-P2",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Does a D5-cancelled unsent draft trigger a \"not selected\" notice?",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-P3",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Update-log coverage",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q1",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider fault record and cause name",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q10",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Patient receives both quote.accepted and booking.scheduled at acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q11",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Admin alert on every acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q12",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "quote.cancelled_inquiry mandatory vs FR-032 provider toggle",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q13",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Reminder defaults and hour bounds in FR-026",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q14",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Default Currency change and quote-configuration version",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q15",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "TTFQ end point",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q16",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "TTFQ cohort differs from response-rate cohort",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q17",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Return flight or hotel check-out before the last treatment plan day",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q18",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Travel records during an FR-006 provider-fault transfer",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q19",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Standalone FR-011 aftercare when its provider is suspended or deactivated",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q2",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Clinic treatment-detail changes while booking is Accepted (unpaid)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q20",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Purpose of FR-024 Screen 3 treatment Base Price",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q21",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Stored itineraries table",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q22",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Binding commission snapshot stored on bookings",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q23",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Unique index on active holds (provider, appointment time, time zone)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q24",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "quote.updated producer",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q25",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Base for deposit and instalments",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q26",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Admin manual cancellation after a missed later instalment",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q27",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider payout trigger",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q28",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "FR-007 REQ-007-014 commission base wording",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q29",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Promotion reservation on re-send of a new quote version",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q3",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Zero-price option/date-price rows",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q30",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Automatic promotion use after a booking fails before first payment",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q31",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Admin recipient of quote.withdrawn",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q32",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider notices on a provider-fault transfer",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q33",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Storage of FR-019 promotion programmes",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q34",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "System PRD versioning",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q35",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Commercial source of a provider-fault replacement acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q36",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider fault while the patient is in Aftercare",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q37",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Who may cancel a booking, and from which stages",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q38",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Promotion storage (revisits Q33 with new evidence)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q39",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Reserved automatic-promotion use when the accepted row does not carry the promotion",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q4",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Default Currency changes while a draft holds prices",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q40",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Number of automatic promotions per quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q41",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Meaning of the \"Both Fees\" discount type",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q42",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Reschedule notice and acceptance notice recipients",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q43",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Admin screens for every admin intervention",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q44",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Treatment-detail changes after Check In",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q45",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Provider fault while the booking is In Progress",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q46",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "When the treatment record is created",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q47",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Notice for an admin aftercare-provider reassignment",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q48",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Automatic promotions on an admin-authored replacement quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q49",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Replacement quote not accepted",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q5",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Commission base for Hairline-funded (\"Hairline only\") discounts",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q50",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Replacement quotes in provider analytics",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q6",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Auto-applied promotion whose usage limit runs out between send and acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q7",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Disabling a currency still used by quotes or bookings",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q8",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Price sort across quotes in different currencies",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-Q9",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Mandatory flag for booking.provider_fault_replacement and treatment.plan_changed",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-R7-1",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Fixes that need no business decision (9 groups: FR-010 snapshot read, FR-006 cleanup incl. first-payment-only PWE boundary, status lists, FR-007b snapshot/currency, FR-029 Rule 1, notification templates and PWE event, system docs, missing tests, stale CR claims and Minors)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-R7-2",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Plan days vs calendar dates (FR-010)",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-R7-3",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Unverified Minor/Observation findings",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PO-001-R7-4",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "Fix-pass process",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
       "id": "STG-aftercare-01-recovery-plan",
       "type": "Stage",
       "owner_fr": null,
@@ -109149,9 +110060,9 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-quote.author_type",
+      "id": "ENT-quote.authored_by_type",
       "entity_id": "ENT-quote",
-      "name": "author_type",
+      "name": "authored_by_type",
       "data_type": "enum",
       "required": true,
       "calculated_by": null
@@ -119031,13 +119942,13 @@
       "sort_order": 3
     },
     {
-      "field_id": "ENT-quote.author_type",
+      "field_id": "ENT-quote.authored_by_type",
       "value": "provider",
       "label": "Provider",
       "sort_order": 0
     },
     {
-      "field_id": "ENT-quote.author_type",
+      "field_id": "ENT-quote.authored_by_type",
       "value": "admin",
       "label": "Admin (replacement quote)",
       "sort_order": 1
@@ -214321,9 +215232,947 @@
       "section": "Operational Direction",
       "date": "2026-09-17",
       "lifecycle": "pending review"
+    },
+    {
+      "id": "SRC-PO-001",
+      "kind": "decision log",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": null,
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D1",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D1",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D10",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D10",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D11",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D11",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D12",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D12",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D13",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D13",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D14",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D14",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D15",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D15",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D16",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D16",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D17",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D17",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D18",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D18",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D19",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D19",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D2",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D2",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D20",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D20",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D21",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D21",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D22",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D22",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D23",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D23",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D24",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D24",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D3",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D3",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D4",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D4",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D5",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D5",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D6",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D6",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D6-M",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D6-M",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D7",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D7",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D8",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D8",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-D9",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "D9",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M1",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M1",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M10",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M10",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M11",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M11",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M12",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M12",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M13",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M13",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M14",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M14",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M15",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M15",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M16",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M16",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M17",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M17",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M18",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M18",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M2",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M2",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M3",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M3",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M4",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M4",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M5",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M5",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M6",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M6",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M7",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M7",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M8",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M8",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-M9",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "M9",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-P1",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "P1",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-P2",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "P2",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-P3",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "P3",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q1",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q1",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q10",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q10",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q11",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q11",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q12",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q12",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q13",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q13",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q14",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q14",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q15",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q15",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q16",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q16",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q17",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q17",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q18",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q18",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q19",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q19",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q2",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q2",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q20",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q20",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q21",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q21",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q22",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q22",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q23",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q23",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q24",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q24",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q25",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q25",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q26",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q26",
+      "date": "2026-10-16",
+      "lifecycle": "pending review"
+    },
+    {
+      "id": "SRC-PO-001-Q27",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q27",
+      "date": "2026-10-16",
+      "lifecycle": "pending review"
+    },
+    {
+      "id": "SRC-PO-001-Q28",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q28",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q29",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q29",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q3",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q3",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q30",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q30",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q31",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q31",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q32",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q32",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q33",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q33",
+      "date": "2026-10-18",
+      "lifecycle": "superseded"
+    },
+    {
+      "id": "SRC-PO-001-Q34",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q34",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q35",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q35",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q36",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q36",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q37",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q37",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q38",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q38",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q39",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q39",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q4",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q4",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q40",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q40",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q41",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q41",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q42",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q42",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q43",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q43",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q44",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q44",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q45",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q45",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q46",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q46",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q47",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q47",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q48",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q48",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q49",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q49",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q5",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q5",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q50",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q50",
+      "date": "2026-10-18",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q6",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q6",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q7",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q7",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q8",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q8",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-Q9",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "Q9",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-R7-1",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "R7-1",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-R7-2",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "R7-2",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-R7-3",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "R7-3",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
+    },
+    {
+      "id": "SRC-PO-001-R7-4",
+      "kind": "decision item",
+      "ref": "reports/2026-10-16/mtg002-quote-model-decisions-2026-10-16.md",
+      "section": "R7-4",
+      "date": "2026-10-16",
+      "lifecycle": "incorporated"
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261109-172543-f9f5279d",
+      "at": "2026-11-09T17:25:43.968861+00:00",
+      "changed_by": "controller",
+      "reason": "Record each MTG-002 Product Owner decision as its own Source so Rules can cite it with 'decided by' (D42 item 7). Q26 and Q27 were deferred to the payment pass; Q33 was superseded by Q38.",
+      "source_id": null,
+      "nodes_added": [
+        "SRC-PO-001",
+        "SRC-PO-001-D1",
+        "SRC-PO-001-D10",
+        "SRC-PO-001-D11",
+        "SRC-PO-001-D12",
+        "SRC-PO-001-D13",
+        "SRC-PO-001-D14",
+        "SRC-PO-001-D15",
+        "SRC-PO-001-D16",
+        "SRC-PO-001-D17",
+        "SRC-PO-001-D18",
+        "SRC-PO-001-D19",
+        "SRC-PO-001-D2",
+        "SRC-PO-001-D20",
+        "SRC-PO-001-D21",
+        "SRC-PO-001-D22",
+        "SRC-PO-001-D23",
+        "SRC-PO-001-D24",
+        "SRC-PO-001-D3",
+        "SRC-PO-001-D4",
+        "SRC-PO-001-D5",
+        "SRC-PO-001-D6",
+        "SRC-PO-001-D6-M",
+        "SRC-PO-001-D7",
+        "SRC-PO-001-D8",
+        "SRC-PO-001-D9",
+        "SRC-PO-001-M1",
+        "SRC-PO-001-M10",
+        "SRC-PO-001-M11",
+        "SRC-PO-001-M12",
+        "SRC-PO-001-M13",
+        "SRC-PO-001-M14",
+        "SRC-PO-001-M15",
+        "SRC-PO-001-M16",
+        "SRC-PO-001-M17",
+        "SRC-PO-001-M18",
+        "SRC-PO-001-M2",
+        "SRC-PO-001-M3",
+        "SRC-PO-001-M4",
+        "SRC-PO-001-M5",
+        "SRC-PO-001-M6",
+        "SRC-PO-001-M7",
+        "SRC-PO-001-M8",
+        "SRC-PO-001-M9",
+        "SRC-PO-001-P1",
+        "SRC-PO-001-P2",
+        "SRC-PO-001-P3",
+        "SRC-PO-001-Q1",
+        "SRC-PO-001-Q10",
+        "SRC-PO-001-Q11",
+        "SRC-PO-001-Q12",
+        "SRC-PO-001-Q13",
+        "SRC-PO-001-Q14",
+        "SRC-PO-001-Q15",
+        "SRC-PO-001-Q16",
+        "SRC-PO-001-Q17",
+        "SRC-PO-001-Q18",
+        "SRC-PO-001-Q19",
+        "SRC-PO-001-Q2",
+        "SRC-PO-001-Q20",
+        "SRC-PO-001-Q21",
+        "SRC-PO-001-Q22",
+        "SRC-PO-001-Q23",
+        "SRC-PO-001-Q24",
+        "SRC-PO-001-Q25",
+        "SRC-PO-001-Q26",
+        "SRC-PO-001-Q27",
+        "SRC-PO-001-Q28",
+        "SRC-PO-001-Q29",
+        "SRC-PO-001-Q3",
+        "SRC-PO-001-Q30",
+        "SRC-PO-001-Q31",
+        "SRC-PO-001-Q32",
+        "SRC-PO-001-Q33",
+        "SRC-PO-001-Q34",
+        "SRC-PO-001-Q35",
+        "SRC-PO-001-Q36",
+        "SRC-PO-001-Q37",
+        "SRC-PO-001-Q38",
+        "SRC-PO-001-Q39",
+        "SRC-PO-001-Q4",
+        "SRC-PO-001-Q40",
+        "SRC-PO-001-Q41",
+        "SRC-PO-001-Q42",
+        "SRC-PO-001-Q43",
+        "SRC-PO-001-Q44",
+        "SRC-PO-001-Q45",
+        "SRC-PO-001-Q46",
+        "SRC-PO-001-Q47",
+        "SRC-PO-001-Q48",
+        "SRC-PO-001-Q49",
+        "SRC-PO-001-Q5",
+        "SRC-PO-001-Q50",
+        "SRC-PO-001-Q6",
+        "SRC-PO-001-Q7",
+        "SRC-PO-001-Q8",
+        "SRC-PO-001-Q9",
+        "SRC-PO-001-R7-1",
+        "SRC-PO-001-R7-2",
+        "SRC-PO-001-R7-3",
+        "SRC-PO-001-R7-4"
+      ],
+      "nodes_updated": [],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 808
+    },
+    {
+      "id": "cs-20261109-172543-e78809d7",
+      "at": "2026-11-09T17:25:43.801532+00:00",
+      "changed_by": "controller",
+      "reason": "Rename the quote author field to authored_by_type, matching the system data schema naming for who authored a record (D42 item 8). The old field is retired, not deleted.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-quote.authored_by_type"
+      ],
+      "nodes_updated": [
+        "ENT-quote.author_type"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 12
+    },
     {
       "id": "cs-20261109-010251-a5366d76",
       "at": "2026-11-09T01:02:51.259382+00:00",

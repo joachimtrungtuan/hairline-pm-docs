@@ -1,0 +1,7 @@
+reason: "Rename the quote author field to authored_by_type, matching the system data schema naming for who authored a record (D42 item 8). The old field is retired, not deleted."
+by: controller
+operations:
+  - {"op": "retire_node", "id": "ENT-quote.author_type"}
+  - {"op": "add_field", "id": "ENT-quote.authored_by_type", "entity_id": "ENT-quote", "name": "authored_by_type", "data_type": "enum", "title": "Authored by type", "owner_fr": "FR-004", "required": true, "attrs": {"description": "`provider` for every quote except the admin-authored replacement quote (`admin`)."}}
+  - {"op": "add_enum_value", "field_id": "ENT-quote.authored_by_type", "value": "provider", "label": "Provider", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-quote.authored_by_type", "value": "admin", "label": "Admin (replacement quote)", "sort_order": 1}
