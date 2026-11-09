@@ -241,7 +241,7 @@ class TestLint(GraphTestCase):
         self.add_node("REQ-005-001", "Rule", "FR-005", "Acceptance window", '{"statement": "x"}')
         self.add_edge("REQ-005-001", "decided by", "SRC-MTG-002-D03")
         self.assertEqual(self.finding_ids("FR-004"), set())
-        self.assertEqual(self.finding_ids("FR-005"), {"L02:REQ-005-001"})
+        self.assertEqual(self.finding_ids("FR-005"), {"L02:REQ-005-001", "L13:REQ-005-001"})
 
     def test_cli_reports_findings_and_exit_code(self) -> None:
         self.drop_edge("REQ-004-001", "decided by", "SRC-MTG-002-D03")
@@ -282,6 +282,28 @@ class TestExport(GraphTestCase):
             "edges_added": 0, "edges_removed": 0, "rows": 1,
         }])
         self.assertEqual(data["nodes"][ids.index("FR-004")]["attrs"]["module"], "P-02")
+
+    def test_derived_fr_stage_edge(self) -> None:
+        self.add_node("REQ-004-002", "Rule", "FR-004", "Second rule", '{"statement": "Another."}')
+        self.add_edge("REQ-004-002", "applies at", "STG-main-02-quote")
+        self.add_node("FR-005", "FR", None, "Other FR")
+        self.add_node("REQ-005-001", "Rule", "FR-005", "Elsewhere", '{"statement": "Other."}')
+        self.add_edge("REQ-005-001", "applies at", "STG-main-01-inquiry")
+        data = export.build_export(self.conn)
+        derived = [e for e in data["edges"] if e.get("derived")]
+        self.assertEqual(
+            [(e["from_id"], e["verb"], e["to_id"], e["attrs"]) for e in derived],
+            [("FR-004", "active in", "STG-main-02-quote", {"rules": 2}),
+             ("FR-005", "active in", "STG-main-01-inquiry", {"rules": 1})],
+        )
+        self.assertFalse(any("derived" in e for e in data["edges"] if e["verb"] != "active in"))
+        keys = [(e["from_id"], e["verb"], e["to_id"]) for e in data["edges"]]
+        self.assertEqual(keys, sorted(keys))
+        # Never stored: the DB has no such edge, and a retired Stage drops the derived edge.
+        self.assertEqual(self.conn.execute("SELECT COUNT(*) FROM edges WHERE verb = 'active in'").fetchone()[0], 0)
+        self.sql("UPDATE nodes SET status = 'retired' WHERE id = 'STG-main-02-quote'")
+        again = export.build_export(self.conn)
+        self.assertEqual([e["to_id"] for e in again["edges"] if e.get("derived")], ["STG-main-01-inquiry"])
 
     def test_retired_rows_excluded_unless_requested(self) -> None:
         self.sql("UPDATE nodes SET status = 'retired' WHERE id = 'ENT-quote.status'")

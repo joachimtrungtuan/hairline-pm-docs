@@ -5,7 +5,7 @@ Usage: export.py [OUT_PATH] [--db DB_PATH] [--include-retired]
 OUT_PATH defaults to graph.json in the graph folder. Only active nodes are written unless
 --include-retired is given. Rows that belong to a left-out node go with it: the fields of a
 left-out Entity or Field node, their enum values, edges touching it, and its source record.
-Plain reference columns (owner_fr, calculated_by) are kept as stored. Every list is sorted by its key so successive exports diff cleanly.
+Derived `active in` edges (FR to Stage, from each Rule's `applies at` and owner FR) are added to `edges`, marked `derived: true`; they are not in the DB. Plain reference columns (owner_fr, calculated_by) are kept as stored. Every list is sorted by its key so successive exports diff cleanly.
 
 History is exported as one summary per change-set in `changes`, newest first, whatever the node
 filter: its metadata, the node ids it added and updated, its edge counts and its row count. The
@@ -63,6 +63,8 @@ def build_export(conn: sqlite3.Connection, include_retired: bool = False, now: d
         if a in kept and b in kept
     ]
 
+    edges = sorted(edges + derive_fr_stage_edges(nodes, edges), key=lambda e: (e["from_id"], e["verb"], e["to_id"]))
+
     sources = [
         {"id": id_, "kind": kind, "ref": ref, "section": section, "date": date, "lifecycle": lifecycle}
         for id_, kind, ref, section, date, lifecycle in conn.execute(
@@ -82,6 +84,26 @@ def build_export(conn: sqlite3.Connection, include_retired: bool = False, now: d
         "sources": sources,
         "changes": build_change_sets(conn),
     }
+
+
+def derive_fr_stage_edges(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """`FR active in Stage` edges for the viewer: a Rule's owner FR is active in every Stage the Rule applies at.
+
+    Derived on every export and never written to the DB. Each carries `derived: true` and, in attrs,
+    the number of rules behind it. Only edges between exported nodes are produced.
+    """
+    owner = {n["id"]: n["owner_fr"] for n in nodes if n["type"] == "Rule" and n["owner_fr"]}
+    stages = {n["id"] for n in nodes if n["type"] == "Stage"}
+    frs = {n["id"] for n in nodes if n["type"] == "FR"}
+    counts: dict[tuple[str, str], int] = {}
+    for e in edges:
+        fr = owner.get(e["from_id"])
+        if e["verb"] == "applies at" and fr in frs and e["to_id"] in stages:
+            counts[(fr, e["to_id"])] = counts.get((fr, e["to_id"]), 0) + 1
+    return [
+        {"from_id": fr, "verb": "active in", "to_id": stage, "attrs": {"rules": n}, "derived": True}
+        for (fr, stage), n in counts.items()
+    ]
 
 
 def build_change_sets(conn: sqlite3.Connection) -> list[dict[str, Any]]:
