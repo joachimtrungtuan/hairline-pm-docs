@@ -25,8 +25,9 @@ PRD_LINES=$(wc -l < "$PRD" | tr -d ' ')
 mkdir -p "$OUT/in"
 ln -sfn "$PRD" "$OUT/in/prd.md"
 ln -sfn "$ROOT/$CHECKLIST" "$OUT/in/checklist.md"
-ln -sfn "$GRAPH_DIR/graph.json" "$OUT/in/graph.json"
+rm -f "$OUT/in/graph.json"; cp "$GRAPH_DIR/graph.json" "$OUT/in/graph.json"   # snapshot: the controller may re-export mid-run
 ln -sfn "$GRAPH_DIR/schema.yaml" "$OUT/in/schema.yaml"
+ln -sfn "$GRAPH_DIR/checklists/migrate-fr.md" "$OUT/in/migrate-fr.md"
 ( cd "$GRAPH_DIR" && "$PY" scripts/query.py fr "$FR" --json ) > "$OUT/in/fr-nodes.json" 2>"$OUT/query.err" || true
 rm -f "$OUT/report.md"
 EXPORTED=$("$PY" -c "import json,sys;d=json.load(open(sys.argv[1]));print(d.get('changes',[{}])[0].get('at',''))" "$GRAPH_DIR/graph.json" 2>/dev/null)
@@ -60,6 +61,12 @@ Inputs:
 - Pre-computed result of 'query.py fr $FR --json' (the nodes $FR owns): $OUT/in/fr-nodes.json
 - Node types: $OUT/in/schema.yaml
 - Graph export timestamp for the header: $EXPORTED
+- Flow-step and change-set rules: $OUT/in/migrate-fr.md (read it only after the line table is complete, as the checklist says; you need step 2 'Flow steps' and step 5 'Write the change-set')
+Change-set operations are one JSON object per line, for example:
+  - {\"op\": \"add_node\", \"id\": \"STP-005-001\", \"type\": \"Step\", \"title\": \"Patient opens quote list\", \"owner_fr\": \"FR-005\", \"attrs\": {\"prd_ref\": \"Main Flow step 1\"}}
+  - {\"op\": \"add_edge\", \"from\": \"STP-005-001\", \"verb\": \"next\", \"to\": \"STP-005-002\", \"attrs\": {\"label\": \"quote accepted\"}}
+  - {\"op\": \"add_node\", \"id\": \"FLW-005-main\", \"type\": \"Flow\", \"title\": \"Quote comparison main flow\", \"attrs\": {\"kind\": \"main\", \"prd_ref\": \"Main Flow\"}}
+You have no shell, so you cannot validate a change-set: follow the checklist step 7 rule for a checker with no shell and put the draft YAML block in the report.
 Rules: all inputs are inside $OUT/in; you cannot read or write anywhere else. The only file you may write is $OUT/report.md. Do not read any migration report or migrate-fr.md before the line table is complete; the checklist says when you may. Never guess between two business readings; record a 'Needs user decision' item instead. Finish by writing the complete report to $OUT/report.md, ending with the Status line the checklist requires."
 
 START=$(date +%s)
@@ -70,8 +77,9 @@ REPORT_LINES=0; [ -f "$OUT/report.md" ] && REPORT_LINES=$(wc -l < "$OUT/report.m
 STATUS="ok"; [ $RC -eq 124 ] && STATUS="timeout"; { [ $RC -ne 0 ] && [ $RC -ne 124 ]; } && STATUS="error"
 [ "$REPORT_LINES" -eq 0 ] && [ "$STATUS" = "ok" ] && STATUS="no-report"
 DENIED=$(grep -c '"permission' "$OUT/opencode.jsonl" 2>/dev/null || echo 0)
+USAGE=$("$PY" "$GRAPH_DIR/scripts/opencode_usage.py" "$OUT/opencode.jsonl" 2>/dev/null || echo '{}')
 cat > "$OUT/status.json" <<JSON
-{"fr":"$FR","model":"$MODEL","checklist":"$CHECKLIST","status":"$STATUS","exit_code":$RC,"seconds":$((END-START)),"report_lines":$REPORT_LINES,"permission_events":$DENIED,"prd_lines":$PRD_LINES,"graph_exported":"$EXPORTED"}
+{"fr":"$FR","model":"$MODEL","checklist":"$CHECKLIST","status":"$STATUS","exit_code":$RC,"seconds":$((END-START)),"report_lines":$REPORT_LINES,"permission_events":$DENIED,"prd_lines":$PRD_LINES,"graph_exported":"$EXPORTED","usage":$USAGE}
 JSON
 cat "$OUT/status.json"
 [ "$STATUS" = "ok" ] && exit 0
