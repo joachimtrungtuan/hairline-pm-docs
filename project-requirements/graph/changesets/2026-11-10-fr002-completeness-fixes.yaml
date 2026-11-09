@@ -1,0 +1,42 @@
+reason: "FR-002 completeness fixes (D37 review step 1): an applies to edge from each FR-002 Rule to the objects its PRD line names it acting on. FR-002 has no Step that a human performs at a stage the PRD names, so the flow model is entirely in 2026-11-10-fr002-completeness-held.yaml (system-performed steps wait on the missing System Actor; admin configuration steps wait on stage placement). No Rule statement, no scope: global, no node owned by another FR."
+by: tester
+operations:
+  - {"op": "add_edge", "from": "REQ-002-001", "verb": "applies to", "to": "ENT-intake-processing-request.responses"}
+  - {"op": "add_edge", "from": "REQ-002-002", "verb": "applies to", "to": "ENT-risk-tag"}
+  - {"op": "add_edge", "from": "REQ-002-003", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-004", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-005", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-006", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-007", "verb": "applies to", "to": "ENT-intake-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-002-008", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-009", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-010", "verb": "applies to", "to": "ENT-intake-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-002-011", "verb": "applies to", "to": "ENT-intake-processing-request.template_version"}
+  - {"op": "add_edge", "from": "REQ-002-012", "verb": "applies to", "to": "ENT-intake-processing-request"}
+  - {"op": "add_edge", "from": "REQ-002-012", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-015", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-002-016", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-002-016", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-018", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-002-019", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-002-020", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-002-021", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-002-022", "verb": "applies to", "to": "ENT-intake-processing-request.template_version"}
+  - {"op": "add_edge", "from": "REQ-002-023", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-024", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-026", "verb": "applies to", "to": "ENT-intake-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-002-029", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-002-030", "verb": "applies to", "to": "ENT-intake-processing-request"}
+  - {"op": "add_edge", "from": "REQ-002-030", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-030", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-031", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-032", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-033", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-034", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-035", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-036", "verb": "applies to", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "REQ-002-037", "verb": "applies to", "to": "ENT-intake-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-002-037", "verb": "applies to", "to": "ENT-intake-processing-request.template_version"}
+  - {"op": "add_edge", "from": "REQ-002-038", "verb": "applies to", "to": "ENT-intake-processing-request.media"}
+  - {"op": "add_edge", "from": "REQ-002-039", "verb": "applies to", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "REQ-002-040", "verb": "applies to", "to": "ACT-platform-admin"}

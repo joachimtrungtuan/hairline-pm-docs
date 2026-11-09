@@ -1,0 +1,346 @@
+reason: "FR-024 completeness fixes (D37 review step 1): applies to edges from every FR-024 Rule to the objects it acts on, decided by edges to the Product Owner decisions the PRD cites, and the human-performed opening Steps of the 11 flows with their Flows. System-performed Steps and Steps reachable only through them are in 2026-11-10-fr024-completeness-held.yaml (no System Actor in the graph)."
+by: tester
+operations:
+  - {"op": "add_node", "id": "STP-024-001", "type": "Step", "title": "Admin opens Settings > Treatment Settings", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 1"}}
+  - {"op": "add_edge", "from": "STP-024-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-001", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-001", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-001", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-002", "type": "Step", "title": "Admin clicks Create New Treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 2"}}
+  - {"op": "add_edge", "from": "STP-024-002", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-002", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-002", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-002", "verb": "applies", "to": "REQ-024-054"}
+  - {"op": "add_node", "id": "FLW-024-admin-creates-treatment", "type": "Flow", "title": "Main Flow: Admin Creates Treatment", "attrs": {"kind": "main", "description": "Main Flow: Admin Creates Treatment", "prd_ref": "Main Flow: Admin Creates Treatment"}}
+  - {"op": "add_edge", "from": "FLW-024-admin-creates-treatment", "verb": "starts at", "to": "STP-024-001"}
+  - {"op": "add_edge", "from": "STP-024-001", "verb": "next", "to": "STP-024-002"}
+  - {"op": "add_node", "id": "STP-024-021", "type": "Step", "title": "Admin opens Settings > Treatment Settings", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-021", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-021", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-021", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-021", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-022", "type": "Step", "title": "Admin searches or filters for the treatment to edit", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-022", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-022", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-022", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-022", "verb": "applies", "to": "REQ-024-054"}
+  - {"op": "add_node", "id": "STP-024-023", "type": "Step", "title": "Admin clicks Edit on the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-023", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-023", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-023", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-023", "verb": "applies", "to": "REQ-024-054"}
+  - {"op": "add_node", "id": "FLW-024-edit-treatment", "type": "Flow", "title": "A1: Admin Edits Existing Treatment", "attrs": {"kind": "alternative", "description": "A1: Admin Edits Existing Treatment", "prd_ref": "A1"}}
+  - {"op": "add_edge", "from": "FLW-024-edit-treatment", "verb": "starts at", "to": "STP-024-021"}
+  - {"op": "add_edge", "from": "STP-024-021", "verb": "next", "to": "STP-024-022"}
+  - {"op": "add_edge", "from": "STP-024-022", "verb": "next", "to": "STP-024-023"}
+  - {"op": "add_node", "id": "STP-024-031", "type": "Step", "title": "Admin opens the treatment in the catalog", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-031", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-031", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-031", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-031", "verb": "applies", "to": "REQ-024-054"}
+  - {"op": "add_node", "id": "STP-024-032", "type": "Step", "title": "Admin clicks Deactivate Treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "applies", "to": "REQ-024-003"}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "applies", "to": "REQ-024-051"}
+  - {"op": "add_node", "id": "FLW-024-deactivate-treatment", "type": "Flow", "title": "A2: Admin Deactivates Treatment", "attrs": {"kind": "alternative", "description": "A2: Admin Deactivates Treatment", "prd_ref": "A2"}}
+  - {"op": "add_edge", "from": "FLW-024-deactivate-treatment", "verb": "starts at", "to": "STP-024-031"}
+  - {"op": "add_edge", "from": "STP-024-031", "verb": "next", "to": "STP-024-032"}
+  - {"op": "add_node", "id": "STP-024-041", "type": "Step", "title": "Provider opens Products & Services > Treatments > Treatment Pricing", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-041", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-041", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-041", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-041", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "FLW-024-configure-treatment-pricing", "type": "Flow", "title": "A3: Provider Configures Treatment Pricing", "attrs": {"kind": "alternative", "description": "A3: Provider Configures Treatment Pricing", "prd_ref": "A3"}}
+  - {"op": "add_edge", "from": "FLW-024-configure-treatment-pricing", "verb": "starts at", "to": "STP-024-041"}
+  - {"op": "add_node", "id": "STP-024-051", "type": "Step", "title": "Admin fills out the treatment form incompletely", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-051", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-051", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-051", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-051", "verb": "applies", "to": "REQ-024-046"}
+  - {"op": "add_node", "id": "STP-024-052", "type": "Step", "title": "Admin clicks Save Treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "applies", "to": "REQ-024-046"}
+  - {"op": "add_node", "id": "FLW-024-treatment-validation-error", "type": "Flow", "title": "B1: Treatment Creation Validation Error", "attrs": {"kind": "alternative", "description": "B1: Treatment Creation Validation Error", "prd_ref": "B1"}}
+  - {"op": "add_edge", "from": "FLW-024-treatment-validation-error", "verb": "starts at", "to": "STP-024-051"}
+  - {"op": "add_edge", "from": "STP-024-051", "verb": "next", "to": "STP-024-052"}
+  - {"op": "add_node", "id": "STP-024-061", "type": "Step", "title": "Admin uploads a treatment video during creation", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-061", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-061", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-061", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-061", "verb": "applies", "to": "REQ-024-045"}
+  - {"op": "add_node", "id": "FLW-024-media-upload-failure", "type": "Flow", "title": "B2: Media Upload Failure", "attrs": {"kind": "alternative", "description": "B2: Media Upload Failure", "prd_ref": "B2"}}
+  - {"op": "add_edge", "from": "FLW-024-media-upload-failure", "verb": "starts at", "to": "STP-024-061"}
+  - {"op": "add_node", "id": "STP-024-071", "type": "Step", "title": "Provider opens Products & Services > Packages", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 1"}}
+  - {"op": "add_edge", "from": "STP-024-071", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-071", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-071", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-071", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-072", "type": "Step", "title": "Provider clicks Create New Package", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 2"}}
+  - {"op": "add_edge", "from": "STP-024-072", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-072", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-072", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-072", "verb": "applies", "to": "REQ-024-076"}
+  - {"op": "add_node", "id": "FLW-024-package-create", "type": "Flow", "title": "Main Flow: Provider Creates Package", "attrs": {"kind": "main", "description": "Main Flow: Provider Creates Package", "prd_ref": "Main Flow: Provider Creates Package"}}
+  - {"op": "add_edge", "from": "FLW-024-package-create", "verb": "starts at", "to": "STP-024-071"}
+  - {"op": "add_edge", "from": "STP-024-071", "verb": "next", "to": "STP-024-072"}
+  - {"op": "add_node", "id": "STP-024-091", "type": "Step", "title": "Provider opens Products & Services > Packages", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-091", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-091", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-091", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-091", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-092", "type": "Step", "title": "Provider searches or filters for the package to edit", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-092", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-092", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-092", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-092", "verb": "applies", "to": "REQ-024-076"}
+  - {"op": "add_node", "id": "STP-024-093", "type": "Step", "title": "Provider clicks Edit on the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-093", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-093", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-093", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-093", "verb": "applies", "to": "REQ-024-008"}
+  - {"op": "add_node", "id": "FLW-024-package-edit", "type": "Flow", "title": "A4: Provider Edits Existing Package (library edit)", "attrs": {"kind": "alternative", "description": "A4: Provider Edits Existing Package (library edit)", "prd_ref": "A4"}}
+  - {"op": "add_edge", "from": "FLW-024-package-edit", "verb": "starts at", "to": "STP-024-091"}
+  - {"op": "add_edge", "from": "STP-024-091", "verb": "next", "to": "STP-024-092"}
+  - {"op": "add_edge", "from": "STP-024-092", "verb": "next", "to": "STP-024-093"}
+  - {"op": "add_node", "id": "STP-024-101", "type": "Step", "title": "Provider opens Products & Services > Packages", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-101", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-101", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-101", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-101", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-102", "type": "Step", "title": "Provider clicks Deactivate on the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "applies", "to": "REQ-024-009"}
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "applies", "to": "REQ-024-072"}
+  - {"op": "add_node", "id": "FLW-024-package-deactivate", "type": "Flow", "title": "A5: Provider Deactivates Package", "attrs": {"kind": "alternative", "description": "A5: Provider Deactivates Package", "prd_ref": "A5"}}
+  - {"op": "add_edge", "from": "FLW-024-package-deactivate", "verb": "starts at", "to": "STP-024-101"}
+  - {"op": "add_edge", "from": "STP-024-101", "verb": "next", "to": "STP-024-102"}
+  - {"op": "add_node", "id": "STP-024-111", "type": "Step", "title": "Provider opens Products & Services > Packages", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-111", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-111", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-111", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-111", "verb": "applies", "to": "REQ-024-037"}
+  - {"op": "add_node", "id": "STP-024-112", "type": "Step", "title": "Provider clicks Clone on an existing package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-112", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-112", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-112", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-112", "verb": "applies", "to": "REQ-024-073"}
+  - {"op": "add_node", "id": "FLW-024-package-clone", "type": "Flow", "title": "A6: Provider Clones Package", "attrs": {"kind": "alternative", "description": "A6: Provider Clones Package", "prd_ref": "A6"}}
+  - {"op": "add_edge", "from": "FLW-024-package-clone", "verb": "starts at", "to": "STP-024-111"}
+  - {"op": "add_edge", "from": "STP-024-111", "verb": "next", "to": "STP-024-112"}
+  - {"op": "add_node", "id": "STP-024-121", "type": "Step", "title": "Provider fills out the package form with errors", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 1"}}
+  - {"op": "add_edge", "from": "STP-024-121", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-121", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-121", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-121", "verb": "applies", "to": "REQ-024-065"}
+  - {"op": "add_node", "id": "STP-024-122", "type": "Step", "title": "Provider clicks Save Package", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "applies", "to": "REQ-024-065"}
+  - {"op": "add_node", "id": "FLW-024-package-validation-error", "type": "Flow", "title": "B3: Package Creation Validation Error", "attrs": {"kind": "alternative", "description": "B3: Package Creation Validation Error", "prd_ref": "B3"}}
+  - {"op": "add_edge", "from": "FLW-024-package-validation-error", "verb": "starts at", "to": "STP-024-121"}
+  - {"op": "add_edge", "from": "STP-024-121", "verb": "next", "to": "STP-024-122"}
+  # applies to: objects each Rule names acting on
+  - {"op": "add_edge", "from": "REQ-024-001", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-001", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-002", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-002", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-003", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-003", "verb": "applies to", "to": "ENT-treatment.status"}
+  - {"op": "add_edge", "from": "REQ-024-004", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-004", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-005", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-005", "verb": "applies to", "to": "ENT-treatment-pricing-config"}
+  - {"op": "add_edge", "from": "REQ-024-006", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-006", "verb": "applies to", "to": "ENT-treatment-pricing-config.status"}
+  - {"op": "add_edge", "from": "REQ-024-007", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-007", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-007", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-008", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-008", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-008", "verb": "applies to", "to": "ENT-package.version"}
+  - {"op": "add_edge", "from": "REQ-024-009", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-009", "verb": "applies to", "to": "ENT-package.status"}
+  - {"op": "add_edge", "from": "REQ-024-010", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-010", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-010", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-011", "verb": "applies to", "to": "ENT-package.standard_price"}
+  - {"op": "add_edge", "from": "REQ-024-012", "verb": "applies to", "to": "ENT-treatment.version"}
+  - {"op": "add_edge", "from": "REQ-024-012", "verb": "applies to", "to": "ENT-package.version"}
+  - {"op": "add_edge", "from": "REQ-024-013", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-014", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-014", "verb": "applies to", "to": "ENT-package-item"}
+  - {"op": "add_edge", "from": "REQ-024-014", "verb": "applies to", "to": "ENT-package-plan-day"}
+  - {"op": "add_edge", "from": "REQ-024-015", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-015", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-015", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-016", "verb": "applies to", "to": "ENT-treatment-pricing-config"}
+  - {"op": "add_edge", "from": "REQ-024-017", "verb": "applies to", "to": "ENT-package.provider_id"}
+  - {"op": "add_edge", "from": "REQ-024-018", "verb": "applies to", "to": "ENT-treatment.version"}
+  - {"op": "add_edge", "from": "REQ-024-018", "verb": "applies to", "to": "ENT-package.version"}
+  - {"op": "add_edge", "from": "REQ-024-019", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-019", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-020", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-020", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-021", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-021", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-021", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-022", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-022", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-023", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-023", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-023", "verb": "applies to", "to": "ENT-treatment.educational_resource_urls"}
+  - {"op": "add_edge", "from": "REQ-024-023", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-024", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-024", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-025", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-025", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-026", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-026", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-027", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-027", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-027", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-028", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-028", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-028", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-029", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-029", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-030", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-031", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "applies to", "to": "ENT-treatment-pricing-config.base_price"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "applies to", "to": "ENT-treatment-pricing-config.price_per_graft"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "applies to", "to": "ENT-package.standard_price"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "applies to", "to": "ENT-package-item.price"}
+  - {"op": "add_edge", "from": "REQ-024-033", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-034", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-035", "verb": "applies to", "to": "ENT-treatment-pricing-config.base_price"}
+  - {"op": "add_edge", "from": "REQ-024-036", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-024-036", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-036", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "REQ-024-037", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-038", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-038", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-039", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-039", "verb": "applies to", "to": "ENT-treatment.type"}
+  - {"op": "add_edge", "from": "REQ-024-040", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-040", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-041", "verb": "applies to", "to": "EVT-treatment-added"}
+  - {"op": "add_edge", "from": "REQ-024-042", "verb": "applies to", "to": "EVT-treatment-updated"}
+  - {"op": "add_edge", "from": "REQ-024-043", "verb": "applies to", "to": "EVT-treatment-deactivated"}
+  - {"op": "add_edge", "from": "REQ-024-044", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-044", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-044", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-045", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-045", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-045", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-045", "verb": "applies to", "to": "ENT-treatment.educational_resource_urls"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "ENT-treatment.name"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "ENT-treatment.description"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "ENT-treatment.technique_details"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "ENT-treatment.recovery_time"}
+  - {"op": "add_edge", "from": "REQ-024-046", "verb": "applies to", "to": "ENT-treatment.duration_hours"}
+  - {"op": "add_edge", "from": "REQ-024-047", "verb": "applies to", "to": "ENT-treatment.description"}
+  - {"op": "add_edge", "from": "REQ-024-047", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-047", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-048", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-048", "verb": "applies to", "to": "ENT-treatment.status"}
+  - {"op": "add_edge", "from": "REQ-024-049", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-049", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-050", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-050", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-051", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-051", "verb": "applies to", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "REQ-024-051", "verb": "applies to", "to": "ENT-treatment.status"}
+  - {"op": "add_edge", "from": "REQ-024-052", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-052", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-053", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-053", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-054", "verb": "applies to", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "REQ-024-055", "verb": "applies to", "to": "ENT-treatment.provider_count"}
+  - {"op": "add_edge", "from": "REQ-024-056", "verb": "applies to", "to": "ENT-treatment.updated_at"}
+  - {"op": "add_edge", "from": "REQ-024-056", "verb": "applies to", "to": "ENT-package.updated_at"}
+  - {"op": "add_edge", "from": "REQ-024-057", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-057", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-058", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-058", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-058", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-059", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-059", "verb": "applies to", "to": "ENT-treatment-pricing-config.status"}
+  - {"op": "add_edge", "from": "REQ-024-059", "verb": "applies to", "to": "ENT-treatment-pricing-config.base_price"}
+  - {"op": "add_edge", "from": "REQ-024-060", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-060", "verb": "applies to", "to": "ENT-treatment-pricing-config.base_price"}
+  - {"op": "add_edge", "from": "REQ-024-060", "verb": "applies to", "to": "ENT-treatment-pricing-config.price_per_graft"}
+  - {"op": "add_edge", "from": "REQ-024-060", "verb": "applies to", "to": "ENT-treatment-pricing-config.min_graft_count"}
+  - {"op": "add_edge", "from": "REQ-024-060", "verb": "applies to", "to": "ENT-treatment-pricing-config.max_graft_count"}
+  - {"op": "add_edge", "from": "REQ-024-061", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-061", "verb": "applies to", "to": "ENT-treatment-pricing-config.base_price"}
+  - {"op": "add_edge", "from": "REQ-024-061", "verb": "applies to", "to": "ENT-package.standard_price"}
+  - {"op": "add_edge", "from": "REQ-024-062", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-062", "verb": "applies to", "to": "ENT-treatment-pricing-config"}
+  - {"op": "add_edge", "from": "REQ-024-063", "verb": "applies to", "to": "ENT-package-item"}
+  - {"op": "add_edge", "from": "REQ-024-063", "verb": "applies to", "to": "ENT-package-item.item_type"}
+  - {"op": "add_edge", "from": "REQ-024-063", "verb": "applies to", "to": "ENT-package.included_travel_services"}
+  - {"op": "add_edge", "from": "REQ-024-064", "verb": "applies to", "to": "ENT-package-plan-day"}
+  - {"op": "add_edge", "from": "REQ-024-064", "verb": "applies to", "to": "ENT-package-plan-day.day_number"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package.name"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package.description"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package.duration"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package.standard_price"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package.terms_conditions"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package-item"}
+  - {"op": "add_edge", "from": "REQ-024-065", "verb": "applies to", "to": "ENT-package-plan-day"}
+  - {"op": "add_edge", "from": "REQ-024-066", "verb": "applies to", "to": "ENT-package.description"}
+  - {"op": "add_edge", "from": "REQ-024-066", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-067", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-068", "verb": "applies to", "to": "ENT-package.name"}
+  - {"op": "add_edge", "from": "REQ-024-069", "verb": "applies to", "to": "ENT-package.version"}
+  - {"op": "add_edge", "from": "REQ-024-069", "verb": "applies to", "to": "ENT-package.status"}
+  - {"op": "add_edge", "from": "REQ-024-070", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-071", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-072", "verb": "applies to", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "REQ-024-072", "verb": "applies to", "to": "ENT-package.status"}
+  - {"op": "add_edge", "from": "REQ-024-073", "verb": "applies to", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "REQ-024-073", "verb": "applies to", "to": "ENT-package.name"}
+  - {"op": "add_edge", "from": "REQ-024-074", "verb": "applies to", "to": "ENT-package.usage_count"}
+  - {"op": "add_edge", "from": "REQ-024-075", "verb": "applies to", "to": "ENT-package.included_items_summary"}
+  - {"op": "add_edge", "from": "REQ-024-076", "verb": "applies to", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "REQ-024-077", "verb": "applies to", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "REQ-024-077", "verb": "applies to", "to": "ENT-package.standard_price"}
+  - {"op": "add_edge", "from": "REQ-024-078", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-078", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-079", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-024-079", "verb": "applies to", "to": "ENT-package.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-080", "verb": "applies to", "to": "ENT-treatment.video_url"}
+  - {"op": "add_edge", "from": "REQ-024-080", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-081", "verb": "applies to", "to": "ENT-treatment.description"}
+  - {"op": "add_edge", "from": "REQ-024-081", "verb": "applies to", "to": "ENT-treatment.technique_details"}
+  - {"op": "add_edge", "from": "REQ-024-081", "verb": "applies to", "to": "ENT-package.name"}
+  - {"op": "add_edge", "from": "REQ-024-081", "verb": "applies to", "to": "ENT-package.description"}
+  - {"op": "add_edge", "from": "REQ-024-082", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-024-082", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-083", "verb": "applies to", "to": "ENT-package"}
+  - {"op": "add_edge", "from": "REQ-024-084", "verb": "applies to", "to": "ENT-package"}
+  # decided by: Product Owner codes the PRD cites
+  - {"op": "add_edge", "from": "REQ-024-035", "verb": "decided by", "to": "SRC-PO-001-Q20"}
+  - {"op": "add_edge", "from": "REQ-024-007", "verb": "decided by", "to": "SRC-PO-001-D17"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "decided by", "to": "SRC-PO-001-D18"}
+  - {"op": "add_edge", "from": "REQ-024-011", "verb": "decided by", "to": "SRC-PO-001-M1"}
+  - {"op": "add_edge", "from": "REQ-024-074", "verb": "decided by", "to": "SRC-PO-001-M8"}
+  - {"op": "add_edge", "from": "REQ-024-008", "verb": "decided by", "to": "SRC-PO-001-M10"}
+  - {"op": "add_edge", "from": "REQ-024-030", "verb": "decided by", "to": "SRC-PO-001-M10"}
+  - {"op": "add_edge", "from": "REQ-024-071", "verb": "decided by", "to": "SRC-PO-001-M10"}

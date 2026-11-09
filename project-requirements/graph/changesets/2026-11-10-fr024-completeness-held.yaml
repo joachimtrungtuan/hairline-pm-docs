@@ -1,0 +1,631 @@
+reason: "FR-024 completeness fixes held for a user decision: System-performed Steps (no System Actor in the graph) and the Steps reachable only through them, with their next links. Apply after 2026-11-10-fr024-completeness-fixes.yaml."
+by: tester
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-003", "type": "Step", "title": "System displays the treatment creation form", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 3"}}
+  - {"op": "add_edge", "from": "STP-024-003", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-003", "verb": "on", "to": "SCR-024-02"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-004", "type": "Step", "title": "Admin enters name, type, description, technique specifications, recovery time and typical duration", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 4"}}
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "applies", "to": "REQ-024-046"}
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "applies", "to": "REQ-024-047"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-005", "type": "Step", "title": "Admin uploads an optional treatment video", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 5"}}
+  - {"op": "add_edge", "from": "STP-024-005", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-005", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-005", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-005", "verb": "applies", "to": "REQ-024-045"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-006", "type": "Step", "title": "Admin uploads optional treatment images", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 6"}}
+  - {"op": "add_edge", "from": "STP-024-006", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-006", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-006", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-006", "verb": "applies", "to": "REQ-024-045"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-007", "type": "Step", "title": "Admin uploads optional educational resources", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 7"}}
+  - {"op": "add_edge", "from": "STP-024-007", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-007", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-007", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-007", "verb": "applies", "to": "REQ-024-045"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-008", "type": "Step", "title": "Admin sets the treatment status Active or Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 8"}}
+  - {"op": "add_edge", "from": "STP-024-008", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-008", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-008", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-008", "verb": "applies", "to": "REQ-024-048"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-009", "type": "Step", "title": "Admin clicks Save Treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 9"}}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "applies", "to": "REQ-024-001"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-010", "type": "Step", "title": "System validates name uniqueness, required fields and file formats", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 10"}}
+  - {"op": "add_edge", "from": "STP-024-010", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-010", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-010", "verb": "applies", "to": "REQ-024-046"}
+  - {"op": "add_edge", "from": "STP-024-010", "verb": "applies", "to": "REQ-024-023"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-011", "type": "Step", "title": "System uploads media files to S-05 Media Storage Service", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 11"}}
+  - {"op": "add_edge", "from": "STP-024-011", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-011", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-011", "verb": "applies", "to": "REQ-024-027"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-012", "type": "Step", "title": "System generates CDN URLs for video and images", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 12"}}
+  - {"op": "add_edge", "from": "STP-024-012", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-012", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-012", "verb": "applies", "to": "REQ-024-028"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-013", "type": "Step", "title": "System saves the treatment record", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 13"}}
+  - {"op": "add_edge", "from": "STP-024-013", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-013", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-013", "verb": "applies", "to": "REQ-024-013"}
+  - {"op": "add_edge", "from": "STP-024-013", "verb": "applies", "to": "REQ-024-048"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-014", "type": "Step", "title": "System sends the new-treatment notification to all active providers", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 14"}}
+  - {"op": "add_edge", "from": "STP-024-014", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-014", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-014", "verb": "applies", "to": "REQ-024-041"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-015", "type": "Step", "title": "Providers receive the notification and can configure pricing for the new treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 15"}}
+  - {"op": "add_edge", "from": "STP-024-015", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-015", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-015", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-015", "verb": "applies", "to": "REQ-024-059"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-002", "verb": "next", "to": "STP-024-003"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-003", "verb": "next", "to": "STP-024-004"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-004", "verb": "next", "to": "STP-024-005"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-005", "verb": "next", "to": "STP-024-006"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-006", "verb": "next", "to": "STP-024-007"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-007", "verb": "next", "to": "STP-024-008"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-008", "verb": "next", "to": "STP-024-009"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "next", "to": "STP-024-010"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-010", "verb": "next", "to": "STP-024-011"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-011", "verb": "next", "to": "STP-024-012"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-012", "verb": "next", "to": "STP-024-013"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-013", "verb": "next", "to": "STP-024-014"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-014", "verb": "next", "to": "STP-024-015"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-024", "type": "Step", "title": "System displays the edit form with current values pre-filled", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-024", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-024", "verb": "on", "to": "SCR-024-02"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-025", "type": "Step", "title": "Admin modifies description, video, images or technique specifications", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-025", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-025", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-025", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-025", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-026", "type": "Step", "title": "Admin clicks Update Treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-026", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-026", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-026", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-026", "verb": "applies", "to": "REQ-024-002"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-027", "type": "Step", "title": "System creates a new version of the treatment record", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-027", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-027", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-027", "verb": "applies", "to": "REQ-024-002"}
+  - {"op": "add_edge", "from": "STP-024-027", "verb": "applies", "to": "REQ-024-013"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-028", "type": "Step", "title": "System updates CDN URLs if media changed", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-028", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-028", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-028", "verb": "applies", "to": "REQ-024-028"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-029", "type": "Step", "title": "System notifies providers who currently offer the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 9"}}
+  - {"op": "add_edge", "from": "STP-024-029", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-029", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-029", "verb": "applies", "to": "REQ-024-042"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-030", "type": "Step", "title": "Existing provider quotes using the treatment remain unchanged", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 10"}}
+  - {"op": "add_edge", "from": "STP-024-030", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-030", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-030", "verb": "applies", "to": "REQ-024-018"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-023", "verb": "next", "to": "STP-024-024"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-024", "verb": "next", "to": "STP-024-025"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-025", "verb": "next", "to": "STP-024-026"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-026", "verb": "next", "to": "STP-024-027"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-027", "verb": "next", "to": "STP-024-028"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-028", "verb": "next", "to": "STP-024-029"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-029", "verb": "next", "to": "STP-024-030"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-033", "type": "Step", "title": "System checks open quotes and open bookings that use the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-033", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-033", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-033", "verb": "applies", "to": "REQ-024-051"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-034", "type": "Step", "title": "System displays the warning with the provider and active quote counts", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-034", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-034", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-034", "verb": "applies", "to": "REQ-024-051"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-035", "type": "Step", "title": "Admin confirms deactivation", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-035", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-035", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-035", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-035", "verb": "applies", "to": "REQ-024-051"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-036", "type": "Step", "title": "System changes the treatment status to Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-036", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-036", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-036", "verb": "applies", "to": "REQ-024-003"}
+  - {"op": "add_edge", "from": "STP-024-036", "verb": "applies", "to": "REQ-024-051"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-037", "type": "Step", "title": "System prevents providers from selecting the treatment in new quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-037", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-037", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-037", "verb": "applies", "to": "REQ-024-052"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-038", "type": "Step", "title": "System notifies providers that the treatment has been deactivated", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-038", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-038", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-038", "verb": "applies", "to": "REQ-024-043"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-039", "type": "Step", "title": "Existing quotes and bookings using the treatment continue unaffected", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 9"}}
+  - {"op": "add_edge", "from": "STP-024-039", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-039", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-039", "verb": "applies", "to": "REQ-024-018"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "next", "to": "STP-024-033"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-033", "verb": "next", "to": "STP-024-034"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-034", "verb": "next", "to": "STP-024-035"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-035", "verb": "next", "to": "STP-024-036"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-036", "verb": "next", "to": "STP-024-037"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-037", "verb": "next", "to": "STP-024-038"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-038", "verb": "next", "to": "STP-024-039"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-042", "type": "Step", "title": "System displays the list of active treatments from the admin catalog", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-042", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-042", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-042", "verb": "applies", "to": "REQ-024-058"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-043", "type": "Step", "title": "Provider selects a treatment to configure", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-043", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-043", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-043", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-043", "verb": "applies", "to": "REQ-024-058"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-044", "type": "Step", "title": "Provider enters base price, price per graft, minimum and maximum graft count", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "applies", "to": "REQ-024-005"}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "applies", "to": "REQ-024-060"}
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "applies", "to": "REQ-024-032"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-045", "type": "Step", "title": "Provider sets the treatment status Offered or Not Offered", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "applies", "to": "REQ-024-006"}
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "applies", "to": "REQ-024-059"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-046", "type": "Step", "title": "Provider clicks Save Pricing", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "applies", "to": "REQ-024-005"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-047", "type": "Step", "title": "System validates the pricing", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-047", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-047", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-047", "verb": "applies", "to": "REQ-024-060"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-048", "type": "Step", "title": "System saves the provider-specific pricing configuration", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-048", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-048", "verb": "applies", "to": "REQ-024-016"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-049", "type": "Step", "title": "Treatment becomes available for the provider to select when creating quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 9"}}
+  - {"op": "add_edge", "from": "STP-024-049", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-049", "verb": "on", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "STP-024-049", "verb": "applies", "to": "REQ-024-059"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-041", "verb": "next", "to": "STP-024-042"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-042", "verb": "next", "to": "STP-024-043"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-043", "verb": "next", "to": "STP-024-044"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-044", "verb": "next", "to": "STP-024-045"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-045", "verb": "next", "to": "STP-024-046"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "next", "to": "STP-024-047"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-047", "verb": "next", "to": "STP-024-048"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-048", "verb": "next", "to": "STP-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-053", "type": "Step", "title": "System validates inputs", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-053", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-053", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-053", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-054", "type": "Step", "title": "System detects missing name, non-MP4 video, oversized image or overlong description", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-054", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-054", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-054", "verb": "applies", "to": "REQ-024-045"}
+  - {"op": "add_edge", "from": "STP-024-054", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-055", "type": "Step", "title": "System displays error messages next to the invalid fields", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-055", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-055", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-055", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-056", "type": "Step", "title": "Admin corrects the errors", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-056", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-056", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-056", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-056", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-057", "type": "Step", "title": "Admin resubmits the form", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-057", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-057", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-057", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-057", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-058", "type": "Step", "title": "System validates successfully and creates the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-058", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-058", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-058", "verb": "applies", "to": "REQ-024-046"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "next", "to": "STP-024-053"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-053", "verb": "next", "to": "STP-024-054"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-054", "verb": "next", "to": "STP-024-055"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-055", "verb": "next", "to": "STP-024-056"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-056", "verb": "next", "to": "STP-024-057"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-057", "verb": "next", "to": "STP-024-058"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-062", "type": "Step", "title": "Upload to S-05 Media Storage Service fails", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-024-062", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-062", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-062", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-063", "type": "Step", "title": "System retries the upload up to 3 times", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-063", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-063", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-063", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-064", "type": "Step", "title": "System displays the media upload failure error", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-064", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-064", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-064", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-065", "type": "Step", "title": "System saves the treatment record without media marked Pending Media Upload", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-065", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-065", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-065", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-066", "type": "Step", "title": "Admin retries the media upload separately", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-066", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-066", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-066", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-066", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-067", "type": "Step", "title": "System updates the treatment record once the upload succeeds", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-067", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-067", "verb": "on", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "STP-024-067", "verb": "applies", "to": "REQ-024-049"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-061", "verb": "next", "to": "STP-024-062"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-062", "verb": "next", "to": "STP-024-063"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-063", "verb": "next", "to": "STP-024-064"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-064", "verb": "next", "to": "STP-024-065"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-065", "verb": "next", "to": "STP-024-066"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-066", "verb": "next", "to": "STP-024-067"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-073", "type": "Step", "title": "System displays the package creation form", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 3"}}
+  - {"op": "add_edge", "from": "STP-024-073", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-073", "verb": "on", "to": "SCR-024-05"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-074", "type": "Step", "title": "Provider enters package name, description, duration and standard price", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 4"}}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "applies", "to": "REQ-024-065"}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "applies", "to": "REQ-024-032"}
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "applies", "to": "REQ-024-068"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-075", "type": "Step", "title": "Provider builds the included-items list", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 5"}}
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "applies", "to": "REQ-024-063"}
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-076", "type": "Step", "title": "Provider ticks the included travel services", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 6"}}
+  - {"op": "add_edge", "from": "STP-024-076", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-076", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-076", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-076", "verb": "applies", "to": "REQ-024-063"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-077", "type": "Step", "title": "Provider builds the day-by-day relative treatment plan", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 7"}}
+  - {"op": "add_edge", "from": "STP-024-077", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-077", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-077", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-077", "verb": "applies", "to": "REQ-024-064"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-078", "type": "Step", "title": "Provider uploads optional package images", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 8"}}
+  - {"op": "add_edge", "from": "STP-024-078", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-078", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-078", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-078", "verb": "applies", "to": "REQ-024-067"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-079", "type": "Step", "title": "Provider adds optional package terms and conditions", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 9"}}
+  - {"op": "add_edge", "from": "STP-024-079", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-079", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-079", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-079", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-080", "type": "Step", "title": "Provider sets the package status Active or Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 10"}}
+  - {"op": "add_edge", "from": "STP-024-080", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-080", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-080", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-080", "verb": "applies", "to": "REQ-024-007"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-081", "type": "Step", "title": "Provider clicks Save Package", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 11"}}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "applies", "to": "REQ-024-007"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-082", "type": "Step", "title": "System validates name, standard price, included items and plan days", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 12"}}
+  - {"op": "add_edge", "from": "STP-024-082", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-082", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-082", "verb": "applies", "to": "REQ-024-065"}
+  - {"op": "add_edge", "from": "STP-024-082", "verb": "applies", "to": "REQ-024-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-083", "type": "Step", "title": "System uploads images to S-05 Media Storage Service", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 13"}}
+  - {"op": "add_edge", "from": "STP-024-083", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-083", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-083", "verb": "applies", "to": "REQ-024-027"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-084", "type": "Step", "title": "System saves the package as version 1 linked to the provider account", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 14"}}
+  - {"op": "add_edge", "from": "STP-024-084", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-084", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-084", "verb": "applies", "to": "REQ-024-069"}
+  - {"op": "add_edge", "from": "STP-024-084", "verb": "applies", "to": "REQ-024-017"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-085", "type": "Step", "title": "System displays the success message Package created successfully", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 15"}}
+  - {"op": "add_edge", "from": "STP-024-085", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-085", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-085", "verb": "applies", "to": "REQ-024-044"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-086", "type": "Step", "title": "Package appears in the provider list and, when Active, is selectable during quote creation", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 16", "handoff_to": "FR-004: Main Flow, provider selects a treatment and one to five packages"}}
+  - {"op": "add_edge", "from": "STP-024-086", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-086", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-086", "verb": "applies", "to": "REQ-024-069"}
+  - {"op": "add_edge", "from": "STP-024-086", "verb": "applies", "to": "REQ-024-010"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-072", "verb": "next", "to": "STP-024-073"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-073", "verb": "next", "to": "STP-024-074"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-074", "verb": "next", "to": "STP-024-075"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-075", "verb": "next", "to": "STP-024-076"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-076", "verb": "next", "to": "STP-024-077"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-077", "verb": "next", "to": "STP-024-078"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-078", "verb": "next", "to": "STP-024-079"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-079", "verb": "next", "to": "STP-024-080"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-080", "verb": "next", "to": "STP-024-081"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "next", "to": "STP-024-082"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-082", "verb": "next", "to": "STP-024-083"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-083", "verb": "next", "to": "STP-024-084"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-084", "verb": "next", "to": "STP-024-085"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-085", "verb": "next", "to": "STP-024-086"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-094", "type": "Step", "title": "System displays the edit form with the current version values", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-094", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-094", "verb": "on", "to": "SCR-024-05"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-095", "type": "Step", "title": "Provider modifies package fields", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-095", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-095", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-095", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-095", "verb": "applies", "to": "REQ-024-008"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-096", "type": "Step", "title": "Provider clicks Update Package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-096", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-096", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-096", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-096", "verb": "applies", "to": "REQ-024-008"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-097", "type": "Step", "title": "System saves the changes as a new package version", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-097", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-097", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-097", "verb": "applies", "to": "REQ-024-008"}
+  - {"op": "add_edge", "from": "STP-024-097", "verb": "applies", "to": "REQ-024-014"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-098", "type": "Step", "title": "System makes the previous version read-only", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-098", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-098", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-098", "verb": "applies", "to": "REQ-024-008"}
+  - {"op": "add_edge", "from": "STP-024-098", "verb": "applies", "to": "REQ-024-014"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-099", "type": "Step", "title": "System leaves existing quotes unchanged", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 9"}}
+  - {"op": "add_edge", "from": "STP-024-099", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-099", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-099", "verb": "applies", "to": "REQ-024-008"}
+  - {"op": "add_edge", "from": "STP-024-099", "verb": "applies", "to": "REQ-024-018"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-100", "type": "Step", "title": "New quote options copy the latest package version", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 10"}}
+  - {"op": "add_edge", "from": "STP-024-100", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-100", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-100", "verb": "applies", "to": "REQ-024-014"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-093", "verb": "next", "to": "STP-024-094"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-094", "verb": "next", "to": "STP-024-095"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-095", "verb": "next", "to": "STP-024-096"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-096", "verb": "next", "to": "STP-024-097"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-097", "verb": "next", "to": "STP-024-098"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-098", "verb": "next", "to": "STP-024-099"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-099", "verb": "next", "to": "STP-024-100"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-103", "type": "Step", "title": "System counts open quotes containing an option copied from the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-103", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-103", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-103", "verb": "applies", "to": "REQ-024-074"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-104", "type": "Step", "title": "System displays the open-quotes warning", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-104", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-104", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-104", "verb": "applies", "to": "REQ-024-072"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-105", "type": "Step", "title": "Provider confirms deactivation", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-105", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-105", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-105", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-105", "verb": "applies", "to": "REQ-024-072"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-106", "type": "Step", "title": "System changes the package status to Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-106", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-106", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-106", "verb": "applies", "to": "REQ-024-009"}
+  - {"op": "add_edge", "from": "STP-024-106", "verb": "applies", "to": "REQ-024-072"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-107", "type": "Step", "title": "System prevents the package from being added to new quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-107", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-107", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-107", "verb": "applies", "to": "REQ-024-009"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-108", "type": "Step", "title": "Existing quote options copied from the package keep their own copy and remain valid", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 8"}}
+  - {"op": "add_edge", "from": "STP-024-108", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-108", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-108", "verb": "applies", "to": "REQ-024-018"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-102", "verb": "next", "to": "STP-024-103"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-103", "verb": "next", "to": "STP-024-104"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-104", "verb": "next", "to": "STP-024-105"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-105", "verb": "next", "to": "STP-024-106"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-106", "verb": "next", "to": "STP-024-107"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-107", "verb": "next", "to": "STP-024-108"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-113", "type": "Step", "title": "System creates a copy of the package with (Copy) appended to the name", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-113", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-113", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-113", "verb": "applies", "to": "REQ-024-073"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-114", "type": "Step", "title": "Provider modifies the cloned package name, duration and price", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-114", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-114", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-114", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-114", "verb": "applies", "to": "REQ-024-073"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-115", "type": "Step", "title": "Provider saves the cloned package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-115", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-115", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-115", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-115", "verb": "applies", "to": "REQ-024-073"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-116", "type": "Step", "title": "System creates a new package record", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-116", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-116", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-116", "verb": "applies", "to": "REQ-024-073"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-112", "verb": "next", "to": "STP-024-113"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-113", "verb": "next", "to": "STP-024-114"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-114", "verb": "next", "to": "STP-024-115"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-115", "verb": "next", "to": "STP-024-116"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-123", "type": "Step", "title": "System validates inputs", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 3"}}
+  - {"op": "add_edge", "from": "STP-024-123", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-123", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-123", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-124", "type": "Step", "title": "System displays error messages for the invalid fields", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 4"}}
+  - {"op": "add_edge", "from": "STP-024-124", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-124", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-124", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-125", "type": "Step", "title": "Provider corrects the errors", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 5"}}
+  - {"op": "add_edge", "from": "STP-024-125", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-125", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-125", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-125", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor (reachable only through a held System step)
+  - {"op": "add_node", "id": "STP-024-126", "type": "Step", "title": "Provider resubmits the form", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 6"}}
+  - {"op": "add_edge", "from": "STP-024-126", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-126", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-126", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-126", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-024-127", "type": "Step", "title": "System validates successfully and creates the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 7"}}
+  - {"op": "add_edge", "from": "STP-024-127", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-024-127", "verb": "on", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "STP-024-127", "verb": "applies", "to": "REQ-024-065"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "next", "to": "STP-024-123"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-123", "verb": "next", "to": "STP-024-124"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-124", "verb": "next", "to": "STP-024-125"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-125", "verb": "next", "to": "STP-024-126"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-024-126", "verb": "next", "to": "STP-024-127"}

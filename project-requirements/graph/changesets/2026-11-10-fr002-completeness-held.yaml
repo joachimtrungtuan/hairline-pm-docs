@@ -1,0 +1,163 @@
+reason: "FR-002 completeness held operations: the flow model (6 Flows, 21 Steps) for Workflows 1 to 3 and alternative flows A1, A2 and C1. System-performed steps wait on the System Actor decision (no Actor in the graph); admin configuration steps wait on stage placement (queue C48); the provider step is reachable only through held system steps. Apply after 2026-11-10-fr002-completeness-fixes.yaml; done by edges for system steps are added once the System Actor exists. See plans/reports/tester-261110-fr002-completeness.md."
+by: tester
+operations:
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-intake-processing", "type": "Flow", "title": "Workflow 1: Intake Processing (Engine Flow)", "attrs": {"kind": "main", "description": "Workflow 1: Intake Processing (Engine Flow)", "prd_ref": "Workflow 1"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-001", "type": "Step", "title": "FR-003 submits questionnaire responses (with templateVersion) and head scan media metadata", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 1 step 1", "handoff_from": "FR-003: Main Flow, patient submits the inquiry with questionnaire and head scan"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-012"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-038"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-002", "type": "Step", "title": "Engine validates completeness against the FR-025 template and the media constraints", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 1 step 2"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-001"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-011"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-032"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-033"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-034"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "applies", "to": "REQ-002-035"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-003", "type": "Step", "title": "Engine computes severity alerts and risk tags from the configured rules", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 1 step 3"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-003", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-003", "verb": "applies", "to": "REQ-002-002"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-004", "type": "Step", "title": "Engine persists the head scan media under the anonymized patient identifier and stores it", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 1 step 4"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-004", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-004", "verb": "applies", "to": "REQ-002-003"}
+  - {"op": "add_edge", "from": "STP-002-004", "verb": "applies", "to": "REQ-002-009"}
+  - {"op": "add_edge", "from": "STP-002-004", "verb": "applies", "to": "REQ-002-024"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-005", "type": "Step", "title": "Engine returns the normalized intake payload, alert tags and media URIs to FR-003", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 1 step 5", "handoff_to": "FR-003: Main Flow, the inquiry continues with the returned payload"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-002-004"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-002-005"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-002-007"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-002-008"}
+  - {"op": "add_edge", "from": "FLW-002-intake-processing", "verb": "starts at", "to": "STP-002-001"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "next", "to": "STP-002-002"}
+  - {"op": "add_edge", "from": "STP-002-002", "verb": "next", "to": "STP-002-003"}
+  - {"op": "add_edge", "from": "STP-002-003", "verb": "next", "to": "STP-002-004"}
+  - {"op": "add_edge", "from": "STP-002-004", "verb": "next", "to": "STP-002-005"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-media-validation-fails", "type": "Flow", "title": "Alternative flow A1: media validation fails", "attrs": {"kind": "alternative", "description": "Alternative flow A1: media validation fails", "prd_ref": "Alternative Flows A1"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-006", "type": "Step", "title": "Engine detects a validation failure on duration, size or quality", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "applies", "to": "REQ-002-033"}
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "applies", "to": "REQ-002-034"}
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "applies", "to": "REQ-002-035"}
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "applies", "to": "REQ-002-036"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-007", "type": "Step", "title": "Engine returns structured error codes with remediation guidance", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "applies", "to": "REQ-002-013"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "applies", "to": "REQ-002-036"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-008", "type": "Step", "title": "No artifacts are persisted; the caller (FR-003) receives the error and can retry", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A1 step 3", "handoff_to": "FR-003: Main Flow, the patient retakes or re-uploads the media"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-008", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-008", "verb": "applies", "to": "REQ-002-036"}
+  - {"op": "add_edge", "from": "FLW-002-media-validation-fails", "verb": "starts at", "to": "STP-002-006"}
+  - {"op": "add_edge", "from": "STP-002-006", "verb": "next", "to": "STP-002-007"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "next", "to": "STP-002-008"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-template-version-mismatch", "type": "Flow", "title": "Alternative flow A2: template version mismatch", "attrs": {"kind": "alternative", "description": "Alternative flow A2: template version mismatch", "prd_ref": "Alternative Flows A2"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-009", "type": "Step", "title": "Engine detects a templateVersion mismatch", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-009", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-009", "verb": "applies", "to": "REQ-002-037"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-010", "type": "Step", "title": "Engine records templateVersionUsed in the audit log", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-010", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-010", "verb": "applies", "to": "REQ-002-037"}
+  - {"op": "add_edge", "from": "STP-002-010", "verb": "applies", "to": "REQ-002-026"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-011", "type": "Step", "title": "Engine returns a policy-compliant response or requests resubmission per FR-025 rules", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-011", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-011", "verb": "applies", "to": "REQ-002-037"}
+  - {"op": "add_edge", "from": "FLW-002-template-version-mismatch", "verb": "starts at", "to": "STP-002-009"}
+  - {"op": "add_edge", "from": "STP-002-009", "verb": "next", "to": "STP-002-010"}
+  - {"op": "add_edge", "from": "STP-002-010", "verb": "next", "to": "STP-002-011"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-distribution-consumption", "type": "Flow", "title": "Workflow 2: Distribution Consumption (Read Flow)", "attrs": {"kind": "main", "description": "Workflow 2: Distribution Consumption (Read Flow)", "prd_ref": "Workflow 2"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-012", "type": "Step", "title": "FR-003 retrieves the engine-normalized payload and media URIs", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 2 step 1"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-012", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-012", "verb": "applies", "to": "REQ-002-039"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-013", "type": "Step", "title": "FR-003 distributes the payload and media to providers", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 2 step 2"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-013", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-013", "verb": "applies", "to": "REQ-002-039"}
+  - {"op": "add_edge", "from": "STP-002-013", "verb": "applies", "to": "REQ-002-016"}
+  # waits on: no System Actor (cascade: reachable only through a held system step, else L14)
+  - {"op": "add_node", "id": "STP-002-014", "type": "Step", "title": "Provider consumes the read-only normalized payload and media", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 2 step 3", "handoff_to": "STP-003-027"}}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "applies", "to": "REQ-002-016"}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "applies", "to": "REQ-002-018"}
+  - {"op": "add_edge", "from": "FLW-002-distribution-consumption", "verb": "starts at", "to": "STP-002-012"}
+  - {"op": "add_edge", "from": "STP-002-012", "verb": "next", "to": "STP-002-013"}
+  - {"op": "add_edge", "from": "STP-002-013", "verb": "next", "to": "STP-002-014"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-template-management", "type": "Flow", "title": "Workflow 3: Admin Template Management (Management)", "attrs": {"kind": "main", "description": "Workflow 3: Admin Template Management (Management)", "prd_ref": "Workflow 3"}}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-015", "type": "Step", "title": "Admin opens Medical Questionnaire Templates in settings", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 1"}}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "applies", "to": "REQ-002-019"}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-016", "type": "Step", "title": "Admin creates or edits templates: sections, fields, required or optional, help text and risk-tag rules", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 2"}}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "applies", "to": "REQ-002-019"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "applies", "to": "REQ-002-040"}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-017", "type": "Step", "title": "Admin publishes a template version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 3", "handoff_to": "FR-025: Workflow 1, Admin clicks Publish / Activate on the set"}}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "applies", "to": "REQ-002-022"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "applies", "to": "REQ-002-040"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-018", "type": "Step", "title": "System versions templates and applies them to new inquiries only", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 4"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "applies", "to": "REQ-002-040"}
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "applies", "to": "REQ-002-041"}
+  - {"op": "add_edge", "from": "FLW-002-template-management", "verb": "starts at", "to": "STP-002-015"}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "next", "to": "STP-002-016"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "next", "to": "STP-002-017"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "next", "to": "STP-002-018"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  - {"op": "add_node", "id": "FLW-002-template-deprecation", "type": "Flow", "title": "Alternative flow C1: admin deprecates a template", "attrs": {"kind": "alternative", "description": "Alternative flow C1: admin deprecates a template", "prd_ref": "Alternative Flows C1"}}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-019", "type": "Step", "title": "Admin deprecates a template version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 1"}}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "applies", "to": "REQ-002-040"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-020", "type": "Step", "title": "System marks the template deprecated but preserves it for existing inquiries", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 2"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-002-021", "type": "Step", "title": "New inquiries automatically use the latest published version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 3"}}
+  # done by: add when the System Actor exists
+  - {"op": "add_edge", "from": "STP-002-021", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-021", "verb": "applies", "to": "REQ-002-041"}
+  - {"op": "add_edge", "from": "FLW-002-template-deprecation", "verb": "starts at", "to": "STP-002-019"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "next", "to": "STP-002-020"}
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "next", "to": "STP-002-021"}
