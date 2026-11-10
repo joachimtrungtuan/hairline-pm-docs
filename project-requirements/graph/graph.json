@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T14:17:33Z",
+  "generated_at": "2026-11-10T14:25:22Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -40488,7 +40488,7 @@
       "owner_fr": "FR-001",
       "title": "Reset code expires after 15 minutes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "The reset code expires after 15 minutes (configurable via Admin Settings A-09).",
         "rationale": "prd.md line 543 (Screen 11 Reset Code Entry, OTP Code Input validation cell, last clause). Added beside REQ-001-147 under decision D52; no live or held Rule states this expiry."
@@ -63750,7 +63750,7 @@
       "owner_fr": "FR-017",
       "title": "Supported currency pairs are configurable in FR-029",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Supported currency pairs are dynamically configurable in FR-029.",
         "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1218), last clause (FR-029 / A-09). Split from REQ-017-168 under decision D52."
@@ -164783,6 +164783,12 @@
     {
       "from_id": "REQ-001-157",
       "verb": "applies to",
+      "to_id": "ENT-otp-code.expires_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-157",
+      "verb": "applies to",
       "to_id": "SCR-001-09",
       "attrs": {}
     },
@@ -208434,6 +208440,12 @@
       "from_id": "REQ-017-171",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-171",
+      "verb": "applies to",
+      "to_id": "ENT-currency-pair",
       "attrs": {}
     },
     {
@@ -368242,6 +368254,34 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-142422-9ce6dba2",
+      "at": "2026-11-10T14:24:22.641183+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-017 Rule data link released from 2026-11-10-fr017-completeness-held.yaml after the user decided the split edge placement (decision D52): REQ-017-171 applies to ENT-currency-pair, not to the copied target ENT-currency-rate-lock. Apply after 2026-11-10-fr017-rule-wording.yaml.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-017-171"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261110-142422-060b30ef",
+      "at": "2026-11-10T14:24:22.543522+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-001 Rule data link released from 2026-11-10-fr001-completeness-held.yaml after the user decided the split edge placement (decision D52): REQ-001-157 applies to ENT-otp-code.expires_at, not to the copied target ENT-otp-code.code. Apply after 2026-11-10-fr001-rule-wording.yaml.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-001-157"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261110-141631-f3d862e8",
       "at": "2026-11-10T14:16:31.633126+00:00",
