@@ -1,0 +1,19 @@
+reason: "FR-019 Rules released from 2026-11-10-fr019-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-104", "type": "Rule", "owner_fr": "FR-019", "title": "Bulk Revoke of selected codes requires a mandatory reason", "attrs": {"statement": "Bulk Revoke of selected codes requires a mandatory reason.", "rationale": "prd.md line 418 (Screen 5 data fields: Bulk Revoke, validation Mandatory reason)."}}
+  - {"op": "add_edge", "from": "REQ-019-104", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-104", "verb": "applies to", "to": "SCR-019-05"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-105", "type": "Rule", "owner_fr": "FR-019", "title": "The Code-only application mode requires a Code", "attrs": {"statement": "An Application Mode of Code-only requires the Code field to be filled.", "rationale": "prd.md line 590 (Screen 9 fields: Code-only requires Code field)."}}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies to", "to": "SCR-019-09"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-106", "type": "Rule", "owner_fr": "FR-019", "title": "The adoption decision comment is optional and at most 500 characters", "attrs": {"statement": "The deciding actor's comment on an adoption is optional and at most 500 characters.", "rationale": "prd.md line 344 (Screen 3 adoption columns: Comment, 500 characters)."}}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies to", "to": "ENT-promotion-adoption.comment"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-019-107", "type": "Rule", "owner_fr": "FR-019", "title": "Hub search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching", "attrs": {"statement": "Hub code or keyword search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching.", "rationale": "prd.md line 208 (Screen 1 data fields: Code / keyword search)."}}
+  - {"op": "add_edge", "from": "REQ-019-107", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-107", "verb": "applies to", "to": "SCR-019-01"}

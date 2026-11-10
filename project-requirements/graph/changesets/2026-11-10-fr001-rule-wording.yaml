@@ -1,0 +1,124 @@
+reason: "FR-001 Rules released from 2026-11-10-fr001-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-144", "type": "Rule", "owner_fr": "FR-001", "title": "Terms and Privacy Policy links keep the name form state", "attrs": {"statement": "The Terms and Conditions and Privacy Policy links on the name screen open the latest published documents (FR-027) and do not disrupt the form state.", "rationale": "Proposed from prd.md line 359-360 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-144", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-144", "verb": "applies to", "to": "SCR-001-01"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-145", "type": "Rule", "owner_fr": "FR-001", "title": "Account creation legal footer is static text", "attrs": {"statement": "The Terms of Service and Privacy Policy reference on the account creation screen is static informational text and is not interactive.", "rationale": "Proposed from prd.md line 385 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-145", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-145", "verb": "applies to", "to": "SCR-001-02"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-146", "type": "Rule", "owner_fr": "FR-001", "title": "Verification code input is numeric and needs all six digits", "attrs": {"statement": "The verification code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.", "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies at", "to": "STG-patient-01-registered"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies to", "to": "SCR-001-03"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-146", "verb": "applies to", "to": "ENT-otp-code.code"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-147", "type": "Rule", "owner_fr": "FR-001", "title": "Reset code input is numeric and needs all six digits", "attrs": {"statement": "The reset code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.", "rationale": "Proposed from prd.md line 543-544 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies to", "to": "SCR-001-09"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-147", "verb": "applies to", "to": "ENT-otp-code.code"}
+  # new Rule REQ-001-157: split from REQ-001-147 (decision D52), PRD line 543
+  - {"op": "add_node", "id": "REQ-001-157", "type": "Rule", "owner_fr": "FR-001", "title": "Reset code expires after 15 minutes", "attrs": {"statement": "The reset code expires after 15 minutes (configurable via Admin Settings A-09).", "rationale": "prd.md line 543 (Screen 11 Reset Code Entry, OTP Code Input validation cell, last clause). Added beside REQ-001-147 under decision D52; no live or held Rule states this expiry."}}
+  # applies at STG-patient-03-active: copied from REQ-001-147
+  - {"op": "add_edge", "from": "REQ-001-157", "verb": "applies at", "to": "STG-patient-03-active"}
+  # applies to SCR-001-09: copied from REQ-001-147
+  - {"op": "add_edge", "from": "REQ-001-157", "verb": "applies to", "to": "SCR-001-09"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-001-148", "type": "Rule", "owner_fr": "FR-001", "title": "Login button disabled until both fields have input", "attrs": {"statement": "The Login button is disabled until both fields have input; it submits credentials.", "rationale": "prd.md line 500 (Screen 9 Login, Login Button validation cell). The other half of the proposal (line 498) is REQ-001-158 (decision D52 split)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-148", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-148", "verb": "applies to", "to": "SCR-001-07"}
+  # new Rule REQ-001-158: split from REQ-001-148 (decision D52), PRD line 498
+  - {"op": "add_node", "id": "REQ-001-158", "type": "Rule", "owner_fr": "FR-001", "title": "Login password is masked with a show/hide toggle", "attrs": {"statement": "The Password field on the Login screen is masked by default; a show/hide toggle is available.", "rationale": "prd.md line 498 (Screen 9 Login, Password validation cell). Split from REQ-001-148 under decision D52."}}
+  # applies at STG-patient-03-active: copied from REQ-001-148
+  - {"op": "add_edge", "from": "REQ-001-158", "verb": "applies at", "to": "STG-patient-03-active"}
+  # applies to SCR-001-07: copied from REQ-001-148
+  - {"op": "add_edge", "from": "REQ-001-158", "verb": "applies to", "to": "SCR-001-07"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-149", "type": "Rule", "owner_fr": "FR-001", "title": "Send code disabled until the email is valid", "attrs": {"statement": "The Send code button is disabled until the email field has valid input.", "rationale": "Proposed from prd.md line 523 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-149", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-149", "verb": "applies to", "to": "SCR-001-08"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-001-150", "type": "Rule", "owner_fr": "FR-001", "title": "Save and Login disabled until both passwords are valid and match", "attrs": {"statement": "The Save and Login button is disabled until both fields are valid and matching; it creates a new session on success.", "rationale": "prd.md line 567 (Screen 12 Password Reset, Save and Login Button validation cell). The other half of the proposal (line 573) is REQ-001-159 (decision D52 split)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-150", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-150", "verb": "applies to", "to": "SCR-001-10"}
+  # new Rule REQ-001-159: split from REQ-001-150 (decision D52), PRD line 573
+  - {"op": "add_node", "id": "REQ-001-159", "type": "Rule", "owner_fr": "FR-001", "title": "Password Reset screen has a password visibility toggle", "attrs": {"statement": "On the Password Reset screen, a password visibility toggle is available.", "rationale": "prd.md line 573 (Screen 12 Password Reset, Business Rules). Split from REQ-001-150 under decision D52."}}
+  # applies at STG-patient-03-active: copied from REQ-001-150
+  - {"op": "add_edge", "from": "REQ-001-159", "verb": "applies at", "to": "STG-patient-03-active"}
+  # applies to SCR-001-10: copied from REQ-001-150
+  - {"op": "add_edge", "from": "REQ-001-159", "verb": "applies to", "to": "SCR-001-10"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-151", "type": "Rule", "owner_fr": "FR-001", "title": "Payment method menu item opens payment method management", "attrs": {"statement": "The Payment method item on the profile overview opens payment method management.", "rationale": "Proposed from prd.md line 589 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-151", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-151", "verb": "applies to", "to": "SCR-001-11"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-001-152", "type": "Rule", "owner_fr": "FR-001", "title": "Settings navigation sections are static", "attrs": {"statement": "On the Settings Main Screen (Screen 15), navigation sections are static items — always visible in the same order.", "rationale": "prd.md line 655 (Screen 15 Settings Main, Business Rules). The other half of the proposal (line 656) is REQ-001-160 (decision D52 split)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-152", "verb": "applies at", "to": "STG-patient-03-active"}
+  # new Rule REQ-001-160: split from REQ-001-152 (decision D52), PRD line 656
+  - {"op": "add_node", "id": "REQ-001-160", "type": "Rule", "owner_fr": "FR-001", "title": "Settings navigation rows open sub-screens and keep back navigation", "attrs": {"statement": "On the Settings Main Screen (Screen 15), tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 15.", "rationale": "prd.md line 656 (Screen 15 Settings Main, Business Rules). Split from REQ-001-152 under decision D52."}}
+  # applies at STG-patient-03-active: copied from REQ-001-152
+  - {"op": "add_edge", "from": "REQ-001-160", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-001-153", "type": "Rule", "owner_fr": "FR-001", "title": "Edit Profile save disabled until required fields are valid", "attrs": {"statement": "On the Edit Profile screen, the Save and update button is disabled until all required fields are valid; it persists changes.", "rationale": "prd.md line 631 (Screen 14 Edit Profile, Save and Update Button validation cell). The Change Password half of the proposal (line 838) is REQ-001-161 (decision D52 split)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-153", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-153", "verb": "applies to", "to": "SCR-001-12"}
+  # new Rule REQ-001-161: split from REQ-001-153 (decision D52), PRD line 838
+  - {"op": "add_node", "id": "REQ-001-161", "type": "Rule", "owner_fr": "FR-001", "title": "Change Password save disabled until required fields are present", "attrs": {"statement": "On the Change Password screen, the Save button is disabled until all required fields are present.", "rationale": "prd.md line 838 (Screen 17 Change Password, Save Button validation cell). Split from REQ-001-153 under decision D52."}}
+  # applies at STG-patient-03-active: copied from REQ-001-153
+  - {"op": "add_edge", "from": "REQ-001-161", "verb": "applies at", "to": "STG-patient-03-active"}
+  # applies to SCR-001-17: moved from REQ-001-153 to its split half REQ-001-161 (decision D52)
+  - {"op": "add_edge", "from": "REQ-001-161", "verb": "applies to", "to": "SCR-001-17"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-154", "type": "Rule", "owner_fr": "FR-001", "title": "Notification toggle shows save status", "attrs": {"statement": "After a notification toggle change the screen briefly shows Saving or Saved feedback.", "rationale": "Proposed from prd.md line 684 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-154", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-154", "verb": "applies to", "to": "SCR-001-13"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-001-155", "type": "Rule", "owner_fr": "FR-001", "title": "Create account on the profile screen needs all required fields", "attrs": {"statement": "The Create account button on the profile creation screen is disabled until all required fields are complete.", "rationale": "Proposed from prd.md line 434 (table cells, not a PRD sentence)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-155", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-155", "verb": "applies to", "to": "SCR-001-04"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-001-156", "type": "Rule", "owner_fr": "FR-001", "title": "Request deletion re-verifies identity when the last authentication is stale", "attrs": {"statement": "The Request deletion button triggers identity re-verification if the last authentication was more than 5 minutes ago, otherwise shows the confirmation modal.", "rationale": "prd.md line 807 (Screen 16 Delete Account, Request Deletion Button validation cell; line 809 states the same threshold). The modal half (line 808) is REQ-001-162 (decision D52 split)."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies at", "to": "STG-patient-03-active"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies to", "to": "SCR-001-16"}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-001-156", "verb": "applies to", "to": "SCR-001-18"}
+  # new Rule REQ-001-162: split from REQ-001-156 (decision D52), PRD line 808
+  - {"op": "add_node", "id": "REQ-001-162", "type": "Rule", "owner_fr": "FR-001", "title": "Deletion confirmation modal: Confirm submits, Cancel returns", "attrs": {"statement": "The modal's Confirm submits the request and Cancel returns to the screen.", "rationale": "prd.md line 808 (Screen 16 Delete Account, Confirmation Modal validation cell). Split from REQ-001-156 under decision D52."}}
+  # applies at STG-patient-03-active: copied from REQ-001-156
+  - {"op": "add_edge", "from": "REQ-001-162", "verb": "applies at", "to": "STG-patient-03-active"}
+  # applies to SCR-001-16: copied from REQ-001-156
+  - {"op": "add_edge", "from": "REQ-001-162", "verb": "applies to", "to": "SCR-001-16"}

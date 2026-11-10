@@ -1,0 +1,15 @@
+reason: "FR-013 Rules released from 2026-11-10-fr013-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-013-076", "type": "Rule", "owner_fr": "FR-013", "title": "Takedown request queue filter", "attrs": {"statement": "The takedown request queue is filterable by status and date.", "rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 436); wording awaits user review."}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies at", "to": "STG-main-09-review-close", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.status", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.created_at", "attrs": {}}
+  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}

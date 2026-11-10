@@ -1,9 +1,6 @@
 reason: "FR-030 completeness fixes held: Steps the PRD says the system performs (no System Actor exists), every Step reachable only through them, the email-bounce flow (it starts at a system Step), the next links that touch them, and the out-of-scope Rule whose statement joins five PRD bullets. Apply only after the decisions named per operation. See the report, Needs user decision."
 by: tester
-operations:
+operations: []
   # 2026-11-10 D44: 242 ops that waited only on the system Actor left this file (242 moved to 2026-11-10-fr030-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D45/D46: 37 ops left this file (moved to 2026-11-10-fr030-external-steps.yaml): the external-service or payment-capture Steps and the ops that waited only on them; the ops below still wait on their own reason.
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_node", "id": "REQ-030-213", "type": "Rule", "owner_fr": "FR-030", "title": "Communication structure: out of scope", "attrs": {"statement": "Out of scope: real-time chat/messaging between users (handled by P-06: Communication); video consultation notifications (covered under aftercare-specific notifications); third-party notification platform integrations beyond email, SMS, push (for example WhatsApp, Telegram); user-to-user notification forwarding or sharing; notification content personalization based on AI/ML", "rationale": "prd.md lines 83-88 (Communication Structure, Out of Scope): five bullets joined into one statement for the proposed Rule."}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-030-213", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  # 2026-11-10 D52: 2 ops left this file (moved to 2026-11-10-fr030-rule-wording.yaml, with 8 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.

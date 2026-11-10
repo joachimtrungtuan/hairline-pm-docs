@@ -1,16 +1,5 @@
 reason: "FR-013 completeness fixes held: system-performed Steps (no System Actor in the graph), human Steps reachable only through them, the flagged-content Flow, every link touching them, and the takedown queue filter Rule that waits on wording review."
 by: tester
-operations:
+operations: []
   # 2026-11-10 D44: 114 ops that waited only on the system Actor left this file (114 moved to 2026-11-10-fr013-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_node", "id": "REQ-013-076", "type": "Rule", "owner_fr": "FR-013", "title": "Takedown request queue filter", "attrs": {"statement": "The takedown request queue is filterable by status and date.", "rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 436); wording awaits user review."}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies at", "to": "STG-main-09-review-close", "attrs": {}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "SCR-013-09", "attrs": {}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.status", "attrs": {}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ENT-takedown-request.created_at", "attrs": {}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_edge", "from": "REQ-013-076", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  # 2026-11-10 D52: 6 ops left this file (moved to 2026-11-10-fr013-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.

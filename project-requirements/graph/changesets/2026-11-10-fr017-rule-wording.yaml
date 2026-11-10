@@ -1,0 +1,63 @@
+reason: "FR-017 Rules released from 2026-11-10-fr017-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md)."
+by: fullstack-developer
+operations:
+# --- seven new Rules REQ-017-164 to 170 and their edges ---
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-164", "type": "Rule", "owner_fr": "FR-017", "title": "Active Currency Alerts tile opens the filtered alert list", "attrs": {"statement": "Clicking the Active Currency Alerts figure on the dashboard opens the notification list filtered to unresolved currency alerts; each alert links to the Currency Alert Detail Modal (Screen 8); the badge is hidden when the count is zero.", "rationale": "Screen 1, Active Currency Alerts widget (PRD line 327)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-164", "verb": "applies at", "to": "STG-main-05-payment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-164", "verb": "applies to", "to": "SCR-017-01"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-164", "verb": "applies to", "to": "ENT-financial-report.active_currency_alerts"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-165", "type": "Rule", "owner_fr": "FR-017", "title": "Retry Payout modal shows prior failure reason and payout readiness", "attrs": {"statement": "The Retry Payout modal shows the prior failure reason and the current payout readiness state of the statement before the admin confirms the retry.", "rationale": "Screen 3, Retry Payout modal (PRD lines 525-534)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-165", "verb": "applies at", "to": "STG-main-06-treatment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-165", "verb": "applies to", "to": "SCR-017-03"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-165", "verb": "applies to", "to": "ENT-provider-payout"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-166", "type": "Rule", "owner_fr": "FR-017", "title": "Invoice PDF template is fixed in code", "attrs": {"statement": "The invoice PDF template structure (branding and layout) is fixed in the codebase and is not editable by admins.", "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1220)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-166", "verb": "applies at", "to": "STG-main-05-payment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-166", "verb": "applies to", "to": "ENT-patient-invoice"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-166", "verb": "applies to", "to": "SCR-017-05"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-167", "type": "Rule", "owner_fr": "FR-017", "title": "Commission formulas are fixed in code", "attrs": {"statement": "The Percentage and Flat Rate commission calculation formulas are fixed in business logic and are not editable by admins; the active model and value come from the effective provider commission configuration resolved from FR-015 and FR-029.", "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1217)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-167", "verb": "applies at", "to": "STG-main-06-treatment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-167", "verb": "applies to", "to": "ENT-provider-payout"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-017-168", "type": "Rule", "owner_fr": "FR-017", "title": "Exchange API source is set in environment variables", "attrs": {"statement": "The currency exchange API source (xe.com or equivalent) is configured in environment variables and is not editable by admins; USD is the fixed base currency.", "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1218), first two clauses. The currency-pairs clause is REQ-017-171 (decision D52 split)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-168", "verb": "applies at", "to": "STG-main-05-payment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-168", "verb": "applies to", "to": "ENT-currency-rate-lock"}
+  # new Rule REQ-017-171: split from REQ-017-168 (decision D52), PRD line 1218
+  - {"op": "add_node", "id": "REQ-017-171", "type": "Rule", "owner_fr": "FR-017", "title": "Supported currency pairs are configurable in FR-029", "attrs": {"statement": "Supported currency pairs are dynamically configurable in FR-029.", "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1218), last clause (FR-029 / A-09). Split from REQ-017-168 under decision D52."}}
+  # applies at STG-main-05-payment: copied from REQ-017-168
+  - {"op": "add_edge", "from": "REQ-017-171", "verb": "applies at", "to": "STG-main-05-payment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-169", "type": "Rule", "owner_fr": "FR-017", "title": "Stripe connection parameters live in the secrets vault", "attrs": {"statement": "Stripe account connection parameters (API keys) are managed through the secrets vault and are not editable by admins.", "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1219)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-169", "verb": "applies at", "to": "STG-main-06-treatment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-169", "verb": "applies to", "to": "ENT-provider-payout"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-169", "verb": "applies to", "to": "ENT-patient-invoice"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_node", "id": "REQ-017-170", "type": "Rule", "owner_fr": "FR-017", "title": "Failed Stripe transfers are retried up to 3 times", "attrs": {"statement": "A failed Stripe transfer for a provider or affiliate payout is retried up to 3 times; if all retries fail the payout is flagged for manual review and the payout failed event is triggered.", "rationale": "Implementation Notes, Integration 1: Stripe Transfers API (PRD line 1443)."}}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-170", "verb": "applies at", "to": "STG-main-06-treatment"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-170", "verb": "applies to", "to": "ENT-provider-payout"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-170", "verb": "applies to", "to": "ENT-affiliate-commission"}
+# waits on: new Rule wording review (paraphrase, not verbatim PRD)
+  - {"op": "add_edge", "from": "REQ-017-170", "verb": "applies to", "to": "EVT-billing-payout-failed"}

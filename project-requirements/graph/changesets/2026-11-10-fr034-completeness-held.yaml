@@ -4,12 +4,9 @@ reason: "FR-034 completeness held operations: system-performed Steps and the hum
 by: tester
 operations:
   # 2026-11-10 D44: 448 ops that waited only on the system Actor left this file (448 moved to 2026-11-10-fr034-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # 2026-11-10 D52: 5 ops left this file (moved to 2026-11-10-fr034-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
+  # 2026-11-10 D52: REQ-034-161, REQ-034-162, REQ-034-163 below still wait on the wording review: the review list did not include them, so their wording is not decided.
   # waits on: new Rule wording review (paraphrase, not verbatim PRD)
-  - {"op": "add_node", "id": "REQ-034-160", "type": "Rule", "owner_fr": "FR-034", "title": "Case list truncates long case titles", "attrs": {"statement": "Truncated with ellipsis if >50 chars; full title shown on hover", "rationale": "Screen 1, Table Column 3 (PRD line 371)."}}
-  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies at", "to": "STG-patient-03-active"}
-  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies at", "to": "STG-provider-03-active"}
-  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies to", "to": "SCR-034-01"}
-  - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies to", "to": "ENT-support-case.title"}
   - {"op": "add_node", "id": "REQ-034-161", "type": "Rule", "owner_fr": "FR-034", "title": "Send Resolution Email defaults to checked", "attrs": {"statement": "Send Resolution Email: default checked", "rationale": "Screen 4 (PRD line 572)."}}
   - {"op": "add_edge", "from": "REQ-034-161", "verb": "applies at", "to": "STG-patient-03-active"}
   - {"op": "add_edge", "from": "REQ-034-161", "verb": "applies at", "to": "STG-provider-03-active"}

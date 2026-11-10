@@ -2,16 +2,7 @@ reason: "FR-021 completeness fixes held for a user decision: system-performed St
 by: tester
 operations:
   # 2026-11-10 D44: 153 ops that waited only on the system Actor left this file (153 moved to 2026-11-10-fr021-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # 2026-11-10 D52: 8 ops left this file (moved to 2026-11-10-fr021-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
   # waits on: no System Actor / emits edges also wait on review-queue C41 (which stages emit the missing-translation event)
   - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-missing-translation-logged"}
   - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-missing-translation-logged"}
-  # waits on: no System Actor / emits edges also wait on review-queue C41 (which stages emit the missing-translation event)
-  # REQ-021-116 and REQ-021-117 wait on: new Rule wording review (paraphrase, not verbatim PRD) - sentence fragments from Screen 2 and Screen 3 validation cells
-  - {"op": "add_node", "id": "REQ-021-116", "type": "Rule", "title": "Provider dashboard language preference persists before re-render", "owner_fr": "FR-021", "attrs": {"statement": "Must persist preference before refresh/re-render", "rationale": "PRD Screen 2 Save/apply action validation (prd.md line 269)."}}
-  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies to", "to": "SCR-021-02"}
-  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies to", "to": "ACT-provider"}
-  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies at", "to": "STG-provider-03-active"}
-  - {"op": "add_node", "id": "REQ-021-117", "type": "Rule", "title": "Admin language preference persists on apply", "owner_fr": "FR-021", "attrs": {"statement": "Must persist preference", "rationale": "PRD Screen 3 Apply action validation (prd.md line 299)."}}
-  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies to", "to": "SCR-021-03"}
-  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies to", "to": "ACT-platform-admin"}
-  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies at", "to": "STG-main-01-inquiry"}

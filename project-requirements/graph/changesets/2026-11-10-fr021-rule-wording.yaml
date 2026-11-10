@@ -1,0 +1,14 @@
+reason: "FR-021 Rules released from 2026-11-10-fr021-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md)."
+by: fullstack-developer
+operations:
+  # REQ-021-116 and REQ-021-117 wait on: new Rule wording review (paraphrase, not verbatim PRD) - sentence fragments from Screen 2 and Screen 3 validation cells
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-021-116", "type": "Rule", "title": "Provider dashboard language preference persists before re-render", "owner_fr": "FR-021", "attrs": {"statement": "The save/apply action applies the selected language to the dashboard session and profile preference and must persist the preference before refresh/re-render.", "rationale": "PRD Screen 2 Save/apply action validation (prd.md line 269)."}}
+  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies to", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-021-116", "verb": "applies at", "to": "STG-provider-03-active"}
+  # statement set to the approved wording (decision D52)
+  - {"op": "add_node", "id": "REQ-021-117", "type": "Rule", "title": "Admin language preference persists on apply", "owner_fr": "FR-021", "attrs": {"statement": "The apply action applies the selected language to the admin session and preference and must persist the preference.", "rationale": "PRD Screen 3 Apply action validation (prd.md line 299)."}}
+  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies to", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-117", "verb": "applies at", "to": "STG-main-01-inquiry"}

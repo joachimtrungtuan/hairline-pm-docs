@@ -3,11 +3,6 @@ by: tester
 operations:
   # 2026-11-10 D44: 193 ops that waited only on the system Actor left this file (193 moved to 2026-11-10-fr035-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D47/D48: 5 ops left this file (moved to 2026-11-10-fr035-doer-decisions.yaml): the conflict or doer-reading Steps and the ops that waited only on them; the ops below still wait on their own reason.
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD); decision 8
-  - {"op": "add_node", "id": "REQ-035-077", "type": "Rule", "owner_fr": "FR-035", "title": "My Support Tickets empty state", "attrs": {"statement": "Empty State shown when the patient has no tickets (or none match the filter): \"No support tickets yet. Need help? Tap 'Create New Ticket'.\"", "rationale": "Screen 3 Empty State field (PRD line 366)."}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD); decision 8
-  - {"op": "add_edge", "from": "REQ-035-077", "verb": "applies at", "to": "STG-patient-03-active", "attrs": {}}
-  # waits on: new Rule wording review (paraphrase, not verbatim PRD); decision 8
-  - {"op": "add_edge", "from": "REQ-035-077", "verb": "applies to", "to": "SCR-035-03", "attrs": {}}
+  # 2026-11-10 D52: 3 ops left this file (moved to 2026-11-10-fr035-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
   # waits on: support-case field conflicts with FR-034 (category required flag; decision 6)
   - {"op": "update_field", "id": "ENT-support-case.category", "required": true}
