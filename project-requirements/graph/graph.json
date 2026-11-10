@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T15:48:18Z",
+  "generated_at": "2026-11-10T15:56:53Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -19643,7 +19643,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One code of a promotion program: text, binding to an open channel, affiliate, segment or patient, and redemption status. Stored in the promotion_codes table. PRD line 948. in_progress means a use is reserved by an accepted subquote and the first payment has not yet succeeded; it is the code-level view of the same moment as Application state APPLIED.",
         "table": "promotion_codes"
@@ -19726,7 +19726,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion program",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "The single entity for all three promotion program types (admin-via-provider, provider self-created, Hairline-funded and direct-issued). Stored in the promotion_programs table; the legacy discounts table does not hold programs. PRD line 947.",
         "table": "promotion_programs"
@@ -50400,7 +50400,7 @@
       "owner_fr": "FR-010",
       "title": "Admin Change Treatment Details screen from Confirmed onward",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST give admins the Change Treatment Details screen (Screen 9) for any booking from `Confirmed` onward that is not `Cancelled`, with mandatory reason, a before and after confirmation step, a Treatment Detail Change record, an audit entry, and the `treatment.plan_changed` event; the clinic form follows the same rules but closes at Check In",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 955."
@@ -50916,7 +50916,7 @@
       "owner_fr": "FR-010",
       "title": "Admin treatment-detail change available from Confirmed, never while Accepted, Expired or Cancelled",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The admin may use this screen at any time from `Confirmed` onward, including after Check In, during `Aftercare`, and after `Completed`; it is never available while the booking is `Accepted`, `Payment Window Expired`, or `Cancelled`.",
         "rationale": "Applies on screen SCR-010-09. Archived FR-010 PRD baseline, lines 542."
@@ -59442,7 +59442,7 @@
       "owner_fr": "FR-016",
       "title": "Allow admins to reschedule bookings only through the FR-006 Change",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST allow admins to reschedule bookings only through the FR-006 Change Appointment action with justification, notifying both patient and provider through `booking.rescheduled`",
         "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1113)."
@@ -59682,7 +59682,7 @@
       "owner_fr": "FR-016",
       "title": "List patient booking cancellation and change requests raised through",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST list patient booking cancellation and change requests raised through Contact Support after acceptance on Screen 9, open the matching FR-006 action for each, and record a Resolved or Declined outcome with reason and audit entry",
         "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1120). Restated: prd.md line 264: \"System links the outcome to the request, marks it Resolved or Declined, and logs the action on Screen 7\""
@@ -156825,6 +156825,18 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-promotion-code",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q38",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-promotion-program",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q38",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-promotion-program.funding_model",
       "verb": "calculated by",
       "to_id": "REQ-019-050",
@@ -182937,6 +182949,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-010-030",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q44",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-010-031",
       "verb": "applies at",
       "to_id": "STG-main-06-treatment",
@@ -183498,6 +183516,12 @@
       "from_id": "REQ-010-073",
       "verb": "applies to",
       "to_id": "SCR-010-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-073",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q44",
       "attrs": {}
     },
     {
@@ -202065,6 +202089,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-016-010",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q42",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-016-011",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -202518,6 +202548,12 @@
       "from_id": "REQ-016-031",
       "verb": "applies to",
       "to_id": "SCR-016-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-031",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q37",
       "attrs": {}
     },
     {
@@ -368680,6 +368716,51 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-155504-a6b05d2b",
+      "at": "2026-11-10T15:55:04.226545+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-019 decided by links released from 2026-11-10-fr019-completeness-held.yaml after the user rulings of 2026-11-10 23:05 on the links D50 kept held (repoint to the better-fitting decision code where the text matches; Entity links where the code decides its storage). Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-promotion-code",
+        "ENT-promotion-program"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-155504-3c26509d",
+      "at": "2026-11-10T15:55:04.121448+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-016 decided by links released from 2026-11-10-fr016-completeness-held.yaml after the user rulings of 2026-11-10 23:05 on the links D50 kept held (repoint to the better-fitting decision code where the text matches; Entity links where the code decides its storage). Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-016-010",
+        "REQ-016-031"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-155504-9fe7311b",
+      "at": "2026-11-10T15:55:04.013423+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-010 decided by links released from 2026-11-10-fr010-completeness-held.yaml after the user rulings of 2026-11-10 23:05 on the links D50 kept held (repoint to the better-fitting decision code where the text matches; Entity links where the code decides its storage). Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-010-030",
+        "REQ-010-073"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261110-154713-e8cfa278",
       "at": "2026-11-10T15:47:13.040351+00:00",
