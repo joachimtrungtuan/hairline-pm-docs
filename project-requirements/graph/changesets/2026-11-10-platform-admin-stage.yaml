@@ -1,0 +1,8 @@
+# The platform administration timeline (D49): admin settings and configuration Steps belong to no patient-journey
+# Stage. Timeline 'platform-admin' exists from schema version 9. One Stage, so no follows edge; no standalone entry
+# and no link to another timeline, as for the account timelines. No 'acts in' edges here: they are added per FR
+# with the Steps placed at the Stage.
+reason: "Add STG-admin-01-configuration, the one Stage of the new platform-admin timeline (decision D49)"
+by: fullstack-developer
+operations:
+  - {"op": "add_node", "id": "STG-admin-01-configuration", "type": "Stage", "title": "Configuration", "attrs": {"timeline": "platform-admin", "sequence": 1, "description": "Platform admin configures the settings that apply across the platform, outside any patient journey."}}

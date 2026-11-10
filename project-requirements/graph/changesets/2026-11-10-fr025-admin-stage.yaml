@@ -1,0 +1,306 @@
+reason: "FR-025 Steps released from 2026-11-10-fr025-completeness-held.yaml after decision D49 (admin settings and configuration Steps are at STG-admin-01-configuration, the platform-admin timeline; their at ops are rewritten from the placeholder Stage), with the ops held only because one of them was held. Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md)."
+by: fullstack-developer
+operations:
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-001", "type": "Step", "title": "Admin opens the Questionnaire Catalog", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 (Primary Flow) entry"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-002", "type": "Step", "title": "Admin creates a new set (name, context type, category, description, tags)", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Create new set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-003", "type": "Step", "title": "Admin works on the set in Set Details", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Admin works on set in Screen 2"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-004", "type": "Step", "title": "Admin adds a question and selects a system-defined question type", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Add question"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-005", "type": "Step", "title": "Admin configures question text, help text and type-specific content", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: configure text, help text and type-specific content"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-006", "type": "Step", "title": "Admin sets the severity flag and the Yes-answer detail prompt", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Inquiry or Multi-Context severity fields"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-007", "type": "Step", "title": "Admin sets appearance overrides in the Patient App and Provider App and saves the question", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: appearance overrides and save"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-008", "type": "Step", "title": "Admin reorders questions by drag-and-drop", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Reorder questions"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-009", "type": "Step", "title": "Admin previews the set as patient and provider view", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Preview set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-010", "type": "Step", "title": "Admin clicks Publish / Activate on the set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Publish"}}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-025-011", "type": "Step", "title": "Admin sees the set published and visible in the catalog", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: set published and visible in catalog"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-012", "type": "Step", "title": "Admin edits a published set; a new Draft version is created and the Active version stays unchanged", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 alternative flow A1"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-013", "type": "Step", "title": "Admin deletes a question; it is soft-deleted and historical responses are preserved", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 alternative flow A2"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-014", "type": "Step", "title": "Admin duplicates an existing set into an independent Draft copy", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 alternative flow A3"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-020", "type": "Step", "title": "Admin edits a question in an Inquiry or Multi-Context set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 2 flow diagram: start"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "STP-025-021", "type": "Step", "title": "Admin edits a question of a published set; a new Draft version is created and the Active version keeps serving inquiries", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 2 alternative flow B1"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-set-management", "type": "Flow", "title": "Workflow 1: Questionnaire Set Management (Primary Flow)", "attrs": {"kind": "main", "description": "Workflow 1: Questionnaire Set Management (Primary Flow)", "prd_ref": "Workflow 1"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-edit-published-set", "type": "Flow", "title": "Workflow 1 alternative flow A1: admin edits a published set", "attrs": {"kind": "alternative", "description": "Workflow 1 alternative flow A1: admin edits a published set", "prd_ref": "Workflow 1 A1"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-delete-question", "type": "Flow", "title": "Workflow 1 alternative flow A2: admin deletes a question", "attrs": {"kind": "alternative", "description": "Workflow 1 alternative flow A2: admin deletes a question", "prd_ref": "Workflow 1 A2"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-duplicate-set", "type": "Flow", "title": "Workflow 1 alternative flow A3: admin duplicates an existing set", "attrs": {"kind": "alternative", "description": "Workflow 1 alternative flow A3: admin duplicates an existing set", "prd_ref": "Workflow 1 A3"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-severity-management", "type": "Flow", "title": "Workflow 2: Severity Management (Inquiry Context Only)", "attrs": {"kind": "main", "description": "Workflow 2: Severity Management (Inquiry Context Only)", "prd_ref": "Workflow 2"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_node", "id": "FLW-025-severity-published-set-edit", "type": "Flow", "title": "Workflow 2 alternative flow B1: question edited in a published set", "attrs": {"kind": "alternative", "description": "Workflow 2 alternative flow B1: question edited in a published set", "prd_ref": "Workflow 2 B1"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "on", "to": "SCR-025-01"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "applies", "to": "REQ-025-054"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "on", "to": "SCR-025-01"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "applies", "to": "REQ-025-003"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "applies", "to": "REQ-025-005"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "applies", "to": "REQ-025-025"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "applies", "to": "REQ-025-026"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "on", "to": "SCR-025-02"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "applies", "to": "REQ-025-007"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "applies", "to": "REQ-025-009"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "applies", "to": "REQ-025-033"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "applies", "to": "REQ-025-010"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "applies", "to": "REQ-025-011"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "applies", "to": "REQ-025-014"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "applies", "to": "REQ-025-020"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "applies", "to": "REQ-025-021"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "applies", "to": "REQ-025-022"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "applies", "to": "REQ-025-012"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "applies", "to": "REQ-025-013"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "applies", "to": "REQ-025-017"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-007", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-007", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-007", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-007", "verb": "applies", "to": "REQ-025-023"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "on", "to": "SCR-025-02"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "applies", "to": "REQ-025-007"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "applies", "to": "REQ-025-009"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "on", "to": "SCR-025-06"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "applies", "to": "REQ-025-074"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "applies", "to": "REQ-025-075"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "applies", "to": "REQ-025-076"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "on", "to": "SCR-025-02"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-006"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-013"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-014"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-024"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-025"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-031"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-034"}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "on", "to": "SCR-025-01"}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-031"}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-049"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "on", "to": "SCR-025-02"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "applies", "to": "REQ-025-032"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "applies", "to": "REQ-025-033"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-013", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-013", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-013", "verb": "on", "to": "SCR-025-02"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-013", "verb": "applies", "to": "REQ-025-044"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-014", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-014", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-014", "verb": "on", "to": "SCR-025-01"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-014", "verb": "applies", "to": "REQ-025-008"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "applies", "to": "REQ-025-012"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "applies", "to": "REQ-025-017"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-021", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-025-021", "verb": "at", "to": "STG-admin-01-configuration"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-021", "verb": "on", "to": "SCR-025-03"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-021", "verb": "applies", "to": "REQ-025-032"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "next", "to": "STP-025-002", "attrs": {"label": "Create new set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "next", "to": "STP-025-014", "attrs": {"label": "Duplicate existing set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-001", "verb": "next", "to": "STP-025-012", "attrs": {"label": "Edit a published set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-014", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-012", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "next", "to": "STP-025-004", "attrs": {"label": "Add question"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "next", "to": "STP-025-013", "attrs": {"label": "Delete question"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "next", "to": "STP-025-008", "attrs": {"label": "Reorder questions"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "next", "to": "STP-025-009", "attrs": {"label": "Preview set"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-003", "verb": "next", "to": "STP-025-010", "attrs": {"label": "Publish"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-004", "verb": "next", "to": "STP-025-005", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "next", "to": "STP-025-006", "attrs": {"label": "Inquiry or Multi-Context set", "condition": "REQ-025-012"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-005", "verb": "next", "to": "STP-025-007", "attrs": {"label": "Aftercare-only set", "condition": "REQ-025-016"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-006", "verb": "next", "to": "STP-025-007", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-007", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-008", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-009", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-013", "verb": "next", "to": "STP-025-003", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps); item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "next", "to": "STP-025-011", "attrs": {"label": "All questions complete", "condition": "REQ-025-024"}}
+  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
+  # waits on: endpoint STP-025-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-025-011", "verb": "next", "to": "STP-025-040", "attrs": {"label": "Designate for Inquiry (separate action)"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "next", "to": "STP-025-021", "attrs": {"label": "Set is published", "condition": "REQ-025-032"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-020", "verb": "next", "to": "STP-025-006", "attrs": {"label": "Set is still a Draft"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-021", "verb": "next", "to": "STP-025-006", "attrs": {}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "STP-025-041", "verb": "next", "to": "STP-025-010", "attrs": {"label": "Admin publishes the set first"}}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-set-management", "verb": "starts at", "to": "STP-025-001"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-edit-published-set", "verb": "starts at", "to": "STP-025-012"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-delete-question", "verb": "starts at", "to": "STP-025-013"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-duplicate-set", "verb": "starts at", "to": "STP-025-014"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-severity-management", "verb": "starts at", "to": "STP-025-020"}
+  # waits on item 7 (queue C48: stage placement of admin-configuration steps)
+  - {"op": "add_edge", "from": "FLW-025-severity-published-set-edit", "verb": "starts at", "to": "STP-025-021"}

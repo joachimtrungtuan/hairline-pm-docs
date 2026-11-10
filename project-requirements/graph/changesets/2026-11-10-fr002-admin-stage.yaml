@@ -1,0 +1,86 @@
+reason: "FR-002 Steps released from 2026-11-10-fr002-completeness-held.yaml after decision D49 (admin settings and configuration Steps are at STG-admin-01-configuration, the platform-admin timeline; their at ops are rewritten from the placeholder Stage), with the ops held only because one of them was held. Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md)."
+by: fullstack-developer
+operations:
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-002-template-management", "type": "Flow", "title": "Workflow 3: Admin Template Management (Management)", "attrs": {"kind": "main", "description": "Workflow 3: Admin Template Management (Management)", "prd_ref": "Workflow 3"}}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-015", "type": "Step", "title": "Admin opens Medical Questionnaire Templates in settings", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 1"}}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "done by", "to": "ACT-platform-admin"}
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "applies", "to": "REQ-002-019"}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-016", "type": "Step", "title": "Admin creates or edits templates: sections, fields, required or optional, help text and risk-tag rules", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 2"}}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "done by", "to": "ACT-platform-admin"}
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "applies", "to": "REQ-002-019"}
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "applies", "to": "REQ-002-040"}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-017", "type": "Step", "title": "Admin publishes a template version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 3", "handoff_to": "FR-025: Workflow 1, Admin clicks Publish / Activate on the set"}}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "done by", "to": "ACT-platform-admin"}
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "applies", "to": "REQ-002-022"}
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "applies", "to": "REQ-002-040"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-002-018", "type": "Step", "title": "System versions templates and applies them to new inquiries only", "owner_fr": "FR-002", "attrs": {"prd_ref": "Workflow 3 step 4"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # done by: add when the System Actor exists
+  # waits on: endpoint STP-002-018 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "applies", "to": "REQ-002-040"}
+  - {"op": "add_edge", "from": "STP-002-018", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-002-015 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-002-template-management", "verb": "starts at", "to": "STP-002-015"}
+  - {"op": "add_edge", "from": "STP-002-015", "verb": "next", "to": "STP-002-016"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-002-016 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-016", "verb": "next", "to": "STP-002-017"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-002-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-017", "verb": "next", "to": "STP-002-018"}
+  # waits on: the held Steps of this flow (a Flow whose start Step is held is held whole)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-002-template-deprecation", "type": "Flow", "title": "Alternative flow C1: admin deprecates a template", "attrs": {"kind": "alternative", "description": "Alternative flow C1: admin deprecates a template", "prd_ref": "Alternative Flows C1"}}
+  # waits on: stage placement of admin-configuration steps (queue C48; FR-025 decision 7); the PRD names no stage
+  - {"op": "add_node", "id": "STP-002-019", "type": "Step", "title": "Admin deprecates a template version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 1"}}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "done by", "to": "ACT-platform-admin"}
+  # at: STG-admin-01-configuration replaces the placeholder STG-main-01-inquiry (decision D49: admin settings Steps belong to the platform-admin timeline)
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "applies", "to": "REQ-002-040"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-002-020", "type": "Step", "title": "System marks the template deprecated but preserves it for existing inquiries", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 2"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # done by: add when the System Actor exists
+  # waits on: endpoint STP-002-020 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-002-021", "type": "Step", "title": "New inquiries automatically use the latest published version", "owner_fr": "FR-002", "attrs": {"prd_ref": "Alternative Flow C1 step 3"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-002-021", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # done by: add when the System Actor exists
+  # waits on: endpoint STP-002-021 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-021", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-002-021", "verb": "applies", "to": "REQ-002-041"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-002-019 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-002-template-deprecation", "verb": "starts at", "to": "STP-002-019"}
+  - {"op": "add_edge", "from": "STP-002-019", "verb": "next", "to": "STP-002-020"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-002-020 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-002-020", "verb": "next", "to": "STP-002-021"}
+  # acts in: the doers at the Stages of their released or moved Steps (lint L16)
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "acts in", "to": "STG-admin-01-configuration"}
