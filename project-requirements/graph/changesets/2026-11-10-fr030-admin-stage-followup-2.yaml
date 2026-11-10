@@ -1,0 +1,6 @@
+reason: "D49 follow-up 2 (user ruling 2026-11-10 evening): move STP-030-036 from the placeholder STG-main-01-inquiry to STG-admin-01-configuration; the doer ACT-system already acts in Configuration. No other Step moves. Apply after 2026-11-10-fr030-admin-stage-followup.yaml (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up 2)."
+by: fullstack-developer
+operations:
+  # at: 1 Steps move from STG-main-01-inquiry to STG-admin-01-configuration (D49 follow-up 2)
+  - {"op": "add_edge", "from": "STP-030-036", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-036", "verb": "at", "to": "STG-main-01-inquiry"}

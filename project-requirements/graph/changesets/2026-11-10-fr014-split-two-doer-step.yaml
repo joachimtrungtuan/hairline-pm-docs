@@ -1,0 +1,12 @@
+reason: "User ruling 2026-11-10 evening: STP-014-014 had two doers (ACT-provider and ACT-platform-admin); split it into one Step per doer. STP-014-014 keeps the provider doer and is retitled; the new Step STP-014-018 takes the admin doer with the same owner_fr, attrs and Stage and copies of every other outgoing edge, and the Flow that starts at STP-014-014 also starts at STP-014-018 (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up 2)."
+by: fullstack-developer
+operations:
+  # STP-014-014 keeps the provider doer
+  - {"op": "update_node", "id": "STP-014-014", "title": "Provider clicks a chart element to open the filtered operational list"}
+  - {"op": "remove_edge", "from": "STP-014-014", "verb": "done by", "to": "ACT-platform-admin"}
+  # STP-014-018: the admin Step
+  - {"op": "add_node", "id": "STP-014-018", "type": "Step", "title": "Admin clicks a chart element to open the filtered operational list", "owner_fr": "FR-014", "attrs": {"prd_ref": "Alternative Flow A1", "handoff_to": "Operational modules: Inquiries, Quotes, Bookings, Payments, Schedule (filtered list)"}}
+  - {"op": "add_edge", "from": "STP-014-018", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-014-018", "verb": "applies", "to": "REQ-014-145"}
+  - {"op": "add_edge", "from": "STP-014-018", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "FLW-014-drill-down-from-chart", "verb": "starts at", "to": "STP-014-018"}
