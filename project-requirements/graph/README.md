@@ -13,6 +13,7 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/migrate_schema_v6.py`: moves a version 5 `graph.db` to schema version 6 (see "Schema version 6" below).
 - `scripts/migrate_schema_v7.py`: moves a version 6 `graph.db` to schema version 7 (see "Schema version 7" below).
 - `scripts/migrate_schema_v8.py`: moves a version 7 `graph.db` to schema version 8 (see "Schema version 8" below).
+- `scripts/migrate_schema_v9.py`: moves a version 8 `graph.db` to schema version 9 (see "Schema version 9" below).
 - `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
@@ -175,6 +176,16 @@ As in version 7, only `PRAGMA user_version` changes. The migration checks that t
 
 ```bash
 /usr/bin/python3 scripts/migrate_schema_v8.py      # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+## Schema version 9
+
+Version 9 (D49, applied 2026-11-10) adds the value `platform-admin` to the `timeline` enum: platform administration, outside every patient journey. Its one Stage, `STG-admin-01-configuration` ("Configuration", sequence 1), holds the admin settings and configuration Steps, which no PRD places at a lifecycle stage. Before version 9 those Steps sat at a journey Stage (`STG-main-01-inquiry` or `STG-provider-03-active`) only as a placeholder. Timelines are now `main`, `aftercare`, `monitoring`, `provider-account`, `patient-account` and `platform-admin`. The timeline links to no other timeline and has no standalone entry, so lint L08 does not ask it for an `enters from` or `joins` edge, as for the account timelines.
+
+`timeline` lives only in the JSON attrs of Stage nodes, so, as in versions 7 and 8, only `PRAGMA user_version` changes. The migration checks that the DB's DDL equals what `init_db.py` writes for the version 9 schema, backs up `graph.db`, and sets `PRAGMA user_version` to 9:
+
+```bash
+/usr/bin/python3 scripts/migrate_schema_v9.py      # backs up graph.db to backups/ first; --db PATH for another file
 ```
 
 ## Run the tests

@@ -2,7 +2,7 @@
 # Changing node types, verbs or enum values is a schema migration: back up graph.db first.
 
 # Schema version, stored in graph.db as PRAGMA user_version.
-version: 8
+version: 9
 
 # Closed value lists. Attribute specs below may name one of these as their type.
 enums:
@@ -19,8 +19,9 @@ enums:
     - inherited from another FR
     - default
     - session
-  # Timelines that Stages belong to: the treatment case plus the parallel timelines.
-  timeline: [main, aftercare, monitoring, provider-account, patient-account]
+  # Timelines that Stages belong to: the treatment case plus the parallel timelines. 'platform-admin' is
+  # platform administration, outside every patient journey: admin settings and configuration Steps.
+  timeline: [main, aftercare, monitoring, provider-account, patient-account, platform-admin]
   # Which side of the platform an Actor works on: Hairline staff, a clinic, or the patient. The group
   # 'system' is the platform itself, acting for steps it performs automatically. The group 'external'
   # is a service outside Hairline that performs a step itself (Stripe, the email provider, the rate source).
