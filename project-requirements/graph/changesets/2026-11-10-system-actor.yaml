@@ -1,0 +1,6 @@
+# One system Actor for the steps the platform performs by itself (D44, option A). Group 'system' exists from
+# schema version 7. No 'acts in' edges here: they are added per FR when the held system Steps are applied.
+reason: "Add ACT-system, the Hairline platform acting automatically, in the new actor group system"
+by: fullstack-developer
+operations:
+  - {"op": "add_node", "id": "ACT-system", "type": "Actor", "title": "Hairline system", "attrs": {"group": "system", "description": "The Hairline platform acting automatically, for steps the PRDs attribute to \"System\"."}}

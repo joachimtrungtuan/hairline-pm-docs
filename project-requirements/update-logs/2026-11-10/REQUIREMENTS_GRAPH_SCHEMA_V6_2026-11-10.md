@@ -34,3 +34,21 @@ The graph can now hold the order of steps in a flow, not only the rules. Schema 
 ## Next
 
 The 34 remaining completeness checks run as D37 review step 1 under checklist 1.3, building each FR's Steps and Flows.
+
+## Addendum: schema v7, system Actor (same day, D44)
+
+The user chose one system actor (option A in D44). Steps the platform performs by itself had no Actor and sat in the held change-sets; they can now be `done by` `ACT-system`. This change only prepares the ground.
+
+| Item | Change |
+|---|---|
+| `graph/schema.yaml` | Version 7; `system` added to the `actor_group` enum (the platform itself, acting for automatic steps) |
+| `graph/scripts/migrate_schema_v7.py` | New. `actor_group` is stored only in Actor attrs, so no table changes: it checks the DDL equals the version 7 DDL, backs up, and sets `user_version` 7 |
+| `graph/scripts/test_dedup.py` | Five migration tests added (224 tests pass, was 219); the v5 and v6 migration tests now derive their old schemas from a v6 schema |
+| `graph/README.md` | "Schema version 7" section and script entry |
+| `graph/changesets/2026-11-10-system-actor.yaml` | Adds node `ACT-system` (Actor, group `system`); no `acts in` edges, they are added per FR later |
+| `graph/graph.db`, `graph/graph.json` | Migrated and re-exported (9143 nodes); backup `graph/backups/graph-20261110-121140.db` (git-ignored) |
+
+Lint is unchanged at 4,365 findings (L10 4,151, L12 180, L18 34), checked on a copy of the DB first and again on the real one. No Rule was changed. No script or viewer code assumed three groups.
+
+Still open with the user: whether external services (payment gateway, email and SMS providers) count as the system. Steps attributed to an external service stay held. The held change-sets were not touched.
+

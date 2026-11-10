@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T19:40:59Z",
-  "schema_version": 6,
+  "generated_at": "2026-11-10T05:11:40Z",
+  "schema_version": 7,
   "nodes": [
     {
       "id": "ACT-admin-invitee",
@@ -144,6 +144,18 @@
       "attrs": {
         "group": "admin",
         "description": "Admin user with the Super Admin role: full system access, invites admin team members, assigns roles and configures role permissions (FR-031)."
+      }
+    },
+    {
+      "id": "ACT-system",
+      "type": "Actor",
+      "owner_fr": null,
+      "title": "Hairline system",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "group": "system",
+        "description": "The Hairline platform acting automatically, for steps the PRDs attribute to \"System\"."
       }
     },
     {
@@ -296321,6 +296333,20 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-051140-ff20aba3",
+      "at": "2026-11-10T05:11:40.574984+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "Add ACT-system, the Hairline platform acting automatically, in the new actor group system",
+      "source_id": null,
+      "nodes_added": [
+        "ACT-system"
+      ],
+      "nodes_updated": [],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 5
+    },
     {
       "id": "cs-20261109-194059-ed77e291",
       "at": "2026-11-09T19:40:59.616723+00:00",
