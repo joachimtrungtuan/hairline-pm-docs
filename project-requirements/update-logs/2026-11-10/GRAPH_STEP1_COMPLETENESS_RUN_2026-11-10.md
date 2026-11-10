@@ -141,3 +141,27 @@ D52 settled the wording of the 31 Rules held for the new Rule wording review (FR
 - **Still held: 948 ops** (unchanged; no held file changed).
 - **Backup and lint.** Backup `graph/backups/graph-20261110-223436.db` (git-ignored). Lint went from 4,449 to 4,450 (L10 4,179, L12 184, L18 87): one new finding, L18:STP-014-018#handoff_to, because the new Step carries the same open hand-off as STP-014-014; none resolved and no L14 to L19 finding other than that L18. All 234 tests passed, and `graph.json` was re-exported.
 - **Report:** `plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md`, Follow-up 2 section (Hairline root).
+
+## Allowed-value list (enum) rulings, applied 2026-11-10 night
+
+- **Rulings applied (18 ops, one change-set per owning FR, `graph/changesets/2026-11-10-frNNN-enum-decisions.yaml`).**
+  - FR-001: `ENT-patient.account_status` is Active, Suspended, Deactivated (sort order 0, 1, 2); `inactive` and `pending_verification` were retired.
+  - FR-004: `ENT-quote.cancellation_provenance` adds InquiryCancelled ("Inquiry cancelled") and OtherQuoteAccepted ("Other quote accepted"), 4 values in total.
+  - FR-006 (field owner; ruled as the FR-007 booking payment status question): `ENT-booking.payment_status` is unpaid, deposit_only, installments_active, full_paid; `overdue` was retired because Overdue is a separate flag. No flag field was added, because how the flag is stored is not yet ruled.
+  - FR-007B: `ENT-installment-plan.status` is active, completed, defaulted, canceled (`overdue` retired, same flag ruling, no flag field added). `ENT-installment-payment.status` is scheduled, paid, failed, retried, overdue, cancelled (`retrying` retired).
+  - FR-011: `ENT-aftercare-request.payment_status` changes from text to an enum with Paid, Pending, Failed. These are the 4 held ops, released unchanged; the required flag stays optional.
+  - FR-015: `ENT-provider.payout_frequency` is weekly, twice_monthly, monthly (`2x_a_month` retired).
+  - FR-017: on `ENT-provider-payout.payout_frequency`, `2x_a_month` is replaced by `twice_monthly` (label "2x a Month", sort order 1).
+  - FR-034: `ENT-support-case-timeline-event.event_type` adds case_escalated, notification_sent, notification_failed and admin_deactivated (sort order 13 to 16), 17 values in total.
+  - No graph change, by ruling: FR-018 `ENT-affiliate-discount-code.status`, FR-007 `ENT-payout.status` (keeps On Hold), FR-031 `ENT-admin-user-account.status` and `invitation_status`.
+- **References to the retired values.** None in a held op, an edge, another enum list on the same field or a field default. The Rules REQ-015-044 and REQ-015-101 name the label "2x a Month", which stays with `twice_monthly`. The field descriptions of `ENT-installment-plan.status` and `ENT-installment-payment.status` still describe the earlier mixed PRD lists; they were left unchanged.
+- **PRD lines to correct (not edited).**
+  - FR-001 `prd.md` line 910 (Screen 19 badge lists Active, Inactive, Pending Verification).
+  - FR-007 `prd.md` line 475 (Screen 5 lists Overdue as a payment status).
+  - FR-007B `prd.md` lines 288, 300, 324 and 405 (plan status screens list Overdue as a status).
+  - FR-018 `prd.md` line 682 (lists usage-limit-reached as a status colour).
+  - FR-031 `prd.md` line 352 ("Pending Invitation"), line 1236 ("Pending Activation") and line 1351 ("Delivery Failed").
+- **Open question.** How the Overdue flag is stored for bookings and installment plans (new field, calculated value, or neither) is not ruled; no flag field was added.
+- **Still held: 944 ops** (948 before). The FR-011 held file now has no ops and carries a dated note.
+- **Backup and lint.** Backup `graph/backups/graph-20261110-224712.db` (git-ignored). Lint is unchanged at 4,450 (L10 4,179, L12 184, L18 87), with no new or resolved finding. All 234 tests passed, and `graph.json` was re-exported.
+- **Report:** `plans/reports/fullstack-developer-261110-2300-enum-decisions-apply.md` (Hairline root).
