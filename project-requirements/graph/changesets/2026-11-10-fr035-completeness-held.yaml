@@ -2,22 +2,7 @@ reason: "FR-035 completeness fixes held: system-performed Steps (no System Actor
 by: tester
 operations:
   # 2026-11-10 D44: 193 ops that waited only on the system Actor left this file (193 moved to 2026-11-10-fr035-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
-  # waits on: no System Actor
-  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
-  - {"op": "add_node", "id": "STP-035-057", "type": "Step", "owner_fr": "FR-035", "title": "Admin receives the support.case_user_reply notification", "attrs": {"prd_ref": "Alternative Flow A5 step 7", "handoff_to": "FR-020: support.case_user_reply notification"}}
-  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
-  # waits on: no System Actor
-  # waits on: endpoint STP-035-057 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-035-057", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
-  # waits on: no System Actor
-  # waits on: endpoint STP-035-057 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-035-057", "verb": "applies", "to": "REQ-035-019", "attrs": {}}
-  # waits on: no System Actor
-  # waits on: endpoint STP-035-057 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-035-057", "verb": "applies", "to": "REQ-035-065", "attrs": {}}
-  # waits on: no System Actor (reachable only through a held Step)
-  # waits on: endpoint STP-035-057 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-035-056", "verb": "next", "to": "STP-035-057", "attrs": {}}
+  # 2026-11-10 D47/D48: 5 ops left this file (moved to 2026-11-10-fr035-doer-decisions.yaml): the conflict or doer-reading Steps and the ops that waited only on them; the ops below still wait on their own reason.
   # waits on: new Rule wording review (paraphrase, not verbatim PRD); decision 8
   - {"op": "add_node", "id": "REQ-035-077", "type": "Rule", "owner_fr": "FR-035", "title": "My Support Tickets empty state", "attrs": {"statement": "Empty State shown when the patient has no tickets (or none match the filter): \"No support tickets yet. Need help? Tap 'Create New Ticket'.\"", "rationale": "Screen 3 Empty State field (PRD line 366)."}}
   # waits on: new Rule wording review (paraphrase, not verbatim PRD); decision 8

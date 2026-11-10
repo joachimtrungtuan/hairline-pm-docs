@@ -1,0 +1,843 @@
+reason: "FR-015 Steps released from 2026-11-10-fr015-completeness-held.yaml after decisions D47 (system Steps that carried a human done by are done by ACT-system; STP-003-015 is split into a system Step and the patient Step STP-003-087) and D48 (doer-reading Steps), with the ops held only because one of them was held. Apply after the earlier 2026-11-10 files of the FR; apply the doer-decisions files in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-003", "type": "Step", "title": "System shows the Provider Creation Form", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-004", "type": "Step", "title": "Admin enters provider basic information", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 4"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-005", "type": "Step", "title": "Admin enters professional details", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-006", "type": "Step", "title": "Admin enters clinic information", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 6"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-007", "type": "Step", "title": "Admin uploads required documents", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 7"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-008", "type": "Step", "title": "Admin configures commission", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 8"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-009", "type": "Step", "title": "Admin reviews the summary", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 9"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-010", "type": "Step", "title": "Admin clicks Create Provider", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 10"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-011", "type": "Step", "title": "System validates every required field", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 11"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-012", "type": "Step", "title": "System creates the Active provider with password_set false", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 12"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-013", "type": "Step", "title": "System sends the activation email", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 13"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-014", "type": "Step", "title": "Provider clicks the Set Password link", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 14"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-015", "type": "Step", "title": "System shows the password creation form", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 15"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-016", "type": "Step", "title": "Provider creates and confirms the password", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 16"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-017", "type": "Step", "title": "System validates and saves the password hash", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 17"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-018", "type": "Step", "title": "Provider logs in", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 18"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-019", "type": "Step", "title": "System shows the Welcome onboarding screen", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 19"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-020", "type": "Step", "title": "Provider completes the profile via FR-032", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 20", "handoff_to": "FR-032: Main Flow step 1"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-021", "type": "Step", "title": "Provider becomes eligible for inquiry distribution", "owner_fr": "FR-015", "attrs": {"prd_ref": "Main Flow step 21", "handoff_to": "FR-003: Main Flow step 1"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-103", "type": "Step", "title": "System shows the email resend form", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 3"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-104", "type": "Step", "title": "Provider enters the account email", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 4"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-105", "type": "Step", "title": "Provider clicks Resend Activation Email", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 5"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-106", "type": "Step", "title": "System validates the provider account", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 6"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-107", "type": "Step", "title": "System generates a new link and invalidates the old one", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 7"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-108", "type": "Step", "title": "System sends the new activation email", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 8"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-provider); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-109", "type": "Step", "title": "System shows the resend success message", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 9"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-110", "type": "Step", "title": "Provider continues with password setup", "owner_fr": "FR-015", "attrs": {"prd_ref": "A1 step 10"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-122", "type": "Step", "title": "System saves the flat rate configuration", "owner_fr": "FR-015", "attrs": {"prd_ref": "A2 step 2"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-123", "type": "Step", "title": "System applies a fixed deduction per completed procedure", "owner_fr": "FR-015", "attrs": {"prd_ref": "A2 step 3"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-132", "type": "Step", "title": "System verifies Active status and the 10-provider cap", "owner_fr": "FR-015", "attrs": {"prd_ref": "A3 step 2"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-133", "type": "Step", "title": "System stores the featured flag for later patient display", "owner_fr": "FR-015", "attrs": {"prd_ref": "A3 step 3"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-143", "type": "Step", "title": "System stores the file, archives the replaced file and logs the action", "owner_fr": "FR-015", "attrs": {"prd_ref": "A4 step 3"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-144", "type": "Step", "title": "System makes the document available without approval", "owner_fr": "FR-015", "attrs": {"prd_ref": "A4 step 4"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-151", "type": "Step", "title": "System shows affected quotes and cases before confirmation", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 1"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-152", "type": "Step", "title": "Admin confirms suspension and new activity is blocked", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 2"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-153", "type": "Step", "title": "System cancels unaccepted quotes and closes pre-treatment bookings", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 3"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-154", "type": "Step", "title": "System records the cancellation cause and support marker", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 4"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-155", "type": "Step", "title": "System notifies patients and alerts admins", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 5"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-156", "type": "Step", "title": "System records the cascade in the audit trail", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 6"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-157", "type": "Step", "title": "Admin starts the provider-fault transfer and aftercare decisions", "owner_fr": "FR-015", "attrs": {"prd_ref": "A5 step 7", "handoff_to": "FR-006: Alternative Flow B5 step 1"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-162", "type": "Step", "title": "System shows the current suspension reason and date", "owner_fr": "FR-015", "attrs": {"prd_ref": "A6 step 2"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-015-163", "type": "Step", "title": "Admin enters a reason, re-authenticates and confirms", "owner_fr": "FR-015", "attrs": {"prd_ref": "A6 step 3"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-164", "type": "Step", "title": "System sets Active and cancels the pending scheduled change", "owner_fr": "FR-015", "attrs": {"prd_ref": "A6 step 4"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-174", "type": "Step", "title": "System applies the deactivation cascade and notifications", "owner_fr": "FR-015", "attrs": {"prd_ref": "A7 step 4", "handoff_to": "FR-017: post-suspension payment reconciliation"}}
+  # waits on: no System Actor
+  # waits on: conflict, a system Step that carries a human done by edge (ACT-platform-admin); the doer is not replaced
+  - {"op": "add_node", "id": "STP-015-175", "type": "Step", "title": "System marks the closure request Approved and links the status event", "owner_fr": "FR-015", "attrs": {"prd_ref": "A7 step 5"}}
+  # waits on: no System Actor (start Step is held)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-015-suspension-cascade", "type": "Flow", "title": "Provider suspension cancels cases and requires admin support", "attrs": {"kind": "alternative", "prd_ref": "Alternative Flow A5"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-003", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-008", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-009", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-012 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-012", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-013 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-013", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-014 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-014", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-015 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-015", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-016 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-016", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-017", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-018 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-018", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-019 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-019", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-020 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-020", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-021 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-103 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-103", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-104 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-104", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-105 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-106 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-106", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-107 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-107", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-108 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-108", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-109 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-provider (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-109", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-110 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-110", "verb": "done by", "to": "ACT-provider", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-122", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-123 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-123", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-133 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-133", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-144 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-144", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-151", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-152 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-154 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-154", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-155 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-157 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-157", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-162", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-163 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-163", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-164", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-175 stays held (its own reason, the system Actor, is resolved by D44)
+  # done by: ACT-system replaces ACT-platform-admin (decision D47: a system Step, the human doer is swapped)
+  - {"op": "add_edge", "from": "STP-015-175", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-003", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-008", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-009", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-012 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-012", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-013", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-014 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-014", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-015 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-015", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-016 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-016", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-017", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-018 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-018", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-019 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-019", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-020 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-020", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-021 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-103 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-103", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-104 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-104", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-105 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-106 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-106", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-107 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-107", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-108 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-108", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-109 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-109", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-110 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-110", "verb": "at", "to": "STG-provider-02-onboarding", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-122", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-123", "verb": "at", "to": "STG-provider-01-invited", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-133 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-133", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-144 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-144", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-151", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-152 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-154 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-154", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-155 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-157 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-157", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-162", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-163 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-163", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-164", "verb": "at", "to": "STG-provider-04-suspended", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "at", "to": "STG-provider-05-offboarded", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-175 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-175", "verb": "at", "to": "STG-provider-05-offboarded", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-003", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-008", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-009", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-122", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-123", "verb": "on", "to": "SCR-015-02", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "on", "to": "SCR-015-01", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-133 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-133", "verb": "on", "to": "SCR-015-01", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "on", "to": "SCR-015-03", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-144 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-144", "verb": "on", "to": "SCR-015-03", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-151", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-152 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-154 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-154", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-155 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-157 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-157", "verb": "on", "to": "SCR-015-04", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-162", "verb": "on", "to": "SCR-015-05", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-163 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-163", "verb": "on", "to": "SCR-015-05", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-164", "verb": "on", "to": "SCR-015-05", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-003", "verb": "applies", "to": "REQ-015-001", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "applies", "to": "REQ-015-030", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "applies", "to": "REQ-015-096", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "applies", "to": "REQ-015-097", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "applies", "to": "REQ-015-098", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "applies", "to": "REQ-015-096", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "applies", "to": "REQ-015-014", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "applies", "to": "REQ-015-030", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "applies", "to": "REQ-015-045", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-008", "verb": "applies", "to": "REQ-015-100", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-009", "verb": "applies", "to": "REQ-015-030", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "applies", "to": "REQ-015-052", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "applies", "to": "REQ-015-030", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "applies", "to": "REQ-015-055", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-012 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-012", "verb": "applies", "to": "REQ-015-052", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-012 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-012", "verb": "applies", "to": "REQ-015-031", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-013", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-013", "verb": "applies", "to": "REQ-015-053", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-014 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-014", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-015 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-015", "verb": "applies", "to": "REQ-015-015", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-016 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-016", "verb": "applies", "to": "REQ-015-015", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-017", "verb": "applies", "to": "REQ-015-015", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-017", "verb": "applies", "to": "REQ-015-011", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-018 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-018", "verb": "applies", "to": "REQ-015-031", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-019 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-019", "verb": "applies", "to": "REQ-015-054", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-020 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-020", "verb": "applies", "to": "REQ-015-007", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-021 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "applies", "to": "REQ-015-031", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-103 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-103", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-104 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-104", "verb": "applies", "to": "REQ-015-056", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-105 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-106 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-106", "verb": "applies", "to": "REQ-015-056", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-107 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-107", "verb": "applies", "to": "REQ-015-011", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-108 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-108", "verb": "applies", "to": "REQ-015-053", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-109 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-109", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-110 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-110", "verb": "applies", "to": "REQ-015-006", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-122", "verb": "applies", "to": "REQ-015-100", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-123", "verb": "applies", "to": "REQ-015-042", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "applies", "to": "REQ-015-033", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "applies", "to": "REQ-015-034", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-133 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-133", "verb": "applies", "to": "REQ-015-046", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "applies", "to": "REQ-015-060", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "applies", "to": "REQ-015-062", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-144 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-144", "verb": "applies", "to": "REQ-015-045", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-151", "verb": "applies", "to": "REQ-015-084", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-152 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "applies", "to": "REQ-015-017", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-152 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "applies", "to": "REQ-015-020", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "applies", "to": "REQ-015-017", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "applies", "to": "REQ-015-073", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-154 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-154", "verb": "applies", "to": "REQ-015-018", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-155 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "applies", "to": "REQ-015-019", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "applies", "to": "REQ-015-024", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "applies", "to": "REQ-015-072", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-157 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-157", "verb": "applies", "to": "REQ-015-029", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-157 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-157", "verb": "applies", "to": "REQ-015-036", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-162", "verb": "applies", "to": "REQ-015-080", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-163 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-163", "verb": "applies", "to": "REQ-015-081", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-164", "verb": "applies", "to": "REQ-015-080", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-164", "verb": "applies", "to": "REQ-015-049", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "applies", "to": "REQ-015-017", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "applies", "to": "REQ-015-086", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-175 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-175", "verb": "applies", "to": "REQ-015-086", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-175 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-175", "verb": "applies", "to": "REQ-015-088", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-002", "verb": "next", "to": "STP-015-003", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-003 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-003", "verb": "next", "to": "STP-015-004", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-004 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-004", "verb": "next", "to": "STP-015-005", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-005", "verb": "next", "to": "STP-015-006", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-006", "verb": "next", "to": "STP-015-007", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-007", "verb": "next", "to": "STP-015-008", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-008", "verb": "next", "to": "STP-015-009", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-009", "verb": "next", "to": "STP-015-010", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "next", "to": "STP-015-011", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-011 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-011", "verb": "next", "to": "STP-015-012", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-012 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-012", "verb": "next", "to": "STP-015-013", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-013", "verb": "next", "to": "STP-015-014", "attrs": {"label": "provider receives the email"}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-015 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-014", "verb": "next", "to": "STP-015-015", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-015 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-015", "verb": "next", "to": "STP-015-016", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-016", "verb": "next", "to": "STP-015-017", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-017 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-017", "verb": "next", "to": "STP-015-018", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-019 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-018", "verb": "next", "to": "STP-015-019", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-019 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-019", "verb": "next", "to": "STP-015-020", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-021 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-020", "verb": "next", "to": "STP-015-021", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-103 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-102", "verb": "next", "to": "STP-015-103", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-103 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-103", "verb": "next", "to": "STP-015-104", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-104 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-104", "verb": "next", "to": "STP-015-105", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-106 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "next", "to": "STP-015-106", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-106 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-106", "verb": "next", "to": "STP-015-107", "attrs": {"label": "account exists and is Active"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-107 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-107", "verb": "next", "to": "STP-015-108", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-108 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-108", "verb": "next", "to": "STP-015-109", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-109 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-109", "verb": "next", "to": "STP-015-110", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-110 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-110", "verb": "next", "to": "STP-015-014", "attrs": {"label": "password setup continues in the main flow"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-121", "verb": "next", "to": "STP-015-122", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-122", "verb": "next", "to": "STP-015-123", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-131", "verb": "next", "to": "STP-015-132", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-132 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-132", "verb": "next", "to": "STP-015-133", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-142", "verb": "next", "to": "STP-015-143", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-143 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-143", "verb": "next", "to": "STP-015-144", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-151", "verb": "next", "to": "STP-015-152", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "next", "to": "STP-015-153", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-153 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-153", "verb": "next", "to": "STP-015-154", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-154 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-154", "verb": "next", "to": "STP-015-155", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-155 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "next", "to": "STP-015-156", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-156 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-156", "verb": "next", "to": "STP-015-157", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-161", "verb": "next", "to": "STP-015-162", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-162 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-162", "verb": "next", "to": "STP-015-163", "attrs": {}}
+  # waits on: no System Actor (cascade: reachable only through a held System step or a held Flow)
+  # waits on: endpoint STP-015-164 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-163", "verb": "next", "to": "STP-015-164", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-173", "verb": "next", "to": "STP-015-174", "attrs": {"label": "admin confirms deactivation"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-015-174 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "next", "to": "STP-015-175", "attrs": {}}
+  # waits on: no System Actor (start Step is held)
+  # waits on: endpoint STP-015-151 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-015-suspension-cascade", "verb": "starts at", "to": "STP-015-151", "attrs": {}}
+  # acts in: the doers at the Stages of their released Steps (lint L16)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-provider-02-onboarding"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-provider-05-offboarded"}

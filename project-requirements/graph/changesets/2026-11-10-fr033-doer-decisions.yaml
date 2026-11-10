@@ -1,0 +1,15 @@
+reason: "FR-033 Steps released from 2026-11-10-fr033-completeness-held.yaml after decisions D47 (system Steps that carried a human done by are done by ACT-system; STP-003-015 is split into a system Step and the patient Step STP-003-087) and D48 (doer-reading Steps), with the ops held only because one of them was held. Apply after the earlier 2026-11-10 files of the FR; apply the doer-decisions files in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
+  - {"op": "add_node", "id": "STP-033-083", "type": "Step", "title": "Providers see the updated status on the status page", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 10"}}
+  # done by: ACT-system (decision D48; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-033-083 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "applies", "to": "REQ-033-033"}
+  # waits on: no System Actor (next edges touching a held system step)
+  # waits on: endpoint STP-033-083 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-033-082", "verb": "next", "to": "STP-033-083"}

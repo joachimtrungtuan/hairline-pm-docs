@@ -1,0 +1,32 @@
+reason: "FR-001 Steps released from 2026-11-10-fr001-completeness-held.yaml after decisions D47 (system Steps that carried a human done by are done by ACT-system; STP-003-015 is split into a system Step and the patient Step STP-003-087) and D48 (doer-reading Steps), with the ops held only because one of them was held. Apply after the earlier 2026-11-10 files of the FR; apply the doer-decisions files in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md)."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
+  - {"op": "add_node", "id": "STP-001-123", "type": "Step", "owner_fr": "FR-001", "title": "Patient receives a notification of the changes", "attrs": {"prd_ref": "Alternative Flow D1 step 3"}}
+  # done by: ACT-system (decision D48; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-001-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-001-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "applies", "to": "REQ-001-034"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-001-124", "type": "Step", "owner_fr": "FR-001", "title": "Patient reviews and accepts or rejects the changes", "attrs": {"prd_ref": "Alternative Flow D1 step 4"}}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  # waits on: endpoint STP-001-124 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  # waits on: endpoint STP-001-124 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "at", "to": "STG-patient-03-active"}
+  # waits on: no System Actor (human Step reachable only through a held Step)
+  # waits on: endpoint STP-001-124 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-124", "verb": "applies", "to": "REQ-001-035"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-001-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-122", "verb": "next", "to": "STP-001-123"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-001-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-001-123", "verb": "next", "to": "STP-001-124"}
