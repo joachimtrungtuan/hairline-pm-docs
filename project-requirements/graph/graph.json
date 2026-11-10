@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T09:34:48Z",
+  "generated_at": "2026-11-10T09:35:47Z",
   "schema_version": 7,
   "nodes": [
     {
@@ -152,7 +152,7 @@
       "owner_fr": null,
       "title": "Hairline system",
       "status": "active",
-      "version": 5,
+      "version": 9,
       "attrs": {
         "group": "system",
         "description": "The Hairline platform acting automatically, for steps the PRDs attribute to \"System\"."
@@ -34662,6 +34662,45 @@
       }
     },
     {
+      "id": "FLW-011-w2b-provider-declines",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 2b Alternative Flow B1a: original provider declines",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 2b Alternative Flow B1a: original provider declines",
+        "prd_ref": "Workflow 2b Alternative Flow B1a"
+      }
+    },
+    {
+      "id": "FLW-011-w3-concerning-symptoms",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 3 Alternative Flow C2: concerning symptoms reported",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 3 Alternative Flow C2: concerning symptoms reported",
+        "prd_ref": "Workflow 3 Alternative Flow C2"
+      }
+    },
+    {
+      "id": "FLW-011-w3-missed-task",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 3 Alternative Flow C1: patient misses a task",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 3 Alternative Flow C1: patient misses a task",
+        "prd_ref": "Workflow 3 Alternative Flow C1"
+      }
+    },
+    {
       "id": "FLW-011-w3-patient-activities",
       "type": "Flow",
       "owner_fr": null,
@@ -34714,6 +34753,19 @@
       }
     },
     {
+      "id": "FLW-011-w4-provider-suspended",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 4 Alternative Flow D4: provider suspended or deactivated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 4 Alternative Flow D4: provider suspended or deactivated",
+        "prd_ref": "Workflow 4 Alternative Flow D4"
+      }
+    },
+    {
       "id": "FLW-011-w4-provider-withdraws",
       "type": "Flow",
       "owner_fr": null,
@@ -34740,6 +34792,30 @@
       }
     },
     {
+      "id": "FLW-012-attachment",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Attachment alternative flow",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-012-connectivity",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Intermittent connectivity alternative flow",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
       "id": "FLW-012-emergency-intervention",
       "type": "Flow",
       "owner_fr": null,
@@ -34749,6 +34825,18 @@
       "attrs": {
         "kind": "alternative",
         "prd_ref": "Alternative Flow A3"
+      }
+    },
+    {
+      "id": "FLW-012-invalid-content",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Invalid content alternative flow",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "prd_ref": "Alternative Flow B1"
       }
     },
     {
@@ -34800,6 +34888,19 @@
         "kind": "alternative",
         "description": "A4: Admin Processes Takedown Request",
         "prd_ref": "A4"
+      }
+    },
+    {
+      "id": "FLW-013-flagged-content-review",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B2: Flagging/Inappropriate Content",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B2: Flagging/Inappropriate Content",
+        "prd_ref": "B2"
       }
     },
     {
@@ -34878,6 +34979,32 @@
         "kind": "alternative",
         "description": "Alternative Flow A2: export from any screen",
         "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "FLW-014-low-sample",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow B2: low sample",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow B2: low sample",
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "FLW-014-pipeline-delay",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow B1: analytics pipeline delay",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow B1: analytics pipeline delay",
+        "prd_ref": "Alternative Flow B1"
       }
     },
     {
@@ -99721,9 +99848,20 @@
       "owner_fr": "FR-011",
       "title": "Provider adds instructions and medications, adjusts durations and confirms the plan",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-004",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System generates the plan and dashboard and notifies the patient and aftercare team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 Main Flow step 4"
       }
     },
     {
@@ -99731,6 +99869,17 @@
       "type": "Step",
       "owner_fr": "FR-011",
       "title": "Provider marks paperwork only and uploads the aftercare instructions document",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 1 Alternative Flow A1"
+      }
+    },
+    {
+      "id": "STP-011-006",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System moves the patient status to Completed after the instructions are delivered",
       "status": "active",
       "version": 1,
       "attrs": {
@@ -99776,9 +99925,65 @@
       "owner_fr": "FR-011",
       "title": "Patient reviews the order, enters payment details and submits payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-011-011",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System processes the payment through FR-007 and moves the request to Pending Assignment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Main Flow step 2",
+        "handoff_to": "FR-007: payment processing of the aftercare order"
+      }
+    },
+    {
+      "id": "STP-011-012",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Admin reviews the request and assigns a provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-013",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Assigned provider selects a template, customizes the plan and activates it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Main Flow step 4; Workflow 2b Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-011-014",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System sends the activation notice and gives the patient dashboard access",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Main Flow step 5; Workflow 2b Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-011-015",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team begins monitoring the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Main Flow step 5; Workflow 2b Main Flow step 5"
       }
     },
     {
@@ -99786,6 +99991,17 @@
       "type": "Step",
       "owner_fr": "FR-011",
       "title": "Patient retries payment with a different method",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 2 Alternative Flow B1; Workflow 2b Alternative Flow B1b"
+      }
+    },
+    {
+      "id": "STP-011-017",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System expires the request after 48 hours without successful payment",
       "status": "active",
       "version": 1,
       "attrs": {
@@ -99797,6 +100013,17 @@
       "type": "Step",
       "owner_fr": "FR-011",
       "title": "Admin marks the request Not suitable for aftercare with a reason",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 2 Alternative Flow B2"
+      }
+    },
+    {
+      "id": "STP-011-019",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System refunds the payment automatically",
       "status": "active",
       "version": 1,
       "attrs": {
@@ -99842,9 +100069,54 @@
       "owner_fr": "FR-011",
       "title": "Patient completes payment at checkout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2b Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-011-024",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System processes the payment through FR-007 and starts automatic assignment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2b Main Flow step 2",
+        "handoff_to": "FR-007: payment processing of the aftercare order"
+      }
+    },
+    {
+      "id": "STP-011-025",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System assigns the original treatment provider or the Hairline aftercare team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2b Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-026",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System assigns the case to the Hairline aftercare team after the original provider declines",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2b Alternative Flow B1a"
+      }
+    },
+    {
+      "id": "STP-011-027",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team provider configures and activates the plan",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2b Alternative Flow B1a"
       }
     },
     {
@@ -99853,7 +100125,7 @@
       "owner_fr": "FR-011",
       "title": "Patient completes the tasks that are due",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 Main Flow step 1"
       }
@@ -99864,7 +100136,7 @@
       "owner_fr": "FR-011",
       "title": "Patient captures and uploads the head scan photo set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 Main Flow step 2"
       }
@@ -99875,9 +100147,119 @@
       "owner_fr": "FR-011",
       "title": "Patient completes the milestone questionnaire",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 3 Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-031",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System validates the scan quality and stores the scan for the aftercare team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-011-032",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System processes the questionnaire responses and flags concerning answers",
+      "status": "active",
       "version": 1,
       "attrs": {
         "prd_ref": "Workflow 3 Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-033",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team reviews the questionnaire responses",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-011-034",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System tracks task completion and calculates the overall progress",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Main Flow steps 1 and 4"
+      }
+    },
+    {
+      "id": "STP-011-035",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Patient views the progress dashboard",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-011-036",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System sends a reminder and flags the task Overdue after 24 hours",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Alternative Flow C1"
+      }
+    },
+    {
+      "id": "STP-011-037",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team contacts the patient about the missed task",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Alternative Flow C1"
+      }
+    },
+    {
+      "id": "STP-011-038",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System flags the case Urgent for concerning symptoms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Alternative Flow C2"
+      }
+    },
+    {
+      "id": "STP-011-039",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team contacts the patient immediately",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Alternative Flow C2"
+      }
+    },
+    {
+      "id": "STP-011-040",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System triggers the escalation workflow",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 Alternative Flow C2"
       }
     },
     {
@@ -100002,6 +100384,29 @@
       }
     },
     {
+      "id": "STP-011-052",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "System records the provider-status cause and sets the supportRequired marker",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 4 Alternative Flow D4",
+        "handoff_from": "FR-015: Alternative Flow A5, provider suspension or deactivation becomes effective"
+      }
+    },
+    {
+      "id": "STP-011-053",
+      "type": "Step",
+      "owner_fr": "FR-011",
+      "title": "Admin reassigns the case on Screen 19, assigns the Hairline team or keeps it cancelled, and resolves the marker",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 4 Alternative Flow D4"
+      }
+    },
+    {
       "id": "STP-011-054",
       "type": "Step",
       "owner_fr": "FR-011",
@@ -100011,6 +100416,50 @@
       "attrs": {
         "prd_ref": "Workflow 4 Alternative Flow D5",
         "handoff_from": "FR-006: Alternative Flows B6 and B7, booking is Aftercare after a provider fault"
+      }
+    },
+    {
+      "id": "STP-012-011",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System validates attachment file type and size",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-012-012",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System validates the attachment count",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-012-013",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System stores the media and generates thumbnails",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 3"
+      }
+    },
+    {
+      "id": "STP-012-014",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System blocks the upload and shows the specific error",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 4"
       }
     },
     {
@@ -100030,9 +100479,64 @@
       "owner_fr": "FR-012",
       "title": "Admin selects Flag for Observation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 2"
+      }
+    },
+    {
+      "id": "STP-012-017",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System prompts for a flag type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 3"
+      }
+    },
+    {
+      "id": "STP-012-018",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin optionally adds internal notes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 4"
+      }
+    },
+    {
+      "id": "STP-012-019",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System marks the conversation with a flag badge",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 5"
+      }
+    },
+    {
+      "id": "STP-012-020",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Flagged conversation appears in the Flagged filter",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 6"
+      }
+    },
+    {
+      "id": "STP-012-021",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System logs the flag action",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 7"
       }
     },
     {
@@ -100052,9 +100556,163 @@
       "owner_fr": "FR-012",
       "title": "Admin enables emergency intervention and confirms",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 2"
+      }
+    },
+    {
+      "id": "STP-012-024",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System shows the emergency warning banner",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 3"
+      }
+    },
+    {
+      "id": "STP-012-025",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin selects the emergency reason and optional justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 4"
+      }
+    },
+    {
+      "id": "STP-012-026",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin reviews the conversation and flag history",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 5"
+      }
+    },
+    {
+      "id": "STP-012-027",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin composes the intervention message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 6"
+      }
+    },
+    {
+      "id": "STP-012-028",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin reviews the preview and sends",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 7"
+      }
+    },
+    {
+      "id": "STP-012-029",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System adds the Hairline Admin badge",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 8"
+      }
+    },
+    {
+      "id": "STP-012-030",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System logs the intervention",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 9"
+      }
+    },
+    {
+      "id": "STP-012-031",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System updates the flag status to Intervention Completed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 10"
+      }
+    },
+    {
+      "id": "STP-012-032",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System returns the admin to Screen 6A",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 11"
+      }
+    },
+    {
+      "id": "STP-012-033",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System validates the attachment before upload",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 1"
+      }
+    },
+    {
+      "id": "STP-012-034",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System blocks the upload and shows the specific error",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-012-035",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "User retries with valid content",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-012-036",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System queues the message locally and shows pending",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 1"
+      }
+    },
+    {
+      "id": "STP-012-037",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System retries on reconnect and prompts resend on failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 2"
       }
     },
     {
@@ -100063,9 +100721,53 @@
       "owner_fr": "FR-013",
       "title": "Patient completes ratings, feedback and optional photos",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-013-002",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System validates inputs and verifies eligibility",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-013-003",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System publishes or republishes the review and recalculates provider rating metrics",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-013-004",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System re-runs flagging, tracks the edit, writes the audit record and notifies the provider on edit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-013-005",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Patient sees the confirmation and the live review with the Edited marker",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
       }
     },
     {
@@ -100074,9 +100776,31 @@
       "owner_fr": "FR-013",
       "title": "Admin enters the review payload with source evidence",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1 step 1"
+      }
+    },
+    {
+      "id": "STP-013-012",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System validates fields and stores source provenance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 2"
+      }
+    },
+    {
+      "id": "STP-013-013",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System publishes the review flagged Verified Off-platform",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 3"
       }
     },
     {
@@ -100085,9 +100809,20 @@
       "owner_fr": "FR-013",
       "title": "Admin opens review detail and applies edits or redactions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2 step 1"
+      }
+    },
+    {
+      "id": "STP-013-022",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System records before and after values, reason and admin identity",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 2"
       }
     },
     {
@@ -100107,9 +100842,31 @@
       "owner_fr": "FR-013",
       "title": "Patient enters the required takedown reason and confirms",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 2"
+      }
+    },
+    {
+      "id": "STP-013-033",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System records the reason, creates the Pending takedown request and links it to the review and case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 3"
+      }
+    },
+    {
+      "id": "STP-013-034",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System notifies the admin takedown queue",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 4"
       }
     },
     {
@@ -100129,9 +100886,31 @@
       "owner_fr": "FR-013",
       "title": "Admin approves or rejects the request with a decision note",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A4 step 2"
+      }
+    },
+    {
+      "id": "STP-013-043",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System applies the decision: unpublish and recalculate, or keep the review published",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 3"
+      }
+    },
+    {
+      "id": "STP-013-044",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System notifies the patient of the decision and reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 4"
       }
     },
     {
@@ -100140,9 +100919,86 @@
       "owner_fr": "FR-013",
       "title": "Provider opens Review Detail and taps Respond as Provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1 step 1"
+      }
+    },
+    {
+      "id": "STP-013-052",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System opens the inline response composer within Screen 6",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 2"
+      }
+    },
+    {
+      "id": "STP-013-053",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Provider writes the response",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 3"
+      }
+    },
+    {
+      "id": "STP-013-054",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System validates response length and policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 3"
+      }
+    },
+    {
+      "id": "STP-013-055",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Provider confirms the response submission",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 4"
+      }
+    },
+    {
+      "id": "STP-013-056",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System publishes the response under provider identity",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 4"
+      }
+    },
+    {
+      "id": "STP-013-061",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System queues flagged content for admin review",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 steps"
+      }
+    },
+    {
+      "id": "STP-013-062",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Admin redacts, unpublishes or upholds the flagged content",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 steps"
       }
     },
     {
@@ -100310,6 +101166,28 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "STP-014-016",
+      "type": "Step",
+      "owner_fr": "FR-014",
+      "title": "Analytics pipeline delay: a non-blocking banner is shown and cached data is displayed with its last-updated timestamp",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "STP-014-017",
+      "type": "Step",
+      "owner_fr": "FR-014",
+      "title": "Low sample: helper copy is shown on affected widgets and partial data is still rendered",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2"
       }
     },
     {
@@ -136361,7 +137239,25 @@
     {
       "from_id": "ACT-system",
       "verb": "acts in",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
+      "to_id": "STG-main-02-quote",
       "attrs": {}
     },
     {
@@ -136391,6 +137287,12 @@
     {
       "from_id": "ACT-system",
       "verb": "acts in",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
       "to_id": "STG-patient-01-registered",
       "attrs": {}
     },
@@ -136398,6 +137300,12 @@
       "from_id": "ACT-system",
       "verb": "acts in",
       "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
+      "to_id": "STG-provider-03-active",
       "attrs": {}
     },
     {
@@ -139929,6 +140837,24 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-011-w2b-provider-declines",
+      "verb": "starts at",
+      "to_id": "STP-011-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-011-w3-concerning-symptoms",
+      "verb": "starts at",
+      "to_id": "STP-011-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-011-w3-missed-task",
+      "verb": "starts at",
+      "to_id": "STP-011-036",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-011-w3-patient-activities",
       "verb": "starts at",
       "to_id": "STP-011-028",
@@ -139953,6 +140879,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-011-w4-provider-suspended",
+      "verb": "starts at",
+      "to_id": "STP-011-052",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-011-w4-provider-withdraws",
       "verb": "starts at",
       "to_id": "STP-011-044",
@@ -139965,9 +140897,27 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-012-attachment",
+      "verb": "starts at",
+      "to_id": "STP-012-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-012-connectivity",
+      "verb": "starts at",
+      "to_id": "STP-012-036",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-012-emergency-intervention",
       "verb": "starts at",
       "to_id": "STP-012-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-012-invalid-content",
+      "verb": "starts at",
+      "to_id": "STP-012-033",
       "attrs": {}
     },
     {
@@ -139992,6 +140942,12 @@
       "from_id": "FLW-013-admin-processes-takedown-request",
       "verb": "starts at",
       "to_id": "STP-013-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-013-flagged-content-review",
+      "verb": "starts at",
+      "to_id": "STP-013-061",
       "attrs": {}
     },
     {
@@ -140028,6 +140984,18 @@
       "from_id": "FLW-014-export-from-any-screen",
       "verb": "starts at",
       "to_id": "STP-014-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-014-low-sample",
+      "verb": "starts at",
+      "to_id": "STP-014-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-014-pipeline-delay",
+      "verb": "starts at",
+      "to_id": "STP-014-016",
       "attrs": {}
     },
     {
@@ -289798,8 +290766,38 @@
     },
     {
       "from_id": "STP-011-003",
+      "verb": "next",
+      "to_id": "STP-011-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-003",
       "verb": "on",
       "to_id": "SCR-011-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-004",
+      "verb": "applies",
+      "to_id": "REQ-011-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-004",
+      "verb": "applies",
+      "to_id": "REQ-011-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-004",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-004",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -289818,6 +290816,30 @@
       "from_id": "STP-011-005",
       "verb": "done by",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-005",
+      "verb": "next",
+      "to_id": "STP-011-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-006",
+      "verb": "applies",
+      "to_id": "REQ-011-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-006",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-006",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -289942,8 +290964,158 @@
     },
     {
       "from_id": "STP-011-010",
+      "verb": "next",
+      "to_id": "STP-011-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-010",
       "verb": "on",
       "to_id": "SCR-011-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "applies",
+      "to_id": "REQ-011-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "applies",
+      "to_id": "REQ-011-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "next",
+      "to_id": "STP-011-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "applies",
+      "to_id": "REQ-011-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "applies",
+      "to_id": "REQ-011-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "next",
+      "to_id": "STP-011-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-012",
+      "verb": "on",
+      "to_id": "SCR-011-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "applies",
+      "to_id": "REQ-011-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "applies",
+      "to_id": "REQ-011-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "next",
+      "to_id": "STP-011-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-013",
+      "verb": "on",
+      "to_id": "SCR-011-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-014",
+      "verb": "applies",
+      "to_id": "REQ-011-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-014",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-014",
+      "verb": "next",
+      "to_id": "STP-011-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-015",
+      "verb": "applies",
+      "to_id": "REQ-011-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-015",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-015",
+      "verb": "done by",
+      "to_id": "ACT-aftercare-specialist",
       "attrs": {}
     },
     {
@@ -289966,8 +291138,32 @@
     },
     {
       "from_id": "STP-011-016",
+      "verb": "next",
+      "to_id": "STP-011-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-016",
       "verb": "on",
       "to_id": "SCR-011-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-017",
+      "verb": "applies",
+      "to_id": "REQ-011-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-017",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-017",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -289996,8 +291192,32 @@
     },
     {
       "from_id": "STP-011-018",
+      "verb": "next",
+      "to_id": "STP-011-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-018",
       "verb": "on",
       "to_id": "SCR-011-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-019",
+      "verb": "applies",
+      "to_id": "REQ-011-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-019",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-019",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290134,8 +291354,130 @@
     },
     {
       "from_id": "STP-011-023",
+      "verb": "next",
+      "to_id": "STP-011-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-023",
       "verb": "on",
       "to_id": "SCR-011-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "applies",
+      "to_id": "REQ-011-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "applies",
+      "to_id": "REQ-011-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "next",
+      "to_id": "STP-011-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-025",
+      "verb": "applies",
+      "to_id": "REQ-011-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-025",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-025",
+      "verb": "next",
+      "to_id": "STP-011-013",
+      "attrs": {
+        "label": "Provider activates the plan"
+      }
+    },
+    {
+      "from_id": "STP-011-026",
+      "verb": "applies",
+      "to_id": "REQ-011-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-026",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-026",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-026",
+      "verb": "next",
+      "to_id": "STP-011-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "applies",
+      "to_id": "REQ-011-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "applies",
+      "to_id": "REQ-011-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "applies",
+      "to_id": "REQ-011-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "done by",
+      "to_id": "ACT-aftercare-specialist",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-027",
+      "verb": "on",
+      "to_id": "SCR-011-10",
       "attrs": {}
     },
     {
@@ -290186,6 +291528,12 @@
     },
     {
       "from_id": "STP-011-028",
+      "verb": "next",
+      "to_id": "STP-011-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-028",
       "verb": "on",
       "to_id": "SCR-011-01",
       "attrs": {}
@@ -290222,6 +291570,12 @@
     },
     {
       "from_id": "STP-011-029",
+      "verb": "next",
+      "to_id": "STP-011-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-029",
       "verb": "on",
       "to_id": "SCR-011-02",
       "attrs": {}
@@ -290252,8 +291606,248 @@
     },
     {
       "from_id": "STP-011-030",
+      "verb": "next",
+      "to_id": "STP-011-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-030",
       "verb": "on",
       "to_id": "SCR-011-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-031",
+      "verb": "applies",
+      "to_id": "REQ-011-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-031",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-031",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-032",
+      "verb": "applies",
+      "to_id": "REQ-011-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-032",
+      "verb": "applies",
+      "to_id": "REQ-011-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-032",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-032",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-032",
+      "verb": "next",
+      "to_id": "STP-011-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-033",
+      "verb": "applies",
+      "to_id": "REQ-011-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-033",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-033",
+      "verb": "done by",
+      "to_id": "ACT-aftercare-specialist",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-034",
+      "verb": "applies",
+      "to_id": "REQ-011-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-034",
+      "verb": "applies",
+      "to_id": "REQ-011-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-034",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-034",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-034",
+      "verb": "next",
+      "to_id": "STP-011-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-035",
+      "verb": "applies",
+      "to_id": "REQ-011-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-035",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-035",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-035",
+      "verb": "on",
+      "to_id": "SCR-011-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-036",
+      "verb": "applies",
+      "to_id": "REQ-011-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-036",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-036",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-036",
+      "verb": "next",
+      "to_id": "STP-011-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-037",
+      "verb": "applies",
+      "to_id": "REQ-011-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-037",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-037",
+      "verb": "done by",
+      "to_id": "ACT-aftercare-specialist",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-038",
+      "verb": "applies",
+      "to_id": "REQ-011-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-038",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-038",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-038",
+      "verb": "next",
+      "to_id": "STP-011-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-039",
+      "verb": "applies",
+      "to_id": "REQ-011-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-039",
+      "verb": "applies",
+      "to_id": "REQ-011-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-039",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-039",
+      "verb": "done by",
+      "to_id": "ACT-aftercare-specialist",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-039",
+      "verb": "next",
+      "to_id": "STP-011-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-040",
+      "verb": "applies",
+      "to_id": "REQ-011-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-040",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-040",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290573,6 +292167,84 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-011-052",
+      "verb": "applies",
+      "to_id": "REQ-011-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-052",
+      "verb": "applies",
+      "to_id": "REQ-011-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-052",
+      "verb": "applies",
+      "to_id": "REQ-011-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-052",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-052",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-052",
+      "verb": "next",
+      "to_id": "STP-011-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "applies",
+      "to_id": "REQ-011-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "applies",
+      "to_id": "REQ-011-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "applies",
+      "to_id": "REQ-011-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "applies",
+      "to_id": "REQ-011-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-053",
+      "verb": "on",
+      "to_id": "SCR-011-19",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-011-054",
       "verb": "applies",
       "to_id": "REQ-011-015",
@@ -290606,6 +292278,126 @@
       "from_id": "STP-011-054",
       "verb": "on",
       "to_id": "SCR-011-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-011",
+      "verb": "applies",
+      "to_id": "REQ-012-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-011",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-011",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-011",
+      "verb": "next",
+      "to_id": "STP-012-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-011",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "applies",
+      "to_id": "REQ-012-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "next",
+      "to_id": "STP-012-013",
+      "attrs": {
+        "label": "valid attachment",
+        "condition": "REQ-012-009"
+      }
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "next",
+      "to_id": "STP-012-014",
+      "attrs": {
+        "label": "invalid attachment",
+        "condition": "REQ-012-040"
+      }
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-013",
+      "verb": "applies",
+      "to_id": "REQ-012-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-013",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-013",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "applies",
+      "to_id": "REQ-012-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "on",
+      "to_id": "SCR-012-02",
       "attrs": {}
     },
     {
@@ -290658,8 +292450,152 @@
     },
     {
       "from_id": "STP-012-016",
+      "verb": "next",
+      "to_id": "STP-012-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-016",
       "verb": "on",
       "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-017",
+      "verb": "applies",
+      "to_id": "REQ-012-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-017",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-017",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-017",
+      "verb": "next",
+      "to_id": "STP-012-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-017",
+      "verb": "on",
+      "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-018",
+      "verb": "applies",
+      "to_id": "REQ-012-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-018",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-018",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-018",
+      "verb": "next",
+      "to_id": "STP-012-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-018",
+      "verb": "on",
+      "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-019",
+      "verb": "applies",
+      "to_id": "REQ-012-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-019",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-019",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-019",
+      "verb": "next",
+      "to_id": "STP-012-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-019",
+      "verb": "on",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-020",
+      "verb": "applies",
+      "to_id": "REQ-012-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-020",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-020",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-020",
+      "verb": "next",
+      "to_id": "STP-012-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-020",
+      "verb": "on",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-021",
+      "verb": "applies",
+      "to_id": "REQ-012-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-021",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-021",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290712,8 +292648,398 @@
     },
     {
       "from_id": "STP-012-023",
+      "verb": "next",
+      "to_id": "STP-012-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-023",
       "verb": "on",
       "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-024",
+      "verb": "applies",
+      "to_id": "REQ-012-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-024",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-024",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-024",
+      "verb": "next",
+      "to_id": "STP-012-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-024",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-025",
+      "verb": "applies",
+      "to_id": "REQ-012-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-025",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-025",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-025",
+      "verb": "next",
+      "to_id": "STP-012-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-025",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-026",
+      "verb": "applies",
+      "to_id": "REQ-012-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-026",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-026",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-026",
+      "verb": "next",
+      "to_id": "STP-012-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-026",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-027",
+      "verb": "applies",
+      "to_id": "REQ-012-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-027",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-027",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-027",
+      "verb": "next",
+      "to_id": "STP-012-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-027",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-028",
+      "verb": "applies",
+      "to_id": "REQ-012-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-028",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-028",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-028",
+      "verb": "next",
+      "to_id": "STP-012-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-028",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-029",
+      "verb": "applies",
+      "to_id": "REQ-012-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-029",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-029",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-029",
+      "verb": "next",
+      "to_id": "STP-012-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-030",
+      "verb": "applies",
+      "to_id": "REQ-012-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-030",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-030",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-030",
+      "verb": "next",
+      "to_id": "STP-012-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-031",
+      "verb": "applies",
+      "to_id": "REQ-012-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-031",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-031",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-031",
+      "verb": "next",
+      "to_id": "STP-012-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-032",
+      "verb": "applies",
+      "to_id": "REQ-012-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-032",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-032",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-032",
+      "verb": "on",
+      "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-033",
+      "verb": "applies",
+      "to_id": "REQ-012-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-033",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-033",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-033",
+      "verb": "next",
+      "to_id": "STP-012-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-033",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "applies",
+      "to_id": "REQ-012-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "next",
+      "to_id": "STP-012-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "applies",
+      "to_id": "REQ-012-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-036",
+      "verb": "applies",
+      "to_id": "REQ-012-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-036",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-036",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-036",
+      "verb": "next",
+      "to_id": "STP-012-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-036",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-037",
+      "verb": "applies",
+      "to_id": "REQ-012-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-037",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-037",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-037",
+      "verb": "on",
+      "to_id": "SCR-012-02",
       "attrs": {}
     },
     {
@@ -290748,8 +293074,180 @@
     },
     {
       "from_id": "STP-013-001",
+      "verb": "next",
+      "to_id": "STP-013-002",
+      "attrs": {
+        "label": "patient submits"
+      }
+    },
+    {
+      "from_id": "STP-013-001",
       "verb": "on",
       "to_id": "SCR-013-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "applies",
+      "to_id": "REQ-013-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "applies",
+      "to_id": "REQ-013-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "applies",
+      "to_id": "REQ-013-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "applies",
+      "to_id": "REQ-013-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-002",
+      "verb": "next",
+      "to_id": "STP-013-003",
+      "attrs": {
+        "label": "inputs valid and patient eligible"
+      }
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "applies",
+      "to_id": "REQ-013-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "applies",
+      "to_id": "REQ-013-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "applies",
+      "to_id": "REQ-013-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "applies",
+      "to_id": "REQ-013-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "next",
+      "to_id": "STP-013-004",
+      "attrs": {
+        "label": "the action is an edit of a published review"
+      }
+    },
+    {
+      "from_id": "STP-013-003",
+      "verb": "next",
+      "to_id": "STP-013-005",
+      "attrs": {
+        "label": "initial submission"
+      }
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "applies",
+      "to_id": "REQ-013-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "applies",
+      "to_id": "REQ-013-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-004",
+      "verb": "next",
+      "to_id": "STP-013-005",
+      "attrs": {
+        "label": "edit republished"
+      }
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "applies",
+      "to_id": "REQ-013-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "applies",
+      "to_id": "REQ-013-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "done by",
+      "to_id": "ACT-patient",
       "attrs": {}
     },
     {
@@ -290784,8 +293282,78 @@
     },
     {
       "from_id": "STP-013-011",
+      "verb": "next",
+      "to_id": "STP-013-012",
+      "attrs": {
+        "label": "admin submits the payload"
+      }
+    },
+    {
+      "from_id": "STP-013-011",
       "verb": "on",
       "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "applies",
+      "to_id": "REQ-013-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "applies",
+      "to_id": "REQ-013-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "next",
+      "to_id": "STP-013-013",
+      "attrs": {
+        "label": "fields valid"
+      }
+    },
+    {
+      "from_id": "STP-013-012",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-013",
+      "verb": "applies",
+      "to_id": "REQ-013-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-013",
+      "verb": "applies",
+      "to_id": "REQ-013-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-013",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290814,6 +293382,44 @@
     },
     {
       "from_id": "STP-013-021",
+      "verb": "next",
+      "to_id": "STP-013-022",
+      "attrs": {
+        "label": "admin saves the edit"
+      }
+    },
+    {
+      "from_id": "STP-013-021",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "applies",
+      "to_id": "REQ-013-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
       "verb": "on",
       "to_id": "SCR-013-08",
       "attrs": {}
@@ -290894,8 +293500,72 @@
     },
     {
       "from_id": "STP-013-032",
+      "verb": "next",
+      "to_id": "STP-013-033",
+      "attrs": {
+        "label": "patient confirms the request"
+      }
+    },
+    {
+      "from_id": "STP-013-032",
       "verb": "on",
       "to_id": "SCR-013-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-033",
+      "verb": "applies",
+      "to_id": "REQ-013-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-033",
+      "verb": "applies",
+      "to_id": "REQ-013-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-033",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-033",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-033",
+      "verb": "next",
+      "to_id": "STP-013-034",
+      "attrs": {
+        "label": "request created"
+      }
+    },
+    {
+      "from_id": "STP-013-034",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-034",
+      "verb": "applies",
+      "to_id": "REQ-013-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-034",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-034",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290956,8 +293626,84 @@
     },
     {
       "from_id": "STP-013-042",
+      "verb": "next",
+      "to_id": "STP-013-043",
+      "attrs": {
+        "label": "admin approves or rejects"
+      }
+    },
+    {
+      "from_id": "STP-013-042",
       "verb": "on",
       "to_id": "SCR-013-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "applies",
+      "to_id": "REQ-013-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "applies",
+      "to_id": "REQ-013-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "applies",
+      "to_id": "REQ-013-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "applies",
+      "to_id": "REQ-013-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-043",
+      "verb": "next",
+      "to_id": "STP-013-044",
+      "attrs": {
+        "label": "decision applied"
+      }
+    },
+    {
+      "from_id": "STP-013-044",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-044",
+      "verb": "applies",
+      "to_id": "REQ-013-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-044",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-044",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -290986,8 +293732,272 @@
     },
     {
       "from_id": "STP-013-051",
+      "verb": "next",
+      "to_id": "STP-013-052",
+      "attrs": {
+        "label": "provider taps Respond as Provider"
+      }
+    },
+    {
+      "from_id": "STP-013-051",
       "verb": "on",
       "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-052",
+      "verb": "applies",
+      "to_id": "REQ-013-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-052",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-052",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-052",
+      "verb": "next",
+      "to_id": "STP-013-053",
+      "attrs": {
+        "label": "composer opened"
+      }
+    },
+    {
+      "from_id": "STP-013-052",
+      "verb": "on",
+      "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-053",
+      "verb": "applies",
+      "to_id": "REQ-013-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-053",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-053",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-053",
+      "verb": "next",
+      "to_id": "STP-013-054",
+      "attrs": {
+        "label": "provider enters text"
+      }
+    },
+    {
+      "from_id": "STP-013-053",
+      "verb": "on",
+      "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "applies",
+      "to_id": "REQ-013-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "applies",
+      "to_id": "REQ-013-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "next",
+      "to_id": "STP-013-055",
+      "attrs": {
+        "label": "response valid"
+      }
+    },
+    {
+      "from_id": "STP-013-054",
+      "verb": "on",
+      "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-055",
+      "verb": "applies",
+      "to_id": "REQ-013-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-055",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-055",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-055",
+      "verb": "next",
+      "to_id": "STP-013-056",
+      "attrs": {
+        "label": "provider confirms"
+      }
+    },
+    {
+      "from_id": "STP-013-055",
+      "verb": "on",
+      "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "applies",
+      "to_id": "REQ-013-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "applies",
+      "to_id": "REQ-013-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "applies",
+      "to_id": "REQ-013-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "on",
+      "to_id": "SCR-013-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "applies",
+      "to_id": "REQ-013-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "applies",
+      "to_id": "REQ-013-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "next",
+      "to_id": "STP-013-062",
+      "attrs": {
+        "label": "content flagged by the system"
+      }
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "applies",
+      "to_id": "REQ-013-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "applies",
+      "to_id": "REQ-013-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "applies",
+      "to_id": "REQ-013-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "on",
+      "to_id": "SCR-013-08",
       "attrs": {}
     },
     {
@@ -291510,6 +294520,48 @@
       "from_id": "STP-014-015",
       "verb": "on",
       "to_id": "SCR-014-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-016",
+      "verb": "applies",
+      "to_id": "REQ-014-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-016",
+      "verb": "applies",
+      "to_id": "REQ-014-149",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-016",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-016",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-017",
+      "verb": "applies",
+      "to_id": "REQ-014-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-017",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-017",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -303068,6 +306120,161 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-093449-2a31bb45",
+      "at": "2026-11-10T09:34:49.828133+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-014 system Steps released from 2026-11-10-fr014-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr014-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-014-low-sample",
+        "FLW-014-pipeline-delay",
+        "STP-014-016",
+        "STP-014-017"
+      ],
+      "nodes_updated": [
+        "ACT-system"
+      ],
+      "edges_added": 10,
+      "edges_removed": 0,
+      "rows": 32
+    },
+    {
+      "id": "cs-20261110-093449-6af90fa8",
+      "at": "2026-11-10T09:34:49.712450+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-013 system Steps released from 2026-11-10-fr013-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr013-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-013-flagged-content-review",
+        "STP-013-002",
+        "STP-013-003",
+        "STP-013-004",
+        "STP-013-005",
+        "STP-013-012",
+        "STP-013-013",
+        "STP-013-022",
+        "STP-013-033",
+        "STP-013-034",
+        "STP-013-043",
+        "STP-013-044",
+        "STP-013-052",
+        "STP-013-053",
+        "STP-013-054",
+        "STP-013-055",
+        "STP-013-056",
+        "STP-013-061",
+        "STP-013-062"
+      ],
+      "nodes_updated": [
+        "ACT-system",
+        "STP-013-001",
+        "STP-013-011",
+        "STP-013-021",
+        "STP-013-032",
+        "STP-013-042",
+        "STP-013-051"
+      ],
+      "edges_added": 110,
+      "edges_removed": 0,
+      "rows": 206
+    },
+    {
+      "id": "cs-20261110-093449-a2908019",
+      "at": "2026-11-10T09:34:49.543555+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-012 system Steps released from 2026-11-10-fr012-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr012-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-012-attachment",
+        "FLW-012-connectivity",
+        "FLW-012-invalid-content",
+        "STP-012-011",
+        "STP-012-012",
+        "STP-012-013",
+        "STP-012-014",
+        "STP-012-017",
+        "STP-012-018",
+        "STP-012-019",
+        "STP-012-020",
+        "STP-012-021",
+        "STP-012-024",
+        "STP-012-025",
+        "STP-012-026",
+        "STP-012-027",
+        "STP-012-028",
+        "STP-012-029",
+        "STP-012-030",
+        "STP-012-031",
+        "STP-012-032",
+        "STP-012-033",
+        "STP-012-034",
+        "STP-012-035",
+        "STP-012-036",
+        "STP-012-037"
+      ],
+      "nodes_updated": [
+        "ACT-system",
+        "STP-012-016",
+        "STP-012-023"
+      ],
+      "edges_added": 112,
+      "edges_removed": 0,
+      "rows": 242
+    },
+    {
+      "id": "cs-20261110-093449-4367d8ae",
+      "at": "2026-11-10T09:34:49.381524+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-011 system Steps released from 2026-11-10-fr011-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr011-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-011-w2b-provider-declines",
+        "FLW-011-w3-concerning-symptoms",
+        "FLW-011-w3-missed-task",
+        "FLW-011-w4-provider-suspended",
+        "STP-011-004",
+        "STP-011-006",
+        "STP-011-011",
+        "STP-011-012",
+        "STP-011-013",
+        "STP-011-014",
+        "STP-011-015",
+        "STP-011-017",
+        "STP-011-019",
+        "STP-011-024",
+        "STP-011-025",
+        "STP-011-026",
+        "STP-011-027",
+        "STP-011-031",
+        "STP-011-032",
+        "STP-011-033",
+        "STP-011-034",
+        "STP-011-035",
+        "STP-011-036",
+        "STP-011-037",
+        "STP-011-038",
+        "STP-011-039",
+        "STP-011-040",
+        "STP-011-052",
+        "STP-011-053"
+      ],
+      "nodes_updated": [
+        "ACT-system",
+        "STP-011-003",
+        "STP-011-005",
+        "STP-011-010",
+        "STP-011-016",
+        "STP-011-018",
+        "STP-011-023",
+        "STP-011-028",
+        "STP-011-029",
+        "STP-011-030"
+      ],
+      "edges_added": 123,
+      "edges_removed": 0,
+      "rows": 275
+    },
     {
       "id": "cs-20261110-093349-6a6ecfb2",
       "at": "2026-11-10T09:33:49.937320+00:00",
