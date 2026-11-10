@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T09:40:54Z",
-  "schema_version": 7,
+  "generated_at": "2026-11-10T10:39:05Z",
+  "schema_version": 8,
   "nodes": [
     {
       "id": "ACT-admin-invitee",
@@ -36,6 +36,18 @@
       "attrs": {
         "description": "Hairline team member who supports recovering patients and escalates complications (system PRD persona 3).",
         "group": "provider"
+      }
+    },
+    {
+      "id": "ACT-email-provider",
+      "type": "Actor",
+      "owner_fr": null,
+      "title": "Email provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "group": "external",
+        "description": "The external email server or service that delivers Hairline email, for steps it performs itself (bounces, delivery errors)."
       }
     },
     {
@@ -132,6 +144,30 @@
       "attrs": {
         "group": "provider",
         "description": "Provider Owner: single primary account holder of a provider organization."
+      }
+    },
+    {
+      "id": "ACT-rate-source",
+      "type": "Actor",
+      "owner_fr": null,
+      "title": "Exchange-rate source",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "group": "external",
+        "description": "The external exchange-rate source API that supplies currency rates, for steps it performs itself (API errors)."
+      }
+    },
+    {
+      "id": "ACT-stripe",
+      "type": "Actor",
+      "owner_fr": null,
+      "title": "Stripe",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "group": "external",
+        "description": "Stripe, the external payment processor, for steps the PRDs attribute to Stripe itself (transfers, webhooks, API errors)."
       }
     },
     {
@@ -353135,6 +353171,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-103818-59b45adb",
+      "at": "2026-11-10T10:38:18.257094+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "Add ACT-stripe, ACT-email-provider and ACT-rate-source, the external services, in the new actor group external",
+      "source_id": null,
+      "nodes_added": [
+        "ACT-email-provider",
+        "ACT-rate-source",
+        "ACT-stripe"
+      ],
+      "nodes_updated": [],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 15
+    },
     {
       "id": "cs-20261110-093952-03e89902",
       "at": "2026-11-10T09:39:52.135247+00:00",

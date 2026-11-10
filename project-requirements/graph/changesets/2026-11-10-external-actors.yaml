@@ -1,0 +1,8 @@
+# One Actor per external service that performs a Step itself (D45). Group 'external' exists from schema
+# version 8. No 'acts in' edges here: they are added per FR when the held external Steps are applied.
+reason: "Add ACT-stripe, ACT-email-provider and ACT-rate-source, the external services, in the new actor group external"
+by: fullstack-developer
+operations:
+  - {"op": "add_node", "id": "ACT-stripe", "type": "Actor", "title": "Stripe", "attrs": {"group": "external", "description": "Stripe, the external payment processor, for steps the PRDs attribute to Stripe itself (transfers, webhooks, API errors)."}}
+  - {"op": "add_node", "id": "ACT-email-provider", "type": "Actor", "title": "Email provider", "attrs": {"group": "external", "description": "The external email server or service that delivers Hairline email, for steps it performs itself (bounces, delivery errors)."}}
+  - {"op": "add_node", "id": "ACT-rate-source", "type": "Actor", "title": "Exchange-rate source", "attrs": {"group": "external", "description": "The external exchange-rate source API that supplies currency rates, for steps it performs itself (API errors)."}}
