@@ -12,6 +12,7 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/migrate_schema_v5.py`: moves a version 4 `graph.db` to schema version 5 (see "Schema version 5" below).
 - `scripts/migrate_schema_v6.py`: moves a version 5 `graph.db` to schema version 6 (see "Schema version 6" below).
 - `scripts/migrate_schema_v7.py`: moves a version 6 `graph.db` to schema version 7 (see "Schema version 7" below).
+- `scripts/migrate_schema_v8.py`: moves a version 7 `graph.db` to schema version 8 (see "Schema version 8" below).
 - `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
@@ -158,12 +159,22 @@ Product Owner decisions from the MTG-002 decision log are Source nodes `SRC-PO-0
 
 ## Schema version 7
 
-Version 7 (D44, applied 2026-11-10) adds the value `system` to the `actor_group` enum: the Hairline platform itself, acting for the steps it performs automatically. One Actor, `ACT-system`, carries that group, so a Step the PRD attributes to "System" can be `done by` it. Groups are now `admin`, `provider`, `patient` and `system`. External services (payment gateway, email and SMS providers) are not covered; whether they count as the system is still open.
+Version 7 (D44, applied 2026-11-10) adds the value `system` to the `actor_group` enum: the Hairline platform itself, acting for the steps it performs automatically. One Actor, `ACT-system`, carries that group, so a Step the PRD attributes to "System" can be `done by` it. Groups are now `admin`, `provider`, `patient` and `system`. External services (payment gateway, email and SMS providers) are not the system; version 8 gives them their own group.
 
 `actor_group` lives only in the JSON attrs of Actor nodes, not in a CHECK or trigger, so no table changes. The migration checks that the DB's DDL equals what `init_db.py` writes for the version 7 schema, backs up `graph.db`, and sets `PRAGMA user_version` to 7:
 
 ```bash
 /usr/bin/python3 scripts/migrate_schema_v7.py      # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+## Schema version 8
+
+Version 8 (D45, applied 2026-11-10) adds the value `external` to the `actor_group` enum: a service outside Hairline that performs a step itself. External services are not the system, so each gets its own Actor: `ACT-stripe` (Stripe), `ACT-email-provider` (the email provider) and `ACT-rate-source` (the exchange-rate source). A Step whose subject is the service, such as "Stripe webhook is received", is `done by` that Actor. Hairline's own modules stay in the system: the Payment Service (S-02) is part of the platform, so its Steps are `done by` `ACT-system` (D46). Groups are now `admin`, `provider`, `patient`, `system` and `external`.
+
+As in version 7, only `PRAGMA user_version` changes. The migration checks that the DB's DDL equals what `init_db.py` writes for the version 8 schema, backs up `graph.db`, and sets `PRAGMA user_version` to 8:
+
+```bash
+/usr/bin/python3 scripts/migrate_schema_v8.py      # backs up graph.db to backups/ first; --db PATH for another file
 ```
 
 ## Run the tests

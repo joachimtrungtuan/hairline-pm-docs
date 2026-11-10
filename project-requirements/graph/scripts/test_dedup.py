@@ -1,4 +1,4 @@
-"""Tests for Rule de-duplication: merge_node, lint L12 and L13, query.py duplicates and the v5, v6 and v7 migrations.
+"""Tests for Rule de-duplication: merge_node, lint L12 and L13, query.py duplicates and the v5 to v8 migrations.
 
 Run from the scripts folder: /usr/bin/python3 -m unittest -q
 """
@@ -14,6 +14,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 import yaml
 
@@ -22,6 +23,7 @@ import lint
 import migrate_schema_v5
 import migrate_schema_v6
 import migrate_schema_v7
+import migrate_schema_v8
 import query
 import write
 from common import SCHEMA_PATH, connect, parse_schema
@@ -233,9 +235,17 @@ class TestQueryDuplicates(DedupTestCase):
         self.assertIn("non-empty", err)
 
 
+def v7_raw():
+    """schema.yaml as it was before version 8: no 'external' actor group."""
+    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw["version"] = 7
+    raw["enums"]["actor_group"].remove(migrate_schema_v8.NEW_GROUP)
+    return raw
+
+
 def v6_raw():
     """schema.yaml as it was before version 7: no 'system' actor group."""
-    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw = v7_raw()
     raw["version"] = 6
     raw["enums"]["actor_group"].remove(migrate_schema_v7.NEW_GROUP)
     return raw
@@ -262,6 +272,10 @@ def v6_schema():
 
 
 def v7_schema():
+    return parse_schema(v7_raw())
+
+
+def v8_schema():
     return parse_schema(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
 
 
@@ -464,10 +478,94 @@ class TestMigrateV7(unittest.TestCase):
         self.assertFalse((self.db.parent / "backups").exists())
 
     def test_cli_migrates_and_reports_missing_db(self) -> None:
-        code, out, _ = run_cli(migrate_schema_v7, "--db", str(self.db))
+        # schema.yaml is now a later version, so the CLI is given the version 7 schema it was written for.
+        with mock.patch.object(migrate_schema_v7, "load_schema", v7_schema):
+            code, out, _ = run_cli(migrate_schema_v7, "--db", str(self.db))
+            self.assertEqual(code, 0)
+            self.assertIn("schema version 7", out)
+            code, _, err = run_cli(migrate_schema_v7, "--db", str(Path(self._tmp.name) / "missing.db"))
+        self.assertEqual(code, 1)
+        self.assertIn("does not exist", err)
+
+
+class TestMigrateV8(unittest.TestCase):
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.db = Path(self._tmp.name) / "graph.db"
+        init_db.init_db(self.db, schema=v7_schema())
+        conn = connect(self.db)
+        write.apply_changeset(conn, v7_schema(), {"reason": "seed", "by": "tester", "operations": [
+            {"op": "add_node", "id": "ACT-system", "type": "Actor", "title": "Hairline system", "attrs": {"group": "system"}},
+        ]})
+        conn.close()
+        self.external_actor = {"reason": "external actor", "by": "tester", "operations": [
+            {"op": "add_node", "id": "ACT-stripe", "type": "Actor", "title": "Stripe", "attrs": {"group": "external"}}]}
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def dump(self, path: Path) -> dict[str, list[tuple]]:
+        conn = connect(path)
+        try:
+            return {t: conn.execute(f"SELECT rowid, * FROM {t} ORDER BY rowid").fetchall() for t in migrate_schema_v6.TABLES}
+        finally:
+            conn.close()
+
+    def test_old_schema_refuses_external_group(self) -> None:
+        conn = connect(self.db)
+        try:
+            with self.assertRaises(write.ChangeSetError):
+                write.apply_changeset(conn, v7_schema(), self.external_actor)
+        finally:
+            conn.close()
+
+    def test_migrates_rows_unchanged_and_accepts_external_group(self) -> None:
+        before = self.dump(self.db)
+        backup = migrate_schema_v8.migrate(self.db, v8_schema())
+        self.assertTrue(backup.is_file())
+        self.assertEqual(backup.parent, self.db.parent / "backups")
+        self.assertEqual(self.dump(self.db), before)
+        self.assertEqual(self.dump(backup), before)
+        conn = connect(self.db)
+        try:
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 8)
+            write.apply_changeset(conn, v8_schema(), self.external_actor)
+            self.assertEqual(conn.execute("SELECT json_extract(attrs, '$.group') FROM nodes WHERE id = 'ACT-stripe'").fetchone()[0], "external")
+            fresh = Path(self._tmp.name) / "fresh.db"
+            init_db.init_db(fresh, schema=v8_schema())
+            ddl = "SELECT type, name, sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY name"
+            fresh_conn = connect(fresh)
+            self.assertEqual(conn.execute(ddl).fetchall(), fresh_conn.execute(ddl).fetchall())
+            fresh_conn.close()
+        finally:
+            conn.close()
+
+    def test_refuses_wrong_schema_or_db_version_and_leaves_db(self) -> None:
+        before = self.db.read_bytes()
+        with self.assertRaises(migrate_schema_v8.MigrationError):
+            migrate_schema_v8.migrate(self.db, v7_schema())
+        self.assertEqual(self.db.read_bytes(), before)
+        self.assertFalse((self.db.parent / "backups").exists())
+        migrate_schema_v8.migrate(self.db, v8_schema())
+        with self.assertRaises(migrate_schema_v8.MigrationError):
+            migrate_schema_v8.migrate(self.db, v8_schema())
+
+    def test_refuses_db_whose_ddl_drifted_from_the_schema(self) -> None:
+        conn = connect(self.db)
+        conn.execute("CREATE INDEX stray_index ON nodes(title)")
+        conn.commit()
+        conn.close()
+        before = self.db.read_bytes()
+        with self.assertRaises(migrate_schema_v8.MigrationError):
+            migrate_schema_v8.migrate(self.db, v8_schema())
+        self.assertEqual(self.db.read_bytes(), before)
+        self.assertFalse((self.db.parent / "backups").exists())
+
+    def test_cli_migrates_and_reports_missing_db(self) -> None:
+        code, out, _ = run_cli(migrate_schema_v8, "--db", str(self.db))
         self.assertEqual(code, 0)
-        self.assertIn("schema version 7", out)
-        code, _, err = run_cli(migrate_schema_v7, "--db", str(Path(self._tmp.name) / "missing.db"))
+        self.assertIn("schema version 8", out)
+        code, _, err = run_cli(migrate_schema_v8, "--db", str(Path(self._tmp.name) / "missing.db"))
         self.assertEqual(code, 1)
         self.assertIn("does not exist", err)
 
