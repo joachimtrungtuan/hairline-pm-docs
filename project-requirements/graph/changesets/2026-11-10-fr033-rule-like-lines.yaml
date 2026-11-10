@@ -1,0 +1,17 @@
+reason: "FR-033 Rules from rule-like PRD lines outside the business-rule sections (Validation Rules cells, screen business-rule bullets, Security Considerations and External Dependencies lines), released from 2026-11-10-fr033-completeness-held.yaml after decision D51: each statement is the PRD text at its cited line word for word and duplicates no live Rule. Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2350-rule-like-lines-apply.md)."
+by: fullstack-developer
+operations:
+  - {"op": "add_node", "id": "REQ-033-089", "type": "Rule", "owner_fr": "FR-033", "title": "Media storage failure: queue uploads, cached content, notify admin", "attrs": {"statement": "If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues", "rationale": "Dependencies, External Dependencies, Media Storage Service failure handling (PRD line 1140)."}}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_node", "id": "REQ-033-090", "type": "Rule", "owner_fr": "FR-033", "title": "Editor library fails to load: plain textarea fallback", "attrs": {"statement": "If editor library fails to load, fall back to plain textarea with markdown support", "rationale": "Dependencies, External Dependencies, Rich Text Editor Library failure handling (PRD line 1145)."}}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "REQ-033-091", "type": "Rule", "owner_fr": "FR-033", "title": "Virus scanner unavailable: quarantine uploads", "attrs": {"statement": "If virus scanner unavailable, quarantine uploads and notify admin; do not make files available to providers until scan completes", "rationale": "Dependencies, External Dependencies, Virus Scanning Service failure handling (PRD line 1150)."}}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ENT-content-attachment"}
+  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ACT-platform-admin"}

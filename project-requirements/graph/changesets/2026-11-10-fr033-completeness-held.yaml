@@ -5,18 +5,4 @@ by: tester
 operations:
   # 2026-11-10 D44: 356 ops that waited only on the system Actor left this file (356 moved to 2026-11-10-fr033-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D47/D48: 4 ops left this file (moved to 2026-11-10-fr033-doer-decisions.yaml): the conflict or doer-reading Steps and the ops that waited only on them; the ops below still wait on their own reason.
-  # waits on: whether the External Dependencies failure-handling lines (PRD 1140, 1145, 1150) are Rules; the migration left them out (controller moved these from the fixes file)
-  - {"op": "add_node", "id": "REQ-033-089", "type": "Rule", "owner_fr": "FR-033", "title": "Media storage failure: queue uploads, cached content, notify admin", "attrs": {"statement": "If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues", "rationale": "Dependencies, External Dependencies, Media Storage Service failure handling (PRD line 1140)."}}
-  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies at", "to": "STG-provider-03-active"}
-  - {"op": "add_node", "id": "REQ-033-090", "type": "Rule", "owner_fr": "FR-033", "title": "Editor library fails to load: plain textarea fallback", "attrs": {"statement": "If editor library fails to load, fall back to plain textarea with markdown support", "rationale": "Dependencies, External Dependencies, Rich Text Editor Library failure handling (PRD line 1145)."}}
-  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-provider-03-active"}
-  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies at", "to": "STG-patient-03-active"}
-  - {"op": "add_node", "id": "REQ-033-091", "type": "Rule", "owner_fr": "FR-033", "title": "Virus scanner unavailable: quarantine uploads", "attrs": {"statement": "If virus scanner unavailable, quarantine uploads and notify admin; do not make files available to providers until scan completes", "rationale": "Dependencies, External Dependencies, Virus Scanning Service failure handling (PRD line 1150)."}}
-  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-provider-03-active"}
-  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies at", "to": "STG-patient-03-active"}
-  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ENT-content-attachment"}
-  - {"op": "add_edge", "from": "REQ-033-089", "verb": "applies to", "to": "ACT-platform-admin"}
-  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-07"}
-  - {"op": "add_edge", "from": "REQ-033-090", "verb": "applies to", "to": "SCR-033-21"}
-  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ENT-content-attachment"}
-  - {"op": "add_edge", "from": "REQ-033-091", "verb": "applies to", "to": "ACT-platform-admin"}
+  # 2026-11-10 D51: rule-like lines outside the business-rule sections become Rules unless they duplicate a live Rule: 3 verbatim Rules with no live duplicate and their edges (14 ops) left this file for 2026-11-10-fr033-rule-like-lines.yaml; 0 ops dropped (see plans/reports/fullstack-developer-261110-2350-rule-like-lines-apply.md).
