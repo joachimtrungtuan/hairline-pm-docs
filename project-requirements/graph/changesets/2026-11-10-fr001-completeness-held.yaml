@@ -4,6 +4,7 @@ operations:
   # 2026-11-10 D44: 132 ops that waited only on the system Actor left this file (132 moved to 2026-11-10-fr001-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D47/D48: 9 ops left this file (moved to 2026-11-10-fr001-doer-decisions.yaml): the conflict or doer-reading Steps and the ops that waited only on them; the ops below still wait on their own reason.
   # 2026-11-10 D52: 42 ops left this file (moved to 2026-11-10-fr001-rule-wording.yaml, with 16 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
+  # 2026-11-10 D52 split edge placement: 1 op left this file (moved to 2026-11-10-fr001-rule-data-links.yaml, target changed as the user decided): REQ-001-157 applies to ENT-otp-code.expires_at instead of ENT-otp-code.code; the ops below still wait on their own reason.
   - {"op": "add_node", "id": "SCR-001-20", "type": "Screen", "owner_fr": "FR-001", "title": "Splash Screen", "attrs": {"platform": "patient", "description": "PRD Screen 1 (prd.md line 307). Purpose: Initial app loading and branding display."}}
   # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
   - {"op": "add_edge", "from": "SCR-001-20", "verb": "belongs to", "to": "STG-patient-01-registered"}
@@ -56,8 +57,6 @@ operations:
   # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
   # wording approved (decision D52); this op waits only on SCR-001-22, which stays held
   - {"op": "add_edge", "from": "REQ-001-152", "verb": "applies to", "to": "SCR-001-22"}
-  # waits on: split edge placement (decision D52): REQ-001-157 applies to ENT-otp-code.code was copied from REQ-001-147; the copied edge targets the code value field; the expiry concerns the code lifetime (ENT-otp-code.expires_at), so which field it applies to is for the user
-  - {"op": "add_edge", "from": "REQ-001-157", "verb": "applies to", "to": "ENT-otp-code.code"}
   # waits on: new Screen nodes (a screen with no fields shown raises L03; accept or give the screen a shows target)
   # new op (decision D52 split, copied from REQ-001-152); it waits only on SCR-001-22, which stays held
   - {"op": "add_edge", "from": "REQ-001-160", "verb": "applies to", "to": "SCR-001-22"}

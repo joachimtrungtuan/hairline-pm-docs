@@ -1,0 +1,5 @@
+reason: "FR-001 Rule data link released from 2026-11-10-fr001-completeness-held.yaml after the user decided the split edge placement (decision D52): REQ-001-157 applies to ENT-otp-code.expires_at, not to the copied target ENT-otp-code.code. Apply after 2026-11-10-fr001-rule-wording.yaml."
+by: fullstack-developer
+operations:
+  # target decided by the user on 2026-11-10 (the reset code expiry concerns the code lifetime); replaces the held edge to ENT-otp-code.code
+  - {"op": "add_edge", "from": "REQ-001-157", "verb": "applies to", "to": "ENT-otp-code.expires_at"}
