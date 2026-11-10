@@ -52,3 +52,17 @@ Lint is unchanged at 4,365 findings (L10 4,151, L12 180, L18 34), checked on a c
 
 Still open with the user: whether external services (payment gateway, email and SMS providers) count as the system. Steps attributed to an external service stay held. The held change-sets were not touched.
 
+## Addendum: schema v8, external-service Actors (same day, D45 and D46)
+
+The user decided that external services are not the system (D45): each gets its own Actor in a new actor group `external`. Hairline's own Payment Service (shared module S-02) is part of the system (D46), so its Steps are `done by` `ACT-system`.
+
+| Item | Change |
+|---|---|
+| `graph/schema.yaml` | Version 8; `external` added to the `actor_group` enum (a service outside Hairline that performs a step itself) |
+| `graph/scripts/migrate_schema_v8.py` | New. As in v7, no table changes: it checks the DDL equals the version 8 DDL, backs up, and sets `user_version` 8 |
+| `graph/scripts/test_dedup.py` | Five v8 migration tests added (229 tests pass, was 224); the older migration tests derive their schemas from a v7 schema, and the v7 CLI test is given the v7 schema |
+| `graph/README.md` | "Schema version 8" section and script entry; the v7 note on external services now points to v8 |
+| `graph/changesets/2026-11-10-external-actors.yaml` | Adds `ACT-stripe`, `ACT-email-provider` and `ACT-rate-source` (Actor, group `external`); `acts in` edges come with their Steps |
+| `graph/graph.db`, `graph/graph.json` | Migrated and re-exported (10535 nodes); backup `graph/backups/graph-20261110-173818.db` (git-ignored) |
+
+Lint is unchanged at 4,403 findings (L10 4,151, L12 180, L18 72), on a copy first and on the real DB. No Rule was changed. The held external-service Steps were released afterwards; see the D45/D46 section of `GRAPH_STEP1_COMPLETENESS_RUN_2026-11-10.md`.

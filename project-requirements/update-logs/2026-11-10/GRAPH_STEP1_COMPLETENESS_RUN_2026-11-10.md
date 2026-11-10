@@ -50,3 +50,13 @@ Decision D44 made `ACT-system` the one actor for system Steps. The held ops whos
   - 7 no-doer Steps whose title names a person who receives or sees something (doer reading);
   - ops waiting on other decisions (stage placement, enum, Rule wording, review-queue items), and everything that depends on a held op or that no Flow would reach.
 - **Report:** `plans/reports/fullstack-developer-261110-1630-system-steps-apply.md` (Hairline root).
+
+## External-service and payment-capture release (decisions D45 and D46), applied 2026-11-10 evening
+
+D45 gave each external service its own Actor (schema v8, group `external`: `ACT-stripe`, `ACT-email-provider`, `ACT-rate-source`). D46 placed the Payment Service (S-02) in the system. The 10 Steps held under the external-service question, and the ops held only because of them, moved from 7 held files into `graph/changesets/2026-11-10-frNNN-external-steps.yaml` (FR-006, FR-007, FR-017, FR-018, FR-029, FR-030, FR-031) and were applied to the live graph in FR number order.
+
+- **Doers.** STP-017-045, STP-017-046, STP-018-084 and STP-029-112 are `done by ACT-stripe`; STP-029-119 `done by ACT-rate-source`; STP-030-050 and STP-031-732 `done by ACT-email-provider`; STP-006-005, STP-006-201 and STP-007-042 `done by ACT-system`. 34 released downstream system Steps with no doer got `done by ACT-system` as under D44. 4 `acts in` edges were added for the external Actors. No existing doer was changed.
+- **Ops.** 271 held ops released unaltered (including the 61 ops held with the payment-capture Steps in commit 315e7be), plus 48 generated edges (319 ops applied). The count proof passes for all 38 FRs: 2,988 held before = 271 released + 2,717 still held. A control run with the 10 Steps kept held releases nothing. Ops with any other wait reason were not touched.
+- **Backup and lint.** Backup `graph/backups/graph-20261110-174348.db` (git-ignored). Lint 4,403 to 4,404: one new L18, the open hand-off on STP-017-008 to FR-032 and FR-034; no L14, L15, L16, L17 or L19. Tests (229) passed; `graph.json` re-exported (10592 active nodes). Local-docs commits f544f4d, 45f8a98, 09095eb, 26d2650.
+- **Still held: 2,717 ops**, none of them on the external-service question: the 81 conflict Steps, the 7 doer-reading Steps, ops waiting on other decisions, and everything that depends on them.
+- **Report:** `plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md` (Hairline root).
