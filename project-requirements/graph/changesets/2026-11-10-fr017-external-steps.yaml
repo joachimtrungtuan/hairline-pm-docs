@@ -1,0 +1,126 @@
+reason: "FR-017 Steps released from 2026-11-10-fr017-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr017-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md)."
+by: fullstack-developer
+operations:
+# waits on: no System Actor
+  # waits on: external-service question (an external service performs this Step)
+  - {"op": "add_node", "id": "STP-017-045", "type": "Step", "title": "Stripe processes the transfer in 1 to 2 business days", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 15"}}
+  # done by: ACT-stripe (decision D45; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-045", "verb": "done by", "to": "ACT-stripe"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-045 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-045", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-045", "verb": "applies", "to": "REQ-017-039"}
+# waits on: no System Actor
+  # waits on: external-service question (an external service performs this Step)
+  - {"op": "add_node", "id": "STP-017-046", "type": "Step", "title": "Stripe webhook is received", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16"}}
+  # done by: ACT-stripe (decision D45; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "done by", "to": "ACT-stripe"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-046 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "applies", "to": "REQ-017-039"}
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "applies", "to": "REQ-017-022"}
+# waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-047", "type": "Step", "title": "transfer.paid: status Paid and invoice PDF with itemised breakdown generated", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 17"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "done by", "to": "ACT-system"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-047 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-039"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-125"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-150"}
+# waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-050", "type": "Step", "title": "transfer.failed: status Failed and admin notified", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16a"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "done by", "to": "ACT-system"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-050 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "applies", "to": "REQ-017-042"}
+# waits on: no System Actor (cascade)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-008", "type": "Step", "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16c", "handoff_to": "FR-032 (provider updates bank details in Billing Settings); FR-034 (support contact)"}}
+# waits on: no System Actor (cascade)
+  # waits on: endpoint STP-017-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "applies", "to": "REQ-017-042"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "applies", "to": "REQ-017-066"}
+# waits on: no System Actor (cascade)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-009", "type": "Step", "title": "Other Stripe error: admin investigates, resolves and retries the transfer", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16d"}}
+# waits on: no System Actor (cascade)
+  # waits on: endpoint STP-017-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "applies", "to": "REQ-017-042"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "applies", "to": "REQ-017-066"}
+# waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-048", "type": "Step", "title": "System emails and pushes the provider with the invoice attached", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 18"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "done by", "to": "ACT-system"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-048 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "applies", "to": "REQ-017-043"}
+# waits on: no System Actor (cascade)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-010", "type": "Step", "title": "Provider dashboard shows the confirmed payout and invoice download", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 19"}}
+# waits on: no System Actor (cascade)
+  # waits on: endpoint STP-017-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "on", "to": "SCR-017-12"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "applies", "to": "REQ-017-043"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "applies", "to": "REQ-017-125"}
+# waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-017-049", "type": "Step", "title": "Full transaction is logged in the audit trail", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 20"}}
+  # done by: ACT-system (decision D44; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "done by", "to": "ACT-system"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-049 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "applies", "to": "REQ-017-018"}
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "applies", "to": "REQ-017-127"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-045 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-044", "verb": "next", "to": "STP-017-045"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-045 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-045", "verb": "next", "to": "STP-017-046"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-046 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "next", "to": "STP-017-047", "attrs": {"label": "transfer.paid"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-046 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-046", "verb": "next", "to": "STP-017-050", "attrs": {"label": "transfer.failed"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-050 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "next", "to": "STP-017-008", "attrs": {"label": "invalid bank account"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-050 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "next", "to": "STP-017-009", "attrs": {"label": "other Stripe error"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "next", "to": "STP-017-044", "attrs": {"label": "retry"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-009 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "next", "to": "STP-017-044", "attrs": {"label": "retry"}}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-047 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "next", "to": "STP-017-048"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-048 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "next", "to": "STP-017-010"}
+# waits on: no System Actor
+  # waits on: endpoint STP-017-010 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "next", "to": "STP-017-049"}
+  # acts in: the external Actors at the Stages of their released Steps (decision D45)
+  - {"op": "add_edge", "from": "ACT-stripe", "verb": "acts in", "to": "STG-main-06-treatment"}

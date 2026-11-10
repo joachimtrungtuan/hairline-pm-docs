@@ -2,24 +2,7 @@ reason: "FR-031 completeness fixes held for user decisions: every Step the PRD a
 by: tester
 operations:
   # 2026-11-10 D44: 501 ops that waited only on the system Actor left this file (501 moved to 2026-11-10-fr031-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
-  # waits on: no System Actor
-  # waits on: external-service question (an external service performs this Step)
-  - {"op": "add_node", "id": "STP-031-732", "type": "Step", "title": "Email service returns error", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 2"}}
-  # waits on: no System Actor
-  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_node", "id": "STP-031-733", "type": "Step", "title": "System logs and retries three times", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 3"}}
-  # waits on: no System Actor
-  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_node", "id": "STP-031-734", "type": "Step", "title": "System marks Pending Send", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 4"}}
-  # waits on: no System Actor
-  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_node", "id": "STP-031-735", "type": "Step", "title": "System warns Super Admin", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 5"}}
-  # waits on: no System Actor
-  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_node", "id": "STP-031-736", "type": "Step", "title": "Background job retries for 24 hours", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 6"}}
-  # waits on: no System Actor
-  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_node", "id": "STP-031-737", "type": "Step", "title": "System alerts admin team", "owner_fr": "FR-031", "attrs": {"prd_ref": "B4 step 7"}}
+  # 2026-11-10 D45/D46: 24 ops left this file (moved to 2026-11-10-fr031-external-steps.yaml): the external-service or payment-capture Steps and the ops that waited only on them; the ops below still wait on their own reason.
   # waits on: no System Actor
   # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
   - {"op": "add_node", "id": "STP-031-742", "type": "Step", "title": "Admin reaches a restricted feature", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 2"}}
@@ -35,42 +18,6 @@ operations:
   # waits on: no System Actor
   # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-031-746", "type": "Step", "title": "System alerts Super Admin on repeats", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 6"}}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-732 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-732", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-732 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-732", "verb": "applies", "to": "REQ-031-043"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-733 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-733", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-733 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-733", "verb": "applies", "to": "REQ-031-043"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-734 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-734", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-734 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-734", "verb": "applies", "to": "REQ-031-043"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-735 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-735", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-735 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-735", "verb": "applies", "to": "REQ-031-043"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-736 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-736", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-736 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-736", "verb": "applies", "to": "REQ-031-043"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-737 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-737", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on: no System Actor
-  # waits on: endpoint STP-031-737 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-737", "verb": "applies", "to": "REQ-031-043"}
   # waits on: no System Actor (B5 step 2 names 'Admin user'; the Actor is a decision, so no done by)
   # waits on: no System Actor
   # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
@@ -108,24 +55,6 @@ operations:
   # waits on: no System Actor
   # waits on: endpoint STP-031-746 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-031-746", "verb": "applies", "to": "REQ-031-090"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-732 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-731", "verb": "next", "to": "STP-031-732"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-732 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-732", "verb": "next", "to": "STP-031-733"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-733 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-733", "verb": "next", "to": "STP-031-734"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-734 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-734", "verb": "next", "to": "STP-031-735"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-735 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-735", "verb": "next", "to": "STP-031-736"}
-  # waits on: no System Actor (chain touches a held Step)
-  # waits on: endpoint STP-031-736 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-031-736", "verb": "next", "to": "STP-031-737"}
   # waits on: no System Actor (chain touches a held Step)
   # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-031-741", "verb": "next", "to": "STP-031-742"}
