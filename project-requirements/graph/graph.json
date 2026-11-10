@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T14:06:53Z",
+  "generated_at": "2026-11-10T14:17:33Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -107180,7 +107180,7 @@
       "owner_fr": "FR-021",
       "title": "System displays impacted locale, tenant/surface, groups, keys, and rollback warning",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 4R"
       }
@@ -107202,7 +107202,7 @@
       "owner_fr": "FR-021",
       "title": "System creates new rollback version from prior bundle contents and marks it active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 6R"
       }
@@ -107213,7 +107213,7 @@
       "owner_fr": "FR-021",
       "title": "System requires elevated authorization, change reason, and placeholder validation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 6P (English source changed)"
       }
@@ -107224,7 +107224,7 @@
       "owner_fr": "FR-021",
       "title": "System marks dependent non-English translations Review Needed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 7P"
       }
@@ -107235,7 +107235,7 @@
       "owner_fr": "FR-021",
       "title": "System validates placeholders, ICU syntax, required values, and length guidance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 6P (English source not changed)"
       }
@@ -107246,7 +107246,7 @@
       "owner_fr": "FR-021",
       "title": "System blocks save, import, or publish and shows errors for correction",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 9"
       }
@@ -107257,7 +107257,7 @@
       "owner_fr": "FR-021",
       "title": "System saves accepted changes as draft and marks keys Pending Publish",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 9A"
       }
@@ -107268,7 +107268,7 @@
       "owner_fr": "FR-021",
       "title": "System validates JSON syntax, known keys, duplicate keys, placeholders, ICU syntax, locale compatibility, and unsupported or orphaned keys",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 5J"
       }
@@ -107279,7 +107279,7 @@
       "owner_fr": "FR-021",
       "title": "System shows validation preview with created, updated, unchanged, skipped, row-warning, and error counts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 7J"
       }
@@ -107312,7 +107312,7 @@
       "owner_fr": "FR-021",
       "title": "System generates draft values only for missing target-language keys",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 7M (prefill)"
       }
@@ -107323,7 +107323,7 @@
       "owner_fr": "FR-021",
       "title": "System generates replacement draft values for all selected target-language keys except English source",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 7M (replace)"
       }
@@ -107334,7 +107334,7 @@
       "owner_fr": "FR-021",
       "title": "System validates placeholders, ICU syntax, protected terms, unsupported keys, and provider response errors",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 8M"
       }
@@ -107367,7 +107367,7 @@
       "owner_fr": "FR-021",
       "title": "System runs publish validation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 12"
       }
@@ -107378,7 +107378,7 @@
       "owner_fr": "FR-021",
       "title": "System creates immutable published bundle version and marks it active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 13"
       }
@@ -107400,7 +107400,7 @@
       "owner_fr": "FR-021",
       "title": "System stores encrypted credential and verifies connection",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 4"
       }
@@ -107411,7 +107411,7 @@
       "owner_fr": "FR-021",
       "title": "System translates missing target-language keys only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 6A"
       }
@@ -107422,7 +107422,7 @@
       "owner_fr": "FR-021",
       "title": "System translates all selected target-language keys and stages replacements",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 6B"
       }
@@ -107433,7 +107433,7 @@
       "owner_fr": "FR-021",
       "title": "System saves machine-generated values as draft and marks Review Needed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 7"
       }
@@ -109344,7 +109344,7 @@
       "owner_fr": "FR-025",
       "title": "Admin clicks Set as Active for Inquiry on a published Inquiry or Multi-Context set",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: Activating a set for Inquiry"
       }
@@ -109355,7 +109355,7 @@
       "owner_fr": "FR-025",
       "title": "Admin is told activation is blocked because only published sets can be designated",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: set is Draft or Archived"
       }
@@ -109366,7 +109366,7 @@
       "owner_fr": "FR-025",
       "title": "Admin is asked to confirm replacing the current Inquiry set and confirms",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: another set is designated, Admin confirms"
       }
@@ -109377,7 +109377,7 @@
       "owner_fr": "FR-025",
       "title": "Admin sees the set designated as the active Inquiry questionnaire and serving new inquiries",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: Set is actively serving all new patient inquiries"
       }
@@ -109388,7 +109388,7 @@
       "owner_fr": "FR-025",
       "title": "Admin cancels the replace confirmation; the previous set remains active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 alternative flow A1"
       }
@@ -109399,7 +109399,7 @@
       "owner_fr": "FR-025",
       "title": "Admin archives the active Inquiry set or removes its designation; the Inquiry flow is flagged unconfigured and the admin is notified",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 alternative flow A2"
       }
@@ -110710,7 +110710,7 @@
       "owner_fr": "FR-028",
       "title": "Admin opens the Location Presentation by Country tab",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 1"
       }
@@ -110721,7 +110721,7 @@
       "owner_fr": "FR-028",
       "title": "Admin clicks Add New Regional Grouping",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 2"
       }
@@ -110732,7 +110732,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the grouping name",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 3"
       }
@@ -110743,7 +110743,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the countries of the grouping",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 4"
       }
@@ -110754,7 +110754,7 @@
       "owner_fr": "FR-028",
       "title": "Admin defines the location presentation order and sees the preview",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 5"
       }
@@ -110765,7 +110765,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 6"
       }
@@ -110776,7 +110776,7 @@
       "owner_fr": "FR-028",
       "title": "Admin saves the regional grouping",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 7"
       }
@@ -110787,7 +110787,7 @@
       "owner_fr": "FR-028",
       "title": "System validates configuration completeness, including the change reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 8"
       }
@@ -110798,7 +110798,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the configuration to the database",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 9"
       }
@@ -110809,7 +110809,7 @@
       "owner_fr": "FR-028",
       "title": "System clears the location presentation cache",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 10"
       }
@@ -110820,7 +110820,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the save confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 11"
       }
@@ -110831,7 +110831,7 @@
       "owner_fr": "FR-028",
       "title": "System logs the configuration change in the audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 12"
       }
@@ -110842,7 +110842,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects an existing regional grouping",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 1"
       }
@@ -110853,7 +110853,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the current countries and location order",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 2"
       }
@@ -110864,7 +110864,7 @@
       "owner_fr": "FR-028",
       "title": "Admin modifies the countries or reorders the destinations",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 3"
       }
@@ -110875,7 +110875,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 4"
       }
@@ -110886,7 +110886,7 @@
       "owner_fr": "FR-028",
       "title": "Admin saves the changes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 5"
       }
@@ -110897,7 +110897,7 @@
       "owner_fr": "FR-028",
       "title": "System validates, saves, clears the cache and confirms",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 6"
       }
@@ -110908,7 +110908,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the regional grouping to delete",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 1"
       }
@@ -110919,7 +110919,7 @@
       "owner_fr": "FR-028",
       "title": "System warns how many countries are affected",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 2"
       }
@@ -110930,7 +110930,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason and confirms the deletion",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 3"
       }
@@ -110941,7 +110941,7 @@
       "owner_fr": "FR-028",
       "title": "System archives the grouping and clears the cache",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 4"
       }
@@ -110952,7 +110952,7 @@
       "owner_fr": "FR-028",
       "title": "System confirms the archive",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 5"
       }
@@ -110963,7 +110963,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a grouping with no country selected",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1: Admin Attempts to Save Regional Grouping Without Countries step 1"
       }
@@ -110974,7 +110974,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the missing-country validation error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1: Admin Attempts to Save Regional Grouping Without Countries step 2"
       }
@@ -110985,7 +110985,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects countries or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1: Admin Attempts to Save Regional Grouping Without Countries step 3"
       }
@@ -110996,7 +110996,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a grouping with no destination ordered",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2: Admin Attempts to Save Regional Grouping Without Location Order step 1"
       }
@@ -111007,7 +111007,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the missing-order validation error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2: Admin Attempts to Save Regional Grouping Without Location Order step 2"
       }
@@ -111018,7 +111018,7 @@
       "owner_fr": "FR-028",
       "title": "Admin adds destination ordering or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2: Admin Attempts to Save Regional Grouping Without Location Order step 3"
       }
@@ -111029,7 +111029,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a grouping change without a change reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Save Without Change Reason step 1"
       }
@@ -111040,7 +111040,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the change-reason validation error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Save Without Change Reason step 2"
       }
@@ -111051,7 +111051,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Save Without Change Reason step 3"
       }
@@ -111062,7 +111062,7 @@
       "owner_fr": "FR-028",
       "title": "Admin opens the Location Pricing tab",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 1"
       }
@@ -111073,7 +111073,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the destination location",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 2"
       }
@@ -111084,7 +111084,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the current pricing configuration for the destination",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 3"
       }
@@ -111095,7 +111095,7 @@
       "owner_fr": "FR-028",
       "title": "Admin clicks Add Currency or Edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 4"
       }
@@ -111106,7 +111106,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the currency",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 5"
       }
@@ -111117,7 +111117,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the starting price amount",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 6"
       }
@@ -111128,7 +111128,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 7"
       }
@@ -111139,7 +111139,7 @@
       "owner_fr": "FR-028",
       "title": "Admin saves the currency-price configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 8"
       }
@@ -111150,7 +111150,7 @@
       "owner_fr": "FR-028",
       "title": "System validates the currency, price, decimal places and change reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 9"
       }
@@ -111161,7 +111161,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the pricing configuration to the database",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 10"
       }
@@ -111172,7 +111172,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the price save confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 11"
       }
@@ -111183,7 +111183,7 @@
       "owner_fr": "FR-028",
       "title": "System logs the pricing change in the audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 12"
       }
@@ -111194,7 +111194,7 @@
       "owner_fr": "FR-028",
       "title": "Admin opens Location Pricing > Fallback Pricing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 1"
       }
@@ -111205,7 +111205,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the destination location",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 2"
       }
@@ -111216,7 +111216,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enables the fallback pricing option",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 3"
       }
@@ -111227,7 +111227,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the fallback price per currency",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 4"
       }
@@ -111238,7 +111238,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 5"
       }
@@ -111249,7 +111249,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the fallback configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 6"
       }
@@ -111260,7 +111260,7 @@
       "owner_fr": "FR-028",
       "title": "System confirms the fallback pricing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 7"
       }
@@ -111271,7 +111271,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the destination location",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 1"
       }
@@ -111282,7 +111282,7 @@
       "owner_fr": "FR-028",
       "title": "Admin clicks Bulk Update Pricing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 2"
       }
@@ -111293,7 +111293,7 @@
       "owner_fr": "FR-028",
       "title": "Admin selects the update method",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 3"
       }
@@ -111304,7 +111304,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the adjustment value",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 4"
       }
@@ -111315,7 +111315,7 @@
       "owner_fr": "FR-028",
       "title": "System displays a preview of the new prices for all currencies",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 5"
       }
@@ -111326,7 +111326,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason and confirms or adjusts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 6"
       }
@@ -111337,7 +111337,7 @@
       "owner_fr": "FR-028",
       "title": "System saves all currency price updates simultaneously",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 7"
       }
@@ -111348,7 +111348,7 @@
       "owner_fr": "FR-028",
       "title": "System confirms the bulk update",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 8"
       }
@@ -111359,7 +111359,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a non-numeric or negative price",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Set Invalid Price step 1"
       }
@@ -111370,7 +111370,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the positive-number validation error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Set Invalid Price step 2"
       }
@@ -111381,7 +111381,7 @@
       "owner_fr": "FR-028",
       "title": "Admin corrects the value or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3: Admin Attempts to Set Invalid Price step 3"
       }
@@ -111392,7 +111392,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a price for an unsupported currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4: Admin Attempts to Set Price for Unsupported Currency step 1"
       }
@@ -111403,7 +111403,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the unsupported-currency error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B4: Admin Attempts to Set Price for Unsupported Currency step 2"
       }
@@ -111414,7 +111414,7 @@
       "owner_fr": "FR-028",
       "title": "Admin opens Currency Management or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B4: Admin Attempts to Set Price for Unsupported Currency step 3"
       }
@@ -111425,7 +111425,7 @@
       "owner_fr": "FR-028",
       "title": "Admin attempts to save a price without a change reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5: Admin Attempts to Save Pricing Without Change Reason step 1"
       }
@@ -111436,7 +111436,7 @@
       "owner_fr": "FR-028",
       "title": "System shows the change-reason validation error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5: Admin Attempts to Save Pricing Without Change Reason step 2"
       }
@@ -111447,7 +111447,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the change reason or cancels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5: Admin Attempts to Save Pricing Without Change Reason step 3"
       }
@@ -113330,7 +113330,7 @@
       "owner_fr": "FR-030",
       "title": "System displays the backend event catalog grouped by category with status, channels and last modified",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 2"
       }
@@ -113374,7 +113374,7 @@
       "owner_fr": "FR-030",
       "title": "System displays event-specific configuration options (channels, timing, templates, retries, escalation)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 6"
       }
@@ -113451,7 +113451,7 @@
       "owner_fr": "FR-030",
       "title": "System renders templates with placeholder data and displays the preview",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 13"
       }
@@ -113473,7 +113473,7 @@
       "owner_fr": "FR-030",
       "title": "System validates the rule configuration and saves it as draft",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 15"
       }
@@ -113495,7 +113495,7 @@
       "owner_fr": "FR-030",
       "title": "System generates the test notification and delivers it to the admin email or phone",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 17"
       }
@@ -113528,7 +113528,7 @@
       "owner_fr": "FR-030",
       "title": "System prompts that the rule will activate immediately and apply to all matching events",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 20"
       }
@@ -113550,7 +113550,7 @@
       "owner_fr": "FR-030",
       "title": "System activates the rule and notifies S-03 Notification Service of the new rule",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 22"
       }
@@ -113561,7 +113561,7 @@
       "owner_fr": "FR-030",
       "title": "System displays the confirmation: Notification rule activated successfully",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 23"
       }
@@ -113649,7 +113649,7 @@
       "owner_fr": "FR-030",
       "title": "System logs the change with timestamp and admin user ID",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 7"
       }
@@ -113682,7 +113682,7 @@
       "owner_fr": "FR-030",
       "title": "System prompts that paused rules will not trigger notifications",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 3"
       }
@@ -113781,7 +113781,7 @@
       "owner_fr": "FR-030",
       "title": "System displays a language dropdown populated from FR-021 supported locales",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 6"
       }
@@ -113825,7 +113825,7 @@
       "owner_fr": "FR-030",
       "title": "System validates that both templates have matching variables",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 10"
       }
@@ -113968,7 +113968,7 @@
       "owner_fr": "FR-030",
       "title": "System validates the template against the event payload schema",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 3"
       }
@@ -113979,7 +113979,7 @@
       "owner_fr": "FR-030",
       "title": "System detects that patient.procedure_date is not available in the event payload",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 4"
       }
@@ -113990,7 +113990,7 @@
       "owner_fr": "FR-030",
       "title": "System displays the error naming the variable and listing available variables",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 5"
       }
@@ -114012,7 +114012,7 @@
       "owner_fr": "FR-030",
       "title": "System validates successfully and saves the template",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 7"
       }
@@ -114034,7 +114034,7 @@
       "owner_fr": "FR-030",
       "title": "System displays one canonical configuration entry per backend event type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 2"
       }
@@ -114056,7 +114056,7 @@
       "owner_fr": "FR-030",
       "title": "System opens the existing configuration for the event; there is no create-duplicate-rule action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 4"
       }
@@ -325351,7 +325351,7 @@
     {
       "from_id": "STP-021-011",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325423,7 +325423,7 @@
     {
       "from_id": "STP-021-013",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325459,7 +325459,7 @@
     {
       "from_id": "STP-021-014",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325495,7 +325495,7 @@
     {
       "from_id": "STP-021-015",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325531,7 +325531,7 @@
     {
       "from_id": "STP-021-016",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325571,7 +325571,7 @@
     {
       "from_id": "STP-021-017",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325595,7 +325595,7 @@
     {
       "from_id": "STP-021-018",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325625,7 +325625,7 @@
     {
       "from_id": "STP-021-019",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325665,7 +325665,7 @@
     {
       "from_id": "STP-021-020",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325797,7 +325797,7 @@
     {
       "from_id": "STP-021-023",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325827,7 +325827,7 @@
     {
       "from_id": "STP-021-024",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325857,7 +325857,7 @@
     {
       "from_id": "STP-021-025",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -325957,7 +325957,7 @@
     {
       "from_id": "STP-021-028",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -326003,7 +326003,7 @@
     {
       "from_id": "STP-021-029",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -326057,7 +326057,7 @@
     {
       "from_id": "STP-021-031",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -326087,7 +326087,7 @@
     {
       "from_id": "STP-021-032",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -326117,7 +326117,7 @@
     {
       "from_id": "STP-021-033",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -326153,7 +326153,7 @@
     {
       "from_id": "STP-021-034",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332141,7 +332141,7 @@
     {
       "from_id": "STP-025-040",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332191,7 +332191,7 @@
     {
       "from_id": "STP-025-041",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332223,7 +332223,7 @@
     {
       "from_id": "STP-025-042",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332275,7 +332275,7 @@
     {
       "from_id": "STP-025-043",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332316,7 +332316,7 @@
     {
       "from_id": "STP-025-044",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -332346,7 +332346,7 @@
     {
       "from_id": "STP-025-045",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335599,7 +335599,7 @@
     {
       "from_id": "STP-028-001",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335629,7 +335629,7 @@
     {
       "from_id": "STP-028-002",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335659,7 +335659,7 @@
     {
       "from_id": "STP-028-003",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335707,7 +335707,7 @@
     {
       "from_id": "STP-028-004",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335743,7 +335743,7 @@
     {
       "from_id": "STP-028-005",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335773,7 +335773,7 @@
     {
       "from_id": "STP-028-006",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335803,7 +335803,7 @@
     {
       "from_id": "STP-028-007",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335845,7 +335845,7 @@
     {
       "from_id": "STP-028-008",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335875,7 +335875,7 @@
     {
       "from_id": "STP-028-009",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335905,7 +335905,7 @@
     {
       "from_id": "STP-028-010",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335935,7 +335935,7 @@
     {
       "from_id": "STP-028-011",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335971,7 +335971,7 @@
     {
       "from_id": "STP-028-012",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -335995,7 +335995,7 @@
     {
       "from_id": "STP-028-101",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336025,7 +336025,7 @@
     {
       "from_id": "STP-028-102",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336055,7 +336055,7 @@
     {
       "from_id": "STP-028-103",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336085,7 +336085,7 @@
     {
       "from_id": "STP-028-104",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336115,7 +336115,7 @@
     {
       "from_id": "STP-028-105",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336163,7 +336163,7 @@
     {
       "from_id": "STP-028-106",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336187,7 +336187,7 @@
     {
       "from_id": "STP-028-111",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336217,7 +336217,7 @@
     {
       "from_id": "STP-028-112",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336253,7 +336253,7 @@
     {
       "from_id": "STP-028-113",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336289,7 +336289,7 @@
     {
       "from_id": "STP-028-114",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336319,7 +336319,7 @@
     {
       "from_id": "STP-028-115",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336343,7 +336343,7 @@
     {
       "from_id": "STP-028-121",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336373,7 +336373,7 @@
     {
       "from_id": "STP-028-122",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336403,7 +336403,7 @@
     {
       "from_id": "STP-028-123",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336427,7 +336427,7 @@
     {
       "from_id": "STP-028-131",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336457,7 +336457,7 @@
     {
       "from_id": "STP-028-132",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336487,7 +336487,7 @@
     {
       "from_id": "STP-028-133",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336511,7 +336511,7 @@
     {
       "from_id": "STP-028-141",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336541,7 +336541,7 @@
     {
       "from_id": "STP-028-142",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336571,7 +336571,7 @@
     {
       "from_id": "STP-028-143",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336601,7 +336601,7 @@
     {
       "from_id": "STP-028-201",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336631,7 +336631,7 @@
     {
       "from_id": "STP-028-202",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336661,7 +336661,7 @@
     {
       "from_id": "STP-028-203",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336691,7 +336691,7 @@
     {
       "from_id": "STP-028-204",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336727,7 +336727,7 @@
     {
       "from_id": "STP-028-205",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336763,7 +336763,7 @@
     {
       "from_id": "STP-028-206",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336793,7 +336793,7 @@
     {
       "from_id": "STP-028-207",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336823,7 +336823,7 @@
     {
       "from_id": "STP-028-208",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336877,7 +336877,7 @@
     {
       "from_id": "STP-028-209",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336907,7 +336907,7 @@
     {
       "from_id": "STP-028-210",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336937,7 +336937,7 @@
     {
       "from_id": "STP-028-211",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336973,7 +336973,7 @@
     {
       "from_id": "STP-028-212",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336997,7 +336997,7 @@
     {
       "from_id": "STP-028-301",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337027,7 +337027,7 @@
     {
       "from_id": "STP-028-302",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337063,7 +337063,7 @@
     {
       "from_id": "STP-028-303",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337093,7 +337093,7 @@
     {
       "from_id": "STP-028-304",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337123,7 +337123,7 @@
     {
       "from_id": "STP-028-305",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337153,7 +337153,7 @@
     {
       "from_id": "STP-028-306",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337183,7 +337183,7 @@
     {
       "from_id": "STP-028-307",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337207,7 +337207,7 @@
     {
       "from_id": "STP-028-311",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337243,7 +337243,7 @@
     {
       "from_id": "STP-028-312",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337273,7 +337273,7 @@
     {
       "from_id": "STP-028-313",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337303,7 +337303,7 @@
     {
       "from_id": "STP-028-314",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337339,7 +337339,7 @@
     {
       "from_id": "STP-028-315",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337375,7 +337375,7 @@
     {
       "from_id": "STP-028-316",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337405,7 +337405,7 @@
     {
       "from_id": "STP-028-317",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337435,7 +337435,7 @@
     {
       "from_id": "STP-028-318",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337459,7 +337459,7 @@
     {
       "from_id": "STP-028-321",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337489,7 +337489,7 @@
     {
       "from_id": "STP-028-322",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337519,7 +337519,7 @@
     {
       "from_id": "STP-028-323",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337543,7 +337543,7 @@
     {
       "from_id": "STP-028-331",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337573,7 +337573,7 @@
     {
       "from_id": "STP-028-332",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337609,7 +337609,7 @@
     {
       "from_id": "STP-028-333",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337633,7 +337633,7 @@
     {
       "from_id": "STP-028-341",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337663,7 +337663,7 @@
     {
       "from_id": "STP-028-342",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337693,7 +337693,7 @@
     {
       "from_id": "STP-028-343",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -342675,7 +342675,7 @@
     {
       "from_id": "STP-030-002",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -342813,7 +342813,7 @@
     {
       "from_id": "STP-030-006",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343023,7 +343023,7 @@
     {
       "from_id": "STP-030-013",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343083,7 +343083,7 @@
     {
       "from_id": "STP-030-015",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343143,7 +343143,7 @@
     {
       "from_id": "STP-030-017",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343233,7 +343233,7 @@
     {
       "from_id": "STP-030-020",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343299,7 +343299,7 @@
     {
       "from_id": "STP-030-022",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343329,7 +343329,7 @@
     {
       "from_id": "STP-030-023",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343581,7 +343581,7 @@
     {
       "from_id": "STP-030-031",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343665,7 +343665,7 @@
     {
       "from_id": "STP-030-034",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -343929,7 +343929,7 @@
     {
       "from_id": "STP-030-043",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344055,7 +344055,7 @@
     {
       "from_id": "STP-030-047",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344403,7 +344403,7 @@
     {
       "from_id": "STP-030-060",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344433,7 +344433,7 @@
     {
       "from_id": "STP-030-061",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344463,7 +344463,7 @@
     {
       "from_id": "STP-030-062",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344523,7 +344523,7 @@
     {
       "from_id": "STP-030-064",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344577,7 +344577,7 @@
     {
       "from_id": "STP-030-066",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -344637,7 +344637,7 @@
     {
       "from_id": "STP-030-068",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -368242,6 +368242,168 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-141631-f3d862e8",
+      "at": "2026-11-10T14:16:31.633126+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up (user rulings 2026-11-10, ruling 3: the FR-030 system Steps that reply to the admin inside the notification rule and template settings flows (display, preview, validate, save, activate, log, confirm)): move each Step from the placeholder STG-main-01-inquiry to STG-admin-01-configuration. Screens and Rules are not moved. Apply after the earlier 2026-11-10 files of the FR and 2026-11-10-platform-admin-stage.yaml; apply the follow-up files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-030-002",
+        "STP-030-006",
+        "STP-030-013",
+        "STP-030-015",
+        "STP-030-017",
+        "STP-030-020",
+        "STP-030-022",
+        "STP-030-023",
+        "STP-030-031",
+        "STP-030-034",
+        "STP-030-043",
+        "STP-030-047",
+        "STP-030-060",
+        "STP-030-061",
+        "STP-030-062",
+        "STP-030-064",
+        "STP-030-066",
+        "STP-030-068"
+      ],
+      "edges_added": 18,
+      "edges_removed": 18,
+      "rows": 36
+    },
+    {
+      "id": "cs-20261110-141631-1e102314",
+      "at": "2026-11-10T14:16:31.516569+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up (user rulings 2026-11-10, ruling 1: the FR-028 regional presentation and location pricing admin flows (Main Flows 1 and 2, A1 to A4, B1 to B5), admin and system Steps): move each Step from the placeholder STG-main-01-inquiry to STG-admin-01-configuration. Screens and Rules are not moved. Apply after the earlier 2026-11-10 files of the FR and 2026-11-10-platform-admin-stage.yaml; apply the follow-up files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-028-001",
+        "STP-028-002",
+        "STP-028-003",
+        "STP-028-004",
+        "STP-028-005",
+        "STP-028-006",
+        "STP-028-007",
+        "STP-028-008",
+        "STP-028-009",
+        "STP-028-010",
+        "STP-028-011",
+        "STP-028-012",
+        "STP-028-101",
+        "STP-028-102",
+        "STP-028-103",
+        "STP-028-104",
+        "STP-028-105",
+        "STP-028-106",
+        "STP-028-111",
+        "STP-028-112",
+        "STP-028-113",
+        "STP-028-114",
+        "STP-028-115",
+        "STP-028-121",
+        "STP-028-122",
+        "STP-028-123",
+        "STP-028-131",
+        "STP-028-132",
+        "STP-028-133",
+        "STP-028-141",
+        "STP-028-142",
+        "STP-028-143",
+        "STP-028-201",
+        "STP-028-202",
+        "STP-028-203",
+        "STP-028-204",
+        "STP-028-205",
+        "STP-028-206",
+        "STP-028-207",
+        "STP-028-208",
+        "STP-028-209",
+        "STP-028-210",
+        "STP-028-211",
+        "STP-028-212",
+        "STP-028-301",
+        "STP-028-302",
+        "STP-028-303",
+        "STP-028-304",
+        "STP-028-305",
+        "STP-028-306",
+        "STP-028-307",
+        "STP-028-311",
+        "STP-028-312",
+        "STP-028-313",
+        "STP-028-314",
+        "STP-028-315",
+        "STP-028-316",
+        "STP-028-317",
+        "STP-028-318",
+        "STP-028-321",
+        "STP-028-322",
+        "STP-028-323",
+        "STP-028-331",
+        "STP-028-332",
+        "STP-028-333",
+        "STP-028-341",
+        "STP-028-342",
+        "STP-028-343"
+      ],
+      "edges_added": 68,
+      "edges_removed": 68,
+      "rows": 136
+    },
+    {
+      "id": "cs-20261110-141631-997e89cf",
+      "at": "2026-11-10T14:16:31.375910+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up (user rulings 2026-11-10, ruling 2: the Set as Active for Inquiry admin Steps STP-025-040 to 045): move each Step from the placeholder STG-main-01-inquiry to STG-admin-01-configuration. Screens and Rules are not moved. Apply after the earlier 2026-11-10 files of the FR and 2026-11-10-platform-admin-stage.yaml; apply the follow-up files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-025-040",
+        "STP-025-041",
+        "STP-025-042",
+        "STP-025-043",
+        "STP-025-044",
+        "STP-025-045"
+      ],
+      "edges_added": 6,
+      "edges_removed": 6,
+      "rows": 12
+    },
+    {
+      "id": "cs-20261110-141631-f3229b21",
+      "at": "2026-11-10T14:16:31.272635+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up (user rulings 2026-11-10, ruling 3: the FR-021 system Steps that reply to the admin inside the translation settings flow (display, validate, save draft, version, store credential, generate drafts)): move each Step from the placeholder STG-main-01-inquiry to STG-admin-01-configuration. Screens and Rules are not moved. Apply after the earlier 2026-11-10 files of the FR and 2026-11-10-platform-admin-stage.yaml; apply the follow-up files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-021-011",
+        "STP-021-013",
+        "STP-021-014",
+        "STP-021-015",
+        "STP-021-016",
+        "STP-021-017",
+        "STP-021-018",
+        "STP-021-019",
+        "STP-021-020",
+        "STP-021-023",
+        "STP-021-024",
+        "STP-021-025",
+        "STP-021-028",
+        "STP-021-029",
+        "STP-021-031",
+        "STP-021-032",
+        "STP-021-033",
+        "STP-021-034"
+      ],
+      "edges_added": 18,
+      "edges_removed": 18,
+      "rows": 36
+    },
     {
       "id": "cs-20261110-140547-4f5de1b4",
       "at": "2026-11-10T14:05:47.727513+00:00",
