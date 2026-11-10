@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T15:26:14Z",
+  "generated_at": "2026-11-10T15:35:40Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -35191,7 +35191,7 @@
       "owner_fr": null,
       "title": "Alternative Flow A1: drill-down from any chart",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
         "description": "Alternative Flow A1: drill-down from any chart",
@@ -98970,7 +98970,7 @@
       "owner_fr": "FR-002",
       "title": "System versions templates and applies them to new inquiries only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 step 4"
       }
@@ -98992,7 +98992,7 @@
       "owner_fr": "FR-002",
       "title": "System marks the template deprecated but preserves it for existing inquiries",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow C1 step 2"
       }
@@ -103809,9 +103809,9 @@
       "id": "STP-014-014",
       "type": "Step",
       "owner_fr": "FR-014",
-      "title": "Provider or admin clicks a chart element to open the filtered operational list",
+      "title": "Provider clicks a chart element to open the filtered operational list",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1",
         "handoff_to": "Operational modules: Inquiries, Quotes, Bookings, Payments, Schedule (filtered list)"
@@ -103848,6 +103848,18 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "STP-014-018",
+      "type": "Step",
+      "owner_fr": "FR-014",
+      "title": "Admin clicks a chart element to open the filtered operational list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1",
+        "handoff_to": "Operational modules: Inquiries, Quotes, Bookings, Payments, Schedule (filtered list)"
       }
     },
     {
@@ -113704,7 +113716,7 @@
       "owner_fr": "FR-030",
       "title": "System pauses the rule and stops triggering notifications for the event",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 5"
       }
@@ -158478,6 +158490,12 @@
       "from_id": "FLW-014-drill-down-from-chart",
       "verb": "starts at",
       "to_id": "STP-014-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-014-drill-down-from-chart",
+      "verb": "starts at",
+      "to_id": "STP-014-018",
       "attrs": {}
     },
     {
@@ -302009,7 +302027,7 @@
     {
       "from_id": "STP-002-018",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -302057,7 +302075,7 @@
     {
       "from_id": "STP-002-020",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -316503,12 +316521,6 @@
     {
       "from_id": "STP-014-014",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-014-014",
-      "verb": "done by",
       "to_id": "ACT-provider",
       "attrs": {}
     },
@@ -316576,6 +316588,24 @@
       "from_id": "STP-014-017",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-018",
+      "verb": "applies",
+      "to_id": "REQ-014-145",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-018",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-014-018",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
       "attrs": {}
     },
     {
@@ -344115,7 +344145,7 @@
     {
       "from_id": "STP-030-036",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -368632,6 +368662,52 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-153437-9ae99340",
+      "at": "2026-11-10T15:34:37.052569+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "User ruling 2026-11-10 evening: STP-014-014 had two doers (ACT-provider and ACT-platform-admin); split it into one Step per doer. STP-014-014 keeps the provider doer and is retitled; the new Step STP-014-018 takes the admin doer with the same owner_fr, attrs and Stage and copies of every other outgoing edge, and the Flow that starts at STP-014-014 also starts at STP-014-018 (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up 2).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-014-018"
+      ],
+      "nodes_updated": [
+        "FLW-014-drill-down-from-chart",
+        "STP-014-014"
+      ],
+      "edges_added": 4,
+      "edges_removed": 1,
+      "rows": 12
+    },
+    {
+      "id": "cs-20261110-153436-e6c37824",
+      "at": "2026-11-10T15:34:36.949012+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up 2 (user ruling 2026-11-10 evening): move STP-030-036 from the placeholder STG-main-01-inquiry to STG-admin-01-configuration; the doer ACT-system already acts in Configuration. No other Step moves. Apply after 2026-11-10-fr030-admin-stage-followup.yaml (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up 2).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-030-036"
+      ],
+      "edges_added": 1,
+      "edges_removed": 1,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-153436-9264b31b",
+      "at": "2026-11-10T15:34:36.844023+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "D49 follow-up 2 (user ruling 2026-11-10 evening): move STP-002-018, STP-002-020 from the placeholder STG-main-01-inquiry to STG-admin-01-configuration; the doer ACT-system already acts in Configuration. No other Step moves. Apply after 2026-11-10-fr002-admin-stage-followup.yaml (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up 2).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-002-018",
+        "STP-002-020"
+      ],
+      "edges_added": 2,
+      "edges_removed": 2,
+      "rows": 4
+    },
     {
       "id": "cs-20261110-152512-2ca1bc5d",
       "at": "2026-11-10T15:25:12.186727+00:00",
