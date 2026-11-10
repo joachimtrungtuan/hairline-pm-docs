@@ -1,7 +1,6 @@
 reason: "FR-008 completeness fixes held for a product decision: decided by links the PRD change log does not tie to one Rule. Apply only after the decision is made; see the report, Needs user decision."
 by: tester
 operations:
-  # Waits on decision 3 (Q35/Q36: which replacement-quote decision governs the provider-fault carry-over): the change log names Q35 and Q36 together for REQ-008-073 without saying which
-  - {"op": "add_edge", "from": "REQ-008-073", "verb": "decided by", "to": "SRC-PO-001-Q36"}
+  # 2026-11-10 D50: 1 op left this file (moved to 2026-11-10-fr008-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 1 decided by link below is an unclear match kept held and listed for the user; the ops below still wait on their own reason.
   # Waits on decision 3: the change log credits Q18 to REQ-008-032 only; whether the replacement-TravelContext notices of REQ-008-072 also come from Q18 is not stated
   - {"op": "add_edge", "from": "REQ-008-072", "verb": "decided by", "to": "SRC-PO-001-Q18"}

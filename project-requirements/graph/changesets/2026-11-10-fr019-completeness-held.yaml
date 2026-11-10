@@ -3,45 +3,11 @@ by: tester
 operations:
   # 2026-11-10 D44: 102 ops that waited only on the system Actor left this file (102 moved to 2026-11-10-fr019-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D52: 12 ops left this file (moved to 2026-11-10-fr019-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
+  # 2026-11-10 D50: 35 ops left this file (moved to 2026-11-10-fr019-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 6 decided by links below are unclear matches kept held and listed for the user; the ops below still wait on their own reason.
   # waits on: which Rule each Product Owner code decided; the PRD names these codes only in Change Log rows 2.2 to 2.4, by topic, so each link is a reading (controller moved these from the fixes file)
-  - {"op": "add_edge", "from": "REQ-019-003", "verb": "decided by", "to": "SRC-PO-001-D8"}
-  - {"op": "add_edge", "from": "REQ-019-039", "verb": "decided by", "to": "SRC-PO-001-D8"}
-  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D9"}
-  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D9"}
-  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D9"}
-  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D6"}
-  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D6"}
-  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D6"}
-  - {"op": "add_edge", "from": "REQ-019-012", "verb": "decided by", "to": "SRC-PO-001-D10"}
-  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D11"}
-  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D2"}
-  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-M14"}
-  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-D12"}
-  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-Q5"}
-  - {"op": "add_edge", "from": "REQ-019-032", "verb": "decided by", "to": "SRC-PO-001-Q5"}
-  - {"op": "add_edge", "from": "REQ-019-037", "verb": "decided by", "to": "SRC-PO-001-Q5"}
   - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q6"}
   - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q29"}
-  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q30"}
-  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q30"}
-  - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q30"}
-  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q30"}
-  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q39"}
-  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q39"}
-  - {"op": "add_edge", "from": "REQ-019-004", "verb": "decided by", "to": "SRC-PO-001-Q40"}
-  - {"op": "add_edge", "from": "REQ-019-035", "verb": "decided by", "to": "SRC-PO-001-Q40"}
-  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q40"}
-  - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q41"}
-  - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q41"}
   - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q43"}
   - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q43"}
-  - {"op": "add_edge", "from": "REQ-019-019", "verb": "decided by", "to": "SRC-PO-001-Q48"}
-  - {"op": "add_edge", "from": "REQ-019-052", "verb": "decided by", "to": "SRC-PO-001-Q48"}
   - {"op": "add_edge", "from": "ENT-promotion-program", "verb": "decided by", "to": "SRC-PO-001-Q38"}
   - {"op": "add_edge", "from": "ENT-promotion-code", "verb": "decided by", "to": "SRC-PO-001-Q38"}

@@ -1,0 +1,5 @@
+reason: "FR-016 decided by links released from 2026-11-10-fr016-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md)."
+by: fullstack-developer
+operations:
+  # D50 topic match: D2 requires a slot check on appointment-date change and FR-016 change log 1.8 cites D2 for the guarded date change; the Rule is that guarded date change
+  - {"op": "add_edge", "from": "REQ-016-077", "verb": "decided by", "to": "SRC-PO-001-D2"}

@@ -1,0 +1,41 @@
+reason: "FR-004 decided by links released from 2026-11-10-fr004-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md)."
+by: fullstack-developer
+operations:
+  # D50 topic match: Q3 blocks zero-price rows and leaves out unservable date ranges; the Rule states both
+  - {"op": "add_edge", "from": "REQ-004-040", "verb": "decided by", "to": "SRC-PO-001-Q3"}
+  # D50 topic match: Q4 keeps typed numbers, switches currency and requires the acknowledged banner; the Rule states the same
+  - {"op": "add_edge", "from": "REQ-004-041", "verb": "decided by", "to": "SRC-PO-001-Q4"}
+  # D50 topic match: Q6 reserves one use at send, released on expiry, withdrawal or not selected and consumed at acceptance; the Rule states this reservation
+  - {"op": "add_edge", "from": "REQ-004-042", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q6 reserves uses at send so the usage limit can never be exceeded; the Rule withholds a promotion whose last use another sent quote reserved
+  - {"op": "add_edge", "from": "REQ-004-089", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q15 ends TTFQ at first_sent_at and a re-send never changes it; the Rule sets firstSentAt on first send only
+  - {"op": "add_edge", "from": "REQ-004-043", "verb": "decided by", "to": "SRC-PO-001-Q15"}
+  # D50 topic match: Q20 makes the Base Price a non-binding prefill never read after send; the Rule states the same
+  - {"op": "add_edge", "from": "REQ-004-044", "verb": "decided by", "to": "SRC-PO-001-Q20"}
+  # D50 topic match: Q24 keeps FR-004 as producer of quote.updated on re-send of a new version; the Rule states the same
+  - {"op": "add_edge", "from": "REQ-004-045", "verb": "decided by", "to": "SRC-PO-001-Q24"}
+  # D50 topic match: Q29 keeps one reservation per quote across re-sent versions; the Rule repeats it word for word
+  - {"op": "add_edge", "from": "REQ-004-042", "verb": "decided by", "to": "SRC-PO-001-Q29"}
+  # D50 topic match: Q30 returns the consumed use when the booking ends in Payment Window Expired or is cancelled before first payment; the Rule states that case
+  - {"op": "add_edge", "from": "REQ-004-042", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  # D50 topic match: Q31 tells the patient always and the admin only after acceptance; the Rule states the same recipients
+  - {"op": "add_edge", "from": "REQ-004-047", "verb": "decided by", "to": "SRC-PO-001-Q31"}
+  # D50 topic match: Q35 is the admin-authored replacement quote in the same inquiry; the Rule defines that quote
+  - {"op": "add_edge", "from": "REQ-004-048", "verb": "decided by", "to": "SRC-PO-001-Q35"}
+  # D50 topic match: Q36 limits the transfer to before treatment and reassigns only aftercare in Aftercare; the Rule states both
+  - {"op": "add_edge", "from": "REQ-004-080", "verb": "decided by", "to": "SRC-PO-001-Q36"}
+  # D50 topic match: Q37 leaves the accepted quote accepted when an admin cancels the booking; the Rule states it and FR-004 change log 3.4 applies it under Q37
+  - {"op": "add_edge", "from": "REQ-004-071", "verb": "decided by", "to": "SRC-PO-001-Q37"}
+  # D50 topic match: Q39 releases the reservation with reason not_applied when the accepted row lacks the promotion; the Rule states it
+  - {"op": "add_edge", "from": "REQ-004-042", "verb": "decided by", "to": "SRC-PO-001-Q39"}
+  # D50 topic match: Q40 allows one automatic promotion per quote chosen by the priority order; the Rule states it
+  - {"op": "add_edge", "from": "REQ-004-035", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  # D50 topic match: Q42 adds booking.rescheduled and keeps the accepted appointment as the snapshot baseline; the Rule states both
+  - {"op": "add_edge", "from": "REQ-004-084", "verb": "decided by", "to": "SRC-PO-001-Q42"}
+  # D50 topic match: Q43 requires an admin screen with mandatory reason and audit for the replacement quote; the Rule gives Screen 8 with reason and full audit
+  - {"op": "add_edge", "from": "REQ-004-048", "verb": "decided by", "to": "SRC-PO-001-Q43"}
+  # D50 topic match: Q48 attaches no automatic promotion and takes no reservation on a replacement quote; the Rule states it
+  - {"op": "add_edge", "from": "REQ-004-050", "verb": "decided by", "to": "SRC-PO-001-Q48"}
+  # D50 topic match: Q49 lets an unaccepted replacement quote expire normally with supportRequired; the Rule states it
+  - {"op": "add_edge", "from": "REQ-004-050", "verb": "decided by", "to": "SRC-PO-001-Q49"}

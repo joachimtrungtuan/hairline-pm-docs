@@ -2,15 +2,11 @@ reason: "FR-010 completeness fixes held: Steps the PRD says the system performs 
 by: tester
 operations:
   # 2026-11-10 D44: 134 ops that waited only on the system Actor left this file (134 moved to 2026-11-10-fr010-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # 2026-11-10 D50: 5 ops left this file (moved to 2026-11-10-fr010-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 6 decided by links below are unclear matches kept held and listed for the user; the ops below still wait on their own reason.
   # waits on decision 8 (PO codes Q2, Q37, Q43 to Q46, R7-1): the change log names the codes against groups of Rules, not one Rule each
-  - {"op": "add_edge", "from": "REQ-010-027", "verb": "decided by", "to": "SRC-PO-001-Q2"}
   - {"op": "add_edge", "from": "REQ-010-073", "verb": "decided by", "to": "SRC-PO-001-Q2"}
   - {"op": "add_edge", "from": "REQ-010-031", "verb": "decided by", "to": "SRC-PO-001-Q43"}
   - {"op": "add_edge", "from": "REQ-010-031", "verb": "decided by", "to": "SRC-PO-001-Q44"}
   - {"op": "add_edge", "from": "REQ-010-030", "verb": "decided by", "to": "SRC-PO-001-Q37"}
-  - {"op": "add_edge", "from": "REQ-010-041", "verb": "decided by", "to": "SRC-PO-001-Q45"}
   - {"op": "add_edge", "from": "REQ-010-041", "verb": "decided by", "to": "SRC-PO-001-Q46"}
-  - {"op": "add_edge", "from": "REQ-010-029", "verb": "decided by", "to": "SRC-PO-001-Q45"}
   - {"op": "add_edge", "from": "REQ-010-029", "verb": "decided by", "to": "SRC-PO-001-Q46"}
-  - {"op": "add_edge", "from": "REQ-010-026", "verb": "decided by", "to": "SRC-PO-001-R7-1"}
-  - {"op": "add_edge", "from": "REQ-010-043", "verb": "decided by", "to": "SRC-PO-001-R7-1"}

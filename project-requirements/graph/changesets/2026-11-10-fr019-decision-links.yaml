@@ -1,0 +1,73 @@
+reason: "FR-019 decided by links released from 2026-11-10-fr019-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md)."
+by: fullstack-developer
+operations:
+  # D50 topic match: D8 allows patient codes before acceptance on one named subquote; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-003", "verb": "decided by", "to": "SRC-PO-001-D8"}
+  # D50 topic match: D8 allows patient codes before acceptance on one named subquote, frozen at acceptance; the Rule is that flow
+  - {"op": "add_edge", "from": "REQ-019-039", "verb": "decided by", "to": "SRC-PO-001-D8"}
+  # D50 topic match: D9 freezes promotion and price at acceptance, admin void included; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  # D50 topic match: D9 rejects any promotion change after acceptance; the Rule is that rejection flow
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  # D50 topic match: D9 is the post-acceptance freeze; the Rule is the post-acceptance freeze
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D9"}
+  # D50 topic match: D6 is the provider-fault transfer that creates a new linked record; the Rule names it as the only exception and FR-019 change log cites D9, D6 for it
+  - {"op": "add_edge", "from": "REQ-019-013", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  # D50 topic match: D6 is the provider-fault transfer with a new linked acceptance record; the Rule names it as the only exception
+  - {"op": "add_edge", "from": "REQ-019-041", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  # D50 topic match: D6 keeps the original as history and creates a linked record; the Rule states that handling for the promotion Application
+  - {"op": "add_edge", "from": "REQ-019-089", "verb": "decided by", "to": "SRC-PO-001-D6"}
+  # D50 topic match: D10 fixes promotion terms at send; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-012", "verb": "decided by", "to": "SRC-PO-001-D10"}
+  # D50 topic match: D11 reserves at acceptance, consumes at first payment, releases on Payment Window Expired or cancellation and re-reserves on revive; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D11"}
+  # D50 topic match: D2 is the admin revive; the Rule re-reserves on revive and rejects it when the limit is exhausted, and FR-019 change log cites D11, D2 for it
+  - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-D2"}
+  # D50 topic match: M14 attaches automatic promotions at send to every eligible row with the price kept and the discount separate; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-M14"}
+  # D50 topic match: D12 sets the commission base to the accepted price after promotion; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-D12"}
+  # D50 topic match: Q5 applies the after-promotion commission base to every discount type including Hairline-funded; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-016", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  # D50 topic match: Q5 puts commission after promotion for Hairline-funded discounts and has providers bear most of it; the Rule is that flow
+  - {"op": "add_edge", "from": "REQ-019-032", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  # D50 topic match: Q5 puts commission after promotion for Hairline-funded discounts and has providers bear most of it; the Rule is the Hairline-funded code flow stating it
+  - {"op": "add_edge", "from": "REQ-019-037", "verb": "decided by", "to": "SRC-PO-001-Q5"}
+  # D50 topic match: Q6 reserves at send, releases on expiry, withdrawal or not selected and consumes at acceptance; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q6 reserves one use at send so the limit is never exceeded; the Rule reserves at send and does not attach when the limit is used up
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q6 consumes the use reserved at send at acceptance; the Rule states it for automatic promotions
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q6 consumes an auto-applied use at acceptance; the Rule says so for the Applied and Completed states, and FR-019 change log 2.4 cites Q6, Q30 for it
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q6 consumes an auto-applied use at acceptance; the Rule is the Applied to Completed criterion that does not count it again, cited under Q6, Q30 in change log 2.4
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q6"}
+  # D50 topic match: Q29 keeps one reservation per quote across re-sent versions; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q29"}
+  # D50 topic match: Q30 returns the consumed use before first payment and re-takes it on revive only with room; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  # D50 topic match: Q30 consumes an automatic promotion's use at acceptance; the Rule says Completed only marks the first payment for it, cited under Q6, Q30
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  # D50 topic match: Q30 returns the consumed use when the booking ends in Payment Window Expired or is cancelled before first payment; the Rule states it for Voided
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  # D50 topic match: Q30 consumes an automatic promotion's use at acceptance; the Rule does not count it again at first payment, cited under Q6, Q30
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "decided by", "to": "SRC-PO-001-Q30"}
+  # D50 topic match: Q39 releases the reservation with reason not_applied; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-015", "verb": "decided by", "to": "SRC-PO-001-Q39"}
+  # D50 topic match: Q39 releases the reservation with reason not_applied when the accepted subquote lacks the promotion; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-040", "verb": "decided by", "to": "SRC-PO-001-Q39"}
+  # D50 topic match: Q40 allows one automatic promotion per quote with Hairline-funded in the priority order; the Rule states it and change log 2.5 cites Q40 for REQ-019-004
+  - {"op": "add_edge", "from": "REQ-019-004", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  # D50 topic match: Q40 picks one automatic promotion by priority when several qualify; the Rule is that conflict flow
+  - {"op": "add_edge", "from": "REQ-019-035", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  # D50 topic match: Q40 allows one automatic promotion per quote; the Rule states a quote carries at most one
+  - {"op": "add_edge", "from": "REQ-019-038", "verb": "decided by", "to": "SRC-PO-001-Q40"}
+  # D50 topic match: Q41 adds a Hairline share % for Both Fees reimbursed at payout on top of the commission effect; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q41"}
+  # D50 topic match: Q41 adds the Hairline share % for Both Fees; the Rule is that field's validation
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q41"}
+  # D50 topic match: Q48 attaches no automatic promotion and reserves no use on a replacement quote; the Rule states it
+  - {"op": "add_edge", "from": "REQ-019-019", "verb": "decided by", "to": "SRC-PO-001-Q48"}
+  # D50 topic match: Q48 attaches no automatic promotion on a replacement quote; the Rule states it for auto-applied programs
+  - {"op": "add_edge", "from": "REQ-019-052", "verb": "decided by", "to": "SRC-PO-001-Q48"}

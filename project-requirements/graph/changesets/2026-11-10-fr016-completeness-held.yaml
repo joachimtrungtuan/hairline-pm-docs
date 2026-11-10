@@ -3,8 +3,7 @@ by: tester
 operations:
   # 2026-11-10 D44: 253 ops that waited only on the system Actor left this file (253 moved to 2026-11-10-fr016-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D52: 4 ops left this file (moved to 2026-11-10-fr016-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
-  # waits on: decision code match (Source title differs from the PRD use of the code)
-  - {"op": "add_edge", "from": "REQ-016-077", "verb": "decided by", "to": "SRC-PO-001-D2"}
+  # 2026-11-10 D50: 1 op left this file (moved to 2026-11-10-fr016-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 3 decided by links below are unclear matches kept held and listed for the user; the ops below still wait on their own reason.
   # waits on: decision code match (Source title differs from the PRD use of the code)
   - {"op": "add_edge", "from": "REQ-016-182", "verb": "decided by", "to": "SRC-PO-001-Q37"}
   # waits on: decision code match (Source title differs from the PRD use of the code)

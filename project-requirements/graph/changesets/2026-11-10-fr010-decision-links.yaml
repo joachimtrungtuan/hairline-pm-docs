@@ -1,0 +1,13 @@
+reason: "FR-010 decided by links released from 2026-11-10-fr010-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md)."
+by: fullstack-developer
+operations:
+  # D50 topic match: Q2 locks treatment details while Accepted and allows audited changes from Confirmed until Check In with treatment.plan_changed; the Rule states it
+  - {"op": "add_edge", "from": "REQ-010-027", "verb": "decided by", "to": "SRC-PO-001-Q2"}
+  # D50 topic match: Q45 keeps an In Progress booking with supportRequired and lets the admin move it to Aftercare or cancel; the Rule states this for a suspended provider
+  - {"op": "add_edge", "from": "REQ-010-041", "verb": "decided by", "to": "SRC-PO-001-Q45"}
+  # D50 topic match: Q45 routes an In Progress provider fault to the admin decision; the Rule hands it to the FR-006 B7 admin decision and FR-010 change log 2.5 names REQ-010-029 under Q45
+  - {"op": "add_edge", "from": "REQ-010-029", "verb": "decided by", "to": "SRC-PO-001-Q45"}
+  # D50 topic match: R7-1 approved the FR-010 snapshot read fix group; the Rule is that snapshot read and FR-010 change log 2.2 cites R7-1 for it
+  - {"op": "add_edge", "from": "REQ-010-026", "verb": "decided by", "to": "SRC-PO-001-R7-1"}
+  # D50 topic match: R7-1 approved the FR-010 snapshot read fix group; the Rule is that snapshot read
+  - {"op": "add_edge", "from": "REQ-010-043", "verb": "decided by", "to": "SRC-PO-001-R7-1"}
