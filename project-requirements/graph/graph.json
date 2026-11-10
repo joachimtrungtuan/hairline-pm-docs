@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T13:55:08Z",
+  "generated_at": "2026-11-10T14:06:53Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -99970,7 +99970,7 @@
       "owner_fr": "FR-003",
       "title": "Patient retries",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Patient Creates Inquiry)"
       }
@@ -115090,9 +115090,64 @@
       "owner_fr": "FR-031",
       "title": "System checks permissions and hides UI",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B5 step 1"
+      }
+    },
+    {
+      "id": "STP-031-742",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Admin reaches a restricted feature",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 2"
+      }
+    },
+    {
+      "id": "STP-031-743",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System checks required permission",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 3"
+      }
+    },
+    {
+      "id": "STP-031-744",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System denies access and shows message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 4"
+      }
+    },
+    {
+      "id": "STP-031-745",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System logs the denial",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 5"
+      }
+    },
+    {
+      "id": "STP-031-746",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System alerts Super Admin on repeats",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 6"
       }
     },
     {
@@ -115684,9 +115739,75 @@
       "owner_fr": "FR-032",
       "title": "Upload progress reaches 50 percent",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 2"
+      }
+    },
+    {
+      "id": "STP-032-044",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Network connection drops",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 3"
+      }
+    },
+    {
+      "id": "STP-032-045",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Detect the upload failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 4"
+      }
+    },
+    {
+      "id": "STP-032-046",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Display the upload-failed network error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 5"
+      }
+    },
+    {
+      "id": "STP-032-047",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Check the network connection",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 6"
+      }
+    },
+    {
+      "id": "STP-032-048",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Click Retry Upload",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 7"
+      }
+    },
+    {
+      "id": "STP-032-049",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Resume the upload from the beginning",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 8"
       }
     },
     {
@@ -115904,9 +116025,64 @@
       "owner_fr": "FR-032",
       "title": "Send the save request to the backend",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B4 (Network Error During Save) step 2"
+      }
+    },
+    {
+      "id": "STP-032-070",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Network connection times out",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 (Network Error During Save) step 3"
+      }
+    },
+    {
+      "id": "STP-032-071",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Display the failed-to-save error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 (Network Error During Save) step 4"
+      }
+    },
+    {
+      "id": "STP-032-072",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Check the connection",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 (Network Error During Save) step 5"
+      }
+    },
+    {
+      "id": "STP-032-073",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Click Save Preferences again",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 (Network Error During Save) step 6"
+      }
+    },
+    {
+      "id": "STP-032-074",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Save the preferences successfully",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 (Network Error During Save) step 7"
       }
     },
     {
@@ -304415,7 +304591,7 @@
     {
       "from_id": "STP-003-087",
       "verb": "next",
-      "to_id": "STP-003-014",
+      "to_id": "STP-003-013",
       "attrs": {}
     },
     {
@@ -347441,6 +347617,138 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-031-741",
+      "verb": "next",
+      "to_id": "STP-031-742",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-742",
+      "verb": "applies",
+      "to_id": "REQ-031-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-742",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-742",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-742",
+      "verb": "next",
+      "to_id": "STP-031-743",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-743",
+      "verb": "applies",
+      "to_id": "REQ-031-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-743",
+      "verb": "applies",
+      "to_id": "REQ-031-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-743",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-743",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-743",
+      "verb": "next",
+      "to_id": "STP-031-744",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-744",
+      "verb": "applies",
+      "to_id": "REQ-031-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-744",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-744",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-744",
+      "verb": "next",
+      "to_id": "STP-031-745",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-745",
+      "verb": "applies",
+      "to_id": "REQ-031-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-745",
+      "verb": "applies",
+      "to_id": "REQ-031-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-745",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-745",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-745",
+      "verb": "next",
+      "to_id": "STP-031-746",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-746",
+      "verb": "applies",
+      "to_id": "REQ-031-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-746",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-746",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-031-751",
       "verb": "applies",
       "to_id": "REQ-031-073",
@@ -348990,6 +349298,150 @@
     },
     {
       "from_id": "STP-032-043",
+      "verb": "next",
+      "to_id": "STP-032-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-043",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-044",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-044",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-044",
+      "verb": "next",
+      "to_id": "STP-032-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-044",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-045",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-045",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-045",
+      "verb": "next",
+      "to_id": "STP-032-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-045",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-046",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-046",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-046",
+      "verb": "next",
+      "to_id": "STP-032-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-046",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-047",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-047",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-047",
+      "verb": "next",
+      "to_id": "STP-032-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-047",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-048",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-048",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-048",
+      "verb": "next",
+      "to_id": "STP-032-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-048",
+      "verb": "on",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-049",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-049",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-049",
       "verb": "on",
       "to_id": "SCR-032-03",
       "attrs": {}
@@ -349596,6 +350048,150 @@
     },
     {
       "from_id": "STP-032-069",
+      "verb": "next",
+      "to_id": "STP-032-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-069",
+      "verb": "on",
+      "to_id": "SCR-032-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-070",
+      "verb": "applies",
+      "to_id": "REQ-032-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-070",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-070",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-070",
+      "verb": "next",
+      "to_id": "STP-032-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-070",
+      "verb": "on",
+      "to_id": "SCR-032-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-071",
+      "verb": "applies",
+      "to_id": "REQ-032-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-071",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-071",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-071",
+      "verb": "next",
+      "to_id": "STP-032-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-071",
+      "verb": "on",
+      "to_id": "SCR-032-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-072",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-072",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-072",
+      "verb": "next",
+      "to_id": "STP-032-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-072",
+      "verb": "on",
+      "to_id": "SCR-032-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-073",
+      "verb": "applies",
+      "to_id": "REQ-032-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-073",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-073",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-073",
+      "verb": "next",
+      "to_id": "STP-032-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-073",
+      "verb": "on",
+      "to_id": "SCR-032-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-074",
+      "verb": "applies",
+      "to_id": "REQ-032-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-074",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-074",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-074",
       "verb": "on",
       "to_id": "SCR-032-07",
       "attrs": {}
@@ -367646,6 +368242,67 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-140547-4f5de1b4",
+      "at": "2026-11-10T14:05:47.727513+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-032 Steps released from 2026-11-10-fr032-completeness-held.yaml after the D48 follow-up rulings (STP-031-742 is done by ACT-platform-admin; STP-032-044 and STP-032-070 are done by ACT-system), with the ops held only because one of them was held; the system Steps they unblock get done by ACT-system under D44. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-032-044",
+        "STP-032-045",
+        "STP-032-046",
+        "STP-032-047",
+        "STP-032-048",
+        "STP-032-049",
+        "STP-032-070",
+        "STP-032-071",
+        "STP-032-072",
+        "STP-032-073",
+        "STP-032-074"
+      ],
+      "nodes_updated": [
+        "STP-032-043",
+        "STP-032-069"
+      ],
+      "edges_added": 48,
+      "edges_removed": 0,
+      "rows": 103
+    },
+    {
+      "id": "cs-20261110-140547-d4fc5338",
+      "at": "2026-11-10T14:05:47.594829+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-031 Steps released from 2026-11-10-fr031-completeness-held.yaml after the D48 follow-up rulings (STP-031-742 is done by ACT-platform-admin; STP-032-044 and STP-032-070 are done by ACT-system), with the ops held only because one of them was held; the system Steps they unblock get done by ACT-system under D44. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-031-742",
+        "STP-031-743",
+        "STP-031-744",
+        "STP-031-745",
+        "STP-031-746"
+      ],
+      "nodes_updated": [
+        "STP-031-741"
+      ],
+      "edges_added": 22,
+      "edges_removed": 0,
+      "rows": 47
+    },
+    {
+      "id": "cs-20261110-140547-aca9e3f9",
+      "at": "2026-11-10T14:05:47.474046+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-003 retry link after the D48 follow-up ruling: the patient retry Step STP-003-087 leads back to the review Step STP-003-013, as the FR-003 PRD workflow diagram shows (SubmitErr goes back to Review), instead of to STP-003-014. Apply after 2026-11-10-fr003-doer-decisions.yaml, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-003-087"
+      ],
+      "edges_added": 1,
+      "edges_removed": 1,
+      "rows": 2
+    },
     {
       "id": "cs-20261110-135403-610e9458",
       "at": "2026-11-10T13:54:03.808537+00:00",
