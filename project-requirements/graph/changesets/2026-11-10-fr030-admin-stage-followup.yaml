@@ -1,0 +1,40 @@
+reason: "D49 follow-up (user rulings 2026-11-10, ruling 3: the FR-030 system Steps that reply to the admin inside the notification rule and template settings flows (display, preview, validate, save, activate, log, confirm)): move each Step from the placeholder STG-main-01-inquiry to STG-admin-01-configuration. Screens and Rules are not moved. Apply after the earlier 2026-11-10 files of the FR and 2026-11-10-platform-admin-stage.yaml; apply the follow-up files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md, Follow-up)."
+by: fullstack-developer
+operations:
+  # at: 18 Steps move from STG-main-01-inquiry to STG-admin-01-configuration (D49 follow-up, ruling 3)
+  - {"op": "add_edge", "from": "STP-030-002", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-006", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-013", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-013", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-015", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-015", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-017", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-017", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-022", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-022", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-023", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-023", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-031", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-031", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-034", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-034", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-043", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-043", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-047", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-047", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-060", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-060", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-061", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-061", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-062", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-062", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-064", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-064", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-066", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-066", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-030-068", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-030-068", "verb": "at", "to": "STG-main-01-inquiry"}
