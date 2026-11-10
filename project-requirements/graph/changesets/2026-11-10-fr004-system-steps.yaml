@@ -1,0 +1,108 @@
+reason: "FR-004 system Steps released from 2026-11-10-fr004-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr004-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-004-005", "type": "Step", "owner_fr": "FR-004", "title": "Provider selects the treatment service (Tab 1)", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_node", "id": "STP-004-006", "type": "Step", "owner_fr": "FR-004", "title": "Provider selects one to five packages (Tab 2)", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_node", "id": "STP-004-008", "type": "Step", "owner_fr": "FR-004", "title": "Provider customises options inline", "attrs": {"prd_ref": "Main Flow step 8"}}
+  - {"op": "add_node", "id": "STP-004-009", "type": "Step", "owner_fr": "FR-004", "title": "Provider enters grafts and visual plan (Tab 3)", "attrs": {"prd_ref": "Main Flow step 9"}}
+  - {"op": "add_node", "id": "STP-004-010", "type": "Step", "owner_fr": "FR-004", "title": "Provider sets dates and prices (Tab 4)", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_node", "id": "STP-004-011", "type": "Step", "owner_fr": "FR-004", "title": "Provider adjusts option treatment plans (Tab 5)", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_node", "id": "STP-004-012", "type": "Step", "owner_fr": "FR-004", "title": "Provider selects clinicians, notes and attachments (Tab 6)", "attrs": {"prd_ref": "Main Flow step 12"}}
+  - {"op": "add_node", "id": "STP-004-013", "type": "Step", "owner_fr": "FR-004", "title": "Provider reviews and submits the quote (Tab 7)", "attrs": {"prd_ref": "Main Flow step 13"}}
+  - {"op": "add_node", "id": "STP-004-101", "type": "Step", "owner_fr": "FR-004", "title": "Draft is auto-archived after 7 days", "attrs": {"prd_ref": "Alternative Flows bullet 1"}}
+  - {"op": "add_node", "id": "FLW-004-abandoned-draft", "type": "Flow", "title": "Provider abandons a draft; system archives it after 7 days", "attrs": {"kind": "alternative", "description": "Provider abandons a draft; system archives it after 7 days", "prd_ref": "Alternative Flows bullet 1"}}
+  - {"op": "add_node", "id": "STP-004-107", "type": "Step", "owner_fr": "FR-004", "title": "Open sent quotes expire when no subquote is accepted", "attrs": {"prd_ref": "Alternative Flows bullet 6"}}
+  - {"op": "add_node", "id": "FLW-004-no-subquote-accepted", "type": "Flow", "title": "Patient accepts no subquote", "attrs": {"kind": "alternative", "description": "Patient accepts no subquote", "prd_ref": "Alternative Flows bullet 6"}}
+  - {"op": "add_node", "id": "STP-004-108", "type": "Step", "owner_fr": "FR-004", "title": "Other parent quotes become cancelled (other accepted)", "attrs": {"prd_ref": "Alternative Flows bullet 7"}}
+  - {"op": "add_node", "id": "FLW-004-other-quote-accepted", "type": "Flow", "title": "Another quote is accepted", "attrs": {"kind": "alternative", "description": "Another quote is accepted", "prd_ref": "Alternative Flows bullet 7"}}
+  - {"op": "add_node", "id": "STP-004-109", "type": "Step", "owner_fr": "FR-004", "title": "Unsent draft is cancelled silently and opens read-only", "attrs": {"prd_ref": "Alternative Flows bullet 8"}}
+  - {"op": "add_node", "id": "FLW-004-draft-cancelled-other-accepted", "type": "Flow", "title": "Provider drafting while another quote is accepted", "attrs": {"kind": "alternative", "description": "Provider drafting while another quote is accepted", "prd_ref": "Alternative Flows bullet 8"}}
+  - {"op": "add_node", "id": "STP-004-110", "type": "Step", "owner_fr": "FR-004", "title": "Draft, sent and expired quotes become Cancelled (Inquiry Cancelled)", "attrs": {"prd_ref": "Alternative Flows bullet 9"}}
+  - {"op": "add_node", "id": "FLW-004-inquiry-cancelled", "type": "Flow", "title": "Patient cancels the parent inquiry", "attrs": {"kind": "alternative", "description": "Patient cancels the parent inquiry", "prd_ref": "Alternative Flows bullet 9"}}
+  - {"op": "add_node", "id": "STP-004-111", "type": "Step", "owner_fr": "FR-004", "title": "Provider's unaccepted quotes are cancelled once each", "attrs": {"prd_ref": "Alternative Flows bullet 10", "handoff_to": "FR-006: Alternative Flow B5"}}
+  - {"op": "add_node", "id": "FLW-004-provider-suspended", "type": "Flow", "title": "Owning provider becomes Suspended or Deactivated", "attrs": {"kind": "alternative", "description": "Owning provider becomes Suspended or Deactivated", "prd_ref": "Alternative Flows bullet 10"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "applies", "to": "REQ-004-054"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "applies", "to": "REQ-004-001"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "applies", "to": "REQ-004-058"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "applies", "to": "REQ-004-015"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "applies", "to": "REQ-004-033"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "applies", "to": "REQ-004-056"}
+  - {"op": "add_edge", "from": "STP-004-006", "verb": "applies", "to": "REQ-004-058"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "applies", "to": "REQ-004-017"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "applies", "to": "REQ-004-034"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "applies", "to": "REQ-004-020"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "applies", "to": "REQ-004-028"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "applies", "to": "REQ-004-018"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "applies", "to": "REQ-004-040"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "applies", "to": "REQ-004-061"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "applies", "to": "REQ-004-062"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "applies", "to": "REQ-004-019"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "applies", "to": "REQ-004-063"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "applies", "to": "REQ-004-027"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "applies", "to": "REQ-004-026"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "applies", "to": "REQ-004-020"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "applies", "to": "REQ-004-023"}
+  - {"op": "add_edge", "from": "STP-004-005", "verb": "next", "to": "STP-004-006"}
+  - {"op": "add_edge", "from": "STP-004-008", "verb": "next", "to": "STP-004-009"}
+  - {"op": "add_edge", "from": "STP-004-009", "verb": "next", "to": "STP-004-010"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "next", "to": "STP-004-011"}
+  - {"op": "add_edge", "from": "STP-004-011", "verb": "next", "to": "STP-004-012"}
+  - {"op": "add_edge", "from": "STP-004-012", "verb": "next", "to": "STP-004-013"}
+  - {"op": "add_edge", "from": "STP-004-101", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-101", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-101", "verb": "applies", "to": "REQ-004-094"}
+  - {"op": "add_edge", "from": "FLW-004-abandoned-draft", "verb": "starts at", "to": "STP-004-101"}
+  - {"op": "add_edge", "from": "STP-004-107", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-004-107", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-107", "verb": "on", "to": "SCR-004-04"}
+  - {"op": "add_edge", "from": "STP-004-107", "verb": "applies", "to": "REQ-004-095"}
+  - {"op": "add_edge", "from": "STP-004-107", "verb": "applies", "to": "REQ-004-068"}
+  - {"op": "add_edge", "from": "FLW-004-no-subquote-accepted", "verb": "starts at", "to": "STP-004-107"}
+  - {"op": "add_edge", "from": "STP-004-108", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-004-108", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-004-108", "verb": "applies", "to": "REQ-004-003"}
+  - {"op": "add_edge", "from": "FLW-004-other-quote-accepted", "verb": "starts at", "to": "STP-004-108"}
+  - {"op": "add_edge", "from": "STP-004-109", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-109", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-004-109", "verb": "on", "to": "SCR-004-01"}
+  - {"op": "add_edge", "from": "STP-004-109", "verb": "applies", "to": "REQ-004-096"}
+  - {"op": "add_edge", "from": "FLW-004-draft-cancelled-other-accepted", "verb": "starts at", "to": "STP-004-109"}
+  - {"op": "add_edge", "from": "STP-004-110", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-004-110", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-110", "verb": "applies", "to": "REQ-004-013"}
+  - {"op": "add_edge", "from": "STP-004-110", "verb": "applies", "to": "REQ-004-072"}
+  - {"op": "add_edge", "from": "STP-004-110", "verb": "applies", "to": "REQ-004-098"}
+  - {"op": "add_edge", "from": "FLW-004-inquiry-cancelled", "verb": "starts at", "to": "STP-004-110"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "applies", "to": "REQ-004-032"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "applies", "to": "REQ-004-073"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "applies", "to": "REQ-004-075"}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "applies", "to": "REQ-004-031"}
+  - {"op": "add_edge", "from": "FLW-004-provider-suspended", "verb": "starts at", "to": "STP-004-111"}

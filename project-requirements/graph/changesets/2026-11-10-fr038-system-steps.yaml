@@ -1,0 +1,250 @@
+reason: "FR-038 system Steps released from 2026-11-10-fr038-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr038-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-002", "type": "Step", "title": "System checks that no active transplant-progress case exists", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-003", "type": "Step", "title": "Patient enters treatment date, type, treating clinic, current concerns and optional documentation", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-004", "type": "Step", "title": "Patient reviews consent and confirms this is self-tracking, not managed aftercare", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 4"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-005", "type": "Step", "title": "System creates the active self-service case", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-005", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-006", "type": "Step", "title": "Patient opens the calendar and adds optional dated logs", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 6"}}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-007", "type": "Step", "title": "Patient records a log with severity 1 to 10, notes, photos and a V1 head scan photo set", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 7"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-008", "type": "Step", "title": "System updates timeline, scan history and severity trend without overdue states", "owner_fr": "FR-038", "attrs": {"prd_ref": "Main Flow step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-008", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-012", "type": "Step", "title": "System previews monitoring date range, logged-day count, scan count and severity trend", "owner_fr": "FR-038", "attrs": {"prd_ref": "A1 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-012", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-013", "type": "Step", "title": "Patient confirms completion", "owner_fr": "FR-038", "attrs": {"prd_ref": "A1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-014", "type": "Step", "title": "System completes the case", "owner_fr": "FR-038", "attrs": {"prd_ref": "A1 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-015", "type": "Step", "title": "System generates the date-to-date PDF with logs, severity summary and scan photos", "owner_fr": "FR-038", "attrs": {"prd_ref": "A1 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-015", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-016", "type": "Step", "title": "Patient views or downloads the PDF", "owner_fr": "FR-038", "attrs": {"prd_ref": "A1 step 6"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-022", "type": "Step", "title": "System generates the current monitoring-summary PDF", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-022", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-023", "type": "Step", "title": "System pre-fills the FR-011 standalone external-treatment intake", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-025", "type": "Step", "title": "Patient reviews and may edit any copied information", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 5"}}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-026", "type": "Step", "title": "Patient selects an available aftercare package and continues to FR-011 checkout", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 6"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-027", "type": "Step", "title": "System links the records and completes the monitoring case on successful standalone-request creation", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 7", "handoff_to": "FR-011: standalone aftercare request after checkout (FR-011 owns payment, Admin assignment, provider activation, milestones and managed aftercare)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-033", "type": "Step", "title": "System validates permission and value", "owner_fr": "FR-038", "attrs": {"prd_ref": "A3 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-033", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-034", "type": "Step", "title": "System saves a new version and an immutable before-and-after audit event", "owner_fr": "FR-038", "attrs": {"prd_ref": "A3 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-034", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-041", "type": "Step", "title": "System detects an active transplant-progress case", "owner_fr": "FR-038", "attrs": {"prd_ref": "B1 step 1"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-041", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-042", "type": "Step", "title": "System blocks duplicate creation", "owner_fr": "FR-038", "attrs": {"prd_ref": "B1 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-042", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-043", "type": "Step", "title": "Patient can Resume Monitoring or End Existing Case", "owner_fr": "FR-038", "attrs": {"prd_ref": "B1 step 3"}}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-051", "type": "Step", "title": "FR-011 request validation or creation does not complete", "owner_fr": "FR-038", "attrs": {"prd_ref": "B2 step 1"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-051", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-038-052", "type": "Step", "title": "System preserves the active monitoring case and the conversion draft", "owner_fr": "FR-038", "attrs": {"prd_ref": "B2 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-038-052", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-038-053", "type": "Step", "title": "Patient corrects information, retries or returns to monitoring", "owner_fr": "FR-038", "attrs": {"prd_ref": "B2 step 3"}}
+  # waits on: no System Actor (the Flow's start Step is held)
+  - {"op": "add_node", "id": "FLW-038-duplicate-case", "type": "Flow", "title": "Active transplant-progress case already exists", "attrs": {"kind": "alternative", "description": "B1: Active Transplant-Progress Case Already Exists", "prd_ref": "B1"}}
+  # waits on: no System Actor (the Flow's start Step is held)
+  - {"op": "add_node", "id": "FLW-038-conversion-fails", "type": "Flow", "title": "Standalone aftercare conversion fails or is abandoned", "attrs": {"kind": "alternative", "description": "B2: Standalone Aftercare Conversion Fails or Is Abandoned", "prd_ref": "B2"}}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "applies", "to": "REQ-038-001"}
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "applies", "to": "REQ-038-019"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "on", "to": "SCR-038-01"}
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "applies", "to": "REQ-038-007"}
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "applies", "to": "REQ-038-020"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "on", "to": "SCR-038-01"}
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "applies", "to": "REQ-038-021"}
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "applies", "to": "REQ-038-022"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-005", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-005", "verb": "applies", "to": "REQ-038-024"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "on", "to": "SCR-038-02"}
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "applies", "to": "REQ-038-003"}
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "applies", "to": "REQ-038-004"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "on", "to": "SCR-038-03"}
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "applies", "to": "REQ-038-003"}
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "applies", "to": "REQ-038-026"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-008", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-008", "verb": "applies", "to": "REQ-038-004"}
+  - {"op": "add_edge", "from": "STP-038-008", "verb": "applies", "to": "REQ-038-034"}
+  - {"op": "add_edge", "from": "STP-038-008", "verb": "applies", "to": "REQ-038-049"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-012", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-012", "verb": "on", "to": "SCR-038-05"}
+  - {"op": "add_edge", "from": "STP-038-012", "verb": "applies", "to": "REQ-038-038"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-013", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-013", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-013", "verb": "on", "to": "SCR-038-05"}
+  - {"op": "add_edge", "from": "STP-038-013", "verb": "applies", "to": "REQ-038-039"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "applies", "to": "REQ-038-039"}
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "applies", "to": "REQ-038-043"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-015", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-015", "verb": "applies", "to": "REQ-038-040"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "on", "to": "SCR-038-07"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-038-005"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-038-054"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-022", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-022", "verb": "applies", "to": "REQ-038-064"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "applies", "to": "REQ-038-008"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "applies", "to": "REQ-038-008"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "applies", "to": "REQ-038-067"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "applies", "to": "REQ-038-065"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "applies", "to": "REQ-038-066"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-015"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-016"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-044"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-033", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-033", "verb": "applies", "to": "REQ-038-057"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-034", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-038-034", "verb": "applies", "to": "REQ-038-056"}
+  - {"op": "add_edge", "from": "STP-038-034", "verb": "applies", "to": "REQ-038-058"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-041", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-041", "verb": "applies", "to": "REQ-038-001"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-042", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-042", "verb": "applies", "to": "REQ-038-019"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-043", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-043", "verb": "at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "STP-038-043", "verb": "applies", "to": "REQ-038-019"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-051", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-051", "verb": "applies", "to": "REQ-038-068"}
+  # waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-038-052", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-052", "verb": "applies", "to": "REQ-038-015"}
+  - {"op": "add_edge", "from": "STP-038-052", "verb": "applies", "to": "REQ-038-068"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_edge", "from": "STP-038-053", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-053", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-053", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-053", "verb": "applies", "to": "REQ-038-068"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-001", "verb": "next", "to": "STP-038-002"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "next", "to": "STP-038-003"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-003", "verb": "next", "to": "STP-038-004"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-004", "verb": "next", "to": "STP-038-005"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-005", "verb": "next", "to": "STP-038-006"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "next", "to": "STP-038-007"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "next", "to": "STP-038-008"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-011", "verb": "next", "to": "STP-038-012"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-012", "verb": "next", "to": "STP-038-013"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-013", "verb": "next", "to": "STP-038-014"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "next", "to": "STP-038-015"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-015", "verb": "next", "to": "STP-038-016"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-021", "verb": "next", "to": "STP-038-022"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-022", "verb": "next", "to": "STP-038-023"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "next", "to": "STP-038-026"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "next", "to": "STP-038-027"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-032", "verb": "next", "to": "STP-038-033"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-033", "verb": "next", "to": "STP-038-034"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-041", "verb": "next", "to": "STP-038-042"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-042", "verb": "next", "to": "STP-038-043"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-051", "verb": "next", "to": "STP-038-052"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-052", "verb": "next", "to": "STP-038-053"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-002", "verb": "next", "to": "STP-038-041", "attrs": {"label": "Active case already exists", "condition": "REQ-038-019"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "next", "to": "STP-038-051", "attrs": {"label": "Request validation or creation does not complete", "condition": "REQ-038-068"}}
+  # waits on: no System Actor (the Flow's start Step is held)
+  - {"op": "add_edge", "from": "FLW-038-duplicate-case", "verb": "starts at", "to": "STP-038-041"}
+  # waits on: no System Actor (the Flow's start Step is held)
+  - {"op": "add_edge", "from": "FLW-038-conversion-fails", "verb": "starts at", "to": "STP-038-051"}

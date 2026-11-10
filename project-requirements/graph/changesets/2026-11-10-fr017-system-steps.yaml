@@ -1,0 +1,496 @@
+reason: "FR-017 system Steps released from 2026-11-10-fr017-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr017-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+by: fullstack-developer
+operations:
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-037", "type": "Step", "title": "Payout-day schedule check: daily cron reads each provider payout schedule", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 1"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-037", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-037", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-037", "verb": "applies", "to": "REQ-017-038"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-038", "type": "Step", "title": "System calculates eligible earnings, commission from the booking snapshot and net payout", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "applies", "to": "REQ-017-006"}
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "applies", "to": "REQ-017-030"}
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "applies", "to": "REQ-017-061"}
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "applies", "to": "REQ-017-155"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-039", "type": "Step", "title": "System creates the statement as Pending Approval (dashboard view only, no PDF)", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-039", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-039", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-039", "verb": "applies", "to": "REQ-017-038"}
+  - {"op": "add_edge", "from": "STP-017-039", "verb": "applies", "to": "REQ-017-150"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-040", "type": "Step", "title": "System notifies admin by push and email that statements are ready for review", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-040", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-040", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-040", "verb": "applies", "to": "REQ-017-041"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-001", "type": "Step", "title": "Admin opens Provider Billing Upcoming Payments list and selects a provider statement", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "applies", "to": "REQ-017-072"}
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "applies", "to": "REQ-017-073"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-002", "type": "Step", "title": "Admin reviews payout detail: revenue, commission, net payout, treatments, bank details", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 7"}}
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "applies", "to": "REQ-017-063"}
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "applies", "to": "REQ-017-064"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-003", "type": "Step", "title": "Admin enters an internal note (max 500 characters, not visible to the provider) and saves", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 8a"}}
+  - {"op": "add_edge", "from": "STP-017-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-003", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-003", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-003", "verb": "applies", "to": "REQ-017-069"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-004", "type": "Step", "title": "Admin clicks Approve Payout; system prompts for confirmation with amount and destination", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 9"}}
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "applies", "to": "REQ-017-065"}
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "applies", "to": "REQ-017-078"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-005", "type": "Step", "title": "Admin confirms or cancels the approval", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "applies", "to": "REQ-017-078"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-006", "type": "Step", "title": "Statement becomes Approved; admin repeats for remaining providers or uses bulk approval", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_edge", "from": "STP-017-006", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-006", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-006", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-006", "verb": "applies", "to": "REQ-017-076"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-041", "type": "Step", "title": "Payout-day cron auto-processes Approved statements", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 12"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "applies", "to": "REQ-017-153"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-042", "type": "Step", "title": "Statements still Pending Approval become Overdue", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 13"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-042", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-042", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-042", "verb": "applies", "to": "REQ-017-153"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-043", "type": "Step", "title": "System notifies admin of Overdue statements", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 13a"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-043", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-043", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-043", "verb": "applies", "to": "REQ-017-153"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-007", "type": "Step", "title": "Admin sees the Overdue section at the top of the list and approves at any time", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 13b"}}
+  - {"op": "add_edge", "from": "STP-017-007", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-007", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-007", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-007", "verb": "applies", "to": "REQ-017-072"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-044", "type": "Step", "title": "Cron initiates the Stripe transfer; status Processing", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 14"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-044", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-044", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-044", "verb": "applies", "to": "REQ-017-039"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-047", "type": "Step", "title": "transfer.paid: status Paid and invoice PDF with itemised breakdown generated", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 17"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-039"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-125"}
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "applies", "to": "REQ-017-150"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-050", "type": "Step", "title": "transfer.failed: status Failed and admin notified", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16a"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "applies", "to": "REQ-017-042"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-008", "type": "Step", "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16c", "handoff_to": "FR-032 (provider updates bank details in Billing Settings); FR-034 (support contact)"}}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "applies", "to": "REQ-017-042"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "applies", "to": "REQ-017-066"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-009", "type": "Step", "title": "Other Stripe error: admin investigates, resolves and retries the transfer", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 16d"}}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "on", "to": "SCR-017-03"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "applies", "to": "REQ-017-042"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "applies", "to": "REQ-017-066"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-048", "type": "Step", "title": "System emails and pushes the provider with the invoice attached", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 18"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "applies", "to": "REQ-017-043"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-010", "type": "Step", "title": "Provider dashboard shows the confirmed payout and invoice download", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 19"}}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "on", "to": "SCR-017-12"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "applies", "to": "REQ-017-043"}
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "applies", "to": "REQ-017-125"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-049", "type": "Step", "title": "Full transaction is logged in the audit trail", "owner_fr": "FR-017", "attrs": {"prd_ref": "Main Flow step 20"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "applies", "to": "REQ-017-018"}
+  - {"op": "add_edge", "from": "STP-017-049", "verb": "applies", "to": "REQ-017-127"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-051", "type": "Step", "title": "System selects all Pending Approval statements for the cycle", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-051", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-051", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-051", "verb": "applies", "to": "REQ-017-070"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-013", "type": "Step", "title": "Admin unchecks providers to exclude from the batch", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 3a"}}
+  - {"op": "add_edge", "from": "STP-017-013", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-013", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-013", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-013", "verb": "applies", "to": "REQ-017-070"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-015", "type": "Step", "title": "Admin clicks Approve All Selected Payouts", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-017-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-015", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-015", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-015", "verb": "applies", "to": "REQ-017-070"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-052", "type": "Step", "title": "System shows the batch confirmation modal with count and total amount", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-052", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-052", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-052", "verb": "applies", "to": "REQ-017-070"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-016", "type": "Step", "title": "Admin confirms or cancels the batch", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "applies", "to": "REQ-017-070"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-053", "type": "Step", "title": "System marks each statement Approved in sequence with live progress", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-053", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-053", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-053", "verb": "applies", "to": "REQ-017-071"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-054", "type": "Step", "title": "System shows the batch summary: total, approved, failed with error details", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-054", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-054", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-054", "verb": "applies", "to": "REQ-017-071"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-056", "type": "Step", "title": "All successful payouts are queued for payout-day processing", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 10"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-056", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-056", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-056", "verb": "applies", "to": "REQ-017-071"}
+  - {"op": "add_edge", "from": "STP-017-056", "verb": "applies", "to": "REQ-017-076"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-017", "type": "Step", "title": "Admin reviews each failed payout and retries it (returns to main flow step 9)", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A1 step 11"}}
+  - {"op": "add_edge", "from": "STP-017-017", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-017", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-017", "verb": "on", "to": "SCR-017-02"}
+  - {"op": "add_edge", "from": "STP-017-017", "verb": "applies", "to": "REQ-017-066"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-057", "type": "Step", "title": "Change takes effect from the next billing cycle", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-057", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-057", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-057", "verb": "applies", "to": "REQ-017-044"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-058", "type": "Step", "title": "Cron reads the updated frequency on the next run and schedules the next statement", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A2 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-058", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-058", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-058", "verb": "applies", "to": "REQ-017-044"}
+  - {"op": "add_edge", "from": "STP-017-058", "verb": "applies", "to": "REQ-017-038"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-059", "type": "Step", "title": "Provider is notified of the new payout date", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow A2 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-059", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-059", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-059", "verb": "applies", "to": "REQ-017-044"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-060", "type": "Step", "title": "System displays booking details and expected net payout", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-060", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-060", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-060", "verb": "applies", "to": "REQ-017-045"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-024", "type": "Step", "title": "Admin checks the provider payout history for the booking completion date range", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "applies", "to": "REQ-017-045"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-025", "type": "Step", "title": "Already paid: admin confirms correct inclusion and shares the payout reference with the provider", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 7a"}}
+  - {"op": "add_edge", "from": "STP-017-025", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-025", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-025", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-025", "verb": "applies", "to": "REQ-017-045"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-026", "type": "Step", "title": "Missing: admin confirms the booking was excluded", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 7b"}}
+  - {"op": "add_edge", "from": "STP-017-026", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-026", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-026", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-026", "verb": "applies", "to": "REQ-017-045"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-027", "type": "Step", "title": "Admin adds the booking to the next payout with an internal note", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 8"}}
+  - {"op": "add_edge", "from": "STP-017-027", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-027", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-027", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-027", "verb": "applies", "to": "REQ-017-110"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-028", "type": "Step", "title": "Admin notifies the provider that the booking is included in the next payout", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 9"}}
+  - {"op": "add_edge", "from": "STP-017-028", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-028", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-028", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-028", "verb": "applies", "to": "REQ-017-111"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-061", "type": "Step", "title": "System logs the dispute resolution in the audit trail", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B1 step 10"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-061", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-061", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-061", "verb": "applies", "to": "REQ-017-111"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-062", "type": "Step", "title": "System monitors currency pairs hourly and flags bookings whose locked rate is exposed", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 steps 1 to 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-062", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-062", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-062", "verb": "applies", "to": "REQ-017-046"}
+  - {"op": "add_edge", "from": "STP-017-062", "verb": "applies", "to": "REQ-017-024"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-063", "type": "Step", "title": "System sends the admin a currency alert", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-063", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-063", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-063", "verb": "applies", "to": "REQ-017-046"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-029", "type": "Step", "title": "Admin opens the alert, reviews affected bookings and compares locked and current rates", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 5"}}
+  - {"op": "add_edge", "from": "STP-017-029", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-029", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-029", "verb": "on", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "STP-017-029", "verb": "applies", "to": "REQ-017-113"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-030", "type": "Step", "title": "Admin decides on the risk exposure", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 6"}}
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "on", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "applies", "to": "REQ-017-114"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-031", "type": "Step", "title": "Admin accepts the risk; pending payouts do not change", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 7a"}}
+  - {"op": "add_edge", "from": "STP-017-031", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-031", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-031", "verb": "on", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "STP-017-031", "verb": "applies", "to": "REQ-017-114"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-032", "type": "Step", "title": "Admin contacts providers; any agreed change is a separate authorised finance adjustment", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 7b"}}
+  - {"op": "add_edge", "from": "STP-017-032", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-032", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-032", "verb": "on", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "STP-017-032", "verb": "applies", "to": "REQ-017-116"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-033", "type": "Step", "title": "Admin routes a commission change to the FR-015 or FR-029 surface", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 7c", "handoff_to": "FR-015 (single-provider commission edit); FR-029 (global or bulk commission change)"}}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "on", "to": "SCR-017-10"}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "applies", "to": "REQ-017-115"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-066", "type": "Step", "title": "System logs the admin decision and action in the audit trail", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B2 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-066", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-066", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-066", "verb": "applies", "to": "REQ-017-114"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-067", "type": "Step", "title": "Provider-status event cancels the booking (ProviderSuspended or ProviderDeactivated)", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 1", "handoff_from": "FR-015 (provider-status cancellation cascade)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-067", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-067", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-067", "verb": "applies", "to": "REQ-017-029"}
+  - {"op": "add_edge", "from": "STP-017-067", "verb": "applies", "to": "REQ-017-137"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-068", "type": "Step", "title": "System cancels the remaining unpaid scheduled installments", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-068", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-068", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-068", "verb": "applies", "to": "REQ-017-029"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-069", "type": "Step", "title": "Already-paid installments and deposits stay recorded for admin financial resolution", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-069", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-069", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-069", "verb": "applies", "to": "REQ-017-137"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-070", "type": "Step", "title": "System records a late capture as a real transaction; the booking stays cancelled", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-070", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-070", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-070", "verb": "applies", "to": "REQ-017-028"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-071", "type": "Step", "title": "System sets the Reconciliation Flag Captured after provider cancellation and excludes the amount from earnings", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-071", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-071", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-071", "verb": "applies", "to": "REQ-017-028"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-072", "type": "Step", "title": "Booking amounts are held from provider payout statements until admin resolution", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-072", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-072", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-017-072", "verb": "applies", "to": "REQ-017-138"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_node", "id": "STP-017-034", "type": "Step", "title": "Admin reviews the flagged invoice and resolves it by refund or adjustment with a mandatory reason", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 8"}}
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "on", "to": "SCR-017-06"}
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "applies", "to": "REQ-017-028"}
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "applies", "to": "REQ-017-146"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "STP-017-073", "type": "Step", "title": "System writes the audit entry and clears the flag", "owner_fr": "FR-017", "attrs": {"prd_ref": "Alternative Flow B3 step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-017-073", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-073", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-017-073", "verb": "applies", "to": "REQ-017-028"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-037", "verb": "next", "to": "STP-017-038"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-038", "verb": "next", "to": "STP-017-039"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-039", "verb": "next", "to": "STP-017-040"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-040", "verb": "next", "to": "STP-017-001"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-001", "verb": "next", "to": "STP-017-002"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "next", "to": "STP-017-003", "attrs": {"label": "needs a note"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-002", "verb": "next", "to": "STP-017-004", "attrs": {"label": "no note"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-003", "verb": "next", "to": "STP-017-004"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-004", "verb": "next", "to": "STP-017-005"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "next", "to": "STP-017-001", "attrs": {"label": "cancel"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-005", "verb": "next", "to": "STP-017-006", "attrs": {"label": "confirm"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-006", "verb": "next", "to": "STP-017-041"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "next", "to": "STP-017-042", "attrs": {"label": "still Pending Approval"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-042", "verb": "next", "to": "STP-017-043"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-043", "verb": "next", "to": "STP-017-007"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-007", "verb": "next", "to": "STP-017-004"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "next", "to": "STP-017-044", "attrs": {"label": "Approved"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "next", "to": "STP-017-008", "attrs": {"label": "invalid bank account"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-050", "verb": "next", "to": "STP-017-009", "attrs": {"label": "other Stripe error"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "next", "to": "STP-017-044", "attrs": {"label": "retry"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "next", "to": "STP-017-044", "attrs": {"label": "retry"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-047", "verb": "next", "to": "STP-017-048"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-048", "verb": "next", "to": "STP-017-010"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-010", "verb": "next", "to": "STP-017-049"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-012", "verb": "next", "to": "STP-017-051"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-051", "verb": "next", "to": "STP-017-013", "attrs": {"label": "exclude some"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-051", "verb": "next", "to": "STP-017-015", "attrs": {"label": "proceed with all"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-013", "verb": "next", "to": "STP-017-015"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-015", "verb": "next", "to": "STP-017-052"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-052", "verb": "next", "to": "STP-017-016"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "next", "to": "STP-017-012", "attrs": {"label": "cancel"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-016", "verb": "next", "to": "STP-017-053", "attrs": {"label": "confirm"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-053", "verb": "next", "to": "STP-017-054"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-054", "verb": "next", "to": "STP-017-056", "attrs": {"label": "no failures"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-054", "verb": "next", "to": "STP-017-017", "attrs": {"label": "failures"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-017", "verb": "next", "to": "STP-017-004"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-057", "verb": "next", "to": "STP-017-058"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-058", "verb": "next", "to": "STP-017-059"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-060", "verb": "next", "to": "STP-017-024"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "next", "to": "STP-017-025", "attrs": {"label": "already paid"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-024", "verb": "next", "to": "STP-017-026", "attrs": {"label": "missing"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-026", "verb": "next", "to": "STP-017-027"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-027", "verb": "next", "to": "STP-017-028"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-025", "verb": "next", "to": "STP-017-061"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-028", "verb": "next", "to": "STP-017-061"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-062", "verb": "next", "to": "STP-017-063"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-063", "verb": "next", "to": "STP-017-029"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-029", "verb": "next", "to": "STP-017-030"}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "next", "to": "STP-017-031", "attrs": {"label": "accept risk"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "next", "to": "STP-017-032", "attrs": {"label": "contact providers"}}
+# waits on: no System Actor (cascade)
+  - {"op": "add_edge", "from": "STP-017-030", "verb": "next", "to": "STP-017-033", "attrs": {"label": "adjust commission"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-031", "verb": "next", "to": "STP-017-066"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-032", "verb": "next", "to": "STP-017-066"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "next", "to": "STP-017-066"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-067", "verb": "next", "to": "STP-017-068"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-068", "verb": "next", "to": "STP-017-069"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-069", "verb": "next", "to": "STP-017-070", "attrs": {"label": "capture reported"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-069", "verb": "next", "to": "STP-017-072", "attrs": {"label": "no capture"}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-070", "verb": "next", "to": "STP-017-071"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-071", "verb": "next", "to": "STP-017-072"}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-072", "verb": "next", "to": "STP-017-034", "attrs": {"back": true}}
+# waits on: no System Actor
+  - {"op": "add_edge", "from": "STP-017-034", "verb": "next", "to": "STP-017-073"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "FLW-017-main", "type": "Flow", "title": "Provider payout processing", "attrs": {"kind": "main", "description": "Provider payout processing: payout-day statements, admin approval, Stripe transfer, confirmation and failure handling.", "prd_ref": "Business Workflows: Main Flow"}}
+  - {"op": "add_edge", "from": "FLW-017-main", "verb": "starts at", "to": "STP-017-037"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "FLW-017-currency-alert", "type": "Flow", "title": "Currency rate protection alert", "attrs": {"kind": "alternative", "description": "Currency rate protection alert: admin reviews exposed bookings and records a decision.", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "FLW-017-currency-alert", "verb": "starts at", "to": "STP-017-062"}
+# waits on: no System Actor
+  - {"op": "add_node", "id": "FLW-017-provider-cancellation", "type": "Flow", "title": "Payment captured after a provider-status cancellation is recorded, flagged and resolved by admin.", "attrs": {"kind": "alternative", "description": "Payment captured after a provider-status cancellation is recorded, flagged and resolved by admin.", "prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_edge", "from": "FLW-017-provider-cancellation", "verb": "starts at", "to": "STP-017-067"}

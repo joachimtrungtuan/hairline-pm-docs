@@ -1,18 +1,7 @@
 reason: "FR-014 completeness held operations: system-performed steps of alternative flows B1 and B2 (no System Actor), and references to the FR-013 and FR-026 rules the PRD cites by sub-ids that are not graph ids. Apply after 2026-11-10-fr014-completeness-fixes.yaml; see Needs user decision in plans/reports/tester-261110-fr014-completeness.md."
 by: tester
 operations:
-  # waits on: no System Actor (B1 banner and B2 helper copy are shown by the system; no Actor can be given)
-  - {"op": "add_node", "id": "STP-014-016", "type": "Step", "title": "Analytics pipeline delay: a non-blocking banner is shown and cached data is displayed with its last-updated timestamp", "owner_fr": "FR-014", "attrs": {"prd_ref": "Alternative Flow B1"}}
-  - {"op": "add_edge", "from": "STP-014-016", "verb": "at", "to": "STG-provider-03-active"}
-  - {"op": "add_edge", "from": "STP-014-016", "verb": "applies", "to": "REQ-014-128"}
-  - {"op": "add_edge", "from": "STP-014-016", "verb": "applies", "to": "REQ-014-149"}
-  - {"op": "add_node", "id": "FLW-014-pipeline-delay", "type": "Flow", "title": "Alternative Flow B1: analytics pipeline delay", "attrs": {"kind": "alternative", "description": "Alternative Flow B1: analytics pipeline delay", "prd_ref": "Alternative Flow B1"}}
-  - {"op": "add_edge", "from": "FLW-014-pipeline-delay", "verb": "starts at", "to": "STP-014-016"}
-  - {"op": "add_node", "id": "STP-014-017", "type": "Step", "title": "Low sample: helper copy is shown on affected widgets and partial data is still rendered", "owner_fr": "FR-014", "attrs": {"prd_ref": "Alternative Flow B2"}}
-  - {"op": "add_edge", "from": "STP-014-017", "verb": "at", "to": "STG-provider-03-active"}
-  - {"op": "add_edge", "from": "STP-014-017", "verb": "applies", "to": "REQ-014-150"}
-  - {"op": "add_node", "id": "FLW-014-low-sample", "type": "Flow", "title": "Alternative Flow B2: low sample", "attrs": {"kind": "alternative", "description": "Alternative Flow B2: low sample", "prd_ref": "Alternative Flow B2"}}
-  - {"op": "add_edge", "from": "FLW-014-low-sample", "verb": "starts at", "to": "STP-014-017"}
+  # 2026-11-10 D44: 11 ops that waited only on the system Actor moved to 2026-11-10-fr014-system-steps.yaml; the ops below still wait on their own decision.
   # waits on: decision 4 (the PRD cites REQ-013-018a and REQ-026-012g, which are not graph ids; REQ-013-018 and REQ-026-012 are the nearest parents)
   - {"op": "add_edge", "from": "FR-014", "verb": "references", "to": "REQ-013-018"}
   - {"op": "add_edge", "from": "FR-014", "verb": "references", "to": "REQ-026-012"}

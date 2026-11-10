@@ -1,0 +1,195 @@
+reason: "FR-021 system Steps released from 2026-11-10-fr021-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr021-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor / emits edges also wait on review-queue C41 (which stages emit the missing-translation event)
+  - {"op": "add_node", "id": "STP-021-011", "type": "Step", "title": "System displays impacted locale, tenant/surface, groups, keys, and rollback warning", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 4R"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-011", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-011", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-011", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-011", "verb": "applies", "to": "REQ-021-100"}
+  - {"op": "add_node", "id": "STP-021-012", "type": "Step", "title": "Admin enters rollback reason and confirms", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 5R"}}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "applies", "to": "REQ-021-100"}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "applies", "to": "REQ-021-102"}
+  - {"op": "add_node", "id": "STP-021-013", "type": "Step", "title": "System creates new rollback version from prior bundle contents and marks it active", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 6R"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "applies", "to": "REQ-021-012"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "applies", "to": "REQ-021-045"}
+  - {"op": "add_node", "id": "STP-021-014", "type": "Step", "title": "System requires elevated authorization, change reason, and placeholder validation", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 6P (English source changed)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "applies", "to": "REQ-021-020"}
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "applies", "to": "REQ-021-086"}
+  - {"op": "add_node", "id": "STP-021-015", "type": "Step", "title": "System marks dependent non-English translations Review Needed", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 7P"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "applies", "to": "REQ-021-020"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "applies", "to": "REQ-021-086"}
+  - {"op": "add_node", "id": "STP-021-016", "type": "Step", "title": "System validates placeholders, ICU syntax, required values, and length guidance", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 6P (English source not changed)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "applies", "to": "REQ-021-015"}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "applies", "to": "REQ-021-085"}
+  - {"op": "add_node", "id": "STP-021-017", "type": "Step", "title": "System blocks save, import, or publish and shows errors for correction", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "applies", "to": "REQ-021-089"}
+  - {"op": "add_node", "id": "STP-021-018", "type": "Step", "title": "System saves accepted changes as draft and marks keys Pending Publish", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 9A"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "applies", "to": "REQ-021-008"}
+  - {"op": "add_node", "id": "STP-021-019", "type": "Step", "title": "System validates JSON syntax, known keys, duplicate keys, placeholders, ICU syntax, locale compatibility, and unsupported or orphaned keys", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 5J"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "applies", "to": "REQ-021-091"}
+  - {"op": "add_node", "id": "STP-021-020", "type": "Step", "title": "System shows validation preview with created, updated, unchanged, skipped, row-warning, and error counts", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 7J"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "applies", "to": "REQ-021-090"}
+  - {"op": "add_node", "id": "STP-021-021", "type": "Step", "title": "Admin chooses whether to import valid rows only or cancel for correction", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 9J"}}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "applies", "to": "REQ-021-095"}
+  - {"op": "add_node", "id": "STP-021-022", "type": "Step", "title": "Admin enters publish summary and confirms import and publish", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 11J"}}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "applies", "to": "REQ-021-093"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "applies", "to": "REQ-021-102"}
+  - {"op": "add_node", "id": "STP-021-023", "type": "Step", "title": "System generates draft values only for missing target-language keys", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 7M (prefill)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "applies", "to": "REQ-021-028"}
+  - {"op": "add_node", "id": "STP-021-024", "type": "Step", "title": "System generates replacement draft values for all selected target-language keys except English source", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 7M (replace)"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "applies", "to": "REQ-021-029"}
+  - {"op": "add_node", "id": "STP-021-025", "type": "Step", "title": "System validates placeholders, ICU syntax, protected terms, unsupported keys, and provider response errors", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 8M"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "applies", "to": "REQ-021-106"}
+  - {"op": "add_node", "id": "STP-021-026", "type": "Step", "title": "Admin opens Language Version History and Rollback and reviews pending changes", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_edge", "from": "STP-021-026", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-026", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-026", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_node", "id": "STP-021-027", "type": "Step", "title": "Admin enters publish summary and confirms publish", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "applies", "to": "REQ-021-102"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "applies", "to": "REQ-021-096"}
+  - {"op": "add_node", "id": "STP-021-028", "type": "Step", "title": "System runs publish validation", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 12"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "applies", "to": "REQ-021-099"}
+  - {"op": "add_node", "id": "STP-021-029", "type": "Step", "title": "System creates immutable published bundle version and marks it active", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 13"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "applies", "to": "REQ-021-096"}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "applies", "to": "REQ-021-045"}
+  - {"op": "add_node", "id": "STP-021-030", "type": "Step", "title": "System invalidates cache and version metadata for impacted bundles", "owner_fr": "FR-021", "attrs": {"prd_ref": "Main Flow step 14"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-030", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-030", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-030", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-030", "verb": "applies", "to": "REQ-021-097"}
+  - {"op": "add_node", "id": "STP-021-031", "type": "Step", "title": "System stores encrypted credential and verifies connection", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-031", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-031", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-031", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-031", "verb": "applies", "to": "REQ-021-109"}
+  - {"op": "add_node", "id": "STP-021-032", "type": "Step", "title": "System translates missing target-language keys only", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 6A"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "applies", "to": "REQ-021-028"}
+  - {"op": "add_node", "id": "STP-021-033", "type": "Step", "title": "System translates all selected target-language keys and stages replacements", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 6B"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "applies", "to": "REQ-021-029"}
+  - {"op": "add_node", "id": "STP-021-034", "type": "Step", "title": "System saves machine-generated values as draft and marks Review Needed", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "applies", "to": "REQ-021-039"}
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "applies", "to": "REQ-021-105"}
+  - {"op": "add_node", "id": "STP-021-035", "type": "Step", "title": "Admin reviews draft values in registry and key detail and publishes through Version History when ready", "owner_fr": "FR-021", "attrs": {"prd_ref": "C1 step 8"}}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "on", "to": "SCR-021-06"}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "applies", "to": "REQ-021-105"}
+  - {"op": "add_edge", "from": "STP-021-002", "verb": "next", "to": "STP-021-011"}
+  - {"op": "add_edge", "from": "STP-021-011", "verb": "next", "to": "STP-021-012"}
+  - {"op": "add_edge", "from": "STP-021-012", "verb": "next", "to": "STP-021-013"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "next", "to": "STP-021-030"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-014", "attrs": {"label": "English source value changed"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-016", "attrs": {"label": "English source value not changed"}}
+  - {"op": "add_edge", "from": "STP-021-014", "verb": "next", "to": "STP-021-015"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-016"}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Patch invalid"}}
+  - {"op": "add_edge", "from": "STP-021-016", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Patch valid"}}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "next", "to": "STP-021-019"}
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Structural error"}}
+  - {"op": "add_edge", "from": "STP-021-019", "verb": "next", "to": "STP-021-020", "attrs": {"label": "No structural error"}}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "next", "to": "STP-021-021", "attrs": {"label": "Row-level errors or warnings"}}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "next", "to": "STP-021-018", "attrs": {"label": "No row errors, Import as Draft"}}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "next", "to": "STP-021-022", "attrs": {"label": "No row errors, Import and Publish Version"}}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Cancel for correction"}}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Import valid rows only, Import as Draft"}}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-022", "attrs": {"label": "Import valid rows only, Import and Publish Version"}}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "next", "to": "STP-021-023", "attrs": {"label": "Prefill missing keys"}}
+  - {"op": "add_edge", "from": "STP-021-006", "verb": "next", "to": "STP-021-024", "attrs": {"label": "Replace entire language"}}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "next", "to": "STP-021-025"}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "next", "to": "STP-021-025"}
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-025", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "next", "to": "STP-021-026"}
+  - {"op": "add_edge", "from": "STP-021-026", "verb": "next", "to": "STP-021-027"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "next", "to": "STP-021-028"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "next", "to": "STP-021-028"}
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Publish validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-028", "verb": "next", "to": "STP-021-029", "attrs": {"label": "Publish validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "next", "to": "STP-021-030"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "next", "to": "STP-021-031"}
+  - {"op": "add_edge", "from": "STP-021-031", "verb": "next", "to": "STP-021-009"}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "next", "to": "STP-021-032", "attrs": {"label": "Prefill missing keys"}}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "next", "to": "STP-021-033", "attrs": {"label": "Replace entire language"}}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "next", "to": "STP-021-034"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "next", "to": "STP-021-034"}
+  - {"op": "add_edge", "from": "STP-021-034", "verb": "next", "to": "STP-021-035"}

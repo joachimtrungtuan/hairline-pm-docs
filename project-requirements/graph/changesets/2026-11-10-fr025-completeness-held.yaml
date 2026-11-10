@@ -1,6 +1,7 @@
 reason: "FR-025 completeness fixes held for a user decision: Workflow 1 and 2 steps and flows whose stage placement is review-queue row C48, three outcome steps with no named Actor (no System Actor), the publish-blocked alternative flow (incomplete-question contradiction), and the version-published emission at the Aftercare recovery-plan Stage. Apply after 2026-11-10-fr025-completeness-fixes.yaml."
 by: tester
 operations:
+  # 2026-11-10 D44: 26 ops that waited only on the system Actor moved to 2026-11-10-fr025-system-steps.yaml; the ops below still wait on their own decision.
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_node", "id": "STP-025-001", "type": "Step", "title": "Admin opens the Questionnaire Catalog", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 (Primary Flow) entry"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
@@ -21,8 +22,6 @@ operations:
   - {"op": "add_node", "id": "STP-025-009", "type": "Step", "title": "Admin previews the set as patient and provider view", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Preview set"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_node", "id": "STP-025-010", "type": "Step", "title": "Admin clicks Publish / Activate on the set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: Publish"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_node", "id": "STP-025-011", "type": "Step", "title": "Admin sees the set published and visible in the catalog", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: set published and visible in catalog"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_node", "id": "STP-025-012", "type": "Step", "title": "Admin edits a published set; a new Draft version is created and the Active version stays unchanged", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 alternative flow A1"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
@@ -35,10 +34,6 @@ operations:
   - {"op": "add_node", "id": "STP-025-020", "type": "Step", "title": "Admin edits a question in an Inquiry or Multi-Context set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 2 flow diagram: start"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_node", "id": "STP-025-021", "type": "Step", "title": "Admin edits a question of a published set; a new Draft version is created and the Active version keeps serving inquiries", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 2 alternative flow B1"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_node", "id": "STP-025-043", "type": "Step", "title": "Admin sees the set designated as the active Inquiry questionnaire and serving new inquiries", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 4 flow diagram: Set is actively serving all new patient inquiries"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_node", "id": "STP-025-048", "type": "Step", "title": "Admin sees the milestone assigned the questionnaire set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 4 flow diagram: Milestone assigned this questionnaire set", "handoff_to": "FR-011: Aftercare milestone questionnaire delivery schedule and frequency"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_node", "id": "FLW-025-set-management", "type": "Flow", "title": "Workflow 1: Questionnaire Set Management (Primary Flow)", "attrs": {"kind": "main", "description": "Workflow 1: Questionnaire Set Management (Primary Flow)", "prd_ref": "Workflow 1"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
@@ -173,16 +168,6 @@ operations:
   - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-031"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-010", "verb": "applies", "to": "REQ-025-034"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "done by", "to": "ACT-platform-admin"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "on", "to": "SCR-025-01"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-031"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-049"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-012", "verb": "done by", "to": "ACT-platform-admin"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
@@ -241,28 +226,6 @@ operations:
   - {"op": "add_edge", "from": "STP-025-021", "verb": "on", "to": "SCR-025-03"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-021", "verb": "applies", "to": "REQ-025-032"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "done by", "to": "ACT-platform-admin"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "on", "to": "SCR-025-01"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "applies", "to": "REQ-025-049"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "applies", "to": "REQ-025-050"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "applies", "to": "REQ-025-053"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "done by", "to": "ACT-platform-admin"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "applies", "to": "REQ-025-069"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "applies", "to": "REQ-025-070"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "applies", "to": "REQ-025-019"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-001", "verb": "next", "to": "STP-025-002", "attrs": {"label": "Create new set"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
@@ -307,28 +270,14 @@ operations:
   - {"op": "add_edge", "from": "STP-025-010", "verb": "next", "to": "STP-025-015", "attrs": {"label": "Incomplete questions found", "condition": "REQ-025-024"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps); item 2 (incomplete-question contradiction, lines 363 against 95/567/569)
   - {"op": "add_edge", "from": "STP-025-015", "verb": "next", "to": "STP-025-003", "attrs": {"label": "Admin fixes the questions"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "next", "to": "STP-025-040", "attrs": {"label": "Designate for Inquiry (separate action)"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-020", "verb": "next", "to": "STP-025-021", "attrs": {"label": "Set is published", "condition": "REQ-025-032"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-020", "verb": "next", "to": "STP-025-006", "attrs": {"label": "Set is still a Draft"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-021", "verb": "next", "to": "STP-025-006", "attrs": {}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-040", "verb": "next", "to": "STP-025-043", "attrs": {"label": "Inquiry flow unconfigured"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "STP-025-041", "verb": "next", "to": "STP-025-010", "attrs": {"label": "Admin publishes the set first"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-042", "verb": "next", "to": "STP-025-043", "attrs": {"label": "Admin confirms"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "next", "to": "STP-025-030", "attrs": {"label": "Delivered per Workflow 3"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-043", "verb": "next", "to": "STP-025-045", "attrs": {"label": "Admin later removes designation or archives the set", "condition": "REQ-025-048"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-046", "verb": "next", "to": "STP-025-048", "attrs": {"label": "Compatible set"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-048", "verb": "next", "to": "STP-025-049", "attrs": {"label": "Admin later replaces the set", "condition": "REQ-025-072"}}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)
   - {"op": "add_edge", "from": "FLW-025-set-management", "verb": "starts at", "to": "STP-025-001"}
   # waits on item 7 (queue C48: stage placement of admin-configuration steps)

@@ -1,0 +1,620 @@
+reason: "FR-018 system Steps released from 2026-11-10-fr018-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr018-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-003", "type": "Step", "title": "System validates unique email and payment-detail format", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "on", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "applies", "to": "REQ-018-194"}
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "applies", "to": "REQ-018-078"}
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "applies", "to": "REQ-018-079"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-004", "type": "Step", "title": "Admin submits the onboarding form", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_edge", "from": "STP-018-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-004", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-004", "verb": "on", "to": "SCR-018-02"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-005", "type": "Step", "title": "System creates the affiliate account with Pending status and sends the activation link", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "on", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "applies", "to": "REQ-018-030"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "applies", "to": "REQ-018-050"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "applies", "to": "REQ-018-036"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "applies", "to": "REQ-018-083"}
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "applies", "to": "REQ-018-195"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-006", "type": "Step", "title": "Admin creates a discount code for the affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "applies", "to": "REQ-018-002"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "applies", "to": "REQ-018-196"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-007", "type": "Step", "title": "System validates the discount code", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "applies", "to": "REQ-018-103"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-008", "type": "Step", "title": "System saves the code and links it to the affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "applies", "to": "REQ-018-012"}
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "applies", "to": "REQ-018-104"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-009", "type": "Step", "title": "System sends the activation email", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "applies", "to": "REQ-018-200"}
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "applies", "to": "REQ-018-050"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-010", "type": "Step", "title": "Affiliate opens the Set Password link and sees the password form", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "on", "to": "SCR-018-19"}
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "applies", "to": "REQ-018-197"}
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "applies", "to": "REQ-018-150"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-011", "type": "Step", "title": "Affiliate sets and confirms the password", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "on", "to": "SCR-018-19"}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "applies", "to": "REQ-018-198"}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "applies", "to": "REQ-018-151"}
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "applies", "to": "REQ-018-153"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-012", "type": "Step", "title": "Affiliate logs in and lands on the Affiliate Portal Overview", "owner_fr": "FR-018", "attrs": {"prd_ref": "Main Flow step 12"}}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "on", "to": "SCR-018-14"}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "applies", "to": "REQ-018-199"}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "applies", "to": "REQ-018-060"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-023", "type": "Step", "title": "System displays the discount code creation form", "owner_fr": "FR-018", "attrs": {"prd_ref": "A1 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-023", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-023", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-023", "verb": "on", "to": "SCR-018-07"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-024", "type": "Step", "title": "Admin configures the new code with different parameters", "owner_fr": "FR-018", "attrs": {"prd_ref": "A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "applies", "to": "REQ-018-002"}
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "applies", "to": "REQ-018-159"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-025", "type": "Step", "title": "System validates and saves the new code on the same affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "A1 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "applies", "to": "REQ-018-103"}
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "applies", "to": "REQ-018-012"}
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "applies", "to": "REQ-018-159"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-026", "type": "Step", "title": "System emails the affiliate about the new code", "owner_fr": "FR-018", "attrs": {"prd_ref": "A1 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-026", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-026", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-026", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-026", "verb": "applies", "to": "REQ-018-187"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-034", "type": "Step", "title": "System asks the admin to confirm the changes and the effective date", "owner_fr": "FR-018", "attrs": {"prd_ref": "A2 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "on", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "applies", "to": "REQ-018-034"}
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "applies", "to": "REQ-018-093"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-035", "type": "Step", "title": "Admin confirms the changes", "owner_fr": "FR-018", "attrs": {"prd_ref": "A2 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-035", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-035", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-035", "verb": "on", "to": "SCR-018-05"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-036", "type": "Step", "title": "System updates the affiliate commission record", "owner_fr": "FR-018", "attrs": {"prd_ref": "A2 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "on", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "applies", "to": "REQ-018-034"}
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "applies", "to": "REQ-018-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-037", "type": "Step", "title": "System applies the new rates to bookings completed after the effective date", "owner_fr": "FR-018", "attrs": {"prd_ref": "A2 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "on", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "applies", "to": "REQ-018-092"}
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "applies", "to": "REQ-018-066"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-038", "type": "Step", "title": "System emails the affiliate about the commission change", "owner_fr": "FR-018", "attrs": {"prd_ref": "A2 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-038", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-038", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-038", "verb": "on", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "STP-018-038", "verb": "applies", "to": "REQ-018-094"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-042", "type": "Step", "title": "System displays the affiliate dashboard", "owner_fr": "FR-018", "attrs": {"prd_ref": "A3 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "on", "to": "SCR-018-14"}
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "applies", "to": "REQ-018-006"}
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "applies", "to": "REQ-018-058"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-043", "type": "Step", "title": "Affiliate clicks a discount code to see its breakdown", "owner_fr": "FR-018", "attrs": {"prd_ref": "A3 step 3"}}
+  - {"op": "add_edge", "from": "STP-018-043", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-043", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-043", "verb": "on", "to": "SCR-018-15"}
+  - {"op": "add_edge", "from": "STP-018-043", "verb": "applies", "to": "REQ-018-140"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-044", "type": "Step", "title": "System displays per-code statistics", "owner_fr": "FR-018", "attrs": {"prd_ref": "A3 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-044", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-044", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-044", "verb": "on", "to": "SCR-018-15"}
+  - {"op": "add_edge", "from": "STP-018-044", "verb": "applies", "to": "REQ-018-140"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-045", "type": "Step", "title": "Affiliate reviews the data and downloads the PDF report if needed", "owner_fr": "FR-018", "attrs": {"prd_ref": "A3 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-045", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-045", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-045", "verb": "on", "to": "SCR-018-14"}
+  - {"op": "add_edge", "from": "STP-018-045", "verb": "applies", "to": "REQ-018-139"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-056", "type": "Step", "title": "System generates one distinct code for each selected affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "A4 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "applies", "to": "REQ-018-025"}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "applies", "to": "REQ-018-105"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-057", "type": "Step", "title": "System validates every generated code for platform-wide uniqueness", "owner_fr": "FR-018", "attrs": {"prd_ref": "A4 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-057", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-057", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-057", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-057", "verb": "applies", "to": "REQ-018-103"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-058", "type": "Step", "title": "System links each generated code to exactly one affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "A4 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-058", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-058", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-058", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-058", "verb": "applies", "to": "REQ-018-104"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-059", "type": "Step", "title": "System publishes the codes to the affiliate dashboards and sends code-created notifications", "owner_fr": "FR-018", "attrs": {"prd_ref": "A4 step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "on", "to": "SCR-018-07"}
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "applies", "to": "REQ-018-026"}
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "applies", "to": "REQ-018-112"}
+  - {"op": "add_edge", "from": "STP-018-059", "verb": "applies", "to": "REQ-018-187"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-063", "type": "Step", "title": "System displays the resend form", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-063", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-063", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-063", "verb": "on", "to": "SCR-018-20"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-064", "type": "Step", "title": "Affiliate enters the email used at account creation", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 4"}}
+  - {"op": "add_edge", "from": "STP-018-064", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-064", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-064", "verb": "on", "to": "SCR-018-20"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-065", "type": "Step", "title": "Affiliate clicks Resend Activation Email", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "on", "to": "SCR-018-20"}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "applies", "to": "REQ-018-154"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-066", "type": "Step", "title": "System validates that the email exists and the account is not yet activated", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-066", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-066", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-066", "verb": "on", "to": "SCR-018-20"}
+  - {"op": "add_edge", "from": "STP-018-066", "verb": "applies", "to": "REQ-018-156"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-067", "type": "Step", "title": "System generates a fresh one-time link and invalidates the previous one", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-067", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-067", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-067", "verb": "on", "to": "SCR-018-20"}
+  - {"op": "add_edge", "from": "STP-018-067", "verb": "applies", "to": "REQ-018-150"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-068", "type": "Step", "title": "System sends the new activation email and shows the confirmation message", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "on", "to": "SCR-018-20"}
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "applies", "to": "REQ-018-155"}
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "applies", "to": "REQ-018-200"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-069", "type": "Step", "title": "Affiliate completes password setup", "owner_fr": "FR-018", "attrs": {"prd_ref": "A5 step 9"}}
+  - {"op": "add_edge", "from": "STP-018-069", "verb": "done by", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "STP-018-069", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-069", "verb": "on", "to": "SCR-018-19"}
+  - {"op": "add_edge", "from": "STP-018-069", "verb": "applies", "to": "REQ-018-198"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-072", "type": "Step", "title": "System validates the code against expiration, usage limit and active status", "owner_fr": "FR-018", "attrs": {"prd_ref": "B1 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "applies", "to": "REQ-018-108"}
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "applies", "to": "REQ-018-109"}
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "applies", "to": "REQ-018-103"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-073", "type": "Step", "title": "System determines the code is invalid", "owner_fr": "FR-018", "attrs": {"prd_ref": "B1 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-073", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-073", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-073", "verb": "applies", "to": "REQ-018-163"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-074", "type": "Step", "title": "System displays the invalid-code error message", "owner_fr": "FR-018", "attrs": {"prd_ref": "B1 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-074", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-074", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-074", "verb": "applies", "to": "REQ-018-163"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-075", "type": "Step", "title": "Patient proceeds without a discount or enters a different valid code", "owner_fr": "FR-018", "attrs": {"prd_ref": "B1 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-075", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-018-075", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-075", "verb": "applies", "to": "REQ-018-163"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-076", "type": "Step", "title": "System does not track a referral or trigger commission", "owner_fr": "FR-018", "attrs": {"prd_ref": "B1 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-076", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-076", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-076", "verb": "applies", "to": "REQ-018-163"}
+  - {"op": "add_edge", "from": "STP-018-076", "verb": "applies", "to": "REQ-018-175"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-081", "type": "Step", "title": "FR-018 calculates the commissions owed for the previous month", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 1"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-081", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-081", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-081", "verb": "applies", "to": "REQ-018-007"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-082", "type": "Step", "title": "FR-018 exposes the payout cycle data and readiness status to FR-017", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-082", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-082", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-082", "verb": "applies", "to": "REQ-018-164"}
+  - {"op": "add_edge", "from": "STP-018-082", "verb": "applies", "to": "REQ-018-035"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-083", "type": "Step", "title": "FR-017 attempts the Stripe transfer", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-083", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-083", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-083", "verb": "applies", "to": "REQ-018-008"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-085", "type": "Step", "title": "System logs the error with affiliate ID, amount and error message", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-085", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-085", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-085", "verb": "applies", "to": "REQ-018-165"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-086", "type": "Step", "title": "FR-017 marks the payout Failed and FR-018 displays it read-only", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "on", "to": "SCR-018-11"}
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "applies", "to": "REQ-018-166"}
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "applies", "to": "REQ-018-021"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-087", "type": "Step", "title": "System alerts the admin team with the failed payout details", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-087", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-087", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-087", "verb": "applies", "to": "REQ-018-167"}
+  # waits on: no System Actor (Flow starts at a held Step)
+  - {"op": "add_node", "id": "STP-018-088", "type": "Step", "title": "Admin reviews the error and contacts the affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 8"}}
+  - {"op": "add_edge", "from": "STP-018-088", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-088", "verb": "at", "to": "STG-main-05-payment"}
+  # waits on: no System Actor (Flow starts at a held Step)
+  - {"op": "add_node", "id": "STP-018-089", "type": "Step", "title": "Admin triggers the retry in FR-017", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 9"}}
+  - {"op": "add_edge", "from": "STP-018-089", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-089", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-089", "verb": "applies", "to": "REQ-018-168"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-090", "type": "Step", "title": "FR-017 re-processes the payment and FR-018 displays Paid", "owner_fr": "FR-018", "attrs": {"prd_ref": "B2 step 10"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-090", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-090", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-090", "verb": "on", "to": "SCR-018-11"}
+  - {"op": "add_edge", "from": "STP-018-090", "verb": "applies", "to": "REQ-018-166"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-103", "type": "Step", "title": "System prompts for the required suspension reason", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-103", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-103", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-103", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-103", "verb": "applies", "to": "REQ-018-169"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-104", "type": "Step", "title": "Admin enters the reason and confirms the suspension", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 4"}}
+  - {"op": "add_edge", "from": "STP-018-104", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-104", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-104", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-104", "verb": "applies", "to": "REQ-018-091"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-105", "type": "Step", "title": "System sets the affiliate status to Suspended", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 5"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "applies", "to": "REQ-018-052"}
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "applies", "to": "REQ-018-088"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-106", "type": "Step", "title": "System disables all of the affiliate codes", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-106", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-106", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-106", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-106", "verb": "applies", "to": "REQ-018-088"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-107", "type": "Step", "title": "System emails the affiliate about the suspension with the reason", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-107", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-107", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-107", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-107", "verb": "applies", "to": "REQ-018-090"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-108", "type": "Step", "title": "System retains historical data and blocks new activity", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-108", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-108", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-108", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-108", "verb": "applies", "to": "REQ-018-170"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-109", "type": "Step", "title": "Pending unpaid commissions are held pending investigation", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-109", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-109", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-109", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-109", "verb": "applies", "to": "REQ-018-088"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-110", "type": "Step", "title": "Admin can reinstate the account to Active later", "owner_fr": "FR-018", "attrs": {"prd_ref": "B3 step 10"}}
+  - {"op": "add_edge", "from": "STP-018-110", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-110", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-110", "verb": "on", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "STP-018-110", "verb": "applies", "to": "REQ-018-089"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-111", "type": "Step", "title": "System completes generation for the valid affiliates", "owner_fr": "FR-018", "attrs": {"prd_ref": "B4 step 1"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-111", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-111", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-111", "verb": "applies", "to": "REQ-018-110"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-112", "type": "Step", "title": "System skips failed affiliates and records the reason per affiliate", "owner_fr": "FR-018", "attrs": {"prd_ref": "B4 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-112", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-112", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-112", "verb": "applies", "to": "REQ-018-114"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-113", "type": "Step", "title": "System displays the created, skipped and failed summary", "owner_fr": "FR-018", "attrs": {"prd_ref": "B4 step 3"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-113", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-113", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-113", "verb": "on", "to": "SCR-018-08"}
+  - {"op": "add_edge", "from": "STP-018-113", "verb": "applies", "to": "REQ-018-171"}
+  # waits on: no System Actor (Flow starts at a held Step)
+  - {"op": "add_node", "id": "STP-018-114", "type": "Step", "title": "Admin views or downloads the failed-row list", "owner_fr": "FR-018", "attrs": {"prd_ref": "B4 step 4"}}
+  - {"op": "add_edge", "from": "STP-018-114", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-114", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-114", "verb": "on", "to": "SCR-018-08"}
+  - {"op": "add_edge", "from": "STP-018-114", "verb": "applies", "to": "REQ-018-116"}
+  # waits on: no System Actor (Flow starts at a held Step)
+  - {"op": "add_node", "id": "STP-018-115", "type": "Step", "title": "Admin fixes the cause and retries only the failed affiliates", "owner_fr": "FR-018", "attrs": {"prd_ref": "B4 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "on", "to": "SCR-018-08"}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "applies", "to": "REQ-018-113"}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "applies", "to": "REQ-018-115"}
+  - {"op": "add_edge", "from": "STP-018-115", "verb": "applies", "to": "REQ-018-202"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-122", "type": "Step", "title": "System opens Screen 3.3 and requires a reason", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 2"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-122", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-122", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-122", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-122", "verb": "applies", "to": "REQ-018-102"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-123", "type": "Step", "title": "Admin reviews the final-settlement summary", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 3"}}
+  - {"op": "add_edge", "from": "STP-018-123", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-123", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-123", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-123", "verb": "applies", "to": "REQ-018-097"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-124", "type": "Step", "title": "System applies the terminal settlement rules", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 4"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-124", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-124", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-124", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-124", "verb": "applies", "to": "REQ-018-097"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  - {"op": "add_node", "id": "STP-018-125", "type": "Step", "title": "Admin confirms and the status becomes Inactive", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 5"}}
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "applies", "to": "REQ-018-096"}
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "applies", "to": "REQ-018-102"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-126", "type": "Step", "title": "System disables all of the affiliate codes", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 6"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-126", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-126", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-126", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-126", "verb": "applies", "to": "REQ-018-098"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-127", "type": "Step", "title": "System makes the portal access read-only", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 7"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-127", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-127", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-127", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-127", "verb": "applies", "to": "REQ-018-099"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-128", "type": "Step", "title": "System retains all historical data", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 8"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "applies", "to": "REQ-018-100"}
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "applies", "to": "REQ-018-170"}
+  # waits on: no System Actor
+  - {"op": "add_node", "id": "STP-018-129", "type": "Step", "title": "System sends the offboarding notification and records the audit entry", "owner_fr": "FR-018", "attrs": {"prd_ref": "B5 step 9"}}
+  # done by: ACT-system (decision D44)
+  - {"op": "add_edge", "from": "STP-018-129", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-129", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-129", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-129", "verb": "applies", "to": "REQ-018-172"}
+  - {"op": "add_edge", "from": "STP-018-129", "verb": "applies", "to": "REQ-018-061"}
+  # waits on: no System Actor (Flow starts at a System Step)
+  - {"op": "add_node", "id": "FLW-018-b2", "type": "Flow", "title": "Payout fails during FR-017 execution", "attrs": {"kind": "alternative", "description": "B2: Payout Processing Failure (from FR-017 Execution)", "prd_ref": "B2"}}
+  - {"op": "add_edge", "from": "FLW-018-b2", "verb": "starts at", "to": "STP-018-081"}
+  # waits on: no System Actor (Flow starts at a System Step)
+  - {"op": "add_node", "id": "FLW-018-b4", "type": "Flow", "title": "Bulk code generation partly fails", "attrs": {"kind": "alternative", "description": "B4: Bulk Code Generation Partial Failure", "prd_ref": "B4"}}
+  - {"op": "add_edge", "from": "FLW-018-b4", "verb": "starts at", "to": "STP-018-111"}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-002", "verb": "next", "to": "STP-018-003", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-003", "verb": "next", "to": "STP-018-004", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-004", "verb": "next", "to": "STP-018-005", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-005", "verb": "next", "to": "STP-018-006", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "next", "to": "STP-018-007", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "next", "to": "STP-018-008", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "next", "to": "STP-018-009", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-009", "verb": "next", "to": "STP-018-010", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-010", "verb": "next", "to": "STP-018-011", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-011", "verb": "next", "to": "STP-018-012", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-022", "verb": "next", "to": "STP-018-023", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-023", "verb": "next", "to": "STP-018-024", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-024", "verb": "next", "to": "STP-018-025", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-025", "verb": "next", "to": "STP-018-026", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-033", "verb": "next", "to": "STP-018-034", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-034", "verb": "next", "to": "STP-018-035", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-035", "verb": "next", "to": "STP-018-036", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-036", "verb": "next", "to": "STP-018-037", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-037", "verb": "next", "to": "STP-018-038", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-041", "verb": "next", "to": "STP-018-042", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-042", "verb": "next", "to": "STP-018-043", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-043", "verb": "next", "to": "STP-018-044", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-044", "verb": "next", "to": "STP-018-045", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-055", "verb": "next", "to": "STP-018-056", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "next", "to": "STP-018-057", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-057", "verb": "next", "to": "STP-018-058", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-058", "verb": "next", "to": "STP-018-059", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-062", "verb": "next", "to": "STP-018-063", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-063", "verb": "next", "to": "STP-018-064", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-064", "verb": "next", "to": "STP-018-065", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "next", "to": "STP-018-066", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-066", "verb": "next", "to": "STP-018-067", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-067", "verb": "next", "to": "STP-018-068", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-068", "verb": "next", "to": "STP-018-069", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-071", "verb": "next", "to": "STP-018-072", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-072", "verb": "next", "to": "STP-018-073", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-073", "verb": "next", "to": "STP-018-074", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-074", "verb": "next", "to": "STP-018-075", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-075", "verb": "next", "to": "STP-018-076", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-081", "verb": "next", "to": "STP-018-082", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-082", "verb": "next", "to": "STP-018-083", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-085", "verb": "next", "to": "STP-018-086", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-086", "verb": "next", "to": "STP-018-087", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-087", "verb": "next", "to": "STP-018-088", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-088", "verb": "next", "to": "STP-018-089", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-089", "verb": "next", "to": "STP-018-090", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-102", "verb": "next", "to": "STP-018-103", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-103", "verb": "next", "to": "STP-018-104", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-104", "verb": "next", "to": "STP-018-105", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-105", "verb": "next", "to": "STP-018-106", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-106", "verb": "next", "to": "STP-018-107", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-107", "verb": "next", "to": "STP-018-108", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-108", "verb": "next", "to": "STP-018-109", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-109", "verb": "next", "to": "STP-018-110", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-111", "verb": "next", "to": "STP-018-112", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-112", "verb": "next", "to": "STP-018-113", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-113", "verb": "next", "to": "STP-018-114", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-114", "verb": "next", "to": "STP-018-115", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-121", "verb": "next", "to": "STP-018-122", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-122", "verb": "next", "to": "STP-018-123", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-123", "verb": "next", "to": "STP-018-124", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-124", "verb": "next", "to": "STP-018-125", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-125", "verb": "next", "to": "STP-018-126", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-126", "verb": "next", "to": "STP-018-127", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-127", "verb": "next", "to": "STP-018-128", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-128", "verb": "next", "to": "STP-018-129", "attrs": {"label": "then"}}
+  # waits on: no System Actor (edge touches a held Step)
+  - {"op": "add_edge", "from": "STP-018-069", "verb": "next", "to": "STP-018-010", "attrs": {"label": "password set, continue activation"}}
