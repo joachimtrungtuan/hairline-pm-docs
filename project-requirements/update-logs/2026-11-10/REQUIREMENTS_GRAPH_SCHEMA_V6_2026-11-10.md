@@ -66,3 +66,18 @@ The user decided that external services are not the system (D45): each gets its 
 | `graph/graph.db`, `graph/graph.json` | Migrated and re-exported (10535 nodes); backup `graph/backups/graph-20261110-173818.db` (git-ignored) |
 
 Lint is unchanged at 4,403 findings (L10 4,151, L12 180, L18 72), on a copy first and on the real DB. No Rule was changed. The held external-service Steps were released afterwards; see the D45/D46 section of `GRAPH_STEP1_COMPLETENESS_RUN_2026-11-10.md`.
+
+## Addendum: schema v9, platform administration timeline (same day, D49)
+
+The user decided that admin settings and configuration Steps belong to no patient-journey Stage (D49). They get a new timeline with one Stage.
+
+| Item | Change |
+|---|---|
+| `graph/schema.yaml` | Version 9; `platform-admin` added to the `timeline` enum (platform administration, outside every patient journey) |
+| `graph/scripts/migrate_schema_v9.py` | New. As in v8, no table changes: it checks the DDL equals the version 9 DDL, backs up, and sets `user_version` 9 |
+| `graph/scripts/test_dedup.py` | Five v9 migration tests added (234 tests pass, was 229); the older tests derive their schemas from a v8 schema, and the v8 CLI test is given the v8 schema |
+| `graph/README.md` | "Schema version 9" section and script entry |
+| `graph/changesets/2026-11-10-platform-admin-stage.yaml` | Adds `STG-admin-01-configuration` "Configuration" (timeline `platform-admin`, sequence 1); `acts in` edges come with its Steps |
+| `graph/graph.db`, `graph/graph.json` | Migrated and re-exported; backup `graph/backups/graph-20261110-190500.db` (git-ignored) |
+
+The schema change itself added no lint finding (checked on a copy first). No Rule was changed. The held admin settings Steps were released at the same time; see the D49 section of `GRAPH_STEP1_COMPLETENESS_RUN_2026-11-10.md`.
