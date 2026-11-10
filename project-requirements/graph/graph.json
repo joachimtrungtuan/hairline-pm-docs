@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T14:25:22Z",
+  "generated_at": "2026-11-10T15:26:14Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -42862,7 +42862,7 @@
       "owner_fr": "FR-004",
       "title": "Promotion terms copied at send; one automatic promotion",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST store the offered price as entered and any promotion discount separately, MUST copy the terms of every attached promotion into the sent quote version at send, and MUST attach at most one automatic FR-019 promotion per quote to each eligible option/date-price row at send, chosen by the FR-019 priority order when several qualify. Later FR-019 promotion edits MUST NOT change a sent quote."
       }
@@ -42917,7 +42917,7 @@
       "owner_fr": "FR-004",
       "title": "Option/date price greater than zero",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Every option/date price MUST be greater than 0 before send, and a zero price MUST block send. A date range the clinic cannot serve MUST be left out of that option rather than priced.",
         "rationale": "A zero price is blocked with an inline error on that row."
@@ -42929,7 +42929,7 @@
       "owner_fr": "FR-004",
       "title": "Default Currency change on a draft",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "If the FR-029 Default Currency changes while a draft holds prices, System MUST switch the draft to the new currency, keep every typed number unchanged, and show a \"currency changed, check your prices\" banner that the provider MUST acknowledge before send."
       }
@@ -42940,7 +42940,7 @@
       "owner_fr": "FR-004",
       "title": "Automatic promotion usage reservation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "A sent quote carrying an automatic FR-019 promotion MUST hold exactly one reserved use of that promotion's usage limit. A re-send of a new version MUST keep the existing reservation, create one only if the new version newly qualifies, and release it if the new version no longer carries the promotion. The reservation MUST be released when the quote expires, is withdrawn, or ends not selected or cancelled, MUST be released with reason `not_applied` when the accepted row does not carry the promotion, and MUST be consumed at acceptance when the accepted row carries it, so the usage limit is never exceeded. If the booking later ends in `Payment Window Expired` or is cancelled before the first payment, FR-005 and FR-019 own the return of the consumed use to the limit."
       }
@@ -42951,7 +42951,7 @@
       "owner_fr": "FR-004",
       "title": "First-send timestamp set once",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST set the parent quote's `firstSentAt` on its first send, and a re-send or new version MUST NOT change it."
       }
@@ -42962,7 +42962,7 @@
       "owner_fr": "FR-004",
       "title": "Treatment Base Price is a reference-only prefill",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The FR-024 treatment Base Price MAY prefill a new option/date-price row only where no other standard value exists; it MUST be treated as a non-binding reference and MUST NOT be read after the quote is sent."
       }
@@ -42973,7 +42973,7 @@
       "owner_fr": "FR-004",
       "title": "FR-004 produces quote.updated on re-send",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "FR-004 MUST be the producer of `quote.updated` and MUST emit it when a new version of an already-sent quote is re-sent, described as \"quote revised (new version)\"."
       }
@@ -42995,7 +42995,7 @@
       "owner_fr": "FR-004",
       "title": "FR-004 is the only producer of quote.withdrawn",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "FR-004 MUST be the only producer of `quote.withdrawn`. The notice MUST go to the patient for every withdrawal and to the admin only when the withdrawn quote was already accepted.",
         "rationale": "A withdrawal before acceptance is a normal provider action; FR-006 reacts to a post-acceptance withdrawal without emitting the event again."
@@ -43007,7 +43007,7 @@
       "owner_fr": "FR-004",
       "title": "Admin-authored replacement quote",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the closed AcceptanceEvent, MUST NOT be offered for patient comparison or emit `quote.submitted`, and MUST be the target of the FR-005 admin-authored replacement acceptance.",
         "rationale": "Business Rules: it is the only exception to the block on new quotes after acceptance."
@@ -43030,7 +43030,7 @@
       "owner_fr": "FR-004",
       "title": "Replacement quote pricing and expiry",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly. A replacement quote that is not accepted MUST expire under the normal quote expiry, MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and MUST allow the admin to author another replacement quote or cancel the inquiry and booking."
       }
@@ -43262,7 +43262,7 @@
       "owner_fr": "FR-004",
       "title": "Accepted quote stays accepted",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "An accepted parent quote stays `accepted` and is never reopened for acceptance or moved to `expired`, including after FR-006 moves the booking to `Payment Window Expired`; its status changes only through provider withdrawal (Workflow 6). An admin booking cancellation in FR-006 moves the booking and inquiry to `Cancelled` but leaves the accepted parent quote `accepted`. Competing parent quotes stay cancelled."
       }
@@ -43361,7 +43361,7 @@
       "owner_fr": "FR-004",
       "title": "Replacement quote only before treatment starts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The provider-fault transfer with a replacement quote and a new acceptance applies only before treatment starts (booking `Accepted` or `Confirmed`); provider drop-out after acceptance, including an FR-010 reassignment, is not a quote withdrawal. If the fault happens in Aftercare, no replacement quote, new acceptance, or new payment is created. Screen 8 is unavailable for a booking in `In Progress` or later stages and for any inquiry with an active acceptance."
       }
@@ -43405,7 +43405,7 @@
       "owner_fr": "FR-004",
       "title": "Accepted terms never change",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "After acceptance, price, currency, date range, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change, which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline."
       }
@@ -43460,7 +43460,7 @@
       "owner_fr": "FR-004",
       "title": "Automatic promotion with no uses left is not attached",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "An automatic promotion with no uses left is not eligible and is not attached; when its last use is reserved by another quote before this quote is sent, it is not attached at send, because the usage limit can never be exceeded."
       }
@@ -48114,7 +48114,7 @@
       "owner_fr": "FR-008",
       "title": "Provider-fault carry-over applies before treatment starts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The provider-fault carry-over MUST apply only when an admin transfers the patient through FR-006 Alternative Flow B5 after the original booking was confirmed and before treatment starts. A provider fault during Aftercare reassigns only the aftercare provider (FR-011) and leaves the booking and its TravelContext unchanged."
       }
@@ -50352,7 +50352,7 @@
       "owner_fr": "FR-010",
       "title": "Accepted snapshot is the only source of money and appointment data",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST read price, currency, date range, appointment, and promotion only from the accepted snapshot reached through the booking's AcceptanceEvent, and MUST seed the case's treatment plan days, clinician set, and estimated graft count from the same snapshot; FR-010 MUST NOT read accepted data from live FR-004 records or edit the snapshot (Rule 14)",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 951."
@@ -50364,7 +50364,7 @@
       "owner_fr": "FR-010",
       "title": "FR-010 is the only path for post-acceptance treatment-detail changes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST make FR-010 the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count, blocked while the booking is `Accepted` and limited to the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) and admins (from `Confirmed` onward); each change MUST require a reason, be audited with before/after values, notify the patient through the FR-030 `treatment.plan_changed` event, leave the accepted snapshot unchanged, and never change money fields (Rule 13; Alternative Flow A2)",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 952."
@@ -50388,7 +50388,7 @@
       "owner_fr": "FR-010",
       "title": "Treating provider never reassigned in FR-010",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST NOT reassign the treating provider in FR-010; provider withdrawal, drop-out, or replacement after acceptance MUST be handed to the FR-006 Alternative Flow B5 provider-fault transfer before Check In, and to the FR-006 Alternative Flow B7 admin decision while In Progress (Rule 16; Alternative Flow B6)",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 954."
@@ -50532,7 +50532,7 @@
       "owner_fr": "FR-010",
       "title": "Suspension or deactivation leaves In Progress cases In Progress with a support marker",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "An effective provider suspension/deactivation (FR-015 A5/Screen 4) does not cancel the provider's In Progress cases: each stays In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, and provider documentation is blocked (Alternative Flow B5). This cascade is distinct from Rule 11's provider-requested closure. Clinical notes, photos, head scan photo sets, and any already recorded completion milestone are preserved; an admin decides case by case through FR-006 Alternative Flow B7 to move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or to cancel the booking. No replacement acceptance is created for an In Progress case. Reactivation never restores the provider's actions on the case.",
         "rationale": "Conflicts with REQ-010-025 (see the product owner question). Also stated in Alternative Flow B5 and the suspended-mid-treatment edge case; the edge case adds that a later deactivation does not overwrite an earlier ProviderSuspended cause. Archived FR-010 PRD baseline, lines 563."
@@ -50556,7 +50556,7 @@
       "owner_fr": "FR-010",
       "title": "Money and appointment baseline read only from the accepted snapshot",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Price, currency, date range, accepted appointment baseline, and promotion are read only from the accepted snapshot, reached through the FR-006 booking's AcceptanceEvent. The operative procedure date (Check In gate and displays) is the current FR-006 booking appointment, which equals the snapshot appointment unless an approved FR-006 admin date change applies. FR-010 never edits the snapshot or reads these values from live FR-004 records. The case's current treatment details are seeded from the same snapshot and then change only under Rule 13.",
         "rationale": "Restates REQ-010-026 and adds the operative procedure date; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 565."
@@ -60234,7 +60234,7 @@
       "owner_fr": "FR-016",
       "title": "Editable by admin: Booking appointment date only through the FR-006",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Editable by admin: Booking appointment date only through the FR-006 guarded date change: allowed for `Accepted` or `Confirmed` bookings, with a mandatory reason and a slot availability check, and triggering an FR-008 travel-date review for any linked travel records (emergency reschedules with provider coordination)",
         "rationale": "Stated in prd.md, Admin Editability Rules (line 707). Restated: prd.md line 262: \"For a change request, admin opens the FR-006 Change Appointment action (FR-006 Screen 8), which applies to `Accepted` or `Confirmed` bookings; the patient and provider receive `booking.rescheduled`\""
@@ -66258,7 +66258,7 @@
       "owner_fr": "FR-019",
       "title": "Attach promotions at send; validate patient code on one named subquote; one discount per subquote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST attach provider-selected and eligible automatic promotions to option/date-price rows when a quote is sent, validate patient codes on one named subquote before acceptance, and apply at most one discount per subquote.",
         "rationale": "Restated by the Provider and Patient scope lines, Scope Boundaries, Entry Points, Alternative Flows A3 and A4 and General Module Rules. PRD lines 38, 57, 75-76, 143-152, 721."
@@ -66270,7 +66270,7 @@
       "owner_fr": "FR-019",
       "title": "Priority and non-stacking; one automatic promotion per quote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST enforce priority and non‑stacking rules (patient-entered code > provider discount > Hairline-funded discount > affiliate discount when conflicts arise) and MUST attach at most one automatic promotion per quote.",
         "rationale": "Restated by Scope Boundaries (stacking out of scope), Alternative Flows B2 and B3 and General Module Rules. PRD lines 64, 121-133, 721, 724."
@@ -66366,7 +66366,7 @@
       "owner_fr": "FR-019",
       "title": "Copy promotion terms into the sent quote version; later program changes never change a sent row",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST copy each row's promotion terms into the sent quote version at send; later program changes MUST NOT change a sent row.",
         "rationale": "Restated by Scope Boundaries, Entry Points, Alternative Flow A3 outcome, Screen 2 acceptance criterion 3 and General Module Rules. PRD lines 57, 76, 145, 314, 722, 900."
@@ -66378,7 +66378,7 @@
       "owner_fr": "FR-019",
       "title": "Freeze promotion and discounted price at acceptance; reject later change",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST freeze the promotion and discounted price of an accepted subquote in the AcceptanceEvent snapshot and MUST reject any later removal, replacement, code entry, price-changing revalidation, or admin void, except through the FR-006 provider-fault transfer, which creates a new linked record.",
         "rationale": "Restated by Scope Boundaries (out of scope), Alternative Flow B4, Screens 6, 10 and 11 and General Module Rules. PRD lines 65, 162-164, 502, 652, 680, 730."
@@ -66390,7 +66390,7 @@
       "owner_fr": "FR-019",
       "title": "Provider-selected and patient-code use: reserve at acceptance, consume at first payment, release on expiry or cancellation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "For provider-selected promotions and patient-entered codes, System MUST reserve one promotion use at acceptance, consume it at the first successful payment, release it on `Payment Window Expired` or cancellation, and re-reserve it on an admin revive, rejecting the revive if the usage limit is exhausted.",
         "rationale": "Restated by Scope Boundaries and General Module Rules. PRD lines 58, 726."
@@ -66402,7 +66402,7 @@
       "owner_fr": "FR-019",
       "title": "Auto-applied use: reserve at send, one per sent quote, release or consume by outcome",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "For an auto-applied promotion, System MUST reserve one use when a quote carrying it is sent, MUST hold at most one reserved use per sent quote across re-sent versions (keeping the existing reservation, creating one only when a new version newly carries the promotion, and releasing it when a new version no longer carries the promotion), MUST release the reservation when the quote expires, is withdrawn, ends Not Selected, drops the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, or when a subquote of that quote is accepted that does not carry the promotion (`not_applied`), and MUST consume it when the accepted subquote carries the promotion. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, System MUST return the consumed use to the limit; on an admin revive, System MUST take the use again if the limit has room and otherwise MUST reject the revive, so the accepted price never changes. Usage limits MUST count active reservations plus consumed uses so that a limit can never be exceeded.",
         "rationale": "Restated by Scope Boundaries, Alternative Flows A3 and A5, Screen 6 rules and General Module Rules. PRD lines 58, 144-145, 157, 727, 729."
@@ -66414,7 +66414,7 @@
       "owner_fr": "FR-019",
       "title": "Commission on the accepted price after the promotion for every discount type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST calculate commission on the accepted price after the promotion for every discount type, including Hairline-funded programs.",
         "rationale": "Restated by Alternative Flows A2 and C1, the Screen Specifications overview and General Module Rules. PRD lines 113-114, 139, 176, 731."
@@ -66426,7 +66426,7 @@
       "owner_fr": "FR-019",
       "title": "Hairline share percent on Both Fees programs, fixed at send, given to FR-017",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST record a Hairline share % from 0 to 100 on every Both Fees program, copy it into the terms fixed at send, and provide it to FR-017, which reimburses that share of the discount to the provider at payout on top of the commission effect.",
         "rationale": "Restated by the Screen Specifications overview, Screen 2 and General Module Rules. PRD lines 176, 288, 306, 732."
@@ -66450,7 +66450,7 @@
       "owner_fr": "FR-019",
       "title": "No automatic promotion on an admin-authored replacement quote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST NOT attach an automatic promotion to an admin-authored replacement quote (FR-004 Workflow 7) or reserve a use for it; the admin sets the replacement price directly, and the promotion use held by the closed acceptance MUST be returned or kept under the normal rules.",
         "rationale": "Restated by Alternative Flow A3 exception and Screen 2 business rules. PRD lines 146, 305."
@@ -66606,7 +66606,7 @@
       "owner_fr": "FR-019",
       "title": "Hairline-only discount is hidden from providers; commission is on the price after the promotion",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: Admin creates a Hairline‑funded discount. Steps: System applies the discount to the patient's price; the program is not visible to providers in selection UIs. Commission is calculated on the accepted price after the promotion, as for every discount type. Outcome: Both the platform commission and the provider's payout are reduced; the provider bears most of the discount. The funding of each program is defined in General Module Rules; FR-017 applies it in payout settlement.",
         "rationale": "Alternative Flow A2. PRD lines 112-114. Screen 2 business rules (line 304) and acceptance criterion 2 (line 313) repeat that Hairline-funded programs do not appear in provider selection UIs or adoption inboxes."
@@ -66642,7 +66642,7 @@
       "owner_fr": "FR-019",
       "title": "Auto-applied conflicts resolve silently by priority, with no user prompt",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: When a quote is sent, more than one automatic promotion is eligible for the quote, or an automatic promotion is eligible for an option/date-price row that already carries another discount. Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. When several automatic programs qualify, only the highest-ranked one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row. No user prompt is shown. Example: A Hairline-funded automatic program and a provider's automatic program are both eligible when a quote is sent. The provider's program ranks higher, so it attaches to every row it is eligible for and one use is reserved for it; the Hairline-funded program attaches to no row of that quote and no use is reserved for it.",
         "rationale": "Alternative Flow B3. PRD lines 130-132. General Module Rules (line 721) repeat the priority order."
@@ -66666,7 +66666,7 @@
       "owner_fr": "FR-019",
       "title": "Direct-issued code is validated against its binding and redemption is recorded against the issuing channel",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: Admin issues a Hairline-funded code (open code, segment-bound, or affiliate-distributed) and the patient enters it on one named subquote before acceptance. Steps: System validates the code against issuance binding (open vs recipient-bound), records the redemption against the issuing channel (e.g., affiliate id), and calculates commission on the accepted price after the promotion, as for every discount type. For affiliate-bound codes, code generation and affiliate assignment are initiated from FR-018; FR-019 receives the registered code and manages redemption lifecycle. Outcome: Patient receives discount; the platform commission and the provider's payout are both reduced, with the provider bearing most of the discount; affiliate (if applicable) accrues the configured incentive (see FR-018).",
         "rationale": "Alternative Flow C1. PRD lines 137-139."
@@ -66678,7 +66678,7 @@
       "owner_fr": "FR-019",
       "title": "Automatic promotion attaches at send to every eligible row; the provider price stays and the discount shows as a separate line",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: A provider sends a quote while an auto-applied program is active and eligible for one or more of its option/date-price rows. Steps: A quote carries at most one automatic promotion; when several qualify, Alternative Flow B3 picks one. System attaches that program to every eligible option/date-price row of the sent quote and copies its terms into the sent quote version. The provider's entered price on each row stays unchanged, and the discount is shown as a separate line next to it. Rows that are not eligible receive no automatic promotion. Conflicts with another discount on the same row are resolved by Alternative Flow B3. Sending a quote carrying the automatic promotion reserves one use against the program's usage limits. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. If the limit is already fully reserved or consumed, the promotion does not attach.",
         "rationale": "Alternative Flow A3. PRD lines 143-146, General Module Rules (line 724). Outcome and exception lines are carried by REQ-019-012, REQ-019-015 and REQ-019-019."
@@ -66690,7 +66690,7 @@
       "owner_fr": "FR-019",
       "title": "Patient code is validated for the named subquote only and never written to the provider promotion",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: While reviewing one named subquote and before confirming acceptance, the patient enters a code (FR-005 Alternative Flow A8). Steps: System validates the code for that subquote only (active window, eligibility, usage limits, recipient binding). If valid, the discounted price is shown next to the provider's offered price; if invalid, the reason is shown and the offered price is unchanged. The code is recorded against the patient's selection on that subquote and is never written to the provider's promotion or quote records. Opening another subquote does not carry the code over. Outcome: On acceptance, the discounted price and the applied promotion are frozen into the AcceptanceEvent snapshot.",
         "rationale": "Alternative Flow A4. PRD lines 150-152. Screen 11 business rule (line 678) and acceptance criterion 3 (line 688) repeat that the code is not carried to another subquote."
@@ -66702,7 +66702,7 @@
       "owner_fr": "FR-019",
       "title": "Accepting a subquote with a promotion creates one Application atomically and reserves or consumes a use",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: The patient accepts a subquote that carries a promotion attached at send or a valid patient-entered code. Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code entered on a subquote that was not accepted is discarded. Outcome: The Application is in state Applied with its use reserved, or consumed for an automatic promotion; the discounted price is read from the acceptance snapshot by every later step.",
         "rationale": "Alternative Flow A5. PRD lines 156-158, Implementation Notes (line 814)."
@@ -66714,7 +66714,7 @@
       "owner_fr": "FR-019",
       "title": "Any promotion change attempted after acceptance is rejected and logged",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Trigger: Any actor (patient, provider, or admin) tries to remove, replace, enter, or revalidate a promotion on an accepted subquote, including at checkout or booking. Steps: System rejects the action, leaves the Application and the AcceptanceEvent snapshot unchanged, and logs the attempt. Outcome: The accepted price stands. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5), which creates a new linked acceptance record; promotion handling for that case follows the post-acceptance freeze rule in General Module Rules.",
         "rationale": "Alternative Flow B4. PRD lines 162-164. Screen 11 business rule (line 680) and Screen 11 acceptance criterion 4 (line 689) repeat the rejection at checkout and payment."
@@ -66846,7 +66846,7 @@
       "owner_fr": "FR-019",
       "title": "Auto-applied mode is allowed only for Hairline Only or Provider Only programs and never on a replacement quote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "`Application Mode = Auto-applied` is only allowed for programs with `Funding Model = Hairline Only` or `Provider Only` and explicit eligibility rules (cannot be auto-applied across multiple providers without consent). Auto-applied programs attach when a quote is sent (Alternative Flow A3). They never attach to an admin-authored replacement quote, and no use is reserved for one.",
         "rationale": "Screen 2 business rules. PRD line 305, acceptance criterion 4 (line 315: message \"Auto-applied is not permitted for Both-Fees programs.\")."
@@ -66858,7 +66858,7 @@
       "owner_fr": "FR-019",
       "title": "Hairline share percent is required for Both Fees programs, 0 to 100, audited, and part of the terms fixed at send",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "`Hairline Share %` is required for Both Fees programs and must be a number from 0 to 100; it is hidden for other funding models. It is part of the terms fixed at send and frozen at acceptance, so an edit applies only to quotes sent afterwards. Every change is recorded in the Audit Trail Panel with actor, timestamp, and old and new values.",
         "rationale": "Screen 2 business rules. PRD line 306, acceptance criterion 5 (line 316)."
@@ -67050,7 +67050,7 @@
       "owner_fr": "FR-019",
       "title": "Applied and Completed are two distinct redemption states",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The two-state distinction (Applied vs Completed) is preserved per client request (Admin Part 1 L341–344). Applied = the subquote carrying the promotion has been accepted and, for a provider-selected promotion or patient code, one use is reserved; Completed = the first payment for that booking has succeeded and that reserved use is consumed. For an automatic promotion the use is already consumed at acceptance, so Completed only marks the first payment.",
         "rationale": "Screen 6 business rules. PRD line 492."
@@ -67062,7 +67062,7 @@
       "owner_fr": "FR-019",
       "title": "Voided and Superseded are set only by the system; there is no admin Void",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Voided is set only by the system, when the booking reaches `Payment Window Expired` or is cancelled; the reserved use is then released. For an automatic promotion, the use consumed at acceptance returns to the usage limit when the row is Voided before the first payment. Superseded is set only by the system when a provider-fault transfer replaces the accepted record. There is no admin Void action.",
         "rationale": "Screen 6 business rules. PRD line 493, acceptance criteria 3 and 4 (lines 501-502)."
@@ -67086,7 +67086,7 @@
       "owner_fr": "FR-019",
       "title": "The first successful payment moves Applied to Completed and consumes the reserved use",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Given an accepted subquote with an Applied redemption, when the first payment for the booking succeeds, then the redemption row transitions from State = Applied to State = Completed, the reserved use is consumed (for an automatic promotion the use was already consumed at acceptance and is not counted again), and the change is reflected in Overview KPIs within 5 seconds.",
         "rationale": "Screen 6 acceptance criterion 1. PRD line 499, Screen 6 rule on automatic promotions (line 492)."
@@ -67290,7 +67290,7 @@
       "owner_fr": "FR-019",
       "title": "On a provider-fault transfer the original Application is kept as Superseded and a new Application is linked",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Post-acceptance freeze: after acceptance, the promotion and discounted price of the accepted subquote are frozen in the AcceptanceEvent snapshot. No removal, replacement, code entry at checkout or booking, price-changing revalidation, or admin void is allowed. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5): the original Application is kept as history and marked Superseded, and any promotion on the replacement is recorded as a new Application linked to the new admin-authored acceptance record; a use already reserved or consumed carries over and is not counted twice. Money handling for that transfer is defined by FR-006, FR-007, FR-007b, and FR-017.",
         "rationale": "General Module Rules, post-acceptance freeze exception. PRD line 730. FR-006 Alternative Flow B5 owns the transfer."
@@ -75128,7 +75128,7 @@
       "owner_fr": "FR-026",
       "title": "One versioned Quote Configuration; currency is the FR-029 Default Currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST store one versioned Quote Configuration containing the quote expiry window (whole hours from 24 to 336, default 48), the quote-expiring-soon lead time (whole hours from 1 up to half of the expiry window, default 12), the slot-hold duration (whole hours from 24 to 168, default 48), and the hold-expiring-soon lead time (whole hours from 1 up to half of the slot-hold duration, default 12). The quote currency MUST be the FR-029 Default Currency, not a separate setting, and each change to the FR-029 Default Currency MUST create a new Quote Configuration version so the version recorded on a quote identifies both the hours and the currency used. Consumers: FR-004 (currency, expiry window, quote-expiring-soon lead time), FR-005 and FR-006 (slot-hold duration), and FR-006 (hold-expiring-soon lead time).",
         "rationale": "PRD id REQ-026-012f, renumbered. FR-026 keeps no second currency setting."
@@ -168885,6 +168885,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-035",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q40",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-036",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -169047,6 +169053,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-040",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q3",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-041",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -169074,6 +169086,12 @@
       "from_id": "REQ-004-041",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-041",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q4",
       "attrs": {}
     },
     {
@@ -169125,6 +169143,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-042",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q29",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-042",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q30",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-042",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q39",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-042",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-043",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -169140,6 +169182,12 @@
       "from_id": "REQ-004-043",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-043",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q15",
       "attrs": {}
     },
     {
@@ -169173,6 +169221,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-044",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q20",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-045",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -169194,6 +169248,12 @@
       "from_id": "REQ-004-045",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-045",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q24",
       "attrs": {}
     },
     {
@@ -169257,6 +169317,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-047",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q31",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-048",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -169302,6 +169368,18 @@
       "from_id": "REQ-004-048",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-048",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q35",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-048",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q43",
       "attrs": {}
     },
     {
@@ -169374,6 +169452,18 @@
       "from_id": "REQ-004-050",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-050",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q48",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-050",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q49",
       "attrs": {}
     },
     {
@@ -170001,6 +170091,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-071",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q37",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-072",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -170247,6 +170343,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-080",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q36",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-081",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -170370,6 +170472,12 @@
       "from_id": "REQ-004-084",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-084",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q42",
       "attrs": {}
     },
     {
@@ -170508,6 +170616,12 @@
       "from_id": "REQ-004-089",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-089",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
       "attrs": {}
     },
     {
@@ -179283,6 +179397,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-073",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q36",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-074",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -182661,6 +182781,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-010-026",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-R7-1",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-010-027",
       "verb": "applies at",
       "to_id": "STG-main-06-treatment",
@@ -182694,6 +182820,12 @@
       "from_id": "REQ-010-027",
       "verb": "decided by",
       "to_id": "SRC-PO-001-M2",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-027",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q2",
       "attrs": {}
     },
     {
@@ -182748,6 +182880,12 @@
       "from_id": "REQ-010-029",
       "verb": "decided by",
       "to_id": "SRC-PO-001-M18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-029",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q45",
       "attrs": {}
     },
     {
@@ -182907,6 +183045,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-010-041",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q45",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-010-042",
       "verb": "applies at",
       "to_id": "STG-main-06-treatment",
@@ -182964,6 +183108,12 @@
       "from_id": "REQ-010-043",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-043",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-R7-1",
       "attrs": {}
     },
     {
@@ -203247,6 +203397,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-016-077",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D2",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-016-078",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -211959,6 +212115,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-003",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D8",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-004",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -211974,6 +212136,12 @@
       "from_id": "REQ-019-004",
       "verb": "applies to",
       "to_id": "ENT-promotion-program",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-004",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q40",
       "attrs": {}
     },
     {
@@ -212097,6 +212265,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-012",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D10",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-013",
       "verb": "applies at",
       "to_id": "STG-main-03-acceptance",
@@ -212112,6 +212286,18 @@
       "from_id": "REQ-019-013",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-013",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D6",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-013",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D9",
       "attrs": {}
     },
     {
@@ -212136,6 +212322,18 @@
       "from_id": "REQ-019-014",
       "verb": "applies to",
       "to_id": "ENT-promotion-usage-reservation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-014",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-014",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D2",
       "attrs": {}
     },
     {
@@ -212169,6 +212367,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-015",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q29",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-015",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q30",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-015",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q39",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-015",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-016",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -212178,6 +212400,18 @@
       "from_id": "REQ-019-016",
       "verb": "applies to",
       "to_id": "ENT-promotion-application",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-016",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-016",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q5",
       "attrs": {}
     },
     {
@@ -212205,6 +212439,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-017",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q41",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-018",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -212226,6 +212466,12 @@
       "from_id": "REQ-019-019",
       "verb": "applies to",
       "to_id": "ENT-promotion-program",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-019",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q48",
       "attrs": {}
     },
     {
@@ -212481,6 +212727,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-032",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q5",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-033",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -212538,6 +212790,12 @@
       "from_id": "REQ-019-035",
       "verb": "applies to",
       "to_id": "ENT-promotion-program",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-035",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q40",
       "attrs": {}
     },
     {
@@ -212577,6 +212835,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-037",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q5",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-038",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -212592,6 +212856,24 @@
       "from_id": "REQ-019-038",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-038",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-M14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-038",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q40",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-038",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
       "attrs": {}
     },
     {
@@ -212625,6 +212907,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-039",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D8",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-040",
       "verb": "applies at",
       "to_id": "STG-main-03-acceptance",
@@ -212646,6 +212934,18 @@
       "from_id": "REQ-019-040",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-040",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q39",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-040",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
       "attrs": {}
     },
     {
@@ -212682,6 +212982,18 @@
       "from_id": "REQ-019-041",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-041",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D6",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-041",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D9",
       "attrs": {}
     },
     {
@@ -212853,6 +213165,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-052",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q48",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-053",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -212874,6 +213192,12 @@
       "from_id": "REQ-019-053",
       "verb": "applies to",
       "to_id": "SCR-019-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-053",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q41",
       "attrs": {}
     },
     {
@@ -213165,6 +213489,18 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-069",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q30",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-069",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-070",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -213183,6 +213519,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-070",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q30",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-071",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -213216,6 +213558,18 @@
       "from_id": "REQ-019-072",
       "verb": "applies to",
       "to_id": "SCR-019-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-072",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q30",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-072",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q6",
       "attrs": {}
     },
     {
@@ -213516,6 +213870,18 @@
       "from_id": "REQ-019-089",
       "verb": "applies to",
       "to_id": "ENT-promotion-usage-reservation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-089",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D6",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-089",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-D9",
       "attrs": {}
     },
     {
@@ -228630,6 +228996,18 @@
       "from_id": "REQ-026-037",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-037",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-037",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q14",
       "attrs": {}
     },
     {
@@ -368254,6 +368632,128 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-152512-2ca1bc5d",
+      "at": "2026-11-10T15:25:12.186727+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-026 decided by links released from 2026-11-10-fr026-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-026-037"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-152512-0772cc61",
+      "at": "2026-11-10T15:25:12.072345+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-019 decided by links released from 2026-11-10-fr019-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-019-003",
+        "REQ-019-004",
+        "REQ-019-012",
+        "REQ-019-013",
+        "REQ-019-014",
+        "REQ-019-015",
+        "REQ-019-016",
+        "REQ-019-017",
+        "REQ-019-019",
+        "REQ-019-032",
+        "REQ-019-035",
+        "REQ-019-037",
+        "REQ-019-038",
+        "REQ-019-039",
+        "REQ-019-040",
+        "REQ-019-041",
+        "REQ-019-052",
+        "REQ-019-053",
+        "REQ-019-069",
+        "REQ-019-070",
+        "REQ-019-072",
+        "REQ-019-089"
+      ],
+      "edges_added": 35,
+      "edges_removed": 0,
+      "rows": 35
+    },
+    {
+      "id": "cs-20261110-152511-a7d0586b",
+      "at": "2026-11-10T15:25:11.951969+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-016 decided by links released from 2026-11-10-fr016-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-016-077"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261110-152511-5fcd969e",
+      "at": "2026-11-10T15:25:11.837055+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-010 decided by links released from 2026-11-10-fr010-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-010-026",
+        "REQ-010-027",
+        "REQ-010-029",
+        "REQ-010-041",
+        "REQ-010-043"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 5
+    },
+    {
+      "id": "cs-20261110-152511-058ceb3a",
+      "at": "2026-11-10T15:25:11.726735+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-008 decided by links released from 2026-11-10-fr008-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-008-073"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261110-152511-640e7ab6",
+      "at": "2026-11-10T15:25:11.608484+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-004 decided by links released from 2026-11-10-fr004-completeness-held.yaml after decision D50 (decision-code links by topic: a Rule is linked to a decision-code Source where the topic clearly matches; unclear matches stay held and are listed for the user). Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2220-decision-links-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-004-035",
+        "REQ-004-040",
+        "REQ-004-041",
+        "REQ-004-042",
+        "REQ-004-043",
+        "REQ-004-044",
+        "REQ-004-045",
+        "REQ-004-047",
+        "REQ-004-048",
+        "REQ-004-050",
+        "REQ-004-071",
+        "REQ-004-080",
+        "REQ-004-084",
+        "REQ-004-089"
+      ],
+      "edges_added": 19,
+      "edges_removed": 0,
+      "rows": 19
+    },
     {
       "id": "cs-20261110-142422-9ce6dba2",
       "at": "2026-11-10T14:24:22.641183+00:00",
