@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T10:39:05Z",
+  "generated_at": "2026-11-10T10:44:49Z",
   "schema_version": 8,
   "nodes": [
     {
@@ -44,7 +44,7 @@
       "owner_fr": null,
       "title": "Email provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "group": "external",
         "description": "The external email server or service that delivers Hairline email, for steps it performs itself (bounces, delivery errors)."
@@ -152,7 +152,7 @@
       "owner_fr": null,
       "title": "Exchange-rate source",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "group": "external",
         "description": "The external exchange-rate source API that supplies currency rates, for steps it performs itself (API errors)."
@@ -164,7 +164,7 @@
       "owner_fr": null,
       "title": "Stripe",
       "status": "active",
-      "version": 1,
+      "version": 3,
       "attrs": {
         "group": "external",
         "description": "Stripe, the external payment processor, for steps the PRDs attribute to Stripe itself (transfers, webhooks, API errors)."
@@ -34071,6 +34071,19 @@
         "kind": "alternative",
         "description": "Installment plan selected",
         "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-006-b1",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Payment failure during the slot hold",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Payment failure during the slot hold",
+        "prd_ref": "Alternative Flow B1"
       }
     },
     {
@@ -98608,9 +98621,53 @@
       "owner_fr": "FR-006",
       "title": "Patient confirms and submits payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-006-005",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Payment Service authorizes and captures the deposit or schedules installments",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-006-006",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System sets the booking to Confirmed and unmasks patient identity to the provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-006-007",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System creates the appointment record, converts the hold into a provider calendar block and shows the booking in the provider dashboard",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 7"
+      }
+    },
+    {
+      "id": "STP-006-008",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Notification Service sends confirmations to patient and provider and the admin dashboard updates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 8"
       }
     },
     {
@@ -98633,6 +98690,61 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-006-201",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Payment Service applies the FR-007 retry policy after a first-payment failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 1"
+      }
+    },
+    {
+      "id": "STP-006-202",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System keeps the single hold unchanged after a payment failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-006-203",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Patient retries payment from the Accepted Subquote view while the hold is active",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-006-204",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System releases the hold, blocks further payment and moves the booking to Payment Window Expired",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 4"
+      }
+    },
+    {
+      "id": "STP-006-205",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System sends the Payment Window Expired notice to patient and provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 5"
       }
     },
     {
@@ -99167,9 +99279,42 @@
       "owner_fr": "FR-007",
       "title": "System classifies the failure as hard decline or transient error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 1"
+      }
+    },
+    {
+      "id": "STP-007-042",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "Payment Service performs up to 3 automatic retries with exponential backoff and shows final failure if retries exhaust",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 2"
+      }
+    },
+    {
+      "id": "STP-007-043",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "System displays a clear error and suggested next steps for a hard decline",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 3"
+      }
+    },
+    {
+      "id": "STP-007-044",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "Patient retries or selects another method against the same accepted snapshot while the original hold remains valid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 4"
       }
     },
     {
@@ -102799,6 +102944,40 @@
       }
     },
     {
+      "id": "STP-017-008",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 16c",
+        "handoff_to": "FR-032 (provider updates bank details in Billing Settings); FR-034 (support contact)"
+      }
+    },
+    {
+      "id": "STP-017-009",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Other Stripe error: admin investigates, resolves and retries the transfer",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 16d"
+      }
+    },
+    {
+      "id": "STP-017-010",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Provider dashboard shows the confirmed payout and invoice download",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 19"
+      }
+    },
+    {
       "id": "STP-017-012",
       "type": "Step",
       "owner_fr": "FR-017",
@@ -103003,9 +103182,75 @@
       "owner_fr": "FR-017",
       "title": "Cron initiates the Stripe transfer; status Processing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 14"
+      }
+    },
+    {
+      "id": "STP-017-045",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Stripe processes the transfer in 1 to 2 business days",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 15"
+      }
+    },
+    {
+      "id": "STP-017-046",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Stripe webhook is received",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 16"
+      }
+    },
+    {
+      "id": "STP-017-047",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "transfer.paid: status Paid and invoice PDF with itemised breakdown generated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 17"
+      }
+    },
+    {
+      "id": "STP-017-048",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System emails and pushes the provider with the invoice attached",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 18"
+      }
+    },
+    {
+      "id": "STP-017-049",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Full transaction is logged in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 20"
+      }
+    },
+    {
+      "id": "STP-017-050",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "transfer.failed: status Failed and admin notified",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 16a"
       }
     },
     {
@@ -103807,9 +104052,86 @@
       "owner_fr": "FR-018",
       "title": "FR-017 attempts the Stripe transfer",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2 step 3"
+      }
+    },
+    {
+      "id": "STP-018-084",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Stripe returns a transfer error",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 4"
+      }
+    },
+    {
+      "id": "STP-018-085",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System logs the error with affiliate ID, amount and error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 5"
+      }
+    },
+    {
+      "id": "STP-018-086",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "FR-017 marks the payout Failed and FR-018 displays it read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 6"
+      }
+    },
+    {
+      "id": "STP-018-087",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System alerts the admin team with the failed payout details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 7"
+      }
+    },
+    {
+      "id": "STP-018-088",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin reviews the error and contacts the affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 8"
+      }
+    },
+    {
+      "id": "STP-018-089",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin triggers the retry in FR-017",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 9"
+      }
+    },
+    {
+      "id": "STP-018-090",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "FR-017 re-processes the payment and FR-018 displays Paid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 10"
       }
     },
     {
@@ -108683,9 +109005,75 @@
       "owner_fr": "FR-029",
       "title": "System validates the credentials by calling the Stripe API",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Boundary Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-029-112",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Stripe API returns an authentication error or connection timeout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-029-113",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System displays the unable-to-connect error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 4"
+      }
+    },
+    {
+      "id": "STP-029-114",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System highlights the publishable key, secret key and webhook secret fields",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 5"
+      }
+    },
+    {
+      "id": "STP-029-115",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Admin corrects the credentials or troubleshoots the connection",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 6"
+      }
+    },
+    {
+      "id": "STP-029-116",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Admin clicks Retry Connection",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 7"
+      }
+    },
+    {
+      "id": "STP-029-117",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System re-attempts the credential validation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B1 step 8"
       }
     },
     {
@@ -108694,9 +109082,97 @@
       "owner_fr": "FR-029",
       "title": "System scheduled sync job fetches the pair rate from its assigned source",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Boundary Flow B2 step 1"
+      }
+    },
+    {
+      "id": "STP-029-119",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Source API returns an error or connection timeout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 2"
+      }
+    },
+    {
+      "id": "STP-029-120",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System logs the sync failure with the pair, source and error details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 3"
+      }
+    },
+    {
+      "id": "STP-029-121",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System keeps using the last successfully fetched rate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 4"
+      }
+    },
+    {
+      "id": "STP-029-122",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System turns the pair status indicator red on the pair list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 5"
+      }
+    },
+    {
+      "id": "STP-029-123",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System sends the sync-failed alert to the admin with the cached rate time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 6"
+      }
+    },
+    {
+      "id": "STP-029-124",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System retries the sync after exponential backoff",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 7"
+      }
+    },
+    {
+      "id": "STP-029-125",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System turns the source status indicator red when the source stays down",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 8"
+      }
+    },
+    {
+      "id": "STP-029-126",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Admin investigates the source, fixes credentials or switches affected pairs to another source or manual mode",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Boundary Flow B2 step 9"
       }
     },
     {
@@ -109585,9 +110061,97 @@
       "owner_fr": "FR-030",
       "title": "S-03 Notification Service attempts email delivery via SMTP",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 1"
+      }
+    },
+    {
+      "id": "STP-030-050",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "Email server returns a bounce error (invalid address or mailbox full)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 2"
+      }
+    },
+    {
+      "id": "STP-030-051",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "System logs the failed delivery with error code and timestamp",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 3"
+      }
+    },
+    {
+      "id": "STP-030-052",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "System evaluates the retry configuration for the notification type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 4"
+      }
+    },
+    {
+      "id": "STP-030-053",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "If retry is enabled, system queues a retry attempt for 1 hour later",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 5"
+      }
+    },
+    {
+      "id": "STP-030-054",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "After retry attempts are exhausted (max 3 retries), system marks the notification Failed - Permanent",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 6"
+      }
+    },
+    {
+      "id": "STP-030-055",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "System flags the patient account with an Email delivery issue indicator",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 7"
+      }
+    },
+    {
+      "id": "STP-030-056",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "Admin receives an alert if the event is critical (for example payment confirmation)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 8"
+      }
+    },
+    {
+      "id": "STP-030-057",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "Admin contacts the patient by phone or in-app message to update the email address",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 9"
       }
     },
     {
@@ -110663,9 +111227,75 @@
       "owner_fr": "FR-031",
       "title": "System attempts to send invitation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B4 step 1"
+      }
+    },
+    {
+      "id": "STP-031-732",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Email service returns error",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 2"
+      }
+    },
+    {
+      "id": "STP-031-733",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System logs and retries three times",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 3"
+      }
+    },
+    {
+      "id": "STP-031-734",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System marks Pending Send",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 4"
+      }
+    },
+    {
+      "id": "STP-031-735",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System warns Super Admin",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 5"
+      }
+    },
+    {
+      "id": "STP-031-736",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Background job retries for 24 hours",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 6"
+      }
+    },
+    {
+      "id": "STP-031-737",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System alerts admin team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 7"
       }
     },
     {
@@ -147206,6 +147836,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ACT-email-provider",
+      "verb": "acts in",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
       "from_id": "ACT-patient",
       "verb": "acts in",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -149861,6 +150497,24 @@
       "from_id": "ACT-provider-owner",
       "verb": "uses",
       "to_id": "SCR-032-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-rate-source",
+      "verb": "acts in",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-stripe",
+      "verb": "acts in",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-stripe",
+      "verb": "acts in",
+      "to_id": "STG-main-06-treatment",
       "attrs": {}
     },
     {
@@ -153275,6 +153929,12 @@
       "from_id": "FLW-006-a1",
       "verb": "starts at",
       "to_id": "STP-006-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-006-b1",
+      "verb": "starts at",
+      "to_id": "STP-006-201",
       "attrs": {}
     },
     {
@@ -298099,8 +298759,134 @@
     },
     {
       "from_id": "STP-006-004",
+      "verb": "next",
+      "to_id": "STP-006-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-004",
       "verb": "on",
       "to_id": "SCR-006-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-005",
+      "verb": "applies",
+      "to_id": "REQ-006-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-005",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-005",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-005",
+      "verb": "next",
+      "to_id": "STP-006-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "applies",
+      "to_id": "REQ-006-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "applies",
+      "to_id": "REQ-006-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "next",
+      "to_id": "STP-006-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "applies",
+      "to_id": "REQ-006-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "applies",
+      "to_id": "REQ-006-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "applies",
+      "to_id": "REQ-006-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "next",
+      "to_id": "STP-006-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-007",
+      "verb": "on",
+      "to_id": "SCR-006-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "applies",
+      "to_id": "REQ-006-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "applies",
+      "to_id": "REQ-006-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -298159,6 +298945,144 @@
     },
     {
       "from_id": "STP-006-102",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-201",
+      "verb": "applies",
+      "to_id": "REQ-006-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-201",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-201",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-201",
+      "verb": "next",
+      "to_id": "STP-006-202",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-202",
+      "verb": "applies",
+      "to_id": "REQ-006-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-202",
+      "verb": "applies",
+      "to_id": "REQ-006-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-202",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-202",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-202",
+      "verb": "next",
+      "to_id": "STP-006-203",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-203",
+      "verb": "applies",
+      "to_id": "REQ-006-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-203",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-203",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-203",
+      "verb": "next",
+      "to_id": "STP-006-204",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-203",
+      "verb": "on",
+      "to_id": "SCR-006-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "applies",
+      "to_id": "REQ-006-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "applies",
+      "to_id": "REQ-006-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "applies",
+      "to_id": "REQ-006-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "next",
+      "to_id": "STP-006-205",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-205",
+      "verb": "applies",
+      "to_id": "REQ-006-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-205",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-205",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
@@ -299590,6 +300514,90 @@
       "from_id": "STP-007-041",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-041",
+      "verb": "next",
+      "to_id": "STP-007-042",
+      "attrs": {
+        "label": "transient error"
+      }
+    },
+    {
+      "from_id": "STP-007-042",
+      "verb": "applies",
+      "to_id": "REQ-007-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-042",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-042",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-042",
+      "verb": "next",
+      "to_id": "STP-007-043",
+      "attrs": {
+        "label": "retries exhausted or hard decline"
+      }
+    },
+    {
+      "from_id": "STP-007-043",
+      "verb": "applies",
+      "to_id": "REQ-007-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-043",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-043",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-043",
+      "verb": "next",
+      "to_id": "STP-007-044",
+      "attrs": {
+        "label": "error shown"
+      }
+    },
+    {
+      "from_id": "STP-007-044",
+      "verb": "applies",
+      "to_id": "REQ-007-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-044",
+      "verb": "applies",
+      "to_id": "REQ-007-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-044",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-044",
+      "verb": "done by",
+      "to_id": "ACT-patient",
       "attrs": {}
     },
     {
@@ -310296,6 +311304,118 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-017-008",
+      "verb": "applies",
+      "to_id": "REQ-017-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-008",
+      "verb": "applies",
+      "to_id": "REQ-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-008",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-008",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-008",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "retry"
+      }
+    },
+    {
+      "from_id": "STP-017-008",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "applies",
+      "to_id": "REQ-017-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "applies",
+      "to_id": "REQ-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "retry"
+      }
+    },
+    {
+      "from_id": "STP-017-009",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "applies",
+      "to_id": "REQ-017-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "applies",
+      "to_id": "REQ-017-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "next",
+      "to_id": "STP-017-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-010",
+      "verb": "on",
+      "to_id": "SCR-017-12",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-017-012",
       "verb": "applies",
       "to_id": "REQ-017-070",
@@ -310878,6 +311998,194 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-017-044",
+      "verb": "next",
+      "to_id": "STP-017-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-045",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-045",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-045",
+      "verb": "done by",
+      "to_id": "ACT-stripe",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-045",
+      "verb": "next",
+      "to_id": "STP-017-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "applies",
+      "to_id": "REQ-017-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "done by",
+      "to_id": "ACT-stripe",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "next",
+      "to_id": "STP-017-047",
+      "attrs": {
+        "label": "transfer.paid"
+      }
+    },
+    {
+      "from_id": "STP-017-046",
+      "verb": "next",
+      "to_id": "STP-017-050",
+      "attrs": {
+        "label": "transfer.failed"
+      }
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "applies",
+      "to_id": "REQ-017-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "applies",
+      "to_id": "REQ-017-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
+      "verb": "next",
+      "to_id": "STP-017-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-048",
+      "verb": "applies",
+      "to_id": "REQ-017-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-048",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-048",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-048",
+      "verb": "next",
+      "to_id": "STP-017-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-049",
+      "verb": "applies",
+      "to_id": "REQ-017-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-049",
+      "verb": "applies",
+      "to_id": "REQ-017-127",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-049",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-049",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "applies",
+      "to_id": "REQ-017-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "next",
+      "to_id": "STP-017-008",
+      "attrs": {
+        "label": "invalid bank account"
+      }
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "next",
+      "to_id": "STP-017-009",
+      "attrs": {
+        "label": "other Stripe error"
+      }
     },
     {
       "from_id": "STP-017-051",
@@ -313165,6 +314473,194 @@
       "from_id": "STP-018-083",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-083",
+      "verb": "next",
+      "to_id": "STP-018-084",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-084",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-084",
+      "verb": "done by",
+      "to_id": "ACT-stripe",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-084",
+      "verb": "next",
+      "to_id": "STP-018-085",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-085",
+      "verb": "applies",
+      "to_id": "REQ-018-165",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-085",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-085",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-085",
+      "verb": "next",
+      "to_id": "STP-018-086",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "applies",
+      "to_id": "REQ-018-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "applies",
+      "to_id": "REQ-018-166",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "next",
+      "to_id": "STP-018-087",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-086",
+      "verb": "on",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-087",
+      "verb": "applies",
+      "to_id": "REQ-018-167",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-087",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-087",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-087",
+      "verb": "next",
+      "to_id": "STP-018-088",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-088",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-088",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-088",
+      "verb": "next",
+      "to_id": "STP-018-089",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-089",
+      "verb": "applies",
+      "to_id": "REQ-018-168",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-089",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-089",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-089",
+      "verb": "next",
+      "to_id": "STP-018-090",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-090",
+      "verb": "applies",
+      "to_id": "REQ-018-166",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-090",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-090",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-090",
+      "verb": "on",
+      "to_id": "SCR-018-11",
       "attrs": {}
     },
     {
@@ -327494,6 +328990,162 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-029-111",
+      "verb": "next",
+      "to_id": "STP-029-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-112",
+      "verb": "applies",
+      "to_id": "REQ-029-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-112",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-112",
+      "verb": "done by",
+      "to_id": "ACT-stripe",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-112",
+      "verb": "next",
+      "to_id": "STP-029-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-113",
+      "verb": "applies",
+      "to_id": "REQ-029-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-113",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-113",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-113",
+      "verb": "next",
+      "to_id": "STP-029-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-113",
+      "verb": "on",
+      "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-114",
+      "verb": "applies",
+      "to_id": "REQ-029-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-114",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-114",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-114",
+      "verb": "next",
+      "to_id": "STP-029-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-114",
+      "verb": "on",
+      "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-115",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-115",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-115",
+      "verb": "next",
+      "to_id": "STP-029-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-115",
+      "verb": "on",
+      "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-116",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-116",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-116",
+      "verb": "next",
+      "to_id": "STP-029-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-116",
+      "verb": "on",
+      "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-117",
+      "verb": "applies",
+      "to_id": "REQ-029-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-117",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-117",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-029-118",
       "verb": "applies",
       "to_id": "REQ-029-008",
@@ -327509,6 +329161,234 @@
       "from_id": "STP-029-118",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-118",
+      "verb": "next",
+      "to_id": "STP-029-119",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-119",
+      "verb": "applies",
+      "to_id": "REQ-029-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-119",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-119",
+      "verb": "done by",
+      "to_id": "ACT-rate-source",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-119",
+      "verb": "next",
+      "to_id": "STP-029-120",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-120",
+      "verb": "applies",
+      "to_id": "REQ-029-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-120",
+      "verb": "applies",
+      "to_id": "REQ-029-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-120",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-120",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-120",
+      "verb": "next",
+      "to_id": "STP-029-121",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-121",
+      "verb": "applies",
+      "to_id": "REQ-029-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-121",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-121",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-121",
+      "verb": "next",
+      "to_id": "STP-029-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "applies",
+      "to_id": "REQ-029-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "applies",
+      "to_id": "REQ-029-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "next",
+      "to_id": "STP-029-123",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-122",
+      "verb": "on",
+      "to_id": "SCR-029-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-123",
+      "verb": "applies",
+      "to_id": "REQ-029-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-123",
+      "verb": "applies",
+      "to_id": "REQ-029-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-123",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-123",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-123",
+      "verb": "next",
+      "to_id": "STP-029-124",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-124",
+      "verb": "applies",
+      "to_id": "REQ-029-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-124",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-124",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-124",
+      "verb": "next",
+      "to_id": "STP-029-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-125",
+      "verb": "applies",
+      "to_id": "REQ-029-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-125",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-125",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-125",
+      "verb": "next",
+      "to_id": "STP-029-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-125",
+      "verb": "on",
+      "to_id": "SCR-029-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-126",
+      "verb": "applies",
+      "to_id": "REQ-029-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-126",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-126",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-126",
+      "verb": "on",
+      "to_id": "SCR-029-02",
       "attrs": {}
     },
     {
@@ -329873,6 +331753,216 @@
       "from_id": "STP-030-049",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-049",
+      "verb": "next",
+      "to_id": "STP-030-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-050",
+      "verb": "applies",
+      "to_id": "REQ-030-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-050",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-050",
+      "verb": "done by",
+      "to_id": "ACT-email-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-050",
+      "verb": "next",
+      "to_id": "STP-030-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-051",
+      "verb": "applies",
+      "to_id": "REQ-030-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-051",
+      "verb": "applies",
+      "to_id": "REQ-030-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-051",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-051",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-051",
+      "verb": "next",
+      "to_id": "STP-030-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-052",
+      "verb": "applies",
+      "to_id": "REQ-030-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-052",
+      "verb": "applies",
+      "to_id": "REQ-030-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-052",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-052",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-052",
+      "verb": "next",
+      "to_id": "STP-030-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-053",
+      "verb": "applies",
+      "to_id": "REQ-030-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-053",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-053",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-053",
+      "verb": "next",
+      "to_id": "STP-030-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-054",
+      "verb": "applies",
+      "to_id": "REQ-030-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-054",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-054",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-054",
+      "verb": "next",
+      "to_id": "STP-030-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-055",
+      "verb": "applies",
+      "to_id": "REQ-030-156",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-055",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-055",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-055",
+      "verb": "next",
+      "to_id": "STP-030-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-056",
+      "verb": "applies",
+      "to_id": "REQ-030-157",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-056",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-056",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-056",
+      "verb": "next",
+      "to_id": "STP-030-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-057",
+      "verb": "applies",
+      "to_id": "REQ-030-157",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-057",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-057",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-057",
+      "verb": "on",
+      "to_id": "SCR-030-01",
       "attrs": {}
     },
     {
@@ -332997,6 +335087,150 @@
     },
     {
       "from_id": "STP-031-731",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-731",
+      "verb": "next",
+      "to_id": "STP-031-732",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-732",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-732",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-732",
+      "verb": "done by",
+      "to_id": "ACT-email-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-732",
+      "verb": "next",
+      "to_id": "STP-031-733",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-733",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-733",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-733",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-733",
+      "verb": "next",
+      "to_id": "STP-031-734",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-734",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-734",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-734",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-734",
+      "verb": "next",
+      "to_id": "STP-031-735",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-735",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-735",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-735",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-735",
+      "verb": "next",
+      "to_id": "STP-031-736",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-736",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-736",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-736",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-736",
+      "verb": "next",
+      "to_id": "STP-031-737",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-737",
+      "verb": "applies",
+      "to_id": "REQ-031-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-737",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-737",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
@@ -353171,6 +355405,173 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-104349-11430d55",
+      "at": "2026-11-10T10:43:49.020995+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-031 Steps released from 2026-11-10-fr031-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr031-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-031-732",
+        "STP-031-733",
+        "STP-031-734",
+        "STP-031-735",
+        "STP-031-736",
+        "STP-031-737"
+      ],
+      "nodes_updated": [
+        "STP-031-731"
+      ],
+      "edges_added": 24,
+      "edges_removed": 0,
+      "rows": 54
+    },
+    {
+      "id": "cs-20261110-104348-14e1211c",
+      "at": "2026-11-10T10:43:48.905206+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-030 Steps released from 2026-11-10-fr030-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr030-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-030-050",
+        "STP-030-051",
+        "STP-030-052",
+        "STP-030-053",
+        "STP-030-054",
+        "STP-030-055",
+        "STP-030-056",
+        "STP-030-057"
+      ],
+      "nodes_updated": [
+        "ACT-email-provider",
+        "STP-030-049"
+      ],
+      "edges_added": 36,
+      "edges_removed": 0,
+      "rows": 76
+    },
+    {
+      "id": "cs-20261110-104348-e3fce9fe",
+      "at": "2026-11-10T10:43:48.776730+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-029 Steps released from 2026-11-10-fr029-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr029-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-029-112",
+        "STP-029-113",
+        "STP-029-114",
+        "STP-029-115",
+        "STP-029-116",
+        "STP-029-117",
+        "STP-029-119",
+        "STP-029-120",
+        "STP-029-121",
+        "STP-029-122",
+        "STP-029-123",
+        "STP-029-124",
+        "STP-029-125",
+        "STP-029-126"
+      ],
+      "nodes_updated": [
+        "ACT-rate-source",
+        "STP-029-111",
+        "STP-029-118"
+      ],
+      "edges_added": 65,
+      "edges_removed": 0,
+      "rows": 135
+    },
+    {
+      "id": "cs-20261110-104348-d9a38aa9",
+      "at": "2026-11-10T10:43:48.638652+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-018 Steps released from 2026-11-10-fr018-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr018-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-018-084",
+        "STP-018-085",
+        "STP-018-086",
+        "STP-018-087",
+        "STP-018-088",
+        "STP-018-089",
+        "STP-018-090"
+      ],
+      "nodes_updated": [
+        "ACT-stripe",
+        "STP-018-083"
+      ],
+      "edges_added": 30,
+      "edges_removed": 0,
+      "rows": 65
+    },
+    {
+      "id": "cs-20261110-104348-68415306",
+      "at": "2026-11-10T10:43:48.515483+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-017 Steps released from 2026-11-10-fr017-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr017-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-017-008",
+        "STP-017-009",
+        "STP-017-010",
+        "STP-017-045",
+        "STP-017-046",
+        "STP-017-047",
+        "STP-017-048",
+        "STP-017-049",
+        "STP-017-050"
+      ],
+      "nodes_updated": [
+        "ACT-stripe",
+        "STP-017-044"
+      ],
+      "edges_added": 49,
+      "edges_removed": 0,
+      "rows": 95
+    },
+    {
+      "id": "cs-20261110-104348-d09f6a38",
+      "at": "2026-11-10T10:43:48.391974+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-007 Steps released from 2026-11-10-fr007-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr007-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "STP-007-042",
+        "STP-007-043",
+        "STP-007-044"
+      ],
+      "nodes_updated": [
+        "STP-007-041"
+      ],
+      "edges_added": 13,
+      "edges_removed": 0,
+      "rows": 28
+    },
+    {
+      "id": "cs-20261110-104348-14156ee6",
+      "at": "2026-11-10T10:43:48.279057+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-006 Steps released from 2026-11-10-fr006-completeness-held.yaml after decisions D45 (external services are their own Actors: ACT-stripe, ACT-email-provider, ACT-rate-source) and D46 (the Payment Service S-02 is the system, ACT-system): the external-service and payment-capture Steps with their decided doer, and the ops held only because one of them was held. Apply after 2026-11-10-fr006-system-steps.yaml where it exists; apply the external-steps files in FR number order (see plans/reports/fullstack-developer-261110-1740-external-actors-payment-capture.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-006-b1",
+        "STP-006-005",
+        "STP-006-006",
+        "STP-006-007",
+        "STP-006-008",
+        "STP-006-201",
+        "STP-006-202",
+        "STP-006-203",
+        "STP-006-204",
+        "STP-006-205"
+      ],
+      "nodes_updated": [
+        "STP-006-004"
+      ],
+      "edges_added": 45,
+      "edges_removed": 0,
+      "rows": 96
+    },
     {
       "id": "cs-20261110-103818-59b45adb",
       "at": "2026-11-10T10:38:18.257094+00:00",
