@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T10:56:25Z",
-  "schema_version": 8,
+  "generated_at": "2026-11-10T12:06:05Z",
+  "schema_version": 9,
   "nodes": [
     {
       "id": "ACT-admin-invitee",
@@ -68,7 +68,7 @@
       "owner_fr": null,
       "title": "Platform administrator",
       "status": "active",
-      "version": 39,
+      "version": 40,
       "attrs": {
         "description": "Hairline operations staff who onboard providers, run billing and configure the platform (system PRD persona 4).",
         "group": "admin"
@@ -188,7 +188,7 @@
       "owner_fr": null,
       "title": "Hairline system",
       "status": "active",
-      "version": 13,
+      "version": 14,
       "attrs": {
         "group": "system",
         "description": "The Hairline platform acting automatically, for steps the PRDs attribute to \"System\"."
@@ -33697,6 +33697,32 @@
       }
     },
     {
+      "id": "FLW-002-template-deprecation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative flow C1: admin deprecates a template",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative flow C1: admin deprecates a template",
+        "prd_ref": "Alternative Flows C1"
+      }
+    },
+    {
+      "id": "FLW-002-template-management",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 3: Admin Template Management (Management)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 3: Admin Template Management (Management)",
+        "prd_ref": "Workflow 3"
+      }
+    },
+    {
       "id": "FLW-002-template-version-mismatch",
       "type": "Flow",
       "owner_fr": null,
@@ -36127,6 +36153,45 @@
       }
     },
     {
+      "id": "FLW-025-delete-question",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 1 alternative flow A2: admin deletes a question",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 1 alternative flow A2: admin deletes a question",
+        "prd_ref": "Workflow 1 A2"
+      }
+    },
+    {
+      "id": "FLW-025-duplicate-set",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 1 alternative flow A3: admin duplicates an existing set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 1 alternative flow A3: admin duplicates an existing set",
+        "prd_ref": "Workflow 1 A3"
+      }
+    },
+    {
+      "id": "FLW-025-edit-published-set",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 1 alternative flow A1: admin edits a published set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 1 alternative flow A1: admin edits a published set",
+        "prd_ref": "Workflow 1 A1"
+      }
+    },
+    {
       "id": "FLW-025-inquiry-activation",
       "type": "Flow",
       "owner_fr": null,
@@ -36192,6 +36257,45 @@
       }
     },
     {
+      "id": "FLW-025-set-management",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 1: Questionnaire Set Management (Primary Flow)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 1: Questionnaire Set Management (Primary Flow)",
+        "prd_ref": "Workflow 1"
+      }
+    },
+    {
+      "id": "FLW-025-severity-management",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 2: Severity Management (Inquiry Context Only)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 2: Severity Management (Inquiry Context Only)",
+        "prd_ref": "Workflow 2"
+      }
+    },
+    {
+      "id": "FLW-025-severity-published-set-edit",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Workflow 2 alternative flow B1: question edited in a published set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Workflow 2 alternative flow B1: question edited in a published set",
+        "prd_ref": "Workflow 2 B1"
+      }
+    },
+    {
       "id": "FLW-025-version-mismatch",
       "type": "Flow",
       "owner_fr": null,
@@ -36202,6 +36306,162 @@
         "kind": "alternative",
         "description": "Workflow 3 alternative flow C1: questionnaire version mismatch",
         "prd_ref": "Workflow 3 C1"
+      }
+    },
+    {
+      "id": "FLW-026-a1-countries",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits the centrally managed country list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits the centrally managed country list",
+        "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-026-a2-otp-template",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits an OTP email template",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits an OTP email template",
+        "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "FLW-026-a3-discovery",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits discovery question options",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits discovery question options",
+        "prd_ref": "Alternative Flow A3"
+      }
+    },
+    {
+      "id": "FLW-026-a4-cancellation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits inquiry cancellation reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits inquiry cancellation reasons",
+        "prd_ref": "Alternative Flow A4"
+      }
+    },
+    {
+      "id": "FLW-026-a5-deletion",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits account deletion reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits account deletion reasons",
+        "prd_ref": "Alternative Flow A5"
+      }
+    },
+    {
+      "id": "FLW-026-a6-inquiry-config",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin configures inquiry treatment areas and lead time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin configures inquiry treatment areas and lead time",
+        "prd_ref": "Alternative Flow A6"
+      }
+    },
+    {
+      "id": "FLW-026-a7-quote-config",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin configures quote and slot-hold settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin configures quote and slot-hold settings",
+        "prd_ref": "Alternative Flow A7"
+      }
+    },
+    {
+      "id": "FLW-026-a8-analytics-config",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin configures analytics parameters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin configures analytics parameters",
+        "prd_ref": "Alternative Flow A8"
+      }
+    },
+    {
+      "id": "FLW-026-a9-specialties",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits provider specialties",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin edits provider specialties",
+        "prd_ref": "Alternative Flow A9"
+      }
+    },
+    {
+      "id": "FLW-026-b1-invalid-throttling",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin attempts an invalid throttling configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin attempts an invalid throttling configuration",
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "FLW-026-b2-propagation-failure",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Settings propagation failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Settings propagation failure",
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "FLW-026-main",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits the authentication throttling policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Admin edits the authentication throttling policy",
+        "prd_ref": "Main Flow"
       }
     },
     {
@@ -97193,6 +97453,19 @@
       "attrs": {}
     },
     {
+      "id": "STG-admin-01-configuration",
+      "type": "Stage",
+      "owner_fr": null,
+      "title": "Configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "timeline": "platform-admin",
+        "sequence": 1,
+        "description": "Platform admin configures the settings that apply across the platform, outside any patient journey."
+      }
+    },
+    {
       "id": "STG-aftercare-01-recovery-plan",
       "type": "Stage",
       "owner_fr": null,
@@ -98115,6 +98388,84 @@
       "attrs": {
         "prd_ref": "Workflow 2 step 3",
         "handoff_to": "STP-003-027"
+      }
+    },
+    {
+      "id": "STP-002-015",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Admin opens Medical Questionnaire Templates in settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 step 1"
+      }
+    },
+    {
+      "id": "STP-002-016",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Admin creates or edits templates: sections, fields, required or optional, help text and risk-tag rules",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 step 2"
+      }
+    },
+    {
+      "id": "STP-002-017",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Admin publishes a template version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 step 3",
+        "handoff_to": "FR-025: Workflow 1, Admin clicks Publish / Activate on the set"
+      }
+    },
+    {
+      "id": "STP-002-018",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "System versions templates and applies them to new inquiries only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 3 step 4"
+      }
+    },
+    {
+      "id": "STP-002-019",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Admin deprecates a template version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C1 step 1"
+      }
+    },
+    {
+      "id": "STP-002-020",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "System marks the template deprecated but preserves it for existing inquiries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C1 step 2"
+      }
+    },
+    {
+      "id": "STP-002-021",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "New inquiries automatically use the latest published version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C1 step 3"
       }
     },
     {
@@ -106190,7 +106541,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Localization Management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -106201,7 +106552,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects prior published version from Version History",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 3R"
       }
@@ -106212,7 +106563,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects a key from Translation Key Inventory and edits values in the editor",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 4P"
       }
@@ -106223,7 +106574,7 @@
       "owner_fr": "FR-021",
       "title": "Admin uploads JSON package for selected locale, tenant/surface, and group",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 4J"
       }
@@ -106234,7 +106585,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Machine Translation Provider and Draft Generation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 4M"
       }
@@ -106245,7 +106596,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects provider, target non-English language, tenant/surface scope, and generation mode",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 5M"
       }
@@ -106256,7 +106607,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Machine Translation Provider and Draft Generation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 1"
       }
@@ -106267,7 +106618,7 @@
       "owner_fr": "FR-021",
       "title": "Admin adds provider, API key, supported languages, and usage notes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 3 (no active provider)"
       }
@@ -106278,7 +106629,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects target language, tenant/surface scope, and generation mode",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 3 (active provider)"
       }
@@ -106300,7 +106651,7 @@
       "owner_fr": "FR-021",
       "title": "Admin enters rollback reason and confirms",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 5R"
       }
@@ -106399,7 +106750,7 @@
       "owner_fr": "FR-021",
       "title": "Admin chooses whether to import valid rows only or cancel for correction",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 9J"
       }
@@ -106410,7 +106761,7 @@
       "owner_fr": "FR-021",
       "title": "Admin enters publish summary and confirms import and publish",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 11J"
       }
@@ -106454,7 +106805,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Language Version History and Rollback and reviews pending changes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 10"
       }
@@ -106465,7 +106816,7 @@
       "owner_fr": "FR-021",
       "title": "Admin enters publish summary and confirms publish",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 11"
       }
@@ -106553,7 +106904,7 @@
       "owner_fr": "FR-021",
       "title": "Admin reviews draft values in registry and key detail and publishes through Version History when ready",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "C1 step 8"
       }
@@ -108226,6 +108577,182 @@
       }
     },
     {
+      "id": "STP-025-001",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin opens the Questionnaire Catalog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 (Primary Flow) entry"
+      }
+    },
+    {
+      "id": "STP-025-002",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin creates a new set (name, context type, category, description, tags)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Create new set"
+      }
+    },
+    {
+      "id": "STP-025-003",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin works on the set in Set Details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Admin works on set in Screen 2"
+      }
+    },
+    {
+      "id": "STP-025-004",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin adds a question and selects a system-defined question type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Add question"
+      }
+    },
+    {
+      "id": "STP-025-005",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin configures question text, help text and type-specific content",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: configure text, help text and type-specific content"
+      }
+    },
+    {
+      "id": "STP-025-006",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin sets the severity flag and the Yes-answer detail prompt",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Inquiry or Multi-Context severity fields"
+      }
+    },
+    {
+      "id": "STP-025-007",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin sets appearance overrides in the Patient App and Provider App and saves the question",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: appearance overrides and save"
+      }
+    },
+    {
+      "id": "STP-025-008",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin reorders questions by drag-and-drop",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Reorder questions"
+      }
+    },
+    {
+      "id": "STP-025-009",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin previews the set as patient and provider view",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Preview set"
+      }
+    },
+    {
+      "id": "STP-025-010",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin clicks Publish / Activate on the set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: Publish"
+      }
+    },
+    {
+      "id": "STP-025-011",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin sees the set published and visible in the catalog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 flow diagram: set published and visible in catalog"
+      }
+    },
+    {
+      "id": "STP-025-012",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin edits a published set; a new Draft version is created and the Active version stays unchanged",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 alternative flow A1"
+      }
+    },
+    {
+      "id": "STP-025-013",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin deletes a question; it is soft-deleted and historical responses are preserved",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 alternative flow A2"
+      }
+    },
+    {
+      "id": "STP-025-014",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin duplicates an existing set into an independent Draft copy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 alternative flow A3"
+      }
+    },
+    {
+      "id": "STP-025-020",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin edits a question in an Inquiry or Multi-Context set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 flow diagram: start"
+      }
+    },
+    {
+      "id": "STP-025-021",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin edits a question of a published set; a new Draft version is created and the Active version keeps serving inquiries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 alternative flow B1"
+      }
+    },
+    {
       "id": "STP-025-030",
       "type": "Step",
       "owner_fr": "FR-025",
@@ -108288,7 +108815,7 @@
       "owner_fr": "FR-025",
       "title": "Admin is told activation is blocked because only published sets can be designated",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: set is Draft or Archived"
       }
@@ -108381,6 +108908,1139 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Workflow 4 alternative flow A4"
+      }
+    },
+    {
+      "id": "STP-026-001",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Settings, Authentication and Security",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-026-002",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows current throttling values",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-026-003",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Edit on Authentication Throttling",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-026-004",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows the prefilled editable form",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-026-005",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin raises Max Login Attempts from 5 to 7",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-026-006",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin lowers Lockout Duration from 15 to 10 minutes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-026-007",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save Changes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 7"
+      }
+    },
+    {
+      "id": "STP-026-008",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates the attempts and lockout ranges",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 8"
+      }
+    },
+    {
+      "id": "STP-026-009",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System prompts for the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 9"
+      }
+    },
+    {
+      "id": "STP-026-010",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System creates the audit log entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 10"
+      }
+    },
+    {
+      "id": "STP-026-011",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System increments the version number",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 11"
+      }
+    },
+    {
+      "id": "STP-026-012",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System saves the new configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 12"
+      }
+    },
+    {
+      "id": "STP-026-013",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System invalidates the settings cache",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 13"
+      }
+    },
+    {
+      "id": "STP-026-014",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows the success message with the version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 14"
+      }
+    },
+    {
+      "id": "STP-026-015",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Platforms poll and receive the new policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 15"
+      }
+    },
+    {
+      "id": "STP-026-016",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "New login attempts apply the new throttling policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 16"
+      }
+    },
+    {
+      "id": "STP-026-017",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Countries and Calling Codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-026-018",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists countries with calling codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-026-019",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Add Country",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 3"
+      }
+    },
+    {
+      "id": "STP-026-020",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin enters Albania with +355 and AL",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 4"
+      }
+    },
+    {
+      "id": "STP-026-021",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 5"
+      }
+    },
+    {
+      "id": "STP-026-022",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 6"
+      }
+    },
+    {
+      "id": "STP-026-023",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates country name and ISO uniqueness",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 7"
+      }
+    },
+    {
+      "id": "STP-026-024",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System writes the audit entry and versions the list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 8"
+      }
+    },
+    {
+      "id": "STP-026-025",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Patient profile forms show Albania within one minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 9"
+      }
+    },
+    {
+      "id": "STP-026-026",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens OTP Email Templates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 1"
+      }
+    },
+    {
+      "id": "STP-026-027",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists the two templates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 2"
+      }
+    },
+    {
+      "id": "STP-026-028",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin selects Verification Email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 3"
+      }
+    },
+    {
+      "id": "STP-026-029",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows the editor with available variables",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 4"
+      }
+    },
+    {
+      "id": "STP-026-030",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin changes the copy and branding",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 5"
+      }
+    },
+    {
+      "id": "STP-026-031",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin previews the email with sample data",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 6"
+      }
+    },
+    {
+      "id": "STP-026-032",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 7"
+      }
+    },
+    {
+      "id": "STP-026-033",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 8"
+      }
+    },
+    {
+      "id": "STP-026-034",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions the template",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 9"
+      }
+    },
+    {
+      "id": "STP-026-035",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System writes the audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 10"
+      }
+    },
+    {
+      "id": "STP-026-036",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "New OTP requests use the new template version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 11"
+      }
+    },
+    {
+      "id": "STP-026-038",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Discovery Questions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 1"
+      }
+    },
+    {
+      "id": "STP-026-039",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists the current options",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 2"
+      }
+    },
+    {
+      "id": "STP-026-040",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Add Option",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 3"
+      }
+    },
+    {
+      "id": "STP-026-041",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin enters the new option",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 4"
+      }
+    },
+    {
+      "id": "STP-026-042",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin reorders the options by drag and drop",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 5"
+      }
+    },
+    {
+      "id": "STP-026-043",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 6"
+      }
+    },
+    {
+      "id": "STP-026-044",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 7"
+      }
+    },
+    {
+      "id": "STP-026-045",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions the discovery options",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 8"
+      }
+    },
+    {
+      "id": "STP-026-046",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Patient registration shows the new option within one minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 9"
+      }
+    },
+    {
+      "id": "STP-026-047",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Inquiry Cancellation Reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 1"
+      }
+    },
+    {
+      "id": "STP-026-048",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists the active reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 2"
+      }
+    },
+    {
+      "id": "STP-026-049",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin adds a cancellation reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 3"
+      }
+    },
+    {
+      "id": "STP-026-050",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin sets Requires Explanation to Yes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 4"
+      }
+    },
+    {
+      "id": "STP-026-051",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin reorders the reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 5"
+      }
+    },
+    {
+      "id": "STP-026-052",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 6"
+      }
+    },
+    {
+      "id": "STP-026-053",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 7"
+      }
+    },
+    {
+      "id": "STP-026-054",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions the reason list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 8"
+      }
+    },
+    {
+      "id": "STP-026-055",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-003 cancellation modal shows the reasons within one minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 9"
+      }
+    },
+    {
+      "id": "STP-026-056",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Account Deletion Reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 1"
+      }
+    },
+    {
+      "id": "STP-026-057",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists the active deletion reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 2"
+      }
+    },
+    {
+      "id": "STP-026-058",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin adds a deletion reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 3"
+      }
+    },
+    {
+      "id": "STP-026-059",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin sets Requires Explanation to Yes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 4"
+      }
+    },
+    {
+      "id": "STP-026-060",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin reorders the deletion reasons",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 5"
+      }
+    },
+    {
+      "id": "STP-026-061",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 6"
+      }
+    },
+    {
+      "id": "STP-026-062",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 7"
+      }
+    },
+    {
+      "id": "STP-026-063",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions the deletion reason list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 8"
+      }
+    },
+    {
+      "id": "STP-026-064",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-001 deletion screen shows the reasons within one minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5 step 9"
+      }
+    },
+    {
+      "id": "STP-026-065",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Inquiry Configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 1"
+      }
+    },
+    {
+      "id": "STP-026-066",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin adds or edits a treatment-area option",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 2"
+      }
+    },
+    {
+      "id": "STP-026-067",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin sets the minimum inquiry lead time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 3"
+      }
+    },
+    {
+      "id": "STP-026-068",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save and supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 4"
+      }
+    },
+    {
+      "id": "STP-026-069",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates labels, asset and lead time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 5"
+      }
+    },
+    {
+      "id": "STP-026-070",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions, audits and invalidates the cache",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 6"
+      }
+    },
+    {
+      "id": "STP-026-071",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "New inquiry sessions use the new configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 7"
+      }
+    },
+    {
+      "id": "STP-026-072",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Quote Configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 1"
+      }
+    },
+    {
+      "id": "STP-026-073",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows the FR-029 currency read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 2"
+      }
+    },
+    {
+      "id": "STP-026-074",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin enters the four hour values",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 3"
+      }
+    },
+    {
+      "id": "STP-026-075",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin saves the configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 4"
+      }
+    },
+    {
+      "id": "STP-026-076",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates the bounds and exposes the values",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 5"
+      }
+    },
+    {
+      "id": "STP-026-077",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-004 copies currency and expiry onto a sent quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 6"
+      }
+    },
+    {
+      "id": "STP-026-078",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-005 and FR-006 place the hold for the current duration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 7"
+      }
+    },
+    {
+      "id": "STP-026-079",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Analytics Configuration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 1"
+      }
+    },
+    {
+      "id": "STP-026-080",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin edits the analytics values",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 2"
+      }
+    },
+    {
+      "id": "STP-026-081",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates the values and blocks bad saves",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 3"
+      }
+    },
+    {
+      "id": "STP-026-082",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin saves with a change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 4"
+      }
+    },
+    {
+      "id": "STP-026-083",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions, audits and exposes the values",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 5"
+      }
+    },
+    {
+      "id": "STP-026-084",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-014 recalculates with the new version; exports unchanged",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 6"
+      }
+    },
+    {
+      "id": "STP-026-085",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin opens Provider Specialties",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 1"
+      }
+    },
+    {
+      "id": "STP-026-086",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System lists specialties with status and order",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 2"
+      }
+    },
+    {
+      "id": "STP-026-087",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin adds or edits a specialty value",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 3"
+      }
+    },
+    {
+      "id": "STP-026-088",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin clicks Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 4"
+      }
+    },
+    {
+      "id": "STP-026-089",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System validates names and the last active value",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 5"
+      }
+    },
+    {
+      "id": "STP-026-090",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin supplies the change reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 6"
+      }
+    },
+    {
+      "id": "STP-026-091",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System versions, audits and invalidates the cache",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 7"
+      }
+    },
+    {
+      "id": "STP-026-092",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "FR-015 shows active values in order within one minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 8"
+      }
+    },
+    {
+      "id": "STP-026-093",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin sets Max Login Attempts to zero",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 1"
+      }
+    },
+    {
+      "id": "STP-026-094",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System detects the range violation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-026-095",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System shows the range error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-026-096",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin corrects the value to three",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 4"
+      }
+    },
+    {
+      "id": "STP-026-097",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System revalidates and accepts the value",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 5"
+      }
+    },
+    {
+      "id": "STP-026-098",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "The normal save flow continues",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 6"
+      }
+    },
+    {
+      "id": "STP-026-099",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Admin updates the throttling policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 1"
+      }
+    },
+    {
+      "id": "STP-026-100",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Patient Platform settings poll times out",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 2"
+      }
+    },
+    {
+      "id": "STP-026-101",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Platform logs the error and keeps cached settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 3"
+      }
+    },
+    {
+      "id": "STP-026-102",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Platform retries on the next 60-second interval",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 4"
+      }
+    },
+    {
+      "id": "STP-026-103",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "Platform receives and applies the new settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 5"
+      }
+    },
+    {
+      "id": "STP-026-104",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System logs the delay without alerting",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 6"
       }
     },
     {
@@ -111119,7 +112779,7 @@
       "owner_fr": "FR-030",
       "title": "Admin navigates to Admin Platform, Settings, Alerts and Notifications",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 1"
       }
@@ -111141,7 +112801,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects an event row and reviews its current configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 3"
       }
@@ -111152,7 +112812,7 @@
       "owner_fr": "FR-030",
       "title": "Admin toggles the event On or Off (security-critical events show a locked toggle)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 4"
       }
@@ -111163,7 +112823,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Configure or expands the row to edit settings for the event",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 5"
       }
@@ -111185,7 +112845,7 @@
       "owner_fr": "FR-030",
       "title": "Admin configures recipient rules",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 7"
       }
@@ -111196,7 +112856,7 @@
       "owner_fr": "FR-030",
       "title": "Admin configures channel preferences",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 8"
       }
@@ -111207,7 +112867,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects a notification template for each enabled channel",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 9"
       }
@@ -111218,7 +112878,7 @@
       "owner_fr": "FR-030",
       "title": "Admin configures delivery timing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 10"
       }
@@ -111229,7 +112889,7 @@
       "owner_fr": "FR-030",
       "title": "Admin configures escalation rules (optional)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 11"
       }
@@ -111240,7 +112900,7 @@
       "owner_fr": "FR-030",
       "title": "Admin previews notification templates with sample data",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 12"
       }
@@ -111262,7 +112922,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Save Draft to save the configuration without activating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 14"
       }
@@ -111284,7 +112944,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Test Rule to send a test notification to themselves",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 16"
       }
@@ -111306,7 +112966,7 @@
       "owner_fr": "FR-030",
       "title": "Admin receives the test notification and verifies content, formatting and delivery",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 18"
       }
@@ -111317,7 +112977,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Activate Rule (or toggles status to Active)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 19"
       }
@@ -111339,7 +112999,7 @@
       "owner_fr": "FR-030",
       "title": "Admin confirms activation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 21"
       }
@@ -111383,7 +113043,7 @@
       "owner_fr": "FR-030",
       "title": "Admin navigates to Settings, Alerts and Notifications and filters by event type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 1"
       }
@@ -111394,7 +113054,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Edit on the existing rule",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 2"
       }
@@ -111405,7 +113065,7 @@
       "owner_fr": "FR-030",
       "title": "Admin changes delivery timing from 3 days to 5 days before due date",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 3"
       }
@@ -111416,7 +113076,7 @@
       "owner_fr": "FR-030",
       "title": "Admin enables the SMS channel and selects an SMS template",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 4"
       }
@@ -111427,7 +113087,7 @@
       "owner_fr": "FR-030",
       "title": "Admin previews the changes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 5"
       }
@@ -111438,7 +113098,7 @@
       "owner_fr": "FR-030",
       "title": "Admin saves the changes (applies immediately to future events)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1: Admin Edits Existing Notification Rule step 6"
       }
@@ -111460,7 +113120,7 @@
       "owner_fr": "FR-030",
       "title": "Admin navigates to Settings, Alerts and Notifications",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 1"
       }
@@ -111471,7 +113131,7 @@
       "owner_fr": "FR-030",
       "title": "Admin toggles the rule status from Active to Paused",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 2"
       }
@@ -111493,7 +113153,7 @@
       "owner_fr": "FR-030",
       "title": "Admin confirms the pause",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 4"
       }
@@ -111515,7 +113175,7 @@
       "owner_fr": "FR-030",
       "title": "Admin reactivates the rule by toggling the status back to Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 6"
       }
@@ -111526,7 +113186,7 @@
       "owner_fr": "FR-030",
       "title": "Admin navigates to Settings, Alerts and Notifications and opens the Templates section",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 1"
       }
@@ -111537,7 +113197,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects the event type (for example Quote Submitted / Ready)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 2"
       }
@@ -111548,7 +113208,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects the default language English from the supported locales list",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 3"
       }
@@ -111559,7 +113219,7 @@
       "owner_fr": "FR-030",
       "title": "Admin edits the email template with subject, body and variables",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 4"
       }
@@ -111570,7 +113230,7 @@
       "owner_fr": "FR-030",
       "title": "Admin clicks Add Translation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 5"
       }
@@ -111592,7 +113252,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects Turkish",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 7"
       }
@@ -111603,7 +113263,7 @@
       "owner_fr": "FR-030",
       "title": "Admin edits the Turkish version of the template (subject, body, same variables)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 8"
       }
@@ -111614,7 +113274,7 @@
       "owner_fr": "FR-030",
       "title": "Admin saves the template with both languages",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 9"
       }
@@ -111746,7 +113406,7 @@
       "owner_fr": "FR-030",
       "title": "Admin creates a notification template with variable patient.procedure_date",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 1"
       }
@@ -111757,7 +113417,7 @@
       "owner_fr": "FR-030",
       "title": "Admin saves the template",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 2"
       }
@@ -111801,7 +113461,7 @@
       "owner_fr": "FR-030",
       "title": "Admin corrects the variable to booking.procedure_date",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2: Template Variable Missing or Invalid step 6"
       }
@@ -111823,7 +113483,7 @@
       "owner_fr": "FR-030",
       "title": "Admin navigates to Settings, Alerts and Notifications",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 1"
       }
@@ -111845,7 +113505,7 @@
       "owner_fr": "FR-030",
       "title": "Admin selects the event and clicks Configure",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 3"
       }
@@ -150053,6 +151713,12 @@
     {
       "from_id": "ACT-platform-admin",
       "verb": "acts in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-platform-admin",
+      "verb": "acts in",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {}
     },
@@ -152202,6 +153868,12 @@
       "from_id": "ACT-super-admin",
       "verb": "uses",
       "to_id": "SCR-031-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -155391,6 +157063,18 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-002-template-deprecation",
+      "verb": "starts at",
+      "to_id": "STP-002-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-002-template-management",
+      "verb": "starts at",
+      "to_id": "STP-002-015",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-002-template-version-mismatch",
       "verb": "starts at",
       "to_id": "STP-002-009",
@@ -156525,6 +158209,24 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-025-delete-question",
+      "verb": "starts at",
+      "to_id": "STP-025-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-025-duplicate-set",
+      "verb": "starts at",
+      "to_id": "STP-025-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-025-edit-published-set",
+      "verb": "starts at",
+      "to_id": "STP-025-012",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-025-inquiry-activation",
       "verb": "starts at",
       "to_id": "STP-025-040",
@@ -156555,9 +158257,99 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-025-set-management",
+      "verb": "starts at",
+      "to_id": "STP-025-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-025-severity-management",
+      "verb": "starts at",
+      "to_id": "STP-025-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-025-severity-published-set-edit",
+      "verb": "starts at",
+      "to_id": "STP-025-021",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-025-version-mismatch",
       "verb": "starts at",
       "to_id": "STP-025-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a1-countries",
+      "verb": "starts at",
+      "to_id": "STP-026-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a2-otp-template",
+      "verb": "starts at",
+      "to_id": "STP-026-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a3-discovery",
+      "verb": "starts at",
+      "to_id": "STP-026-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a4-cancellation",
+      "verb": "starts at",
+      "to_id": "STP-026-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a5-deletion",
+      "verb": "starts at",
+      "to_id": "STP-026-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a6-inquiry-config",
+      "verb": "starts at",
+      "to_id": "STP-026-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a7-quote-config",
+      "verb": "starts at",
+      "to_id": "STP-026-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a8-analytics-config",
+      "verb": "starts at",
+      "to_id": "STP-026-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-a9-specialties",
+      "verb": "starts at",
+      "to_id": "STP-026-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-b1-invalid-throttling",
+      "verb": "starts at",
+      "to_id": "STP-026-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-b2-propagation-failure",
+      "verb": "starts at",
+      "to_id": "STP-026-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-026-main",
+      "verb": "starts at",
+      "to_id": "STP-026-001",
       "attrs": {}
     },
     {
@@ -298401,6 +300193,186 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-002-015",
+      "verb": "applies",
+      "to_id": "REQ-002-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-015",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-015",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-015",
+      "verb": "next",
+      "to_id": "STP-002-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-016",
+      "verb": "applies",
+      "to_id": "REQ-002-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-016",
+      "verb": "applies",
+      "to_id": "REQ-002-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-016",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-016",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-016",
+      "verb": "next",
+      "to_id": "STP-002-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-017",
+      "verb": "applies",
+      "to_id": "REQ-002-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-017",
+      "verb": "applies",
+      "to_id": "REQ-002-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-017",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-017",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-017",
+      "verb": "next",
+      "to_id": "STP-002-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-018",
+      "verb": "applies",
+      "to_id": "REQ-002-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-018",
+      "verb": "applies",
+      "to_id": "REQ-002-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-018",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-018",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-019",
+      "verb": "applies",
+      "to_id": "REQ-002-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-019",
+      "verb": "applies",
+      "to_id": "REQ-002-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-019",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-019",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-019",
+      "verb": "next",
+      "to_id": "STP-002-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-020",
+      "verb": "applies",
+      "to_id": "REQ-002-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-020",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-020",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-020",
+      "verb": "next",
+      "to_id": "STP-002-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-021",
+      "verb": "applies",
+      "to_id": "REQ-002-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-021",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-021",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-003-001",
       "verb": "applies",
       "to_id": "REQ-003-022",
@@ -321685,7 +323657,7 @@
     {
       "from_id": "STP-021-001",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321741,7 +323713,7 @@
     {
       "from_id": "STP-021-002",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321777,7 +323749,7 @@
     {
       "from_id": "STP-021-003",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321823,7 +323795,7 @@
     {
       "from_id": "STP-021-004",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321853,7 +323825,7 @@
     {
       "from_id": "STP-021-005",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321889,7 +323861,7 @@
     {
       "from_id": "STP-021-006",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321929,7 +323901,7 @@
     {
       "from_id": "STP-021-007",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -321975,7 +323947,7 @@
     {
       "from_id": "STP-021-008",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322011,7 +323983,7 @@
     {
       "from_id": "STP-021-009",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322087,7 +324059,7 @@
     {
       "from_id": "STP-021-012",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322413,7 +324385,7 @@
     {
       "from_id": "STP-021-021",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322467,7 +324439,7 @@
     {
       "from_id": "STP-021-022",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322591,7 +324563,7 @@
     {
       "from_id": "STP-021-026",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322627,7 +324599,7 @@
     {
       "from_id": "STP-021-027",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -322883,7 +324855,7 @@
     {
       "from_id": "STP-021-035",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -327980,6 +329952,704 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-025-001",
+      "verb": "applies",
+      "to_id": "REQ-025-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-002",
+      "attrs": {
+        "label": "Create new set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-012",
+      "attrs": {
+        "label": "Edit a published set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-014",
+      "attrs": {
+        "label": "Duplicate existing set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "on",
+      "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "applies",
+      "to_id": "REQ-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "applies",
+      "to_id": "REQ-025-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "applies",
+      "to_id": "REQ-025-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "applies",
+      "to_id": "REQ-025-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-002",
+      "verb": "on",
+      "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "applies",
+      "to_id": "REQ-025-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "applies",
+      "to_id": "REQ-025-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "applies",
+      "to_id": "REQ-025-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-004",
+      "attrs": {
+        "label": "Add question"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-008",
+      "attrs": {
+        "label": "Reorder questions"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-009",
+      "attrs": {
+        "label": "Preview set"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-010",
+      "attrs": {
+        "label": "Publish"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-013",
+      "attrs": {
+        "label": "Delete question"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "on",
+      "to_id": "SCR-025-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "applies",
+      "to_id": "REQ-025-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "applies",
+      "to_id": "REQ-025-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "applies",
+      "to_id": "REQ-025-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "next",
+      "to_id": "STP-025-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-004",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "applies",
+      "to_id": "REQ-025-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "applies",
+      "to_id": "REQ-025-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "applies",
+      "to_id": "REQ-025-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "next",
+      "to_id": "STP-025-006",
+      "attrs": {
+        "label": "Inquiry or Multi-Context set",
+        "condition": "REQ-025-012"
+      }
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "next",
+      "to_id": "STP-025-007",
+      "attrs": {
+        "label": "Aftercare-only set",
+        "condition": "REQ-025-016"
+      }
+    },
+    {
+      "from_id": "STP-025-005",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "applies",
+      "to_id": "REQ-025-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "applies",
+      "to_id": "REQ-025-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "applies",
+      "to_id": "REQ-025-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "next",
+      "to_id": "STP-025-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-006",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-007",
+      "verb": "applies",
+      "to_id": "REQ-025-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-007",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-007",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-007",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-007",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "applies",
+      "to_id": "REQ-025-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "applies",
+      "to_id": "REQ-025-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-008",
+      "verb": "on",
+      "to_id": "SCR-025-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "applies",
+      "to_id": "REQ-025-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "applies",
+      "to_id": "REQ-025-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "applies",
+      "to_id": "REQ-025-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-009",
+      "verb": "on",
+      "to_id": "SCR-025-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "next",
+      "to_id": "STP-025-011",
+      "attrs": {
+        "label": "All questions complete",
+        "condition": "REQ-025-024"
+      }
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "on",
+      "to_id": "SCR-025-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "applies",
+      "to_id": "REQ-025-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "applies",
+      "to_id": "REQ-025-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "next",
+      "to_id": "STP-025-040",
+      "attrs": {
+        "label": "Designate for Inquiry (separate action)"
+      }
+    },
+    {
+      "from_id": "STP-025-011",
+      "verb": "on",
+      "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "applies",
+      "to_id": "REQ-025-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "applies",
+      "to_id": "REQ-025-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-012",
+      "verb": "on",
+      "to_id": "SCR-025-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "applies",
+      "to_id": "REQ-025-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "on",
+      "to_id": "SCR-025-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-014",
+      "verb": "applies",
+      "to_id": "REQ-025-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-014",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-014",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-014",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-014",
+      "verb": "on",
+      "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "applies",
+      "to_id": "REQ-025-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "applies",
+      "to_id": "REQ-025-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "next",
+      "to_id": "STP-025-006",
+      "attrs": {
+        "label": "Set is still a Draft"
+      }
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "next",
+      "to_id": "STP-025-021",
+      "attrs": {
+        "label": "Set is published",
+        "condition": "REQ-025-032"
+      }
+    },
+    {
+      "from_id": "STP-025-020",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-021",
+      "verb": "applies",
+      "to_id": "REQ-025-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-021",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-021",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-021",
+      "verb": "next",
+      "to_id": "STP-025-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-021",
+      "verb": "on",
+      "to_id": "SCR-025-03",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-025-030",
       "verb": "applies",
       "to_id": "REQ-025-053",
@@ -328201,6 +330871,14 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-025-041",
+      "verb": "next",
+      "to_id": "STP-025-010",
+      "attrs": {
+        "label": "Admin publishes the set first"
+      }
     },
     {
       "from_id": "STP-025-041",
@@ -328481,6 +331159,2676 @@
       "from_id": "STP-025-049",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-001",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-001",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-001",
+      "verb": "next",
+      "to_id": "STP-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-001",
+      "verb": "on",
+      "to_id": "SCR-026-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-002",
+      "verb": "applies",
+      "to_id": "REQ-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-002",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-002",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-002",
+      "verb": "next",
+      "to_id": "STP-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-002",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-003",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-003",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-003",
+      "verb": "next",
+      "to_id": "STP-026-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-003",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-004",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-004",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-004",
+      "verb": "next",
+      "to_id": "STP-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-004",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-005",
+      "verb": "applies",
+      "to_id": "REQ-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-005",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-005",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-005",
+      "verb": "next",
+      "to_id": "STP-026-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-005",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-006",
+      "verb": "applies",
+      "to_id": "REQ-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-006",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-006",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-006",
+      "verb": "next",
+      "to_id": "STP-026-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-006",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-007",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-007",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-007",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-007",
+      "verb": "next",
+      "to_id": "STP-026-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-007",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-008",
+      "verb": "applies",
+      "to_id": "REQ-026-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-008",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-008",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-008",
+      "verb": "next",
+      "to_id": "STP-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-008",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-009",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-009",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-009",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-009",
+      "verb": "next",
+      "to_id": "STP-026-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-009",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-010",
+      "verb": "applies",
+      "to_id": "REQ-026-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-010",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-010",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-010",
+      "verb": "next",
+      "to_id": "STP-026-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-010",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-011",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-011",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-011",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-011",
+      "verb": "next",
+      "to_id": "STP-026-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-011",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-012",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-012",
+      "verb": "next",
+      "to_id": "STP-026-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-012",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-013",
+      "verb": "applies",
+      "to_id": "REQ-026-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-013",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-013",
+      "verb": "next",
+      "to_id": "STP-026-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-013",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-014",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-014",
+      "verb": "next",
+      "to_id": "STP-026-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-014",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-015",
+      "verb": "applies",
+      "to_id": "REQ-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-015",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-015",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-015",
+      "verb": "next",
+      "to_id": "STP-026-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-016",
+      "verb": "applies",
+      "to_id": "REQ-026-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-016",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-016",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-017",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-017",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-017",
+      "verb": "next",
+      "to_id": "STP-026-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-017",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-018",
+      "verb": "applies",
+      "to_id": "REQ-026-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-018",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-018",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-018",
+      "verb": "next",
+      "to_id": "STP-026-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-018",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-019",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-019",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-019",
+      "verb": "next",
+      "to_id": "STP-026-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-019",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-020",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-020",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-020",
+      "verb": "next",
+      "to_id": "STP-026-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-020",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-021",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-021",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-021",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-021",
+      "verb": "next",
+      "to_id": "STP-026-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-021",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-022",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-022",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-022",
+      "verb": "next",
+      "to_id": "STP-026-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-022",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-023",
+      "verb": "applies",
+      "to_id": "REQ-026-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-023",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-023",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-023",
+      "verb": "next",
+      "to_id": "STP-026-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-023",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-024",
+      "verb": "applies",
+      "to_id": "REQ-026-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-024",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-024",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-024",
+      "verb": "next",
+      "to_id": "STP-026-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-024",
+      "verb": "on",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-025",
+      "verb": "applies",
+      "to_id": "REQ-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-025",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-026",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-026",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-026",
+      "verb": "next",
+      "to_id": "STP-026-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-026",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-027",
+      "verb": "applies",
+      "to_id": "REQ-026-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-027",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-027",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-027",
+      "verb": "next",
+      "to_id": "STP-026-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-027",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-028",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-028",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-028",
+      "verb": "next",
+      "to_id": "STP-026-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-028",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-029",
+      "verb": "applies",
+      "to_id": "REQ-026-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-029",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-029",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-029",
+      "verb": "next",
+      "to_id": "STP-026-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-029",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-030",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-030",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-030",
+      "verb": "next",
+      "to_id": "STP-026-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-030",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-031",
+      "verb": "applies",
+      "to_id": "REQ-026-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-031",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-031",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-031",
+      "verb": "next",
+      "to_id": "STP-026-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-031",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-032",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-032",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-032",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-032",
+      "verb": "next",
+      "to_id": "STP-026-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-032",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-033",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-033",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-033",
+      "verb": "next",
+      "to_id": "STP-026-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-033",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-034",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-034",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-034",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-034",
+      "verb": "next",
+      "to_id": "STP-026-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-034",
+      "verb": "on",
+      "to_id": "SCR-026-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-035",
+      "verb": "applies",
+      "to_id": "REQ-026-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-035",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-035",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-035",
+      "verb": "next",
+      "to_id": "STP-026-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-036",
+      "verb": "applies",
+      "to_id": "REQ-026-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-036",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-036",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-038",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-038",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-038",
+      "verb": "next",
+      "to_id": "STP-026-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-038",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-039",
+      "verb": "applies",
+      "to_id": "REQ-026-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-039",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-039",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-039",
+      "verb": "next",
+      "to_id": "STP-026-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-039",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-040",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-040",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-040",
+      "verb": "next",
+      "to_id": "STP-026-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-040",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-041",
+      "verb": "applies",
+      "to_id": "REQ-026-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-041",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-041",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-041",
+      "verb": "next",
+      "to_id": "STP-026-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-041",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-042",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-042",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-042",
+      "verb": "next",
+      "to_id": "STP-026-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-042",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-043",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-043",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-043",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-043",
+      "verb": "next",
+      "to_id": "STP-026-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-043",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-044",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-044",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-044",
+      "verb": "next",
+      "to_id": "STP-026-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-044",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-045",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-045",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-045",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-045",
+      "verb": "next",
+      "to_id": "STP-026-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-045",
+      "verb": "on",
+      "to_id": "SCR-026-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-046",
+      "verb": "applies",
+      "to_id": "REQ-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-046",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-046",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-047",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-047",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-047",
+      "verb": "next",
+      "to_id": "STP-026-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-047",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-048",
+      "verb": "applies",
+      "to_id": "REQ-026-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-048",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-048",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-048",
+      "verb": "next",
+      "to_id": "STP-026-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-048",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-049",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-049",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-049",
+      "verb": "next",
+      "to_id": "STP-026-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-049",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-050",
+      "verb": "applies",
+      "to_id": "REQ-026-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-050",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-050",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-050",
+      "verb": "next",
+      "to_id": "STP-026-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-050",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-051",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-051",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-051",
+      "verb": "next",
+      "to_id": "STP-026-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-051",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-052",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-052",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-052",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-052",
+      "verb": "next",
+      "to_id": "STP-026-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-052",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-053",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-053",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-053",
+      "verb": "next",
+      "to_id": "STP-026-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-053",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-054",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-054",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-054",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-054",
+      "verb": "next",
+      "to_id": "STP-026-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-054",
+      "verb": "on",
+      "to_id": "SCR-026-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-055",
+      "verb": "applies",
+      "to_id": "REQ-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-055",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-055",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-056",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-056",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-056",
+      "verb": "next",
+      "to_id": "STP-026-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-056",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-057",
+      "verb": "applies",
+      "to_id": "REQ-026-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-057",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-057",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-057",
+      "verb": "next",
+      "to_id": "STP-026-058",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-057",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-058",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-058",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-058",
+      "verb": "next",
+      "to_id": "STP-026-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-058",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-059",
+      "verb": "applies",
+      "to_id": "REQ-026-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-059",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-059",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-059",
+      "verb": "next",
+      "to_id": "STP-026-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-059",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-060",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-060",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-060",
+      "verb": "next",
+      "to_id": "STP-026-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-060",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-061",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-061",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-061",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-061",
+      "verb": "next",
+      "to_id": "STP-026-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-061",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-062",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-062",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-062",
+      "verb": "next",
+      "to_id": "STP-026-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-062",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-063",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-063",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-063",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-063",
+      "verb": "next",
+      "to_id": "STP-026-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-063",
+      "verb": "on",
+      "to_id": "SCR-026-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-064",
+      "verb": "applies",
+      "to_id": "REQ-026-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-064",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-064",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-065",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-065",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-065",
+      "verb": "next",
+      "to_id": "STP-026-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-065",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-066",
+      "verb": "applies",
+      "to_id": "REQ-026-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-066",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-066",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-066",
+      "verb": "next",
+      "to_id": "STP-026-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-066",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-067",
+      "verb": "applies",
+      "to_id": "REQ-026-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-067",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-067",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-067",
+      "verb": "next",
+      "to_id": "STP-026-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-067",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-068",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-068",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-068",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-068",
+      "verb": "next",
+      "to_id": "STP-026-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-068",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-069",
+      "verb": "applies",
+      "to_id": "REQ-026-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-069",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-069",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-069",
+      "verb": "next",
+      "to_id": "STP-026-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-069",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-070",
+      "verb": "applies",
+      "to_id": "REQ-026-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-070",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-070",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-070",
+      "verb": "next",
+      "to_id": "STP-026-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-070",
+      "verb": "on",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-071",
+      "verb": "applies",
+      "to_id": "REQ-026-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-071",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-071",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-072",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-072",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-072",
+      "verb": "next",
+      "to_id": "STP-026-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-072",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-073",
+      "verb": "applies",
+      "to_id": "REQ-026-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-073",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-073",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-073",
+      "verb": "next",
+      "to_id": "STP-026-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-073",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-074",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-074",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-074",
+      "verb": "next",
+      "to_id": "STP-026-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-074",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-075",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-075",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-075",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-075",
+      "verb": "next",
+      "to_id": "STP-026-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-075",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-076",
+      "verb": "applies",
+      "to_id": "REQ-026-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-076",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-076",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-076",
+      "verb": "next",
+      "to_id": "STP-026-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-076",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "applies",
+      "to_id": "REQ-026-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "next",
+      "to_id": "STP-026-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "on",
+      "to_id": "SCR-026-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-078",
+      "verb": "applies",
+      "to_id": "REQ-026-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-078",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-078",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-079",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-079",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-079",
+      "verb": "next",
+      "to_id": "STP-026-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-079",
+      "verb": "on",
+      "to_id": "SCR-026-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-080",
+      "verb": "applies",
+      "to_id": "REQ-026-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-080",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-080",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-080",
+      "verb": "next",
+      "to_id": "STP-026-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-080",
+      "verb": "on",
+      "to_id": "SCR-026-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-081",
+      "verb": "applies",
+      "to_id": "REQ-026-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-081",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-081",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-081",
+      "verb": "next",
+      "to_id": "STP-026-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-081",
+      "verb": "on",
+      "to_id": "SCR-026-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-082",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-082",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-082",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-082",
+      "verb": "next",
+      "to_id": "STP-026-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-082",
+      "verb": "on",
+      "to_id": "SCR-026-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-083",
+      "verb": "applies",
+      "to_id": "REQ-026-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-083",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-083",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-083",
+      "verb": "next",
+      "to_id": "STP-026-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-083",
+      "verb": "on",
+      "to_id": "SCR-026-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-084",
+      "verb": "applies",
+      "to_id": "REQ-026-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-084",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-084",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-085",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-085",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-085",
+      "verb": "next",
+      "to_id": "STP-026-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-085",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-086",
+      "verb": "applies",
+      "to_id": "REQ-026-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-086",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-086",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-086",
+      "verb": "next",
+      "to_id": "STP-026-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-086",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-087",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-087",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-087",
+      "verb": "next",
+      "to_id": "STP-026-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-087",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-088",
+      "verb": "applies",
+      "to_id": "REQ-026-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-088",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-088",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-088",
+      "verb": "next",
+      "to_id": "STP-026-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-088",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-089",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-089",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-089",
+      "verb": "next",
+      "to_id": "STP-026-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-089",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-090",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-090",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-090",
+      "verb": "next",
+      "to_id": "STP-026-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-090",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-091",
+      "verb": "applies",
+      "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-091",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-091",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-091",
+      "verb": "next",
+      "to_id": "STP-026-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-091",
+      "verb": "on",
+      "to_id": "SCR-026-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-092",
+      "verb": "applies",
+      "to_id": "REQ-026-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-092",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-092",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-093",
+      "verb": "applies",
+      "to_id": "REQ-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-093",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-093",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-093",
+      "verb": "next",
+      "to_id": "STP-026-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-093",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-094",
+      "verb": "applies",
+      "to_id": "REQ-026-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-094",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-094",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-094",
+      "verb": "next",
+      "to_id": "STP-026-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-094",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-095",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-095",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-095",
+      "verb": "next",
+      "to_id": "STP-026-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-095",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-096",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-096",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-096",
+      "verb": "next",
+      "to_id": "STP-026-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-096",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-097",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-097",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-097",
+      "verb": "next",
+      "to_id": "STP-026-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-097",
+      "verb": "on",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-098",
+      "verb": "applies",
+      "to_id": "REQ-026-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-098",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-098",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-099",
+      "verb": "applies",
+      "to_id": "REQ-026-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-099",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-099",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-099",
+      "verb": "next",
+      "to_id": "STP-026-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-100",
+      "verb": "applies",
+      "to_id": "REQ-026-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-100",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-100",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-100",
+      "verb": "next",
+      "to_id": "STP-026-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-101",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-101",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-101",
+      "verb": "next",
+      "to_id": "STP-026-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-102",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-102",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-102",
+      "verb": "next",
+      "to_id": "STP-026-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-103",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-103",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-103",
+      "verb": "next",
+      "to_id": "STP-026-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-104",
+      "verb": "applies",
+      "to_id": "REQ-026-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-104",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-104",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -335969,7 +341317,7 @@
     {
       "from_id": "STP-030-001",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336029,7 +341377,7 @@
     {
       "from_id": "STP-030-003",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336059,7 +341407,7 @@
     {
       "from_id": "STP-030-004",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336089,7 +341437,7 @@
     {
       "from_id": "STP-030-005",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336167,7 +341515,7 @@
     {
       "from_id": "STP-030-007",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336197,7 +341545,7 @@
     {
       "from_id": "STP-030-008",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336227,7 +341575,7 @@
     {
       "from_id": "STP-030-009",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336257,7 +341605,7 @@
     {
       "from_id": "STP-030-010",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336287,7 +341635,7 @@
     {
       "from_id": "STP-030-011",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336317,7 +341665,7 @@
     {
       "from_id": "STP-030-012",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336377,7 +341725,7 @@
     {
       "from_id": "STP-030-014",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336437,7 +341785,7 @@
     {
       "from_id": "STP-030-016",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336497,7 +341845,7 @@
     {
       "from_id": "STP-030-018",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336527,7 +341875,7 @@
     {
       "from_id": "STP-030-019",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336587,7 +341935,7 @@
     {
       "from_id": "STP-030-021",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336707,7 +342055,7 @@
     {
       "from_id": "STP-030-025",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336737,7 +342085,7 @@
     {
       "from_id": "STP-030-026",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336767,7 +342115,7 @@
     {
       "from_id": "STP-030-027",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336809,7 +342157,7 @@
     {
       "from_id": "STP-030-028",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336839,7 +342187,7 @@
     {
       "from_id": "STP-030-029",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336869,7 +342217,7 @@
     {
       "from_id": "STP-030-030",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336929,7 +342277,7 @@
     {
       "from_id": "STP-030-032",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -336959,7 +342307,7 @@
     {
       "from_id": "STP-030-033",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337019,7 +342367,7 @@
     {
       "from_id": "STP-030-035",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337079,7 +342427,7 @@
     {
       "from_id": "STP-030-037",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337103,7 +342451,7 @@
     {
       "from_id": "STP-030-038",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337133,7 +342481,7 @@
     {
       "from_id": "STP-030-039",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337163,7 +342511,7 @@
     {
       "from_id": "STP-030-040",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337193,7 +342541,7 @@
     {
       "from_id": "STP-030-041",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337223,7 +342571,7 @@
     {
       "from_id": "STP-030-042",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337283,7 +342631,7 @@
     {
       "from_id": "STP-030-044",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337319,7 +342667,7 @@
     {
       "from_id": "STP-030-045",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337349,7 +342697,7 @@
     {
       "from_id": "STP-030-046",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337661,7 +343009,7 @@
     {
       "from_id": "STP-030-058",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337691,7 +343039,7 @@
     {
       "from_id": "STP-030-059",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337817,7 +343165,7 @@
     {
       "from_id": "STP-030-063",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337871,7 +343219,7 @@
     {
       "from_id": "STP-030-065",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -337931,7 +343279,7 @@
     {
       "from_id": "STP-030-067",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -361146,6 +366494,290 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-120501-32af7ad7",
+      "at": "2026-11-10T12:05:01.349289+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-030 admin settings Steps moved from the placeholder STG-main-01-inquiry to STG-admin-01-configuration after decision D49 (tester-261110-fr030-completeness.md item 10 flags them as placed there only because no admin settings Stage existed). Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-030-001",
+        "STP-030-003",
+        "STP-030-004",
+        "STP-030-005",
+        "STP-030-007",
+        "STP-030-008",
+        "STP-030-009",
+        "STP-030-010",
+        "STP-030-011",
+        "STP-030-012",
+        "STP-030-014",
+        "STP-030-016",
+        "STP-030-018",
+        "STP-030-019",
+        "STP-030-021",
+        "STP-030-025",
+        "STP-030-026",
+        "STP-030-027",
+        "STP-030-028",
+        "STP-030-029",
+        "STP-030-030",
+        "STP-030-032",
+        "STP-030-033",
+        "STP-030-035",
+        "STP-030-037",
+        "STP-030-038",
+        "STP-030-039",
+        "STP-030-040",
+        "STP-030-041",
+        "STP-030-042",
+        "STP-030-044",
+        "STP-030-045",
+        "STP-030-046",
+        "STP-030-058",
+        "STP-030-059",
+        "STP-030-063",
+        "STP-030-065",
+        "STP-030-067"
+      ],
+      "edges_added": 38,
+      "edges_removed": 38,
+      "rows": 76
+    },
+    {
+      "id": "cs-20261110-120501-78a0b873",
+      "at": "2026-11-10T12:05:01.198945+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-026 Steps released from 2026-11-10-fr026-completeness-held.yaml after decision D49 (admin settings and configuration Steps are at STG-admin-01-configuration, the platform-admin timeline; their at ops are rewritten from the placeholder Stage), with the ops held only because one of them was held. Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-026-a1-countries",
+        "FLW-026-a2-otp-template",
+        "FLW-026-a3-discovery",
+        "FLW-026-a4-cancellation",
+        "FLW-026-a5-deletion",
+        "FLW-026-a6-inquiry-config",
+        "FLW-026-a7-quote-config",
+        "FLW-026-a8-analytics-config",
+        "FLW-026-a9-specialties",
+        "FLW-026-b1-invalid-throttling",
+        "FLW-026-b2-propagation-failure",
+        "FLW-026-main",
+        "STP-026-001",
+        "STP-026-002",
+        "STP-026-003",
+        "STP-026-004",
+        "STP-026-005",
+        "STP-026-006",
+        "STP-026-007",
+        "STP-026-008",
+        "STP-026-009",
+        "STP-026-010",
+        "STP-026-011",
+        "STP-026-012",
+        "STP-026-013",
+        "STP-026-014",
+        "STP-026-015",
+        "STP-026-016",
+        "STP-026-017",
+        "STP-026-018",
+        "STP-026-019",
+        "STP-026-020",
+        "STP-026-021",
+        "STP-026-022",
+        "STP-026-023",
+        "STP-026-024",
+        "STP-026-025",
+        "STP-026-026",
+        "STP-026-027",
+        "STP-026-028",
+        "STP-026-029",
+        "STP-026-030",
+        "STP-026-031",
+        "STP-026-032",
+        "STP-026-033",
+        "STP-026-034",
+        "STP-026-035",
+        "STP-026-036",
+        "STP-026-038",
+        "STP-026-039",
+        "STP-026-040",
+        "STP-026-041",
+        "STP-026-042",
+        "STP-026-043",
+        "STP-026-044",
+        "STP-026-045",
+        "STP-026-046",
+        "STP-026-047",
+        "STP-026-048",
+        "STP-026-049",
+        "STP-026-050",
+        "STP-026-051",
+        "STP-026-052",
+        "STP-026-053",
+        "STP-026-054",
+        "STP-026-055",
+        "STP-026-056",
+        "STP-026-057",
+        "STP-026-058",
+        "STP-026-059",
+        "STP-026-060",
+        "STP-026-061",
+        "STP-026-062",
+        "STP-026-063",
+        "STP-026-064",
+        "STP-026-065",
+        "STP-026-066",
+        "STP-026-067",
+        "STP-026-068",
+        "STP-026-069",
+        "STP-026-070",
+        "STP-026-071",
+        "STP-026-072",
+        "STP-026-073",
+        "STP-026-074",
+        "STP-026-075",
+        "STP-026-076",
+        "STP-026-077",
+        "STP-026-078",
+        "STP-026-079",
+        "STP-026-080",
+        "STP-026-081",
+        "STP-026-082",
+        "STP-026-083",
+        "STP-026-084",
+        "STP-026-085",
+        "STP-026-086",
+        "STP-026-087",
+        "STP-026-088",
+        "STP-026-089",
+        "STP-026-090",
+        "STP-026-091",
+        "STP-026-092",
+        "STP-026-093",
+        "STP-026-094",
+        "STP-026-095",
+        "STP-026-096",
+        "STP-026-097",
+        "STP-026-098",
+        "STP-026-099",
+        "STP-026-100",
+        "STP-026-101",
+        "STP-026-102",
+        "STP-026-103",
+        "STP-026-104"
+      ],
+      "nodes_updated": [
+        "ACT-system"
+      ],
+      "edges_added": 458,
+      "edges_removed": 0,
+      "rows": 1045
+    },
+    {
+      "id": "cs-20261110-120500-09fe2835",
+      "at": "2026-11-10T12:05:00.821852+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-025 Steps released from 2026-11-10-fr025-completeness-held.yaml after decision D49 (admin settings and configuration Steps are at STG-admin-01-configuration, the platform-admin timeline; their at ops are rewritten from the placeholder Stage), with the ops held only because one of them was held. Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-025-delete-question",
+        "FLW-025-duplicate-set",
+        "FLW-025-edit-published-set",
+        "FLW-025-set-management",
+        "FLW-025-severity-management",
+        "FLW-025-severity-published-set-edit",
+        "STP-025-001",
+        "STP-025-002",
+        "STP-025-003",
+        "STP-025-004",
+        "STP-025-005",
+        "STP-025-006",
+        "STP-025-007",
+        "STP-025-008",
+        "STP-025-009",
+        "STP-025-010",
+        "STP-025-011",
+        "STP-025-012",
+        "STP-025-013",
+        "STP-025-014",
+        "STP-025-020",
+        "STP-025-021"
+      ],
+      "nodes_updated": [
+        "STP-025-041"
+      ],
+      "edges_added": 118,
+      "edges_removed": 0,
+      "rows": 234
+    },
+    {
+      "id": "cs-20261110-120500-ce9ae22e",
+      "at": "2026-11-10T12:05:00.650933+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-021 admin settings Steps moved from the placeholder STG-main-01-inquiry to STG-admin-01-configuration after decision D49 (tester-261110-fr021-completeness.md item 11 flags them as placed there only because no admin settings Stage existed). Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-021-001",
+        "STP-021-002",
+        "STP-021-003",
+        "STP-021-004",
+        "STP-021-005",
+        "STP-021-006",
+        "STP-021-007",
+        "STP-021-008",
+        "STP-021-009",
+        "STP-021-012",
+        "STP-021-021",
+        "STP-021-022",
+        "STP-021-026",
+        "STP-021-027",
+        "STP-021-035"
+      ],
+      "edges_added": 15,
+      "edges_removed": 15,
+      "rows": 30
+    },
+    {
+      "id": "cs-20261110-120500-f95d34cf",
+      "at": "2026-11-10T12:05:00.533247+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-002 Steps released from 2026-11-10-fr002-completeness-held.yaml after decision D49 (admin settings and configuration Steps are at STG-admin-01-configuration, the platform-admin timeline; their at ops are rewritten from the placeholder Stage), with the ops held only because one of them was held. Apply after 2026-11-10-platform-admin-stage.yaml and the earlier 2026-11-10 files of the FR; apply the admin-stage files in FR number order (see plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-002-template-deprecation",
+        "FLW-002-template-management",
+        "STP-002-015",
+        "STP-002-016",
+        "STP-002-017",
+        "STP-002-018",
+        "STP-002-019",
+        "STP-002-020",
+        "STP-002-021"
+      ],
+      "nodes_updated": [
+        "ACT-platform-admin"
+      ],
+      "edges_added": 33,
+      "edges_removed": 0,
+      "rows": 81
+    },
+    {
+      "id": "cs-20261110-120500-54f1b0b5",
+      "at": "2026-11-10T12:05:00.408598+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "Add STG-admin-01-configuration, the one Stage of the new platform-admin timeline (decision D49)",
+      "source_id": null,
+      "nodes_added": [
+        "STG-admin-01-configuration"
+      ],
+      "nodes_updated": [],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 6
+    },
     {
       "id": "cs-20261110-105521-653225f3",
       "at": "2026-11-10T10:55:21.919006+00:00",
