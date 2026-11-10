@@ -165,3 +165,16 @@ D52 settled the wording of the 31 Rules held for the new Rule wording review (FR
 - **Still held: 944 ops** (948 before). The FR-011 held file now has no ops and carries a dated note.
 - **Backup and lint.** Backup `graph/backups/graph-20261110-224712.db` (git-ignored). Lint is unchanged at 4,450 (L10 4,179, L12 184, L18 87), with no new or resolved finding. All 234 tests passed, and `graph.json` was re-exported.
 - **Report:** `plans/reports/fullstack-developer-261110-2300-enum-decisions-apply.md` (Hairline root).
+
+## Decision-code link follow-up (D50 follow-up rulings), applied 2026-11-10 night
+
+- **Ruling.** The user ruled on the 16 `decided by` links D50 kept held, and extended D50: an Entity may be `decided by` a Product Owner code when that code decides the Entity's storage.
+- **Repointed to the better-fitting code (4 edges).** REQ-010-073 and REQ-010-030 to SRC-PO-001-Q44 (held links were to Q2 and Q37), REQ-016-031 to Q37 (was Q42) and REQ-016-010 to Q42 (was Q43). Each Source decision text was checked against the Rule statement before the link was made; the side-by-side texts are in the report.
+- **Already live (1 op dropped).** The ruling repoints REQ-019-070 from Q6 to Q30, but REQ-019-070 `decided by` Q30 was already live from the D50 release, so the held Q6 op was dropped and no duplicate edge was added.
+- **Entity links released (2 edges).** ENT-promotion-program and ENT-promotion-code `decided by` SRC-PO-001-Q38 (new `promotion_programs` and `promotion_codes` tables). The tooling and schema accept the edge as they are; no tooling change.
+- **Dropped by ruling (8 ops, no graph change).** REQ-008-072 to Q18, REQ-010-031 to Q43 and to Q44, REQ-010-041 to Q46, REQ-010-029 to Q46, REQ-016-182 to Q37, REQ-019-017 to Q43 and REQ-019-053 to Q43.
+- **Still held by ruling.** REQ-019-014 to Q6.
+- **Files.** `graph/changesets/2026-11-10-fr010-`, `-fr016-` and `-fr019-decision-links-followup.yaml` (2 ops each). The four held files of FR-008, FR-010, FR-016 and FR-019 lost only the released and dropped lines and the wait notes whose whole group left, and each carries one dated follow-up note; every other line is unchanged. The FR-008, FR-010 and FR-016 held files now have no ops.
+- **Still held: 929 ops** (944 before).
+- **Backup and lint.** Backup `graph/backups/graph-20261110-225503.db` (git-ignored). Lint went from 4,450 to 4,444 (L10 4,173, L12 184, L18 87): 6 L10 findings resolved (ENT-promotion-code, ENT-promotion-program, REQ-010-030, REQ-010-073, REQ-016-010, REQ-016-031), none new. All 234 tests passed, and `graph.json` was re-exported (10,944 nodes, 33,309 edges).
+- **Report:** `plans/reports/fullstack-developer-261110-2330-decision-links-followup.md` (Hairline root).
