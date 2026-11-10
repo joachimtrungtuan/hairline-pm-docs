@@ -83,3 +83,15 @@ D49 gave admin settings and configuration Steps their own timeline, `platform-ad
 - **Backup and lint.** Backup `graph/backups/graph-20261110-190500.db` (git-ignored); the migration also wrote `graph-20261110-190500-1.db`. Lint went from 4,416 to 4,417: 1 new L18 open hand-off (STP-002-017), and no L14, L15, L16, L17 or L19. All 234 tests passed, and `graph.json` was re-exported (10,882 nodes). Local-docs commits 462631b, d7a8c82 and ff68d15.
 - **Still held: 1,208 ops.** None waits only on the admin settings placement.
 - **Report:** `plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md` (Hairline root).
+
+## Rule wording release (decision D52), applied 2026-11-10 evening
+
+D52 settled the wording of the 31 Rules held for the new Rule wording review (FR-001, FR-013, FR-016, FR-017, FR-019, FR-021, FR-030, FR-034, FR-035). Their ops, and the new Rules from the splits, moved into `graph/changesets/2026-11-10-frNNN-rule-wording.yaml` (9 files) and were applied to the live graph in FR number order.
+
+- **Wordings.** 21 Rules keep their proposed statement. 10 get the decided statement (REQ-001-148, 150, 152, 153, 156, REQ-017-168, REQ-021-116, 117, REQ-030-213, REQ-034-160); for the split Rules the title and the PRD citation in `rationale` changed too. No other op was altered, apart from one edge moved to its new half (REQ-001-153 `applies to` SCR-001-17 now leaves REQ-001-161).
+- **New Rules (11).** REQ-001-157 (15-minute reset-code expiry, beside REQ-001-147), REQ-001-158 to 162 (the second halves of 148, 150, 152, 153, 156), REQ-017-171 (currency pairs configurable in FR-029), REQ-030-214 to 217 (one Rule per FR-030 Out of Scope bullet). Each copies only the source edges that fit its half.
+- **Ops.** 109 held ops released, plus 26 new ops: 135 applied. The count proof passes for all 38 FRs: 1,208 held before = 109 released + 1,099 still held. A control run releases nothing.
+- **Kept held.** REQ-001-152 and REQ-001-160 `applies to` SCR-001-22 (the Settings Main Screen is itself held). Two copied edges whose half is unclear, under `# waits on: split edge placement (decision D52)`: REQ-001-157 `applies to` ENT-otp-code.code and REQ-017-171 `applies to` ENT-currency-rate-lock. REQ-034-161, 162 and 163 (12 ops) were not in the review and still wait on their wording.
+- **Backup and lint.** Backup `graph/backups/graph-20261110-203726.db` (git-ignored). Lint went from 4,417 to 4,461: L10 +42 (the released and new Rules have no `decided by` Source yet) and L12 +2 (REQ-001-146 and REQ-001-147 read alike; they cover the sign-up and reset codes). No L14, L15, L16, L17 or L19. All 234 tests passed, and `graph.json` was re-exported (10,924 nodes). Local-docs commits 3b08258 and 9314968.
+- **Still held: 1,102 ops.** None waits on the reviewed wordings.
+- **Report:** `plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md` (Hairline root).
