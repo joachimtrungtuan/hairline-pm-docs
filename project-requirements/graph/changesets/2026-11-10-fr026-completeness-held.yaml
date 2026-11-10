@@ -338,10 +338,12 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-001", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-002", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-003", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-004", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-005", "verb": "at", "to": "STG-provider-03-active"}
@@ -350,26 +352,36 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-007", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-008", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-009 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-009", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-010 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-010", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-011 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-011", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-012 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-012", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-013 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-013", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-014 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-014", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-015 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-015", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-016 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-016", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-017", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-018 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-018", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-019", "verb": "at", "to": "STG-provider-03-active"}
@@ -380,18 +392,23 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-022", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-023 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-023", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-024", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-025 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-025", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-026", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-027 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-027", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-028", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-029 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-029", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-030", "verb": "at", "to": "STG-provider-03-active"}
@@ -402,16 +419,21 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-033", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-034 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-034", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-035 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-035", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-036 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-036", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-037 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-037", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-038", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-039 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-039", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-040", "verb": "at", "to": "STG-provider-03-active"}
@@ -424,12 +446,15 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-044", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-045 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-045", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-046 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-046", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-047", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-048 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-048", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-049", "verb": "at", "to": "STG-provider-03-active"}
@@ -442,12 +467,15 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-053", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-054 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-054", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-055 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-055", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-056", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-057 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-057", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-058", "verb": "at", "to": "STG-provider-03-active"}
@@ -460,8 +488,10 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-062", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-063 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-063", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-064 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-064", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-065", "verb": "at", "to": "STG-provider-03-active"}
@@ -472,84 +502,109 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-068", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-069 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-069", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-070 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-070", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-071 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-071", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-072", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-073 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-073", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-074", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-075", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-076 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-076", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-077 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-077", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-078 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-078", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-079", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-080", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-081 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-081", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-082", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-083", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-084 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-084", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-085", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-086 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-086", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-087", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-088", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-089 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-089", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-090", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-091 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-091", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-092 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-092", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-093", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-094 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-094", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-095 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-095", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-096", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-097 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-097", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-098 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-098", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-099", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-100 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-100", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-101 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-101", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-102 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-102", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-103 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-103", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-104 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-104", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-001", "verb": "on", "to": "SCR-026-01"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-002", "verb": "on", "to": "SCR-026-02"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-003", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-004", "verb": "on", "to": "SCR-026-02"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-005", "verb": "on", "to": "SCR-026-02"}
@@ -558,22 +613,30 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-007", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-008", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-009 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-009", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-010 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-010", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-011 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-011", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-012 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-012", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-013 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-013", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-014 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-014", "verb": "on", "to": "SCR-026-02"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-017", "verb": "on", "to": "SCR-026-04"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-018 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-018", "verb": "on", "to": "SCR-026-04"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-019", "verb": "on", "to": "SCR-026-04"}
@@ -584,16 +647,20 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-022", "verb": "on", "to": "SCR-026-04"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-023 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-023", "verb": "on", "to": "SCR-026-04"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-024", "verb": "on", "to": "SCR-026-04"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-026", "verb": "on", "to": "SCR-026-12"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-027 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-027", "verb": "on", "to": "SCR-026-12"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-028", "verb": "on", "to": "SCR-026-12"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-029 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-029", "verb": "on", "to": "SCR-026-12"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-030", "verb": "on", "to": "SCR-026-12"}
@@ -604,10 +671,12 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-033", "verb": "on", "to": "SCR-026-12"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-034 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-034", "verb": "on", "to": "SCR-026-12"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-038", "verb": "on", "to": "SCR-026-05"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-039 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-039", "verb": "on", "to": "SCR-026-05"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-040", "verb": "on", "to": "SCR-026-05"}
@@ -620,10 +689,12 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-044", "verb": "on", "to": "SCR-026-05"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-045 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-045", "verb": "on", "to": "SCR-026-05"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-047", "verb": "on", "to": "SCR-026-06"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-048 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-048", "verb": "on", "to": "SCR-026-06"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-049", "verb": "on", "to": "SCR-026-06"}
@@ -636,10 +707,12 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-053", "verb": "on", "to": "SCR-026-06"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-054 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-054", "verb": "on", "to": "SCR-026-06"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-056", "verb": "on", "to": "SCR-026-07"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-057 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-057", "verb": "on", "to": "SCR-026-07"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-058", "verb": "on", "to": "SCR-026-07"}
@@ -652,6 +725,7 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-062", "verb": "on", "to": "SCR-026-07"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-063 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-063", "verb": "on", "to": "SCR-026-07"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-065", "verb": "on", "to": "SCR-026-08"}
@@ -662,56 +736,70 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-068", "verb": "on", "to": "SCR-026-08"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-069 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-069", "verb": "on", "to": "SCR-026-08"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-070 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-070", "verb": "on", "to": "SCR-026-08"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-072", "verb": "on", "to": "SCR-026-09"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-073 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-073", "verb": "on", "to": "SCR-026-09"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-074", "verb": "on", "to": "SCR-026-09"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-075", "verb": "on", "to": "SCR-026-09"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-076 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-076", "verb": "on", "to": "SCR-026-09"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-077 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-077", "verb": "on", "to": "SCR-026-09"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-079", "verb": "on", "to": "SCR-026-10"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-080", "verb": "on", "to": "SCR-026-10"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-081 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-081", "verb": "on", "to": "SCR-026-10"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-082", "verb": "on", "to": "SCR-026-10"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-083", "verb": "on", "to": "SCR-026-10"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-085", "verb": "on", "to": "SCR-026-11"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-086 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-086", "verb": "on", "to": "SCR-026-11"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-087", "verb": "on", "to": "SCR-026-11"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-088", "verb": "on", "to": "SCR-026-11"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-089 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-089", "verb": "on", "to": "SCR-026-11"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-090", "verb": "on", "to": "SCR-026-11"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-091 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-091", "verb": "on", "to": "SCR-026-11"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-093", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-094 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-094", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-095 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-095", "verb": "on", "to": "SCR-026-02"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-096", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-097 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-097", "verb": "on", "to": "SCR-026-02"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-002", "verb": "applies", "to": "REQ-026-009"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-005", "verb": "applies", "to": "REQ-026-009"}
@@ -720,72 +808,97 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-007", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-008", "verb": "applies", "to": "REQ-026-045"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-009 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-009", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-010 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-010", "verb": "applies", "to": "REQ-026-004"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-011 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-011", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-013 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-013", "verb": "applies", "to": "REQ-026-006"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-015 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-015", "verb": "applies", "to": "REQ-026-005"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-016 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-016", "verb": "applies", "to": "REQ-026-070"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-018 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-018", "verb": "applies", "to": "REQ-026-011"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-021", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-023 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-023", "verb": "applies", "to": "REQ-026-076"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-024", "verb": "applies", "to": "REQ-026-004"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-025 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-025", "verb": "applies", "to": "REQ-026-005"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-027 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-027", "verb": "applies", "to": "REQ-026-013"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-029 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-029", "verb": "applies", "to": "REQ-026-104"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-031", "verb": "applies", "to": "REQ-026-105"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-032", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-034 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-034", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-035 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-035", "verb": "applies", "to": "REQ-026-004"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-036 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-036", "verb": "applies", "to": "REQ-026-106"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-039 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-039", "verb": "applies", "to": "REQ-026-012"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-041", "verb": "applies", "to": "REQ-026-080"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-043", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-045 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-045", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-046 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-046", "verb": "applies", "to": "REQ-026-005"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-048 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-048", "verb": "applies", "to": "REQ-026-032"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-050", "verb": "applies", "to": "REQ-026-087"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-052", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-054 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-054", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-055 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-055", "verb": "applies", "to": "REQ-026-005"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-057 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-057", "verb": "applies", "to": "REQ-026-033"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-059", "verb": "applies", "to": "REQ-026-092"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-061", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-063 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-063", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-064 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-064", "verb": "applies", "to": "REQ-026-005"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-066", "verb": "applies", "to": "REQ-026-093"}
@@ -794,84 +907,116 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-068", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-069 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-069", "verb": "applies", "to": "REQ-026-096"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-070 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-070", "verb": "applies", "to": "REQ-026-006"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-071 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-071", "verb": "applies", "to": "REQ-026-094"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-073 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-073", "verb": "applies", "to": "REQ-026-037"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-075", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-076 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-076", "verb": "applies", "to": "REQ-026-037"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-077 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-077", "verb": "applies", "to": "REQ-026-027"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-078 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-078", "verb": "applies", "to": "REQ-026-030"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-080", "verb": "applies", "to": "REQ-026-038"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-081 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-081", "verb": "applies", "to": "REQ-026-100"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-082", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-083", "verb": "applies", "to": "REQ-026-028"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-084 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-084", "verb": "applies", "to": "REQ-026-029"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-086 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-086", "verb": "applies", "to": "REQ-026-039"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-088", "verb": "applies", "to": "REQ-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-091 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-091", "verb": "applies", "to": "REQ-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-092 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-092", "verb": "applies", "to": "REQ-026-039"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-093", "verb": "applies", "to": "REQ-026-009"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-094 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-094", "verb": "applies", "to": "REQ-026-045"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-098 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-098", "verb": "applies", "to": "REQ-026-045"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-099", "verb": "applies", "to": "REQ-026-009"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-100 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-100", "verb": "applies", "to": "REQ-026-046"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-104 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-104", "verb": "applies", "to": "REQ-026-046"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-001 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-001", "verb": "next", "to": "STP-026-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-002", "verb": "next", "to": "STP-026-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-003 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-003", "verb": "next", "to": "STP-026-004"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-004", "verb": "next", "to": "STP-026-005"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-005", "verb": "next", "to": "STP-026-006"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-006", "verb": "next", "to": "STP-026-007"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-007 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-007", "verb": "next", "to": "STP-026-008"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-008", "verb": "next", "to": "STP-026-009"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-009 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-009", "verb": "next", "to": "STP-026-010"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-010 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-010", "verb": "next", "to": "STP-026-011"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-011 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-011", "verb": "next", "to": "STP-026-012"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-012 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-012", "verb": "next", "to": "STP-026-013"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-013 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-013", "verb": "next", "to": "STP-026-014"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-014 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-014", "verb": "next", "to": "STP-026-015"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-015 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-015", "verb": "next", "to": "STP-026-016"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-017 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-017", "verb": "next", "to": "STP-026-018"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-018 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-018", "verb": "next", "to": "STP-026-019"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-019", "verb": "next", "to": "STP-026-020"}
@@ -880,18 +1025,25 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-021", "verb": "next", "to": "STP-026-022"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-022 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-022", "verb": "next", "to": "STP-026-023"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-023 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-023", "verb": "next", "to": "STP-026-024"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-024", "verb": "next", "to": "STP-026-025"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-026 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-026", "verb": "next", "to": "STP-026-027"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-027 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-027", "verb": "next", "to": "STP-026-028"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-028 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-028", "verb": "next", "to": "STP-026-029"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-029 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-029", "verb": "next", "to": "STP-026-030"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-030", "verb": "next", "to": "STP-026-031"}
@@ -900,16 +1052,22 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-032", "verb": "next", "to": "STP-026-033"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-033 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-033", "verb": "next", "to": "STP-026-034"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-034 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-034", "verb": "next", "to": "STP-026-035"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-035 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-035", "verb": "next", "to": "STP-026-036"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-036 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-036", "verb": "next", "to": "STP-026-037"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-038 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-038", "verb": "next", "to": "STP-026-039"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-039 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-039", "verb": "next", "to": "STP-026-040"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-040", "verb": "next", "to": "STP-026-041"}
@@ -920,12 +1078,16 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-043", "verb": "next", "to": "STP-026-044"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-044 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-044", "verb": "next", "to": "STP-026-045"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-045 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-045", "verb": "next", "to": "STP-026-046"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-047 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-047", "verb": "next", "to": "STP-026-048"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-048 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-048", "verb": "next", "to": "STP-026-049"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-049", "verb": "next", "to": "STP-026-050"}
@@ -936,12 +1098,16 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-052", "verb": "next", "to": "STP-026-053"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-053 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-053", "verb": "next", "to": "STP-026-054"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-054 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-054", "verb": "next", "to": "STP-026-055"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-056 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-056", "verb": "next", "to": "STP-026-057"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-057 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-057", "verb": "next", "to": "STP-026-058"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-058", "verb": "next", "to": "STP-026-059"}
@@ -952,8 +1118,10 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-061", "verb": "next", "to": "STP-026-062"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-062 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-062", "verb": "next", "to": "STP-026-063"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-063 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-063", "verb": "next", "to": "STP-026-064"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-065", "verb": "next", "to": "STP-026-066"}
@@ -962,66 +1130,94 @@ operations:
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-067", "verb": "next", "to": "STP-026-068"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-068 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-068", "verb": "next", "to": "STP-026-069"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-069 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-069", "verb": "next", "to": "STP-026-070"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-070 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-070", "verb": "next", "to": "STP-026-071"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-072 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-072", "verb": "next", "to": "STP-026-073"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-073 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-073", "verb": "next", "to": "STP-026-074"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-074", "verb": "next", "to": "STP-026-075"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-075 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-075", "verb": "next", "to": "STP-026-076"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-076 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-076", "verb": "next", "to": "STP-026-077"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-077 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-077", "verb": "next", "to": "STP-026-078"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-079", "verb": "next", "to": "STP-026-080"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-080 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-080", "verb": "next", "to": "STP-026-081"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-081 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-081", "verb": "next", "to": "STP-026-082"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-082 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-082", "verb": "next", "to": "STP-026-083"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-083", "verb": "next", "to": "STP-026-084"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-085 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-085", "verb": "next", "to": "STP-026-086"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-086 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-086", "verb": "next", "to": "STP-026-087"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "STP-026-087", "verb": "next", "to": "STP-026-088"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-088 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-088", "verb": "next", "to": "STP-026-089"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-089 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-089", "verb": "next", "to": "STP-026-090"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-090 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-090", "verb": "next", "to": "STP-026-091"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-091 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-091", "verb": "next", "to": "STP-026-092"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-093 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-093", "verb": "next", "to": "STP-026-094"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-094 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-094", "verb": "next", "to": "STP-026-095"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-095 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-095", "verb": "next", "to": "STP-026-096"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-096 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-096", "verb": "next", "to": "STP-026-097"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-097 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-097", "verb": "next", "to": "STP-026-098"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-099 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-099", "verb": "next", "to": "STP-026-100"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-100 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-100", "verb": "next", "to": "STP-026-101"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-101 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-101", "verb": "next", "to": "STP-026-102"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-102 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-102", "verb": "next", "to": "STP-026-103"}
   # waits on: no System Actor
+  # waits on: endpoint STP-026-103 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-026-103", "verb": "next", "to": "STP-026-104"}
   # waits on: stage placement of the admin settings steps (queue B42); the PRD does not name the lifecycle stage
   - {"op": "add_edge", "from": "FLW-026-main", "verb": "starts at", "to": "STP-026-001"}

@@ -1,9 +1,9 @@
-reason: "FR-014 system Steps released from 2026-11-10-fr014-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr014-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-014 system Steps released from 2026-11-10-fr014-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr014-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor (B1 banner and B2 helper copy are shown by the system; no Actor can be given)
   - {"op": "add_node", "id": "STP-014-016", "type": "Step", "title": "Analytics pipeline delay: a non-blocking banner is shown and cached data is displayed with its last-updated timestamp", "owner_fr": "FR-014", "attrs": {"prd_ref": "Alternative Flow B1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-014-016", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-014-016", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-014-016", "verb": "applies", "to": "REQ-014-128"}
@@ -11,9 +11,11 @@ operations:
   - {"op": "add_node", "id": "FLW-014-pipeline-delay", "type": "Flow", "title": "Alternative Flow B1: analytics pipeline delay", "attrs": {"kind": "alternative", "description": "Alternative Flow B1: analytics pipeline delay", "prd_ref": "Alternative Flow B1"}}
   - {"op": "add_edge", "from": "FLW-014-pipeline-delay", "verb": "starts at", "to": "STP-014-016"}
   - {"op": "add_node", "id": "STP-014-017", "type": "Step", "title": "Low sample: helper copy is shown on affected widgets and partial data is still rendered", "owner_fr": "FR-014", "attrs": {"prd_ref": "Alternative Flow B2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-014-017", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-014-017", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-014-017", "verb": "applies", "to": "REQ-014-150"}
   - {"op": "add_node", "id": "FLW-014-low-sample", "type": "Flow", "title": "Alternative Flow B2: low sample", "attrs": {"kind": "alternative", "description": "Alternative Flow B2: low sample", "prd_ref": "Alternative Flow B2"}}
   - {"op": "add_edge", "from": "FLW-014-low-sample", "verb": "starts at", "to": "STP-014-017"}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-provider-03-active"}

@@ -1,25 +1,25 @@
-reason: "FR-028 system Steps released from 2026-11-10-fr028-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr028-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-028 system Steps released from 2026-11-10-fr028-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr028-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-008", "type": "Step", "title": "System validates configuration completeness, including the change reason", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-008", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-009", "type": "Step", "title": "System saves the configuration to the database", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-009", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-010", "type": "Step", "title": "System clears the location presentation cache", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-010", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-011", "type": "Step", "title": "System displays the save confirmation", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-011", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-012", "type": "Step", "title": "System logs the configuration change in the audit trail", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-012", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-008", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -56,7 +56,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-011", "verb": "next", "to": "STP-028-012"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-102", "type": "Step", "title": "System displays the current countries and location order", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-102", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-103", "type": "Step", "title": "Admin modifies the countries or reorders the destinations", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 3"}}
@@ -66,7 +66,7 @@ operations:
   - {"op": "add_node", "id": "STP-028-105", "type": "Step", "title": "Admin saves the changes", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 5"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-106", "type": "Step", "title": "System validates, saves, clears the cache and confirms", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-106", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-102", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -106,17 +106,17 @@ operations:
   - {"op": "add_edge", "from": "STP-028-105", "verb": "next", "to": "STP-028-106"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-112", "type": "Step", "title": "System warns how many countries are affected", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-112", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-113", "type": "Step", "title": "Admin enters the change reason and confirms the deletion", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 3"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-114", "type": "Step", "title": "System archives the grouping and clears the cache", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-114", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-115", "type": "Step", "title": "System confirms the archive", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-115", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-112", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -147,7 +147,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-114", "verb": "next", "to": "STP-028-115"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-122", "type": "Step", "title": "System shows the missing-country validation error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B1: Admin Attempts to Save Regional Grouping Without Countries step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-122", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-123", "type": "Step", "title": "Admin selects countries or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B1: Admin Attempts to Save Regional Grouping Without Countries step 3"}}
@@ -166,7 +166,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-122", "verb": "next", "to": "STP-028-123"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-132", "type": "Step", "title": "System shows the missing-order validation error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B2: Admin Attempts to Save Regional Grouping Without Location Order step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-132", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-133", "type": "Step", "title": "Admin adds destination ordering or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B2: Admin Attempts to Save Regional Grouping Without Location Order step 3"}}
@@ -185,7 +185,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-132", "verb": "next", "to": "STP-028-133"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-142", "type": "Step", "title": "System shows the change-reason validation error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B3: Admin Attempts to Save Without Change Reason step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-142", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-143", "type": "Step", "title": "Admin enters the change reason or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B3: Admin Attempts to Save Without Change Reason step 3"}}
@@ -204,7 +204,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-142", "verb": "next", "to": "STP-028-143"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-203", "type": "Step", "title": "System displays the current pricing configuration for the destination", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-203", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-204", "type": "Step", "title": "Admin clicks Add Currency or Edit", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 4"}}
@@ -218,19 +218,19 @@ operations:
   - {"op": "add_node", "id": "STP-028-208", "type": "Step", "title": "Admin saves the currency-price configuration", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 8"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-209", "type": "Step", "title": "System validates the currency, price, decimal places and change reason", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-209", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-210", "type": "Step", "title": "System saves the pricing configuration to the database", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-210", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-211", "type": "Step", "title": "System displays the price save confirmation", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-211", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-212", "type": "Step", "title": "System logs the pricing change in the audit trail", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-212", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-203", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -306,11 +306,11 @@ operations:
   - {"op": "add_edge", "from": "STP-028-211", "verb": "next", "to": "STP-028-212"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-306", "type": "Step", "title": "System saves the fallback configuration", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-306", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-307", "type": "Step", "title": "System confirms the fallback pricing", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-307", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-306", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -326,17 +326,17 @@ operations:
   - {"op": "add_edge", "from": "STP-028-306", "verb": "next", "to": "STP-028-307"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-315", "type": "Step", "title": "System displays a preview of the new prices for all currencies", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-315", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-316", "type": "Step", "title": "Admin enters the change reason and confirms or adjusts", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 6"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-317", "type": "Step", "title": "System saves all currency price updates simultaneously", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-317", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-318", "type": "Step", "title": "System confirms the bulk update", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-318", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-028-315", "verb": "at", "to": "STG-main-01-inquiry"}
@@ -367,7 +367,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-317", "verb": "next", "to": "STP-028-318"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-322", "type": "Step", "title": "System shows the positive-number validation error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B3: Admin Attempts to Set Invalid Price step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-322", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-323", "type": "Step", "title": "Admin corrects the value or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B3: Admin Attempts to Set Invalid Price step 3"}}
@@ -386,7 +386,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-322", "verb": "next", "to": "STP-028-323"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-332", "type": "Step", "title": "System shows the unsupported-currency error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B4: Admin Attempts to Set Price for Unsupported Currency step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-332", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-333", "type": "Step", "title": "Admin opens Currency Management or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B4: Admin Attempts to Set Price for Unsupported Currency step 3"}}
@@ -406,7 +406,7 @@ operations:
   - {"op": "add_edge", "from": "STP-028-332", "verb": "next", "to": "STP-028-333"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-342", "type": "Step", "title": "System shows the change-reason validation error", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B5: Admin Attempts to Save Pricing Without Change Reason step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-342", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-343", "type": "Step", "title": "Admin enters the change reason or cancels", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow B5: Admin Attempts to Save Pricing Without Change Reason step 3"}}
@@ -425,31 +425,31 @@ operations:
   - {"op": "add_edge", "from": "STP-028-342", "verb": "next", "to": "STP-028-343"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-402", "type": "Step", "title": "System gets the patient location from the profile or IP geolocation", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-402", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-403", "type": "Step", "title": "System identifies the patient's country", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-403", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-404", "type": "Step", "title": "System finds the regional grouping that matches the patient's country", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-404", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-405", "type": "Step", "title": "System applies the location presentation order of the matched grouping", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-405", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-406", "type": "Step", "title": "System lists destinations in the configured order, the rest by proximity", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-406", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-407", "type": "Step", "title": "System fetches the starting price for each displayed location", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-407", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-408", "type": "Step", "title": "System displays the destination list with name, flag, price, description and provider count", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-408", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-028-409", "type": "Step", "title": "Patient selects the preferred destination or destinations", "owner_fr": "FR-028", "attrs": {"prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 9", "handoff_to": "STP-003-003"}}
@@ -505,19 +505,19 @@ operations:
   - {"op": "add_edge", "from": "STP-028-408", "verb": "next", "to": "STP-028-409"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-411", "type": "Step", "title": "System detects no matching regional grouping", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-411", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-412", "type": "Step", "title": "System falls back to proximity-based location ordering", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-412", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-413", "type": "Step", "title": "System displays all available destinations in the default order", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-413", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-414", "type": "Step", "title": "System shows starting prices from fallback pricing or system defaults", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-414", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (the flow starts at a System Step)
   - {"op": "add_node", "id": "FLW-028-no-grouping-match", "type": "Flow", "title": "Alternative Flow A5: Patient's location is in no regional grouping", "attrs": {"kind": "alternative", "description": "Alternative Flow A5: Patient's location is in no regional grouping", "prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping"}}
@@ -547,23 +547,23 @@ operations:
   - {"op": "add_edge", "from": "FLW-028-no-grouping-match", "verb": "starts at", "to": "STP-028-411"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-421", "type": "Step", "title": "System detects missing currency-specific pricing", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-421", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-422", "type": "Step", "title": "System checks for fallback pricing in the patient's currency", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-422", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-423", "type": "Step", "title": "System displays the fallback price when it exists", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-423", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-424", "type": "Step", "title": "System displays the price in the location's default currency with a conversion note when no fallback exists", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-424", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-028-425", "type": "Step", "title": "System converts using the real-time exchange rate from the FR-029 currency service", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-028-425", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (the flow starts at a System Step)
   - {"op": "add_node", "id": "FLW-028-currency-not-configured", "type": "Flow", "title": "Alternative Flow A6: Patient's currency is not configured for the location", "attrs": {"kind": "alternative", "description": "Alternative Flow A6: Patient's currency is not configured for the location", "prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location"}}

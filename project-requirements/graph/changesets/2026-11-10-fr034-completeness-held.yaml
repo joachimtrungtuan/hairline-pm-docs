@@ -3,7 +3,7 @@
 reason: "FR-034 completeness held operations: system-performed Steps and the human Steps behind them (Needs user decision: no System Actor), new Rules whose wording needs review, and the provider-stage emits edges removed under review-queue row F8. See plans/reports/tester-261110-fr034-completeness.md."
 by: tester
 operations:
-  # 2026-11-10 D44: 448 ops that waited only on the system Actor moved to 2026-11-10-fr034-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 448 ops that waited only on the system Actor left this file (448 moved to 2026-11-10-fr034-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: new Rule wording review (paraphrase, not verbatim PRD)
   - {"op": "add_node", "id": "REQ-034-160", "type": "Rule", "owner_fr": "FR-034", "title": "Case list truncates long case titles", "attrs": {"statement": "Truncated with ellipsis if >50 chars; full title shown on hover", "rationale": "Screen 1, Table Column 3 (PRD line 371)."}}
   - {"op": "add_edge", "from": "REQ-034-160", "verb": "applies at", "to": "STG-patient-03-active"}

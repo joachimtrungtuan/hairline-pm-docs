@@ -1,16 +1,56 @@
 reason: "FR-038 completeness fixes held for user decisions: every Step the PRD assigns to the system (no System Actor), the human Steps reachable only through those, the Flows B1 and B2 whose start Step is a system Step, every next, starts at and Step edge touching them, and the export-ready emission at the conversion Stage. Apply after 2026-11-10-fr038-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 139 ops that waited only on the system Actor moved to 2026-11-10-fr038-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 119 ops that waited only on the system Actor left this file (119 moved to 2026-11-10-fr038-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: no System Actor (the default selection is the system's, the choice is the patient's; mixed step, see decision item)
   - {"op": "add_node", "id": "STP-038-024", "type": "Step", "title": "Latest valid scan is selected by default; patient may choose another scan or retake", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 4"}}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-038-025", "type": "Step", "title": "Patient reviews and may edit any copied information", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 5"}}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-038-026", "type": "Step", "title": "Patient selects an available aftercare package and continues to FR-011 checkout", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 6"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-038-027", "type": "Step", "title": "System links the records and completes the monitoring case on successful standalone-request creation", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 7", "handoff_to": "FR-011: standalone aftercare request after checkout (FR-011 owns payment, Admin assignment, provider activation, milestones and managed aftercare)"}}
   # waits on: no System Actor (the default selection is the system's, the choice is the patient's; mixed step, see decision item)
   - {"op": "add_edge", "from": "STP-038-024", "verb": "at", "to": "STG-monitoring-03-conversion"}
   - {"op": "add_edge", "from": "STP-038-024", "verb": "on", "to": "SCR-038-06"}
   - {"op": "add_edge", "from": "STP-038-024", "verb": "applies", "to": "REQ-038-009"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  # waits on: endpoint STP-038-025 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "applies", "to": "REQ-038-008"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "applies", "to": "REQ-038-067"}
+  # waits on: no System Actor (reachable only through a held Step; lint L14)
+  # waits on: endpoint STP-038-026 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "applies", "to": "REQ-038-065"}
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "applies", "to": "REQ-038-066"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-038-027 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-015"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-016"}
+  - {"op": "add_edge", "from": "STP-038-027", "verb": "applies", "to": "REQ-038-044"}
   # waits on: no System Actor (edge touches a held Step)
+  # waits on: endpoint STP-038-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-038-023", "verb": "next", "to": "STP-038-024"}
   # waits on: no System Actor (edge touches a held Step)
+  # waits on: endpoint STP-038-024 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-038-024", "verb": "next", "to": "STP-038-025"}
+  # waits on: no System Actor (edge touches a held Step)
+  # waits on: endpoint STP-038-025 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "next", "to": "STP-038-026"}
+  # waits on: no System Actor (edge touches a held Step)
+  # waits on: endpoint STP-038-026 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "next", "to": "STP-038-027"}
+  # waits on: no System Actor (edge touches a held Step)
+  # waits on: endpoint STP-038-026 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-038-026", "verb": "next", "to": "STP-038-051", "attrs": {"label": "Request validation or creation does not complete", "condition": "REQ-038-068"}}
   # waits on: decision item 'export-ready at conversion' (PRD does not say the export-ready event fires for the PDF generated when conversion starts)
   - {"op": "add_edge", "from": "STG-monitoring-03-conversion", "verb": "emits", "to": "EVT-transplant-progress-export-ready"}

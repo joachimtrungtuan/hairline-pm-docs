@@ -1,4 +1,174 @@
 reason: "FR-007B held ops: Steps the PRD says the system performs, their flows and every edge touching them wait on the no-System-Actor decision. Apply after the fixes file."
 by: tester
 operations:
-operations: []
+  # 2026-11-10 D44: 116 ops that waited only on the system Actor left this file (116 moved to 2026-11-10-fr007b-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-401", "type": "Step", "owner_fr": "FR-007B", "title": "System detects failure and logs the reason", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-401 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-012", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-017", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-402", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies the patient of the failed payment", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-402 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "applies", "to": "REQ-007B-017", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-403", "type": "Step", "owner_fr": "FR-007B", "title": "System schedules the first retry for the next day", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-403 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-404", "type": "Step", "owner_fr": "FR-007B", "title": "System retries after 3 days if the first retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-404 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-405", "type": "Step", "owner_fr": "FR-007B", "title": "System retries after 7 days if the second retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-405 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-406", "type": "Step", "owner_fr": "FR-007B", "title": "System flags the plan Defaulted if all 3 retries fail", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-406 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "applies", "to": "REQ-007B-019", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-407", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies admin of the defaulted plan and overdue booking", "attrs": {"prd_ref": "Alternative Flow B1 step 7"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-407 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "applies", "to": "REQ-007B-020", "attrs": {}}
+  # # waits on: no System Actor (reachable only through a held System step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-408", "type": "Step", "owner_fr": "FR-007B", "title": "Admin reviews and contacts the patient to resolve the payment issue", "attrs": {"prd_ref": "Alternative Flow B1 step 8", "handoff_to": "FR-006: Cancel Booking action (admin cancels with a mandatory reason)"}}
+  # # waits on: no System Actor (reachable only through a held System step)
+  # waits on: endpoint STP-007B-408 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "applies", "to": "REQ-007B-051", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-401 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "next", "to": "STP-007B-402", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-402 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "next", "to": "STP-007B-403", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-403 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "next", "to": "STP-007B-404", "attrs": {"label": "retry fails"}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-404 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "next", "to": "STP-007B-405", "attrs": {"label": "retry fails"}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-405 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "next", "to": "STP-007B-406", "attrs": {"label": "all 3 retries fail"}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-406 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "next", "to": "STP-007B-407", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-407 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "next", "to": "STP-007B-408", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-602", "type": "Step", "owner_fr": "FR-007B", "title": "System checks whether the new date allows the remaining installments", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-602 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "applies", "to": "REQ-007B-061", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-603", "type": "Step", "owner_fr": "FR-007B", "title": "System adjusts installment schedule dates to the new procedure date", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-603 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-603", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-603", "verb": "applies", "to": "REQ-007B-061", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-604", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies the patient that the balance must be paid now or the plan cancelled", "attrs": {"prd_ref": "Alternative Flow B3 step 4"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-604 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "applies", "to": "REQ-007B-062", "attrs": {}}
+  # # waits on: no System Actor (reachable only through a held System step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-605", "type": "Step", "owner_fr": "FR-007B", "title": "Admin collects the remaining balance or cancels the booking", "attrs": {"prd_ref": "Alternative Flow B3 step 5", "handoff_to": "FR-006: Cancel Booking action"}}
+  # # waits on: no System Actor (reachable only through a held System step)
+  # waits on: endpoint STP-007B-605 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "applies", "to": "REQ-007B-062", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-602 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-601", "verb": "next", "to": "STP-007B-602", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-602 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-603", "attrs": {"label": "sufficient time"}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-602 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-604", "attrs": {"label": "insufficient time"}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-604 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "next", "to": "STP-007B-605", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-702", "type": "Step", "owner_fr": "FR-007B", "title": "Paid installments become credit toward the replacement booking, unused part refunded", "attrs": {"prd_ref": "Alternative Flow B4 step 2"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-702 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "applies", "to": "REQ-007B-027", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-007B-703", "type": "Step", "owner_fr": "FR-007B", "title": "Replacement plan takes total, currency and rate from the replacement quote snapshot", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
+  # # waits on: no System Actor
+  # done by: no System Actor exists; add the done by edge once the decision is made
+  # waits on: endpoint STP-007B-703 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-703", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-703", "verb": "applies", "to": "REQ-007B-064", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-702 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-701", "verb": "next", "to": "STP-007B-702", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint STP-007B-702 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "next", "to": "STP-007B-703", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint None not in the graph or the held ops (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-007b-installment-fails", "type": "Flow", "owner_fr": null, "title": "Installment payment fails", "attrs": {"kind": "alternative", "description": "Installment payment fails", "prd_ref": "Alternative Flow B1"}}
+  # # waits on: no System Actor
+  # waits on: endpoint FLW-007b-installment-fails stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-007b-installment-fails", "verb": "starts at", "to": "STP-007B-401", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint None not in the graph or the held ops (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-007b-date-change", "type": "Flow", "owner_fr": null, "title": "Procedure date changes after the plan is established", "attrs": {"kind": "alternative", "description": "Procedure date changes after the plan is established", "prd_ref": "Alternative Flow B3"}}
+  # # waits on: no System Actor
+  # waits on: endpoint FLW-007b-date-change stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-007b-date-change", "verb": "starts at", "to": "STP-007B-601", "attrs": {}}
+  # # waits on: no System Actor
+  # waits on: endpoint None not in the graph or the held ops (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-007b-provider-fault", "type": "Flow", "owner_fr": null, "title": "Provider fault after acceptance", "attrs": {"kind": "alternative", "description": "Provider fault after acceptance", "prd_ref": "Alternative Flow B4"}}
+  # # waits on: no System Actor
+  # waits on: endpoint FLW-007b-provider-fault stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-007b-provider-fault", "verb": "starts at", "to": "STP-007B-701", "attrs": {}}

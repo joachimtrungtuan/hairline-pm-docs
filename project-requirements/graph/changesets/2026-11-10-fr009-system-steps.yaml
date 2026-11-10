@@ -1,4 +1,4 @@
-reason: "FR-009 system Steps released from 2026-11-10-fr009-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr009-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-009 system Steps released from 2026-11-10-fr009-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr009-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor (system-performed steps lie between this step and the previous human step; no bridging next edge in the fixes file)

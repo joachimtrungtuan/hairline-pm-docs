@@ -1,9 +1,9 @@
-reason: "FR-024 system Steps released from 2026-11-10-fr024-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr024-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-024 system Steps released from 2026-11-10-fr024-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr024-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-003", "type": "Step", "title": "System displays the treatment creation form", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-003", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-003", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-003", "verb": "on", "to": "SCR-024-02"}
@@ -46,7 +46,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-009", "verb": "applies", "to": "REQ-024-001"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-010", "type": "Step", "title": "System validates name uniqueness, required fields and file formats", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-010", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-010", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-010", "verb": "on", "to": "SCR-024-02"}
@@ -54,21 +54,21 @@ operations:
   - {"op": "add_edge", "from": "STP-024-010", "verb": "applies", "to": "REQ-024-023"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-011", "type": "Step", "title": "System uploads media files to S-05 Media Storage Service", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-011", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-011", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-011", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-011", "verb": "applies", "to": "REQ-024-027"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-012", "type": "Step", "title": "System generates CDN URLs for video and images", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-012", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-012", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-012", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-012", "verb": "applies", "to": "REQ-024-028"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-013", "type": "Step", "title": "System saves the treatment record", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-013", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-013", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-013", "verb": "on", "to": "SCR-024-02"}
@@ -76,7 +76,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-013", "verb": "applies", "to": "REQ-024-048"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-014", "type": "Step", "title": "System sends the new-treatment notification to all active providers", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Admin Creates Treatment step 14"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-014", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-014", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-014", "verb": "on", "to": "SCR-024-02"}
@@ -115,7 +115,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-014", "verb": "next", "to": "STP-024-015"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-024", "type": "Step", "title": "System displays the edit form with current values pre-filled", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-024", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-024", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-024", "verb": "on", "to": "SCR-024-02"}
@@ -133,7 +133,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-026", "verb": "applies", "to": "REQ-024-002"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-027", "type": "Step", "title": "System creates a new version of the treatment record", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-027", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-027", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-027", "verb": "on", "to": "SCR-024-02"}
@@ -141,21 +141,21 @@ operations:
   - {"op": "add_edge", "from": "STP-024-027", "verb": "applies", "to": "REQ-024-013"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-028", "type": "Step", "title": "System updates CDN URLs if media changed", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-028", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-028", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-028", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-028", "verb": "applies", "to": "REQ-024-028"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-029", "type": "Step", "title": "System notifies providers who currently offer the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-029", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-029", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-029", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-029", "verb": "applies", "to": "REQ-024-042"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-030", "type": "Step", "title": "Existing provider quotes using the treatment remain unchanged", "owner_fr": "FR-024", "attrs": {"prd_ref": "A1 step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-030", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-030", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-030", "verb": "on", "to": "SCR-024-02"}
@@ -176,14 +176,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-029", "verb": "next", "to": "STP-024-030"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-033", "type": "Step", "title": "System checks open quotes and open bookings that use the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-033", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-033", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-033", "verb": "on", "to": "SCR-024-01"}
   - {"op": "add_edge", "from": "STP-024-033", "verb": "applies", "to": "REQ-024-051"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-034", "type": "Step", "title": "System displays the warning with the provider and active quote counts", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-034", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-034", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-034", "verb": "on", "to": "SCR-024-01"}
@@ -196,7 +196,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-035", "verb": "applies", "to": "REQ-024-051"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-036", "type": "Step", "title": "System changes the treatment status to Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-036", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-036", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-036", "verb": "on", "to": "SCR-024-01"}
@@ -204,21 +204,21 @@ operations:
   - {"op": "add_edge", "from": "STP-024-036", "verb": "applies", "to": "REQ-024-051"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-037", "type": "Step", "title": "System prevents providers from selecting the treatment in new quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-037", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-037", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-037", "verb": "on", "to": "SCR-024-01"}
   - {"op": "add_edge", "from": "STP-024-037", "verb": "applies", "to": "REQ-024-052"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-038", "type": "Step", "title": "System notifies providers that the treatment has been deactivated", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-038", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-038", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-038", "verb": "on", "to": "SCR-024-01"}
   - {"op": "add_edge", "from": "STP-024-038", "verb": "applies", "to": "REQ-024-043"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-039", "type": "Step", "title": "Existing quotes and bookings using the treatment continue unaffected", "owner_fr": "FR-024", "attrs": {"prd_ref": "A2 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-039", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-039", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-039", "verb": "on", "to": "SCR-024-01"}
@@ -239,7 +239,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-038", "verb": "next", "to": "STP-024-039"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-042", "type": "Step", "title": "System displays the list of active treatments from the admin catalog", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-042", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-042", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-042", "verb": "on", "to": "SCR-024-03"}
@@ -273,21 +273,21 @@ operations:
   - {"op": "add_edge", "from": "STP-024-046", "verb": "applies", "to": "REQ-024-005"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-047", "type": "Step", "title": "System validates the pricing", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-047", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-047", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-047", "verb": "on", "to": "SCR-024-03"}
   - {"op": "add_edge", "from": "STP-024-047", "verb": "applies", "to": "REQ-024-060"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-048", "type": "Step", "title": "System saves the provider-specific pricing configuration", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-048", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-048", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-048", "verb": "on", "to": "SCR-024-03"}
   - {"op": "add_edge", "from": "STP-024-048", "verb": "applies", "to": "REQ-024-016"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-049", "type": "Step", "title": "Treatment becomes available for the provider to select when creating quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A3 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-049", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-049", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-049", "verb": "on", "to": "SCR-024-03"}
@@ -310,14 +310,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-048", "verb": "next", "to": "STP-024-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-053", "type": "Step", "title": "System validates inputs", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-053", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-053", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-053", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-053", "verb": "applies", "to": "REQ-024-046"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-054", "type": "Step", "title": "System detects missing name, non-MP4 video, oversized image or overlong description", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-054", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-054", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-054", "verb": "on", "to": "SCR-024-02"}
@@ -325,7 +325,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-054", "verb": "applies", "to": "REQ-024-046"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-055", "type": "Step", "title": "System displays error messages next to the invalid fields", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-055", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-055", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-055", "verb": "on", "to": "SCR-024-02"}
@@ -344,7 +344,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-057", "verb": "applies", "to": "REQ-024-046"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-058", "type": "Step", "title": "System validates successfully and creates the treatment", "owner_fr": "FR-024", "attrs": {"prd_ref": "B1 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-058", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-058", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-058", "verb": "on", "to": "SCR-024-02"}
@@ -363,28 +363,28 @@ operations:
   - {"op": "add_edge", "from": "STP-024-057", "verb": "next", "to": "STP-024-058"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-062", "type": "Step", "title": "Upload to S-05 Media Storage Service fails", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-062", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-062", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-062", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-062", "verb": "applies", "to": "REQ-024-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-063", "type": "Step", "title": "System retries the upload up to 3 times", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-063", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-063", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-063", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-063", "verb": "applies", "to": "REQ-024-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-064", "type": "Step", "title": "System displays the media upload failure error", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-064", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-064", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-064", "verb": "on", "to": "SCR-024-02"}
   - {"op": "add_edge", "from": "STP-024-064", "verb": "applies", "to": "REQ-024-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-065", "type": "Step", "title": "System saves the treatment record without media marked Pending Media Upload", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-065", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-065", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-065", "verb": "on", "to": "SCR-024-02"}
@@ -397,7 +397,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-066", "verb": "applies", "to": "REQ-024-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-067", "type": "Step", "title": "System updates the treatment record once the upload succeeds", "owner_fr": "FR-024", "attrs": {"prd_ref": "B2 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-067", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-067", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-067", "verb": "on", "to": "SCR-024-02"}
@@ -416,7 +416,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-066", "verb": "next", "to": "STP-024-067"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-073", "type": "Step", "title": "System displays the package creation form", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-073", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-073", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-073", "verb": "on", "to": "SCR-024-05"}
@@ -473,7 +473,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-081", "verb": "applies", "to": "REQ-024-007"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-082", "type": "Step", "title": "System validates name, standard price, included items and plan days", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-082", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-082", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-082", "verb": "on", "to": "SCR-024-05"}
@@ -481,14 +481,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-082", "verb": "applies", "to": "REQ-024-066"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-083", "type": "Step", "title": "System uploads images to S-05 Media Storage Service", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-083", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-083", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-083", "verb": "on", "to": "SCR-024-05"}
   - {"op": "add_edge", "from": "STP-024-083", "verb": "applies", "to": "REQ-024-027"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-084", "type": "Step", "title": "System saves the package as version 1 linked to the provider account", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 14"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-084", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-084", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-084", "verb": "on", "to": "SCR-024-05"}
@@ -496,14 +496,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-084", "verb": "applies", "to": "REQ-024-017"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-085", "type": "Step", "title": "System displays the success message Package created successfully", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 15"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-085", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-085", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-085", "verb": "on", "to": "SCR-024-05"}
   - {"op": "add_edge", "from": "STP-024-085", "verb": "applies", "to": "REQ-024-044"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-086", "type": "Step", "title": "Package appears in the provider list and, when Active, is selectable during quote creation", "owner_fr": "FR-024", "attrs": {"prd_ref": "Main Flow: Provider Creates Package step 16", "handoff_to": "FR-004: Main Flow, provider selects a treatment and one to five packages"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-086", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-086", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-086", "verb": "on", "to": "SCR-024-04"}
@@ -539,7 +539,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-085", "verb": "next", "to": "STP-024-086"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-094", "type": "Step", "title": "System displays the edit form with the current version values", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-094", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-094", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-094", "verb": "on", "to": "SCR-024-05"}
@@ -557,7 +557,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-096", "verb": "applies", "to": "REQ-024-008"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-097", "type": "Step", "title": "System saves the changes as a new package version", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-097", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-097", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-097", "verb": "on", "to": "SCR-024-05"}
@@ -565,7 +565,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-097", "verb": "applies", "to": "REQ-024-014"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-098", "type": "Step", "title": "System makes the previous version read-only", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-098", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-098", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-098", "verb": "on", "to": "SCR-024-05"}
@@ -573,7 +573,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-098", "verb": "applies", "to": "REQ-024-014"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-099", "type": "Step", "title": "System leaves existing quotes unchanged", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-099", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-099", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-099", "verb": "on", "to": "SCR-024-05"}
@@ -581,7 +581,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-099", "verb": "applies", "to": "REQ-024-018"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-100", "type": "Step", "title": "New quote options copy the latest package version", "owner_fr": "FR-024", "attrs": {"prd_ref": "A4 step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-100", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-100", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-100", "verb": "on", "to": "SCR-024-05"}
@@ -602,14 +602,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-099", "verb": "next", "to": "STP-024-100"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-103", "type": "Step", "title": "System counts open quotes containing an option copied from the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-103", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-103", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-103", "verb": "on", "to": "SCR-024-04"}
   - {"op": "add_edge", "from": "STP-024-103", "verb": "applies", "to": "REQ-024-074"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-104", "type": "Step", "title": "System displays the open-quotes warning", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-104", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-104", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-104", "verb": "on", "to": "SCR-024-04"}
@@ -622,7 +622,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-105", "verb": "applies", "to": "REQ-024-072"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-106", "type": "Step", "title": "System changes the package status to Inactive", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-106", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-106", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-106", "verb": "on", "to": "SCR-024-04"}
@@ -630,14 +630,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-106", "verb": "applies", "to": "REQ-024-072"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-107", "type": "Step", "title": "System prevents the package from being added to new quotes", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-107", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-107", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-107", "verb": "on", "to": "SCR-024-04"}
   - {"op": "add_edge", "from": "STP-024-107", "verb": "applies", "to": "REQ-024-009"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-108", "type": "Step", "title": "Existing quote options copied from the package keep their own copy and remain valid", "owner_fr": "FR-024", "attrs": {"prd_ref": "A5 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-108", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-108", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-108", "verb": "on", "to": "SCR-024-04"}
@@ -656,7 +656,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-107", "verb": "next", "to": "STP-024-108"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-113", "type": "Step", "title": "System creates a copy of the package with (Copy) appended to the name", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-113", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-113", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-113", "verb": "on", "to": "SCR-024-05"}
@@ -675,7 +675,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-115", "verb": "applies", "to": "REQ-024-073"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-116", "type": "Step", "title": "System creates a new package record", "owner_fr": "FR-024", "attrs": {"prd_ref": "A6 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-116", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-116", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-116", "verb": "on", "to": "SCR-024-05"}
@@ -690,14 +690,14 @@ operations:
   - {"op": "add_edge", "from": "STP-024-115", "verb": "next", "to": "STP-024-116"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-123", "type": "Step", "title": "System validates inputs", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-123", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-123", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-123", "verb": "on", "to": "SCR-024-05"}
   - {"op": "add_edge", "from": "STP-024-123", "verb": "applies", "to": "REQ-024-065"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-124", "type": "Step", "title": "System displays error messages for the invalid fields", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-124", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-124", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-124", "verb": "on", "to": "SCR-024-05"}
@@ -716,7 +716,7 @@ operations:
   - {"op": "add_edge", "from": "STP-024-126", "verb": "applies", "to": "REQ-024-065"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-024-127", "type": "Step", "title": "System validates successfully and creates the package", "owner_fr": "FR-024", "attrs": {"prd_ref": "B3 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-024-127", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-024-127", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-024-127", "verb": "on", "to": "SCR-024-05"}

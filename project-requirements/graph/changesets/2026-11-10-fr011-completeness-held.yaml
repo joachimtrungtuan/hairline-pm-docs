@@ -1,7 +1,7 @@
 reason: "FR-011 completeness, held operations: Steps the PRD assigns to the system (the graph has no System Actor), the human Steps reachable only through them, their next links and the Flows that start at a system Step. Apply on top of 2026-11-10-fr011-completeness-fixes.yaml once the System Actor decision is made."
 by: tester
 operations:
-  # 2026-11-10 D44: 134 ops that waited only on the system Actor moved to 2026-11-10-fr011-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 134 ops that waited only on the system Actor left this file (134 moved to 2026-11-10-fr011-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: field type change text to enum (user review, PRD line 1047)
   - {"op": "update_field", "id": "ENT-aftercare-request.payment_status", "data_type": "enum"}
   # waits on: field type change text to enum (user review, PRD line 1047)

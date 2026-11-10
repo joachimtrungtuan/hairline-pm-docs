@@ -1,4 +1,4 @@
 reason: "FR-028 completeness fixes held: Steps the PRD says the system performs (no System Actor exists), every human Step reachable only through them, the two Flows that start at a System Step, and the links that touch them. Apply only after the decision named per operation. See the report, Needs user decision."
 by: tester
-operations:
 operations: []
+  # 2026-11-10 D44: 333 ops that waited only on the system Actor left this file (333 moved to 2026-11-10-fr028-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.

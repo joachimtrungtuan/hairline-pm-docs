@@ -1,7 +1,7 @@
 reason: "FR-016 completeness check 2026-11-10, held for user decision: System-performed Steps (no System Actor) with the human Steps reachable only through them, Flow FLW-016-patient-not-found, and two proposed Rules whose wording needs review. Apply only after 2026-11-10-fr016-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 253 ops that waited only on the system Actor moved to 2026-11-10-fr016-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 253 ops that waited only on the system Actor left this file (253 moved to 2026-11-10-fr016-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: new Rule wording review (paraphrase, not verbatim PRD)
   - {"op": "add_node", "id": "REQ-016-199", "type": "Rule", "owner_fr": "FR-016", "title": "Admin notes on a deletion request are optional and are stored in the a", "attrs": {"statement": "Admin notes on a deletion request are optional and are stored in the audit trail when the admin approves or denies the request.", "rationale": "Proposed from prd.md, Screen 8 data field Modal: Admin Notes (line 629): \"Optional notes about verification/contact; Stored in audit trail if approving/denying\"."}}
   # waits on: new Rule wording review (paraphrase, not verbatim PRD)

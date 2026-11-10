@@ -1,13 +1,9 @@
-reason: "FR-037 system Steps released from 2026-11-10-fr037-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr037-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-037 system Steps released from 2026-11-10-fr037-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr037-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-01-baseline"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-02-tracking"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-03-conversion"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-020", "type": "Step", "owner_fr": "FR-037", "title": "System blocks a duplicate and opens the existing case", "attrs": {"prd_ref": "Unified Flow: blocks a duplicate and opens the existing case"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-020", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-020", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
@@ -17,7 +13,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-020", "verb": "applies", "to": "REQ-037-001", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-021", "type": "Step", "owner_fr": "FR-037", "title": "System activates the self-monitoring case", "attrs": {"prd_ref": "Unified Flow: activates the self-monitoring case"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-021", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-021", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
@@ -29,7 +25,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-021", "verb": "applies", "to": "REQ-037-035", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-022", "type": "Step", "owner_fr": "FR-037", "title": "System shows missing or invalid medical answers", "attrs": {"prd_ref": "Unified Flow: shows missing or invalid medical answers"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-022", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-022", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
@@ -39,7 +35,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-022", "verb": "applies", "to": "REQ-037-005", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-023", "type": "Step", "owner_fr": "FR-037", "title": "System activates the case as Pending Assignment and notifies Admin", "attrs": {"prd_ref": "Unified Flow: activates the case as Pending Assignment and notifies Admin"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-023", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-023", "verb": "at", "to": "STG-monitoring-01-baseline", "attrs": {}}
@@ -49,7 +45,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-023", "verb": "applies", "to": "REQ-037-037", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-024", "type": "Step", "owner_fr": "FR-037", "title": "System saves the entry and updates the derived values", "attrs": {"prd_ref": "Unified Flow: saves the entry and updates the derived values"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-024", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-024", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -65,7 +61,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-024", "verb": "applies", "to": "REQ-037-020", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-025", "type": "Step", "owner_fr": "FR-037", "title": "No provider workflow runs for a self-monitoring case", "attrs": {"prd_ref": "Unified Flow: provider workflow runs for a self-monitoring case"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-025", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-025", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -75,7 +71,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-025", "verb": "applies", "to": "REQ-037-025", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-026", "type": "Step", "owner_fr": "FR-037", "title": "System records the initial assignment and notifies", "attrs": {"prd_ref": "Unified Flow: records the initial assignment and notifies"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-026", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-026", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -87,7 +83,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-026", "verb": "applies", "to": "REQ-037-078", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-027", "type": "Step", "owner_fr": "FR-037", "title": "System blocks advice submission when no window is actionable", "attrs": {"prd_ref": "Unified Flow: blocks advice submission when no window is actionable"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-027", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-027", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -99,7 +95,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-027", "verb": "applies", "to": "REQ-037-081", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-028", "type": "Step", "owner_fr": "FR-037", "title": "System creates the advice calendar entry, marks the window submitted and notifies", "attrs": {"prd_ref": "Unified Flow: creates the advice calendar entry, marks the window submitted and notifies"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-028", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-028", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -115,7 +111,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-028", "verb": "applies", "to": "REQ-037-078", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-029", "type": "Step", "owner_fr": "FR-037", "title": "System revokes provider access, marks Pending Reassignment and notifies", "attrs": {"prd_ref": "Unified Flow: revokes provider access, marks Pending Reassignment and notifies"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-029", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-029", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -127,7 +123,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-029", "verb": "applies", "to": "REQ-037-078", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-030", "type": "Step", "owner_fr": "FR-037", "title": "System records the reassignment; the replacement provider receives the history", "attrs": {"prd_ref": "Unified Flow: records the reassignment; the replacement provider receives the history"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-030", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-030", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -139,7 +135,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-030", "verb": "applies", "to": "REQ-037-078", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-031", "type": "Step", "owner_fr": "FR-037", "title": "System keeps the case active so the patient can resume later", "attrs": {"prd_ref": "Unified Flow: keeps the case active so the patient can resume later"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-031", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-031", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -149,7 +145,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-031", "verb": "applies", "to": "REQ-037-080", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-032", "type": "Step", "owner_fr": "FR-037", "title": "System shows the completion preview", "attrs": {"prd_ref": "Unified Flow: shows the completion preview"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-032", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-032", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -171,7 +167,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-033", "verb": "applies", "to": "REQ-037-052", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-034", "type": "Step", "owner_fr": "FR-037", "title": "System completes the case and ends the provider assignment", "attrs": {"prd_ref": "Unified Flow: completes the case and ends the provider assignment"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-034", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-034", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -183,7 +179,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-034", "verb": "applies", "to": "REQ-037-057", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-035", "type": "Step", "owner_fr": "FR-037", "title": "System generates the PDF export", "attrs": {"prd_ref": "Unified Flow: generates the PDF export"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-035", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-035", "verb": "at", "to": "STG-monitoring-02-tracking", "attrs": {}}
@@ -209,7 +205,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-036", "verb": "applies", "to": "REQ-037-057", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-037", "type": "Step", "owner_fr": "FR-037", "title": "System blocks conversion while an FR-003 inquiry is active", "attrs": {"prd_ref": "Unified Flow: blocks conversion while an FR-003 inquiry is active"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-037", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-037", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -221,7 +217,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-037", "verb": "applies", "to": "REQ-037-030", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-038", "type": "Step", "owner_fr": "FR-037", "title": "System generates the PDF and pre-fills the FR-003 fields", "attrs": {"prd_ref": "Unified Flow: generates the PDF and pre-fills the FR-003 fields"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-038", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-038", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -271,7 +267,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-041", "verb": "applies", "to": "REQ-037-063", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-042", "type": "Step", "owner_fr": "FR-037", "title": "System preserves the draft when the patient exits conversion", "attrs": {"prd_ref": "Unified Flow: preserves the draft when the patient exits conversion"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-042", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-042", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -281,7 +277,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-042", "verb": "applies", "to": "REQ-037-064", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-043", "type": "Step", "owner_fr": "FR-037", "title": "System creates the inquiry, links provenance and completes the case", "attrs": {"prd_ref": "Unified Flow: creates the inquiry, links provenance and completes the case", "handoff_to": "FR-003: Workflow 1 inquiry (REQ-037-029 routing)"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-043", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-043", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -293,7 +289,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-043", "verb": "applies", "to": "REQ-037-031", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-044", "type": "Step", "owner_fr": "FR-037", "title": "System routes the inquiry exclusively to the assigned provider", "attrs": {"prd_ref": "Unified Flow: routes the inquiry exclusively to the assigned provider"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-044", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-044", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -305,7 +301,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-044", "verb": "applies", "to": "REQ-037-069", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-037-045", "type": "Step", "owner_fr": "FR-037", "title": "System distributes the inquiry normally", "attrs": {"prd_ref": "Unified Flow: distributes the inquiry normally"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-037-045", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-037-045", "verb": "at", "to": "STG-monitoring-03-conversion", "attrs": {}}
@@ -395,3 +391,7 @@ operations:
   - {"op": "add_edge", "from": "STP-037-037", "verb": "next", "to": "STP-037-004", "attrs": {"label": "conversion blocked, case stays active", "back": true}}
   # waits on: no System Actor (next link touches a held step)
   - {"op": "add_edge", "from": "STP-037-042", "verb": "next", "to": "STP-037-004", "attrs": {"label": "draft kept, monitoring stays active", "back": true}}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-monitoring-03-conversion"}

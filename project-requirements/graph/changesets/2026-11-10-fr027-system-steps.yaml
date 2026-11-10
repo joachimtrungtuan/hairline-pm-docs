@@ -1,9 +1,9 @@
-reason: "FR-027 system Steps released from 2026-11-10-fr027-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr027-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-027 system Steps released from 2026-11-10-fr027-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr027-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-004", "type": "Step", "owner_fr": "FR-027", "title": "System publishes the version, marks it current and archives the previous version", "attrs": {"prd_ref": "Main Flow: Admin Publishes New Legal Version, step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-004", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-004", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -19,7 +19,7 @@ operations:
   - {"op": "add_edge", "from": "STP-027-004", "verb": "applies", "to": "REQ-027-050", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-005", "type": "Step", "owner_fr": "FR-027", "title": "System records the audit entry and notifies the Admin", "attrs": {"prd_ref": "Main Flow: Admin Publishes New Legal Version, step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-005", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-005", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -31,7 +31,7 @@ operations:
   - {"op": "add_edge", "from": "STP-027-005", "verb": "applies", "to": "REQ-027-022", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-006", "type": "Step", "owner_fr": "FR-027", "title": "System triggers user acceptance prompts from the configured scope", "attrs": {"prd_ref": "Main Flow: Admin Publishes New Legal Version, step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-006", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-006", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -49,7 +49,7 @@ operations:
   - {"op": "add_edge", "from": "STP-027-005", "verb": "next", "to": "STP-027-006", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-010", "type": "Step", "owner_fr": "FR-027", "title": "System shows the current legal documents requiring acceptance", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-010", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-010", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
@@ -58,36 +58,12 @@ operations:
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-010", "verb": "applies", "to": "REQ-027-033", "attrs": {}}
   # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-027-013", "type": "Step", "owner_fr": "FR-027", "title": "System records the acceptance with user, document type, version, timestamp and locale", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 3"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "done by", "to": "ACT-system"}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-005", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-009", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-036", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-038", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-027-014", "type": "Step", "owner_fr": "FR-027", "title": "System resumes normal access without further prompts until the next required version", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 4"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-027-014", "verb": "done by", "to": "ACT-system"}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-014", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-014", "verb": "applies", "to": "REQ-027-035", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-027-013", "verb": "next", "to": "STP-027-014", "attrs": {}}
-  # waits on: no System Actor
   - {"op": "add_node", "id": "FLW-027-user-accepts", "type": "Flow", "title": "User accepts a new legal version", "attrs": {"kind": "main", "description": "Patient or provider user signs in after a required version is published, reviews and accepts it, and carries on.", "prd_ref": "Main Flow: User Accepts New Version"}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "FLW-027-user-accepts", "verb": "starts at", "to": "STP-027-010", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-020", "type": "Step", "owner_fr": "FR-027", "title": "System schedules activation of the new version", "attrs": {"prd_ref": "Alternative Flow A1: Scheduled Effective Date, step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-020", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-020", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -97,7 +73,7 @@ operations:
   - {"op": "add_edge", "from": "STP-027-020", "verb": "applies", "to": "REQ-027-048", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-021", "type": "Step", "owner_fr": "FR-027", "title": "System makes the version current on the effective date and prompts begin", "attrs": {"prd_ref": "Alternative Flow A1: Scheduled Effective Date, step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-021", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-021", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -115,7 +91,7 @@ operations:
   - {"op": "add_edge", "from": "FLW-027-a1-scheduled-date", "verb": "starts at", "to": "STP-027-020", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-030", "type": "Step", "owner_fr": "FR-027", "title": "System marks the previous version current again", "attrs": {"prd_ref": "Alternative Flow B1: Publication Reversion, step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-030", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-030", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
@@ -125,7 +101,7 @@ operations:
   - {"op": "add_edge", "from": "STP-027-030", "verb": "applies", "to": "REQ-027-029", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-027-031", "type": "Step", "owner_fr": "FR-027", "title": "System updates the prompts and records an audit entry", "attrs": {"prd_ref": "Alternative Flow B1: Publication Reversion, step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-027-031", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-027-031", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}

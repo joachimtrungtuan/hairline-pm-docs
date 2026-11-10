@@ -1,12 +1,9 @@
-reason: "FR-016 system Steps released from 2026-11-10-fr016-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr016-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-016 system Steps released from 2026-11-10-fr016-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr016-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-patient-03-active"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-patient-05-deleted"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-002", "type": "Step", "owner_fr": "FR-016", "title": "System displays the patient list with default filters", "attrs": {"prd_ref": "Main Flow: Patient Account Search and Overview step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-002", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-002", "verb": "at", "to": "STG-patient-03-active"}
@@ -30,7 +27,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-003", "verb": "applies", "to": "REQ-016-087"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-004", "type": "Step", "owner_fr": "FR-016", "title": "System executes the search and returns matching patient records", "attrs": {"prd_ref": "Main Flow: Patient Account Search and Overview step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-004", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-004", "verb": "at", "to": "STG-patient-03-active"}
@@ -40,7 +37,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-004", "verb": "applies", "to": "REQ-016-001"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-005", "type": "Step", "owner_fr": "FR-016", "title": "System displays results in a paginated list with key information", "attrs": {"prd_ref": "Main Flow: Patient Account Search and Overview step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-005", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-005", "verb": "at", "to": "STG-patient-03-active"}
@@ -60,7 +57,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-006", "verb": "applies", "to": "REQ-016-093"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-007", "type": "Step", "owner_fr": "FR-016", "title": "System loads the patient detail view with tabbed sections", "attrs": {"prd_ref": "Main Flow: Patient Account Search and Overview step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-007", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-007", "verb": "at", "to": "STG-patient-03-active"}
@@ -78,7 +75,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-008", "verb": "on", "to": "SCR-016-02"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-012", "type": "Step", "owner_fr": "FR-016", "title": "System displays chronological milestone cards", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-012", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-012", "verb": "at", "to": "STG-patient-03-active"}
@@ -90,7 +87,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-012", "verb": "applies", "to": "REQ-016-112"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-013", "type": "Step", "owner_fr": "FR-016", "title": "System shows status, timestamp and an Open Case Detail link on each milestone", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-013", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-013", "verb": "at", "to": "STG-patient-03-active"}
@@ -102,7 +99,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-013", "verb": "applies", "to": "REQ-016-113"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-022", "type": "Step", "owner_fr": "FR-016", "title": "System requests admin justification for access", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-022", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-022", "verb": "at", "to": "STG-patient-03-active"}
@@ -122,7 +119,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-023", "verb": "applies", "to": "REQ-016-014"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-024", "type": "Step", "owner_fr": "FR-016", "title": "System logs access with timestamp, admin ID and justification", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-024", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-024", "verb": "at", "to": "STG-patient-03-active"}
@@ -132,7 +129,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-024", "verb": "applies", "to": "REQ-016-015"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-025", "type": "Step", "owner_fr": "FR-016", "title": "System displays the medical data", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-025", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-025", "verb": "at", "to": "STG-patient-03-active"}
@@ -150,7 +147,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-026", "verb": "on", "to": "SCR-016-04"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-027", "type": "Step", "owner_fr": "FR-016", "title": "System marks the medical data access in the audit log", "attrs": {"prd_ref": "Alternative Flow A2 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-027", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-027", "verb": "at", "to": "STG-patient-03-active"}
@@ -160,7 +157,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-027", "verb": "applies", "to": "REQ-016-015"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-032", "type": "Step", "owner_fr": "FR-016", "title": "System displays the complete payment history", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-032", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-032", "verb": "at", "to": "STG-patient-03-active"}
@@ -194,7 +191,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-034", "verb": "applies", "to": "REQ-016-020"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-041", "type": "Step", "owner_fr": "FR-016", "title": "System displays \"No patients found matching your search criteria\"", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-041", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-041", "verb": "at", "to": "STG-patient-03-active"}
@@ -204,7 +201,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-041", "verb": "applies", "to": "REQ-016-046"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-042", "type": "Step", "owner_fr": "FR-016", "title": "System suggests broadening the search", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-042", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-042", "verb": "at", "to": "STG-patient-03-active"}
@@ -236,7 +233,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-044", "verb": "applies", "to": "REQ-016-183"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-055", "type": "Step", "owner_fr": "FR-016", "title": "System displays a confirmation dialog with action summary, patient impact and justification field", "attrs": {"prd_ref": "Main Flow: Manual Patient Intervention step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-055", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-055", "verb": "at", "to": "STG-patient-03-active"}
@@ -260,7 +257,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-057", "verb": "applies", "to": "REQ-016-020"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-058", "type": "Step", "owner_fr": "FR-016", "title": "System executes the action, logs it in the audit trail and notifies the patient", "attrs": {"prd_ref": "Main Flow: Manual Patient Intervention step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-058", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-058", "verb": "at", "to": "STG-patient-03-active"}
@@ -272,7 +269,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-058", "verb": "applies", "to": "REQ-016-027"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-059", "type": "Step", "owner_fr": "FR-016", "title": "System displays \"Action completed successfully\"", "attrs": {"prd_ref": "Main Flow: Manual Patient Intervention step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-059", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-059", "verb": "at", "to": "STG-patient-03-active"}
@@ -286,7 +283,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-060", "verb": "at", "to": "STG-patient-03-active"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-063", "type": "Step", "owner_fr": "FR-016", "title": "System displays the password reset confirmation dialog", "attrs": {"prd_ref": "Alternative Flow A4 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-063", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-063", "verb": "at", "to": "STG-patient-03-active"}
@@ -308,7 +305,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-065", "verb": "at", "to": "STG-patient-03-active"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-066", "type": "Step", "owner_fr": "FR-016", "title": "System generates a password reset token", "attrs": {"prd_ref": "Alternative Flow A4 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-066", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-066", "verb": "at", "to": "STG-patient-03-active"}
@@ -316,7 +313,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-066", "verb": "applies", "to": "REQ-016-050"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-067", "type": "Step", "owner_fr": "FR-016", "title": "System sends the reset email with a 6-digit OTP to the patient", "attrs": {"prd_ref": "Alternative Flow A4 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-067", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-067", "verb": "at", "to": "STG-patient-03-active"}
@@ -326,7 +323,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-067", "verb": "applies", "to": "REQ-016-008"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-068", "type": "Step", "owner_fr": "FR-016", "title": "System logs the admin action in the audit trail", "attrs": {"prd_ref": "Alternative Flow A4 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-068", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-068", "verb": "at", "to": "STG-patient-03-active"}
@@ -334,13 +331,13 @@ operations:
   - {"op": "add_edge", "from": "STP-016-068", "verb": "applies", "to": "REQ-016-007"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-069", "type": "Step", "owner_fr": "FR-016", "title": "System displays \"Password reset email sent to patient\"", "attrs": {"prd_ref": "Alternative Flow A4 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-069", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-069", "verb": "at", "to": "STG-patient-03-active"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-075", "type": "Step", "owner_fr": "FR-016", "title": "System displays the suspension warning", "attrs": {"prd_ref": "Alternative Flow A6 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-075", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-075", "verb": "at", "to": "STG-patient-03-active"}
@@ -374,7 +371,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-078", "verb": "applies", "to": "REQ-016-082"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-079", "type": "Step", "owner_fr": "FR-016", "title": "System immediately revokes patient authentication tokens", "attrs": {"prd_ref": "Alternative Flow A6 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-079", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-079", "verb": "at", "to": "STG-patient-03-active"}
@@ -382,7 +379,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-079", "verb": "applies", "to": "REQ-016-053"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-080", "type": "Step", "owner_fr": "FR-016", "title": "System cancels each active booking through the FR-006 admin booking cancellation", "attrs": {"prd_ref": "Alternative Flow A6 step 10", "handoff_to": "STP-006-301"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-080", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-080", "verb": "at", "to": "STG-main-04-booking"}
@@ -394,7 +391,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-080", "verb": "applies", "to": "REQ-016-071"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-081", "type": "Step", "owner_fr": "FR-016", "title": "System sends the suspension notification with appeal process information", "attrs": {"prd_ref": "Alternative Flow A6 step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-081", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-081", "verb": "at", "to": "STG-patient-03-active"}
@@ -402,7 +399,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-081", "verb": "applies", "to": "REQ-016-054"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-082", "type": "Step", "owner_fr": "FR-016", "title": "System logs the suspension in the audit trail with full justification", "attrs": {"prd_ref": "Alternative Flow A6 step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-082", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-082", "verb": "at", "to": "STG-patient-03-active"}
@@ -410,7 +407,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-082", "verb": "applies", "to": "REQ-016-007"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-096", "type": "Step", "owner_fr": "FR-016", "title": "System links the outcome to the request, marks it Resolved or Declined and logs the action on Screen 7", "attrs": {"prd_ref": "Alternative Flow A8 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-096", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-096", "verb": "at", "to": "STG-main-04-booking"}
@@ -422,7 +419,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-096", "verb": "applies", "to": "REQ-016-178"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-105", "type": "Step", "owner_fr": "FR-016", "title": "System records the resolution reason and audit event, then clears the marker", "attrs": {"prd_ref": "Alternative Flow A7 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-105", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-105", "verb": "at", "to": "STG-patient-03-active"}
@@ -434,7 +431,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-105", "verb": "applies", "to": "REQ-016-107"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-116", "type": "Step", "owner_fr": "FR-016", "title": "System executes the deletion workflow as a soft delete with anonymization", "attrs": {"prd_ref": "Alternative Flow B5 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-116", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-116", "verb": "at", "to": "STG-patient-05-deleted"}
@@ -444,7 +441,7 @@ operations:
   - {"op": "add_edge", "from": "STP-016-116", "verb": "applies", "to": "REQ-016-172"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-016-117", "type": "Step", "owner_fr": "FR-016", "title": "System generates a data deletion certificate for audit", "attrs": {"prd_ref": "Alternative Flow B5 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-016-117", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-117", "verb": "at", "to": "STG-patient-05-deleted"}
@@ -570,3 +567,5 @@ operations:
   - {"op": "add_edge", "from": "STP-016-094", "verb": "next", "to": "STP-016-096"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-016-095", "verb": "next", "to": "STP-016-096"}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-patient-05-deleted"}

@@ -3,12 +3,16 @@
 reason: "FR-033 completeness fixes held (D37 review step 1): Steps the PRD assigns to the system, the human Steps reachable only through them, and every next edge that touches them. Held until the user decides how the graph models a System Actor."
 by: tester
 operations:
-  # 2026-11-10 D44: 356 ops that waited only on the system Actor moved to 2026-11-10-fr033-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 356 ops that waited only on the system Actor left this file (356 moved to 2026-11-10-fr033-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
   - {"op": "add_node", "id": "STP-033-083", "type": "Step", "title": "Providers see the updated status on the status page", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 10"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-033-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-033-083", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-083", "verb": "applies", "to": "REQ-033-033"}
   # waits on: no System Actor (next edges touching a held system step)
+  # waits on: endpoint STP-033-083 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-033-082", "verb": "next", "to": "STP-033-083"}
   # waits on: whether the External Dependencies failure-handling lines (PRD 1140, 1145, 1150) are Rules; the migration left them out (controller moved these from the fixes file)
   - {"op": "add_node", "id": "REQ-033-089", "type": "Rule", "owner_fr": "FR-033", "title": "Media storage failure: queue uploads, cached content, notify admin", "attrs": {"statement": "If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues", "rationale": "Dependencies, External Dependencies, Media Storage Service failure handling (PRD line 1140)."}}

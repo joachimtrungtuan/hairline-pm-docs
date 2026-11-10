@@ -1,4 +1,4 @@
 reason: "FR-024 completeness fixes held for a user decision: System-performed Steps (no System Actor in the graph) and the Steps reachable only through them, with their next links. Apply after 2026-11-10-fr024-completeness-fixes.yaml."
 by: tester
-operations:
 operations: []
+  # 2026-11-10 D44: 462 ops that waited only on the system Actor left this file (462 moved to 2026-11-10-fr024-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.

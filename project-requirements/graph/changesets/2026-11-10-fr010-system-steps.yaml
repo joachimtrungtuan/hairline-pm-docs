@@ -1,9 +1,10 @@
-reason: "FR-010 system Steps released from 2026-11-10-fr010-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr010-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-010 system Steps released from 2026-11-10-fr010-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr010-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
+  # waits on: no System Actor. System Steps carry no done by edge until a System Actor exists; every Step after a held Step is held with it.
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-020", "type": "Step", "title": "System moves the case from Confirmed to In Progress and notifies the patient", "owner_fr": "FR-010", "attrs": {"prd_ref": "Main Flow step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-020", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-010-021", "type": "Step", "title": "Provider adds the beginning note and the initial head scan photo set", "owner_fr": "FR-010", "attrs": {"prd_ref": "Main Flow step 7"}}
@@ -17,53 +18,53 @@ operations:
   - {"op": "add_node", "id": "STP-010-025", "type": "Step", "title": "Provider saves the End of Treatment record", "owner_fr": "FR-010", "attrs": {"prd_ref": "Main Flow step 13"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-026", "type": "Step", "title": "System signals completion to FR-011 and sends post-op instructions and medication to the patient", "owner_fr": "FR-010", "attrs": {"prd_ref": "Main Flow step 14", "handoff_to": "FR-011: Main Flow step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-026", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-027", "type": "Step", "title": "System records the check-in time and moves the case to In Progress early", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-027", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-028", "type": "Step", "title": "System rejects a change that touches money, provider or appointment", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-028", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-029", "type": "Step", "title": "System saves the change, audits it and emits treatment.plan_changed", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow A2 steps 5-6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-029", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-030", "type": "Step", "title": "System notifies the admin of the no-show", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B1 step 6", "handoff_to": "FR-006: Change Appointment (Screen 8) or Cancel Booking (Screen 9)"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-030", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-031", "type": "Step", "title": "System notifies the admin of the medical postponement", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B2 step 4", "handoff_to": "FR-006: Change Appointment (Screen 8) or Cancel Booking (Screen 9)"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-031", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-032", "type": "Step", "title": "System notifies the admin that the interrupted case stays In Progress", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B3 step 6", "handoff_to": "FR-006: Cancel Booking (Screen 9)"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-032", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-033", "type": "Step", "title": "System sends the closure reason and note to the admin", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-033", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-010-034", "type": "Step", "title": "Admin reviews the closed case and cancels it through FR-006", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B4 step 4", "handoff_to": "FR-006: Cancel Booking (Screen 9) or Alternative Flow B6"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-035", "type": "Step", "title": "Provider suspension or deactivation becomes effective", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B5 step 1", "handoff_from": "FR-015: Alternative Flow A5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-035", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-036", "type": "Step", "title": "System keeps the case In Progress and records the cause and supportRequired", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B5 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-036", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-037", "type": "Step", "title": "System blocks documentation actions and keeps the records read-only", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B5 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-037", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-010-038", "type": "Step", "title": "System notifies the patient and admin", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B5 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-010-038", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (reachable only through a held system Step)
   - {"op": "add_node", "id": "STP-010-039", "type": "Step", "title": "Admin resolves the case on FR-006 Screen 11", "owner_fr": "FR-010", "attrs": {"prd_ref": "Alternative Flow B5 step 5", "handoff_to": "FR-006: Alternative Flow B7 and FR-011 Screen 19"}}

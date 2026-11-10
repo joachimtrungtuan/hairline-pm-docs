@@ -1,7 +1,7 @@
 reason: "FR-009 completeness held operations: Change Team Member Role and Remove Team Member main flows, held until the user rules on who performs them (Needs user decision 3 in plans/reports/tester-261110-fr009-completeness.md). Apply after 2026-11-10-fr009-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 61 ops that waited only on the system Actor moved to 2026-11-10-fr009-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 61 ops that waited only on the system Actor left this file (61 moved to 2026-11-10-fr009-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # Waits on Needs user decision 3 (who performs role change and removal: "authorized actor" and "Owner/Admin" are modelled as Owner only)
   - {"op": "add_node", "id": "STP-009-013", "type": "Step", "title": "Authorized actor views the team management dashboard to change a role", "owner_fr": "FR-009", "attrs": {"prd_ref": "Main Flow Change Role step 1"}}
   - {"op": "add_edge", "from": "STP-009-013", "verb": "done by", "to": "ACT-provider-owner"}

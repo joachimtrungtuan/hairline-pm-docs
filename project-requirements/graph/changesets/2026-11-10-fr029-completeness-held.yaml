@@ -1,7 +1,7 @@
 reason: "FR-029 completeness fixes held: Steps the PRD says the system performs (no System Actor exists), every Step reachable only through them, the tiered-installment flow and its Rule placement, and the links that touch them. Apply only after the decisions named per operation. See the report, Needs user decision."
 by: tester
 operations:
-  # 2026-11-10 D44: 687 ops that waited only on the system Actor moved to 2026-11-10-fr029-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 630 ops that waited only on the system Actor left this file (630 moved to 2026-11-10-fr029-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: tiered installments vs one global configuration
   - {"op": "add_node", "id": "FLW-029-alt-tiered-installments", "type": "Flow", "title": "Alternative Flow A4: different installment options for different booking amounts", "attrs": {"kind": "alternative", "description": "Alternative Flow A4: different installment options for different booking amounts", "prd_ref": "Alternative Flow A4"}}
   # waits on: tiered installments vs one global configuration
@@ -19,49 +19,174 @@ operations:
   # waits on: tiered installments vs one global configuration and no System Actor
   - {"op": "add_node", "id": "STP-029-109", "type": "Step", "title": "System applies the installment options for the booking amount at checkout", "owner_fr": "FR-029", "attrs": {"prd_ref": "Alternative Flow A4 step 7"}}
   # waits on: no System Actor
+  # waits on: external-service question (an external service performs this Step)
   - {"op": "add_node", "id": "STP-029-112", "type": "Step", "title": "Stripe API returns an authentication error or connection timeout", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 3"}}
   # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-113", "type": "Step", "title": "System displays the unable-to-connect error message", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 4"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-114", "type": "Step", "title": "System highlights the publishable key, secret key and webhook secret fields", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 5"}}
+  # waits on: no System Actor (reachable only through a held system Step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-115", "type": "Step", "title": "Admin corrects the credentials or troubleshoots the connection", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 6"}}
+  # waits on: no System Actor (reachable only through a held system Step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-116", "type": "Step", "title": "Admin clicks Retry Connection", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 7"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-117", "type": "Step", "title": "System re-attempts the credential validation", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B1 step 8"}}
+  # waits on: no System Actor
+  # waits on: external-service question (an external service performs this Step)
   - {"op": "add_node", "id": "STP-029-119", "type": "Step", "title": "Source API returns an error or connection timeout", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 2"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-120", "type": "Step", "title": "System logs the sync failure with the pair, source and error details", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 3"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-121", "type": "Step", "title": "System keeps using the last successfully fetched rate", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 4"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-122", "type": "Step", "title": "System turns the pair status indicator red on the pair list", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 5"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-123", "type": "Step", "title": "System sends the sync-failed alert to the admin with the cached rate time", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 6"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-124", "type": "Step", "title": "System retries the sync after exponential backoff", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 7"}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-125", "type": "Step", "title": "System turns the source status indicator red when the source stays down", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 8"}}
+  # waits on: no System Actor (flow starts at a system Step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-029-126", "type": "Step", "title": "Admin investigates the source, fixes credentials or switches affected pairs to another source or manual mode", "owner_fr": "FR-029", "attrs": {"prd_ref": "Boundary Flow B2 step 9"}}
   # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint FLW-029-alt-tiered-installments stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "FLW-029-alt-tiered-installments", "verb": "starts at", "to": "STP-029-103"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-103 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-103", "verb": "done by", "to": "ACT-platform-admin"}
   - {"op": "add_edge", "from": "STP-029-103", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-103", "verb": "on", "to": "SCR-029-05"}
   - {"op": "add_edge", "from": "STP-029-103", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-103", "verb": "next", "to": "STP-029-104"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-104 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-104", "verb": "done by", "to": "ACT-platform-admin"}
   - {"op": "add_edge", "from": "STP-029-104", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-104", "verb": "on", "to": "SCR-029-05"}
   - {"op": "add_edge", "from": "STP-029-104", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-104", "verb": "next", "to": "STP-029-105"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-105 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-105", "verb": "done by", "to": "ACT-platform-admin"}
   - {"op": "add_edge", "from": "STP-029-105", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-105", "verb": "on", "to": "SCR-029-05"}
   - {"op": "add_edge", "from": "STP-029-105", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-105", "verb": "next", "to": "STP-029-106"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-106 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-106", "verb": "done by", "to": "ACT-platform-admin"}
   - {"op": "add_edge", "from": "STP-029-106", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-106", "verb": "on", "to": "SCR-029-05"}
   - {"op": "add_edge", "from": "STP-029-106", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-106", "verb": "next", "to": "STP-029-107"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-107 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-107", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-107", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-107", "verb": "next", "to": "STP-029-108"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-108 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-108", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-108", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-108", "verb": "applies", "to": "REQ-029-024"}
   - {"op": "add_edge", "from": "STP-029-108", "verb": "next", "to": "STP-029-109"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-109 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-109", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-109", "verb": "applies", "to": "REQ-029-107"}
   - {"op": "add_edge", "from": "STP-029-109", "verb": "applies", "to": "REQ-029-021"}
   # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-112 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-111", "verb": "next", "to": "STP-029-112"}
   - {"op": "add_edge", "from": "STP-029-112", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-112", "verb": "applies", "to": "REQ-029-003"}
   - {"op": "add_edge", "from": "STP-029-112", "verb": "next", "to": "STP-029-113"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-113 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-113", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-113", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-113", "verb": "applies", "to": "REQ-029-067"}
+  - {"op": "add_edge", "from": "STP-029-113", "verb": "next", "to": "STP-029-114"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-114 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-114", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-114", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-114", "verb": "applies", "to": "REQ-029-067"}
+  - {"op": "add_edge", "from": "STP-029-114", "verb": "next", "to": "STP-029-115"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-115 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-115", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-115", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-115", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-115", "verb": "next", "to": "STP-029-116"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-116 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "on", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "next", "to": "STP-029-117"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-117 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-117", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-117", "verb": "applies", "to": "REQ-029-003"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-119 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-029-118", "verb": "next", "to": "STP-029-119"}
   - {"op": "add_edge", "from": "STP-029-119", "verb": "at", "to": "STG-main-05-payment"}
   - {"op": "add_edge", "from": "STP-029-119", "verb": "applies", "to": "REQ-029-012"}
   - {"op": "add_edge", "from": "STP-029-119", "verb": "next", "to": "STP-029-120"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-120 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-120", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-120", "verb": "applies", "to": "REQ-029-012"}
+  - {"op": "add_edge", "from": "STP-029-120", "verb": "applies", "to": "REQ-029-095"}
+  - {"op": "add_edge", "from": "STP-029-120", "verb": "next", "to": "STP-029-121"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-121 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-121", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-121", "verb": "applies", "to": "REQ-029-012"}
+  - {"op": "add_edge", "from": "STP-029-121", "verb": "next", "to": "STP-029-122"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-122 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-122", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-122", "verb": "on", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "STP-029-122", "verb": "applies", "to": "REQ-029-012"}
+  - {"op": "add_edge", "from": "STP-029-122", "verb": "applies", "to": "REQ-029-087"}
+  - {"op": "add_edge", "from": "STP-029-122", "verb": "next", "to": "STP-029-123"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-123 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-123", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-123", "verb": "applies", "to": "REQ-029-095"}
+  - {"op": "add_edge", "from": "STP-029-123", "verb": "applies", "to": "REQ-029-035"}
+  - {"op": "add_edge", "from": "STP-029-123", "verb": "next", "to": "STP-029-124"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-124 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-124", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-124", "verb": "applies", "to": "REQ-029-095"}
+  - {"op": "add_edge", "from": "STP-029-124", "verb": "next", "to": "STP-029-125"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-125 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-125", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-125", "verb": "on", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "STP-029-125", "verb": "applies", "to": "REQ-029-081"}
+  - {"op": "add_edge", "from": "STP-029-125", "verb": "next", "to": "STP-029-126"}
+  # waits on: no System Actor (edge into a held Step)
+  # waits on: endpoint STP-029-126 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "on", "to": "SCR-029-02"}
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "applies", "to": "REQ-029-090"}
   # waits on: tiered installments vs one global configuration (REQ-029-107 has no placement until the decision)
   - {"op": "add_edge", "from": "REQ-029-107", "verb": "applies to", "to": "ENT-split-payment-config"}

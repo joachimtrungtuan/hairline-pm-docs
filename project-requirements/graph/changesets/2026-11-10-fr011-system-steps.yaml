@@ -1,25 +1,22 @@
-reason: "FR-011 system Steps released from 2026-11-10-fr011-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr011-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-011 system Steps released from 2026-11-10-fr011-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr011-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-aftercare-01-recovery-plan"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-aftercare-02-follow-up"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-004", "type": "Step", "title": "System generates the plan and dashboard and notifies the patient and aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 1 Main Flow step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-004", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-004", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-004", "verb": "applies", "to": "REQ-011-055"}
   - {"op": "add_edge", "from": "STP-011-004", "verb": "applies", "to": "REQ-011-017"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-006", "type": "Step", "title": "System moves the patient status to Completed after the instructions are delivered", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-006", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-006", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-006", "verb": "applies", "to": "REQ-011-056"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-011", "type": "Step", "title": "System processes the payment through FR-007 and moves the request to Pending Assignment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 2", "handoff_to": "FR-007: payment processing of the aftercare order"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-011", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-011", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-011", "verb": "applies", "to": "REQ-011-063"}
@@ -40,7 +37,7 @@ operations:
   - {"op": "add_edge", "from": "STP-011-013", "verb": "applies", "to": "REQ-011-066"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-014", "type": "Step", "title": "System sends the activation notice and gives the patient dashboard access", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Main Flow step 5; Workflow 2b Main Flow step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-014", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-014", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-014", "verb": "applies", "to": "REQ-011-049"}
@@ -51,32 +48,32 @@ operations:
   - {"op": "add_edge", "from": "STP-011-015", "verb": "applies", "to": "REQ-011-049"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-017", "type": "Step", "title": "System expires the request after 48 hours without successful payment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B1; Workflow 2b Alternative Flow B1b"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-017", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-017", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-017", "verb": "applies", "to": "REQ-011-050"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-019", "type": "Step", "title": "System refunds the payment automatically", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-019", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-019", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-019", "verb": "applies", "to": "REQ-011-037"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-024", "type": "Step", "title": "System processes the payment through FR-007 and starts automatic assignment", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Main Flow step 2", "handoff_to": "FR-007: payment processing of the aftercare order"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-024", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-024", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-024", "verb": "applies", "to": "REQ-011-063"}
   - {"op": "add_edge", "from": "STP-011-024", "verb": "applies", "to": "REQ-011-054"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-025", "type": "Step", "title": "System assigns the original treatment provider or the Hairline aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Main Flow step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-025", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-025", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-025", "verb": "applies", "to": "REQ-011-054"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-026", "type": "Step", "title": "System assigns the case to the Hairline aftercare team after the original provider declines", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 2b Alternative Flow B1a"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-026", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-026", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
   - {"op": "add_edge", "from": "STP-011-026", "verb": "applies", "to": "REQ-011-054"}
@@ -90,13 +87,13 @@ operations:
   - {"op": "add_edge", "from": "STP-011-027", "verb": "applies", "to": "REQ-011-066"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-031", "type": "Step", "title": "System validates the scan quality and stores the scan for the aftercare team", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-031", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-031", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-031", "verb": "applies", "to": "REQ-011-059"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-032", "type": "Step", "title": "System processes the questionnaire responses and flags concerning answers", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-032", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-032", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-032", "verb": "applies", "to": "REQ-011-060"}
@@ -108,7 +105,7 @@ operations:
   - {"op": "add_edge", "from": "STP-011-033", "verb": "applies", "to": "REQ-011-060"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-034", "type": "Step", "title": "System tracks task completion and calculates the overall progress", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Main Flow steps 1 and 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-034", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-034", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-034", "verb": "applies", "to": "REQ-011-027"}
@@ -121,7 +118,7 @@ operations:
   - {"op": "add_edge", "from": "STP-011-035", "verb": "applies", "to": "REQ-011-027"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-036", "type": "Step", "title": "System sends a reminder and flags the task Overdue after 24 hours", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-036", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-036", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-036", "verb": "applies", "to": "REQ-011-026"}
@@ -132,7 +129,7 @@ operations:
   - {"op": "add_edge", "from": "STP-011-037", "verb": "applies", "to": "REQ-011-026"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-038", "type": "Step", "title": "System flags the case Urgent for concerning symptoms", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-038", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-038", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-038", "verb": "applies", "to": "REQ-011-028"}
@@ -144,13 +141,13 @@ operations:
   - {"op": "add_edge", "from": "STP-011-039", "verb": "applies", "to": "REQ-011-029"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-040", "type": "Step", "title": "System triggers the escalation workflow", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-040", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-040", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-040", "verb": "applies", "to": "REQ-011-028"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-011-052", "type": "Step", "title": "System records the provider-status cause and sets the supportRequired marker", "owner_fr": "FR-011", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D4", "handoff_from": "FR-015: Alternative Flow A5, provider suspension or deactivation becomes effective"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-011-052", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-011-052", "verb": "at", "to": "STG-aftercare-02-follow-up"}
   - {"op": "add_edge", "from": "STP-011-052", "verb": "applies", "to": "REQ-011-014"}
@@ -195,3 +192,6 @@ operations:
   - {"op": "add_edge", "from": "FLW-011-w3-concerning-symptoms", "verb": "starts at", "to": "STP-011-038"}
   - {"op": "add_node", "id": "FLW-011-w4-provider-suspended", "type": "Flow", "title": "Workflow 4 Alternative Flow D4: provider suspended or deactivated", "attrs": {"kind": "alternative", "description": "Workflow 4 Alternative Flow D4: provider suspended or deactivated", "prd_ref": "Workflow 4 Alternative Flow D4"}}
   - {"op": "add_edge", "from": "FLW-011-w4-provider-suspended", "verb": "starts at", "to": "STP-011-052"}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-aftercare-02-follow-up"}

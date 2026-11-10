@@ -1,10 +1,11 @@
-reason: "FR-035 system Steps released from 2026-11-10-fr035-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr035-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-035 system Steps released from 2026-11-10-fr035-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr035-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-002", "type": "Step", "owner_fr": "FR-035", "title": "System shows the Hub with search, links and emergency contact", "attrs": {"prd_ref": "Main Flow step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-002", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-002", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -23,8 +24,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-003", "verb": "on", "to": "SCR-035-01", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-004", "type": "Step", "owner_fr": "FR-035", "title": "System shows the Help Center Browser with four content type cards", "attrs": {"prd_ref": "Main Flow step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-004", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-004", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -43,8 +45,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-005", "verb": "on", "to": "SCR-035-02", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-006", "type": "Step", "owner_fr": "FR-035", "title": "System shows the content list for the selected type", "attrs": {"prd_ref": "Main Flow step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-006", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-006", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -63,8 +66,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-007", "verb": "on", "to": "SCR-035-02", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-008", "type": "Step", "owner_fr": "FR-035", "title": "System shows the content detail with Was this helpful and related content", "attrs": {"prd_ref": "Main Flow step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-008", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-008", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -85,8 +89,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-009", "verb": "applies", "to": "REQ-035-007", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-010", "type": "Step", "owner_fr": "FR-035", "title": "System logs aggregated feedback and shows a thank-you confirmation", "attrs": {"prd_ref": "Main Flow step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-010", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-010", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -97,16 +102,18 @@ operations:
   - {"op": "add_edge", "from": "STP-035-010", "verb": "applies", "to": "REQ-035-027", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-012", "type": "Step", "owner_fr": "FR-035", "title": "System searches all published patient-audience content", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-012", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-012", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-012", "verb": "applies", "to": "REQ-035-036", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-013", "type": "Step", "owner_fr": "FR-035", "title": "System shows matching results ranked by relevance", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-013", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-013", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -119,8 +126,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-014", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-022", "type": "Step", "owner_fr": "FR-035", "title": "System shows the Still need help Contact Support prompt", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-022", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-022", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -133,8 +141,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-023", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-024", "type": "Step", "owner_fr": "FR-035", "title": "System shows the Contact Support form", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-024", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-024", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -143,8 +152,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-024", "verb": "applies", "to": "REQ-035-038", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-034", "type": "Step", "owner_fr": "FR-035", "title": "System validates all required fields", "attrs": {"prd_ref": "Alternative Flow A3 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-034", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-034", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -153,8 +163,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-034", "verb": "applies", "to": "REQ-035-009", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-035", "type": "Step", "owner_fr": "FR-035", "title": "System creates the support case in FR-034", "attrs": {"prd_ref": "Alternative Flow A3 step 5", "handoff_to": "FR-034: Workflow A5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-035", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-035", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -165,24 +176,27 @@ operations:
   - {"op": "add_edge", "from": "STP-035-035", "verb": "applies", "to": "REQ-035-056", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-036", "type": "Step", "owner_fr": "FR-035", "title": "System links the case to the patient record through the session", "attrs": {"prd_ref": "Alternative Flow A3 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-036", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-036", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-036", "verb": "applies", "to": "REQ-035-011", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-037", "type": "Step", "owner_fr": "FR-035", "title": "System sends the confirmation email with the case reference number", "attrs": {"prd_ref": "Alternative Flow A3 step 7", "handoff_to": "FR-020: confirmation email with case reference number"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-037", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-037", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-037", "verb": "applies", "to": "REQ-035-055", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-038", "type": "Step", "owner_fr": "FR-035", "title": "System shows the confirmation screen with Case ID and 24-hour message", "attrs": {"prd_ref": "Alternative Flow A3 step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-038", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-038", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -191,8 +205,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-038", "verb": "applies", "to": "REQ-035-054", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-039", "type": "Step", "owner_fr": "FR-035", "title": "System navigates to My Support Tickets", "attrs": {"prd_ref": "Alternative Flow A3 step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-039", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-039", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -201,8 +216,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-039", "verb": "applies", "to": "REQ-035-054", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-042", "type": "Step", "owner_fr": "FR-035", "title": "System shows the support cases with status badges and last activity", "attrs": {"prd_ref": "Alternative Flow A4 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-042", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-042", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -227,8 +243,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-043", "verb": "applies", "to": "REQ-035-047", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-044", "type": "Step", "owner_fr": "FR-035", "title": "System shows Ticket Detail with case info, thread and reply input", "attrs": {"prd_ref": "Alternative Flow A4 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-044", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-044", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -259,8 +276,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-045", "verb": "applies", "to": "REQ-035-066", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-046", "type": "Step", "owner_fr": "FR-035", "title": "System adds the patient reply to the communication thread", "attrs": {"prd_ref": "Alternative Flow A4 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-046", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-046", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -269,16 +287,18 @@ operations:
   - {"op": "add_edge", "from": "STP-035-046", "verb": "applies", "to": "REQ-035-065", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-047", "type": "Step", "owner_fr": "FR-035", "title": "System notifies the assigned admin of the reply", "attrs": {"prd_ref": "Alternative Flow A4 step 7", "handoff_to": "FR-020: support.case_user_reply notification"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-047", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-047", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-047", "verb": "applies", "to": "REQ-035-065", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-054", "type": "Step", "owner_fr": "FR-035", "title": "System adds the reply to the communication thread", "attrs": {"prd_ref": "Alternative Flow A5 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-054", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-054", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -287,8 +307,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-054", "verb": "applies", "to": "REQ-035-065", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-055", "type": "Step", "owner_fr": "FR-035", "title": "System reopens the case to Open status", "attrs": {"prd_ref": "Alternative Flow A5 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-055", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-055", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -307,8 +328,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-056", "verb": "applies", "to": "REQ-035-019", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-062", "type": "Step", "owner_fr": "FR-035", "title": "System validates the required fields", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-062", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-062", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -317,8 +339,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-062", "verb": "applies", "to": "REQ-035-050", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-063", "type": "Step", "owner_fr": "FR-035", "title": "System highlights invalid fields with inline error messages", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-063", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-063", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -337,8 +360,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-064", "verb": "applies", "to": "REQ-035-050", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-072", "type": "Step", "owner_fr": "FR-035", "title": "System fails to load content from the FR-033 API", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-072", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-072", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor
@@ -347,8 +371,9 @@ operations:
   - {"op": "add_edge", "from": "STP-035-072", "verb": "applies", "to": "REQ-035-045", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-035-073", "type": "Step", "owner_fr": "FR-035", "title": "System shows cached content or the temporarily unavailable message", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-035-073", "verb": "done by", "to": "ACT-system"}
+  # done by: none (the PRD assigns this step to the system; the graph has no System Actor)
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-035-073", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
   # waits on: no System Actor

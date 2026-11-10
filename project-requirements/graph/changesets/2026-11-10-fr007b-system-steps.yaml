@@ -1,9 +1,9 @@
-reason: "FR-007B system Steps released from 2026-11-10-fr007b-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr007b-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-007B system Steps released from 2026-11-10-fr007b-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr007b-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-002", "type": "Step", "owner_fr": "FR-007B", "title": "System calculates feasible installment options", "attrs": {"prd_ref": "Main Flow step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-002", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-002", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -11,7 +11,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-002", "verb": "applies", "to": "REQ-007B-003", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-003", "type": "Step", "owner_fr": "FR-007B", "title": "System displays installment options", "attrs": {"prd_ref": "Main Flow step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-003", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-003", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -26,7 +26,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-004", "verb": "applies", "to": "REQ-007B-036", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-005", "type": "Step", "owner_fr": "FR-007B", "title": "System calculates installment amount and shows schedule with dates", "attrs": {"prd_ref": "Main Flow step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-005", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-005", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -41,7 +41,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-006", "verb": "applies", "to": "REQ-007B-043", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-007", "type": "Step", "owner_fr": "FR-007B", "title": "System charges the first installment at checkout", "attrs": {"prd_ref": "Main Flow step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-007", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-007", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -49,35 +49,35 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-007", "verb": "applies", "to": "REQ-007B-048", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-008", "type": "Step", "owner_fr": "FR-007B", "title": "System schedules remaining installments monthly", "attrs": {"prd_ref": "Main Flow step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-008", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-008", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-008", "verb": "applies", "to": "REQ-007B-006", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-009", "type": "Step", "owner_fr": "FR-007B", "title": "System records the booking as Confirmed with plan active", "attrs": {"prd_ref": "Main Flow step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-009", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-009", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-009", "verb": "applies", "to": "REQ-007B-005", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-010", "type": "Step", "owner_fr": "FR-007B", "title": "System sends reminder three days before each installment", "attrs": {"prd_ref": "Main Flow step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-010", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-010", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-010", "verb": "applies", "to": "REQ-007B-014", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-011", "type": "Step", "owner_fr": "FR-007B", "title": "System charges the payment method on the due date", "attrs": {"prd_ref": "Main Flow step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-011", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-011", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-011", "verb": "applies", "to": "REQ-007B-015", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-012", "type": "Step", "owner_fr": "FR-007B", "title": "System updates installment status and sends confirmation", "attrs": {"prd_ref": "Main Flow step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-012", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-012", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -85,7 +85,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-012", "verb": "applies", "to": "REQ-007B-016", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-013", "type": "Step", "owner_fr": "FR-007B", "title": "System repeats reminder, charge and confirmation for each remaining installment", "attrs": {"prd_ref": "Main Flow step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-013", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-013", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -94,7 +94,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-013", "verb": "applies", "to": "REQ-007B-016", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-014", "type": "Step", "owner_fr": "FR-007B", "title": "System marks the plan completed (Fully Paid) when the final installment completes", "attrs": {"prd_ref": "Main Flow step 14"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-014", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-014", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -130,7 +130,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-013", "verb": "next", "to": "STP-007B-010", "attrs": {"label": "installments remain", "back": true}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-102", "type": "Step", "owner_fr": "FR-007B", "title": "System calculates the higher installment amount for the same total", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-102", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-102", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -138,7 +138,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-102", "verb": "applies", "to": "REQ-007B-004", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-103", "type": "Step", "owner_fr": "FR-007B", "title": "System adjusts the payment schedule, cutoff window unchanged", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-103", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-103", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -151,14 +151,14 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-102", "verb": "next", "to": "STP-007B-103", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-303", "type": "Step", "owner_fr": "FR-007B", "title": "System validates and saves the new payment method", "attrs": {"prd_ref": "Alternative Flow A3 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-303", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-303", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-303", "verb": "applies", "to": "REQ-007B-047", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-304", "type": "Step", "owner_fr": "FR-007B", "title": "System applies the new payment method to the remaining installments", "attrs": {"prd_ref": "Alternative Flow A3 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-304", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-304", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -168,77 +168,8 @@ operations:
   # # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-007B-303", "verb": "next", "to": "STP-007B-304", "attrs": {}}
   # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-401", "type": "Step", "owner_fr": "FR-007B", "title": "System detects failure and logs the reason", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-401", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-401", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-012", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-017", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-402", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies the patient of the failed payment", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-402", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-402", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-402", "verb": "applies", "to": "REQ-007B-017", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-403", "type": "Step", "owner_fr": "FR-007B", "title": "System schedules the first retry for the next day", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-403", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-403", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-403", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-404", "type": "Step", "owner_fr": "FR-007B", "title": "System retries after 3 days if the first retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-404", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-404", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-404", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-405", "type": "Step", "owner_fr": "FR-007B", "title": "System retries after 7 days if the second retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-405", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-405", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-405", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-406", "type": "Step", "owner_fr": "FR-007B", "title": "System flags the plan Defaulted if all 3 retries fail", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-406", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-406", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-406", "verb": "applies", "to": "REQ-007B-019", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-407", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies admin of the defaulted plan and overdue booking", "attrs": {"prd_ref": "Alternative Flow B1 step 7"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-407", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-407", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-407", "verb": "applies", "to": "REQ-007B-020", "attrs": {}}
-  # # waits on: no System Actor (reachable only through a held System step)
-  - {"op": "add_node", "id": "STP-007B-408", "type": "Step", "owner_fr": "FR-007B", "title": "Admin reviews and contacts the patient to resolve the payment issue", "attrs": {"prd_ref": "Alternative Flow B1 step 8", "handoff_to": "FR-006: Cancel Booking action (admin cancels with a mandatory reason)"}}
-  - {"op": "add_edge", "from": "STP-007B-408", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-408", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-408", "verb": "applies", "to": "REQ-007B-051", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-401", "verb": "next", "to": "STP-007B-402", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-402", "verb": "next", "to": "STP-007B-403", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-403", "verb": "next", "to": "STP-007B-404", "attrs": {"label": "retry fails"}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-404", "verb": "next", "to": "STP-007B-405", "attrs": {"label": "retry fails"}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-405", "verb": "next", "to": "STP-007B-406", "attrs": {"label": "all 3 retries fail"}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-406", "verb": "next", "to": "STP-007B-407", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-407", "verb": "next", "to": "STP-007B-408", "attrs": {}}
-  # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-502", "type": "Step", "owner_fr": "FR-007B", "title": "System calculates paid installments and the refund per cancellation policy", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-502", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-502", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -251,7 +182,7 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-503", "verb": "applies", "to": "REQ-007B-053", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-504", "type": "Step", "owner_fr": "FR-007B", "title": "System processes the refund based on cancellation timing", "attrs": {"prd_ref": "Alternative Flow B2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-504", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-504", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -259,14 +190,14 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-504", "verb": "applies", "to": "REQ-007B-055", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-505", "type": "Step", "owner_fr": "FR-007B", "title": "System cancels the remaining scheduled installments", "attrs": {"prd_ref": "Alternative Flow B2 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-505", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-505", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-505", "verb": "applies", "to": "REQ-007B-023", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-506", "type": "Step", "owner_fr": "FR-007B", "title": "System records the partial refund outcome on the plan", "attrs": {"prd_ref": "Alternative Flow B2 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-506", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-506", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
@@ -283,77 +214,16 @@ operations:
   - {"op": "add_edge", "from": "STP-007B-505", "verb": "next", "to": "STP-007B-506", "attrs": {}}
   # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-601", "type": "Step", "owner_fr": "FR-007B", "title": "System recalculates the plan after the admin date change", "attrs": {"prd_ref": "Alternative Flow B3 step 1", "handoff_from": "FR-006: Change Appointment action"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-601", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-601", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-601", "verb": "applies", "to": "REQ-007B-060", "attrs": {}}
   # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-602", "type": "Step", "owner_fr": "FR-007B", "title": "System checks whether the new date allows the remaining installments", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-602", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-602", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-602", "verb": "applies", "to": "REQ-007B-061", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-603", "type": "Step", "owner_fr": "FR-007B", "title": "System adjusts installment schedule dates to the new procedure date", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-603", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-603", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-603", "verb": "applies", "to": "REQ-007B-061", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-604", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies the patient that the balance must be paid now or the plan cancelled", "attrs": {"prd_ref": "Alternative Flow B3 step 4"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-604", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-604", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-604", "verb": "applies", "to": "REQ-007B-062", "attrs": {}}
-  # # waits on: no System Actor (reachable only through a held System step)
-  - {"op": "add_node", "id": "STP-007B-605", "type": "Step", "owner_fr": "FR-007B", "title": "Admin collects the remaining balance or cancels the booking", "attrs": {"prd_ref": "Alternative Flow B3 step 5", "handoff_to": "FR-006: Cancel Booking action"}}
-  - {"op": "add_edge", "from": "STP-007B-605", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-605", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-605", "verb": "applies", "to": "REQ-007B-062", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-601", "verb": "next", "to": "STP-007B-602", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-603", "attrs": {"label": "sufficient time"}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-604", "attrs": {"label": "insufficient time"}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-604", "verb": "next", "to": "STP-007B-605", "attrs": {}}
-  # # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007B-701", "type": "Step", "owner_fr": "FR-007B", "title": "System cancels the remaining installments of the original booking", "attrs": {"prd_ref": "Alternative Flow B4 step 1", "handoff_from": "FR-006: Alternative Flow B5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007B-701", "verb": "done by", "to": "ACT-system"}
   # done by: no System Actor exists; add the done by edge once the decision is made
   - {"op": "add_edge", "from": "STP-007B-701", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-701", "verb": "applies", "to": "REQ-007B-027", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007B-701", "verb": "applies", "to": "REQ-007B-023", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-702", "type": "Step", "owner_fr": "FR-007B", "title": "Paid installments become credit toward the replacement booking, unused part refunded", "attrs": {"prd_ref": "Alternative Flow B4 step 2"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-702", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-702", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-702", "verb": "applies", "to": "REQ-007B-027", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007B-703", "type": "Step", "owner_fr": "FR-007B", "title": "Replacement plan takes total, currency and rate from the replacement quote snapshot", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-007B-703", "verb": "done by", "to": "ACT-system"}
-  # done by: no System Actor exists; add the done by edge once the decision is made
-  - {"op": "add_edge", "from": "STP-007B-703", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007B-703", "verb": "applies", "to": "REQ-007B-064", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-701", "verb": "next", "to": "STP-007B-702", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-007B-702", "verb": "next", "to": "STP-007B-703", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "FLW-007b-installment-fails", "type": "Flow", "owner_fr": null, "title": "Installment payment fails", "attrs": {"kind": "alternative", "description": "Installment payment fails", "prd_ref": "Alternative Flow B1"}}
-  - {"op": "add_edge", "from": "FLW-007b-installment-fails", "verb": "starts at", "to": "STP-007B-401", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "FLW-007b-date-change", "type": "Flow", "owner_fr": null, "title": "Procedure date changes after the plan is established", "attrs": {"kind": "alternative", "description": "Procedure date changes after the plan is established", "prd_ref": "Alternative Flow B3"}}
-  - {"op": "add_edge", "from": "FLW-007b-date-change", "verb": "starts at", "to": "STP-007B-601", "attrs": {}}
-  # # waits on: no System Actor
-  - {"op": "add_node", "id": "FLW-007b-provider-fault", "type": "Flow", "owner_fr": null, "title": "Provider fault after acceptance", "attrs": {"kind": "alternative", "description": "Provider fault after acceptance", "prd_ref": "Alternative Flow B4"}}
-  - {"op": "add_edge", "from": "FLW-007b-provider-fault", "verb": "starts at", "to": "STP-007B-701", "attrs": {}}

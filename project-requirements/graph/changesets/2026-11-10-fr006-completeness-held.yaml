@@ -1,6 +1,6 @@
 reason: "FR-006 completeness fixes held for a user decision (tester-261110-fr006-completeness.md): every Step the PRD says the system, Payment Service or Notification Service performs, the human steps reachable only through them, their Flows, next and starts at links, and the booking.scheduled emission at the booking stage. Apply after 2026-11-10-fr006-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 221 ops that waited only on the system Actor moved to 2026-11-10-fr006-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 221 ops that waited only on the system Actor left this file (221 moved to 2026-11-10-fr006-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: decision 5 (stage of the booking.scheduled replacement acceptance, PRD lines 175, 799, 1133)
   - {"op": "add_edge", "from": "STG-main-04-booking", "verb": "emits", "to": "EVT-booking-scheduled"}

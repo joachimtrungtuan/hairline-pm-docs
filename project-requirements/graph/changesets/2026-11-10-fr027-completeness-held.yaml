@@ -1,7 +1,7 @@
 reason: "FR-027 completeness fixes held: system-performed Steps (no System Actor in the graph), the user-acceptance flow whose start Step is system-performed and whose Patient/Provider split is a product decision, and every link touching them."
 by: tester
 operations:
-  # 2026-11-10 D44: 60 ops that waited only on the system Actor moved to 2026-11-10-fr027-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 50 ops that waited only on the system Actor left this file (50 moved to 2026-11-10-fr027-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: Patient and Provider acceptance step split (decision item), and the held start Step
   - {"op": "add_node", "id": "STP-027-011", "type": "Step", "owner_fr": "FR-027", "title": "Patient reviews the content and accepts", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 2"}}
   # waits on: Patient and Provider acceptance step split (decision item), and the held start Step
@@ -26,11 +26,43 @@ operations:
   - {"op": "add_edge", "from": "STP-027-012", "verb": "applies", "to": "REQ-027-009", "attrs": {}}
   # waits on: Patient and Provider acceptance step split (decision item), and the held start Step
   - {"op": "add_edge", "from": "STP-027-012", "verb": "applies", "to": "REQ-027-012", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-027-013", "type": "Step", "owner_fr": "FR-027", "title": "System records the acceptance with user, document type, version, timestamp and locale", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 3"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-005", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-009", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-036", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "applies", "to": "REQ-027-038", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-027-014", "type": "Step", "owner_fr": "FR-027", "title": "System resumes normal access without further prompts until the next required version", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 4"}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-014 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-014", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-014 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-014", "verb": "applies", "to": "REQ-027-035", "attrs": {}}
   # waits on: Patient and Provider acceptance step split (decision item), and the held start Step
   - {"op": "add_edge", "from": "STP-027-010", "verb": "next", "to": "STP-027-011", "attrs": {}}
   # waits on: Patient and Provider acceptance step split (decision item), and the held start Step
   - {"op": "add_edge", "from": "STP-027-010", "verb": "next", "to": "STP-027-012", "attrs": {}}
   # waits on: no System Actor
+  # waits on: endpoint STP-027-011 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-027-011", "verb": "next", "to": "STP-027-013", "attrs": {}}
   # waits on: no System Actor
+  # waits on: endpoint STP-027-012 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-027-012", "verb": "next", "to": "STP-027-013", "attrs": {}}
+  # waits on: no System Actor
+  # waits on: endpoint STP-027-013 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-027-013", "verb": "next", "to": "STP-027-014", "attrs": {}}

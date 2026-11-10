@@ -2,86 +2,119 @@ reason: "FR-020 completeness fixes held for user decisions: the flow model (ever
 by: tester
 operations:
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-001", "type": "Step", "title": "Event is emitted with payload type, actor, subject and recipient id", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 1"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-002", "type": "Step", "title": "Notification Service evaluates preferences and throttling", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 2"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-003", "type": "Step", "title": "Notification Service builds the message from the template and routes it to enabled channels", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 3"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-004", "type": "Step", "title": "Notification Service records the delivery attempt and status and exposes the audit", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 4"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-005", "type": "Step", "title": "SMS path is included when SMS is enabled and the event is urgent, otherwise email and push only", "owner_fr": "FR-020", "attrs": {"prd_ref": "Main Flow step 5"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-006", "type": "Step", "title": "Channel is suppressed and delivery is attempted on the remaining enabled channels", "owner_fr": "FR-020", "attrs": {"prd_ref": "A1 outcome"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-007", "type": "Step", "title": "Notifications are coalesced or deferred per policy and the suppression is recorded in the audit", "owner_fr": "FR-020", "attrs": {"prd_ref": "B1 outcome"}}
   # waits on: no System Actor
+  # waits on: its at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "STP-020-008", "type": "Step", "title": "Delivery is retried with backoff, failover is used when configured, and the status reflects the failure cause", "owner_fr": "FR-020", "attrs": {"prd_ref": "B2 outcome"}}
   # waits on: no System Actor (start Step is held)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "FLW-020-main", "type": "Flow", "title": "Event to notification dispatch", "attrs": {"kind": "main", "description": "Main Flow: Event to Notification Dispatch", "prd_ref": "Main Flow"}}
   # waits on: no System Actor (start Step is held)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "FLW-020-preference-disabled", "type": "Flow", "title": "Preference disabled", "attrs": {"kind": "alternative", "description": "A1: Preference Disabled", "prd_ref": "A1"}}
   # waits on: no System Actor (start Step is held)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "FLW-020-throttling", "type": "Flow", "title": "Throttling", "attrs": {"kind": "alternative", "description": "B1: Throttling", "prd_ref": "B1"}}
   # waits on: no System Actor (start Step is held)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_node", "id": "FLW-020-channel-failure", "type": "Flow", "title": "Channel failure", "attrs": {"kind": "alternative", "description": "B2: Channel Failure", "prd_ref": "B2"}}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-001", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-001 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-001", "verb": "applies", "to": "REQ-020-034"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-002", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-002", "verb": "applies", "to": "REQ-020-035"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-002", "verb": "applies", "to": "REQ-020-006"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-003", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-003 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-003", "verb": "applies", "to": "REQ-020-035"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-003 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-003", "verb": "applies", "to": "REQ-020-005"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-004", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-004", "verb": "applies", "to": "REQ-020-036"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-004", "verb": "applies", "to": "REQ-020-007"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-005", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-005 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-005", "verb": "applies", "to": "REQ-020-037"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-006", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-006 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-006", "verb": "applies", "to": "REQ-020-038"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-007", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-007 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-007", "verb": "applies", "to": "REQ-020-039"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-007 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-007", "verb": "applies", "to": "REQ-020-042"}
   # waits on: no System Actor; Stage placement (PRD names no Stage, notifications span all Stages)
   - {"op": "add_edge", "from": "STP-020-008", "verb": "at", "to": "STG-main-01-inquiry"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-008", "verb": "applies", "to": "REQ-020-040"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-008", "verb": "applies", "to": "REQ-020-043"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-001 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "FLW-020-main", "verb": "starts at", "to": "STP-020-001"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-006 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "FLW-020-preference-disabled", "verb": "starts at", "to": "STP-020-006"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-007 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "FLW-020-throttling", "verb": "starts at", "to": "STP-020-007"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-008 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "FLW-020-channel-failure", "verb": "starts at", "to": "STP-020-008"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-001 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-001", "verb": "next", "to": "STP-020-002"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-002 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-002", "verb": "next", "to": "STP-020-003"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-003 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-003", "verb": "next", "to": "STP-020-004"}
   # waits on: no System Actor
+  # waits on: endpoint STP-020-004 stays held (its own reason, the system Actor, is resolved by D44)
   - {"op": "add_edge", "from": "STP-020-004", "verb": "next", "to": "STP-020-005"}
   # waits on: no System Actor; branch point for the alternative flow is read from the PRD trigger
   - {"op": "add_edge", "from": "STP-020-002", "verb": "next", "to": "STP-020-006", "attrs": {"label": "Recipient has disabled Email or Push", "condition": "REQ-020-038"}}

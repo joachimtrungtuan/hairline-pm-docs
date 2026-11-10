@@ -1,7 +1,7 @@
 reason: "FR-023 completeness fixes held for a user decision: System-performed Steps (no System Actor in the graph) and the Steps and flows reachable only through them, their next links, and placements the PRD does not state (Screen mapping, submission event, REQ-023-005 placement, REQ-001-094 reference). Apply after 2026-11-10-fr023-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 45 ops that waited only on the system Actor moved to 2026-11-10-fr023-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 45 ops that waited only on the system Actor left this file (45 moved to 2026-11-10-fr023-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: no System Actor and emission stage of A1 step 1 (the PRD fires dsr.verification_required there; the Stage is not stated, see decision on step stages)
   - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "emits", "to": "EVT-dsr-verification-required"}
   # waits on: decision on Screen mapping (Privacy screen, DSR Queue; PRD lines 51-53, 62)

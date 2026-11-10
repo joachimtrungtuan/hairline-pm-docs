@@ -1,9 +1,9 @@
-reason: "FR-033 system Steps released from 2026-11-10-fr033-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr033-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-033 system Steps released from 2026-11-10-fr033-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr033-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-002", "type": "Step", "title": "Dashboard shows category navigation for the 10 categories", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-002", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-002", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-002", "verb": "on", "to": "SCR-033-01"}
@@ -23,7 +23,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-004", "verb": "applies", "to": "REQ-033-004"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-005", "type": "Step", "title": "System shows the category-specific editor", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-005", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-005", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-005", "verb": "applies", "to": "REQ-033-004"}
@@ -50,7 +50,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-009", "verb": "applies", "to": "REQ-033-011"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-010", "type": "Step", "title": "System renders the matching provider layout", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-010", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-010", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-010", "verb": "on", "to": "SCR-033-16"}
@@ -62,37 +62,37 @@ operations:
   - {"op": "add_edge", "from": "STP-033-011", "verb": "applies", "to": "REQ-033-053"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-012", "type": "Step", "title": "System saves status and timestamps", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 12"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-012", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-012", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-012", "verb": "applies", "to": "REQ-033-053"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-013", "type": "Step", "title": "System logs creation in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-013", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-013", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-013", "verb": "applies", "to": "REQ-033-015"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-014", "type": "Step", "title": "If published, content is immediately available in the provider category", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 14"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-014", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-014", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-014", "verb": "applies", "to": "REQ-033-034"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-015", "type": "Step", "title": "System shows success confirmation with link to published content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Main Flow: Admin Creates Help Centre Content step 15"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-015", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-015", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-015", "verb": "applies", "to": "REQ-033-053"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-019", "type": "Step", "title": "System loads the editor pre-filled with existing content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-019", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-019", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-019", "verb": "applies", "to": "REQ-033-060"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-020", "type": "Step", "title": "System creates a new version in version control", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-020", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-020", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-020", "verb": "applies", "to": "REQ-033-054"}
@@ -114,20 +114,20 @@ operations:
   - {"op": "add_edge", "from": "STP-033-023", "verb": "applies", "to": "REQ-033-054"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-024", "type": "Step", "title": "System updates the version and logs the change in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-024", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-024", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-024", "verb": "applies", "to": "REQ-033-015"}
   - {"op": "add_edge", "from": "STP-033-024", "verb": "applies", "to": "REQ-033-054"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-025", "type": "Step", "title": "If published, system immediately updates provider-facing content", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-025", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-025", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-025", "verb": "applies", "to": "REQ-033-034"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-027", "type": "Step", "title": "System shows all FAQ items with current organisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-027", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-027", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-027", "verb": "on", "to": "SCR-033-03"}
@@ -140,7 +140,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-028", "verb": "applies", "to": "REQ-033-066"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-029", "type": "Step", "title": "System shows topic management with drag-and-drop", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-029", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-029", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-029", "verb": "on", "to": "SCR-033-05"}
@@ -179,19 +179,19 @@ operations:
   - {"op": "add_edge", "from": "STP-033-034", "verb": "applies", "to": "REQ-033-066"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-035", "type": "Step", "title": "System updates FAQ navigation for the provider Help Centre", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-035", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-035", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-035", "verb": "applies", "to": "REQ-033-034"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-036", "type": "Step", "title": "Provider Help Centre immediately reflects the new organisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-036", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-036", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-036", "verb": "applies", "to": "REQ-033-034"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-039", "type": "Step", "title": "System shows video upload form", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-039", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-039", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-039", "verb": "on", "to": "SCR-033-11"}
@@ -211,7 +211,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-041", "verb": "applies", "to": "REQ-033-077"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-042", "type": "Step", "title": "System validates size and format, starts upload to media storage", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-042", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-042", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-042", "verb": "on", "to": "SCR-033-11"}
@@ -219,14 +219,14 @@ operations:
   - {"op": "add_edge", "from": "STP-033-042", "verb": "applies", "to": "REQ-033-077"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-043", "type": "Step", "title": "System shows upload progress bar", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-043", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-043", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-043", "verb": "on", "to": "SCR-033-11"}
   - {"op": "add_edge", "from": "STP-033-043", "verb": "applies", "to": "REQ-033-077"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-044", "type": "Step", "title": "System extracts duration and generates thumbnail at the 10% mark", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-044", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-044", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-044", "verb": "on", "to": "SCR-033-11"}
@@ -258,19 +258,19 @@ operations:
   - {"op": "add_edge", "from": "STP-033-048", "verb": "applies", "to": "REQ-033-053"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-049", "type": "Step", "title": "System processes video for streaming optimisation", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-049", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-049", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-049", "verb": "applies", "to": "REQ-033-077"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-050", "type": "Step", "title": "System makes video available in the provider Video Tutorials subscreen", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 14"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-050", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-050", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-050", "verb": "applies", "to": "REQ-033-034"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-053", "type": "Step", "title": "System asks to confirm unpublish with a reason", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-053", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-053", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-053", "verb": "applies", "to": "REQ-033-055"}
@@ -286,45 +286,45 @@ operations:
   - {"op": "add_edge", "from": "STP-033-055", "verb": "applies", "to": "REQ-033-055"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-056", "type": "Step", "title": "System changes status from Published to Unpublished", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-056", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-056", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-056", "verb": "applies", "to": "REQ-033-055"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-057", "type": "Step", "title": "System immediately removes content from provider view", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-057", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-057", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-057", "verb": "applies", "to": "REQ-033-034"}
   - {"op": "add_edge", "from": "STP-033-057", "verb": "applies", "to": "REQ-033-055"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-058", "type": "Step", "title": "System logs unpublish with reason in the audit trail", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-058", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-058", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-058", "verb": "applies", "to": "REQ-033-015"}
   - {"op": "add_edge", "from": "STP-033-058", "verb": "applies", "to": "REQ-033-055"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-059", "type": "Step", "title": "Content stays in admin view as Unpublished", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-059", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-059", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-059", "verb": "applies", "to": "REQ-033-055"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-061", "type": "Step", "title": "System validates required fields", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-061", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-061", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-061", "verb": "applies", "to": "REQ-033-056"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-062", "type": "Step", "title": "System detects a validation error", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-062", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-062", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-062", "verb": "applies", "to": "REQ-033-056"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-063", "type": "Step", "title": "System shows error message highlighting missing or invalid fields", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-063", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-063", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-063", "verb": "applies", "to": "REQ-033-056"}
@@ -340,26 +340,26 @@ operations:
   - {"op": "add_edge", "from": "STP-033-065", "verb": "applies", "to": "REQ-033-056"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-066", "type": "Step", "title": "System re-validates and publishes if all validations pass", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B1 (Content Validation Fails) step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-066", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-066", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-066", "verb": "applies", "to": "REQ-033-056"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-068", "type": "Step", "title": "System checks file size against limits", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-068", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-068", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-068", "verb": "applies", "to": "REQ-033-010"}
   - {"op": "add_edge", "from": "STP-033-068", "verb": "applies", "to": "REQ-033-057"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-069", "type": "Step", "title": "File exceeds the size limit", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-069", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-069", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-069", "verb": "applies", "to": "REQ-033-057"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-070", "type": "Step", "title": "System shows error with the limit and alternatives", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-070", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-070", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-070", "verb": "applies", "to": "REQ-033-057"}
@@ -377,14 +377,14 @@ operations:
   - {"op": "add_edge", "from": "STP-033-072", "verb": "applies", "to": "REQ-033-078"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-073", "type": "Step", "title": "System validates the new file or link and continues the upload", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-073", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-073", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-073", "verb": "applies", "to": "REQ-033-057"}
   - {"op": "add_edge", "from": "STP-033-073", "verb": "applies", "to": "REQ-033-078"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-075", "type": "Step", "title": "System shows overall status, components, incident history, maintenance schedule", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-075", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-075", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-075", "verb": "on", "to": "SCR-033-12"}
@@ -397,7 +397,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-076", "verb": "applies", "to": "REQ-033-081"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-077", "type": "Step", "title": "System recalculates overall status from component statuses", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-077", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-077", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-077", "verb": "on", "to": "SCR-033-12"}
@@ -410,7 +410,7 @@ operations:
   - {"op": "add_edge", "from": "STP-033-078", "verb": "applies", "to": "REQ-033-082"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-079", "type": "Step", "title": "System creates the incident record and timeline entry", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-079", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-079", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-079", "verb": "on", "to": "SCR-033-14"}
@@ -424,14 +424,14 @@ operations:
   - {"op": "add_edge", "from": "STP-033-080", "verb": "applies", "to": "REQ-033-082"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-081", "type": "Step", "title": "System updates incident timeline with each status change", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-081", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-081", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-081", "verb": "on", "to": "SCR-033-14"}
   - {"op": "add_edge", "from": "STP-033-081", "verb": "applies", "to": "REQ-033-083"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-033-082", "type": "Step", "title": "Status updates propagate to the provider Service Status subscreen within 1 minute", "owner_fr": "FR-033", "attrs": {"prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 9"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-033-082", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-033-082", "verb": "at", "to": "STG-provider-03-active"}
   - {"op": "add_edge", "from": "STP-033-082", "verb": "applies", "to": "REQ-033-033"}

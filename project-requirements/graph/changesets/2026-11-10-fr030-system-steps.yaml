@@ -1,9 +1,9 @@
-reason: "FR-030 system Steps released from 2026-11-10-fr030-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr030-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-030 system Steps released from 2026-11-10-fr030-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr030-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-002", "type": "Step", "title": "System displays the backend event catalog grouped by category with status, channels and last modified", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-002", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-002", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-002", "verb": "on", "to": "SCR-030-01", "attrs": {}}
@@ -36,7 +36,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-004", "verb": "next", "to": "STP-030-005", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-006", "type": "Step", "title": "System displays event-specific configuration options (channels, timing, templates, retries, escalation)", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-006", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-006", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-006", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -96,7 +96,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-011", "verb": "next", "to": "STP-030-012", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-013", "type": "Step", "title": "System renders templates with placeholder data and displays the preview", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 13"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-013", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-013", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-013", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -113,7 +113,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-013", "verb": "next", "to": "STP-030-014", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-015", "type": "Step", "title": "System validates the rule configuration and saves it as draft", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 15"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-015", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-015", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-015", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -130,7 +130,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-015", "verb": "next", "to": "STP-030-016", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-017", "type": "Step", "title": "System generates the test notification and delivers it to the admin email or phone", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 17"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-017", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-017", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-017", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -155,7 +155,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-018", "verb": "next", "to": "STP-030-019", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-020", "type": "Step", "title": "System prompts that the rule will activate immediately and apply to all matching events", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 20"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-020", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-020", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-020", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -172,7 +172,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-020", "verb": "next", "to": "STP-030-021", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-022", "type": "Step", "title": "System activates the rule and notifies S-03 Notification Service of the new rule", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 22"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-022", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-022", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-022", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -182,7 +182,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-021", "verb": "next", "to": "STP-030-022", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-023", "type": "Step", "title": "System displays the confirmation: Notification rule activated successfully", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 23"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-023", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-023", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-023", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -191,7 +191,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-022", "verb": "next", "to": "STP-030-023", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-024", "type": "Step", "title": "S-03 Notification Service begins monitoring for event triggers matching the rule", "owner_fr": "FR-030", "attrs": {"prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 24"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-024", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-024", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-024", "verb": "applies", "to": "REQ-030-115", "attrs": {}}
@@ -199,7 +199,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-023", "verb": "next", "to": "STP-030-024", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-031", "type": "Step", "title": "System logs the change with timestamp and admin user ID", "owner_fr": "FR-030", "attrs": {"prd_ref": "A1: Admin Edits Existing Notification Rule step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-031", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-031", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-031", "verb": "on", "to": "SCR-030-02", "attrs": {}}
@@ -209,7 +209,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-030", "verb": "next", "to": "STP-030-031", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-034", "type": "Step", "title": "System prompts that paused rules will not trigger notifications", "owner_fr": "FR-030", "attrs": {"prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-034", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-034", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-034", "verb": "on", "to": "SCR-030-01", "attrs": {}}
@@ -226,7 +226,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-034", "verb": "next", "to": "STP-030-035", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-036", "type": "Step", "title": "System pauses the rule and stops triggering notifications for the event", "owner_fr": "FR-030", "attrs": {"prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-036", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-036", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-036", "verb": "on", "to": "SCR-030-01", "attrs": {}}
@@ -243,7 +243,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-036", "verb": "next", "to": "STP-030-037", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-043", "type": "Step", "title": "System displays a language dropdown populated from FR-021 supported locales", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-043", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-043", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-043", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -277,7 +277,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-045", "verb": "next", "to": "STP-030-046", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-047", "type": "Step", "title": "System validates that both templates have matching variables", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 10"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-047", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-047", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-047", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -286,7 +286,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-046", "verb": "next", "to": "STP-030-047", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-048", "type": "Step", "title": "S-03 Notification Service selects the template language from the recipient language preference and fallback rules", "owner_fr": "FR-030", "attrs": {"prd_ref": "A3: Admin Creates Multi-Language Notification Template step 11"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-048", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-048", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-048", "verb": "applies", "to": "REQ-030-154", "attrs": {}}
@@ -294,7 +294,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-047", "verb": "next", "to": "STP-030-048", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-049", "type": "Step", "title": "S-03 Notification Service attempts email delivery via SMTP", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-049", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-049", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-049", "verb": "applies", "to": "REQ-030-003", "attrs": {}}
@@ -303,63 +303,8 @@ operations:
   - {"op": "add_node", "id": "FLW-030-email-bounce", "type": "Flow", "title": "B1: notification delivery fails (email bounce)", "attrs": {"kind": "alternative", "description": "B1: notification delivery fails (email bounce)", "prd_ref": "B1: Notification Delivery Fails (Email Bounce)"}}
   - {"op": "add_edge", "from": "FLW-030-email-bounce", "verb": "starts at", "to": "STP-030-049", "attrs": {}}
   # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-030-051", "type": "Step", "title": "System logs the failed delivery with error code and timestamp", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 3"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-030-051", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-030-051", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-051", "verb": "applies", "to": "REQ-030-009", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-051", "verb": "applies", "to": "REQ-030-155", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-030-052", "type": "Step", "title": "System evaluates the retry configuration for the notification type", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 4"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-030-052", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-030-052", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-052", "verb": "applies", "to": "REQ-030-008", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-052", "verb": "applies", "to": "REQ-030-155", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-051", "verb": "next", "to": "STP-030-052", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-030-053", "type": "Step", "title": "If retry is enabled, system queues a retry attempt for 1 hour later", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 5"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-030-053", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-030-053", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-053", "verb": "applies", "to": "REQ-030-155", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-052", "verb": "next", "to": "STP-030-053", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-030-054", "type": "Step", "title": "After retry attempts are exhausted (max 3 retries), system marks the notification Failed - Permanent", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 6"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-030-054", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-030-054", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-054", "verb": "applies", "to": "REQ-030-155", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-053", "verb": "next", "to": "STP-030-054", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-030-055", "type": "Step", "title": "System flags the patient account with an Email delivery issue indicator", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 7"}}
-  # done by: ACT-system (decision D44)
-  - {"op": "add_edge", "from": "STP-030-055", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-030-055", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-055", "verb": "applies", "to": "REQ-030-156", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-054", "verb": "next", "to": "STP-030-055", "attrs": {}}
-  # waits on: no System Actor (reachable only through a held system Step)
-  - {"op": "add_node", "id": "STP-030-056", "type": "Step", "title": "Admin receives an alert if the event is critical (for example payment confirmation)", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 8"}}
-  - {"op": "add_edge", "from": "STP-030-056", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-056", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-056", "verb": "applies", "to": "REQ-030-157", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-055", "verb": "next", "to": "STP-030-056", "attrs": {}}
-  # waits on: no System Actor (reachable only through a held system Step)
-  - {"op": "add_node", "id": "STP-030-057", "type": "Step", "title": "Admin contacts the patient by phone or in-app message to update the email address", "owner_fr": "FR-030", "attrs": {"prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 9"}}
-  - {"op": "add_edge", "from": "STP-030-057", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-057", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-057", "verb": "on", "to": "SCR-030-01", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-030-057", "verb": "applies", "to": "REQ-030-157", "attrs": {}}
-  # waits on: no System Actor
-  - {"op": "add_edge", "from": "STP-030-056", "verb": "next", "to": "STP-030-057", "attrs": {}}
-  # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-060", "type": "Step", "title": "System validates the template against the event payload schema", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-060", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-060", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-060", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -369,7 +314,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-059", "verb": "next", "to": "STP-030-060", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-061", "type": "Step", "title": "System detects that patient.procedure_date is not available in the event payload", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-061", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-061", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-061", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -378,7 +323,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-060", "verb": "next", "to": "STP-030-061", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-062", "type": "Step", "title": "System displays the error naming the variable and listing available variables", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-062", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-062", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-062", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -395,7 +340,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-062", "verb": "next", "to": "STP-030-063", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-064", "type": "Step", "title": "System validates successfully and saves the template", "owner_fr": "FR-030", "attrs": {"prd_ref": "B2: Template Variable Missing or Invalid step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-064", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-064", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-064", "verb": "on", "to": "SCR-030-03", "attrs": {}}
@@ -404,7 +349,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-063", "verb": "next", "to": "STP-030-064", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-066", "type": "Step", "title": "System displays one canonical configuration entry per backend event type", "owner_fr": "FR-030", "attrs": {"prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-066", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-066", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-066", "verb": "on", "to": "SCR-030-01", "attrs": {}}
@@ -421,7 +366,7 @@ operations:
   - {"op": "add_edge", "from": "STP-030-066", "verb": "next", "to": "STP-030-067", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-030-068", "type": "Step", "title": "System opens the existing configuration for the event; there is no create-duplicate-rule action", "owner_fr": "FR-030", "attrs": {"prd_ref": "B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI) step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-030-068", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-030-068", "verb": "at", "to": "STG-main-01-inquiry", "attrs": {}}
   - {"op": "add_edge", "from": "STP-030-068", "verb": "on", "to": "SCR-030-02", "attrs": {}}

@@ -1,7 +1,7 @@
 reason: "FR-014 completeness held operations: system-performed steps of alternative flows B1 and B2 (no System Actor), and references to the FR-013 and FR-026 rules the PRD cites by sub-ids that are not graph ids. Apply after 2026-11-10-fr014-completeness-fixes.yaml; see Needs user decision in plans/reports/tester-261110-fr014-completeness.md."
 by: tester
 operations:
-  # 2026-11-10 D44: 11 ops that waited only on the system Actor moved to 2026-11-10-fr014-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 11 ops that waited only on the system Actor left this file (11 moved to 2026-11-10-fr014-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on: decision 4 (the PRD cites REQ-013-018a and REQ-026-012g, which are not graph ids; REQ-013-018 and REQ-026-012 are the nearest parents)
   - {"op": "add_edge", "from": "FR-014", "verb": "references", "to": "REQ-013-018"}
   - {"op": "add_edge", "from": "FR-014", "verb": "references", "to": "REQ-026-012"}

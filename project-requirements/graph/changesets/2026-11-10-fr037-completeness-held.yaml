@@ -1,7 +1,7 @@
 reason: "FR-037 completeness fixes held: system-performed Steps (no System Actor in the graph), human Steps reachable only through them, every link touching them, and the patient-identifier shows links that wait on a product decision."
 by: tester
 operations:
-  # 2026-11-10 D44: 174 ops that waited only on the system Actor moved to 2026-11-10-fr037-system-steps.yaml; the ops below still wait on their own decision.
+  # 2026-11-10 D44: 174 ops that waited only on the system Actor left this file (174 moved to 2026-11-10-fr037-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # waits on decision: patient name versus anonymised ID on Screens 10A, 10B, 14A and 14B
   - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Case header"}}
   # waits on decision: patient name versus anonymised ID on Screens 10A, 10B, 14A and 14B

@@ -1,13 +1,11 @@
-reason: "FR-013 system Steps released from 2026-11-10-fr013-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr013-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-013 system Steps released from 2026-11-10-fr013-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr013-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-09-review-close"}
   # waits on: no System Actor
   - {"op": "add_node", "id": "FLW-013-flagged-content-review", "type": "Flow", "title": "B2: Flagging/Inappropriate Content", "attrs": {"kind": "alternative", "description": "B2: Flagging/Inappropriate Content", "prd_ref": "B2"}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-002", "type": "Step", "owner_fr": "FR-013", "title": "System validates inputs and verifies eligibility", "attrs": {"prd_ref": "Main Flow step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-002", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-002", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -21,7 +19,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-002", "verb": "applies", "to": "REQ-013-028", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-003", "type": "Step", "owner_fr": "FR-013", "title": "System publishes or republishes the review and recalculates provider rating metrics", "attrs": {"prd_ref": "Main Flow step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-003", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-003", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -35,7 +33,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-003", "verb": "applies", "to": "REQ-013-031", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-004", "type": "Step", "owner_fr": "FR-013", "title": "System re-runs flagging, tracks the edit, writes the audit record and notifies the provider on edit", "attrs": {"prd_ref": "Main Flow step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-004", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-004", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -59,7 +57,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-005", "verb": "applies", "to": "REQ-013-034", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-012", "type": "Step", "owner_fr": "FR-013", "title": "System validates fields and stores source provenance", "attrs": {"prd_ref": "A1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-012", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-012", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -71,7 +69,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-012", "verb": "applies", "to": "REQ-013-038", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-013", "type": "Step", "owner_fr": "FR-013", "title": "System publishes the review flagged Verified Off-platform", "attrs": {"prd_ref": "A1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-013", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-013", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -81,7 +79,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-013", "verb": "applies", "to": "REQ-013-035", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-022", "type": "Step", "owner_fr": "FR-013", "title": "System records before and after values, reason and admin identity", "attrs": {"prd_ref": "A2 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-022", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-022", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -93,7 +91,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-022", "verb": "applies", "to": "REQ-013-050", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-033", "type": "Step", "owner_fr": "FR-013", "title": "System records the reason, creates the Pending takedown request and links it to the review and case", "attrs": {"prd_ref": "A3 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-033", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-033", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -103,7 +101,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-033", "verb": "applies", "to": "REQ-013-044", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-034", "type": "Step", "owner_fr": "FR-013", "title": "System notifies the admin takedown queue", "attrs": {"prd_ref": "A3 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-034", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-034", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -113,7 +111,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-034", "verb": "applies", "to": "REQ-013-044", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-043", "type": "Step", "owner_fr": "FR-013", "title": "System applies the decision: unpublish and recalculate, or keep the review published", "attrs": {"prd_ref": "A4 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-043", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-043", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -127,7 +125,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-043", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-044", "type": "Step", "owner_fr": "FR-013", "title": "System notifies the patient of the decision and reason", "attrs": {"prd_ref": "A4 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-044", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-044", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -137,7 +135,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-044", "verb": "applies", "to": "REQ-013-046", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-052", "type": "Step", "owner_fr": "FR-013", "title": "System opens the inline response composer within Screen 6", "attrs": {"prd_ref": "B1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-052", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-052", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -157,7 +155,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-053", "verb": "applies", "to": "REQ-013-054", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-054", "type": "Step", "owner_fr": "FR-013", "title": "System validates response length and policy", "attrs": {"prd_ref": "B1 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-054", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-054", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -179,7 +177,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-055", "verb": "applies", "to": "REQ-013-057", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-056", "type": "Step", "owner_fr": "FR-013", "title": "System publishes the response under provider identity", "attrs": {"prd_ref": "B1 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-056", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-056", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -195,7 +193,7 @@ operations:
   - {"op": "add_edge", "from": "STP-013-056", "verb": "applies", "to": "REQ-013-017", "attrs": {}}
   # waits on: no System Actor
   - {"op": "add_node", "id": "STP-013-061", "type": "Step", "owner_fr": "FR-013", "title": "System queues flagged content for admin review", "attrs": {"prd_ref": "B2 steps"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-013-061", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-061", "verb": "at", "to": "STG-main-09-review-close", "attrs": {}}
@@ -259,3 +257,5 @@ operations:
   - {"op": "add_edge", "from": "STP-013-055", "verb": "next", "to": "STP-013-056", "attrs": {"label": "provider confirms"}}
   # waits on: no System Actor
   - {"op": "add_edge", "from": "STP-013-061", "verb": "next", "to": "STP-013-062", "attrs": {"label": "content flagged by the system"}}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-09-review-close"}

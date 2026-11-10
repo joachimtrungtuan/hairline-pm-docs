@@ -1,10 +1,6 @@
-reason: "FR-006 system Steps released from 2026-11-10-fr006-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr006-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-006 system Steps released from 2026-11-10-fr006-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr006-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-04-booking"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-07-aftercare"}
-  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-06-treatment"}
   # waits on: no System Actor (the flow starts at a system-performed step)
   - {"op": "add_node", "id": "FLW-006-a1", "type": "Flow", "title": "Installment plan selected", "attrs": {"kind": "alternative", "description": "Installment plan selected", "prd_ref": "Alternative Flow A1"}}
   # waits on: no System Actor (the flow starts at a system-performed step)
@@ -19,7 +15,7 @@ operations:
   - {"op": "add_node", "id": "FLW-006-b7", "type": "Flow", "title": "Provider fault while in progress", "attrs": {"kind": "alternative", "description": "Provider fault while in progress", "prd_ref": "Alternative Flow B7"}}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-003", "type": "Step", "title": "System calculates the required deposit from FR-029 settings and presents the cancellation policy", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-003", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-003", "verb": "at", "to": "STG-main-04-booking"}
@@ -47,7 +43,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-004", "verb": "applies", "to": "REQ-006-039"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-005", "type": "Step", "title": "Payment Service authorizes and captures the deposit or schedules installments", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-005", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-005", "verb": "at", "to": "STG-main-04-booking"}
@@ -55,7 +51,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-005", "verb": "applies", "to": "REQ-006-010"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-006", "type": "Step", "title": "System sets the booking to Confirmed and unmasks patient identity to the provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-006", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-006", "verb": "at", "to": "STG-main-04-booking"}
@@ -65,7 +61,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-006", "verb": "applies", "to": "REQ-006-008"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-007", "type": "Step", "title": "System creates the appointment record, converts the hold into a provider calendar block and shows the booking in the provider dashboard", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-007", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-007", "verb": "at", "to": "STG-main-04-booking"}
@@ -79,7 +75,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-007", "verb": "applies", "to": "REQ-006-069"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-008", "type": "Step", "title": "Notification Service sends confirmations to patient and provider and the admin dashboard updates", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 8"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-008", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-008", "verb": "at", "to": "STG-main-04-booking"}
@@ -89,7 +85,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-008", "verb": "applies", "to": "REQ-006-026"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-101", "type": "Step", "title": "System determines feasible installment options from FR-029 split payment settings and the 30-day constraint", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-101", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-101", "verb": "at", "to": "STG-main-04-booking"}
@@ -101,7 +97,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-101", "verb": "applies", "to": "REQ-006-034"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-102", "type": "Step", "title": "System schedules installment charges and reminders and marks the booking Confirmed on the initial charge", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-102", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-102", "verb": "at", "to": "STG-main-04-booking"}
@@ -111,7 +107,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-102", "verb": "applies", "to": "REQ-006-034"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-201", "type": "Step", "title": "Payment Service applies the FR-007 retry policy after a first-payment failure", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-201", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-201", "verb": "at", "to": "STG-main-04-booking"}
@@ -119,7 +115,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-201", "verb": "applies", "to": "REQ-006-016"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-202", "type": "Step", "title": "System keeps the single hold unchanged after a payment failure", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-202", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-202", "verb": "at", "to": "STG-main-04-booking"}
@@ -139,7 +135,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-203", "verb": "applies", "to": "REQ-006-035"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-204", "type": "Step", "title": "System releases the hold, blocks further payment and moves the booking to Payment Window Expired", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-204", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-204", "verb": "at", "to": "STG-main-04-booking"}
@@ -151,7 +147,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-204", "verb": "applies", "to": "REQ-006-037"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-205", "type": "Step", "title": "System sends the Payment Window Expired notice to patient and provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-205", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-205", "verb": "at", "to": "STG-main-04-booking"}
@@ -159,7 +155,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-205", "verb": "applies", "to": "REQ-006-011"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-303", "type": "Step", "title": "System sets the booking and the inquiry to Cancelled and keeps the accepted quote accepted", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-303", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-303", "verb": "at", "to": "STG-main-04-booking"}
@@ -169,7 +165,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-303", "verb": "applies", "to": "REQ-006-061"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-304", "type": "Step", "title": "System releases any active hold or calendar block and blocks further payment", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-304", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-304", "verb": "at", "to": "STG-main-04-booking"}
@@ -177,7 +173,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-304", "verb": "applies", "to": "REQ-006-051"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-305", "type": "Step", "title": "System writes the audit entry and sends booking.cancelled with the reason to patient and provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-305", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-305", "verb": "at", "to": "STG-main-04-booking"}
@@ -189,7 +185,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-305", "verb": "applies", "to": "REQ-006-011"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-306", "type": "Step", "title": "Refunds and cancellation fees follow the cancellation policy under the payment placeholder", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B2 step 6", "handoff_to": "FR-007: payment placeholder for refunds and cancellation fees"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-306", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-306", "verb": "at", "to": "STG-main-04-booking"}
@@ -197,7 +193,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-306", "verb": "applies", "to": "REQ-006-053"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-402", "type": "Step", "title": "System immediately releases the appointment slot hold", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-402", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-402", "verb": "at", "to": "STG-main-04-booking"}
@@ -207,7 +203,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-402", "verb": "applies", "to": "REQ-006-062"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-403", "type": "Step", "title": "System moves the booking from Accepted to Cancelled and the inquiry to Cancelled", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-403", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-403", "verb": "at", "to": "STG-main-04-booking"}
@@ -217,7 +213,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-403", "verb": "applies", "to": "REQ-006-061"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-404", "type": "Step", "title": "System sends booking.cancelled with the reason to patient and provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B3 step 4"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-404", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-404", "verb": "at", "to": "STG-main-04-booking"}
@@ -225,7 +221,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-404", "verb": "applies", "to": "REQ-006-011"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-405", "type": "Step", "title": "System makes the booking and payment flow inaccessible for the inquiry", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B3 step 5"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-405", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-405", "verb": "at", "to": "STG-main-04-booking"}
@@ -233,7 +229,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-405", "verb": "applies", "to": "REQ-006-037"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-501", "type": "Step", "title": "System cancels the provider's Accepted and Confirmed bookings with the provider-status cause and the support-required marker", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B4 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-501", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-501", "verb": "at", "to": "STG-main-04-booking"}
@@ -241,7 +237,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-501", "verb": "applies", "to": "REQ-006-015"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-502", "type": "Step", "title": "System releases holds, reservations and calendar slots and blocks further payment", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B4 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-502", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-502", "verb": "at", "to": "STG-main-04-booking"}
@@ -251,7 +247,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-502", "verb": "applies", "to": "REQ-006-051"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-503", "type": "Step", "title": "System keeps the acceptance event, accepted snapshot and booking history unchanged", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-503", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-503", "verb": "at", "to": "STG-main-04-booking"}
@@ -269,7 +265,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-504", "verb": "applies", "to": "REQ-006-054"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-505", "type": "Step", "title": "Patient and admin notifications and the support handoff follow FR-015 Screen 4", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B4 step 5", "handoff_to": "FR-015: Screen 4 provider suspension notifications"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-505", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-505", "verb": "at", "to": "STG-main-04-booking"}
@@ -277,7 +273,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-505", "verb": "applies", "to": "REQ-006-055"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-601", "type": "Step", "title": "System cancels the original booking with the provider-fault cause and the support-required marker", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-601", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-601", "verb": "at", "to": "STG-main-04-booking"}
@@ -287,7 +283,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-601", "verb": "applies", "to": "REQ-006-058"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-602", "type": "Step", "title": "System releases the original hold or calendar block and blocks further payment", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-602", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-602", "verb": "at", "to": "STG-main-04-booking"}
@@ -297,7 +293,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-602", "verb": "applies", "to": "REQ-006-051"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-603", "type": "Step", "title": "System keeps the original acceptance event and accepted snapshot unchanged", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-603", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-603", "verb": "at", "to": "STG-main-04-booking"}
@@ -333,7 +329,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-605", "verb": "applies", "to": "REQ-006-063"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-606", "type": "Step", "title": "System creates the replacement booking from the new acceptance", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 6"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-606", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-606", "verb": "at", "to": "STG-main-04-booking"}
@@ -343,7 +339,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-606", "verb": "applies", "to": "REQ-006-028"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-607", "type": "Step", "title": "System notifies patient and admin of the transfer and sends the replacement acceptance notice", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 7"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-607", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-607", "verb": "at", "to": "STG-main-04-booking"}
@@ -351,7 +347,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-607", "verb": "applies", "to": "REQ-006-011"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-608", "type": "Step", "title": "Travel records carry over to the replacement booking through FR-008", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B5 step 8", "handoff_to": "FR-008: travel carry-over to the replacement booking"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-608", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-608", "verb": "at", "to": "STG-main-04-booking"}
@@ -359,7 +355,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-608", "verb": "applies", "to": "REQ-006-057"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-701", "type": "Step", "title": "System keeps the booking in Aftercare and leaves the treatment record unchanged", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B6 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-701", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-701", "verb": "at", "to": "STG-main-07-aftercare"}
@@ -367,7 +363,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-701", "verb": "applies", "to": "REQ-006-056"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-702", "type": "Step", "title": "System carries the provider-status cause and the support-required marker and removes the original provider's aftercare actions", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B6 step 2"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-702", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-702", "verb": "at", "to": "STG-main-07-aftercare"}
@@ -395,7 +391,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-704", "verb": "applies", "to": "REQ-006-056"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-801", "type": "Step", "title": "System keeps the booking In Progress, sets the support-required marker and records the cause", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B7 step 1"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-801", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-801", "verb": "at", "to": "STG-main-06-treatment"}
@@ -417,7 +413,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-802", "verb": "applies", "to": "REQ-006-060"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_node", "id": "STP-006-803", "type": "Step", "title": "System writes the audit entry and the admin decision resolves the support-required marker", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B7 step 3"}}
-  # done by: ACT-system (decision D44)
+  # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-006-803", "verb": "done by", "to": "ACT-system"}
   # waits on: no System Actor (system-performed step)
   - {"op": "add_edge", "from": "STP-006-803", "verb": "at", "to": "STG-main-06-treatment"}
@@ -513,3 +509,7 @@ operations:
   - {"op": "add_edge", "from": "STP-006-802", "verb": "next", "to": "STP-006-703", "attrs": {"label": "Move to Aftercare and reassign"}}
   # waits on: no System Actor (next link touches a held step)
   - {"op": "add_edge", "from": "STP-006-802", "verb": "next", "to": "STP-006-301", "attrs": {"label": "Cancel the booking through Alternative Flow B2", "back": true}}
+  # acts in: ACT-system at the Stages of the released system Steps (decision D44)
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-main-06-treatment"}

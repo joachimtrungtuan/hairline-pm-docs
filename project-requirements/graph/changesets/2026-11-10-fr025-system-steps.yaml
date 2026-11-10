@@ -1,22 +1,10 @@
-reason: "FR-025 system Steps released from 2026-11-10-fr025-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on system Steps that had no doer and the ACT-system acts in edges they need. Apply after 2026-11-10-fr025-completeness-fixes.yaml, in the apply order of plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md."
+reason: "FR-025 system Steps released from 2026-11-10-fr025-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr025-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md)."
 by: fullstack-developer
 operations:
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_node", "id": "STP-025-011", "type": "Step", "title": "Admin sees the set published and visible in the catalog", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: set published and visible in catalog"}}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
   - {"op": "add_node", "id": "STP-025-043", "type": "Step", "title": "Admin sees the set designated as the active Inquiry questionnaire and serving new inquiries", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 4 flow diagram: Set is actively serving all new patient inquiries"}}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
   - {"op": "add_node", "id": "STP-025-048", "type": "Step", "title": "Admin sees the milestone assigned the questionnaire set", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 4 flow diagram: Milestone assigned this questionnaire set", "handoff_to": "FR-011: Aftercare milestone questionnaire delivery schedule and frequency"}}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "done by", "to": "ACT-platform-admin"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "at", "to": "STG-main-01-inquiry"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "on", "to": "SCR-025-01"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-031"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "applies", "to": "REQ-025-049"}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
   - {"op": "add_edge", "from": "STP-025-043", "verb": "done by", "to": "ACT-platform-admin"}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
@@ -39,8 +27,6 @@ operations:
   - {"op": "add_edge", "from": "STP-025-048", "verb": "applies", "to": "REQ-025-070"}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
   - {"op": "add_edge", "from": "STP-025-048", "verb": "applies", "to": "REQ-025-019"}
-  # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
-  - {"op": "add_edge", "from": "STP-025-011", "verb": "next", "to": "STP-025-040", "attrs": {"label": "Designate for Inquiry (separate action)"}}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
   - {"op": "add_edge", "from": "STP-025-040", "verb": "next", "to": "STP-025-043", "attrs": {"label": "Inquiry flow unconfigured"}}
   # waits on item 1 (no System Actor: this outcome step has no Actor the PRD names)
