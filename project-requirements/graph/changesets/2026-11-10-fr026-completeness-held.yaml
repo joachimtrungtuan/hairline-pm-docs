@@ -2,14 +2,15 @@ reason: "FR-026 completeness fixes held for a user decision: every Main Flow and
 by: tester
 operations:
   # 2026-11-10 D49: 520 ops left this file (moved to 2026-11-10-fr026-admin-stage.yaml): the admin settings Steps now at STG-admin-01-configuration and the ops that waited only on them; the ops below still wait on their own reason.
+  # 2026-11-10 D49 follow-up: 3 ops excluded by user decision (STP-026-037 "Users already in flow keep the previous template" is dropped as a Step; the live Rule REQ-026-106 "Template changes apply only to new OTP requests", applied by STP-026-036, covers it). The excluded ops are kept below as comments and must not be applied.
   # waits on: no System Actor (no done by edge); also stage placement (queue B42)
-  - {"op": "add_node", "id": "STP-026-037", "type": "Step", "title": "Users already in flow keep the previous template", "owner_fr": "FR-026", "attrs": {"prd_ref": "Alternative Flow A2 step 12"}}
+  # excluded by user decision 2026-11-10 (D49 follow-up, STP-026-037 dropped; REQ-026-106 covers it): {"op": "add_node", "id": "STP-026-037", "type": "Step", "title": "Users already in flow keep the previous template", "owner_fr": "FR-026", "attrs": {"prd_ref": "Alternative Flow A2 step 12"}}
   # waits on: no System Actor
   # waits on: endpoint STP-026-037 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-026-037", "verb": "at", "to": "STG-provider-03-active"}
+  # excluded by user decision 2026-11-10 (D49 follow-up, STP-026-037 dropped; REQ-026-106 covers it): {"op": "add_edge", "from": "STP-026-037", "verb": "at", "to": "STG-provider-03-active"}
   # waits on: no System Actor
   # waits on: endpoint STP-026-036 stays held (its own reason, the system Actor, is resolved by D44)
-  - {"op": "add_edge", "from": "STP-026-036", "verb": "next", "to": "STP-026-037"}
+  # excluded by user decision 2026-11-10 (D49 follow-up, STP-026-037 dropped; REQ-026-106 covers it): {"op": "add_edge", "from": "STP-026-036", "verb": "next", "to": "STP-026-037"}
   # waits on: which of Q13 and Q14 decided which Quote Rule (change log 1.13 names both without mapping; decision 10)
   - {"op": "add_edge", "from": "REQ-026-037", "verb": "decided by", "to": "SRC-PO-001-Q13"}
   - {"op": "add_edge", "from": "REQ-026-037", "verb": "decided by", "to": "SRC-PO-001-Q14"}
