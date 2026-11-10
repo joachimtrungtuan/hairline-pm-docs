@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T15:35:40Z",
+  "generated_at": "2026-11-10T15:48:18Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -3982,7 +3982,7 @@
       "owner_fr": "FR-011",
       "title": "Payment status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -6379,7 +6379,7 @@
       "owner_fr": "FR-006",
       "title": "Payment status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Stub created during FR-003 migration; owner (FR-006 or FR-007) is an open question."
       }
@@ -11164,7 +11164,7 @@
       "owner_fr": "FR-007B",
       "title": "Installment status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Key Entities lists scheduled, paid, failed, retried, overdue; Screen 4 lists Scheduled, Paid, Failed, Retrying; Screen 2 lists Paid, Scheduled, Overdue, Failed. All are recorded; see the report question on installment status values."
       }
@@ -11448,7 +11448,7 @@
       "owner_fr": "FR-007B",
       "title": "Plan status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities lists active, completed, defaulted, canceled; the screens list Active, Completed, Overdue, Defaulted. Both lists are recorded; see the report question on plan status values."
       }
@@ -17104,7 +17104,7 @@
       "owner_fr": "FR-001",
       "title": "Account status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Account status shown as a badge: Active, Suspended or Deactivated."
       }
@@ -21563,7 +21563,7 @@
       "owner_fr": "FR-017",
       "title": "Payout frequency at payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 10: the provider's schedule at the time of payout; not in Key Entity 2."
       }
@@ -22712,7 +22712,7 @@
       "owner_fr": "FR-015",
       "title": "Payout frequency",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "description": "\"Weekly\" (Mon–Sun), \"2x a Month\" (1st–15th, 16th–last day), or \"Monthly\" (calendar month). Retrieved from FR-015 Tab 7; read-only"
       }
@@ -24313,7 +24313,7 @@
       "owner_fr": "FR-004",
       "title": "Cancellation provenance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Records why an unaccepted quote was cancelled (inquiry cancellation, another accepted quote, or provider suspension/deactivation) and, for provider status, the triggering provider-status event; never provider input."
       }
@@ -27614,7 +27614,7 @@
       "owner_fr": "FR-034",
       "title": "Event type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Kind of event."
       }
@@ -125186,7 +125186,7 @@
       "id": "ENT-aftercare-request.payment_status",
       "entity_id": "ENT-aftercare-request",
       "name": "payment_status",
-      "data_type": "text",
+      "data_type": "enum",
       "required": false,
       "calculated_by": null
     },
@@ -146059,6 +146059,24 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-aftercare-request.payment_status",
+      "value": "paid",
+      "label": "Paid",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-aftercare-request.payment_status",
+      "value": "pending",
+      "label": "Pending",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-aftercare-request.payment_status",
+      "value": "failed",
+      "label": "Failed",
+      "sort_order": 2
+    },
+    {
       "field_id": "ENT-aftercare-request.request_status",
       "value": "pending",
       "label": "Pending",
@@ -146489,12 +146507,6 @@
       "value": "full_paid",
       "label": "Full Paid",
       "sort_order": 3
-    },
-    {
-      "field_id": "ENT-booking.payment_status",
-      "value": "overdue",
-      "label": "Overdue",
-      "sort_order": 4
     },
     {
       "field_id": "ENT-booking.status",
@@ -147452,12 +147464,6 @@
     },
     {
       "field_id": "ENT-installment-payment.status",
-      "value": "retrying",
-      "label": "Retrying",
-      "sort_order": 4
-    },
-    {
-      "field_id": "ENT-installment-payment.status",
       "value": "overdue",
       "label": "Overdue",
       "sort_order": 5
@@ -147491,12 +147497,6 @@
       "value": "canceled",
       "label": "Canceled",
       "sort_order": 3
-    },
-    {
-      "field_id": "ENT-installment-plan.status",
-      "value": "overdue",
-      "label": "Overdue",
-      "sort_order": 4
     },
     {
       "field_id": "ENT-invitation.delivery_state",
@@ -148700,12 +148700,6 @@
     },
     {
       "field_id": "ENT-patient.account_status",
-      "value": "inactive",
-      "label": "Inactive",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-patient.account_status",
       "value": "suspended",
       "label": "Suspended",
       "sort_order": 1
@@ -148714,12 +148708,6 @@
       "field_id": "ENT-patient.account_status",
       "value": "deactivated",
       "label": "Deactivated",
-      "sort_order": 2
-    },
-    {
-      "field_id": "ENT-patient.account_status",
-      "value": "pending_verification",
-      "label": "Pending Verification",
       "sort_order": 2
     },
     {
@@ -149528,7 +149516,7 @@
     },
     {
       "field_id": "ENT-provider-payout.payout_frequency",
-      "value": "2x_a_month",
+      "value": "twice_monthly",
       "label": "2x a Month",
       "sort_order": 1
     },
@@ -149627,12 +149615,6 @@
       "value": "weekly",
       "label": "Weekly",
       "sort_order": 0
-    },
-    {
-      "field_id": "ENT-provider.payout_frequency",
-      "value": "2x_a_month",
-      "label": "2x a Month",
-      "sort_order": 1
     },
     {
       "field_id": "ENT-provider.payout_frequency",
@@ -149927,6 +149909,18 @@
       "value": "ProviderDeactivated",
       "label": "Provider deactivated",
       "sort_order": 1
+    },
+    {
+      "field_id": "ENT-quote.cancellation_provenance",
+      "value": "InquiryCancelled",
+      "label": "Inquiry cancelled",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-quote.cancellation_provenance",
+      "value": "OtherQuoteAccepted",
+      "label": "Other quote accepted",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-quote.status",
@@ -150677,6 +150671,30 @@
       "value": "case_closed",
       "label": "Case closed",
       "sort_order": 12
+    },
+    {
+      "field_id": "ENT-support-case-timeline-event.event_type",
+      "value": "case_escalated",
+      "label": "Case escalated",
+      "sort_order": 13
+    },
+    {
+      "field_id": "ENT-support-case-timeline-event.event_type",
+      "value": "notification_sent",
+      "label": "Notification sent",
+      "sort_order": 14
+    },
+    {
+      "field_id": "ENT-support-case-timeline-event.event_type",
+      "value": "notification_failed",
+      "label": "Notification failed",
+      "sort_order": 15
+    },
+    {
+      "field_id": "ENT-support-case-timeline-event.event_type",
+      "value": "admin_deactivated",
+      "label": "Admin deactivated",
+      "sort_order": 16
     },
     {
       "field_id": "ENT-support-case.case_type",
@@ -368662,6 +368680,119 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-154713-e8cfa278",
+      "at": "2026-11-10T15:47:13.040351+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-034 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-support-case-timeline-event.event_type adds the four events the PRD logs in the timeline (A1 step 6, prd.md lines 1142, 1166 and 1236): 17 values in total.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-support-case-timeline-event.event_type"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261110-154712-34dea67c",
+      "at": "2026-11-10T15:47:12.935601+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-017 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): the payout record field follows the FR-015 spelling: 2x_a_month is replaced by twice_monthly (label 2x a Month), so ENT-provider-payout.payout_frequency becomes weekly, twice_monthly, monthly.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-provider-payout.payout_frequency"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-154712-9303d488",
+      "at": "2026-11-10T15:47:12.829249+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-015 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): keep twice_monthly (Key Entities, prd.md line 1233) and retire 2x_a_month, so ENT-provider.payout_frequency becomes weekly, twice_monthly, monthly.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-provider.payout_frequency"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261110-154712-5ba75ace",
+      "at": "2026-11-10T15:47:12.722139+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-011 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-aftercare-request.payment_status becomes an enum with Paid, Pending, Failed (prd.md line 1047). The 4 ops are released unchanged from 2026-11-10-fr011-completeness-held.yaml; the required flag is not changed.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-aftercare-request.payment_status"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261110-154712-457052f0",
+      "at": "2026-11-10T15:47:12.620504+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-007B allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): Overdue is a separate flag on the installment plan, not a plan status, so ENT-installment-plan.status becomes active, completed, defaulted, canceled; no flag field is added. ENT-installment-payment.status becomes scheduled, paid, failed, retried, overdue, cancelled (retrying leaves). The plan status screen lines 288, 300, 324 and 405 of prd.md are PRD lines to correct.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-installment-payment.status",
+        "ENT-installment-plan.status"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-154712-d03e4f92",
+      "at": "2026-11-10T15:47:12.518125+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-006 (field owner; ruled as the FR-007 booking payment status question) allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): Overdue is a separate flag, not a payment status. ENT-booking.payment_status becomes unpaid, deposit_only, installments_active, full_paid. How the flag is stored is not ruled, so no flag field is added. FR-007 Screen 5 (prd.md line 475) is a PRD line to correct.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-booking.payment_status"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261110-154712-b1f80aa1",
+      "at": "2026-11-10T15:47:12.420765+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-004 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-quote.cancellation_provenance adds InquiryCancelled and OtherQuoteAccepted for the four causes on prd.md line 253, in the naming style of ProviderSuspended and ProviderDeactivated.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-quote.cancellation_provenance"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261110-154712-5bf4d524",
+      "at": "2026-11-10T15:47:12.319927+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-001 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-patient.account_status becomes Active, Suspended, Deactivated (sort order 0, 1, 2). inactive and pending_verification leave the list. FR-001 Screen 19 (prd.md line 910) is a PRD line to correct.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-patient.account_status"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261110-153437-9ae99340",
       "at": "2026-11-10T15:34:37.052569+00:00",
