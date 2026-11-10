@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T13:38:28Z",
+  "generated_at": "2026-11-10T13:55:08Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -40548,9 +40548,9 @@
       "owner_fr": "FR-001",
       "title": "Deletion confirmation modal: Confirm submits, Cancel returns",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The modal's Confirm submits the request and Cancel returns to the screen.",
+        "statement": "On the Delete Account screen, the confirmation modal's Confirm submits the deletion request and Cancel returns to the Delete Account screen.",
         "rationale": "prd.md line 808 (Screen 16 Delete Account, Confirmation Modal validation cell). Split from REQ-001-156 under decision D52."
       }
     },
@@ -87796,6 +87796,42 @@
       "attrs": {
         "statement": "The Case Title column is truncated with ellipsis if over 50 characters; the full title is shown on hover.",
         "rationale": "Screen 1, Table Column 3 (PRD line 370; the line moved up from 371)."
+      }
+    },
+    {
+      "id": "REQ-034-161",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Send Resolution Email defaults to checked",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Send Resolution Email checkbox is checked by default.",
+        "rationale": "Screen 4 (PRD line 572)."
+      }
+    },
+    {
+      "id": "REQ-034-162",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Notify New Assignee defaults to checked",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Notify New Assignee checkbox is checked by default.",
+        "rationale": "Screen 5 (PRD line 611)."
+      }
+    },
+    {
+      "id": "REQ-034-163",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Notify Patient/Provider on reopening defaults to checked",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Notify Patient/Provider checkbox is checked by default.",
+        "rationale": "Screen 6 (PRD line 645)."
       }
     },
     {
@@ -161780,7 +161816,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 152
+        "rules": 155
       },
       "derived": true
     },
@@ -161789,7 +161825,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 153
+        "rules": 156
       },
       "derived": true
     },
@@ -247012,6 +247048,60 @@
       "from_id": "REQ-034-160",
       "verb": "applies to",
       "to_id": "SCR-034-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-161",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-161",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-161",
+      "verb": "applies to",
+      "to_id": "SCR-034-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-162",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-162",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-162",
+      "verb": "applies to",
+      "to_id": "SCR-034-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-163",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-163",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-163",
+      "verb": "applies to",
+      "to_id": "SCR-034-06",
       "attrs": {}
     },
     {
@@ -367556,6 +367646,36 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-135403-610e9458",
+      "at": "2026-11-10T13:54:03.808537+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-034 Rules released from 2026-11-10-fr034-completeness-held.yaml after the decision D52 follow-up (the user decided the wording of REQ-034-161, REQ-034-162 and REQ-034-163), with their edges. Apply after 2026-11-10-fr034-rule-wording.yaml.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-034-161",
+        "REQ-034-162",
+        "REQ-034-163"
+      ],
+      "nodes_updated": [],
+      "edges_added": 9,
+      "edges_removed": 0,
+      "rows": 27
+    },
+    {
+      "id": "cs-20261110-135403-93e1092f",
+      "at": "2026-11-10T13:54:03.706029+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-001 Rule wording follow-up to decision D52: the user reworded REQ-001-162 so it names the Delete Account screen (PRD line 808). Apply after 2026-11-10-fr001-rule-wording.yaml.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-001-162"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261110-133727-06525063",
       "at": "2026-11-10T13:37:27.651437+00:00",
