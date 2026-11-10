@@ -1,6 +1,147 @@
 reason: "FR-006 completeness fixes held for a user decision (tester-261110-fr006-completeness.md): every Step the PRD says the system, Payment Service or Notification Service performs, the human steps reachable only through them, their Flows, next and starts at links, and the booking.scheduled emission at the booking stage. Apply after 2026-11-10-fr006-completeness-fixes.yaml."
 by: tester
 operations:
-  # 2026-11-10 D44: 221 ops that waited only on the system Actor left this file (221 moved to 2026-11-10-fr006-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # 2026-11-10 D44: 174 ops that waited only on the system Actor left this file (174 moved to 2026-11-10-fr006-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
+  # waits on: no System Actor (the flow starts at a system-performed step)
+  # waits on: its starts at edge stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "FLW-006-b1", "type": "Flow", "title": "Payment failure during the slot hold", "attrs": {"kind": "alternative", "description": "Payment failure during the slot hold", "prd_ref": "Alternative Flow B1"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: external-service question (payment capture)
+  - {"op": "add_node", "id": "STP-006-005", "type": "Step", "title": "Payment Service authorizes and captures the deposit or schedules installments", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 5"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-005", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-005", "verb": "applies", "to": "REQ-006-010"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-006", "type": "Step", "title": "System sets the booking to Confirmed and unmasks patient identity to the provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 6"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "applies", "to": "REQ-006-002"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "applies", "to": "REQ-006-008"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-007", "type": "Step", "title": "System creates the appointment record, converts the hold into a provider calendar block and shows the booking in the provider dashboard", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 7"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "on", "to": "SCR-006-03"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "applies", "to": "REQ-006-003"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "applies", "to": "REQ-006-068"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "applies", "to": "REQ-006-069"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-008", "type": "Step", "title": "Notification Service sends confirmations to patient and provider and the admin dashboard updates", "owner_fr": "FR-006", "attrs": {"prd_ref": "Main Flow step 8"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-008", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-008", "verb": "applies", "to": "REQ-006-011"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-008 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-008", "verb": "applies", "to": "REQ-006-026"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: external-service question (payment capture)
+  - {"op": "add_node", "id": "STP-006-201", "type": "Step", "title": "Payment Service applies the FR-007 retry policy after a first-payment failure", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-201 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-201", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-201 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-201", "verb": "applies", "to": "REQ-006-016"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-202", "type": "Step", "title": "System keeps the single hold unchanged after a payment failure", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-202 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-202", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-202 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-202", "verb": "applies", "to": "REQ-006-005"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-202 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-202", "verb": "applies", "to": "REQ-006-016"}
+  # waits on: no System Actor (human step reachable only through a held system step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-203", "type": "Step", "title": "Patient retries payment from the Accepted Subquote view while the hold is active", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  # waits on: no System Actor (human step reachable only through a held system step)
+  # waits on: endpoint STP-006-203 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-203", "verb": "done by", "to": "ACT-patient"}
+  # waits on: no System Actor (human step reachable only through a held system step)
+  # waits on: endpoint STP-006-203 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-203", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (human step reachable only through a held system step)
+  # waits on: endpoint STP-006-203 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-203", "verb": "on", "to": "SCR-006-01"}
+  # waits on: no System Actor (human step reachable only through a held system step)
+  # waits on: endpoint STP-006-203 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-203", "verb": "applies", "to": "REQ-006-035"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-204", "type": "Step", "title": "System releases the hold, blocks further payment and moves the booking to Payment Window Expired", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-204 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-204", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-204 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-204", "verb": "applies", "to": "REQ-006-005"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-204 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-204", "verb": "applies", "to": "REQ-006-016"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-204 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-204", "verb": "applies", "to": "REQ-006-037"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-006-205", "type": "Step", "title": "System sends the Payment Window Expired notice to patient and provider", "owner_fr": "FR-006", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-205 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-205", "verb": "at", "to": "STG-main-04-booking"}
+  # waits on: no System Actor (system-performed step)
+  # waits on: endpoint STP-006-205 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-205", "verb": "applies", "to": "REQ-006-011"}
+  # waits on: no System Actor (flow start step is held)
+  # waits on: endpoint STP-006-201 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "FLW-006-b1", "verb": "starts at", "to": "STP-006-201"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-004", "verb": "next", "to": "STP-006-005"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-005 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-005", "verb": "next", "to": "STP-006-006"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-006 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "next", "to": "STP-006-007"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-007 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-007", "verb": "next", "to": "STP-006-008"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-201 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-201", "verb": "next", "to": "STP-006-202"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-202 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-202", "verb": "next", "to": "STP-006-203"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-203 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-203", "verb": "next", "to": "STP-006-204"}
+  # waits on: no System Actor (next link touches a held step)
+  # waits on: endpoint STP-006-204 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-006-204", "verb": "next", "to": "STP-006-205"}
   # waits on: decision 5 (stage of the booking.scheduled replacement acceptance, PRD lines 175, 799, 1133)
   - {"op": "add_edge", "from": "STG-main-04-booking", "verb": "emits", "to": "EVT-booking-scheduled"}

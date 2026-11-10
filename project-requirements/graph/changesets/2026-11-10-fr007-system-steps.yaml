@@ -109,27 +109,6 @@ operations:
   - {"op": "add_edge", "from": "STP-007-041", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
   - {"op": "add_edge", "from": "STP-007-041", "verb": "applies", "to": "REQ-007-041", "attrs": {}}
   # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007-042", "type": "Step", "title": "Payment Service performs up to 3 automatic retries with exponential backoff and shows final failure if retries exhaust", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
-  # done by: ACT-system (decision D44; the Step had no doer)
-  - {"op": "add_edge", "from": "STP-007-042", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-007-042", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-042", "verb": "applies", "to": "REQ-007-041", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-041", "verb": "next", "to": "STP-007-042", "attrs": {"label": "transient error"}}
-  # waits on: no System Actor
-  - {"op": "add_node", "id": "STP-007-043", "type": "Step", "title": "System displays a clear error and suggested next steps for a hard decline", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
-  # done by: ACT-system (decision D44; the Step had no doer)
-  - {"op": "add_edge", "from": "STP-007-043", "verb": "done by", "to": "ACT-system"}
-  - {"op": "add_edge", "from": "STP-007-043", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-043", "verb": "applies", "to": "REQ-007-042", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-042", "verb": "next", "to": "STP-007-043", "attrs": {"label": "retries exhausted or hard decline"}}
-  # waits on: no System Actor (reachable only through a held System step)
-  - {"op": "add_node", "id": "STP-007-044", "type": "Step", "title": "Patient retries or selects another method against the same accepted snapshot while the original hold remains valid", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow B2 step 4"}}
-  - {"op": "add_edge", "from": "STP-007-044", "verb": "done by", "to": "ACT-patient", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-044", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-044", "verb": "applies", "to": "REQ-007-042", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-044", "verb": "applies", "to": "REQ-007-043", "attrs": {}}
-  - {"op": "add_edge", "from": "STP-007-043", "verb": "next", "to": "STP-007-044", "attrs": {"label": "error shown"}}
-  # waits on: no System Actor
   - {"op": "add_node", "id": "STP-007-051", "type": "Step", "title": "System rejects the request before calling the processor and shows the FR-006 outcome and recovery instructions", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow B3 step 1"}}
   # done by: ACT-system (decision D44; the Step had no doer)
   - {"op": "add_edge", "from": "STP-007-051", "verb": "done by", "to": "ACT-system"}
