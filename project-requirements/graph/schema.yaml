@@ -2,7 +2,7 @@
 # Changing node types, verbs or enum values is a schema migration: back up graph.db first.
 
 # Schema version, stored in graph.db as PRAGMA user_version.
-version: 6
+version: 7
 
 # Closed value lists. Attribute specs below may name one of these as their type.
 enums:
@@ -21,8 +21,9 @@ enums:
     - session
   # Timelines that Stages belong to: the treatment case plus the parallel timelines.
   timeline: [main, aftercare, monitoring, provider-account, patient-account]
-  # Which side of the platform an Actor works on: Hairline staff, a clinic, or the patient.
-  actor_group: [admin, provider, patient]
+  # Which side of the platform an Actor works on: Hairline staff, a clinic, or the patient. The group
+  # 'system' is the platform itself, acting for steps it performs automatically.
+  actor_group: [admin, provider, patient, system]
   # A Rule with no specific stage or object it constrains; L02 and L13 accept it.
   rule_scope: [global]
   # What a Flow start point names: an FR's main flow, a named alternative flow, or a journey across FRs.
