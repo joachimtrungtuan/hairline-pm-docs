@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T12:06:05Z",
+  "generated_at": "2026-11-10T13:38:28Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -40327,6 +40327,234 @@
       }
     },
     {
+      "id": "REQ-001-144",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Terms and Privacy Policy links keep the name form state",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Terms and Conditions and Privacy Policy links on the name screen open the latest published documents (FR-027) and do not disrupt the form state.",
+        "rationale": "Proposed from prd.md line 359-360 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-145",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Account creation legal footer is static text",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Terms of Service and Privacy Policy reference on the account creation screen is static informational text and is not interactive.",
+        "rationale": "Proposed from prd.md line 385 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-146",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Verification code input is numeric and needs all six digits",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The verification code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.",
+        "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-147",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Reset code input is numeric and needs all six digits",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The reset code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.",
+        "rationale": "Proposed from prd.md line 543-544 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-148",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Login button disabled until both fields have input",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Login button is disabled until both fields have input; it submits credentials.",
+        "rationale": "prd.md line 500 (Screen 9 Login, Login Button validation cell). The other half of the proposal (line 498) is REQ-001-158 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-001-149",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Send code disabled until the email is valid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Send code button is disabled until the email field has valid input.",
+        "rationale": "Proposed from prd.md line 523 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-150",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Save and Login disabled until both passwords are valid and match",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Save and Login button is disabled until both fields are valid and matching; it creates a new session on success.",
+        "rationale": "prd.md line 567 (Screen 12 Password Reset, Save and Login Button validation cell). The other half of the proposal (line 573) is REQ-001-159 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-001-151",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Payment method menu item opens payment method management",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Payment method item on the profile overview opens payment method management.",
+        "rationale": "Proposed from prd.md line 589 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-152",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Settings navigation sections are static",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On the Settings Main Screen (Screen 15), navigation sections are static items — always visible in the same order.",
+        "rationale": "prd.md line 655 (Screen 15 Settings Main, Business Rules). The other half of the proposal (line 656) is REQ-001-160 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-001-153",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Edit Profile save disabled until required fields are valid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On the Edit Profile screen, the Save and update button is disabled until all required fields are valid; it persists changes.",
+        "rationale": "prd.md line 631 (Screen 14 Edit Profile, Save and Update Button validation cell). The Change Password half of the proposal (line 838) is REQ-001-161 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-001-154",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Notification toggle shows save status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "After a notification toggle change the screen briefly shows Saving or Saved feedback.",
+        "rationale": "Proposed from prd.md line 684 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-155",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Create account on the profile screen needs all required fields",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Create account button on the profile creation screen is disabled until all required fields are complete.",
+        "rationale": "Proposed from prd.md line 434 (table cells, not a PRD sentence)."
+      }
+    },
+    {
+      "id": "REQ-001-156",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Request deletion re-verifies identity when the last authentication is stale",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Request deletion button triggers identity re-verification if the last authentication was more than 5 minutes ago, otherwise shows the confirmation modal.",
+        "rationale": "prd.md line 807 (Screen 16 Delete Account, Request Deletion Button validation cell; line 809 states the same threshold). The modal half (line 808) is REQ-001-162 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-001-157",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Reset code expires after 15 minutes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The reset code expires after 15 minutes (configurable via Admin Settings A-09).",
+        "rationale": "prd.md line 543 (Screen 11 Reset Code Entry, OTP Code Input validation cell, last clause). Added beside REQ-001-147 under decision D52; no live or held Rule states this expiry."
+      }
+    },
+    {
+      "id": "REQ-001-158",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Login password is masked with a show/hide toggle",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Password field on the Login screen is masked by default; a show/hide toggle is available.",
+        "rationale": "prd.md line 498 (Screen 9 Login, Password validation cell). Split from REQ-001-148 under decision D52."
+      }
+    },
+    {
+      "id": "REQ-001-159",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Password Reset screen has a password visibility toggle",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On the Password Reset screen, a password visibility toggle is available.",
+        "rationale": "prd.md line 573 (Screen 12 Password Reset, Business Rules). Split from REQ-001-150 under decision D52."
+      }
+    },
+    {
+      "id": "REQ-001-160",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Settings navigation rows open sub-screens and keep back navigation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On the Settings Main Screen (Screen 15), tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 15.",
+        "rationale": "prd.md line 656 (Screen 15 Settings Main, Business Rules). Split from REQ-001-152 under decision D52."
+      }
+    },
+    {
+      "id": "REQ-001-161",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Change Password save disabled until required fields are present",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On the Change Password screen, the Save button is disabled until all required fields are present.",
+        "rationale": "prd.md line 838 (Screen 17 Change Password, Save Button validation cell). Split from REQ-001-153 under decision D52."
+      }
+    },
+    {
+      "id": "REQ-001-162",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Deletion confirmation modal: Confirm submits, Cancel returns",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The modal's Confirm submits the request and Cancel returns to the screen.",
+        "rationale": "prd.md line 808 (Screen 16 Delete Account, Confirmation Modal validation cell). Split from REQ-001-156 under decision D52."
+      }
+    },
+    {
       "id": "REQ-002-001",
       "type": "Rule",
       "owner_fr": "FR-002",
@@ -54301,6 +54529,18 @@
       }
     },
     {
+      "id": "REQ-013-076",
+      "type": "Rule",
+      "owner_fr": "FR-013",
+      "title": "Takedown request queue filter",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The takedown request queue is filterable by status and date.",
+        "rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 436); wording awaits user review."
+      }
+    },
+    {
       "id": "REQ-014-001",
       "type": "Rule",
       "owner_fr": "FR-014",
@@ -61453,6 +61693,18 @@
       }
     },
     {
+      "id": "REQ-016-199",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "Admin notes on a deletion request are optional and are stored in the a",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admin notes on a deletion request are optional and are stored in the audit trail when the admin approves or denies the request.",
+        "rationale": "Proposed from prd.md, Screen 8 data field Modal: Admin Notes (line 629): \"Optional notes about verification/contact; Stored in audit trail if approving/denying\"."
+      }
+    },
+    {
       "id": "REQ-017-001",
       "type": "Rule",
       "owner_fr": "FR-017",
@@ -63406,6 +63658,102 @@
       "attrs": {
         "statement": "Provider payout adjusted: under the Percentage model, original commission calculated on £2,700, recalculated on £2,000; under the Flat Rate model, the per-procedure deduction is unchanged because the base procedure is still completed",
         "rationale": "Edge case, partial refund of add-on packages (prd.md lines 1743-1749: Stripe refund for the add-ons; invoice shows Partial Refund and New Total)."
+      }
+    },
+    {
+      "id": "REQ-017-164",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Active Currency Alerts tile opens the filtered alert list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Clicking the Active Currency Alerts figure on the dashboard opens the notification list filtered to unresolved currency alerts; each alert links to the Currency Alert Detail Modal (Screen 8); the badge is hidden when the count is zero.",
+        "rationale": "Screen 1, Active Currency Alerts widget (PRD line 327)."
+      }
+    },
+    {
+      "id": "REQ-017-165",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Retry Payout modal shows prior failure reason and payout readiness",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Retry Payout modal shows the prior failure reason and the current payout readiness state of the statement before the admin confirms the retry.",
+        "rationale": "Screen 3, Retry Payout modal (PRD lines 525-534)."
+      }
+    },
+    {
+      "id": "REQ-017-166",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Invoice PDF template is fixed in code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The invoice PDF template structure (branding and layout) is fixed in the codebase and is not editable by admins.",
+        "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1220)."
+      }
+    },
+    {
+      "id": "REQ-017-167",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Commission formulas are fixed in code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Percentage and Flat Rate commission calculation formulas are fixed in business logic and are not editable by admins; the active model and value come from the effective provider commission configuration resolved from FR-015 and FR-029.",
+        "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1217)."
+      }
+    },
+    {
+      "id": "REQ-017-168",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Exchange API source is set in environment variables",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The currency exchange API source (xe.com or equivalent) is configured in environment variables and is not editable by admins; USD is the fixed base currency.",
+        "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1218), first two clauses. The currency-pairs clause is REQ-017-171 (decision D52 split)."
+      }
+    },
+    {
+      "id": "REQ-017-169",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Stripe connection parameters live in the secrets vault",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Stripe account connection parameters (API keys) are managed through the secrets vault and are not editable by admins.",
+        "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1219)."
+      }
+    },
+    {
+      "id": "REQ-017-170",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Failed Stripe transfers are retried up to 3 times",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A failed Stripe transfer for a provider or affiliate payout is retried up to 3 times; if all retries fail the payout is flagged for manual review and the payout failed event is triggered.",
+        "rationale": "Implementation Notes, Integration 1: Stripe Transfers API (PRD line 1443)."
+      }
+    },
+    {
+      "id": "REQ-017-171",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Supported currency pairs are configurable in FR-029",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Supported currency pairs are dynamically configurable in FR-029.",
+        "rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1218), last clause (FR-029 / A-09). Split from REQ-017-168 under decision D52."
       }
     },
     {
@@ -67105,6 +67453,54 @@
       }
     },
     {
+      "id": "REQ-019-104",
+      "type": "Rule",
+      "owner_fr": "FR-019",
+      "title": "Bulk Revoke of selected codes requires a mandatory reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Bulk Revoke of selected codes requires a mandatory reason.",
+        "rationale": "prd.md line 418 (Screen 5 data fields: Bulk Revoke, validation Mandatory reason)."
+      }
+    },
+    {
+      "id": "REQ-019-105",
+      "type": "Rule",
+      "owner_fr": "FR-019",
+      "title": "The Code-only application mode requires a Code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An Application Mode of Code-only requires the Code field to be filled.",
+        "rationale": "prd.md line 590 (Screen 9 fields: Code-only requires Code field)."
+      }
+    },
+    {
+      "id": "REQ-019-106",
+      "type": "Rule",
+      "owner_fr": "FR-019",
+      "title": "The adoption decision comment is optional and at most 500 characters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The deciding actor's comment on an adoption is optional and at most 500 characters.",
+        "rationale": "prd.md line 344 (Screen 3 adoption columns: Comment, 500 characters)."
+      }
+    },
+    {
+      "id": "REQ-019-107",
+      "type": "Rule",
+      "owner_fr": "FR-019",
+      "title": "Hub search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Hub code or keyword search needs at least 2 characters, debounces 500 ms and matches case-insensitively with fuzzy matching.",
+        "rationale": "prd.md line 208 (Screen 1 data fields: Code / keyword search)."
+      }
+    },
+    {
       "id": "REQ-019-108",
       "type": "Rule",
       "owner_fr": "FR-019",
@@ -70306,6 +70702,30 @@
       "attrs": {
         "statement": "Use fallback locale template/content when recipient locale is missing.",
         "rationale": "PRD Integration Points, Notification Service (prd.md line 884)."
+      }
+    },
+    {
+      "id": "REQ-021-116",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Provider dashboard language preference persists before re-render",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The save/apply action applies the selected language to the dashboard session and profile preference and must persist the preference before refresh/re-render.",
+        "rationale": "PRD Screen 2 Save/apply action validation (prd.md line 269)."
+      }
+    },
+    {
+      "id": "REQ-021-117",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Admin language preference persists on apply",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The apply action applies the selected language to the admin session and preference and must persist the preference.",
+        "rationale": "PRD Screen 3 Apply action validation (prd.md line 299)."
       }
     },
     {
@@ -81466,6 +81886,66 @@
       }
     },
     {
+      "id": "REQ-030-213",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Out of scope: real-time chat between users",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Out of scope: Real-time chat/messaging between users (handled by P-06: Communication)",
+        "rationale": "prd.md line 84 (Communication Structure, Out of Scope, heading line 82). The other four bullets (lines 85 to 88) are REQ-030-214 to 217 (decision D52: one Rule per bullet)."
+      }
+    },
+    {
+      "id": "REQ-030-214",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Out of scope: video consultation notifications",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Out of scope: Video consultation notifications (covered under aftercare-specific notifications)",
+        "rationale": "prd.md line 85 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."
+      }
+    },
+    {
+      "id": "REQ-030-215",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Out of scope: third-party notification platforms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Out of scope: Third-party notification platform integrations beyond email, SMS, push (e.g., WhatsApp, Telegram - future enhancement)",
+        "rationale": "prd.md line 86 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."
+      }
+    },
+    {
+      "id": "REQ-030-216",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Out of scope: user-to-user notification forwarding",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Out of scope: User-to-user notification forwarding or sharing",
+        "rationale": "prd.md line 87 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."
+      }
+    },
+    {
+      "id": "REQ-030-217",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Out of scope: AI/ML notification personalization",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Out of scope: Notification content personalization based on AI/ML (future enhancement)",
+        "rationale": "prd.md line 88 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."
+      }
+    },
+    {
       "id": "REQ-031-001",
       "type": "Rule",
       "owner_fr": "FR-031",
@@ -87307,6 +87787,18 @@
       }
     },
     {
+      "id": "REQ-034-160",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Case list truncates long case titles",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Case Title column is truncated with ellipsis if over 50 characters; the full title is shown on hover.",
+        "rationale": "Screen 1, Table Column 3 (PRD line 370; the line moved up from 371)."
+      }
+    },
+    {
       "id": "REQ-035-001",
       "type": "Rule",
       "owner_fr": "FR-035",
@@ -88216,6 +88708,18 @@
       "attrs": {
         "statement": "Patient-visible support categories (admin cannot add or remove categories from the fixed list but may update labels in future)",
         "rationale": "Configurable with Restrictions (487). Editable by Admin (475) says patient-facing category descriptions and category visibility are managed via FR-033, which sits uneasily with a fixed list and with FR-033 being the help content module: see product owner decision list. Business assumption 4 (600)."
+      }
+    },
+    {
+      "id": "REQ-035-077",
+      "type": "Rule",
+      "owner_fr": "FR-035",
+      "title": "My Support Tickets empty state",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Empty State shown when the patient has no tickets (or none match the filter): \"No support tickets yet. Need help? Tap 'Create New Ticket'.\"",
+        "rationale": "Screen 3 Empty State field (PRD line 366)."
       }
     },
     {
@@ -159125,7 +159629,7 @@
       "verb": "active in",
       "to_id": "STG-patient-01-registered",
       "attrs": {
-        "rules": 37
+        "rules": 40
       },
       "derived": true
     },
@@ -159134,7 +159638,7 @@
       "verb": "active in",
       "to_id": "STG-patient-02-profile-complete",
       "attrs": {
-        "rules": 16
+        "rules": 17
       },
       "derived": true
     },
@@ -159143,7 +159647,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 114
+        "rules": 129
       },
       "derived": true
     },
@@ -159725,7 +160229,7 @@
       "verb": "active in",
       "to_id": "STG-main-09-review-close",
       "attrs": {
-        "rules": 72
+        "rules": 73
       },
       "derived": true
     },
@@ -160049,7 +160553,7 @@
       "verb": "active in",
       "to_id": "STG-patient-05-deleted",
       "attrs": {
-        "rules": 22
+        "rules": 23
       },
       "derived": true
     },
@@ -160058,7 +160562,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 87
+        "rules": 91
       },
       "derived": true
     },
@@ -160067,7 +160571,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 109
+        "rules": 113
       },
       "derived": true
     },
@@ -160223,7 +160727,7 @@
       "verb": "active in",
       "to_id": "STG-main-02-quote",
       "attrs": {
-        "rules": 73
+        "rules": 77
       },
       "derived": true
     },
@@ -160493,7 +160997,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 94
+        "rules": 95
       },
       "derived": true
     },
@@ -160511,7 +161015,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 19
+        "rules": 20
       },
       "derived": true
     },
@@ -160973,7 +161477,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 136
+        "rules": 141
       },
       "derived": true
     },
@@ -161276,7 +161780,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 151
+        "rules": 152
       },
       "derived": true
     },
@@ -161285,7 +161789,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 152
+        "rules": 153
       },
       "derived": true
     },
@@ -161294,7 +161798,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 75
+        "rules": 76
       },
       "derived": true
     },
@@ -163888,6 +164392,240 @@
       "from_id": "REQ-001-143",
       "verb": "applies to",
       "to_id": "ENT-patient-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-144",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-144",
+      "verb": "applies to",
+      "to_id": "SCR-001-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-145",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-145",
+      "verb": "applies to",
+      "to_id": "SCR-001-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-146",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-146",
+      "verb": "applies to",
+      "to_id": "ENT-otp-code.code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-146",
+      "verb": "applies to",
+      "to_id": "SCR-001-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-147",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-147",
+      "verb": "applies to",
+      "to_id": "ENT-otp-code.code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-147",
+      "verb": "applies to",
+      "to_id": "SCR-001-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-148",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-148",
+      "verb": "applies to",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-149",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-149",
+      "verb": "applies to",
+      "to_id": "SCR-001-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-150",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-150",
+      "verb": "applies to",
+      "to_id": "SCR-001-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-151",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-151",
+      "verb": "applies to",
+      "to_id": "SCR-001-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-152",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-153",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-153",
+      "verb": "applies to",
+      "to_id": "SCR-001-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-154",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-154",
+      "verb": "applies to",
+      "to_id": "SCR-001-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-155",
+      "verb": "applies at",
+      "to_id": "STG-patient-02-profile-complete",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-155",
+      "verb": "applies to",
+      "to_id": "SCR-001-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-156",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-156",
+      "verb": "applies to",
+      "to_id": "SCR-001-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-156",
+      "verb": "applies to",
+      "to_id": "SCR-001-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-157",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-157",
+      "verb": "applies to",
+      "to_id": "SCR-001-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-158",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-158",
+      "verb": "applies to",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-159",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-159",
+      "verb": "applies to",
+      "to_id": "SCR-001-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-160",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-161",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-161",
+      "verb": "applies to",
+      "to_id": "SCR-001-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-162",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-162",
+      "verb": "applies to",
+      "to_id": "SCR-001-16",
       "attrs": {}
     },
     {
@@ -188359,6 +189097,36 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-013-076",
+      "verb": "applies at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-076",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-076",
+      "verb": "applies to",
+      "to_id": "ENT-takedown-request.created_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-076",
+      "verb": "applies to",
+      "to_id": "ENT-takedown-request.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-076",
+      "verb": "applies to",
+      "to_id": "SCR-013-09",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-014-001",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -203977,6 +204745,24 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-016-199",
+      "verb": "applies at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-199",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-199",
+      "verb": "applies to",
+      "to_id": "SCR-016-08",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-017-001",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -207310,6 +208096,132 @@
       "from_id": "REQ-017-163",
       "verb": "governed by",
       "to_id": "SET-commission-rate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-164",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-164",
+      "verb": "applies to",
+      "to_id": "ENT-financial-report.active_currency_alerts",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-164",
+      "verb": "applies to",
+      "to_id": "SCR-017-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-165",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-165",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-165",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-166",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-166",
+      "verb": "applies to",
+      "to_id": "ENT-patient-invoice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-166",
+      "verb": "applies to",
+      "to_id": "SCR-017-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-167",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-167",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-168",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-168",
+      "verb": "applies to",
+      "to_id": "ENT-currency-rate-lock",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-169",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-169",
+      "verb": "applies to",
+      "to_id": "ENT-patient-invoice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-169",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-170",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-170",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-commission",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-170",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-170",
+      "verb": "applies to",
+      "to_id": "EVT-billing-payout-failed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-171",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
       "attrs": {}
     },
     {
@@ -212623,6 +213535,54 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-104",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-104",
+      "verb": "applies to",
+      "to_id": "SCR-019-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-105",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-105",
+      "verb": "applies to",
+      "to_id": "SCR-019-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-106",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-106",
+      "verb": "applies to",
+      "to_id": "ENT-promotion-adoption.comment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-107",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-107",
+      "verb": "applies to",
+      "to_id": "SCR-019-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-108",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -217930,6 +218890,42 @@
       "from_id": "REQ-021-115",
       "verb": "applies to",
       "to_id": "ENT-locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-116",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-116",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-116",
+      "verb": "applies to",
+      "to_id": "SCR-021-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-117",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-117",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-117",
+      "verb": "applies to",
+      "to_id": "SCR-021-03",
       "attrs": {}
     },
     {
@@ -237517,6 +238513,36 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-030-213",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-214",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-215",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-216",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-217",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-031-001",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
@@ -245965,6 +246991,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-034-160",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-160",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-160",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.title",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-160",
+      "verb": "applies to",
+      "to_id": "SCR-034-01",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-035-001",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -247384,6 +248434,18 @@
       "from_id": "REQ-035-076",
       "verb": "applies to",
       "to_id": "ENT-support-case-category",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-077",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-077",
+      "verb": "applies to",
+      "to_id": "SCR-035-03",
       "attrs": {}
     },
     {
@@ -366494,6 +367556,165 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-133727-06525063",
+      "at": "2026-11-10T13:37:27.651437+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-035 Rules released from 2026-11-10-fr035-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-035-077"
+      ],
+      "nodes_updated": [],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 8
+    },
+    {
+      "id": "cs-20261110-133727-abd06010",
+      "at": "2026-11-10T13:37:27.551145+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-034 Rules released from 2026-11-10-fr034-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-034-160"
+      ],
+      "nodes_updated": [],
+      "edges_added": 4,
+      "edges_removed": 0,
+      "rows": 10
+    },
+    {
+      "id": "cs-20261110-133727-a26f1335",
+      "at": "2026-11-10T13:37:27.446443+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-030 Rules released from 2026-11-10-fr030-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-030-213",
+        "REQ-030-214",
+        "REQ-030-215",
+        "REQ-030-216",
+        "REQ-030-217"
+      ],
+      "nodes_updated": [],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 35
+    },
+    {
+      "id": "cs-20261110-133727-2a5e6ac0",
+      "at": "2026-11-10T13:37:27.340709+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-021 Rules released from 2026-11-10-fr021-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-021-116",
+        "REQ-021-117"
+      ],
+      "nodes_updated": [],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 18
+    },
+    {
+      "id": "cs-20261110-133727-90388d78",
+      "at": "2026-11-10T13:37:27.236406+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-019 Rules released from 2026-11-10-fr019-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-019-104",
+        "REQ-019-105",
+        "REQ-019-106",
+        "REQ-019-107"
+      ],
+      "nodes_updated": [],
+      "edges_added": 8,
+      "edges_removed": 0,
+      "rows": 32
+    },
+    {
+      "id": "cs-20261110-133727-5761a486",
+      "at": "2026-11-10T13:37:27.129039+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-017 Rules released from 2026-11-10-fr017-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-017-164",
+        "REQ-017-165",
+        "REQ-017-166",
+        "REQ-017-167",
+        "REQ-017-168",
+        "REQ-017-169",
+        "REQ-017-170",
+        "REQ-017-171"
+      ],
+      "nodes_updated": [],
+      "edges_added": 21,
+      "edges_removed": 0,
+      "rows": 69
+    },
+    {
+      "id": "cs-20261110-133727-15e3afb3",
+      "at": "2026-11-10T13:37:27.015140+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-016 Rules released from 2026-11-10-fr016-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-016-199"
+      ],
+      "nodes_updated": [],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 9
+    },
+    {
+      "id": "cs-20261110-133726-08fc6169",
+      "at": "2026-11-10T13:37:26.910106+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-013 Rules released from 2026-11-10-fr013-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-013-076"
+      ],
+      "nodes_updated": [],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 11
+    },
+    {
+      "id": "cs-20261110-133726-2a66f5b8",
+      "at": "2026-11-10T13:37:26.800180+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-001 Rules released from 2026-11-10-fr001-completeness-held.yaml after decision D52 (the user approved the wording of the Rules that waited on the new Rule wording review; changed statements and split Rules as decided), with their edges. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-001-144",
+        "REQ-001-145",
+        "REQ-001-146",
+        "REQ-001-147",
+        "REQ-001-148",
+        "REQ-001-149",
+        "REQ-001-150",
+        "REQ-001-151",
+        "REQ-001-152",
+        "REQ-001-153",
+        "REQ-001-154",
+        "REQ-001-155",
+        "REQ-001-156",
+        "REQ-001-157",
+        "REQ-001-158",
+        "REQ-001-159",
+        "REQ-001-160",
+        "REQ-001-161",
+        "REQ-001-162"
+      ],
+      "nodes_updated": [],
+      "edges_added": 39,
+      "edges_removed": 0,
+      "rows": 153
+    },
     {
       "id": "cs-20261110-120501-32af7ad7",
       "at": "2026-11-10T12:05:01.349289+00:00",
