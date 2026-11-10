@@ -4,10 +4,6 @@ operations:
   # 2026-11-10 D44: 102 ops that waited only on the system Actor left this file (102 moved to 2026-11-10-fr019-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D52: 12 ops left this file (moved to 2026-11-10-fr019-rule-wording.yaml, with 0 new split-Rule ops): the Rules whose wording the user approved and their edges; the ops below still wait on their own reason.
   # 2026-11-10 D50: 35 ops left this file (moved to 2026-11-10-fr019-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 6 decided by links below are unclear matches kept held and listed for the user; the ops below still wait on their own reason.
+  # 2026-11-10 D50 follow-up: user rulings of 23:05 on the decided by links kept held by D50: 2 ops left this file for 2026-11-10-fr019-decision-links-followup.yaml (2 Entity storage links released); 2 ops dropped by ruling with no graph change; 1 op dropped because the ruled better link is already live; 1 decided by link stays held by ruling; the D50 note above is superseded where it counts unclear links (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md).
   # waits on: which Rule each Product Owner code decided; the PRD names these codes only in Change Log rows 2.2 to 2.4, by topic, so each link is a reading (controller moved these from the fixes file)
   - {"op": "add_edge", "from": "REQ-019-014", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-070", "verb": "decided by", "to": "SRC-PO-001-Q6"}
-  - {"op": "add_edge", "from": "REQ-019-017", "verb": "decided by", "to": "SRC-PO-001-Q43"}
-  - {"op": "add_edge", "from": "REQ-019-053", "verb": "decided by", "to": "SRC-PO-001-Q43"}
-  - {"op": "add_edge", "from": "ENT-promotion-program", "verb": "decided by", "to": "SRC-PO-001-Q38"}
-  - {"op": "add_edge", "from": "ENT-promotion-code", "verb": "decided by", "to": "SRC-PO-001-Q38"}

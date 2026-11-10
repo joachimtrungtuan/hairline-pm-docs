@@ -1,0 +1,7 @@
+reason: "FR-019 decided by links released from 2026-11-10-fr019-completeness-held.yaml after the user rulings of 2026-11-10 23:05 on the links D50 kept held (repoint to the better-fitting decision code where the text matches; Entity links where the code decides its storage). Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md)."
+by: fullstack-developer
+operations:
+  # D50 follow-up: Q38 decides the new promotion_programs table; the Entity is stored in promotion_programs (D50 extended to Entities whose storage a Product Owner code decides)
+  - {"op": "add_edge", "from": "ENT-promotion-program", "verb": "decided by", "to": "SRC-PO-001-Q38"}
+  # D50 follow-up: Q38 decides the new promotion_codes table; the Entity is stored in promotion_codes (D50 extended to Entities whose storage a Product Owner code decides)
+  - {"op": "add_edge", "from": "ENT-promotion-code", "verb": "decided by", "to": "SRC-PO-001-Q38"}

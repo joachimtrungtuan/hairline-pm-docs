@@ -2,5 +2,4 @@ reason: "FR-008 completeness fixes held for a product decision: decided by links
 by: tester
 operations:
   # 2026-11-10 D50: 1 op left this file (moved to 2026-11-10-fr008-decision-links.yaml): the decided by links whose decision-code topic clearly matches the Rule; the 1 decided by link below is an unclear match kept held and listed for the user; the ops below still wait on their own reason.
-  # Waits on decision 3: the change log credits Q18 to REQ-008-032 only; whether the replacement-TravelContext notices of REQ-008-072 also come from Q18 is not stated
-  - {"op": "add_edge", "from": "REQ-008-072", "verb": "decided by", "to": "SRC-PO-001-Q18"}
+  # 2026-11-10 D50 follow-up: user rulings of 23:05 on the decided by links kept held by D50: 1 op dropped by ruling with no graph change; the D50 note above is superseded where it counts unclear links (see plans/reports/fullstack-developer-261110-2330-decision-links-followup.md).
