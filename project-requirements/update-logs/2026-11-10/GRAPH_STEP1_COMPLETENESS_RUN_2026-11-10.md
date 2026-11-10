@@ -115,3 +115,11 @@ D52 settled the wording of the 31 Rules held for the new Rule wording review (FR
 - **Still held: 1,013 ops.**
 - **Backup and lint.** Backup `graph/backups/graph-20261110-211631.db` (git-ignored). Lint is unchanged at 4,466 (L10 4,196, L12 184, L18 86), with no new or resolved finding. All 234 tests passed, and `graph.json` was re-exported. Local-docs commits f280585, eb7c581 and 138de40.
 - **Report:** `plans/reports/fullstack-developer-261110-1852-platform-admin-timeline.md`, Follow-up section (Hairline root).
+
+## Split edge placement (decision D52 follow-up), applied 2026-11-10 night
+
+- **Rulings.** REQ-001-157 (the reset code expires after 15 minutes) `applies to` the field ENT-otp-code.expires_at, not the copied target ENT-otp-code.code. REQ-017-171 (supported currency pairs are configurable in FR-029) `applies to` ENT-currency-pair, not the copied target ENT-currency-rate-lock.
+- **Released (2 ops).** One edge each in `graph/changesets/2026-11-10-fr001-rule-data-links.yaml` and `graph/changesets/2026-11-10-fr017-rule-data-links.yaml`, with the decided targets. The two held edges and their wait notes were removed from the FR-001 and FR-017 held files, which now carry a dated note; every other held line is unchanged. Neither copied target is linked from these Rules in the live graph.
+- **Still held: 1,011 ops.**
+- **Backup and lint.** Backup `graph/backups/graph-20261110-212422.db` (git-ignored). Lint is unchanged at 4,466 (L10 4,196, L12 184, L18 86), with no new or resolved finding. All 234 tests passed, and `graph.json` was re-exported.
+- **Report:** `plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md`, Follow-up 2 section (Hairline root).
