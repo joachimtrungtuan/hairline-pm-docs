@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T09:35:47Z",
+  "generated_at": "2026-11-10T09:36:47Z",
   "schema_version": 7,
   "nodes": [
     {
@@ -152,7 +152,7 @@
       "owner_fr": null,
       "title": "Hairline system",
       "status": "active",
-      "version": 9,
+      "version": 11,
       "attrs": {
         "group": "system",
         "description": "The Hairline platform acting automatically, for steps the PRDs attribute to \"System\"."
@@ -35157,6 +35157,19 @@
       }
     },
     {
+      "id": "FLW-016-patient-not-found",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin cannot find the patient in search",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin cannot find the patient in search",
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
       "id": "FLW-016-patient-search-overview",
       "type": "Flow",
       "owner_fr": null,
@@ -35248,6 +35261,45 @@
       }
     },
     {
+      "id": "FLW-017-currency-alert",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Currency rate protection alert",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Currency rate protection alert: admin reviews exposed bookings and records a decision.",
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "FLW-017-main",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Provider payout processing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Provider payout processing: payout-day statements, admin approval, Stripe transfer, confirmation and failure handling.",
+        "prd_ref": "Business Workflows: Main Flow"
+      }
+    },
+    {
+      "id": "FLW-017-provider-cancellation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Payment captured after a provider-status cancellation is recorded, flagged and resolved by admin.",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Payment captured after a provider-status cancellation is recorded, flagged and resolved by admin.",
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
       "id": "FLW-018-a1",
       "type": "Flow",
       "owner_fr": null,
@@ -35326,6 +35378,19 @@
       }
     },
     {
+      "id": "FLW-018-b2",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Payout fails during FR-017 execution",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B2: Payout Processing Failure (from FR-017 Execution)",
+        "prd_ref": "B2"
+      }
+    },
+    {
       "id": "FLW-018-b3",
       "type": "Flow",
       "owner_fr": null,
@@ -35336,6 +35401,19 @@
         "kind": "alternative",
         "description": "B3: Affiliate Account Suspension",
         "prd_ref": "B3"
+      }
+    },
+    {
+      "id": "FLW-018-b4",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Bulk code generation partly fails",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B4: Bulk Code Generation Partial Failure",
+        "prd_ref": "B4"
       }
     },
     {
@@ -35365,6 +35443,84 @@
       }
     },
     {
+      "id": "FLW-019-accepted",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Subquote accepted with a promotion",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Patient accepts a subquote that carries a promotion; the Application and reservation are created atomically.",
+        "prd_ref": "Alternative Flow A5"
+      }
+    },
+    {
+      "id": "FLW-019-auto-attach",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Automatic promotion attachment at send",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A provider sends a quote while an auto-applied program is active and eligible.",
+        "prd_ref": "Alternative Flow A3"
+      }
+    },
+    {
+      "id": "FLW-019-auto-conflict",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Auto-applied single-discount conflict",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Several automatic promotions are eligible at send; priority silently picks one.",
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "FLW-019-code-invalid",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Code validation failure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A patient or provider enters an invalid, expired or limit-reached code; the reason is shown and no discount applies.",
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "FLW-019-direct-code",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Hairline-funded or direct-issued code redemption",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Patient enters an admin-issued code on one named subquote before acceptance.",
+        "prd_ref": "Alternative Flow C1"
+      }
+    },
+    {
+      "id": "FLW-019-hairline-only",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Hairline-only discount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin creates a Hairline-funded discount that the patient's price reflects and providers never see.",
+        "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
       "id": "FLW-019-main",
       "type": "Flow",
       "owner_fr": null,
@@ -35378,6 +35534,32 @@
       }
     },
     {
+      "id": "FLW-019-patient-code",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Patient applies a code before acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Patient enters a code on one named subquote before confirming acceptance.",
+        "prd_ref": "Alternative Flow A4"
+      }
+    },
+    {
+      "id": "FLW-019-post-acceptance",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Promotion change attempted after acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Any actor tries to change a promotion on an accepted subquote; the system rejects it.",
+        "prd_ref": "Alternative Flow B4"
+      }
+    },
+    {
       "id": "FLW-019-provider-inline",
       "type": "Flow",
       "owner_fr": null,
@@ -35388,6 +35570,32 @@
         "kind": "alternative",
         "description": "Provider opens the inline promotion creator from FR-004 Screen 1 and creates an ad-hoc promotion bound to one option/date-price row.",
         "prd_ref": "Alternative Flow A1b"
+      }
+    },
+    {
+      "id": "FLW-019-provider-reusable",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Provider-only reusable discount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Provider creates a reusable provider-only discount from Screen 9; it activates with no approval and is available for list selection.",
+        "prd_ref": "Alternative Flow A1a"
+      }
+    },
+    {
+      "id": "FLW-019-user-conflict",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "User-initiated single-discount conflict",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A user enters a second discount on a row that already has one and chooses replace or keep.",
+        "prd_ref": "Alternative Flow B2"
       }
     },
     {
@@ -101339,9 +101547,86 @@
       "owner_fr": "FR-016",
       "title": "Admin navigates to the Patients section in the admin dashboard",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Patient Account Search and Overview step 1"
+      }
+    },
+    {
+      "id": "STP-016-002",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays the patient list with default filters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 2"
+      }
+    },
+    {
+      "id": "STP-016-003",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin enters search criteria or applies filters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 3"
+      }
+    },
+    {
+      "id": "STP-016-004",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System executes the search and returns matching patient records",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 4"
+      }
+    },
+    {
+      "id": "STP-016-005",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays results in a paginated list with key information",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 5"
+      }
+    },
+    {
+      "id": "STP-016-006",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin clicks a patient row to view the detailed profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 6"
+      }
+    },
+    {
+      "id": "STP-016-007",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System loads the patient detail view with tabbed sections",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 7"
+      }
+    },
+    {
+      "id": "STP-016-008",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin reviews the information and takes action as needed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Patient Account Search and Overview step 8"
       }
     },
     {
@@ -101350,9 +101635,31 @@
       "owner_fr": "FR-016",
       "title": "Admin selects the Treatment Journey tab from the patient detail view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-016-012",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays chronological milestone cards",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-016-013",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System shows status, timestamp and an Open Case Detail link on each milestone",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 3"
       }
     },
     {
@@ -101361,9 +101668,75 @@
       "owner_fr": "FR-016",
       "title": "Admin selects the Medical Data tab from the patient detail view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 1"
+      }
+    },
+    {
+      "id": "STP-016-022",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System requests admin justification for access",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 2"
+      }
+    },
+    {
+      "id": "STP-016-023",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin enters the reason for accessing medical data",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 3"
+      }
+    },
+    {
+      "id": "STP-016-024",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System logs access with timestamp, admin ID and justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 4"
+      }
+    },
+    {
+      "id": "STP-016-025",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays the medical data",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 5"
+      }
+    },
+    {
+      "id": "STP-016-026",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin reviews the data and closes the tab",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 6"
+      }
+    },
+    {
+      "id": "STP-016-027",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System marks the medical data access in the audit log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 7"
       }
     },
     {
@@ -101372,9 +101745,86 @@
       "owner_fr": "FR-016",
       "title": "Admin selects the Payments tab from the patient detail view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
+      }
+    },
+    {
+      "id": "STP-016-032",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays the complete payment history",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 2"
+      }
+    },
+    {
+      "id": "STP-016-033",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin clicks a transaction to view Stripe payment intent details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 3"
+      }
+    },
+    {
+      "id": "STP-016-034",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin initiates a refund with enhanced confirmation for amounts over $1,000",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 4"
+      }
+    },
+    {
+      "id": "STP-016-041",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays \"No patients found matching your search criteria\"",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 1"
+      }
+    },
+    {
+      "id": "STP-016-042",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System suggests broadening the search",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-016-043",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin adjusts the search criteria and retries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-016-044",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin checks whether the patient account exists in a different status or was deactivated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 4"
       }
     },
     {
@@ -101416,9 +101866,75 @@
       "owner_fr": "FR-016",
       "title": "Admin selects an action from the available options",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Manual Patient Intervention step 4"
+      }
+    },
+    {
+      "id": "STP-016-055",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays a confirmation dialog with action summary, patient impact and justification field",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 5"
+      }
+    },
+    {
+      "id": "STP-016-056",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin enters the justification for the intervention",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 6"
+      }
+    },
+    {
+      "id": "STP-016-057",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin confirms the action",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 7"
+      }
+    },
+    {
+      "id": "STP-016-058",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System executes the action, logs it in the audit trail and notifies the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 8"
+      }
+    },
+    {
+      "id": "STP-016-059",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays \"Action completed successfully\"",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 9"
+      }
+    },
+    {
+      "id": "STP-016-060",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin verifies the change in the patient account",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Manual Patient Intervention step 10"
       }
     },
     {
@@ -101438,9 +101954,86 @@
       "owner_fr": "FR-016",
       "title": "Admin clicks Reset Password",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 2"
+      }
+    },
+    {
+      "id": "STP-016-063",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays the password reset confirmation dialog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 3"
+      }
+    },
+    {
+      "id": "STP-016-064",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin enters the justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 4"
+      }
+    },
+    {
+      "id": "STP-016-065",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin confirms the action",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 5"
+      }
+    },
+    {
+      "id": "STP-016-066",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System generates a password reset token",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 6"
+      }
+    },
+    {
+      "id": "STP-016-067",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System sends the reset email with a 6-digit OTP to the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 7"
+      }
+    },
+    {
+      "id": "STP-016-068",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System logs the admin action in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 8"
+      }
+    },
+    {
+      "id": "STP-016-069",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays \"Password reset email sent to patient\"",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 9"
       }
     },
     {
@@ -101482,9 +102075,98 @@
       "owner_fr": "FR-016",
       "title": "Admin clicks Suspend Account",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A6 step 4"
+      }
+    },
+    {
+      "id": "STP-016-075",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System displays the suspension warning",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 5"
+      }
+    },
+    {
+      "id": "STP-016-076",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin enters a detailed justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 6"
+      }
+    },
+    {
+      "id": "STP-016-077",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin selects the suspension duration",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 7"
+      }
+    },
+    {
+      "id": "STP-016-078",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin confirms the suspension",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 8"
+      }
+    },
+    {
+      "id": "STP-016-079",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System immediately revokes patient authentication tokens",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 9"
+      }
+    },
+    {
+      "id": "STP-016-080",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System cancels each active booking through the FR-006 admin booking cancellation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 10",
+        "handoff_to": "STP-006-301"
+      }
+    },
+    {
+      "id": "STP-016-081",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System sends the suspension notification with appeal process information",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 11"
+      }
+    },
+    {
+      "id": "STP-016-082",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System logs the suspension in the audit trail with full justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 12"
       }
     },
     {
@@ -101515,7 +102197,7 @@
       "owner_fr": "FR-016",
       "title": "Admin opens the FR-006 Cancel Booking action, enters the mandatory reason and confirms",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8 step 3",
         "handoff_to": "STP-006-301"
@@ -101527,7 +102209,7 @@
       "owner_fr": "FR-016",
       "title": "Admin opens the FR-006 Change Appointment action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8 step 4",
         "handoff_to": "FR-006: Change Appointment action (FR-006 Screen 8)"
@@ -101539,9 +102221,20 @@
       "owner_fr": "FR-016",
       "title": "Admin declines the request and records a decline reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8 step 5"
+      }
+    },
+    {
+      "id": "STP-016-096",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System links the outcome to the request, marks it Resolved or Declined and logs the action on Screen 7",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 6"
       }
     },
     {
@@ -101584,9 +102277,20 @@
       "owner_fr": "FR-016",
       "title": "Admin selects Resolve Support and enters a resolution reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 4"
+      }
+    },
+    {
+      "id": "STP-016-105",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System records the resolution reason and audit event, then clears the marker",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 5"
       }
     },
     {
@@ -101639,9 +102343,130 @@
       "owner_fr": "FR-016",
       "title": "Admin initiates the data deletion workflow",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 5"
+      }
+    },
+    {
+      "id": "STP-016-116",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System executes the deletion workflow as a soft delete with anonymization",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B5 step 6"
+      }
+    },
+    {
+      "id": "STP-016-117",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System generates a data deletion certificate for audit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B5 step 7"
+      }
+    },
+    {
+      "id": "STP-016-118",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin sends the deletion confirmation to the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B5 step 8"
+      }
+    },
+    {
+      "id": "STP-016-119",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin closes the request",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B5 step 9"
+      }
+    },
+    {
+      "id": "STP-017-001",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin opens Provider Billing Upcoming Payments list and selects a provider statement",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-017-002",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin reviews payout detail: revenue, commission, net payout, treatments, bank details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 7"
+      }
+    },
+    {
+      "id": "STP-017-003",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin enters an internal note (max 500 characters, not visible to the provider) and saves",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 8a"
+      }
+    },
+    {
+      "id": "STP-017-004",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin clicks Approve Payout; system prompts for confirmation with amount and destination",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 9"
+      }
+    },
+    {
+      "id": "STP-017-005",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin confirms or cancels the approval",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 10"
+      }
+    },
+    {
+      "id": "STP-017-006",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Statement becomes Approved; admin repeats for remaining providers or uses bulk approval",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 11"
+      }
+    },
+    {
+      "id": "STP-017-007",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin sees the Overdue section at the top of the list and approves at any time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 13b"
       }
     },
     {
@@ -101650,9 +102475,374 @@
       "owner_fr": "FR-017",
       "title": "Admin ticks Select All on the Upcoming Payments list",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-017-013",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin unchecks providers to exclude from the batch",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 3a"
+      }
+    },
+    {
+      "id": "STP-017-015",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin clicks Approve All Selected Payouts",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 4"
+      }
+    },
+    {
+      "id": "STP-017-016",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin confirms or cancels the batch",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 6"
+      }
+    },
+    {
+      "id": "STP-017-017",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin reviews each failed payout and retries it (returns to main flow step 9)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 11"
+      }
+    },
+    {
+      "id": "STP-017-029",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin opens the alert, reviews affected bookings and compares locked and current rates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 5"
+      }
+    },
+    {
+      "id": "STP-017-030",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin decides on the risk exposure",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 6"
+      }
+    },
+    {
+      "id": "STP-017-031",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin accepts the risk; pending payouts do not change",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 7a"
+      }
+    },
+    {
+      "id": "STP-017-032",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin contacts providers; any agreed change is a separate authorised finance adjustment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 7b"
+      }
+    },
+    {
+      "id": "STP-017-033",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin routes a commission change to the FR-015 or FR-029 surface",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 7c",
+        "handoff_to": "FR-015 (single-provider commission edit); FR-029 (global or bulk commission change)"
+      }
+    },
+    {
+      "id": "STP-017-034",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin reviews the flagged invoice and resolves it by refund or adjustment with a mandatory reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 8"
+      }
+    },
+    {
+      "id": "STP-017-037",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Payout-day schedule check: daily cron reads each provider payout schedule",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-017-038",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System calculates eligible earnings, commission from the booking snapshot and net payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-017-039",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System creates the statement as Pending Approval (dashboard view only, no PDF)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-017-040",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System notifies admin by push and email that statements are ready for review",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-017-041",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Payout-day cron auto-processes Approved statements",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 12"
+      }
+    },
+    {
+      "id": "STP-017-042",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Statements still Pending Approval become Overdue",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 13"
+      }
+    },
+    {
+      "id": "STP-017-043",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System notifies admin of Overdue statements",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 13a"
+      }
+    },
+    {
+      "id": "STP-017-044",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Cron initiates the Stripe transfer; status Processing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 14"
+      }
+    },
+    {
+      "id": "STP-017-051",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System selects all Pending Approval statements for the cycle",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-017-052",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System shows the batch confirmation modal with count and total amount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 5"
+      }
+    },
+    {
+      "id": "STP-017-053",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System marks each statement Approved in sequence with live progress",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 7"
+      }
+    },
+    {
+      "id": "STP-017-054",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System shows the batch summary: total, approved, failed with error details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 8"
+      }
+    },
+    {
+      "id": "STP-017-056",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "All successful payouts are queued for payout-day processing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 10"
+      }
+    },
+    {
+      "id": "STP-017-062",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System monitors currency pairs hourly and flags bookings whose locked rate is exposed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 steps 1 to 3"
+      }
+    },
+    {
+      "id": "STP-017-063",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System sends the admin a currency alert",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 4"
+      }
+    },
+    {
+      "id": "STP-017-066",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System logs the admin decision and action in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 8"
+      }
+    },
+    {
+      "id": "STP-017-067",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Provider-status event cancels the booking (ProviderSuspended or ProviderDeactivated)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 1",
+        "handoff_from": "FR-015 (provider-status cancellation cascade)"
+      }
+    },
+    {
+      "id": "STP-017-068",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System cancels the remaining unpaid scheduled installments",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 2"
+      }
+    },
+    {
+      "id": "STP-017-069",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Already-paid installments and deposits stay recorded for admin financial resolution",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 3"
+      }
+    },
+    {
+      "id": "STP-017-070",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System records a late capture as a real transaction; the booking stays cancelled",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 5"
+      }
+    },
+    {
+      "id": "STP-017-071",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System sets the Reconciliation Flag Captured after provider cancellation and excludes the amount from earnings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 6"
+      }
+    },
+    {
+      "id": "STP-017-072",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Booking amounts are held from provider payout statements until admin resolution",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 7"
+      }
+    },
+    {
+      "id": "STP-017-073",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System writes the audit entry and clears the flag",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 9"
       }
     },
     {
@@ -101672,9 +102862,119 @@
       "owner_fr": "FR-018",
       "title": "Admin enters affiliate details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-018-003",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates unique email and payment-detail format",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-018-004",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin submits the onboarding form",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-018-005",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System creates the affiliate account with Pending status and sends the activation link",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-018-006",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin creates a discount code for the affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-018-007",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates the discount code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 7"
+      }
+    },
+    {
+      "id": "STP-018-008",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System saves the code and links it to the affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 8"
+      }
+    },
+    {
+      "id": "STP-018-009",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System sends the activation email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 9"
+      }
+    },
+    {
+      "id": "STP-018-010",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate opens the Set Password link and sees the password form",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 10"
+      }
+    },
+    {
+      "id": "STP-018-011",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate sets and confirms the password",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 11"
+      }
+    },
+    {
+      "id": "STP-018-012",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate logs in and lands on the Affiliate Portal Overview",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 12"
       }
     },
     {
@@ -101694,9 +102994,53 @@
       "owner_fr": "FR-018",
       "title": "Admin clicks Add New Discount Code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1 step 2"
+      }
+    },
+    {
+      "id": "STP-018-023",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays the discount code creation form",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 3"
+      }
+    },
+    {
+      "id": "STP-018-024",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin configures the new code with different parameters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 4"
+      }
+    },
+    {
+      "id": "STP-018-025",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates and saves the new code on the same affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 5"
+      }
+    },
+    {
+      "id": "STP-018-026",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System emails the affiliate about the new code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 6"
       }
     },
     {
@@ -101727,9 +103071,64 @@
       "owner_fr": "FR-018",
       "title": "Admin modifies the commission parameters",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2 step 3"
+      }
+    },
+    {
+      "id": "STP-018-034",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System asks the admin to confirm the changes and the effective date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 4"
+      }
+    },
+    {
+      "id": "STP-018-035",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin confirms the changes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 5"
+      }
+    },
+    {
+      "id": "STP-018-036",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System updates the affiliate commission record",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 6"
+      }
+    },
+    {
+      "id": "STP-018-037",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System applies the new rates to bookings completed after the effective date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 7"
+      }
+    },
+    {
+      "id": "STP-018-038",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System emails the affiliate about the commission change",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A2 step 8"
       }
     },
     {
@@ -101738,9 +103137,53 @@
       "owner_fr": "FR-018",
       "title": "Affiliate logs in to the affiliate portal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 1"
+      }
+    },
+    {
+      "id": "STP-018-042",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays the affiliate dashboard",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 2"
+      }
+    },
+    {
+      "id": "STP-018-043",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate clicks a discount code to see its breakdown",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 3"
+      }
+    },
+    {
+      "id": "STP-018-044",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays per-code statistics",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 4"
+      }
+    },
+    {
+      "id": "STP-018-045",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate reviews the data and downloads the PDF report if needed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 5"
       }
     },
     {
@@ -101793,9 +103236,53 @@
       "owner_fr": "FR-018",
       "title": "Admin enters the campaign-level code settings",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A4 step 5"
+      }
+    },
+    {
+      "id": "STP-018-056",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System generates one distinct code for each selected affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 6"
+      }
+    },
+    {
+      "id": "STP-018-057",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates every generated code for platform-wide uniqueness",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 7"
+      }
+    },
+    {
+      "id": "STP-018-058",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System links each generated code to exactly one affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 8"
+      }
+    },
+    {
+      "id": "STP-018-059",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System publishes the codes to the affiliate dashboards and sends code-created notifications",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 9"
       }
     },
     {
@@ -101815,9 +103302,86 @@
       "owner_fr": "FR-018",
       "title": "Affiliate clicks Did not receive activation email",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 2"
+      }
+    },
+    {
+      "id": "STP-018-063",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays the resend form",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 3"
+      }
+    },
+    {
+      "id": "STP-018-064",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate enters the email used at account creation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 4"
+      }
+    },
+    {
+      "id": "STP-018-065",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate clicks Resend Activation Email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 5"
+      }
+    },
+    {
+      "id": "STP-018-066",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates that the email exists and the account is not yet activated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 6"
+      }
+    },
+    {
+      "id": "STP-018-067",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System generates a fresh one-time link and invalidates the previous one",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 7"
+      }
+    },
+    {
+      "id": "STP-018-068",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System sends the new activation email and shows the confirmation message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 8"
+      }
+    },
+    {
+      "id": "STP-018-069",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Affiliate completes password setup",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 9"
       }
     },
     {
@@ -101826,9 +103390,97 @@
       "owner_fr": "FR-018",
       "title": "Patient enters the discount code at checkout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1 step 1"
+      }
+    },
+    {
+      "id": "STP-018-072",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System validates the code against expiration, usage limit and active status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 2"
+      }
+    },
+    {
+      "id": "STP-018-073",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System determines the code is invalid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 3"
+      }
+    },
+    {
+      "id": "STP-018-074",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays the invalid-code error message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 4"
+      }
+    },
+    {
+      "id": "STP-018-075",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Patient proceeds without a discount or enters a different valid code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 5"
+      }
+    },
+    {
+      "id": "STP-018-076",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System does not track a referral or trigger commission",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B1 step 6"
+      }
+    },
+    {
+      "id": "STP-018-081",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "FR-018 calculates the commissions owed for the previous month",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 1"
+      }
+    },
+    {
+      "id": "STP-018-082",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "FR-018 exposes the payout cycle data and readiness status to FR-017",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 2"
+      }
+    },
+    {
+      "id": "STP-018-083",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "FR-017 attempts the Stripe transfer",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 step 3"
       }
     },
     {
@@ -101848,9 +103500,152 @@
       "owner_fr": "FR-018",
       "title": "Admin clicks Suspend Account",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3 step 2"
+      }
+    },
+    {
+      "id": "STP-018-103",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System prompts for the required suspension reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 3"
+      }
+    },
+    {
+      "id": "STP-018-104",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin enters the reason and confirms the suspension",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 4"
+      }
+    },
+    {
+      "id": "STP-018-105",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System sets the affiliate status to Suspended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 5"
+      }
+    },
+    {
+      "id": "STP-018-106",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System disables all of the affiliate codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 6"
+      }
+    },
+    {
+      "id": "STP-018-107",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System emails the affiliate about the suspension with the reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 7"
+      }
+    },
+    {
+      "id": "STP-018-108",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System retains historical data and blocks new activity",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 8"
+      }
+    },
+    {
+      "id": "STP-018-109",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Pending unpaid commissions are held pending investigation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 9"
+      }
+    },
+    {
+      "id": "STP-018-110",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin can reinstate the account to Active later",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 10"
+      }
+    },
+    {
+      "id": "STP-018-111",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System completes generation for the valid affiliates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 1"
+      }
+    },
+    {
+      "id": "STP-018-112",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System skips failed affiliates and records the reason per affiliate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 2"
+      }
+    },
+    {
+      "id": "STP-018-113",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System displays the created, skipped and failed summary",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 3"
+      }
+    },
+    {
+      "id": "STP-018-114",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin views or downloads the failed-row list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 4"
+      }
+    },
+    {
+      "id": "STP-018-115",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin fixes the cause and retries only the failed affiliates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 5"
       }
     },
     {
@@ -101859,9 +103654,97 @@
       "owner_fr": "FR-018",
       "title": "Admin opens the affiliate profile and clicks Deactivate / Offboard",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B5 step 1"
+      }
+    },
+    {
+      "id": "STP-018-122",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System opens Screen 3.3 and requires a reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 2"
+      }
+    },
+    {
+      "id": "STP-018-123",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin reviews the final-settlement summary",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 3"
+      }
+    },
+    {
+      "id": "STP-018-124",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System applies the terminal settlement rules",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 4"
+      }
+    },
+    {
+      "id": "STP-018-125",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "Admin confirms and the status becomes Inactive",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 5"
+      }
+    },
+    {
+      "id": "STP-018-126",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System disables all of the affiliate codes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 6"
+      }
+    },
+    {
+      "id": "STP-018-127",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System makes the portal access read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 7"
+      }
+    },
+    {
+      "id": "STP-018-128",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System retains all historical data",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 8"
+      }
+    },
+    {
+      "id": "STP-018-129",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System sends the offboarding notification and records the audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 9"
       }
     },
     {
@@ -101870,7 +103753,7 @@
       "owner_fr": "FR-019",
       "title": "Admin defines the discount (type, value, Hairline share %, dates, usage limit, targeted providers)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -101881,10 +103764,187 @@
       "owner_fr": "FR-019",
       "title": "Provider enters name, type, value, applies-to and optional code in the inline mini-form for one option/date-price row",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1b",
         "handoff_from": "FR-004: Screen 1 inline promotion creator"
+      }
+    },
+    {
+      "id": "STP-019-003",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System saves the discount as Pending Approval and notifies the targeted providers",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-019-004",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "Providers accept or decline; the system logs the responses",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-019-005",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "When a provider accepts, the discount becomes eligible for that provider's option/date-price rows during the active window",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-019-006",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System tracks usage and financial impact per provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-019-007",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System validates inputs, persists the program with scope REUSABLE and activates it per dates and limits",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1a"
+      }
+    },
+    {
+      "id": "STP-019-008",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System creates the ad-hoc PromotionProgram bound to the parent quote and the option/date-price row",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1b step 2"
+      }
+    },
+    {
+      "id": "STP-019-009",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "Provider may toggle Save as reusable program for future quotes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1b step 3"
+      }
+    },
+    {
+      "id": "STP-019-010",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System applies the Hairline-only discount to the patient's price; the program stays hidden from providers",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "STP-019-011",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System returns the reason and prevents application of an invalid, expired or limit-reached code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "STP-019-012",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System blocks the second discount and prompts the user to confirm replacement or keep the existing one",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "STP-019-013",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System silently resolves the automatic-promotion conflict by priority and records applied and superseded programs",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "STP-019-014",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System validates the Hairline-funded or direct-issued code against its binding and records the redemption against the issuing channel",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C1"
+      }
+    },
+    {
+      "id": "STP-019-015",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System attaches the automatic promotion to every eligible option/date-price row of the sent quote and copies its terms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3"
+      }
+    },
+    {
+      "id": "STP-019-016",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System validates the code for the named subquote only and shows the discounted price or the reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4",
+        "handoff_from": "STP-005-015"
+      }
+    },
+    {
+      "id": "STP-019-017",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System creates one Application and reserves or consumes one use in the same atomic step as the acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A5"
+      }
+    },
+    {
+      "id": "STP-019-018",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System rejects a promotion change on an accepted subquote, leaves the Application and snapshot unchanged and logs the attempt",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4"
       }
     },
     {
@@ -137263,6 +139323,12 @@
     {
       "from_id": "ACT-system",
       "verb": "acts in",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
       "to_id": "STG-main-04-booking",
       "attrs": {}
     },
@@ -137300,6 +139366,12 @@
       "from_id": "ACT-system",
       "verb": "acts in",
       "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-system",
+      "verb": "acts in",
+      "to_id": "STG-patient-05-deleted",
       "attrs": {}
     },
     {
@@ -141071,6 +143143,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-016-patient-not-found",
+      "verb": "starts at",
+      "to_id": "STP-016-041",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-016-patient-search-overview",
       "verb": "starts at",
       "to_id": "STP-016-001",
@@ -141113,6 +143191,24 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-017-currency-alert",
+      "verb": "starts at",
+      "to_id": "STP-017-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-017-main",
+      "verb": "starts at",
+      "to_id": "STP-017-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-017-provider-cancellation",
+      "verb": "starts at",
+      "to_id": "STP-017-067",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-018-a1",
       "verb": "starts at",
       "to_id": "STP-018-021",
@@ -141149,9 +143245,21 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-018-b2",
+      "verb": "starts at",
+      "to_id": "STP-018-081",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-018-b3",
       "verb": "starts at",
       "to_id": "STP-018-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-018-b4",
+      "verb": "starts at",
+      "to_id": "STP-018-111",
       "attrs": {}
     },
     {
@@ -141167,15 +143275,75 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-019-accepted",
+      "verb": "starts at",
+      "to_id": "STP-019-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-auto-attach",
+      "verb": "starts at",
+      "to_id": "STP-019-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-auto-conflict",
+      "verb": "starts at",
+      "to_id": "STP-019-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-code-invalid",
+      "verb": "starts at",
+      "to_id": "STP-019-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-direct-code",
+      "verb": "starts at",
+      "to_id": "STP-019-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-hairline-only",
+      "verb": "starts at",
+      "to_id": "STP-019-010",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-019-main",
       "verb": "starts at",
       "to_id": "STP-019-001",
       "attrs": {}
     },
     {
+      "from_id": "FLW-019-patient-code",
+      "verb": "starts at",
+      "to_id": "STP-019-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-post-acceptance",
+      "verb": "starts at",
+      "to_id": "STP-019-018",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-019-provider-inline",
       "verb": "starts at",
       "to_id": "STP-019-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-provider-reusable",
+      "verb": "starts at",
+      "to_id": "STP-019-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-019-user-conflict",
+      "verb": "starts at",
+      "to_id": "STP-019-012",
       "attrs": {}
     },
     {
@@ -294922,6 +297090,222 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-016-001",
+      "verb": "next",
+      "to_id": "STP-016-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-002",
+      "verb": "applies",
+      "to_id": "REQ-016-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-002",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-002",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-002",
+      "verb": "next",
+      "to_id": "STP-016-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-002",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "applies",
+      "to_id": "REQ-016-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "applies",
+      "to_id": "REQ-016-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "applies",
+      "to_id": "REQ-016-180",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "next",
+      "to_id": "STP-016-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-003",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-004",
+      "verb": "applies",
+      "to_id": "REQ-016-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-004",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-004",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-004",
+      "verb": "next",
+      "to_id": "STP-016-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-004",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-005",
+      "verb": "applies",
+      "to_id": "REQ-016-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-005",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-005",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-005",
+      "verb": "next",
+      "to_id": "STP-016-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-005",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-006",
+      "verb": "applies",
+      "to_id": "REQ-016-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-006",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-006",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-006",
+      "verb": "next",
+      "to_id": "STP-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-006",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-007",
+      "verb": "applies",
+      "to_id": "REQ-016-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-007",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-007",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-007",
+      "verb": "next",
+      "to_id": "STP-016-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-007",
+      "verb": "on",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-008",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-008",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-008",
+      "verb": "on",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-016-011",
       "verb": "applies",
       "to_id": "REQ-016-042",
@@ -294941,6 +297325,78 @@
     },
     {
       "from_id": "STP-016-011",
+      "verb": "next",
+      "to_id": "STP-016-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-011",
+      "verb": "on",
+      "to_id": "SCR-016-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "applies",
+      "to_id": "REQ-016-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "applies",
+      "to_id": "REQ-016-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "next",
+      "to_id": "STP-016-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-012",
+      "verb": "on",
+      "to_id": "SCR-016-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-013",
+      "verb": "applies",
+      "to_id": "REQ-016-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-013",
+      "verb": "applies",
+      "to_id": "REQ-016-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-013",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-013",
       "verb": "on",
       "to_id": "SCR-016-03",
       "attrs": {}
@@ -294977,6 +297433,180 @@
     },
     {
       "from_id": "STP-016-021",
+      "verb": "next",
+      "to_id": "STP-016-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-021",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-022",
+      "verb": "applies",
+      "to_id": "REQ-016-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-022",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-022",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-022",
+      "verb": "next",
+      "to_id": "STP-016-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-022",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-023",
+      "verb": "applies",
+      "to_id": "REQ-016-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-023",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-023",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-023",
+      "verb": "next",
+      "to_id": "STP-016-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-023",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-024",
+      "verb": "applies",
+      "to_id": "REQ-016-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-024",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-024",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-024",
+      "verb": "next",
+      "to_id": "STP-016-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-024",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-025",
+      "verb": "applies",
+      "to_id": "REQ-016-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-025",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-025",
+      "verb": "next",
+      "to_id": "STP-016-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-025",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-026",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-026",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-026",
+      "verb": "next",
+      "to_id": "STP-016-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-026",
+      "verb": "on",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-027",
+      "verb": "applies",
+      "to_id": "REQ-016-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-027",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-027",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-027",
       "verb": "on",
       "to_id": "SCR-016-04",
       "attrs": {}
@@ -295001,8 +297631,230 @@
     },
     {
       "from_id": "STP-016-031",
+      "verb": "next",
+      "to_id": "STP-016-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-031",
       "verb": "on",
       "to_id": "SCR-016-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-032",
+      "verb": "applies",
+      "to_id": "REQ-016-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-032",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-032",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-032",
+      "verb": "next",
+      "to_id": "STP-016-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-032",
+      "verb": "on",
+      "to_id": "SCR-016-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "applies",
+      "to_id": "REQ-016-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "applies",
+      "to_id": "REQ-016-136",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "next",
+      "to_id": "STP-016-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-033",
+      "verb": "on",
+      "to_id": "SCR-016-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "applies",
+      "to_id": "REQ-016-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "applies",
+      "to_id": "REQ-016-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "on",
+      "to_id": "SCR-016-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-041",
+      "verb": "applies",
+      "to_id": "REQ-016-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-041",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-041",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-041",
+      "verb": "next",
+      "to_id": "STP-016-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-041",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-042",
+      "verb": "applies",
+      "to_id": "REQ-016-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-042",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-042",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-042",
+      "verb": "next",
+      "to_id": "STP-016-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-042",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-043",
+      "verb": "applies",
+      "to_id": "REQ-016-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-043",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-043",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-043",
+      "verb": "next",
+      "to_id": "STP-016-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-043",
+      "verb": "on",
+      "to_id": "SCR-016-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-044",
+      "verb": "applies",
+      "to_id": "REQ-016-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-044",
+      "verb": "applies",
+      "to_id": "REQ-016-183",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-044",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-044",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-044",
+      "verb": "on",
+      "to_id": "SCR-016-01",
       "attrs": {}
     },
     {
@@ -295090,6 +297942,156 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-016-054",
+      "verb": "next",
+      "to_id": "STP-016-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-055",
+      "verb": "applies",
+      "to_id": "REQ-016-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-055",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-055",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-055",
+      "verb": "next",
+      "to_id": "STP-016-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-056",
+      "verb": "applies",
+      "to_id": "REQ-016-161",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-056",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-056",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-056",
+      "verb": "next",
+      "to_id": "STP-016-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-057",
+      "verb": "applies",
+      "to_id": "REQ-016-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-057",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-057",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-057",
+      "verb": "next",
+      "to_id": "STP-016-058",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "applies",
+      "to_id": "REQ-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "applies",
+      "to_id": "REQ-016-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "applies",
+      "to_id": "REQ-016-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-058",
+      "verb": "next",
+      "to_id": "STP-016-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-059",
+      "verb": "applies",
+      "to_id": "REQ-016-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-059",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-059",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-059",
+      "verb": "next",
+      "to_id": "STP-016-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-060",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-060",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-016-061",
       "verb": "applies",
       "to_id": "REQ-016-001",
@@ -295135,6 +298137,168 @@
       "from_id": "STP-016-062",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-062",
+      "verb": "next",
+      "to_id": "STP-016-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-063",
+      "verb": "applies",
+      "to_id": "REQ-016-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-063",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-063",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-063",
+      "verb": "next",
+      "to_id": "STP-016-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-064",
+      "verb": "applies",
+      "to_id": "REQ-016-161",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-064",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-064",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-064",
+      "verb": "next",
+      "to_id": "STP-016-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-065",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-065",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-065",
+      "verb": "next",
+      "to_id": "STP-016-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-066",
+      "verb": "applies",
+      "to_id": "REQ-016-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-066",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-066",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-066",
+      "verb": "next",
+      "to_id": "STP-016-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-067",
+      "verb": "applies",
+      "to_id": "REQ-016-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-067",
+      "verb": "applies",
+      "to_id": "REQ-016-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-067",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-067",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-067",
+      "verb": "next",
+      "to_id": "STP-016-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-068",
+      "verb": "applies",
+      "to_id": "REQ-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-068",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-068",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-068",
+      "verb": "next",
+      "to_id": "STP-016-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-069",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-069",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -295213,6 +298377,216 @@
       "from_id": "STP-016-074",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-074",
+      "verb": "next",
+      "to_id": "STP-016-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-075",
+      "verb": "applies",
+      "to_id": "REQ-016-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-075",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-075",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-075",
+      "verb": "next",
+      "to_id": "STP-016-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-076",
+      "verb": "applies",
+      "to_id": "REQ-016-161",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-076",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-076",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-076",
+      "verb": "next",
+      "to_id": "STP-016-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-077",
+      "verb": "applies",
+      "to_id": "REQ-016-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-077",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-077",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-077",
+      "verb": "next",
+      "to_id": "STP-016-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-078",
+      "verb": "applies",
+      "to_id": "REQ-016-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-078",
+      "verb": "applies",
+      "to_id": "REQ-016-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-078",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-078",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-078",
+      "verb": "next",
+      "to_id": "STP-016-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-079",
+      "verb": "applies",
+      "to_id": "REQ-016-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-079",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-079",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-079",
+      "verb": "next",
+      "to_id": "STP-016-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "applies",
+      "to_id": "REQ-016-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "applies",
+      "to_id": "REQ-016-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "applies",
+      "to_id": "REQ-016-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "next",
+      "to_id": "STP-016-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-081",
+      "verb": "applies",
+      "to_id": "REQ-016-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-081",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-081",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-081",
+      "verb": "next",
+      "to_id": "STP-016-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-082",
+      "verb": "applies",
+      "to_id": "REQ-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-082",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-082",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -295339,6 +298713,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-016-093",
+      "verb": "next",
+      "to_id": "STP-016-096",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-016-094",
       "verb": "applies",
       "to_id": "REQ-016-010",
@@ -295375,6 +298755,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-016-094",
+      "verb": "next",
+      "to_id": "STP-016-096",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-016-095",
       "verb": "applies",
       "to_id": "REQ-016-196",
@@ -295394,6 +298780,42 @@
     },
     {
       "from_id": "STP-016-095",
+      "verb": "next",
+      "to_id": "STP-016-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-095",
+      "verb": "on",
+      "to_id": "SCR-016-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-096",
+      "verb": "applies",
+      "to_id": "REQ-016-177",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-096",
+      "verb": "applies",
+      "to_id": "REQ-016-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-096",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-096",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-096",
       "verb": "on",
       "to_id": "SCR-016-09",
       "attrs": {}
@@ -295526,6 +298948,42 @@
     },
     {
       "from_id": "STP-016-104",
+      "verb": "next",
+      "to_id": "STP-016-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-104",
+      "verb": "on",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-105",
+      "verb": "applies",
+      "to_id": "REQ-016-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-105",
+      "verb": "applies",
+      "to_id": "REQ-016-107",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-105",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-105",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-105",
       "verb": "on",
       "to_id": "SCR-016-02",
       "attrs": {}
@@ -295687,6 +299145,356 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-016-115",
+      "verb": "next",
+      "to_id": "STP-016-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-116",
+      "verb": "applies",
+      "to_id": "REQ-016-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-116",
+      "verb": "applies",
+      "to_id": "REQ-016-172",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-116",
+      "verb": "at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-116",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-116",
+      "verb": "next",
+      "to_id": "STP-016-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-117",
+      "verb": "applies",
+      "to_id": "REQ-016-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-117",
+      "verb": "at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-117",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-117",
+      "verb": "next",
+      "to_id": "STP-016-118",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-118",
+      "verb": "applies",
+      "to_id": "REQ-016-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-118",
+      "verb": "at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-118",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-118",
+      "verb": "next",
+      "to_id": "STP-016-119",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-119",
+      "verb": "applies",
+      "to_id": "REQ-016-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-119",
+      "verb": "at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-119",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "applies",
+      "to_id": "REQ-017-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "applies",
+      "to_id": "REQ-017-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "next",
+      "to_id": "STP-017-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-001",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "applies",
+      "to_id": "REQ-017-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "applies",
+      "to_id": "REQ-017-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "next",
+      "to_id": "STP-017-003",
+      "attrs": {
+        "label": "needs a note"
+      }
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "next",
+      "to_id": "STP-017-004",
+      "attrs": {
+        "label": "no note"
+      }
+    },
+    {
+      "from_id": "STP-017-002",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-003",
+      "verb": "applies",
+      "to_id": "REQ-017-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-003",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-003",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-003",
+      "verb": "next",
+      "to_id": "STP-017-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-003",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "applies",
+      "to_id": "REQ-017-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "applies",
+      "to_id": "REQ-017-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "next",
+      "to_id": "STP-017-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-004",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "applies",
+      "to_id": "REQ-017-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "next",
+      "to_id": "STP-017-001",
+      "attrs": {
+        "label": "cancel"
+      }
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "next",
+      "to_id": "STP-017-006",
+      "attrs": {
+        "label": "confirm"
+      }
+    },
+    {
+      "from_id": "STP-017-005",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "applies",
+      "to_id": "REQ-017-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "next",
+      "to_id": "STP-017-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-007",
+      "verb": "applies",
+      "to_id": "REQ-017-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-007",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-007",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-007",
+      "verb": "next",
+      "to_id": "STP-017-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-007",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-017-012",
       "verb": "applies",
       "to_id": "REQ-017-070",
@@ -295706,8 +299514,960 @@
     },
     {
       "from_id": "STP-017-012",
+      "verb": "next",
+      "to_id": "STP-017-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-012",
       "verb": "on",
       "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-013",
+      "verb": "applies",
+      "to_id": "REQ-017-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-013",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-013",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-013",
+      "verb": "next",
+      "to_id": "STP-017-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-013",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-015",
+      "verb": "applies",
+      "to_id": "REQ-017-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-015",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-015",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-015",
+      "verb": "next",
+      "to_id": "STP-017-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-015",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "applies",
+      "to_id": "REQ-017-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "next",
+      "to_id": "STP-017-012",
+      "attrs": {
+        "label": "cancel"
+      }
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "next",
+      "to_id": "STP-017-053",
+      "attrs": {
+        "label": "confirm"
+      }
+    },
+    {
+      "from_id": "STP-017-016",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-017",
+      "verb": "applies",
+      "to_id": "REQ-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-017",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-017",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-017",
+      "verb": "next",
+      "to_id": "STP-017-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-017",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-029",
+      "verb": "applies",
+      "to_id": "REQ-017-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-029",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-029",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-029",
+      "verb": "next",
+      "to_id": "STP-017-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-029",
+      "verb": "on",
+      "to_id": "SCR-017-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "applies",
+      "to_id": "REQ-017-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "next",
+      "to_id": "STP-017-031",
+      "attrs": {
+        "label": "accept risk"
+      }
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "next",
+      "to_id": "STP-017-032",
+      "attrs": {
+        "label": "contact providers"
+      }
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "next",
+      "to_id": "STP-017-033",
+      "attrs": {
+        "label": "adjust commission"
+      }
+    },
+    {
+      "from_id": "STP-017-030",
+      "verb": "on",
+      "to_id": "SCR-017-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-031",
+      "verb": "applies",
+      "to_id": "REQ-017-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-031",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-031",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-031",
+      "verb": "next",
+      "to_id": "STP-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-031",
+      "verb": "on",
+      "to_id": "SCR-017-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-032",
+      "verb": "applies",
+      "to_id": "REQ-017-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-032",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-032",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-032",
+      "verb": "next",
+      "to_id": "STP-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-032",
+      "verb": "on",
+      "to_id": "SCR-017-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "applies",
+      "to_id": "REQ-017-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "next",
+      "to_id": "STP-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "on",
+      "to_id": "SCR-017-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "applies",
+      "to_id": "REQ-017-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "applies",
+      "to_id": "REQ-017-146",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "next",
+      "to_id": "STP-017-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-034",
+      "verb": "on",
+      "to_id": "SCR-017-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-037",
+      "verb": "applies",
+      "to_id": "REQ-017-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-037",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-037",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-037",
+      "verb": "next",
+      "to_id": "STP-017-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "applies",
+      "to_id": "REQ-017-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "applies",
+      "to_id": "REQ-017-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "applies",
+      "to_id": "REQ-017-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "applies",
+      "to_id": "REQ-017-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "next",
+      "to_id": "STP-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-039",
+      "verb": "applies",
+      "to_id": "REQ-017-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-039",
+      "verb": "applies",
+      "to_id": "REQ-017-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-039",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-039",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-039",
+      "verb": "next",
+      "to_id": "STP-017-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-040",
+      "verb": "applies",
+      "to_id": "REQ-017-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-040",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-040",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-040",
+      "verb": "next",
+      "to_id": "STP-017-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-041",
+      "verb": "applies",
+      "to_id": "REQ-017-153",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-041",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-041",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-041",
+      "verb": "next",
+      "to_id": "STP-017-042",
+      "attrs": {
+        "label": "still Pending Approval"
+      }
+    },
+    {
+      "from_id": "STP-017-041",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "Approved"
+      }
+    },
+    {
+      "from_id": "STP-017-042",
+      "verb": "applies",
+      "to_id": "REQ-017-153",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-042",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-042",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-042",
+      "verb": "next",
+      "to_id": "STP-017-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-043",
+      "verb": "applies",
+      "to_id": "REQ-017-153",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-043",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-043",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-043",
+      "verb": "next",
+      "to_id": "STP-017-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-044",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-044",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-044",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-051",
+      "verb": "applies",
+      "to_id": "REQ-017-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-051",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-051",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-051",
+      "verb": "next",
+      "to_id": "STP-017-013",
+      "attrs": {
+        "label": "exclude some"
+      }
+    },
+    {
+      "from_id": "STP-017-051",
+      "verb": "next",
+      "to_id": "STP-017-015",
+      "attrs": {
+        "label": "proceed with all"
+      }
+    },
+    {
+      "from_id": "STP-017-052",
+      "verb": "applies",
+      "to_id": "REQ-017-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-052",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-052",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-052",
+      "verb": "next",
+      "to_id": "STP-017-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-053",
+      "verb": "applies",
+      "to_id": "REQ-017-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-053",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-053",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-053",
+      "verb": "next",
+      "to_id": "STP-017-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-054",
+      "verb": "applies",
+      "to_id": "REQ-017-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-054",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-054",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-054",
+      "verb": "next",
+      "to_id": "STP-017-017",
+      "attrs": {
+        "label": "failures"
+      }
+    },
+    {
+      "from_id": "STP-017-054",
+      "verb": "next",
+      "to_id": "STP-017-056",
+      "attrs": {
+        "label": "no failures"
+      }
+    },
+    {
+      "from_id": "STP-017-056",
+      "verb": "applies",
+      "to_id": "REQ-017-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-056",
+      "verb": "applies",
+      "to_id": "REQ-017-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-056",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-062",
+      "verb": "applies",
+      "to_id": "REQ-017-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-062",
+      "verb": "applies",
+      "to_id": "REQ-017-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-062",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-062",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-062",
+      "verb": "next",
+      "to_id": "STP-017-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-063",
+      "verb": "applies",
+      "to_id": "REQ-017-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-063",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-063",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-063",
+      "verb": "next",
+      "to_id": "STP-017-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-066",
+      "verb": "applies",
+      "to_id": "REQ-017-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-066",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-066",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-067",
+      "verb": "applies",
+      "to_id": "REQ-017-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-067",
+      "verb": "applies",
+      "to_id": "REQ-017-137",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-067",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-067",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-067",
+      "verb": "next",
+      "to_id": "STP-017-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-068",
+      "verb": "applies",
+      "to_id": "REQ-017-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-068",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-068",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-068",
+      "verb": "next",
+      "to_id": "STP-017-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-069",
+      "verb": "applies",
+      "to_id": "REQ-017-137",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-069",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-069",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-069",
+      "verb": "next",
+      "to_id": "STP-017-070",
+      "attrs": {
+        "label": "capture reported"
+      }
+    },
+    {
+      "from_id": "STP-017-069",
+      "verb": "next",
+      "to_id": "STP-017-072",
+      "attrs": {
+        "label": "no capture"
+      }
+    },
+    {
+      "from_id": "STP-017-070",
+      "verb": "applies",
+      "to_id": "REQ-017-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-070",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-070",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-070",
+      "verb": "next",
+      "to_id": "STP-017-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-071",
+      "verb": "applies",
+      "to_id": "REQ-017-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-071",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-071",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-071",
+      "verb": "next",
+      "to_id": "STP-017-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-072",
+      "verb": "applies",
+      "to_id": "REQ-017-138",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-072",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-072",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-072",
+      "verb": "next",
+      "to_id": "STP-017-034",
+      "attrs": {
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-017-073",
+      "verb": "applies",
+      "to_id": "REQ-017-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-073",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-073",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -295780,8 +300540,400 @@
     },
     {
       "from_id": "STP-018-002",
+      "verb": "next",
+      "to_id": "STP-018-003",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-002",
       "verb": "on",
       "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "applies",
+      "to_id": "REQ-018-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "applies",
+      "to_id": "REQ-018-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "applies",
+      "to_id": "REQ-018-194",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "next",
+      "to_id": "STP-018-004",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-003",
+      "verb": "on",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-004",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-004",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-004",
+      "verb": "next",
+      "to_id": "STP-018-005",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-004",
+      "verb": "on",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "applies",
+      "to_id": "REQ-018-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "applies",
+      "to_id": "REQ-018-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "applies",
+      "to_id": "REQ-018-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "applies",
+      "to_id": "REQ-018-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "applies",
+      "to_id": "REQ-018-195",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "next",
+      "to_id": "STP-018-006",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-005",
+      "verb": "on",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "applies",
+      "to_id": "REQ-018-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "applies",
+      "to_id": "REQ-018-196",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "next",
+      "to_id": "STP-018-007",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-006",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-007",
+      "verb": "applies",
+      "to_id": "REQ-018-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-007",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-007",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-007",
+      "verb": "next",
+      "to_id": "STP-018-008",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-007",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "applies",
+      "to_id": "REQ-018-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "applies",
+      "to_id": "REQ-018-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "next",
+      "to_id": "STP-018-009",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-008",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "applies",
+      "to_id": "REQ-018-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "applies",
+      "to_id": "REQ-018-200",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "next",
+      "to_id": "STP-018-010",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-009",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "applies",
+      "to_id": "REQ-018-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "applies",
+      "to_id": "REQ-018-197",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "next",
+      "to_id": "STP-018-011",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-010",
+      "verb": "on",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "applies",
+      "to_id": "REQ-018-151",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "applies",
+      "to_id": "REQ-018-153",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "applies",
+      "to_id": "REQ-018-198",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "next",
+      "to_id": "STP-018-012",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-011",
+      "verb": "on",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-012",
+      "verb": "applies",
+      "to_id": "REQ-018-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-012",
+      "verb": "applies",
+      "to_id": "REQ-018-199",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-012",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-012",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-012",
+      "verb": "on",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -295830,8 +300982,148 @@
     },
     {
       "from_id": "STP-018-022",
+      "verb": "next",
+      "to_id": "STP-018-023",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-022",
       "verb": "on",
       "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-023",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-023",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-023",
+      "verb": "next",
+      "to_id": "STP-018-024",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-023",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "applies",
+      "to_id": "REQ-018-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "applies",
+      "to_id": "REQ-018-159",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "next",
+      "to_id": "STP-018-025",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-024",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "applies",
+      "to_id": "REQ-018-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "applies",
+      "to_id": "REQ-018-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "applies",
+      "to_id": "REQ-018-159",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "next",
+      "to_id": "STP-018-026",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-025",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-026",
+      "verb": "applies",
+      "to_id": "REQ-018-187",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-026",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-026",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-026",
+      "verb": "on",
+      "to_id": "SCR-018-07",
       "attrs": {}
     },
     {
@@ -295912,6 +301204,178 @@
     },
     {
       "from_id": "STP-018-033",
+      "verb": "next",
+      "to_id": "STP-018-034",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-033",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "applies",
+      "to_id": "REQ-018-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "applies",
+      "to_id": "REQ-018-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "next",
+      "to_id": "STP-018-035",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-034",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-035",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-035",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-035",
+      "verb": "next",
+      "to_id": "STP-018-036",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-035",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "applies",
+      "to_id": "REQ-018-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "applies",
+      "to_id": "REQ-018-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "next",
+      "to_id": "STP-018-037",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-036",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "applies",
+      "to_id": "REQ-018-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "applies",
+      "to_id": "REQ-018-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "next",
+      "to_id": "STP-018-038",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-037",
+      "verb": "on",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-038",
+      "verb": "applies",
+      "to_id": "REQ-018-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-038",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-038",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-038",
       "verb": "on",
       "to_id": "SCR-018-05",
       "attrs": {}
@@ -295936,8 +301400,142 @@
     },
     {
       "from_id": "STP-018-041",
+      "verb": "next",
+      "to_id": "STP-018-042",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-041",
       "verb": "on",
       "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "applies",
+      "to_id": "REQ-018-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "applies",
+      "to_id": "REQ-018-058",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "next",
+      "to_id": "STP-018-043",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-042",
+      "verb": "on",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-043",
+      "verb": "applies",
+      "to_id": "REQ-018-140",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-043",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-043",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-043",
+      "verb": "next",
+      "to_id": "STP-018-044",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-043",
+      "verb": "on",
+      "to_id": "SCR-018-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-044",
+      "verb": "applies",
+      "to_id": "REQ-018-140",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-044",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-044",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-044",
+      "verb": "next",
+      "to_id": "STP-018-045",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-044",
+      "verb": "on",
+      "to_id": "SCR-018-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-045",
+      "verb": "applies",
+      "to_id": "REQ-018-139",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-045",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-045",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-045",
+      "verb": "on",
+      "to_id": "SCR-018-14",
       "attrs": {}
     },
     {
@@ -296106,6 +301704,152 @@
     },
     {
       "from_id": "STP-018-055",
+      "verb": "next",
+      "to_id": "STP-018-056",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-055",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "applies",
+      "to_id": "REQ-018-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "applies",
+      "to_id": "REQ-018-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "next",
+      "to_id": "STP-018-057",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-056",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-057",
+      "verb": "applies",
+      "to_id": "REQ-018-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-057",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-057",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-057",
+      "verb": "next",
+      "to_id": "STP-018-058",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-057",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-058",
+      "verb": "applies",
+      "to_id": "REQ-018-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-058",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-058",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-058",
+      "verb": "next",
+      "to_id": "STP-018-059",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-058",
+      "verb": "on",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
+      "verb": "applies",
+      "to_id": "REQ-018-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
+      "verb": "applies",
+      "to_id": "REQ-018-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
+      "verb": "applies",
+      "to_id": "REQ-018-187",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-059",
       "verb": "on",
       "to_id": "SCR-018-07",
       "attrs": {}
@@ -296150,8 +301894,234 @@
     },
     {
       "from_id": "STP-018-062",
+      "verb": "next",
+      "to_id": "STP-018-063",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-062",
       "verb": "on",
       "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-063",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-063",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-063",
+      "verb": "next",
+      "to_id": "STP-018-064",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-063",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-064",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-064",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-064",
+      "verb": "next",
+      "to_id": "STP-018-065",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-064",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-065",
+      "verb": "applies",
+      "to_id": "REQ-018-154",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-065",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-065",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-065",
+      "verb": "next",
+      "to_id": "STP-018-066",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-065",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-066",
+      "verb": "applies",
+      "to_id": "REQ-018-156",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-066",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-066",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-066",
+      "verb": "next",
+      "to_id": "STP-018-067",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-066",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-067",
+      "verb": "applies",
+      "to_id": "REQ-018-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-067",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-067",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-067",
+      "verb": "next",
+      "to_id": "STP-018-068",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-067",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "applies",
+      "to_id": "REQ-018-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "applies",
+      "to_id": "REQ-018-200",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "next",
+      "to_id": "STP-018-069",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-068",
+      "verb": "on",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-069",
+      "verb": "applies",
+      "to_id": "REQ-018-198",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-069",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-069",
+      "verb": "done by",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-069",
+      "verb": "next",
+      "to_id": "STP-018-010",
+      "attrs": {
+        "label": "password set, continue activation"
+      }
+    },
+    {
+      "from_id": "STP-018-069",
+      "verb": "on",
+      "to_id": "SCR-018-19",
       "attrs": {}
     },
     {
@@ -296170,6 +302140,230 @@
       "from_id": "STP-018-071",
       "verb": "done by",
       "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-071",
+      "verb": "next",
+      "to_id": "STP-018-072",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "applies",
+      "to_id": "REQ-018-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "applies",
+      "to_id": "REQ-018-108",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "applies",
+      "to_id": "REQ-018-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-072",
+      "verb": "next",
+      "to_id": "STP-018-073",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-073",
+      "verb": "applies",
+      "to_id": "REQ-018-163",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-073",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-073",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-073",
+      "verb": "next",
+      "to_id": "STP-018-074",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-074",
+      "verb": "applies",
+      "to_id": "REQ-018-163",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-074",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-074",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-074",
+      "verb": "next",
+      "to_id": "STP-018-075",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-075",
+      "verb": "applies",
+      "to_id": "REQ-018-163",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-075",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-075",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-075",
+      "verb": "next",
+      "to_id": "STP-018-076",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-076",
+      "verb": "applies",
+      "to_id": "REQ-018-163",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-076",
+      "verb": "applies",
+      "to_id": "REQ-018-175",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-076",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-076",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-081",
+      "verb": "applies",
+      "to_id": "REQ-018-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-081",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-081",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-081",
+      "verb": "next",
+      "to_id": "STP-018-082",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-082",
+      "verb": "applies",
+      "to_id": "REQ-018-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-082",
+      "verb": "applies",
+      "to_id": "REQ-018-164",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-082",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-082",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-082",
+      "verb": "next",
+      "to_id": "STP-018-083",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-083",
+      "verb": "applies",
+      "to_id": "REQ-018-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-083",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-083",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -296218,8 +302412,422 @@
     },
     {
       "from_id": "STP-018-102",
+      "verb": "next",
+      "to_id": "STP-018-103",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-102",
       "verb": "on",
       "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-103",
+      "verb": "applies",
+      "to_id": "REQ-018-169",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-103",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-103",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-103",
+      "verb": "next",
+      "to_id": "STP-018-104",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-103",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-104",
+      "verb": "applies",
+      "to_id": "REQ-018-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-104",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-104",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-104",
+      "verb": "next",
+      "to_id": "STP-018-105",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-104",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "applies",
+      "to_id": "REQ-018-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "applies",
+      "to_id": "REQ-018-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "next",
+      "to_id": "STP-018-106",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-105",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-106",
+      "verb": "applies",
+      "to_id": "REQ-018-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-106",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-106",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-106",
+      "verb": "next",
+      "to_id": "STP-018-107",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-106",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-107",
+      "verb": "applies",
+      "to_id": "REQ-018-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-107",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-107",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-107",
+      "verb": "next",
+      "to_id": "STP-018-108",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-107",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-108",
+      "verb": "applies",
+      "to_id": "REQ-018-170",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-108",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-108",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-108",
+      "verb": "next",
+      "to_id": "STP-018-109",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-108",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-109",
+      "verb": "applies",
+      "to_id": "REQ-018-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-109",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-109",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-109",
+      "verb": "next",
+      "to_id": "STP-018-110",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-109",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-110",
+      "verb": "applies",
+      "to_id": "REQ-018-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-110",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-110",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-110",
+      "verb": "on",
+      "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-111",
+      "verb": "applies",
+      "to_id": "REQ-018-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-111",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-111",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-111",
+      "verb": "next",
+      "to_id": "STP-018-112",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-112",
+      "verb": "applies",
+      "to_id": "REQ-018-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-112",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-112",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-112",
+      "verb": "next",
+      "to_id": "STP-018-113",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-113",
+      "verb": "applies",
+      "to_id": "REQ-018-171",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-113",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-113",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-113",
+      "verb": "next",
+      "to_id": "STP-018-114",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-113",
+      "verb": "on",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-114",
+      "verb": "applies",
+      "to_id": "REQ-018-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-114",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-114",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-114",
+      "verb": "next",
+      "to_id": "STP-018-115",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-114",
+      "verb": "on",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "applies",
+      "to_id": "REQ-018-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "applies",
+      "to_id": "REQ-018-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "applies",
+      "to_id": "REQ-018-202",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-115",
+      "verb": "on",
+      "to_id": "SCR-018-08",
       "attrs": {}
     },
     {
@@ -296242,8 +302850,282 @@
     },
     {
       "from_id": "STP-018-121",
+      "verb": "next",
+      "to_id": "STP-018-122",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-121",
       "verb": "on",
       "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-122",
+      "verb": "applies",
+      "to_id": "REQ-018-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-122",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-122",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-122",
+      "verb": "next",
+      "to_id": "STP-018-123",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-122",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-123",
+      "verb": "applies",
+      "to_id": "REQ-018-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-123",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-123",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-123",
+      "verb": "next",
+      "to_id": "STP-018-124",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-123",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-124",
+      "verb": "applies",
+      "to_id": "REQ-018-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-124",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-124",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-124",
+      "verb": "next",
+      "to_id": "STP-018-125",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-124",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "applies",
+      "to_id": "REQ-018-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "applies",
+      "to_id": "REQ-018-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "next",
+      "to_id": "STP-018-126",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-125",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-126",
+      "verb": "applies",
+      "to_id": "REQ-018-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-126",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-126",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-126",
+      "verb": "next",
+      "to_id": "STP-018-127",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-126",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-127",
+      "verb": "applies",
+      "to_id": "REQ-018-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-127",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-127",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-127",
+      "verb": "next",
+      "to_id": "STP-018-128",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-127",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "applies",
+      "to_id": "REQ-018-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "applies",
+      "to_id": "REQ-018-170",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "next",
+      "to_id": "STP-018-129",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-128",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-129",
+      "verb": "applies",
+      "to_id": "REQ-018-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-129",
+      "verb": "applies",
+      "to_id": "REQ-018-172",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-129",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-129",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-129",
+      "verb": "on",
+      "to_id": "SCR-018-06",
       "attrs": {}
     },
     {
@@ -296280,6 +303162,12 @@
       "from_id": "STP-019-001",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-001",
+      "verb": "next",
+      "to_id": "STP-019-003",
       "attrs": {}
     },
     {
@@ -296326,8 +303214,482 @@
     },
     {
       "from_id": "STP-019-002",
+      "verb": "next",
+      "to_id": "STP-019-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-002",
       "verb": "on",
       "to_id": "SCR-019-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "applies",
+      "to_id": "REQ-019-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "applies",
+      "to_id": "REQ-019-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "applies",
+      "to_id": "REQ-019-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "next",
+      "to_id": "STP-019-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-003",
+      "verb": "on",
+      "to_id": "SCR-019-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "applies",
+      "to_id": "REQ-019-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "applies",
+      "to_id": "REQ-019-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "next",
+      "to_id": "STP-019-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "on",
+      "to_id": "SCR-019-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-005",
+      "verb": "applies",
+      "to_id": "REQ-019-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-005",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-005",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-005",
+      "verb": "next",
+      "to_id": "STP-019-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-006",
+      "verb": "applies",
+      "to_id": "REQ-019-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-006",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-006",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-007",
+      "verb": "applies",
+      "to_id": "REQ-019-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-007",
+      "verb": "applies",
+      "to_id": "REQ-019-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-007",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-007",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-007",
+      "verb": "on",
+      "to_id": "SCR-019-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-008",
+      "verb": "applies",
+      "to_id": "REQ-019-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-008",
+      "verb": "applies",
+      "to_id": "REQ-019-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-008",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-008",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-008",
+      "verb": "next",
+      "to_id": "STP-019-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-009",
+      "verb": "applies",
+      "to_id": "REQ-019-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-009",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-009",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-009",
+      "verb": "on",
+      "to_id": "SCR-019-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-010",
+      "verb": "applies",
+      "to_id": "REQ-019-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-010",
+      "verb": "applies",
+      "to_id": "REQ-019-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-010",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-010",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-011",
+      "verb": "applies",
+      "to_id": "REQ-019-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-011",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-011",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-011",
+      "verb": "on",
+      "to_id": "SCR-019-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-012",
+      "verb": "applies",
+      "to_id": "REQ-019-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-012",
+      "verb": "applies",
+      "to_id": "REQ-019-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-012",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-012",
+      "verb": "on",
+      "to_id": "SCR-019-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-013",
+      "verb": "applies",
+      "to_id": "REQ-019-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-013",
+      "verb": "applies",
+      "to_id": "REQ-019-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-013",
+      "verb": "applies",
+      "to_id": "REQ-019-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-013",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-014",
+      "verb": "applies",
+      "to_id": "REQ-019-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-014",
+      "verb": "applies",
+      "to_id": "REQ-019-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-014",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-014",
+      "verb": "on",
+      "to_id": "SCR-019-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "applies",
+      "to_id": "REQ-019-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "applies",
+      "to_id": "REQ-019-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "applies",
+      "to_id": "REQ-019-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "applies",
+      "to_id": "REQ-019-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-015",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "applies",
+      "to_id": "REQ-019-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "applies",
+      "to_id": "REQ-019-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "applies",
+      "to_id": "REQ-019-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-016",
+      "verb": "on",
+      "to_id": "SCR-019-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "applies",
+      "to_id": "REQ-019-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "applies",
+      "to_id": "REQ-019-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "applies",
+      "to_id": "REQ-019-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-018",
+      "verb": "applies",
+      "to_id": "REQ-019-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-018",
+      "verb": "applies",
+      "to_id": "REQ-019-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-018",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-018",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -306120,6 +313482,272 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-093549-009eeeb1",
+      "at": "2026-11-10T09:35:49.748807+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-019 system Steps released from 2026-11-10-fr019-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr019-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-019-accepted",
+        "FLW-019-auto-attach",
+        "FLW-019-auto-conflict",
+        "FLW-019-code-invalid",
+        "FLW-019-direct-code",
+        "FLW-019-hairline-only",
+        "FLW-019-patient-code",
+        "FLW-019-post-acceptance",
+        "FLW-019-provider-reusable",
+        "FLW-019-user-conflict",
+        "STP-019-003",
+        "STP-019-004",
+        "STP-019-005",
+        "STP-019-006",
+        "STP-019-007",
+        "STP-019-008",
+        "STP-019-009",
+        "STP-019-010",
+        "STP-019-011",
+        "STP-019-012",
+        "STP-019-013",
+        "STP-019-014",
+        "STP-019-015",
+        "STP-019-016",
+        "STP-019-017",
+        "STP-019-018"
+      ],
+      "nodes_updated": [
+        "ACT-system",
+        "STP-019-001",
+        "STP-019-002"
+      ],
+      "edges_added": 91,
+      "edges_removed": 0,
+      "rows": 232
+    },
+    {
+      "id": "cs-20261110-093549-911a8c54",
+      "at": "2026-11-10T09:35:49.576719+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-018 system Steps released from 2026-11-10-fr018-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr018-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-018-b2",
+        "FLW-018-b4",
+        "STP-018-003",
+        "STP-018-004",
+        "STP-018-005",
+        "STP-018-006",
+        "STP-018-007",
+        "STP-018-008",
+        "STP-018-009",
+        "STP-018-010",
+        "STP-018-011",
+        "STP-018-012",
+        "STP-018-023",
+        "STP-018-024",
+        "STP-018-025",
+        "STP-018-026",
+        "STP-018-034",
+        "STP-018-035",
+        "STP-018-036",
+        "STP-018-037",
+        "STP-018-038",
+        "STP-018-042",
+        "STP-018-043",
+        "STP-018-044",
+        "STP-018-045",
+        "STP-018-056",
+        "STP-018-057",
+        "STP-018-058",
+        "STP-018-059",
+        "STP-018-063",
+        "STP-018-064",
+        "STP-018-065",
+        "STP-018-066",
+        "STP-018-067",
+        "STP-018-068",
+        "STP-018-069",
+        "STP-018-072",
+        "STP-018-073",
+        "STP-018-074",
+        "STP-018-075",
+        "STP-018-076",
+        "STP-018-081",
+        "STP-018-082",
+        "STP-018-083",
+        "STP-018-103",
+        "STP-018-104",
+        "STP-018-105",
+        "STP-018-106",
+        "STP-018-107",
+        "STP-018-108",
+        "STP-018-109",
+        "STP-018-110",
+        "STP-018-111",
+        "STP-018-112",
+        "STP-018-113",
+        "STP-018-114",
+        "STP-018-115",
+        "STP-018-122",
+        "STP-018-123",
+        "STP-018-124",
+        "STP-018-125",
+        "STP-018-126",
+        "STP-018-127",
+        "STP-018-128",
+        "STP-018-129"
+      ],
+      "nodes_updated": [
+        "STP-018-002",
+        "STP-018-022",
+        "STP-018-033",
+        "STP-018-041",
+        "STP-018-055",
+        "STP-018-062",
+        "STP-018-071",
+        "STP-018-102",
+        "STP-018-121"
+      ],
+      "edges_added": 335,
+      "edges_removed": 0,
+      "rows": 662
+    },
+    {
+      "id": "cs-20261110-093549-8ddbe80f",
+      "at": "2026-11-10T09:35:49.316463+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-017 system Steps released from 2026-11-10-fr017-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr017-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-017-currency-alert",
+        "FLW-017-main",
+        "FLW-017-provider-cancellation",
+        "STP-017-001",
+        "STP-017-002",
+        "STP-017-003",
+        "STP-017-004",
+        "STP-017-005",
+        "STP-017-006",
+        "STP-017-007",
+        "STP-017-013",
+        "STP-017-015",
+        "STP-017-016",
+        "STP-017-017",
+        "STP-017-029",
+        "STP-017-030",
+        "STP-017-031",
+        "STP-017-032",
+        "STP-017-033",
+        "STP-017-034",
+        "STP-017-037",
+        "STP-017-038",
+        "STP-017-039",
+        "STP-017-040",
+        "STP-017-041",
+        "STP-017-042",
+        "STP-017-043",
+        "STP-017-044",
+        "STP-017-051",
+        "STP-017-052",
+        "STP-017-053",
+        "STP-017-054",
+        "STP-017-056",
+        "STP-017-062",
+        "STP-017-063",
+        "STP-017-066",
+        "STP-017-067",
+        "STP-017-068",
+        "STP-017-069",
+        "STP-017-070",
+        "STP-017-071",
+        "STP-017-072",
+        "STP-017-073"
+      ],
+      "nodes_updated": [
+        "STP-017-012"
+      ],
+      "edges_added": 197,
+      "edges_removed": 0,
+      "rows": 417
+    },
+    {
+      "id": "cs-20261110-093549-99eb02a7",
+      "at": "2026-11-10T09:35:49.109982+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-016 system Steps released from 2026-11-10-fr016-completeness-held.yaml after decision D44 (one system Actor ACT-system): ops whose only hold reason was the missing system Actor, with done by ACT-system on released Steps that had no doer and the ACT-system acts in edges their Stages need. 0 ops already in the live graph were left out. Apply after 2026-11-10-fr016-completeness-fixes.yaml; apply the system-steps files in FR number order (see plans/reports/fullstack-developer-261110-1215-system-steps-release-draft.md).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-016-patient-not-found",
+        "STP-016-002",
+        "STP-016-003",
+        "STP-016-004",
+        "STP-016-005",
+        "STP-016-006",
+        "STP-016-007",
+        "STP-016-008",
+        "STP-016-012",
+        "STP-016-013",
+        "STP-016-022",
+        "STP-016-023",
+        "STP-016-024",
+        "STP-016-025",
+        "STP-016-026",
+        "STP-016-027",
+        "STP-016-032",
+        "STP-016-033",
+        "STP-016-034",
+        "STP-016-041",
+        "STP-016-042",
+        "STP-016-043",
+        "STP-016-044",
+        "STP-016-055",
+        "STP-016-056",
+        "STP-016-057",
+        "STP-016-058",
+        "STP-016-059",
+        "STP-016-060",
+        "STP-016-063",
+        "STP-016-064",
+        "STP-016-065",
+        "STP-016-066",
+        "STP-016-067",
+        "STP-016-068",
+        "STP-016-069",
+        "STP-016-075",
+        "STP-016-076",
+        "STP-016-077",
+        "STP-016-078",
+        "STP-016-079",
+        "STP-016-080",
+        "STP-016-081",
+        "STP-016-082",
+        "STP-016-096",
+        "STP-016-105",
+        "STP-016-116",
+        "STP-016-117",
+        "STP-016-118",
+        "STP-016-119"
+      ],
+      "nodes_updated": [
+        "ACT-system",
+        "STP-016-001",
+        "STP-016-011",
+        "STP-016-021",
+        "STP-016-031",
+        "STP-016-054",
+        "STP-016-062",
+        "STP-016-074",
+        "STP-016-093",
+        "STP-016-094",
+        "STP-016-095",
+        "STP-016-104",
+        "STP-016-115"
+      ],
+      "edges_added": 234,
+      "edges_removed": 0,
+      "rows": 486
+    },
     {
       "id": "cs-20261110-093449-2a31bb45",
       "at": "2026-11-10T09:34:49.828133+00:00",
