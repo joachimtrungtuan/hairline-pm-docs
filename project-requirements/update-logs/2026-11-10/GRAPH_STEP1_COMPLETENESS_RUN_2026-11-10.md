@@ -123,3 +123,13 @@ D52 settled the wording of the 31 Rules held for the new Rule wording review (FR
 - **Still held: 1,011 ops.**
 - **Backup and lint.** Backup `graph/backups/graph-20261110-212422.db` (git-ignored). Lint is unchanged at 4,466 (L10 4,196, L12 184, L18 86), with no new or resolved finding. All 234 tests passed, and `graph.json` was re-exported.
 - **Report:** `plans/reports/fullstack-developer-261110-2030-rule-wording-apply.md`, Follow-up 2 section (Hairline root).
+
+## Decision-code links by topic (decision D50), applied 2026-11-10 night
+
+- **Ruling.** A Rule gets a `decided by` link to a decision-code Source (MTG-002 Product Owner decision log codes D, M, Q and R7) where the decision text and the PRD change-log row are clearly about the same subject as the Rule. Unclear matches are not linked; they stay held and are listed for the user.
+- **Scope.** The 79 held `decided by` ops of FR-004, FR-008, FR-010, FR-016, FR-019 and FR-026, which were the only held ops waiting on decision-code mappings. No Rule statement, other node or PRD was changed.
+- **Released (63 ops).** FR-004 19, FR-008 1, FR-010 5, FR-016 1, FR-019 35 and FR-026 2, in `graph/changesets/2026-11-10-frNNN-decision-links.yaml`. Each op carries a one-line reason for the topic match. The released lines left the six held files, a wait note left only where every op under it left, and each held file carries a dated D50 note; every other held line is unchanged.
+- **Kept held as unclear (16 ops).** FR-008 1, FR-010 6, FR-016 3 and FR-019 6 (including two Entity links to Q38, which D50 does not cover because they do not start at a Rule). They are listed for the user in the report.
+- **Still held: 948 ops** (1,011 before).
+- **Backup and lint.** Backup `graph/backups/graph-20261110-222511.db` (git-ignored). Lint went from 4,466 to 4,449 (L10 4,179, L12 184, L18 86): 17 L10 findings resolved, none new. All 234 tests passed, and `graph.json` was re-exported.
+- **Report:** `plans/reports/fullstack-developer-261110-2220-decision-links-apply.md` (Hairline root).
