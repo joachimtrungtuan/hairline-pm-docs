@@ -1,0 +1,5 @@
+reason: "FR-001 Rule wording follow-up to decision D52: the user reworded REQ-001-162 so it names the Delete Account screen (PRD line 808). Apply after 2026-11-10-fr001-rule-wording.yaml."
+by: fullstack-developer
+operations:
+  # statement set to the user's wording (decision D52 follow-up); title and rationale unchanged
+  - {"op": "update_node", "id": "REQ-001-162", "attrs": {"statement": "On the Delete Account screen, the confirmation modal's Confirm submits the deletion request and Cancel returns to the Delete Account screen."}}
