@@ -1,0 +1,80 @@
+reason: "FR-031 Steps released from 2026-11-10-fr031-completeness-held.yaml after the D48 follow-up rulings (STP-031-742 is done by ACT-platform-admin; STP-032-044 and STP-032-070 are done by ACT-system), with the ops held only because one of them was held; the system Steps they unblock get done by ACT-system under D44. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up)."
+by: fullstack-developer
+operations:
+  # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
+  - {"op": "add_node", "id": "STP-031-742", "type": "Step", "title": "Admin reaches a restricted feature", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 2"}}
+  # done by: ACT-platform-admin (the D48 follow-up ruling; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "done by", "to": "ACT-platform-admin"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-031-743", "type": "Step", "title": "System checks required permission", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 3"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-031-744", "type": "Step", "title": "System denies access and shows message", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 4"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-031-744", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-031-745", "type": "Step", "title": "System logs the denial", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 5"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-031-746", "type": "Step", "title": "System alerts Super Admin on repeats", "owner_fr": "FR-031", "attrs": {"prd_ref": "B5 step 6"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-031-746", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor (B5 step 2 names 'Admin user'; the Actor is a decision, so no done by)
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "applies", "to": "REQ-031-088"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-743 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-743 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "applies", "to": "REQ-031-003"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-743 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "applies", "to": "REQ-031-088"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-744 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-744", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-744 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-744", "verb": "applies", "to": "REQ-031-089"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-745 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-745 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "applies", "to": "REQ-031-089"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-745 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "applies", "to": "REQ-031-008"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-746 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-746", "verb": "at", "to": "STG-main-01-inquiry"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-031-746 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-746", "verb": "applies", "to": "REQ-031-090"}
+  # waits on: no System Actor (chain touches a held Step)
+  # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-741", "verb": "next", "to": "STP-031-742"}
+  # waits on: no System Actor (chain touches a held Step)
+  # waits on: endpoint STP-031-742 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "next", "to": "STP-031-743"}
+  # waits on: no System Actor (chain touches a held Step)
+  # waits on: endpoint STP-031-743 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "next", "to": "STP-031-744"}
+  # waits on: no System Actor (chain touches a held Step)
+  # waits on: endpoint STP-031-744 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-744", "verb": "next", "to": "STP-031-745"}
+  # waits on: no System Actor (chain touches a held Step)
+  # waits on: endpoint STP-031-745 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "next", "to": "STP-031-746"}

@@ -1,0 +1,6 @@
+reason: "FR-003 retry link after the D48 follow-up ruling: the patient retry Step STP-003-087 leads back to the review Step STP-003-013, as the FR-003 PRD workflow diagram shows (SubmitErr goes back to Review), instead of to STP-003-014. Apply after 2026-11-10-fr003-doer-decisions.yaml, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up)."
+by: fullstack-developer
+operations:
+  # next: the retry link written by the STP-003-015 split (decision D47) is replaced; the patient goes back to the review Step
+  - {"op": "remove_edge", "from": "STP-003-087", "verb": "next", "to": "STP-003-014"}
+  - {"op": "add_edge", "from": "STP-003-087", "verb": "next", "to": "STP-003-013"}

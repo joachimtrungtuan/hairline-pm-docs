@@ -1,0 +1,132 @@
+reason: "FR-032 Steps released from 2026-11-10-fr032-completeness-held.yaml after the D48 follow-up rulings (STP-031-742 is done by ACT-platform-admin; STP-032-044 and STP-032-070 are done by ACT-system), with the ops held only because one of them was held; the system Steps they unblock get done by ACT-system under D44. Apply after the earlier 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-1750-doer-decisions-apply.md, Follow-up)."
+by: fullstack-developer
+operations:
+  # Alternative Flow B3: Network Connection Lost During Upload
+  # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
+  - {"op": "add_node", "id": "STP-032-044", "type": "Step", "title": "Network connection drops", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 3"}}
+  # done by: ACT-system (the D48 follow-up ruling; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-044", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-044 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-044", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-044", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-045", "type": "Step", "title": "Detect the upload failure", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 4"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-045", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-045 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-045", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-046", "type": "Step", "title": "Display the upload-failed network error message", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 5"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-046", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-046 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-046", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-046", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-047", "type": "Step", "title": "Check the network connection", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 6"}}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: endpoint STP-032-047 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-047", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-032-047", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-047", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-048", "type": "Step", "title": "Click Retry Upload", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 7"}}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: endpoint STP-032-048 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-048", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-032-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-048", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-049", "type": "Step", "title": "Resume the upload from the beginning", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B3 (Network Lost During Upload) step 8"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-049", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-049 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-049", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-049", "verb": "on", "to": "SCR-032-03"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-044 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-043", "verb": "next", "to": "STP-032-044"}
+  - {"op": "add_edge", "from": "STP-032-044", "verb": "next", "to": "STP-032-045"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-045 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-045", "verb": "next", "to": "STP-032-046"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-046 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-046", "verb": "next", "to": "STP-032-047"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-047 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-047", "verb": "next", "to": "STP-032-048"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-048 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-048", "verb": "next", "to": "STP-032-049"}
+  # waits on: no System Actor
+  # waits on: doer reading (no done by edge, and the title names a person who receives or sees, or no performer; done by ACT-system would pick a reading)
+  - {"op": "add_node", "id": "STP-032-070", "type": "Step", "title": "Network connection times out", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B4 (Network Error During Save) step 3"}}
+  # done by: ACT-system (the D48 follow-up ruling; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-070", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-070 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-070", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-070", "verb": "on", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "STP-032-070", "verb": "applies", "to": "REQ-032-083"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-071", "type": "Step", "title": "Display the failed-to-save error message", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B4 (Network Error During Save) step 4"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-071", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-071 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-071", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-071", "verb": "on", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "STP-032-071", "verb": "applies", "to": "REQ-032-083"}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-072", "type": "Step", "title": "Check the connection", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B4 (Network Error During Save) step 5"}}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: endpoint STP-032-072 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-072", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-032-072", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-072", "verb": "on", "to": "SCR-032-07"}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-073", "type": "Step", "title": "Click Save Preferences again", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B4 (Network Error During Save) step 6"}}
+  # waits on: no System Actor (reachable only through a held system step)
+  # waits on: endpoint STP-032-073 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-073", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-032-073", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-073", "verb": "on", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "STP-032-073", "verb": "applies", "to": "REQ-032-083"}
+  # waits on: no System Actor
+  # waits on: reachable only through a Step or Flow that stays held (lint L14) (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_node", "id": "STP-032-074", "type": "Step", "title": "Save the preferences successfully", "owner_fr": "FR-032", "attrs": {"prd_ref": "Alternative Flow B4 (Network Error During Save) step 7"}}
+  # done by: ACT-system (decision D44, a system Step; the Step had no doer)
+  - {"op": "add_edge", "from": "STP-032-074", "verb": "done by", "to": "ACT-system"}
+  # waits on: no System Actor
+  # waits on: endpoint STP-032-074 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-074", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-074", "verb": "on", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "STP-032-074", "verb": "applies", "to": "REQ-032-016"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-070 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-069", "verb": "next", "to": "STP-032-070"}
+  - {"op": "add_edge", "from": "STP-032-070", "verb": "next", "to": "STP-032-071"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-071 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-071", "verb": "next", "to": "STP-032-072"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-072 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-072", "verb": "next", "to": "STP-032-073"}
+  # waits on: no System Actor (link from the last human step to the first system step; not bridged in the fixes file)
+  # waits on: endpoint STP-032-073 stays held (its own reason, the system Actor, is resolved by D44)
+  - {"op": "add_edge", "from": "STP-032-073", "verb": "next", "to": "STP-032-074"}
